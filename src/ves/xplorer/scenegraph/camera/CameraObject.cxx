@@ -73,7 +73,7 @@
 // --- STL Includes --- //
 #include <iostream>
 
-#define VES_USE_MULTISAMPLING
+//#define VES_USE_MULTISAMPLING
 
 namespace ves
 {
@@ -226,7 +226,7 @@ void CameraObject::Initialize()
 
     m_camera->attach(
         osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
-        0, 0, false, 4, 4 );
+        0, 0, false, maxSamples, maxSamples );
     //Attach the depth texture and use it as the second render target
     //attach( osg::Camera::COLOR_BUFFER1,
             //( ves::xplorer::scenegraph::ResourceManager::instance()->get
@@ -902,7 +902,7 @@ osg::Texture2D* CameraObject::CreateViewportTexture(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::WriteImageFile( std::string const& saveImageDir )
 {
-    std::string filename = saveImageDir + "\\" + getName() + ".png";
+    std::string filename = saveImageDir + "/" + getName() + ".png";
     osgDB::writeImageFile( *(m_colorImage.get()), filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
