@@ -234,7 +234,9 @@ void CameraObject::Initialize()
 
     //Do this for easy image capture capability
     m_colorImage = new osg::Image();
-    m_camera->attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 4, 4 );
+    m_camera->attach(
+        osg::Camera::COLOR_BUFFER0, m_colorImage.get(),
+        maxSamples, maxSamples );
 
     m_initialViewMatrix.makeLookAt(
         osg::Vec3d( 0.0, 0.0, 0.0 ),
