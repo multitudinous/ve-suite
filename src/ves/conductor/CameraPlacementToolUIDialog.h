@@ -187,6 +187,9 @@ private:
     int m_currentCameraSelection;
     unsigned int m_cameraNameNum;
 
+    int m_currentMarkerSelection;
+    unsigned int m_markerNameNum;
+
     double mProjectionData[ 4 ];
     double mDepthOfFieldData[ 3 ];
 

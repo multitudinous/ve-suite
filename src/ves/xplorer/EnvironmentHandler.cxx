@@ -191,7 +191,7 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "SAVE_ALL_CAMERA_IMAGES" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
-    _eventHandlers[ "ADD_MARKER_OBJECT" ] =
+    _eventHandlers[ "TOGGLE_HIGHLIGHT_TOOL" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "SELECT_MARKER_OBJECT" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();

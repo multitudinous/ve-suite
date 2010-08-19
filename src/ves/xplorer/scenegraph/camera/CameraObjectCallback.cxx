@@ -50,7 +50,8 @@ CameraObjectCallback::CameraObjectCallback()
     osg::NodeCallback(),
     m_dcsMatrix()
 {
-    ;
+    //Make it something other than identity
+    m_dcsMatrix( 0, 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraObjectCallback::CameraObjectCallback( const CameraObjectCallback& input )
@@ -85,17 +86,21 @@ void CameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     {
         m_dcsMatrix = tempMatrix;
 
+        /*
         osg::Light& light = cameraObject->GetLight();
         osg::Vec4 position = light.getPosition() * tempMatrix;
         osg::Vec3 direction = light.getDirection() * tempMatrix;
         light.setPosition( position );
         light.setDirection( direction );
+        */
 
         tempMatrix =
             osg::Matrixd::inverse( tempMatrix ) *
             cameraObject->GetInitialViewMatrix();
 
-        cameraObject->GetCamera().setViewMatrix( tempMatrix );
+        osg::Camera& camera = cameraObject->GetCamera();
+        camera.setViewMatrix( tempMatrix );
+
         cameraObject->CalculateMatrixMVPT();
     }
 }

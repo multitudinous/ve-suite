@@ -50,6 +50,9 @@
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
+#include <ves/xplorer/scenegraph/highlight/HighlightManager.h>
+#include <ves/xplorer/scenegraph/highlight/CircleHighlight.h>
+
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 // --- VRJ Includes --- //
@@ -79,6 +82,15 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
         SAVE_CAMERA_IMAGE;
     mCommandNameToInt[ "SAVE_ALL_CAMERA_IMAGES" ] =
         SAVE_ALL_CAMERA_IMAGES;
+
+    mCommandNameToInt[ "TOGGLE_HIGHLIGHT_TOOL" ] =
+        TOGGLE_HIGHLIGHT_TOOL;
+    mCommandNameToInt[ "SELECT_MARKER_OBJECT" ] =
+        SELECT_MARKER_OBJECT;
+    mCommandNameToInt[ "DELETE_MARKER_OBJECT" ] =
+        DELETE_MARKER_OBJECT;
+    mCommandNameToInt[ "REMOVE_ALL_MARKER_OBJECTS" ] =
+        REMOVE_ALL_MARKER_OBJECTS;
 
     mCommandNameToInt[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] =
         DEPTH_OF_FIELD_EFFECT_ON_OFF;
@@ -222,10 +234,19 @@ void CameraPlacementEventHandler::Execute(
             *(NavigationAnimationEngine::instance());
         nae.SetDCS( sceneManager.GetWorldDCS() );
 
+        //
+        osg::Vec3d eye, up, ctr;
+        osg::Matrixd viewMatrix( selectedMatrix.mData );
+        viewMatrix.getLookAt( eye, ctr, up );
+        osg::Vec3d viewVector = ctr - eye;
+        viewVector.normalize();
+        viewVector *= 10.0;
+
         //Hand our created end points off to the animation engine
         selectedMatrix = gmtl::invert( selectedMatrix );
         gmtl::Vec3d navToPoint =
             gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
+        navToPoint += gmtl::Vec3d( viewVector.x(), -viewVector.z(), viewVector.y() );
         gmtl::Quatd rotationPoint =
             gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
         nae.SetAnimationEndPoints( navToPoint, rotationPoint );
@@ -292,7 +313,7 @@ void CameraPlacementEventHandler::Execute(
 
         break;
     }
-    case ADD_MARKER_OBJECT:
+    case TOGGLE_HIGHLIGHT_TOOL:
     {
         /*
         std::string name;
@@ -373,22 +394,16 @@ void CameraPlacementEventHandler::Execute(
     }
     case DELETE_MARKER_OBJECT:
     {
-        /*
-        unsigned int selection;
-        command->GetDataValuePair( "deleteCameraObject" )->GetData( selection );
+        scenegraph::highlight::CircleHighlight* const activeCircleHighlight =
+            highlightManager.GetActiveCircleHighlight();
 
-        //
-        DeviceHandler& deviceHandler = *(DeviceHandler::instance());
-
-        scenegraph::camera::CameraObject* cameraObject =
-            cameraManager.ConvertNodeToCameraObject(
-                cameraManager.getChild( selection ) );
-        if( deviceHandler.GetSelectedDCS() == &(cameraObject->GetDCS()) )
+        if( !activeCircleHighlight )
         {
-            deviceHandler.UnselectObjects();
-            cameraManager.removeChild( cameraObject );
+            return;
         }
-        */
+
+        highlightManager.removeChild( activeCircleHighlight );
+        highlightManager.SetActiveCircleHighlight( NULL );
 
         break;
     }

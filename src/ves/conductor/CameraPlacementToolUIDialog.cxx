@@ -229,6 +229,8 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
     UIDialog( parent, id, wxT( "CameraPlacementTool" ) ),
     m_currentCameraSelection( -1 ),
     m_cameraNameNum( 0 ),
+    m_currentMarkerSelection( -1 ),
+    m_markerNameNum( 0 ),
     m_timer( this, CPT_UPDATE_TIMER_ID )
 {
     mProjectionData[ 0 ] = 40.0;
@@ -1247,13 +1249,24 @@ void CameraPlacementToolUIDialog::OnSaveAllImagesButton(
 void CameraPlacementToolUIDialog::OnImageDirPickerCtrl(
     wxFileDirPickerEvent& WXUNUSED( event ) )
 {
-
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnToggleHighlightToolButton(
     wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
+    unsigned int toggle =
+        static_cast< unsigned int >( m_toggleHighlightToolButton->GetValue() );
 
+    mCommandName = "TOGGLE_HIGHLIGHT_TOOL";
+
+    ves::open::xml::DataValuePairSharedPtr depthOfFieldEffectOnOffDVP(
+        new ves::open::xml::DataValuePair() );
+    depthOfFieldEffectOnOffDVP->SetData( "toggleHighlightTool", toggle );
+    mInstructions.push_back( depthOfFieldEffectOnOffDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnPrevMarkerButton(
@@ -1282,13 +1295,60 @@ void CameraPlacementToolUIDialog::OnNextMarkerButton(
 void CameraPlacementToolUIDialog::OnDeleteMarkerButton(
     wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
+    m_currentMarkerSelection = m_markerComboBox->GetSelection();
+    if( m_currentMarkerSelection == -1 )
+    {
+        return;
+    }
 
+    m_markerComboBox->Delete( m_currentMarkerSelection );
+
+    mCommandName = "DELETE_MARKER_OBJECT";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData(
+        "deleteMarkerObject",
+        static_cast< unsigned int >( m_currentMarkerSelection ) );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+
+    m_currentMarkerSelection = -1;
+    m_markerComboBox->SetSelection( m_currentMarkerSelection );
+    m_markerComboBox->SetValue( wxT( "Select a Marker" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnRemoveAllMarkersButton(
     wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
+    unsigned int count( m_markerComboBox->GetCount() );
+    if( count < 1 )
+    {
+        return;
+    }
 
+    m_currentMarkerSelection = m_markerComboBox->GetSelection();
+
+    m_markerComboBox->Clear();
+
+    m_markerNameNum = 0;
+
+    mCommandName = "REMOVE_ALL_MARKER_OBJECTS";
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData(
+        "deleteMarkerObject",
+        static_cast< unsigned int >( m_currentMarkerSelection ) );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+
+    m_currentMarkerSelection = -1;
+    m_markerComboBox->SetSelection( m_currentMarkerSelection );
+    m_markerComboBox->SetValue( wxT( "Select a Marker" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnDepthOfFieldEffectOnOffRadioBox(
@@ -1467,6 +1527,12 @@ void CameraPlacementToolUIDialog::OnNearPlaneSlider(
     if( nearPlaneValue < 1 )
     {
         nearPlaneValue = 1;
+        mNearPlaneSlider->SetValue( nearPlaneValue );
+    }
+    else if( nearPlaneValue == 10000 )
+    {
+        nearPlaneValue = 9999;
+        mNearPlaneSlider->SetValue( nearPlaneValue );
     }
 
     if( nearPlaneValue >= farPlaneValue )
@@ -1504,6 +1570,7 @@ void CameraPlacementToolUIDialog::OnFarPlaneSlider(
     if( farPlaneValue < 2 )
     {
         farPlaneValue = 2;
+        mFarPlaneSlider->SetValue( farPlaneValue );
     }
 
     if( farPlaneValue <= nearPlaneValue )
@@ -1594,6 +1661,7 @@ bool CameraPlacementToolUIDialog::EnsureSliders( int activeSliderID )
     //maintain the value on the min/max sliders.
     if( mNearPlaneValue >= mFarPlaneValue )
     {
+        /*
         if( mNearPlaneValue == 1000 )
         {
             mNearPlaneSlider->SetValue( 1000 - 1 );
@@ -1602,6 +1670,7 @@ bool CameraPlacementToolUIDialog::EnsureSliders( int activeSliderID )
         {
             mFarPlaneSlider->SetValue( 1 );
         }
+        */
 
         if( activeSliderID == CPT_NEAR_PLANE_SLIDER )
         {
