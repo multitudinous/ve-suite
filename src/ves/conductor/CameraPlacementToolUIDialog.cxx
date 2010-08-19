@@ -210,6 +210,9 @@ BEGIN_EVENT_TABLE( CameraPlacementToolUIDialog, wxDialog )
     EVT_SLIDER(
         CPT_MAX_CIRCLE_OF_CONFUSION_SLIDER,
         CameraPlacementToolUIDialog::OnMaxCircleOfConfusionSlider )
+    EVT_TIMER(
+        CPT_UPDATE_TIMER_ID,
+        CameraPlacementToolUIDialog::OnTimer )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +228,8 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
     :
     UIDialog( parent, id, wxT( "CameraPlacementTool" ) ),
     m_currentCameraSelection( -1 ),
-    m_cameraNameNum( 0 )
+    m_cameraNameNum( 0 ),
+    m_timer( this, CPT_UPDATE_TIMER_ID )
 {
     mProjectionData[ 0 ] = 40.0;
     mProjectionData[ 1 ] = 1.0;
@@ -239,6 +243,9 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
     mServiceList = service;
 
     BuildGUI();
+
+    //Setup the update timer
+    m_timer.Start( 500 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolUIDialog::~CameraPlacementToolUIDialog()
@@ -928,6 +935,10 @@ void CameraPlacementToolUIDialog::BuildGUI()
     Layout();
     mainSizer->Fit( this );
     CenterOnParent();
+
+    //Add HUD display to scene graph
+    wxCommandEvent newEvent;
+    OnCameraWindowOnOffRadioBox( newEvent );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ClearInstructions()
@@ -1002,7 +1013,9 @@ void CameraPlacementToolUIDialog::OnAddCameraButton(
 
     ves::open::xml::DataValuePairSharedPtr dvpII(
         new ves::open::xml::DataValuePair() );
-    dvpII->SetData( "selectCameraObject", m_currentCameraSelection );
+    dvpII->SetData(
+        "selectCameraObject",
+        static_cast< unsigned int >( m_currentCameraSelection ) );
     mInstructions.push_back( dvpII );
 
     SendCommandsToXplorer();
@@ -1034,7 +1047,9 @@ void CameraPlacementToolUIDialog::OnPrevCameraButton(
 
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "selectCameraObject", m_currentCameraSelection );
+    dvp->SetData(
+        "selectCameraObject",
+        static_cast< unsigned int >( m_currentCameraSelection ) );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -1049,7 +1064,9 @@ void CameraPlacementToolUIDialog::OnCameraComboBox( wxCommandEvent& event )
 
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "selectCameraObject", m_currentCameraSelection );
+    dvp->SetData(
+        "selectCameraObject",
+        static_cast< unsigned int >( m_currentCameraSelection ) );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -1107,7 +1124,9 @@ void CameraPlacementToolUIDialog::OnNextCameraButton(
 
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "selectCameraObject", m_currentCameraSelection );
+    dvp->SetData(
+        "selectCameraObject",
+        static_cast< unsigned int >( m_currentCameraSelection ) );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -1129,7 +1148,9 @@ void CameraPlacementToolUIDialog::OnDeleteCameraButton(
 
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "deleteCameraObject", m_currentCameraSelection );
+    dvp->SetData(
+        "deleteCameraObject",
+        static_cast< unsigned int >( m_currentCameraSelection ) );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -1158,7 +1179,9 @@ void CameraPlacementToolUIDialog::OnRemoveAllCamerasButton(
     mCommandName = "REMOVE_ALL_CAMERA_OBJECTS";
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
-    dvp->SetData( "deleteCameraObject", m_currentCameraSelection );
+    dvp->SetData(
+        "deleteCameraObject",
+        static_cast< unsigned int >( m_currentCameraSelection ) );
     mInstructions.push_back( dvp );
 
     SendCommandsToXplorer();
@@ -1431,7 +1454,7 @@ void CameraPlacementToolUIDialog::OnNearPlaneSpinCtrl(
     UpdateNearPlaneControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnNearPlaneText( wxCommandEvent& WXUNUSED( event ) )
+void CameraPlacementToolUIDialog::OnNearPlaneText( wxCommandEvent& event )
 {
     UpdateNearPlaneControls();
 }
@@ -1439,7 +1462,14 @@ void CameraPlacementToolUIDialog::OnNearPlaneText( wxCommandEvent& WXUNUSED( eve
 void CameraPlacementToolUIDialog::OnNearPlaneSlider(
     wxCommandEvent& WXUNUSED( event ) )
 {
-    if( mNearPlaneSlider->GetValue() >= mFarPlaneSlider->GetValue() )
+    int nearPlaneValue = mNearPlaneSlider->GetValue();
+    int farPlaneValue = mFarPlaneSlider->GetValue();
+    if( nearPlaneValue < 1 )
+    {
+        nearPlaneValue = 1;
+    }
+
+    if( nearPlaneValue >= farPlaneValue )
     {
         EnsureSliders( CPT_NEAR_PLANE_SLIDER );
     }
@@ -1461,7 +1491,7 @@ void CameraPlacementToolUIDialog::OnFarPlaneSpinCtrl(
     UpdateFarPlaneControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFarPlaneText( wxCommandEvent& WXUNUSED( event ) )
+void CameraPlacementToolUIDialog::OnFarPlaneText( wxCommandEvent& event )
 {
     UpdateFarPlaneControls();
 }
@@ -1469,7 +1499,14 @@ void CameraPlacementToolUIDialog::OnFarPlaneText( wxCommandEvent& WXUNUSED( even
 void CameraPlacementToolUIDialog::OnFarPlaneSlider(
     wxCommandEvent& WXUNUSED( event ) )
 {
-    if( mFarPlaneSlider->GetValue() <= mNearPlaneSlider->GetValue() )
+    int nearPlaneValue = mNearPlaneSlider->GetValue();
+    int farPlaneValue = mFarPlaneSlider->GetValue();
+    if( farPlaneValue < 2 )
+    {
+        farPlaneValue = 2;
+    }
+
+    if( farPlaneValue <= nearPlaneValue )
     {
         EnsureSliders( CPT_FAR_PLANE_SLIDER );
     }
@@ -1601,19 +1638,23 @@ void CameraPlacementToolUIDialog::UpdateAspectRatioControls()
 void CameraPlacementToolUIDialog::UpdateNearPlaneControls()
 {
     double nearPlaneValue = mNearPlaneSpinCtrl->GetValue();
+    if( nearPlaneValue <= 0.0 )
+    {
+        nearPlaneValue = 0.1;
+    }
 
     if( mFarPlaneSpinCtrl->GetValue() <= nearPlaneValue )
     {
         mNearPlaneSlider->SetValue(
-            static_cast< int >( nearPlaneValue ) * 10 );
+            static_cast< int >( nearPlaneValue * 10 ) );
         mFarPlaneSlider->SetValue(
-            static_cast< int >( nearPlaneValue ) * 10 + 1 );
+            static_cast< int >( nearPlaneValue * 10 + 1 ) );
         mFarPlaneSpinCtrl->SetValue( nearPlaneValue + 0.1 );
     }
     else
     {
         mNearPlaneSlider->SetValue(
-            static_cast< int >( nearPlaneValue ) * 10 );
+            static_cast< int >( nearPlaneValue * 10 ) );
     }
 
     mProjectionData[ 2 ] = mNearPlaneSpinCtrl->GetValue();
@@ -1625,13 +1666,17 @@ void CameraPlacementToolUIDialog::UpdateNearPlaneControls()
 void CameraPlacementToolUIDialog::UpdateFarPlaneControls()
 {
     double farPlaneValue = mFarPlaneSpinCtrl->GetValue();
+    if( farPlaneValue <= 0.1 )
+    {
+        farPlaneValue = 0.2;
+    }
 
     if( mNearPlaneSpinCtrl->GetValue() >= farPlaneValue )
     {
         mNearPlaneSlider->SetValue(
-            static_cast< int >( farPlaneValue ) * 10 - 1 );
+            static_cast< int >( farPlaneValue * 10 - 1 ) );
         mFarPlaneSlider->SetValue(
-            static_cast< int >( farPlaneValue ) * 10 );
+            static_cast< int >( farPlaneValue * 10 ) );
         mNearPlaneSpinCtrl->SetValue( farPlaneValue - 0.1 );
 
         if( farPlaneValue < 1 )
@@ -1643,7 +1688,7 @@ void CameraPlacementToolUIDialog::UpdateFarPlaneControls()
     else
     {
         mFarPlaneSlider->SetValue(
-        static_cast< int >( farPlaneValue ) * 10 );
+        static_cast< int >( farPlaneValue * 10 ) );
     }
 
     mProjectionData[ 2 ] = mNearPlaneSpinCtrl->GetValue();
@@ -1751,5 +1796,50 @@ void CameraPlacementToolUIDialog::MaxCircleOfConfusionUpdate()
 
     SendCommandsToXplorer();
     ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnTimer( wxTimerEvent& WXUNUSED( event ) )
+{
+    //only update the gui when it is in focus and is being used
+    //another method would be the wxTopLevelWindow::IsActive
+    //or an wxIdleEvent may need to be used here
+    //we will have to do testing to figure out the best methods
+    //wxInternalIdle was called too often
+    if( IsShown() )
+    {
+        UpdateFromXplorerData();
+        if( wxUpdateUIEvent::CanUpdate( this ) )
+        {
+            UpdateWindowUI( wxUPDATE_UI_FROMIDLE );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::UpdateFromXplorerData()
+{
+    const open::xml::CommandPtr command =
+        mServiceList->GetGUIUpdateCommands( "UPDATE_ACTIVE_CAMERA_OBJECT" );
+
+    //Hasn't updated yet
+    if( command->GetCommandName() == "NULL" )
+    {
+        return;
+    }
+
+    unsigned int value;
+    const open::xml::DataValuePairPtr dvp =
+        command->GetDataValuePair( "ActiveCameraObject" );
+    dvp->GetData( value );
+
+    m_currentCameraSelection = value;
+    if( m_currentCameraSelection == m_cameraComboBox->GetStrings().size() )
+    {
+        m_currentCameraSelection = -1;
+        m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
+
+        return;
+    }
+
+    m_cameraComboBox->SetSelection( m_currentCameraSelection );
 }
 ////////////////////////////////////////////////////////////////////////////////

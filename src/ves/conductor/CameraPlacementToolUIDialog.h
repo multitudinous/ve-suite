@@ -43,6 +43,7 @@
 
 // --- wxWidgets Includes --- //
 #include <wx/filepicker.h>
+#include <wx/timer.h>
 
 class wxRadioBox;
 class wxSlider;
@@ -177,7 +178,13 @@ private:
     void FocalRangeUpdate();
     void MaxCircleOfConfusionUpdate();
 
-    unsigned int m_currentCameraSelection;
+    ///Idle function
+    void OnTimer( wxTimerEvent& event );
+
+    ///Get data back from xplorer
+    void UpdateFromXplorerData();
+
+    int m_currentCameraSelection;
     unsigned int m_cameraNameNum;
 
     double mProjectionData[ 4 ];
@@ -229,10 +236,12 @@ private:
     ves::conductor::util::wxSpinCtrlDbl* mMaxCircleOfConfusionSpinCtrl;
     wxSlider* mMaxCircleOfConfusionSlider;
 
+    wxTimer m_timer;
+
     ves::conductor::util::CORBAServiceList* mServiceList;
     std::string mCommandName;
     std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
-    
+
     DECLARE_EVENT_TABLE()
 };
 }

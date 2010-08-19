@@ -32,6 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/communication/CommunicationHandler.h>
+
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
@@ -41,6 +43,16 @@
 #include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 
 #include <ves/xplorer/Debug.h>
+
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADPart.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/Transform.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -155,13 +167,13 @@ bool CameraManager::Handle(
     }
     case Event::RELEASE:
     {
-        SetActiveCameraObject( cameraObject );
+        SetActiveCameraObject( cameraObject, true );
 
         break;
     }
     default:
     {
-        SetActiveCameraObject( NULL );
+        SetActiveCameraObject( NULL, true );
 
         break;
     }
@@ -195,7 +207,9 @@ bool CameraManager::replaceChild( CameraObject* origChild, CameraObject* newChil
     return osg::Group::replaceChild( origChild, newChild );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraManager::SetActiveCameraObject( CameraObject* cameraObject )
+void CameraManager::SetActiveCameraObject(
+    CameraObject* cameraObject,
+    const bool& sendDataToConductor )
 {
     if( cameraObject == m_activeCameraObject )
     {
@@ -221,6 +235,12 @@ void CameraManager::SetActiveCameraObject( CameraObject* cameraObject )
 
     //Set the active camera
     m_activeCameraObject = cameraObject;
+
+    //Send active object to conductor if we need to
+    if( sendDataToConductor )
+    {
+        UpdateConductorData();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::SetCameraViewQuadResolution( unsigned int const& scale )
@@ -353,6 +373,20 @@ osg::Node* CameraManager::GetCameraManagerQuad()
     }
 
     return m_rttQuadTransform.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::UpdateConductorData()
+{
+    unsigned int position = getChildIndex( m_activeCameraObject );
+
+    open::xml::CommandPtr command( new open::xml::Command() );
+    command->SetCommandName( "UPDATE_ACTIVE_CAMERA_OBJECT" );
+
+    open::xml::DataValuePairPtr dvp( new open::xml::DataValuePair() );
+    dvp->SetData( "ActiveCameraObject", position );
+    command->AddDataValuePair( dvp );
+
+    communication::CommunicationHandler::instance()->SetXMLCommand( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )

@@ -160,13 +160,6 @@ void CameraPlacementEventHandler::Execute(
         sceneManager.GetManipulatorManager().GetSceneManipulator();
     scenegraph::camera::CameraManager& cameraManager =
         sceneManager.GetCameraManager();
-    scenegraph::camera::CameraObject* const cameraObject =
-        cameraManager.GetActiveCameraObject();
-
-    if( !cameraObject && commandName != ADD_CAMERA_OBJECT )
-    {
-        return;
-    }
 
     switch( commandName )
     {
@@ -187,14 +180,14 @@ void CameraPlacementEventHandler::Execute(
 
         deviceHandler.UnselectObjects();
 
-        scenegraph::camera::CameraObject* cameraObject =
+        scenegraph::camera::CameraObject* newCameraObject =
             cameraManager.ConvertNodeToCameraObject(
                 cameraManager.getChild( selection ) );
 
-        cameraManager.SetActiveCameraObject( cameraObject );
+        cameraManager.SetActiveCameraObject( newCameraObject );
 
         //Right now we are saying you must have a DCS
-        scenegraph::DCS& selectedDCS = cameraObject->GetDCS();
+        scenegraph::DCS& selectedDCS = newCameraObject->GetDCS();
         gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
 
         //Set the connection between the scene manipulator and the selected dcs
@@ -241,36 +234,51 @@ void CameraPlacementEventHandler::Execute(
     }
     case REMOVE_ALL_CAMERA_OBJECTS:
     {
+        scenegraph::camera::CameraObject* const activeCameraObject =
+            cameraManager.GetActiveCameraObject();
+
+        if( activeCameraObject )
+        {
+            deviceHandler.UnselectObjects();
+            cameraManager.SetActiveCameraObject( NULL );
+        }
+
         cameraManager.removeChildren();
 
-        //break;
+        break;
     }
     case DELETE_CAMERA_OBJECT:
     {
-        unsigned int selection;
-        command->GetDataValuePair( "deleteCameraObject" )->GetData( selection );
+        scenegraph::camera::CameraObject* const activeCameraObject =
+            cameraManager.GetActiveCameraObject();
 
-        //
-        DeviceHandler& deviceHandler = *(DeviceHandler::instance());
-
-        scenegraph::camera::CameraObject* cameraObject =
-            cameraManager.ConvertNodeToCameraObject(
-                cameraManager.getChild( selection ) );
-        if( deviceHandler.GetSelectedDCS() == &(cameraObject->GetDCS()) )
+        if( !activeCameraObject )
         {
-            deviceHandler.UnselectObjects();
-            cameraManager.removeChild( cameraObject );
+            return;
         }
+
+        deviceHandler.UnselectObjects();
+        cameraManager.removeChild( activeCameraObject );
+
+        cameraManager.SetActiveCameraObject( NULL );
 
         break;
     }
     case SAVE_CAMERA_IMAGE:
     {
+        scenegraph::camera::CameraObject* const activeCameraObject =
+            cameraManager.GetActiveCameraObject();
+
+        if( !activeCameraObject )
+        {
+            return;
+        }
+
         std::string saveImageDir;
         command->GetDataValuePair(
             "saveImageDirectory" )->GetData( saveImageDir );
 
-        cameraObject->WriteImageFile( saveImageDir );
+        activeCameraObject->WriteImageFile( saveImageDir );
 
         break;
     }
@@ -478,28 +486,52 @@ void CameraPlacementEventHandler::Execute(
     }
     case CAMERA_GEOMETRY_ON_OFF:
     {
+        scenegraph::camera::CameraObject* const activeCameraObject =
+            cameraManager.GetActiveCameraObject();
+
+        if( !activeCameraObject )
+        {
+            return;
+        }
+
         unsigned int selection = 0;
         command->GetDataValuePair(
             "cameraGeometryOnOff" )->GetData( selection );
 
         bool show = ( selection != 0 );
-        cameraObject->ShowCameraGeometry( show );
+        activeCameraObject->ShowCameraGeometry( show );
 
         break;
     }
     case FRUSTUM_GEOMETRY_ON_OFF:
     {
+        scenegraph::camera::CameraObject* const activeCameraObject =
+            cameraManager.GetActiveCameraObject();
+
+        if( !activeCameraObject )
+        {
+            return;
+        }
+
         unsigned int selection = 0;
         command->GetDataValuePair(
             "frustumGeometryOnOff" )->GetData( selection );
 
         bool show = ( selection != 0 );
-        cameraObject->ShowFrustumGeometry( show );
+        activeCameraObject->ShowFrustumGeometry( show );
 
         break;
     }
     case PROJECTION_UPDATE:
     {
+        scenegraph::camera::CameraObject* const activeCameraObject =
+            cameraManager.GetActiveCameraObject();
+
+        if( !activeCameraObject )
+        {
+            return;
+        }
+
         double projectionData[ 4 ] = { 0, 0, 0, 0 };
         command->GetDataValuePair(
             "projectionFieldOfView" )->GetData( projectionData[ 0 ] );
@@ -510,11 +542,11 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair(
             "projectionFarPlane" )->GetData( projectionData[ 3 ] );
 
-        cameraObject->GetCamera().setProjectionMatrixAsPerspective(
+        activeCameraObject->GetCamera().setProjectionMatrixAsPerspective(
             projectionData[ 0 ], projectionData[ 1 ],
             projectionData[ 2 ], projectionData[ 3 ] );
 
-        cameraObject->Update();
+        activeCameraObject->Update();
 
         break;
     }

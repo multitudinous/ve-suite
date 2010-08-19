@@ -118,7 +118,9 @@ public:
         CameraObject* origChild, CameraObject* newChild );
 
     ///
-    void SetActiveCameraObject( CameraObject* cameraObject );
+    void SetActiveCameraObject(
+        CameraObject* cameraObject,
+        const bool& sendDataToConductor = false );
 
     ///
     void SetCameraViewQuadResolution( unsigned int const& scale );
@@ -137,6 +139,9 @@ private:
     ///Create the quad to be used by the rtt cameras that this class manages
     ///\return The geode the holds the drawable with the rtt quad
     osg::Geode* CreateMasterCameraQuad();
+
+    ///
+    void UpdateConductorData();
 
     ///Is the camera manager turned on
     bool m_enabled;
