@@ -89,6 +89,8 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
         TOGGLE_HIGHLIGHT_TOOL;
     mCommandNameToInt[ "SELECT_MARKER_OBJECT" ] =
         SELECT_MARKER_OBJECT;
+    mCommandNameToInt[ "CHANGE_MARKER_OBJECT_NAME" ] =
+        CHANGE_MARKER_OBJECT_NAME;
     mCommandNameToInt[ "DELETE_MARKER_OBJECT" ] =
         DELETE_MARKER_OBJECT;
     mCommandNameToInt[ "REMOVE_ALL_MARKER_OBJECTS" ] =
@@ -352,6 +354,31 @@ void CameraPlacementEventHandler::Execute(
     }
     case SELECT_MARKER_OBJECT:
     {
+        unsigned int selection;
+        command->GetDataValuePair( "selectMarkerObject" )->GetData( selection );
+
+        scenegraph::highlight::CircleHighlight* newCircleHighlight =
+            highlightManager.ConvertNodeToCircleHighlight(
+                highlightManager.getChild( selection ) );
+
+        highlightManager.SetActiveCircleHighlight( newCircleHighlight );
+
+        break;
+    }
+    case CHANGE_MARKER_OBJECT_NAME:
+    {
+        scenegraph::highlight::CircleHighlight* const activeCircleHighlight =
+            highlightManager.GetActiveCircleHighlight();
+
+        if( !activeCircleHighlight )
+        {
+            return;
+        }
+
+        std::string name;
+        command->GetDataValuePair( "changeMarkerObjectName" )->GetData( name );
+        activeCircleHighlight->setName( name );
+
         break;
     }
     case REMOVE_ALL_MARKER_OBJECTS:

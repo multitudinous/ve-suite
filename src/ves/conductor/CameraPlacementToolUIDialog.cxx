@@ -1271,24 +1271,111 @@ void CameraPlacementToolUIDialog::OnToggleHighlightToolButton(
 void CameraPlacementToolUIDialog::OnPrevMarkerButton(
     wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
+    unsigned int count( m_markerComboBox->GetCount() );
+    if( count < 1 )
+    {
+        return;
+    }
 
+    m_currentMarkerSelection = m_markerComboBox->GetSelection();
+    if( m_currentMarkerSelection == -1 || m_currentMarkerSelection == 0 )
+    {
+        m_currentMarkerSelection = count - 1;
+    }
+    else
+    {
+        --m_currentMarkerSelection;
+    }
+
+    m_markerComboBox->SetSelection( m_currentMarkerSelection );
+
+    mCommandName = "SELECT_MARKER_OBJECT";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData(
+        "selectMarkerObject",
+        static_cast< unsigned int >( m_currentMarkerSelection ) );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnMarkerComboBox( wxCommandEvent& WXUNUSED( event ) )
+void CameraPlacementToolUIDialog::OnMarkerComboBox( wxCommandEvent& event )
 {
+    m_currentMarkerSelection = event.GetSelection();
 
+    mCommandName = "SELECT_MARKER_OBJECT";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData(
+        "selectMarkerObject",
+        static_cast< unsigned int >( m_currentMarkerSelection ) );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnMarkerComboBoxTextEnter(
-    wxCommandEvent& WXUNUSED( event ) )
+    wxCommandEvent& event )
 {
+    if( m_currentMarkerSelection == -1 )
+    {
+        m_markerComboBox->SetValue( wxT( "Select a Marker" ) );
 
+        return;
+    }
+
+    wxString markerName( event.GetString() );
+    m_markerComboBox->SetString( m_currentMarkerSelection, markerName );
+
+    mCommandName = "CHANGE_MARKER_OBJECT_NAME";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData( "changeMarkerObjectName", ConvertUnicode( markerName.c_str() ) );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnNextMarkerButton(
     wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
 {
+    unsigned int count( m_markerComboBox->GetCount() );
+    if( count < 1 )
+    {
+        return;
+    }
 
+    m_currentMarkerSelection = m_markerComboBox->GetSelection();
+    if( m_currentMarkerSelection == -1 ||
+        m_currentMarkerSelection == count - 1 )
+    {
+        m_currentMarkerSelection = 0;
+    }
+    else
+    {
+        ++m_currentMarkerSelection;
+    }
+
+    m_markerComboBox->SetSelection( m_currentMarkerSelection );
+
+    mCommandName = "SELECT_MARKER_OBJECT";
+
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData(
+        "selectMarkerObject",
+        static_cast< unsigned int >( m_currentMarkerSelection ) );
+    mInstructions.push_back( dvp );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnDeleteMarkerButton(

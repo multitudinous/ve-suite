@@ -197,6 +197,8 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "SELECT_MARKER_OBJECT" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "CHANGE_MARKER_OBJECT_NAME" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "DELETE_MARKER_OBJECT" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "REMOVE_ALL_MARKER_OBJECTS" ] =
