@@ -98,7 +98,7 @@ BEGIN_EVENT_TABLE( CameraPlacementToolUIDialog, wxDialog )
     EVT_DIRPICKER_CHANGED(
         CPT_IMAGE_DIR_PICKER_CTRL,
         CameraPlacementToolUIDialog::OnImageDirPickerCtrl )
-    EVT_BUTTON(
+    EVT_TOGGLEBUTTON(
         CPT_TOGGLE_HIGHLIGHT_TOOL_BUTTON,
         CameraPlacementToolUIDialog::OnToggleHighlightToolButton )
     EVT_BUTTON(
@@ -1085,9 +1085,8 @@ void CameraPlacementToolUIDialog::OnCameraComboBoxTextEnter(
         return;
     }
 
-    m_cameraComboBox->SetString( m_currentCameraSelection, event.GetString() );
-
-    wxString cameraName( m_cameraComboBox->GetStringSelection() );
+    wxString cameraName( event.GetString() );
+    m_cameraComboBox->SetString( m_currentCameraSelection, cameraName );
 
     mCommandName = "CHANGE_CAMERA_OBJECT_NAME";
 
@@ -1886,6 +1885,12 @@ void CameraPlacementToolUIDialog::OnTimer( wxTimerEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::UpdateFromXplorerData()
 {
+    UpdateCameraData();
+    UpdateMarkerData();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::UpdateCameraData()
+{
     const open::xml::CommandPtr command =
         mServiceList->GetGUIUpdateCommands( "UPDATE_ACTIVE_CAMERA_OBJECT" );
 
@@ -1910,5 +1915,35 @@ void CameraPlacementToolUIDialog::UpdateFromXplorerData()
     }
 
     m_cameraComboBox->SetSelection( m_currentCameraSelection );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::UpdateMarkerData()
+{
+    const open::xml::CommandPtr command =
+        mServiceList->GetGUIUpdateCommands( "UPDATE_NEW_MARKER_OBJECT" );
+
+    //Hasn't updated yet
+    if( command->GetCommandName() == "NULL" )
+    {
+        return;
+    }
+
+    unsigned int position;
+    const open::xml::DataValuePairPtr dvpI =
+        command->GetDataValuePair( "MarkerPosition" );
+    dvpI->GetData( position );
+
+    std::string name;
+    const open::xml::DataValuePairPtr dvpII =
+        command->GetDataValuePair( "MarkerName" );
+    dvpII->GetData( name );
+
+    wxString markerName(
+        wxT( "Marker" ) +
+        wxString::Format( wxT( "%i" ), m_markerNameNum ) );
+    m_currentMarkerSelection = m_markerComboBox->Append( markerName );
+    m_markerComboBox->SetStringSelection( markerName );
+
+    ++m_markerNameNum;
 }
 ////////////////////////////////////////////////////////////////////////////////

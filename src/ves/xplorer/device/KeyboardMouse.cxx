@@ -65,6 +65,8 @@
 
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
+#include <ves/xplorer/scenegraph/highlight/CircleHighlight.h>
+
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 #ifdef QT_ON
@@ -1042,24 +1044,36 @@ void KeyboardMouse::OnMouseRelease( gadget::InputArea& inputArea )
                 break;
             }
 
-            osgUtil::LineSegmentIntersector::Intersections& intersections =
-                scenegraph::TestForIntersections( 
-                *mLineSegmentIntersector.get(), 
-                *m_sceneManager.GetModelRoot() );
-
-            //If we found a low level node
-            /*if( !intersections.empty() )
+            scenegraph::highlight::HighlightManager& highlightManager =
+                m_sceneManager.GetHighlightManager();
+            if( highlightManager.IsToggled() )
             {
-                osg::NodePath nodePath = intersections.begin()->nodePath;
-                osg::Node* node = nodePath[nodePath.size()-1];
-                osg::Vec3 eyePoint;
-                osg::ref_ptr<osg::Node> highlightGraph =
-                    scenegraph::CreateCircleHighlight( 
-                    eyePoint, nodePath, *node, "Label A" );
-                DeviceHandler::instance()->GetActiveDCS()->
-                    addChild( highlightGraph.get() );
-                break;
-            }*/
+                osgUtil::LineSegmentIntersector::Intersections& intersections =
+                    scenegraph::TestForIntersections(
+                    *mLineSegmentIntersector.get(),
+                    *m_sceneManager.GetModelRoot() );
+
+                //If we found a low level node
+                if( !intersections.empty() )
+                {
+                    osg::NodePath nodePath = intersections.begin()->nodePath;
+                    nodePath.pop_back();
+                    osg::Node* node = nodePath[ nodePath.size() - 1 ];
+                    if( node )
+                    {
+                        osg::Vec3 eyePoint;
+                        osg::ref_ptr< scenegraph::highlight::CircleHighlight >
+                            circleHighlight =
+                                new scenegraph::highlight::CircleHighlight();
+                            circleHighlight->addChild(
+                                scenegraph::CreateCircleHighlight(
+                                    eyePoint, nodePath, *node, "Label A" ) );
+                        highlightManager.addChild( circleHighlight.get() );
+
+                        break;
+                    }
+                }
+            }
         }
 
         if( m_manipulatorManager.IsEnabled() )

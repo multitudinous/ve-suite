@@ -75,7 +75,7 @@ public:
     META_Node( ves::xplorer::scenegraph::highlight, HighlightManager );
 
     ///Override the addChild function to only accept Highlights
-    virtual bool addChild( std::string const& name );
+    virtual bool addChild( CircleHighlight* child );
 
     ///
     CircleHighlight* const ConvertNodeToCircleHighlight(
@@ -94,6 +94,9 @@ public:
     const bool IsEnabled() const;
 
     ///
+    bool const& IsToggled() const;
+
+    ///
     virtual void removeChildren();
 
     ///Override the replaceChild function to only accept Highlights
@@ -106,13 +109,22 @@ public:
     ///Override the setChild function to only accept Highlights
     virtual bool setChild( unsigned int i, CircleHighlight* node );
 
+    ///
+    void Toggle( bool const& toggle = true );
+
 protected:
     ///Destructor
     virtual ~HighlightManager();
 
 private:
+    ///
+    void UpdateConductorData();
+
     ///Is the highlight manager turned on
     bool m_enabled;
+
+    ///
+    bool m_toggled;
 
     ///The active highlight
     CircleHighlight* m_activeCircleHighlight;

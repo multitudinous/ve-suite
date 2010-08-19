@@ -32,6 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/communication/CommunicationHandler.h>
+
 #include <ves/xplorer/scenegraph/highlight/HighlightManager.h>
 #include <ves/xplorer/scenegraph/highlight/CircleHighlight.h>
 
@@ -41,6 +43,16 @@
 //#include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 
 #include <ves/xplorer/Debug.h>
+
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADPart.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/Transform.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -59,6 +71,7 @@ HighlightManager::HighlightManager()
     :
     osg::Group(),
     m_enabled( false ),
+    m_toggled( false ),
     m_activeCircleHighlight( NULL )
 {
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
@@ -91,19 +104,16 @@ HighlightManager::~HighlightManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool HighlightManager::addChild( std::string const& name )
+bool HighlightManager::addChild( CircleHighlight* child )
 {
-    osg::ref_ptr< CircleHighlight > circleHighlight = new CircleHighlight();
-    /*
-    DCS* worldDCS = SceneManager::instance()->GetWorldDCS();
-    osg::ref_ptr< CircleHighlight > circleHighlight = new CircleHighlight();
-    circleHighlight->setName( name );
-    DCS& dcs = circleHighlight->GetDCS();
-    gmtl::Matrix44d tempMat( worldDCS->GetMat() );
-    dcs.SetMat( gmtl::invert( tempMat ) );
-    */
+    SetActiveCircleHighlight( child );
 
-    return osg::Group::addChild( circleHighlight.get() );
+    if( child )
+    {
+        UpdateConductorData();
+    }
+
+    return osg::Group::addChild( child );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CircleHighlight* const HighlightManager::ConvertNodeToCircleHighlight(
@@ -142,6 +152,11 @@ const bool HighlightManager::IsEnabled() const
     return m_enabled;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool const& HighlightManager::IsToggled() const
+{
+    return m_toggled;
+}
+////////////////////////////////////////////////////////////////////////////////
 void HighlightManager::removeChildren()
 {
     //SetActiveCircleHighlight( NULL );
@@ -158,36 +173,50 @@ bool HighlightManager::replaceChild(
 void HighlightManager::SetActiveCircleHighlight(
     CircleHighlight* circleHighlight )
 {
-    /*
-    if( cameraObject == m_activeCircleHighlight )
+    if( circleHighlight == m_activeCircleHighlight )
     {
         return;
     }
 
-    //Turn off rendering for previously active camera
-    if( m_activeCircleHighlight )
+    if( circleHighlight )
     {
-        m_activeCircleHighlight->EnableCamera( false );
-    }
-
-    if( cameraObject )
-    {
-        cameraObject->SetRenderQuadTexture( *(m_rttQuad.get()) );
-        cameraObject->EnableCamera();
-        m_rttQuadTransform->setNodeMask( 1 );
+        ;
     }
     else
     {
-        m_rttQuadTransform->setNodeMask( 0 );
+        ;
     }
 
-    //Set the active camera
-    m_activeCircleHighlight = cameraObject;
-    */
+    //Set the active highlight
+    m_activeCircleHighlight = circleHighlight;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool HighlightManager::setChild( unsigned int i, CircleHighlight* node )
 {
     return osg::Group::setChild( i, node );
+}
+////////////////////////////////////////////////////////////////////////////////
+void HighlightManager::Toggle( bool const& toggle )
+{
+    m_toggled = toggle;
+}
+////////////////////////////////////////////////////////////////////////////////
+void HighlightManager::UpdateConductorData()
+{
+    unsigned int position = getChildIndex( m_activeCircleHighlight );
+    std::string name = m_activeCircleHighlight->getName();
+
+    open::xml::CommandPtr command( new open::xml::Command() );
+    command->SetCommandName( "UPDATE_NEW_MARKER_OBJECT" );
+
+    open::xml::DataValuePairPtr dvpI( new open::xml::DataValuePair() );
+    dvpI->SetData( "MarkerPosition", position );
+    command->AddDataValuePair( dvpI );
+
+    open::xml::DataValuePairPtr dvpII( new open::xml::DataValuePair() );
+    dvpII->SetData( "MarkerName", name );
+    command->AddDataValuePair( dvpII );
+
+    communication::CommunicationHandler::instance()->SetXMLCommand( command );
 }
 ////////////////////////////////////////////////////////////////////////////////

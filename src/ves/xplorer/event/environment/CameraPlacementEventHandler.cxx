@@ -73,6 +73,8 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
         ADD_CAMERA_OBJECT;
     mCommandNameToInt[ "SELECT_CAMERA_OBJECT" ] =
         SELECT_CAMERA_OBJECT;
+    mCommandNameToInt[ "CHANGE_CAMERA_OBJECT_NAME" ] =
+        CHANGE_CAMERA_OBJECT_NAME;
     mCommandNameToInt[ "DELETE_CAMERA_OBJECT" ] =
         DELETE_CAMERA_OBJECT;
     mCommandNameToInt[ "REMOVE_ALL_CAMERA_OBJECTS" ] =
@@ -234,22 +236,46 @@ void CameraPlacementEventHandler::Execute(
             *(NavigationAnimationEngine::instance());
         nae.SetDCS( sceneManager.GetWorldDCS() );
 
-        //
+        osg::Matrixd tempMatrix( selectedMatrix.mData );
+        tempMatrix =
+            osg::Matrixd::inverse( tempMatrix ) *
+            newCameraObject->GetInitialViewMatrix();
+
+        /*
+        osg::Camera& camera = newCameraObject->GetCamera();
+        camera.setViewMatrix( tempMatrix );
         osg::Vec3d eye, up, ctr;
         osg::Matrixd viewMatrix( selectedMatrix.mData );
         viewMatrix.getLookAt( eye, ctr, up );
         osg::Vec3d viewVector = ctr - eye;
         viewVector.normalize();
         viewVector *= 10.0;
+        viewMatrix.setTrans( viewMatrix.getTrans() + viewVector );
+        */
 
         //Hand our created end points off to the animation engine
         selectedMatrix = gmtl::invert( selectedMatrix );
         gmtl::Vec3d navToPoint =
             gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
-        navToPoint += gmtl::Vec3d( viewVector.x(), -viewVector.z(), viewVector.y() );
         gmtl::Quatd rotationPoint =
             gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
         nae.SetAnimationEndPoints( navToPoint, rotationPoint );
+
+        break;
+    }
+    case CHANGE_CAMERA_OBJECT_NAME:
+    {
+        scenegraph::camera::CameraObject* const activeCameraObject =
+            cameraManager.GetActiveCameraObject();
+
+        if( !activeCameraObject )
+        {
+            return;
+        }
+
+        std::string name;
+        command->GetDataValuePair( "changeCameraObjectName" )->GetData( name );
+        activeCameraObject->setName( name );
 
         break;
     }
@@ -315,82 +341,32 @@ void CameraPlacementEventHandler::Execute(
     }
     case TOGGLE_HIGHLIGHT_TOOL:
     {
-        /*
-        std::string name;
-        command->GetDataValuePair( "addCameraObject" )->GetData( name );
+        unsigned int value;
+        command->GetDataValuePair( "toggleHighlightTool" )->GetData( value );
 
-        cameraManager.addChild( name );
-        */
+        bool toggle = static_cast< bool >( value );
 
-        //break;
+        highlightManager.Toggle( toggle );
+
+        break;
     }
     case SELECT_MARKER_OBJECT:
     {
-        /*
-        unsigned int selection;
-        command->GetDataValuePair(
-            "selectCameraObject" )->GetData( selection );
-
-        deviceHandler.UnselectObjects();
-
-        scenegraph::camera::CameraObject* cameraObject =
-            cameraManager.ConvertNodeToCameraObject(
-                cameraManager.getChild( selection ) );
-
-        cameraManager.SetActiveCameraObject( cameraObject );
-
-        //Right now we are saying you must have a DCS
-        scenegraph::DCS& selectedDCS = cameraObject->GetDCS();
-        gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
-
-        //Set the connection between the scene manipulator and the selected dcs
-        sceneManipulator->Connect( &selectedDCS );
-
-        //If dcs is from a camera object, we want to rotate about local zero point
-        osg::Vec3d center( 0.0, 0.0, 0.0 );
-        center = center * osg::Matrixd( selectedMatrix.mData );
-        sceneManipulator->SetPosition( center );
-
-        //We need to transform center point into camera space
-        //In the future the center point will be in world coordinates
-        center = center * osg::Matrixd( sceneManager.GetWorldDCS()->GetMat().mData );
-        gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
-        deviceHandler.SetCenterPoint( &tempCenter );
-
-        //Set the selected DCS
-        deviceHandler.SetSelectedDCS( &selectedDCS );
-
-        //Need to do this for multi-pass techniques
-        if( sceneManager.IsRTTOn() )
-        {
-            selectedDCS.SetTechnique( "Glow" );
-        }
-        else
-        {
-            selectedDCS.SetTechnique( "Select" );
-        }
-
-        //Hand the node we are interested in off to the animation engine
-        NavigationAnimationEngine& nae =
-            *(NavigationAnimationEngine::instance());
-        nae.SetDCS( sceneManager.GetWorldDCS() );
-
-        //Hand our created end points off to the animation engine
-        selectedMatrix = gmtl::invert( selectedMatrix );
-        gmtl::Vec3d navToPoint =
-            gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
-        gmtl::Quatd rotationPoint =
-            gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
-        nae.SetAnimationEndPoints( navToPoint, rotationPoint );
-        */
-
         break;
     }
     case REMOVE_ALL_MARKER_OBJECTS:
     {
-        //cameraManager.removeChildren();
+        scenegraph::highlight::CircleHighlight* const activeCircleHighlight =
+            highlightManager.GetActiveCircleHighlight();
 
-        //break;
+        if( activeCircleHighlight )
+        {
+            highlightManager.SetActiveCircleHighlight( NULL );
+        }
+
+        highlightManager.removeChildren();
+
+        break;
     }
     case DELETE_MARKER_OBJECT:
     {

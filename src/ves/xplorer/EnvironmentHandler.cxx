@@ -183,6 +183,8 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "SELECT_CAMERA_OBJECT" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "CHANGE_CAMERA_OBJECT_NAME" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "DELETE_CAMERA_OBJECT" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "REMOVE_ALL_CAMERA_OBJECTS" ] =

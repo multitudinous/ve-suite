@@ -87,91 +87,96 @@ osg::Node* FindVESObject( osg::NodePath& nodePath )
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Node* CreateCircleHighlight( const osg::Vec3 eyePoint, 
-    const osg::NodePath& nodePath, const osg::Node& pickedNode, 
+osg::Node* CreateCircleHighlight(
+    const osg::Vec3 eyePoint,
+    const osg::NodePath& nodePath,
+    const osg::Node& pickedNode,
     const std::string& labelText )
 {
     const std::string textAnnotation( labelText );
-    
-    // determine Subdivision and Radius settings for current viewpoint (stub for now)
+
+    //Determine Subdivision and Radius settings for current viewpoint (stub for now)
     osg::BoundingSphere sphere( pickedNode.getBound() );
     const double radius( sphere.radius() );
     //osg::Vec3 dVec( sphere.center() - eyePoint );
     //const double distance( dVec.length() );
-    
+
     // Subdivision segments is inversely proportional to distance/radius.
     // If distance/radiue if halved, segments is doubled, and vice versa.
     // Basis: subdivide circle with 60 segments at a distance/radius of 10 units.
     const int subdivisions( 30 );//(int)( 10.f / ( distance / radius ) * 60.f ) );
-    osg::notify( osg::DEBUG_FP ) << "  Using subdiv " << subdivisions << std::endl;
-    
-    // Determine text pos and line segment endpoints.
-    osg::Vec3 textDirection( 1., 1., 0. );
+    osg::notify( osg::DEBUG_FP ) << "  Using subdiv "
+                                 << subdivisions << std::endl;
+
+    //Determine text pos and line segment endpoints
+    osg::Vec3 textDirection( 1.0, 1.0, 0.0 );
     textDirection.normalize();
     osg::Vec3 lineEnd( textDirection * radius );
-    osg::Vec3 textPos( textDirection * radius * 1.4f );
-    
-    // Structure:
-    //   AbsoluteModelTransform->AutoTransform->CircleGeode->Circle (Geometry)
-    //                                                   \-->Line segment (Geometry)
-    //                                                   \-->Label (osgText::Text)
+    osg::Vec3 textPos( textDirection * radius * 1.4 );
+
+    //Structure:
+    //AbsoluteModelTransform->AutoTransform->CircleGeode->Circle (Geometry)
+    //                                 \-->Line segment (Geometry)
+    //                                          \-->Label (osgText::Text)
     osg::ref_ptr< osg::Geode > circlegeode;
     osg::ref_ptr< AutoTransform > circleat;
     osg::ref_ptr< osgwTools::AbsoluteModelTransform > amt;
-    
-    // determine position of highlight
-    osg::Vec3 position(0., 0., 0.);
-    osg::Matrix matrix = osg::computeLocalToWorld(nodePath);
-    position = nodePath[nodePath.size()-1]->getBound().center();
+
+    //Determine position of highlight
+    osg::Vec3 position( 0.0, 0.0, 0.0 );
+    position = pickedNode.getBound().center();
+    osg::NodePath newNP = nodePath;
+    newNP.pop_back();
+    osg::Matrix matrix = osg::computeLocalToWorld( newNP );
 
     circlegeode = new osg::Geode();
-
-    osg::Geometry* circleGeom( osgwTools::makeWireCircle( radius, subdivisions ) );
+    osg::Geometry* circleGeom(
+        osgwTools::makeWireCircle( radius, subdivisions ) );
     circlegeode->addDrawable( circleGeom );
     circleat = new AutoTransform();
     circleat->addChild( circlegeode.get() );
-    circleat->SetAutoRotateMode( 
+    circleat->SetAutoRotateMode(
         ves::xplorer::scenegraph::AutoTransform::ROTATE_TO_CAMERA );
-    circleat->SetAutoScaleToScreen(false);
-    circleat->SetPosition(position);
+    circleat->SetAutoScaleToScreen( false );
+    circleat->SetPosition( position );
     amt = new osgwTools::AbsoluteModelTransform();
     amt->addChild( circleat.get() );
-    // setup Absolute Model Transform to mimic transforms of nodepath
-    amt->setMatrix(matrix); 
-    
-    // Add a line segment from the circle to the text.
+    //Setup Absolute Model Transform to mimic transforms of nodepath
+    amt->setMatrix( matrix );
+
+    //Add a line segment from the circle to the text.
     {
         osg::Geometry* lineGeom = new osg::Geometry;
         circlegeode->addDrawable( lineGeom );
-        
+
         osg::Vec3Array* verts( new osg::Vec3Array );
         verts->resize( 2 );
         (*verts)[ 0 ] = lineEnd;
         (*verts)[ 1 ] = textPos;
         lineGeom->setVertexArray( verts );
-        
+
         lineGeom->setColorArray( circleGeom->getColorArray() );
         lineGeom->setColorBinding( osg::Geometry::BIND_OVERALL );
-        
+
         lineGeom->addPrimitiveSet( new osg::DrawArrays( GL_LINES, 0, 2 ) );
     }
-    
-    if(!textAnnotation.empty())
+
+    if( !textAnnotation.empty() )
     {
         // Add text annotation
-        osg::ref_ptr<osgText::Text> text = new osgText::Text;
+        osg::ref_ptr< osgText::Text > text = new osgText::Text();
         text->setPosition( textPos );
         text->setFont( "arial.ttf" );
         text->setText( textAnnotation );
-        text->setColor( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        text->setColor( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
         text->setAlignment( osgText::Text::LEFT_BOTTOM );
         text->setAxisAlignment( osgText::Text::XY_PLANE );
-        
-        // Character size goes up as a function of distance.
-        // Basis: Size is 0.1 for a distance of 10.0.
+
+        //Character size goes up as a function of distance.
+        //Basis: Size is 0.1 for a distance of 10.0.
         //float size( 0.01f * distance );
-        float size( 1.0f );
-        osg::notify( osg::DEBUG_FP ) << "    Using char size " 
+        float size( 1.0 );
+        osg::notify( osg::DEBUG_FP ) << "    Using char size "
             << size << std::endl;
         text->setCharacterSize( size );
 
@@ -204,13 +209,17 @@ osg::Node* CreateCircleHighlight( const osg::Vec3 eyePoint,
         stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
 
         circlegeode->addDrawable( text.get() );
-    } // if
+    }
 
-    // TBD application responsibility?
-    // turn off depth testing on our subgraph
-    amt->getOrCreateStateSet()->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
+    //TBD application responsibility?
+    //turn off depth testing on our subgraph
+    amt->getOrCreateStateSet()->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
+    amt->getOrCreateStateSet()->setMode(
+        GL_DEPTH_TEST,
+        osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
     amt->getOrCreateStateSet()->setRenderBinDetails( 1000, "RenderBin" );
-    amt->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
 
     return( amt.release() );
 }

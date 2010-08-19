@@ -51,7 +51,7 @@ CameraObjectCallback::CameraObjectCallback()
     m_dcsMatrix()
 {
     //Make it something other than identity
-    m_dcsMatrix( 0, 0 );
+    m_dcsMatrix( 0, 0 ) = 0.0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraObjectCallback::CameraObjectCallback( const CameraObjectCallback& input )

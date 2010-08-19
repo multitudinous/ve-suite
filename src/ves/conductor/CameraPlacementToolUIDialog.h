@@ -184,6 +184,12 @@ private:
     ///Get data back from xplorer
     void UpdateFromXplorerData();
 
+    ///Get data back from xplorer
+    void UpdateCameraData();
+
+    ///Get data back from xplorer
+    void UpdateMarkerData();
+
     int m_currentCameraSelection;
     unsigned int m_cameraNameNum;
 
