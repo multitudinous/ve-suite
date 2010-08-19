@@ -264,17 +264,17 @@ void CameraObject::Initialize()
     lightModel->setLocalViewer( true );
 
     //Setup the light
-    osg::ref_ptr< osg::StateSet > stateset = m_camera->getOrCreateStateSet();
-    stateset->setAssociatedModes(
-        m_light.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setMode(
-        GL_LIGHTING,
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setAttributeAndModes(
-        lightModel.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    m_camera->addChild( lightSource.get() );
+    //osg::ref_ptr< osg::StateSet > stateset = m_camera->getOrCreateStateSet();
+    //stateset->setAssociatedModes(
+        //m_light.get(),
+        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //stateset->setMode(
+        //GL_LIGHTING,
+        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //stateset->setAttributeAndModes(
+        //lightModel.get(),
+        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //m_camera->addChild( lightSource.get() );
 
     //Add the subgraph to render
     m_camera->addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
