@@ -305,11 +305,19 @@ int main( int argc, char* argv[] )
     catch ( CORBA::SystemException& ex )
     {
         std::cerr << "Caught CORBA::SystemException." << std::endl
-            << ex._info().c_str() << std::endl 
-            << " The nameserver is probably not started yet or " << std::endl
-            << " the computer name and port number passed into " << std::endl
-            << " VE-Xplorer do not match the computer name and " << std::endl
-            << " port number specified in the launcher.      " << std::endl;
+            << ex._info().c_str() << std::endl
+            << " VE-Xplorer is unable to connect to the        " << std::endl
+            << " computer that the nameserver is supposed to   " << std::endl
+            << " be running on. Some potential causes of this  " << std::endl
+            << " problem are: " << std::endl
+            << " - The ip address for the nameserver computer  " << std::endl
+            << "   cannot be resolved properly. The hosts file " << std::endl
+            << "   may not be configured properly.             " << std::endl
+            << " - The nameserver is probably not started yet. " << std::endl
+            << " - The computer name and port number passed    " << std::endl
+            << "   into VE-Xplorer do not match the computer   " << std::endl
+            << "   name and port number specified in the       " << std::endl
+            << "   launcher for the nameserver.                " << std::endl;
     }
     catch( CORBA::Exception& ex )
     {
