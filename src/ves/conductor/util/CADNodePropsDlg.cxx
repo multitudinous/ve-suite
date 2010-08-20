@@ -950,9 +950,6 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
 #else
                              wxOPEN | wxFILE_MUST_EXIST );
 #endif
-
-        wxMessageBox( _( "Couldn't load shader file." ),
-                     shaderDir, wxOK | wxICON_INFORMATION );
                      
         if( dialog.ShowModal() != wxID_OK )
         {
