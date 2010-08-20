@@ -398,7 +398,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "    const float dotVal = max( dot( normal, eyeVec ), 0.0 ); \n"
         "    const vec4 diff = color * dotVal * diffCont; \n"
         "    return( amb + diff ); \n"
-        "} \n" //25
+        "} \n" //36
         " \n"
         "mat3 \n"
         "makeOrientMat( const in vec3 dir ) \n"
@@ -416,7 +416,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "   float l = length( c );\n"
         "   c /= l;\n"    
         " \n"
-        "   const vec3 up = normalize( cross( dir, c ) ); \n"
+        "   vec3 up = normalize( cross( dir, c ) ); \n"
         " \n"
         // Orientation uses the cross product vector as x,
         // the up vector as y, and the direction vector as z.
