@@ -939,7 +939,7 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
         wxString conductorBaseDir;
         ::wxGetEnv( wxString( "CONDUCTOR_BASE_DIR", wxConvUTF8 ), &conductorBaseDir );
         wxString shaderDir = conductorBaseDir + 
-            wxString( "share/vesuite/shaders", wxConvUTF8 );
+            wxString( "/share/vesuite/shaders", wxConvUTF8 );
         wxFileDialog dialog( this,
                              _T( "Add New Attribute" ),
                              shaderDir,
@@ -951,6 +951,9 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
                              wxOPEN | wxFILE_MUST_EXIST );
 #endif
 
+        wxMessageBox( _( "Couldn't load shader file." ),
+                     shaderDir, wxOK | wxICON_INFORMATION );
+                     
         if( dialog.ShowModal() != wxID_OK )
         {
             return;
