@@ -936,9 +936,13 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
     }
     else if( _attributeType->GetValue() == wxString( "Shaders", wxConvUTF8 ) )
     {
+        wxString conductorBaseDir;
+        ::wxGetEnv( wxString( "CONDUCTOR_BASE_DIR", wxConvUTF8 ), &conductorBaseDir );
+        wxString shaderDir = conductorBaseDir + 
+            wxString( "share/vesuite/shaders", wxConvUTF8 );
         wxFileDialog dialog( this,
                              _T( "Add New Attribute" ),
-                             ::wxGetCwd(),
+                             shaderDir,
                              _T( "" ),
                              _T( "VE-Attribute files (*.vea)|*.vea;" ),
 #if wxCHECK_VERSION( 2, 9, 0 )
