@@ -13,7 +13,8 @@ runScripts = ['vesuiteReboot.sh',
               'vesuiteShutdown.sh',
               'clearCluster.sh', 
               'ves.setup.sh',
-              'ves.setup.csh' ]
+              'ves.setup.csh',
+              'framelock']
 launcherBundle.addFiles( runScripts )
 
 iconScripts = ['vesuiteConfig.sh',
