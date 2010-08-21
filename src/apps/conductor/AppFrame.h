@@ -221,7 +221,8 @@ protected:
     void LaunchStreamlinePane( wxCommandEvent& event );
     void LaunchRecordScenes( wxCommandEvent& event );
     void LaunchCPTPane( wxCommandEvent& event );
-    
+    void UnSelectAllXplorer( wxCommandEvent& event );
+
     void DisplaySelection( wxCommandEvent& event );
 
     void ViewSelection( wxCommandEvent& event );

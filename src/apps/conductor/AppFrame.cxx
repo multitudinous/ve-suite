@@ -197,6 +197,7 @@ EVT_MENU( APPFRAME_XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
 EVT_MENU( APPFRAME_XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
 EVT_MENU( APPFRAME_XPLORER_SCENES, AppFrame::LaunchRecordScenes )
 EVT_MENU( APPFRAME_XPLORER_CPT, AppFrame::LaunchCPTPane )
+EVT_MENU( APPFRAME_XPLORER_UNSELECT_ALL, AppFrame::UnSelectAllXplorer )
 EVT_MENU( APPFRAME_XPLORER_COLOR, AppFrame::SetBackgroundColor )
 EVT_MENU( APPFRAME_XPLORER_EPHEMERIS, AppFrame::SetEphemerisData )
 EVT_MENU( APPFRAME_XPLORER_EXIT, AppFrame::OnExitXplorer )
@@ -884,6 +885,7 @@ void AppFrame::CreateMenu()
     xplorerMenu->Append( APPFRAME_XPLORER_SCENES,     _( "Record Scenes" ) );
     xplorerMenu->Append( APPFRAME_XPLORER_COLOR,      _( "Background Color" ) );
     xplorerMenu->Append( APPFRAME_XPLORER_CPT, _( "Camera Placement Pane" ) );
+    xplorerMenu->Append( APPFRAME_XPLORER_UNSELECT_ALL, _( "Un-select All" ) );
 
     xplorerMenu->Append( APPFRAME_XPLORER_EPHEMERIS, _( "Ephemeris Data" ) );
     //xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
@@ -2839,3 +2841,15 @@ void AppFrame::LaunchCPTPane( wxCommandEvent& WXUNUSED( event ) )
     // now show it
     m_cptDialog->Show();
 }
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::UnSelectAllXplorer( wxCommandEvent& WXUNUSED( event ) )
+{
+    DataValuePairPtr dataValuePair( new DataValuePair() );
+    dataValuePair->SetData( std::string( "Xplorer Unselect All" ), "True" );
+    CommandPtr veCommand( new Command() );
+    veCommand->SetCommandName( std::string( "UNSELECT_OBJECTS" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    
+    CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+}
+////////////////////////////////////////////////////////////////////////////////
