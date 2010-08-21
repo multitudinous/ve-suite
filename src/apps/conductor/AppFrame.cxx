@@ -404,7 +404,7 @@ AppFrame::~AppFrame()
     SetToolBar( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string AppFrame::GetDisplayMode()
+const std::string& AppFrame::GetDisplayMode()
 {
     return _displayMode;
 }
@@ -2828,7 +2828,13 @@ void AppFrame::LaunchCPTPane( wxCommandEvent& WXUNUSED( event ) )
         m_cptDialog = 
             new CameraPlacementToolUIDialog( this, wxID_ANY, serviceList );
         m_cptDialog->Connect( wxEVT_DESTROY, 
-                         wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), NULL, this );
+            wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), NULL, this );
+        if( GetDisplayMode() == "Desktop" )
+        {
+            wxRect canvasPosition = _treeView->GetRect();
+            m_cptDialog->SetSize( canvasPosition.x, canvasPosition.y, 
+                wxDefaultCoord, wxDefaultCoord, wxSIZE_USE_EXISTING );
+        }
     }
     // now show it
     m_cptDialog->Show();

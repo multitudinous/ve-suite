@@ -128,7 +128,7 @@ public:
 
     ///Get the active display mode of conductor
     ///\return Returns either:\n "Desktop" or "Tablet"
-    std::string GetDisplayMode();
+    const std::string& GetDisplayMode();
  
     void Log( const char* msg );
 
