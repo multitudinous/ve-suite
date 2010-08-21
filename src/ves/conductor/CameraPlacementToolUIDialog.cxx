@@ -226,7 +226,7 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
     int id, 
     ves::conductor::util::CORBAServiceList* service )
     :
-    UIDialog( parent, id, wxT( "CameraPlacementTool" ) ),
+    UIDialog( parent, id, wxT( "Camera Placement Tool" ) ),
     m_currentCameraSelection( -1 ),
     m_cameraNameNum( 0 ),
     m_currentMarkerSelection( -1 ),
