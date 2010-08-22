@@ -422,6 +422,9 @@ class Launch:
         else:
             exe = "Error"
         c = [exe, "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1"]
+        if self.settings["Debug"]:
+            #TAO Debug info
+            c += ["-ORBDebug", "-ORBDebugLevel", "10", "-ORBVerboseLogging", "2", "-ORBLogFile", "ce_tao_debug.log", "-ORBObjRefStyle", "URL"]
         if windows:
             c[len(c):] = ["-ORBDottedDecimalAddresses", "1"]
         return c
@@ -445,6 +448,9 @@ class Launch:
             desktop = []
         ##Construct the call.
         s = [exe, "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1"]
+        if self.settings["Debug"]:
+            #TAO Debug info
+            s += ["-ORBDebug", "-ORBDebugLevel", "10", "-ORBVerboseLogging", "2", "-ORBLogFile", "conductor_tao_debug.log", "-ORBObjRefStyle", "URL"]
         s[len(s):] = desktop
         s[len(s):] = ves
         if windows:
@@ -467,16 +473,20 @@ class Launch:
         if windows:
             exe += self.windowsSuffix
         ##Construct the call
-        #support for vrj 3.0
         if computerType.lower() == "master":
             s = [exe, "--vrjmaster", "--jconf", "%s" %self.settings["JconfPath"], "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1" ]
+            if self.settings["Debug"]:
+                #TAO Debug info
+                s += ["-ORBDebug", "-ORBDebugLevel", "10", "-ORBVerboseLogging", "2", "-ORBLogFile", "xplorer_master_tao_debug.log", "-ORBObjRefStyle", "URL"]
         elif computerType.lower() == "slave":
             s = [exe, "--vrjslave", "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1" ]
         else:
             # running in desktop mode or have an error in cluster mode
             s = [exe, "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1", "--jconf", "%s" %self.settings["JconfPath"]]
-        ##Comment this out for vrj 3.0 support
-        #s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
+            if self.settings["Debug"]:
+                #TAO Debug info
+                s += ["-ORBDebug", "-ORBDebugLevel", "10", "-ORBVerboseLogging", "2", "-ORBLogFile", "xplorer_tao_debug.log", "-ORBObjRefStyle", "URL"]
+
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
             s += ["-VESCluster"]
             s += [ self.settings["ClusterMaster"].split('.')[0] ]
