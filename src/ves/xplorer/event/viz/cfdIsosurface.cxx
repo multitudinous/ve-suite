@@ -129,15 +129,6 @@ void cfdIsosurface::Update()
     }
     this->append->Update( );
 #else
-    vprDEBUG( vesDBG, 1 )
-        << "cfdIsosurface: this->GetActiveMeshedVolume() = "
-        << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
-
-    vprDEBUG( vesDBG, 1 )
-        << "cfdIsosurface: this->GetActiveMeshedVolume()->GetDataSet()="
-        << this->GetActiveDataSet()->GetDataSet()
-        << std::endl << vprDEBUG_FLUSH;
-
     vtkCellDataToPointData* c2p = vtkCellDataToPointData::New(); 
     c2p->SetInput( GetActiveDataSet()->GetDataSet() );
     c2p->Update();
