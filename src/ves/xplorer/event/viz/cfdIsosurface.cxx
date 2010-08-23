@@ -196,8 +196,8 @@ double cfdIsosurface::convertPercentage( const int percentage )
     double minmax[2];
     this->GetActiveDataSet()->GetUserRange( minmax );
 
-    vprDEBUG( vesDBG, 1 ) << "minmax = " << minmax[0] << "\t" << minmax[1]
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 2 ) << "|\tMinmax = " << minmax[0] << "\t" << minmax[1]
+        << std::endl << vprDEBUG_FLUSH;
 
     double minmaxDiff = minmax[1] - minmax[0];
     double dx = ( minmaxDiff ) / ( double )this->totalId;
@@ -245,8 +245,11 @@ void cfdIsosurface::UpdateCommand()
     cfdObjects::UpdateCommand();
 
     //Extract the specific commands from the overall command
-    ves::open::xml::DataValuePairPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::DataValuePairPtr activeModelDVP = 
+        veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+    ves::open::xml::CommandPtr objectCommand = 
+        boost::dynamic_pointer_cast<ves::open::xml::Command>(
+        activeModelDVP->GetDataXMLObject() );
 
     //Extract the isosurface value
     activeModelDVP = objectCommand->GetDataValuePair( "Iso-Surface Value" );
@@ -263,24 +266,16 @@ void cfdIsosurface::UpdateCommand()
     activeModelDVP = objectCommand->GetDataValuePair( "Maximum Scalar Value" );
     activeModelDVP->GetData( maxValue );
 
-    //if ( _activeModel )
+    DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+    if( !colorByScalar.empty() )
     {
-        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-        if( !colorByScalar.empty() )
+        unsigned int activeTempScalar = dataSet->GetActiveScalar();
+        dataSet->SetActiveScalar( colorByScalar );
+        DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+        if( scalarBar )
         {
-            unsigned int activeTempScalar = dataSet->GetActiveScalar();
-            dataSet->SetActiveScalar( colorByScalar );
-            DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
-            if( scalarBar )
-            {
-                scalarBar->AddScalarBarToGroup();
-            }
-            dataSet->SetActiveScalar( activeTempScalar );
+            scalarBar->AddScalarBarToGroup();
         }
+        dataSet->SetActiveScalar( activeTempScalar );
     }
-
-    vprDEBUG( vesDBG, 1 )
-    << "IN THE UPDATE COMMAND FUNCTION"
-    << this->GetActiveDataSet()->GetDataSet()
-    << std::endl << vprDEBUG_FLUSH;
 }
