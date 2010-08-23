@@ -1101,7 +1101,7 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
 #ifdef PRINT_HEADERS
                     if( elemNum < 10 ) { std::cout << "  " << nodeValue; }
 #endif // PRINT_HEADERS
-                    tempIdList->InsertNextId( nodeValue );
+                    tempIdList->InsertUniqueId( nodeValue );
                 }
 #ifdef PRINT_HEADERS
                 if( elemNum < 10 ) { std::cout << std::endl; }
