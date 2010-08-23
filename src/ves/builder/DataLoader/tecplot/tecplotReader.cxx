@@ -1074,17 +1074,15 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
         }
 #else // VTK_VERSION
         //std::cout << "Warning: VTK version " << VTK_VERSION << " can not handle polyhedron cells in zone " << currentZone << std::endl;
-        for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; elemNum++ ) // element numbers are 1-based
+        // Begin setting up the tempIdList. 
+        vtkIdList* tempIdList = vtkIdList::New();
+        for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; ++elemNum ) // element numbers are 1-based
         {
             LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum ); 	
 #ifdef PRINT_HEADERS
             if( elemNum < 10 ) { std::cout << "For elem " << elemNum << ", numFacesPerElement = " << numFacesPerElement << std::endl; }
 #endif // PRINT_HEADERS
-            
-            // Begin setting up the tempIdList. 
-            vtkIdList* tempIdList = vtkIdList::New();
-            
-            for( LgIndex_t faceOffset = 1; faceOffset < numFacesPerElement+1; faceOffset++ ) // numbers are 1-based
+            for( LgIndex_t faceOffset = 1; faceOffset < numFacesPerElement+1; ++faceOffset ) // numbers are 1-based
             {
                 LgIndex_t faceNumber = TecUtilDataElemGetFace( ElemToFaceMap,  elemNum, faceOffset );
                 
@@ -1094,7 +1092,7 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
                 if( elemNum < 10 ) { std::cout << "   For face " << faceNumber << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; }
 #endif // PRINT_HEADERS
                 
-                for( LgIndex_t node = 1; node < numNodesOnFace+1; node++ ) // numbers are 1-based
+                for( LgIndex_t node = 1; node < numNodesOnFace+1; ++node ) // numbers are 1-based
                 {
                     // node numbers in tecplot are 1-based, 0-based in VTK
                     vtkIdType nodeValue = TecUtilDataFaceMapGetFaceNode( FaceMap, faceNumber, node ) - 1 + this->nodeOffset; 	
@@ -1109,8 +1107,9 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
             }
             
             this->ugrid->InsertNextCell( VTK_CONVEX_POINT_SET, tempIdList );
-            tempIdList->Delete();
+            tempIdList->Reset();
         }
+        tempIdList->Delete();
 #endif // VTK_VERSION
     }
     else
