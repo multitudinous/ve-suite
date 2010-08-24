@@ -421,7 +421,11 @@ class Launch:
             exe = "ves_ce" + self.windowsSuffix
         else:
             exe = "Error"
-        c = [exe, "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1"]
+        taoMachine = os.getenv("TAO_MACHINE", "None")
+        taoPort = os.getenv("TAO_PORT", "None")
+        #add 1 to the port number for the CE so that we know where the ce is being bound
+        taoInt = int(taoPort) + 1
+        c = [exe, "-ORBInitRef", self.ServiceArg(), "-ORBNoServerSideNameLookups", "1", "-ORBListenEndpoints", "iiop://%s:%i" %(taoMachine,taoInt)]
         if self.settings["Debug"]:
             #TAO Debug info
             c += ["-ORBDebug", "-ORBDebugLevel", "10", "-ORBVerboseLogging", "2", "-ORBLogFile", "ce_tao_debug.log", "-ORBObjRefStyle", "URL"]
@@ -502,7 +506,7 @@ class Launch:
             s += []
         else:
             s += []
-        print s
+        #print s
         return s
 
 
