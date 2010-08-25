@@ -85,7 +85,7 @@ Poco::Data::SessionPool* DatabaseManager::GetPool( )
     return mPool;
 }
 
-std::vector< std::string > DatabaseManager::GetStringVector( const std::string& tableName, const std::string& columnName, bool distinct )
+std::vector< std::string > DatabaseManager::GetStringVector( const std::string& tableName, const std::string& columnName, const std::string& searchCriteria, bool distinct )
 {
     std::vector< std::string > returnValue;
 
@@ -98,13 +98,17 @@ std::vector< std::string > DatabaseManager::GetStringVector( const std::string& 
     Poco::Data::Session session( mPool->get( ) );
     Poco::Data::Statement statement( session );
 
-    // Build the following query: "SELECT [DISTINCT] columnName FROM tableName"
+    // Build the following query: "SELECT [DISTINCT] columnName FROM tableName [WHERE searchCriteria]"
     statement << "SELECT ";
     if( distinct )
     {
         statement << "DISTINCT ";
     }
     statement << columnName << " FROM " << tableName;
+    if( !searchCriteria.empty() )
+    {
+        statement << " WHERE " << searchCriteria;
+    }
 
     try
     {

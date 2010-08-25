@@ -87,16 +87,30 @@ public:
 
     /**
      * Returns a vector of strings of the data contained in
-     * column @c columnName in table @c tableName. If the data in the column is
-     * not string data, this method attempts a lexical cast to string. If the cast
-     * fails, an empty vector is returned.
+     * column @c columnName in table @c tableName where search criteria 
+     * @c searchCriteria is satisfied. If the data in the column is
+     * not string data, this method attempts a lexical cast to string. If the 
+     * cast fails, an empty vector is returned.
      * @param tableName The name of the table in the database
      * @param columnName The name of the column containing the desired data
-     * @param distinct If true, no duplicate values will appear in the returned vector.
-     * Defualt value is false.
+     * @param searchCriteria Predicate for an SQL WHERE clause. For example,
+     * if @c searchCriteria is "Foo = 'Bar'" then only results where the contents of
+     * column Foo are equal to the string Bar will be returned. If you want a list of all 
+     * data in @c columnName, set @c searchCriteria to a null string ("").
+     * @c searchCriteria must conform to the grammar of SQL WHERE predicates; in
+     * short, WHERE predicates are of the form @code column_name operator value 
+     * @endcode where @c column_name is the name of the column to look in, 
+     * @c operator is one of: [=,<>,>,<,>=,<=,BETWEEN,LIKE,IN] (<> means not equal),
+     * and @c value is the value to be compared using @c operator. String values
+     * MUST be enclosed in single quotes; numeric values MUST NOT.
+     * @param distinct If true, no duplicate values will appear in the returned 
+     * vector. Defualt value is false.
      * @return Vector of strings
      */
-    std::vector< std::string > GetStringVector( const std::string& tableName, const std::string& columnName, bool distinct = false );
+    std::vector< std::string > GetStringVector( const std::string& tableName, 
+                                                const std::string& columnName, 
+                                                const std::string& searchCriteria = "", 
+                                                bool distinct = false );
 
     /**
      * Checks whether table with @c tableName exists in the current database.
