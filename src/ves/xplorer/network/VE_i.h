@@ -71,6 +71,7 @@ public:
     std::string GetStatusString( void );
     bool GetNetworkFlag( void );
     void GetNetworkFromCE( void );
+    void SetNetworkString( std::string tempString );
 
 protected:
     Body::Executive_var executive_;
@@ -78,7 +79,8 @@ protected:
     std::vector< std::string > statusStringBuffer;
     vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
     vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
-    void SetNetworkString( std::string tempString );
+    // Following moved up into public for xplorer-driven network loading. -RPT
+    //void SetNetworkString( std::string tempString ); 
 
     virtual void UpdateNetwork(
         const char * network

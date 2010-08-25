@@ -37,6 +37,7 @@
 
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
+#include<ves/conductor/qt/NetworkLoader.h>
 
 #include <iostream>
 #include <QtGui/QPaintEvent>
@@ -94,8 +95,10 @@ void MainWindow::on_actionOpen_triggered()
     }
     
     mFileDialog = new QFileDialog( 0 );
+    mFileDialog->setOptions( QFileDialog::DontUseNativeDialog );
     mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
-    mFileDialog->setFileMode( QFileDialog::AnyFile );
+    mFileDialog->setFileMode( QFileDialog::ExistingFile );
+    mFileDialog->setNameFilter(tr("VES Files (*.ves)"));
     QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)), 
                       this, SLOT(onFileSelected(QString)) );
     QObject::connect( mFileDialog, SIGNAL(rejected()), this,
@@ -108,12 +111,14 @@ void MainWindow::on_actionOpen_triggered()
 void MainWindow::onFileSelected( QString fileName )
 {
     std::cout << "File selected: " << fileName.toStdString() << std::endl;
+    ves::conductor::NetworkLoader loader;
+    loader.LoadVesFile( fileName.toStdString() );
+    
     int index = ui->tabWidget->indexOf( mFileDialog );
     ui->tabWidget->removeTab( index );
     if (mFileDialog)
     {
         mFileDialog->close();
-        //delete mFileDialog;
         mFileDialog = 0;
     }
 }
@@ -125,7 +130,6 @@ void MainWindow::onFileCancelled()
     if (mFileDialog)
     {
         mFileDialog->close();
-        //delete mFileDialog;
         mFileDialog = 0;
     }
 }
