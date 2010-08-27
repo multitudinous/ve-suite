@@ -1588,7 +1588,7 @@ void KeyboardMouse::ProcessSelection()
 ////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()
 {
-#if __GADGET_version >= 2001000
+#if __GADGET_version > 2001000
     return mKeyboardMouse->getTypedInputDevice();
 #else
     return mKeyboardMouse->getKeyboardMousePtr();

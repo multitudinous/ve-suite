@@ -178,18 +178,6 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     //Update the wand direction every frame
     UpdateWandLocalDirection();
     UpdateWandGlobalLocation();
-
-    ///Push the FOCUS event if we are using manipulators and a dragger is not
-    ///active
-    if( m_manipulatorManager.IsEnabled() && 
-       !m_manipulatorManager.LeafDraggerIsActive() )
-    {
-        if( m_manipulatorManager.Handle( scenegraph::manipulator::Event::FOCUS,
-            m_beamLineSegment.get() ) )
-        {
-            ;
-        }
-    }
     
     buttonData[ 0 ] = digital[ 0 ]->getData();
     buttonData[ 1 ] = digital[ 1 ]->getData();
@@ -741,6 +729,18 @@ void Wand::UpdateObjectHandler()
     {        
         UpdateSelectionLine( true );
 
+        ///Push the FOCUS event if we are using manipulators and a dragger is not
+        ///active
+        if( m_manipulatorManager.IsEnabled() && 
+            !m_manipulatorManager.LeafDraggerIsActive() )
+        {
+            if( m_manipulatorManager.Handle( scenegraph::manipulator::Event::FOCUS,
+                m_beamLineSegment.get() ) )
+            {
+                ;
+            }
+        }
+
         if( m_manipulatorManager.IsEnabled() && 
            m_manipulatorManager.LeafDraggerIsActive() )
         {
@@ -778,7 +778,9 @@ void Wand::UpdateObjectHandler()
 
         ProcessHit();
     }
-
+    else
+    {
+    }
     /*
     //Now we can move the object if the button
     int buttonData = digital[ 0 ]->getData();
