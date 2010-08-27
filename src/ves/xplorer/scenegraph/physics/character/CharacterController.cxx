@@ -45,6 +45,7 @@
 #include <gmtl/Generate.h>
 
 #include <gadget/Type/Position.h>
+#include <gadget/gadgetParam.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -402,18 +403,26 @@ void CharacterController::Move( btScalar dt )
     if( headTracked )
     {
         //std::cout << " Move character with head position" << std::endl;
-        //const gadget::Position::SampleBuffer_t::buffer_t headSampleBuffer =
-        //    head->getPositionPtr()->getPositionDataBuffer();
         //we have access to 5000 previous samples if needed
+#if __GADGET_version >= 2001000
+        const buffer_type& headSampleBuffer =
+            head->getTypedInputDevice()->getPositionDataBuffer();
+#else
         const buffer_type& headSampleBuffer =
             head->getPositionPtr()->getPositionDataBuffer();
+#endif
         iter_type cur_frame_iter = headSampleBuffer.rbegin();
         iter_type prev_frame_iter = cur_frame_iter + 1;
         const unsigned int dev_num(head->getUnit());
         m_vjHeadMat2 = m_vjHeadMat1;
+#if __GADGET_version >= 2001000
+        m_vjHeadMat1 =
+            gmtl::convertTo<double>((*cur_frame_iter)[dev_num].getValue());
+#else
         m_vjHeadMat1 =
             gmtl::convertTo<double>((*cur_frame_iter)[dev_num].getPosition());
-
+#endif
+        
         //Every time swap buffers is called the main VR Juggler buffer
         //is cleared and thus all of the history data is lost. We will have to 
         //keep all of the history ourselves with the buffer_type datatype.
