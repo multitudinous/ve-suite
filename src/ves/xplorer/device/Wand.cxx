@@ -102,8 +102,7 @@ Wand::Wand()
     cursorLen( 1.0 ),
     translationStepSize( 0.75 ),
     rotationStepSize( 1.0 ),
-    m_buttonPushed( false ),
-    m_manipulatorSelected( false )
+    m_buttonPushed( false )
 {
     wand.init( "VJWand" );
     head.init( "VJHead" );
@@ -180,6 +179,18 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     UpdateWandLocalDirection();
     UpdateWandGlobalLocation();
 
+    ///Push the FOCUS event if we are using manipulators and a dragger is not
+    ///active
+    if( m_manipulatorManager.IsEnabled() && 
+       !m_manipulatorManager.LeafDraggerIsActive() )
+    {
+        if( m_manipulatorManager.Handle( scenegraph::manipulator::Event::FOCUS,
+            m_beamLineSegment.get() ) )
+        {
+            ;
+        }
+    }
+    
     buttonData[ 0 ] = digital[ 0 ]->getData();
     buttonData[ 1 ] = digital[ 1 ]->getData();
     buttonData[ 2 ] = digital[ 2 ]->getData();
@@ -730,22 +741,13 @@ void Wand::UpdateObjectHandler()
     {        
         UpdateSelectionLine( true );
 
-        if( m_manipulatorManager.IsEnabled() && m_manipulatorSelected )
+        if( m_manipulatorManager.IsEnabled() && 
+           m_manipulatorManager.LeafDraggerIsActive() )
         {
             if( m_manipulatorManager.Handle(
                 scenegraph::manipulator::Event::DRAG ) )
             {
                 return;
-            }
-        }
-        
-        if( m_manipulatorManager.IsEnabled() && !m_manipulatorSelected )
-        {
-            if( m_manipulatorManager.Handle(
-                scenegraph::manipulator::Event::FOCUS,
-                m_beamLineSegment.get() ) )
-            {
-                ;
             }
         }
     }
@@ -754,12 +756,12 @@ void Wand::UpdateObjectHandler()
     {
         UpdateSelectionLine( false );
 
-        if( m_manipulatorManager.IsEnabled() && m_manipulatorSelected )
+        if( m_manipulatorManager.IsEnabled() && 
+           m_manipulatorManager.LeafDraggerIsActive() )
         {
-            if( m_manipulatorManager.Handle(
+            if( m_manipulatorManager.Handle( 
                 scenegraph::manipulator::Event::RELEASE ) )
             {
-                m_manipulatorSelected = false;
                 return;
             }
         }
@@ -770,7 +772,6 @@ void Wand::UpdateObjectHandler()
                 scenegraph::manipulator::Event::PUSH,
                 m_beamLineSegment.get() ) )
             {
-                m_manipulatorSelected = true;
                 return;
             }
         }

@@ -214,8 +214,6 @@ private:
     osg::Quat m_rotIncrement;
     ///Array to hold work translation
     double m_worldTrans[ 3 ];
-    ///
-    bool m_manipulatorSelected;
 
 #ifdef QT_ON
     typedef boost::signals2::signal<void (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
