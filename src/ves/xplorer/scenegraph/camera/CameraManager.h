@@ -93,6 +93,9 @@ public:
     void Enable( const bool& enable = true );
 
     ///
+    void EnableCPT( const bool& enable = true );
+
+    ///
     CameraObject* const GetActiveCameraObject() const;
 
     ///Get the RTT quad
@@ -109,6 +112,9 @@ public:
 
     ///
     const bool IsEnabled() const;
+
+    ///Returns if the camera placement tool is enabled for CAVE
+    bool const& IsCPTEnabled() const;
 
     ///
     virtual void removeChildren();
@@ -143,8 +149,11 @@ private:
     ///
     void UpdateConductorData();
 
-    ///Is the camera manager turned on
+    ///This controls the state of the node mask
     bool m_enabled;
+
+    ///This controls if the camera placement tool is enabled
+    bool m_cptEnabled;
 
     ///The active rtt view camera
     CameraObject* m_activeCameraObject;

@@ -70,6 +70,7 @@ CameraManager::CameraManager()
     :
     osg::Group(),
     m_enabled( false ),
+    m_cptEnabled( false ),
     m_activeCameraObject( NULL ),
     m_rttQuad( NULL ),
     m_rttQuadTransform( new osg::PositionAttitudeTransform() )
@@ -132,6 +133,11 @@ void CameraManager::Enable( const bool& enable )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CameraManager::EnableCPT( const bool& enable )
+{
+    m_cptEnabled = enable;
+}
+////////////////////////////////////////////////////////////////////////////////
 CameraObject* const CameraManager::GetActiveCameraObject() const
 {
     return m_activeCameraObject;
@@ -190,6 +196,11 @@ bool CameraManager::insertChild( unsigned int index, CameraObject* child )
 const bool CameraManager::IsEnabled() const
 {
     return m_enabled;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool const& CameraManager::IsCPTEnabled() const
+{
+    return m_cptEnabled;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::removeChildren()
