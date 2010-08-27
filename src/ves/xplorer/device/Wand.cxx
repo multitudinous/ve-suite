@@ -51,6 +51,8 @@
 
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
+#include <ves/xplorer/scenegraph/camera/CameraManager.h>
+
 #ifdef QT_ON
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
@@ -253,19 +255,41 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
 
     UpdateObjectHandler();
 
+    ///Check and see if the cpt is enabled so that we can handle
+    ///button events differently
+    ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetCameraManager();
+    bool cptEnabled = cameraManager.IsCPTEnabled();
+
     //Process a selection event from a toggle off event just like in KM
-    //Free rotation
     if( ( buttonData[ 5 ] == gadget::Digital::TOGGLE_ON ) ||
         ( buttonData[ 5 ] == gadget::Digital::ON ) )
     {
-        DeviceHandler::instance()->UnselectObjects();
+        if( cptEnabled )
+        {
+            ;
+        }
+        else
+        {
+            DeviceHandler::instance()->UnselectObjects();
+        }
     }
     //Free rotation
     else if(( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) ||
             ( buttonData[ 1 ] == gadget::Digital::ON ) )
     {
         m_buttonPushed = true;
-        FreeRotateAboutWand();
+        if( cptEnabled && ( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) )
+        {
+            open::xml::DataValuePairPtr dvp( new open::xml::DataValuePair() );
+            unsigned int addFlag = 1;
+            dvp->SetData( "AddCameraObject", addFlag );
+            cameraManager.UpdateConductorData( dvp );
+        }
+        else
+        {
+            FreeRotateAboutWand();
+        }
     }
     //Navigate about z up axis
     else if (( buttonData[ 3 ] == gadget::Digital::TOGGLE_ON ) ||

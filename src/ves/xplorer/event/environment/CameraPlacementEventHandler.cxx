@@ -418,7 +418,7 @@ void CameraPlacementEventHandler::Execute(
 
         bool onOff = ( selection != 0 );
         //mCameraEntity->DisplayDepthOfFieldEffect( onOff );
-
+        cameraManager.EnableCPT( onOff );
         break;
     }
     case PROJECTION_EFFECT_ON_OFF:

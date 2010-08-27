@@ -39,6 +39,8 @@
 
 #include <ves/xplorer/scenegraph/camera/Definitions.h>
 
+#include <ves/open/xml/DataValuePair.h>
+
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Geode>
@@ -137,6 +139,9 @@ public:
     ///
     void WriteAllImageFiles( std::string const& saveImageDir );
 
+    ///Send camera manager data to conductor to enable the gui
+    ///to be in sync with Xplorer
+    void UpdateConductorData( open::xml::DataValuePairPtr inDvp = open::xml::DataValuePairPtr() );
 protected:
     ///Destructor
     virtual ~CameraManager();
@@ -145,9 +150,6 @@ private:
     ///Create the quad to be used by the rtt cameras that this class manages
     ///\return The geode the holds the drawable with the rtt quad
     osg::Geode* CreateMasterCameraQuad();
-
-    ///
-    void UpdateConductorData();
 
     ///This controls the state of the node mask
     bool m_enabled;

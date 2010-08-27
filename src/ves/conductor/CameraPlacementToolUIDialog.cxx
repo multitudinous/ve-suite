@@ -996,7 +996,7 @@ void CameraPlacementToolUIDialog::OnFrustumGeometryOnOffRadioBox(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnAddCameraButton(
-    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     wxString cameraName(
         _("Camera") +
@@ -1025,7 +1025,7 @@ void CameraPlacementToolUIDialog::OnAddCameraButton(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnPrevCameraButton(
-    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int count( m_cameraComboBox->GetCount() );
     if( count < 1 )
@@ -1344,7 +1344,7 @@ void CameraPlacementToolUIDialog::OnMarkerComboBoxTextEnter(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnNextMarkerButton(
-    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int count( m_markerComboBox->GetCount() );
     if( count < 1 )
@@ -1379,7 +1379,7 @@ void CameraPlacementToolUIDialog::OnNextMarkerButton(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnDeleteMarkerButton(
-    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     m_currentMarkerSelection = m_markerComboBox->GetSelection();
     if( m_currentMarkerSelection == -1 )
@@ -1407,7 +1407,7 @@ void CameraPlacementToolUIDialog::OnDeleteMarkerButton(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnRemoveAllMarkersButton(
-    wxCommandEvent& WXUNUSED( wxCommandEvent& event ) )
+    wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int count( m_markerComboBox->GetCount() );
     if( count < 1 )
@@ -1600,7 +1600,7 @@ void CameraPlacementToolUIDialog::OnNearPlaneSpinCtrl(
     UpdateNearPlaneControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnNearPlaneText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnNearPlaneText( wxCommandEvent& WXUNUSED( event ) )
 {
     UpdateNearPlaneControls();
 }
@@ -1643,7 +1643,7 @@ void CameraPlacementToolUIDialog::OnFarPlaneSpinCtrl(
     UpdateFarPlaneControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFarPlaneText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnFarPlaneText( wxCommandEvent& WXUNUSED( event ) )
 {
     UpdateFarPlaneControls();
 }
@@ -1988,20 +1988,30 @@ void CameraPlacementToolUIDialog::UpdateCameraData()
     }
 
     unsigned int value;
-    const open::xml::DataValuePairPtr dvp =
+    open::xml::DataValuePairPtr dvp =
         command->GetDataValuePair( "ActiveCameraObject" );
-    dvp->GetData( value );
-
-    m_currentCameraSelection = value;
-    if( m_currentCameraSelection == m_cameraComboBox->GetStrings().size() )
+    if( dvp )
     {
-        m_currentCameraSelection = -1;
-        m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
+        dvp->GetData( value );
 
-        return;
+        m_currentCameraSelection = value;
+        if( m_currentCameraSelection == m_cameraComboBox->GetStrings().size() )
+        {
+            m_currentCameraSelection = -1;
+            m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
+
+            return;
+        }
+
+        m_cameraComboBox->SetSelection( m_currentCameraSelection );
     }
 
-    m_cameraComboBox->SetSelection( m_currentCameraSelection );
+    dvp = command->GetDataValuePair( "AddCameraObject" );
+    if( dvp )
+    {
+        wxCommandEvent event;
+        OnAddCameraButton( event );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::UpdateMarkerData()
