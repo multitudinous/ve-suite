@@ -629,7 +629,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
     baseEnv.Append(BUILDERS = builders)
     #setup the build dir
-    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
+    baseEnv.VariantDir(buildDir, '.', duplicate = 0)
     lokiBaseVar = 'loki-0.1.7'
     Export('baseEnv buildDir bulletBaseVar lokiBaseVar')
 
