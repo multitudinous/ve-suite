@@ -69,6 +69,7 @@
 #include <osgDB/WriteFile>
 #include <osgDB/ReaderWriter>
 #include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
 
 // --- STL Includes --- //
 #include <iostream>
@@ -472,6 +473,69 @@ void CameraObject::CreateGeometry()
 
     //Add the geometric model for the camera
     m_cameraNode = osgDB::readNodeFile( "osg-data/camera.ive" );
+    {
+        std::string vertexSource =
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
+            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
+            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+        "} \n";
+
+        std::string fragmentSource =
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "const vec3 ambMat  = vec3( 0.368627, 0.368421, 0.368421 ); \n"
+        "const vec3 diffMat = vec3( 0.886275, 0.885003, 0.885003 ); \n"
+        "const vec3 specMat = vec3( 0.490196, 0.488722, 0.488722 ); \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec3 N = normalize( normal ); \n"
+            "vec3 L = normalize( lightPos ); \n"
+            "float NDotL = max( dot( N, L ), 0.0 ); \n"
+
+            "vec3 V = normalize( eyePos.xyz ); \n"
+            "vec3 R = reflect( V, N ); \n"
+            "float RDotL = max( dot( R, L ), 0.0 ); \n"
+
+            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * ambMat; \n"
+            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * diffMat * NDotL; \n"
+            "vec3 totalSpecular = \n"
+                "gl_LightSource[ 0 ].specular.rgb * specMat * pow( RDotL, 15.0 ); \n"
+
+            "gl_FragColor = vec4( totalAmbient + totalDiffuse + totalSpecular, 1.0 ); \n"
+        "} \n";
+
+        osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+        vertexShader->setType( osg::Shader::VERTEX );
+        vertexShader->setShaderSource( vertexSource );
+        vertexShader->setName( "Camera Vertex Shader" );
+
+        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+        fragmentShader->setType( osg::Shader::FRAGMENT );
+        fragmentShader->setShaderSource( fragmentSource );
+        fragmentShader->setName( "Camera Fragment Shader" );
+
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( vertexShader.get() );
+        program->addShader( fragmentShader.get() );
+        program->setName( "Camera Program" );
+
+        osg::ref_ptr< osg::StateSet > stateset =
+            m_cameraNode->getOrCreateStateSet();
+        stateset->setAttributeAndModes(
+            program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
     m_dcs->addChild( m_cameraNode.get() );
 
     //Create the geometric lines for the frustum
@@ -500,17 +564,18 @@ void CameraObject::CreateGeometry()
         osg::PrimitiveSet::LINE_LOOP, 4, idxLoops1 ) );
     m_frustumGeode->addDrawable( m_frustumGeometry.get() );
 
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    //stateset->setRenderBinDetails( 0, "RenderBin" );
-    stateset->setMode(
-        GL_LIGHTING,
-        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-    //stateset->setAttribute(
-        //( mResourceManager->get
-        //< osg::Program, osg::ref_ptr >( "FrustumProgram" ) ).get(),
-        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    m_frustumGeode->setStateSet( stateset.get() );
-
+    {
+        osg::ref_ptr< osg::StateSet > stateset =
+            m_frustumGeode->getOrCreateStateSet();
+        //stateset->setRenderBinDetails( 0, "RenderBin" );
+        stateset->setMode(
+            GL_LIGHTING,
+            osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+        //stateset->setAttribute(
+            //( mResourceManager->get
+            //< osg::Program, osg::ref_ptr >( "FrustumProgram" ) ).get(),
+            //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    }
     m_dcs->addChild( m_frustumGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
