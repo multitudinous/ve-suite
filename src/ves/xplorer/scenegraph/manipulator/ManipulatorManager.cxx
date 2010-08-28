@@ -209,6 +209,8 @@ bool ManipulatorManager::Handle(
     {
         if( !TestForIntersections( lineSegmentIntersector ) )
         {
+            vprDEBUG( vesDBG, 3 ) << "|\tNo manipulator intersections, event = " 
+                << event << std::endl << vprDEBUG_FLUSH;
             return false;
         }
     }
@@ -216,6 +218,8 @@ bool ManipulatorManager::Handle(
     //Make sure the root drager is valid
     if( !m_rootDragger )
     {
+        vprDEBUG( vesDBG, 1 ) << "|\tNo root dragger." 
+            << std::endl << vprDEBUG_FLUSH;
         return false;
     }
 
@@ -237,7 +241,13 @@ bool ManipulatorManager::Handle(
 
         m_leafDragger =
             m_rootDragger->Push( *m_deviceInput, m_nodePath, m_nodePathItr );
+        if( !m_leafDragger )
+        {
+            vprDEBUG( vesDBG, 1 ) << "|\tFailed to activate a dragger." 
+                << std::endl << vprDEBUG_FLUSH;
+        }
         m_leafDraggerIsActive = true;
+        ///What does this logic mean???
         return m_leafDragger && returnTemp;
     }
     case Event::DRAG:

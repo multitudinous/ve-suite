@@ -759,27 +759,32 @@ void Wand::UpdateObjectHandler()
         if( m_manipulatorManager.IsEnabled() && 
            m_manipulatorManager.LeafDraggerIsActive() )
         {
-            if( m_manipulatorManager.Handle( 
-                scenegraph::manipulator::Event::RELEASE ) )
+            bool success = m_manipulatorManager.Handle( 
+                scenegraph::manipulator::Event::RELEASE );
+            if( success )
             {
+                 vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully released a dragger." 
+                    << std::endl << vprDEBUG_FLUSH;
                 return;
             }
         }
 
         if( m_manipulatorManager.IsEnabled() )
         {
-            if( m_manipulatorManager.Handle(
-                scenegraph::manipulator::Event::PUSH,
-                m_beamLineSegment.get() ) )
+            vprDEBUG( vesDBG, 2 ) << "|\tTrying to push a dragger." 
+                << std::endl << vprDEBUG_FLUSH;
+            bool success = m_manipulatorManager.Handle(
+                                        scenegraph::manipulator::Event::PUSH,
+                                        m_beamLineSegment.get() );
+            if( m_manipulatorManager.LeafDraggerIsActive() )
             {
+                vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully pushed a dragger." 
+                    << std::endl << vprDEBUG_FLUSH;
                 return;
             }
         }
 
         ProcessHit();
-    }
-    else
-    {
     }
     /*
     //Now we can move the object if the button
