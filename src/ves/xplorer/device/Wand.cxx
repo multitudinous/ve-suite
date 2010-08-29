@@ -633,7 +633,7 @@ void Wand::ProcessHit()
 void Wand::DrawLine( const osg::Vec3d& start, const osg::Vec3d& end )
 {
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( wand->getData() );
-    const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( 90 ), 1, 0, 0 );
+    const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
     const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
 
     ///Transform from juggler space to world space
