@@ -141,7 +141,8 @@ public:
 
     ///Send camera manager data to conductor to enable the gui
     ///to be in sync with Xplorer
-    void UpdateConductorData( open::xml::DataValuePairPtr inDvp = open::xml::DataValuePairPtr() );
+    void UpdateConductorData( ves::open::xml::DataValuePairPtr inDvp = 
+        ves::open::xml::DataValuePairPtr() );
 protected:
     ///Destructor
     virtual ~CameraManager();

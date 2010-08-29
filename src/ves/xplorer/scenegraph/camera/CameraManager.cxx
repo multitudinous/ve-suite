@@ -386,9 +386,9 @@ osg::Node* CameraManager::GetCameraManagerQuad()
     return m_rttQuadTransform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraManager::UpdateConductorData( open::xml::DataValuePairPtr inDvp )
+void CameraManager::UpdateConductorData( ves::open::xml::DataValuePairPtr inDvp )
 {
-    open::xml::CommandPtr command( new open::xml::Command() );
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
     command->SetCommandName( "UPDATE_ACTIVE_CAMERA_OBJECT" );
 
     if( inDvp )
@@ -398,7 +398,7 @@ void CameraManager::UpdateConductorData( open::xml::DataValuePairPtr inDvp )
     else
     {
         unsigned int position = getChildIndex( m_activeCameraObject );
-        open::xml::DataValuePairPtr dvp( new open::xml::DataValuePair() );
+        open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair() );
         dvp->SetData( "ActiveCameraObject", position );
         command->AddDataValuePair( dvp );
     }
