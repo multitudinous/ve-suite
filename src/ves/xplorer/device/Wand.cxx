@@ -147,6 +147,8 @@ void Wand::Initialize()
         //loc[ i ] + dir[ i ] * cursorLen;
         objLoc[ i ] = cursorLoc[ i ];
     }
+    
+    MakeWandLine();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Wand::~Wand()
@@ -162,10 +164,10 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
 
     //Remove the pointer if present
-    if( beamGeode.valid() )
+    /*if( m_beamGeode.valid() )
     {
-        rootNode->asGroup()->removeChild( beamGeode.get() );
-    }
+        rootNode->asGroup()->removeChild( m_beamGeode.get() );
+    }*/
 
     //If the wand does not exist
     if( wand->isStupefied() )
@@ -494,7 +496,12 @@ void Wand::UpdateSelectionLine( bool drawLine )
     
     if( drawLine )
     {
+        m_wandPAT->setNodeMask( 1 );
         DrawLine( startPoint, endPoint );
+    }
+    else
+    {
+        m_wandPAT->setNodeMask( 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -624,98 +631,19 @@ void Wand::ProcessHit()
 //This function currently deletes the existing beam each time it is called and
 //add a new beam.  This should be replaced such that it is only called once
 //and then a transform is modified for the location.
-void Wand::DrawLine( osg::Vec3d start, osg::Vec3d end )
+void Wand::DrawLine( const osg::Vec3d& start, const osg::Vec3d& end )
 {
-    if( beamGeode.valid() )
-    {
-        rootNode->asGroup()->removeChild( beamGeode.get() );
-    }
+    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( wand->getData() );
+    const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( 90 ), 1, 0, 0 );
+    const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
 
-    beamGeode = new osg::Geode();
-    beamGeode->setName( "Wand Beam Geode" );
-    beamGeometry = new osg::Geometry();
-    beamGeode->addDrawable( beamGeometry.get() );
-    beamGeode->setName( this->laserName );
-
-    rootNode->asGroup()->addChild( beamGeode.get() );
-
-    osg::ref_ptr< osg::Vec3Array > beamVertices = new osg::Vec3Array;
-    beamVertices->push_back(
-        osg::Vec3( start[ 0 ] - 0.1, start[ 1 ], start[ 2 ] ) );
-    beamVertices->push_back(
-        osg::Vec3( start[ 0 ] + 0.1, start[ 1 ], start[ 2 ] ) );
-    beamVertices->push_back(
-        osg::Vec3( end[ 0 ] + 0.1, end[ 1 ], end[ 2 ] ) );
-    beamVertices->push_back(
-        osg::Vec3( end[ 0 ] - 0.1, end[ 1 ], end[ 2] ) );
-    beamVertices->push_back(
-        osg::Vec3( start[ 0 ] - 0.1, start[ 1 ], start[ 2 ] + 0.1 ) );
-    beamVertices->push_back(
-        osg::Vec3( start[ 0 ] + 0.1, start[ 1 ], start[ 2 ] + 0.1 ) );
-    beamVertices->push_back(
-        osg::Vec3( end[ 0 ] + 0.1, end[ 1 ], end[ 2 ] + 0.1 ) );
-    beamVertices->push_back(
-        osg::Vec3( end[ 0 ] - 0.1, end[ 1 ], end[ 2 ] + 0.1 ) );
-
-    beamGeometry->setVertexArray( beamVertices.get() );
-
-    osg::ref_ptr< osg::DrawElementsUInt > beamTop =
-        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
-    beamTop->push_back( 0 );
-    beamTop->push_back( 1 );
-    beamTop->push_back( 2 );
-    beamTop->push_back( 3 );
-    beamGeometry->addPrimitiveSet( beamTop.get() );
-
-    osg::ref_ptr< osg::DrawElementsUInt > beamBottom =
-        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
-    beamBottom->push_back( 4 );
-    beamBottom->push_back( 5 );
-    beamBottom->push_back( 6 );
-    beamBottom->push_back( 7 );
-    beamGeometry->addPrimitiveSet( beamBottom.get() );
-
-    osg::ref_ptr< osg::DrawElementsUInt > beamLeft =
-        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
-    beamLeft->push_back( 0 );
-    beamLeft->push_back( 3 );
-    beamLeft->push_back( 7 );
-    beamLeft->push_back( 4 );
-    beamGeometry->addPrimitiveSet( beamLeft.get() );
-
-    osg::ref_ptr< osg::DrawElementsUInt > beamRight =
-        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
-    beamRight->push_back( 5 );
-    beamRight->push_back( 6 );
-    beamRight->push_back( 2 );
-    beamRight->push_back( 1 );
-    beamGeometry->addPrimitiveSet( beamRight.get() );
-
-    osg::ref_ptr< osg::DrawElementsUInt > beamBack =
-        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
-    beamBack->push_back( 1 );
-    beamBack->push_back( 0 );
-    beamBack->push_back( 4 );
-    beamBack->push_back( 5 );
-    beamGeometry->addPrimitiveSet( beamBack.get() );
-
-    osg::ref_ptr< osg::DrawElementsUInt > beamFront =
-        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
-    beamFront->push_back( 3 );
-    beamFront->push_back( 2 );
-    beamFront->push_back( 6 );
-    beamFront->push_back( 7 );
-    beamGeometry->addPrimitiveSet( beamFront.get() );
-
-    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
-    colors->push_back( osg::Vec4( 1.0f, 0.0f, 1.0f, 1.0f ) );
-
-    osg::ref_ptr< osg::UIntArray > cfdColorIndexArray = new osg::UIntArray();
-    cfdColorIndexArray->push_back( 0 );
-
-    beamGeometry->setColorArray( colors.get() );
-    beamGeometry->setColorIndices( cfdColorIndexArray.get() );
-    beamGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+    ///Transform from juggler space to world space
+    vrjWandMat = 
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetInvertedWorldDCS() * myMat * vrjWandMat;
+    
+    const osg::Matrixd tempOsgMatrix( vrjWandMat.getData() );
+    m_wandPAT->setMatrix( tempOsgMatrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
 //The current implemention uses VJButton0 to select an object then if VJButton3
@@ -737,7 +665,11 @@ void Wand::UpdateObjectHandler()
             if( m_manipulatorManager.Handle( scenegraph::manipulator::Event::FOCUS,
                 m_beamLineSegment.get() ) )
             {
-                ;
+                m_beamGeometry->getOrCreateStateSet()->setRenderBinDetails( 11, std::string( "RenderBin" ) );
+            }
+            else
+            {
+                m_beamGeometry->getOrCreateStateSet()->setRenderBinDetails( 0, std::string( "RenderBin" ) );
             }
         }
 
@@ -1008,5 +940,107 @@ double* Wand::GetPlaneEquationConstantsNormalToWand()
     m_planeConstants[2] =  vjVec[ 1 ];
     m_planeConstants[3] =  4;
     return m_planeConstants;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::MakeWandLine()
+{
+    if( m_beamGeode.valid() )
+    {
+        return;
+    }
+    ///The beam is drawn in y up land because we put a transform above it to
+    ///transform the data coming from the and into z up land therefore the
+    ///drawn data needs to be in the same coordinate space as the wand.
+    osg::Vec3 start( 0.0, 0.0, 0.0 );
+    osg::Vec3 end( 0.0, 0.0, -distance );
+
+    m_beamGeode = new osg::Geode();
+    m_beamGeode->setName( "Wand Beam Geode" );
+    m_beamGeometry = new osg::Geometry();
+    m_beamGeode->addDrawable( m_beamGeometry.get() );
+    //m_beamGeode->setName( this->laserName );
+
+    osg::ref_ptr< osg::Vec3Array > beamVertices = new osg::Vec3Array;
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] - 0.05, start[ 1 ] - 0.05, start[ 2 ]) );
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] + 0.05, start[ 1 ] - 0.05, start[ 2 ]) );
+    beamVertices->push_back(
+        osg::Vec3(   end[ 0 ] + 0.05,   end[ 1 ] - 0.05,   end[ 2 ]) );
+    beamVertices->push_back(
+        osg::Vec3(   end[ 0 ] - 0.05,   end[ 1 ] - 0.05,   end[ 2 ]) );
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] - 0.05, start[ 1 ] + 0.05, start[ 2 ]) );
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] + 0.05, start[ 1 ] + 0.05, start[ 2 ]) );
+    beamVertices->push_back(
+        osg::Vec3(   end[ 0 ] + 0.05,   end[ 1 ] + 0.05,   end[ 2 ]) );
+    beamVertices->push_back(
+        osg::Vec3(   end[ 0 ] - 0.05,   end[ 1 ] + 0.05,   end[ 2 ]) );
+
+    m_beamGeometry->setVertexArray( beamVertices.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamTop =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamTop->push_back( 3 );
+    beamTop->push_back( 2 );
+    beamTop->push_back( 1 );
+    beamTop->push_back( 0 );
+    m_beamGeometry->addPrimitiveSet( beamTop.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamBottom =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamBottom->push_back( 4 );
+    beamBottom->push_back( 5 );
+    beamBottom->push_back( 6 );
+    beamBottom->push_back( 7 );
+    m_beamGeometry->addPrimitiveSet( beamBottom.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamLeft =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamLeft->push_back( 4 );
+    beamLeft->push_back( 7 );
+    beamLeft->push_back( 3 );
+    beamLeft->push_back( 0 );
+    m_beamGeometry->addPrimitiveSet( beamLeft.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamRight =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamRight->push_back( 1 );
+    beamRight->push_back( 2 );
+    beamRight->push_back( 6 );
+    beamRight->push_back( 5 );
+    m_beamGeometry->addPrimitiveSet( beamRight.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamBack =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamBack->push_back( 5 );
+    beamBack->push_back( 4 );
+    beamBack->push_back( 0 );
+    beamBack->push_back( 1 );
+    m_beamGeometry->addPrimitiveSet( beamBack.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamFront =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamFront->push_back( 7 );
+    beamFront->push_back( 6 );
+    beamFront->push_back( 2 );
+    beamFront->push_back( 3 );
+    m_beamGeometry->addPrimitiveSet( beamFront.get() );
+
+    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array();
+    colors->push_back( osg::Vec4( 1.0f, 0.0f, 1.0f, 1.0f ) );
+
+    osg::ref_ptr< osg::UIntArray > cfdColorIndexArray = new osg::UIntArray();
+    cfdColorIndexArray->push_back( 0 );
+
+    m_beamGeometry->setColorArray( colors.get() );
+    m_beamGeometry->setColorIndices( cfdColorIndexArray.get() );
+    m_beamGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+    m_wandPAT = new osg::MatrixTransform();
+    m_wandPAT->setNodeMask( 0 );
+    m_wandPAT->addChild( m_beamGeode.get() );
+    rootNode->asGroup()->addChild( m_wandPAT );
 }
 ////////////////////////////////////////////////////////////////////////////////

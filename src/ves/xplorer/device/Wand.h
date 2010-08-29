@@ -123,19 +123,11 @@ public:
     ///\param input Flag to insure translation does not go below zero plane
     void SetSubZeroFlag( int input );
 
-    ///Identifies selection chosen by wand
-    void UpdateSelectionLine( bool drawLine = true );
-
     ///Process if selection is valid
     void ProcessHit();
 
     ///Update the events done by wand
     void UpdateObjectHandler();
-
-    ///Set the start and end position
-    ///\param startPoint The start position
-    ///\param endPoint The end position
-    void SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
 
     ///Performs translation through scene
     void TranslateObject();
@@ -165,10 +157,21 @@ protected:
     ///\param endPoint The end point
     virtual void SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint );
 
+    ///Set the start and end position
+    ///\param startPoint The start position
+    ///\param endPoint The end position
+    void SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
+
     ///Draws a beam from the wand to object
     ///\param startPoint The start position
     ///\param endPoint The end position
-    virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
+    virtual void DrawLine( const osg::Vec3d& startPoint, const osg::Vec3d& endPoint );
+
+    ///Identifies selection chosen by wand
+    void UpdateSelectionLine( bool drawLine = true );
+    
+    ///Make the raw geometry for the wand line
+    void MakeWandLine();
 
     ///Roate about arbitrary axis
     void FreeRotateAboutWand( const bool freeRotate = true );
@@ -201,13 +204,14 @@ private:
 
     osg::ref_ptr< osg::Geode > selectedGeometry; ///<Geometry currently selected
     double distance; ///<Used for scaling
-    std::string laserName; ///<do not know what this does
     osg::Vec3d LastWandPosition; ///<Stores last wand position
     osg::Node* rootNode; ///<do not know what this does
 
-    osg::ref_ptr< osg::Geode > beamGeode;///<do not know what this does
-    osg::ref_ptr< osg::Geometry > beamGeometry;///<do not know what this does
+    osg::ref_ptr< osg::Geode > m_beamGeode;///<do not know what this does
+    osg::ref_ptr< osg::Geometry > m_beamGeometry;///<do not know what this does
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_beamLineSegment;///<do not know what this does
+    osg::ref_ptr< osg::MatrixTransform > m_wandPAT;
+
     ///See if a button has been pushed
     bool m_buttonPushed;
     ///Quat used every frame to store and rotational increments
