@@ -56,6 +56,7 @@
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
+#include <osg/MatrixTransform>
 
 #include <osgUtil/IntersectVisitor>
 
@@ -65,7 +66,6 @@ class Geode;
 class Group;
 class Vec4d;
 class Vec3d;
-class MatrixTransform;
 }
 
 namespace osgUtil

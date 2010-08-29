@@ -78,7 +78,6 @@
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/Group>
 #include <osg/Geometry>
-#include <osg/MatrixTransform>
 #include <osg/Array>
 #include <osg/NodeVisitor>
 #include <osg/Matrix>
