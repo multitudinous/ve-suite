@@ -39,6 +39,12 @@
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 #include<ves/conductor/qt/NetworkLoader.h>
 
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/Model.h>
+
 #include <iostream>
 #include <QtGui/QPaintEvent>
 
@@ -52,16 +58,23 @@ MainWindow::MainWindow(QWidget* parent) :
     
     ui->menuBar->close();
     
-    tb = new IconStack( ui->mainToolBar->widgetForAction( ui->actionFile ), this );
-    tb->AddAction( ui->actionNew );
-    tb->AddAction( ui->actionOpen);
-    tb->AddAction( ui->actionSave );
+    mFileOpsStack = new IconStack( ui->mainToolBar->widgetForAction( ui->actionFile ), this );
+    mFileOpsStack->AddAction( ui->actionNew );
+    mFileOpsStack->AddAction( ui->actionOpen);
+    mFileOpsStack->AddAction( ui->actionSave );
 
     // Make sure there is no statusbar on this widget.
     setStatusBar(0);
     
-    ves::conductor::Visualization* visWindow = new ves::conductor::Visualization( 0 );
-    ui->tabWidget->addTab( visWindow, "Visualization" );
+    // Create set of default dialogs that can be added as tabs
+    mVisualizationTab = new ves::conductor::Visualization( 0 );
+
+    // Connect to the ActiveModelChangedSignal so we can show the correct 
+    // tabs when the model changes
+    typedef boost::signals2::signal< void ( const std::string& ) > AMCSignal_type;
+    AMCSignal_type::slot_type slotFunctor( boost::bind( &MainWindow::OnActiveModelChanged, this, _1 ) );
+    ves::xplorer::eventmanager::SlotWrapper< AMCSignal_type > slotWrapper( slotFunctor );
+    ves::xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "ModelHandler.ActiveModelChangedSignal", &slotWrapper, mConnections );
 }
 
 MainWindow::~MainWindow()
@@ -81,9 +94,54 @@ void MainWindow::changeEvent(QEvent* e)
     }
 }
 
+int MainWindow::AddTab( QWidget* widget, const std::string& tabLabel )
+{
+    int index = ui->tabWidget->addTab( widget, 
+                                       QString::fromStdString( tabLabel ) );
+    mTabbedWidgets[ tabLabel ] = widget;
+    return index;
+}
+
+void MainWindow::RemoveTab( QWidget* widget )
+{
+    if( !widget )
+    {
+        return;
+    }
+    
+    // Remove the visual tab
+    ui->tabWidget->removeTab( ui->tabWidget->indexOf( widget ) );
+    
+    // Remove this tab from mTabbedWidgets map
+    std::map< std::string, QWidget* >::iterator iter;
+    for( iter = mTabbedWidgets.begin(); iter != mTabbedWidgets.end(); iter++ )
+    {
+        if( iter->second == widget )
+        {
+            mTabbedWidgets.erase( iter );
+            break;
+        }
+    }
+}
+
+void MainWindow::RemoveTab( const std::string& tabLabel )
+{
+    std::map< std::string, QWidget* >::iterator marked = mTabbedWidgets.find( tabLabel );
+    if( marked != mTabbedWidgets.end() )
+    {
+        RemoveTab( marked->second );
+    }
+}
+
+void MainWindow::RemoveAllTabs()
+{
+    ui->tabWidget->clear();
+    mTabbedWidgets.clear();
+}
+
 void MainWindow::on_actionFile_triggered()
 {
-    tb->Show();
+    mFileOpsStack->Show();
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -95,27 +153,29 @@ void MainWindow::on_actionOpen_triggered()
     }
     
     mFileDialog = new QFileDialog( 0 );
+    // Ensure that we use Qt's internal file dialog class since native file
+    // dialogs cannot be embedded in a QTabWidget
     mFileDialog->setOptions( QFileDialog::DontUseNativeDialog );
+    // Make mFileDialog manage its own lifetime and memory
     mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
     mFileDialog->setFileMode( QFileDialog::ExistingFile );
     mFileDialog->setNameFilter(tr("VES Files (*.ves)"));
+    
     QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)), 
-                      this, SLOT(onFileSelected(QString)) );
+                      this, SLOT(onFileOpenSelected(QString)) );
     QObject::connect( mFileDialog, SIGNAL(rejected()), this,
                       SLOT( onFileCancelled() ) );
-
-    ui->tabWidget->setCurrentIndex( ui->tabWidget->addTab( mFileDialog, 
-                                                           "Open File" ) );
+                      
+    ui->tabWidget->setCurrentIndex( AddTab( mFileDialog, "Open File" ) );
 }
 
-void MainWindow::onFileSelected( QString fileName )
+void MainWindow::onFileOpenSelected( QString fileName )
 {
-    std::cout << "File selected: " << fileName.toStdString() << std::endl;
     ves::conductor::NetworkLoader loader;
     loader.LoadVesFile( fileName.toStdString() );
     
-    int index = ui->tabWidget->indexOf( mFileDialog );
-    ui->tabWidget->removeTab( index );
+    RemoveTab( mFileDialog );
+    
     if (mFileDialog)
     {
         mFileDialog->close();
@@ -125,12 +185,29 @@ void MainWindow::onFileSelected( QString fileName )
 
 void MainWindow::onFileCancelled()
 {
-    int index = ui->tabWidget->indexOf( mFileDialog );
-    ui->tabWidget->removeTab( index );
+    RemoveTab( mFileDialog );
+    
     if (mFileDialog)
     {
         mFileDialog->close();
         mFileDialog = 0;
+    }
+}
+
+void MainWindow::OnActiveModelChanged( const std::string& modelID )
+{   
+    // We will get rid of all existing tabs, then open only those appropriate 
+    // to the active model.
+    
+    RemoveAllTabs();
+    
+    // Not sure if this will work on Mac or Windows....
+    ves::xplorer::Model* model =  
+        ves::xplorer::ModelHandler::instance()->GetActiveModel( );
+       
+    if( model->GetNumberOfCfdDataSets() > 0 )
+    {
+        AddTab( mVisualizationTab, "Visualization" );
     }
 }
     

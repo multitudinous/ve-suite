@@ -59,7 +59,7 @@ QToolButton:hover
        <number>-1</number>
       </property>
       <property name="tabsClosable">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="movable">
        <bool>true</bool>

@@ -72,7 +72,14 @@
 #ifdef QT_ON
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
-#endif
+
+#include <ves/open/xml/model/Model.h>
+// #include <ves/open/xml/DataValuePair.h>
+// #include <ves/open/xml/Command.h>
+// #include <ves/xplorer/command/CommandManager.h>
+#endif // QT_ON
+
+
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
@@ -1584,6 +1591,23 @@ void KeyboardMouse::ProcessSelection()
     vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
                           << vesObject->getDescriptions().at( 1 )
                           << std::endl << vprDEBUG_FLUSH;
+#ifdef QT_ON
+    vprDEBUG( vesDBG, 1 ) << "|\tObject is part of model "
+                          << newSelectedDCS->GetModelData()->GetID()
+                          << std::endl << vprDEBUG_FLUSH;
+                          
+    // Change the active model to the one corresponding to this piece of geometry
+    ves::xplorer::ModelHandler::instance()->SetActiveModel( newSelectedDCS->GetModelData()->GetID() );
+//     ves::open::xml::DataValuePairPtr dataValuePair(
+//     new ves::open::xml::DataValuePair() );
+//     dataValuePair->SetData( "CHANGE_ACTIVE_MODEL", newSelectedDCS->GetModelData()->GetID() );
+// 
+//     ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+//     veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
+//     veCommand->AddDataValuePair( dataValuePair );
+// 
+//     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()

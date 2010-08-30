@@ -90,6 +90,11 @@
 #include <ves/xplorer/volume/cfdTextureManager.h>
 using namespace ves::xplorer::volume;
 
+#ifdef QT_ON
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#endif // QT_ON
+
 //#include <vtkPolyDataWriter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkPolyData.h>
@@ -154,6 +159,13 @@ ModelHandler::ModelHandler( void )
     _eventHandlers[ std::string( "Xplorer Toggle Plugin Events" )] = new ves::xplorer::event::cad::TogglePluginsEventHandler();
     _eventHandlers[ std::string( "Move to cad" )] = new ves::xplorer::event::cad::NavigateToEventHandler();
     _eventHandlers[ std::string( "Culling Settings" )] = new ves::xplorer::event::cad::OcclusionSettingsEventHandler();
+    
+#ifdef QT_ON
+    // Register signal(s) with EventManager
+    eventmanager::EventManager::instance()->RegisterSignal(
+    new eventmanager::SignalWrapper< ActiveModelChangedSignal_type >( &mActiveModelChangedSignal ),
+    "ModelHandler.ActiveModelChangedSignal");
+#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::Initialize( std::string param )
@@ -226,6 +238,9 @@ void ModelHandler::SetActiveModel( const std::string& modelNumber )
                 << modelNumber
                 << " is set." << std::endl << vprDEBUG_FLUSH;
             _activeModel = _modelList.at( i );
+            #ifdef QT_ON
+            mActiveModelChangedSignal( modelNumber );
+            #endif
             break;
         }
     }

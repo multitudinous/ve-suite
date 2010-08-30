@@ -30,39 +30,70 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QFileDialog>
 
 #include <ves/conductor/qt/IconStack.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 #include <ves/VEConfig.h>
 
-namespace Ui {
+namespace Ui 
+{
     class MainWindow;
-}
+} // Ui
 
 class VE_CONDUCTOR_QTUI_EXPORTS MainWindow : public QMainWindow {
     Q_OBJECT
 public:
     MainWindow(QWidget* parent = 0);
     ~MainWindow();
+    
+    /// Adds @c widget to tabs and gives tab the label @c tabLabel.
+    int AddTab( QWidget* widget, const std::string& tabLabel );
+    
+    /// Remove tab containing @c widget. Does not delete the widget.
+    void RemoveTab( QWidget* widget );
+    
+    /// Remove tab with label @c tabLabel. Does not delete the associated widget.
+    void RemoveTab( const std::string& tabLabel );
+    
+    /// Remove all existing tabs. Does not delete the underlying widgets.
+    void RemoveAllTabs();
 
 protected:
     void changeEvent(QEvent* e);
     
+    /// Is connected to ModelHandler.ActiveModelChangedSignal so that
+    /// appropriate tabs can be shown when the active model changes.
+    void OnActiveModelChanged( const std::string& modelID );
+    
 protected Q_SLOTS:
+    
+    /// Called when the file operations icon on the main toolbar is clicked
     void on_actionFile_triggered(); ///< Autoconnected slot
+    
+    /// Called when the open file icon of the file operations stack is clicked
     void on_actionOpen_triggered(); ///< Autoconnected slot
-    void onFileSelected( QString fileName );
+    
+    /// Called when a valid file selection is made via the file open dialog.
+    void onFileOpenSelected( QString fileName );
+    
+    /// Called when the file selection dialog has been cancelled
     void onFileCancelled();
 
 private:
     Ui::MainWindow* ui;
     QFileDialog* mFileDialog;
-    IconStack* tb;
+    IconStack* mFileOpsStack;
+    std::map< std::string, QWidget* > mTabbedWidgets;
+    
+    /// Maintains the list of signals this object is connected to
+    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+    
+    // Main tabs that this class owns and manages
+    QWidget* mVisualizationTab;
 };
-
-#endif // MAINWINDOW_H
