@@ -261,3 +261,17 @@ void VE_i::SetCommand( const char* openXMLCommand )
     xmlObjects.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
+std::string VE_i::QueryCE( const std::string& query )
+{
+    try
+    {
+        std::string result = executive_->Query( query.c_str() );
+        return result;
+    }
+    catch ( CORBA::Exception & )
+    {
+        std::cerr << "VE_i::QueryCE : no exec found! " << std::endl;
+        return "";
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

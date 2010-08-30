@@ -72,6 +72,7 @@ public:
     bool GetNetworkFlag( void );
     void GetNetworkFromCE( void );
     void SetNetworkString( std::string tempString );
+    std::string QueryCE( const std::string& query );
 
 protected:
     Body::Executive_var executive_;
