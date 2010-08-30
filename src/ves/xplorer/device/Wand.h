@@ -57,6 +57,7 @@
 // --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
+#include <osg/Depth>
 
 #include <osgUtil/IntersectVisitor>
 
@@ -203,15 +204,17 @@ private:
     double deltaTrans[ 3 ]; ///<Stores difference in translation from last position to to current
 
     osg::ref_ptr< osg::Geode > selectedGeometry; ///<Geometry currently selected
-    double distance; ///<Used for scaling
+    double m_distance; ///<Used for scaling
     osg::Vec3d LastWandPosition; ///<Stores last wand position
     osg::Node* rootNode; ///<do not know what this does
 
-    osg::ref_ptr< osg::Geode > m_beamGeode;///<do not know what this does
-    osg::ref_ptr< osg::Geometry > m_beamGeometry;///<do not know what this does
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > m_beamLineSegment;///<do not know what this does
+    ///do not know what this does
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > m_beamLineSegment;
+    ///Transform to manipulate the selection line
     osg::ref_ptr< osg::MatrixTransform > m_wandPAT;
-
+    ///Depth attribute 
+    osg::ref_ptr< osg::Depth > m_depth;
+    
     ///See if a button has been pushed
     bool m_buttonPushed;
     ///Quat used every frame to store and rotational increments

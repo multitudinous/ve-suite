@@ -97,7 +97,7 @@ Wand::Wand()
     Device( WAND ),
     subzeroFlag( 0 ),
     rotationFlag( 1 ),
-    distance( 1000 ),
+    m_distance( 1000 ),
     cursorLen( 1.0 ),
     translationStepSize( 0.75 ),
     rotationStepSize( 1.0 ),
@@ -140,6 +140,10 @@ void Wand::Initialize()
 {
     rootNode = ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 
+    m_depth = new osg::Depth();
+    m_depth->setFunction( osg::Depth::ALWAYS );
+    m_depth->setWriteMask( false );
+    
     for( int i = 0; i < 3; ++i )
     {
         cursorLoc[ i ] = 0;
@@ -161,12 +165,6 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         << std::endl << vprDEBUG_FLUSH;
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
-
-    //Remove the pointer if present
-    /*if( m_beamGeode.valid() )
-    {
-        rootNode->asGroup()->removeChild( m_beamGeode.get() );
-    }*/
 
     //If the wand does not exist
     if( wand->isStupefied() )
@@ -619,8 +617,8 @@ void Wand::ProcessHit()
     else
     {
         vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name "
-        << objectHit->getParents().front()->getName()
-        << std::endl << vprDEBUG_FLUSH;
+            << objectHit->getParents().front()->getName()
+            << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
             ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
@@ -635,6 +633,10 @@ void Wand::DrawLine( const osg::Vec3d& start, const osg::Vec3d& end )
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( wand->getData() );
     const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
     const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+
+    //gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+    //gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
+    //    gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
 
     ///Transform from juggler space to world space
     vrjWandMat = 
@@ -661,14 +663,22 @@ void Wand::UpdateObjectHandler()
         if( m_manipulatorManager.IsEnabled() && 
             !m_manipulatorManager.LeafDraggerIsActive() )
         {
+            osg::ref_ptr< osg::StateSet > stateset = 
+                m_wandPAT->getOrCreateStateSet();
             if( m_manipulatorManager.Handle( scenegraph::manipulator::Event::FOCUS,
                 m_beamLineSegment.get() ) )
             {
-                m_beamGeometry->getOrCreateStateSet()->setRenderBinDetails( 11, std::string( "RenderBin" ) );
+                
+                stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );                
+                stateset->setAttributeAndModes( m_depth.get(), 
+                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                m_wandPAT->setCullingActive( false );
             }
             else
             {
-                m_beamGeometry->getOrCreateStateSet()->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+                stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+                stateset->removeAttribute( m_depth.get() );
+                m_wandPAT->setCullingActive( true );
             }
         }
 
@@ -735,7 +745,7 @@ void Wand::SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 
     for( int i = 0; i < 3; ++i )
     {
-        wandEndPoint[ i ] = ( wandDirection [ i ] * distance );
+        wandEndPoint[ i ] = ( wandDirection [ i ] * m_distance );
     }
 
     startPoint.set( wandPosition[ 0 ], wandPosition[ 1 ], wandPosition[ 2 ] );
@@ -943,7 +953,7 @@ double* Wand::GetPlaneEquationConstantsNormalToWand()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::MakeWandLine()
 {
-    if( m_beamGeode.valid() )
+    if( m_wandPAT.valid() )
     {
         return;
     }
@@ -951,13 +961,12 @@ void Wand::MakeWandLine()
     ///transform the data coming from the and into z up land therefore the
     ///drawn data needs to be in the same coordinate space as the wand.
     osg::Vec3 start( 0.0, 0.0, 0.0 );
-    osg::Vec3 end( 0.0, 0.0, -distance );
+    osg::Vec3 end( 0.0, 0.0, -m_distance );
 
-    m_beamGeode = new osg::Geode();
-    m_beamGeode->setName( "Wand Beam Geode" );
-    m_beamGeometry = new osg::Geometry();
-    m_beamGeode->addDrawable( m_beamGeometry.get() );
-    //m_beamGeode->setName( this->laserName );
+    osg::ref_ptr< osg::Geode > beamGeode = new osg::Geode();
+    beamGeode->setName( "Wand Beam Geode" );
+    osg::ref_ptr< osg::Geometry > beamGeometry = new osg::Geometry();
+    beamGeode->addDrawable( beamGeometry.get() );
 
     osg::ref_ptr< osg::Vec3Array > beamVertices = new osg::Vec3Array;
     beamVertices->push_back(
@@ -977,7 +986,7 @@ void Wand::MakeWandLine()
     beamVertices->push_back(
         osg::Vec3(   end[ 0 ] - 0.05,   end[ 1 ] + 0.05,   end[ 2 ]) );
 
-    m_beamGeometry->setVertexArray( beamVertices.get() );
+    beamGeometry->setVertexArray( beamVertices.get() );
 
     osg::ref_ptr< osg::DrawElementsUInt > beamTop =
         new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
@@ -985,7 +994,7 @@ void Wand::MakeWandLine()
     beamTop->push_back( 2 );
     beamTop->push_back( 1 );
     beamTop->push_back( 0 );
-    m_beamGeometry->addPrimitiveSet( beamTop.get() );
+    beamGeometry->addPrimitiveSet( beamTop.get() );
 
     osg::ref_ptr< osg::DrawElementsUInt > beamBottom =
         new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
@@ -993,7 +1002,7 @@ void Wand::MakeWandLine()
     beamBottom->push_back( 5 );
     beamBottom->push_back( 6 );
     beamBottom->push_back( 7 );
-    m_beamGeometry->addPrimitiveSet( beamBottom.get() );
+    beamGeometry->addPrimitiveSet( beamBottom.get() );
 
     osg::ref_ptr< osg::DrawElementsUInt > beamLeft =
         new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
@@ -1001,7 +1010,7 @@ void Wand::MakeWandLine()
     beamLeft->push_back( 7 );
     beamLeft->push_back( 3 );
     beamLeft->push_back( 0 );
-    m_beamGeometry->addPrimitiveSet( beamLeft.get() );
+    beamGeometry->addPrimitiveSet( beamLeft.get() );
 
     osg::ref_ptr< osg::DrawElementsUInt > beamRight =
         new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
@@ -1009,7 +1018,7 @@ void Wand::MakeWandLine()
     beamRight->push_back( 2 );
     beamRight->push_back( 6 );
     beamRight->push_back( 5 );
-    m_beamGeometry->addPrimitiveSet( beamRight.get() );
+    beamGeometry->addPrimitiveSet( beamRight.get() );
 
     osg::ref_ptr< osg::DrawElementsUInt > beamBack =
         new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
@@ -1017,7 +1026,7 @@ void Wand::MakeWandLine()
     beamBack->push_back( 4 );
     beamBack->push_back( 0 );
     beamBack->push_back( 1 );
-    m_beamGeometry->addPrimitiveSet( beamBack.get() );
+    beamGeometry->addPrimitiveSet( beamBack.get() );
 
     osg::ref_ptr< osg::DrawElementsUInt > beamFront =
         new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
@@ -1025,7 +1034,7 @@ void Wand::MakeWandLine()
     beamFront->push_back( 6 );
     beamFront->push_back( 2 );
     beamFront->push_back( 3 );
-    m_beamGeometry->addPrimitiveSet( beamFront.get() );
+    beamGeometry->addPrimitiveSet( beamFront.get() );
 
     osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array();
     colors->push_back( osg::Vec4( 1.0f, 0.0f, 1.0f, 1.0f ) );
@@ -1033,13 +1042,13 @@ void Wand::MakeWandLine()
     osg::ref_ptr< osg::UIntArray > cfdColorIndexArray = new osg::UIntArray();
     cfdColorIndexArray->push_back( 0 );
 
-    m_beamGeometry->setColorArray( colors.get() );
-    m_beamGeometry->setColorIndices( cfdColorIndexArray.get() );
-    m_beamGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+    beamGeometry->setColorArray( colors.get() );
+    beamGeometry->setColorIndices( cfdColorIndexArray.get() );
+    beamGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     m_wandPAT = new osg::MatrixTransform();
     m_wandPAT->setNodeMask( 0 );
-    m_wandPAT->addChild( m_beamGeode.get() );
+    m_wandPAT->addChild( beamGeode.get() );
     rootNode->asGroup()->addChild( m_wandPAT );
 }
 ////////////////////////////////////////////////////////////////////////////////
