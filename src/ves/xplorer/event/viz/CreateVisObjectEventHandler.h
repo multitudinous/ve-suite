@@ -108,7 +108,7 @@ public:
 
 private:
     ///Set the active dataset for the cfdobject to work on
-    void SetActiveDataSet( ves::open::xml::XMLObjectPtr xmlObject );
+    bool SetActiveDataSet( ves::open::xml::XMLObjectPtr xmlObject );
     ///Set the active scalar and appropriate range
     void SetActiveScalarAndRange( ves::open::xml::XMLObjectPtr xmlObject );
     ///Set access to the active sclalt range
@@ -116,8 +116,6 @@ private:
     ///Set the active cfd object based on the command
     void SetActiveCfdObject( ves::open::xml::XMLObjectPtr xmlObject );
 
-    //ves::xplorer::Model* _activeModel;///<The active cfdModel
-    ves::xplorer::cfdObjects* activeObject;   ///<The active cfdObject
     ves::xplorer::cfdPolyData*         surface;///<A cfdObject
     ves::xplorer::cfdIsosurface*       isosurface;///<A cfdObject
     ves::xplorer::cfdContour*          contour;///<A cfdObject
@@ -146,14 +144,13 @@ private:
     ves::xplorer::cfdImage*            image;///<A cfdObject
     ves::xplorer::cfdAnimatedImage*    animImg;///<A cfdObject
     ves::xplorer::cfdAnimatedStreamlineCone* animStreamer;///<A cfdObject
-    //ves::xplorer::cfdTextOutput*       textOutput;///<A cfdObject
 
     // Vectors that will eventually be stored as maps
     // these hold all the objectsa for easy access and management
     //std::vector< ves::xplorer::cfdObjects* > dataList;
     //std::vector< ves::xplorer::GlobalBase* > commandList;
     std::map< std::pair< std::string, std::pair< std::string, std::string > > , ves::xplorer::cfdObjects* > visObjectMap;///<The container for all of the cfdObjects
-
+    typedef std::map< std::pair< std::string, std::pair< std::string, std::string > > , ves::xplorer::cfdObjects* >::const_iterator VisObjectConstIter;
 };
 
 }

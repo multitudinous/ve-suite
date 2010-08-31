@@ -496,7 +496,10 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     }
 
     // Set the active dataset
-    SetActiveDataSet( xmlObject );
+    if( !SetActiveDataSet( xmlObject ) )
+    {
+        return;
+    }
     // set the active scalar and range
     SetActiveScalarAndRange( xmlObject );
     // set the active vector
@@ -538,7 +541,15 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
                                   std::make_pair( direction, planes + advanced ) );
 
     // set the xml command to the cfdObject
-    this->activeObject = visObjectMap[ commandType ];
+    VisObjectConstIter iter = visObjectMap.find( commandType );
+    if( iter == visObjectMap.end() )
+    {
+        std::cerr << "ERROR: selected vis option is not in the CreateVisObjectEventHandler. " << std::endl;
+        return;
+    }
+
+    ves::xplorer::cfdObjects* activeObject = 0;
+    activeObject = iter->second;
     if( activeObject == 0 )
     {
         std::cerr << "ERROR: selected vis option is not in the CreateVisObjectEventHandler. " << std::endl;
@@ -642,7 +653,7 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLOb
     activeDataset->GetParent()->ResetScalarBarRange( scalarMin, scalarMax );
 }
 //////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObjectPtr xmlObject )
+bool CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObjectPtr xmlObject )
 {
     ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
     ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Active Dataset" );
@@ -703,11 +714,13 @@ void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObjectPtr
                 << std::endl << vprDEBUG_FLUSH;
             activeDataset->SetNewlyActivated();
         }
+        return true;
     }
     else
     {
         std::cerr << "ERROR: CreateVisObjectEventHandler::SetActiveDataSet  requested steady state dataset "
             << activeModel->GetNumberOfCfdDataSets()
             << std::endl;
+        return false;
     }
 }
