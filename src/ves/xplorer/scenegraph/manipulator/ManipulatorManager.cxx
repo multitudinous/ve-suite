@@ -218,7 +218,7 @@ bool ManipulatorManager::Handle(
     //Make sure the root drager is valid
     if( !m_rootDragger )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\tNo root dragger." 
+        vprDEBUG( vesDBG, 2 ) << "|\tNo root dragger." 
             << std::endl << vprDEBUG_FLUSH;
         return false;
     }
