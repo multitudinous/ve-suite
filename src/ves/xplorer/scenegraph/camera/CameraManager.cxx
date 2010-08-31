@@ -40,6 +40,7 @@
 #include <ves/xplorer/scenegraph/Masks.h>
 #include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
 #include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 
 #include <ves/xplorer/Debug.h>
@@ -108,6 +109,13 @@ bool CameraManager::addChild( std::string const& name )
     cameraObject->setName( name );
     DCS& dcs = cameraObject->GetDCS();
     gmtl::Matrix44d tempMat( worldDCS->GetMat() );
+    /*
+    ves::xplorer::scenegraph::GLTransformInfoPtr glInfoPtr = 
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetFirstGLTransformInfo();
+    gmtl::Matrix44d tempCenterMat = glInfoPtr->GetCenterViewMatrix();
+    */
+     
     dcs.SetMat( gmtl::invert( tempMat ) );
 
     return osg::Group::addChild( cameraObject.get() );
