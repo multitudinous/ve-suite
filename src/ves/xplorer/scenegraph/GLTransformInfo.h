@@ -145,6 +145,12 @@ public:
     const osg::Matrixd& GetVrjViewMatrixOSG() const;
 
     ///
+    const gmtl::Matrix44d& GetVrjCenterViewMatrix() const;
+
+    ///
+    const osg::Matrixd& GetVrjCenterViewMatrixOSG() const;
+    
+    ///
     const gmtl::Matrix44d& GetCameraMatrix() const;
 
     ///

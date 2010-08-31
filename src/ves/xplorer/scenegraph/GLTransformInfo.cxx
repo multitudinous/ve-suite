@@ -198,6 +198,16 @@ const osg::Matrixd& GLTransformInfo::GetVrjViewMatrixOSG() const
     return m_vrjViewMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& GLTransformInfo::GetVrjCenterViewMatrix() const
+{
+    return m_vrjCenterViewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd& GLTransformInfo::GetVrjCenterViewMatrixOSG() const
+{
+    return m_vrjCenterViewMatrixOSG;
+}
+////////////////////////////////////////////////////////////////////////////////
 const gmtl::Matrix44d& GLTransformInfo::GetCameraMatrix() const
 {
     return m_cameraMatrix;

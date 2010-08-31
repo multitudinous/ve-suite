@@ -326,6 +326,10 @@ private:
     ///can have more viewports than active at a given time
     typedef std::map< vrj::ViewportPtr, GLTransformInfoPtr > GLTransformInfoMap;
     GLTransformInfoMap m_glTransformInfoMap;
+    
+    ///The last vrj::Viewport that was queried in draw or other context
+    ///specific code.
+    GLTransformInfoPtr m_lastAccessedGLInfo;
 
 };
 } //end scenegraph

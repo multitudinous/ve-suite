@@ -109,14 +109,14 @@ bool CameraManager::addChild( std::string const& name )
     cameraObject->setName( name );
     DCS& dcs = cameraObject->GetDCS();
     gmtl::Matrix44d tempMat( worldDCS->GetMat() );
-    /*
+    
     ves::xplorer::scenegraph::GLTransformInfoPtr glInfoPtr = 
         ves::xplorer::scenegraph::SceneManager::instance()->
         GetFirstGLTransformInfo();
     gmtl::Matrix44d tempCenterMat = glInfoPtr->GetCenterViewMatrix();
-    */
+    
      
-    dcs.SetMat( gmtl::invert( tempMat ) );
+    dcs.SetMat( gmtl::invert( tempCenterMat ) );
 
     return osg::Group::addChild( cameraObject.get() );
 }

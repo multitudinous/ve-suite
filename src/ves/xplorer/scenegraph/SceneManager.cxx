@@ -39,6 +39,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
+
 #ifdef VE_SOUND
 #include <ves/xplorer/scenegraph/Sound.h>
 #endif
@@ -305,6 +307,7 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
         m_glTransformInfoMap.find( viewport );
     if( itr != m_glTransformInfoMap.end() )
     {
+        m_lastAccessedGLInfo = itr->second;
         return itr->second;
     }
 
@@ -316,11 +319,15 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
 ////////////////////////////////////////////////////////////////////////////////
 const GLTransformInfoPtr SceneManager::GetFirstGLTransformInfo() const
 {
-    GLTransformInfoMap::const_iterator itr =
-        m_glTransformInfoMap.begin();
-    if( itr != m_glTransformInfoMap.end() )
+    std::cout << " num scene infos " << m_glTransformInfoMap.size() << std::endl;
+    std::cout << m_lastAccessedGLInfo->GetCameraMatrix() << std::endl;
+    std::cout << m_lastAccessedGLInfo->GetVrjCenterViewMatrix() << std::endl;
+    std::cout << m_lastAccessedGLInfo->GetCenterViewMatrix() << std::endl;
+    //GLTransformInfoMap::const_reverse_iterator itr =
+    //    m_glTransformInfoMap.rbegin();
+    //if( itr != m_glTransformInfoMap.end() )
     {
-        return itr->second;
+        return m_lastAccessedGLInfo;
     }
     
     std::cout << "SceneManager::GetFirstGLTransformInfo - "
