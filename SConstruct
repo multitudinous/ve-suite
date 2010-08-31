@@ -68,7 +68,7 @@ import qt46
 if GetPlatform() == 'win32':
     local_fp_dir = pj(os.getcwd(), 'external', 'svn-win32-1.6.0','bin') 
     os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
-    local_fp_dir = pj(os.getcwd(), 'external', 'FreezePython','upx301w') 
+    local_fp_dir = pj(os.getcwd(), 'external', 'FreezePython','upx305w') 
     os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
 
 # If on windows make sure that you are using a newer version of scons
