@@ -308,18 +308,24 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
         return itr->second;
     }
 
-    //I am not sure why this is needed. It seems this should be addressed
-    //in other locations within our context initialization procedures.
-    /*
-    if( IsDesktopMode() )
-    {
-        return m_glTransformInfoMap.begin()->second;
-    }
-    */
-
     std::cout << "SceneManager::GetGLTransformInfo - "
               << "GLTransformInfo not found!" << std::endl;
 
+    return GLTransformInfoPtr();
+}
+////////////////////////////////////////////////////////////////////////////////
+const GLTransformInfoPtr SceneManager::GetFirstGLTransformInfo() const
+{
+    GLTransformInfoMap::const_iterator itr =
+        m_glTransformInfoMap.begin();
+    if( itr != m_glTransformInfoMap.end() )
+    {
+        return itr->second;
+    }
+    
+    std::cout << "SceneManager::GetFirstGLTransformInfo - "
+        << "GLTransformInfo not found!" << std::endl;
+    
     return GLTransformInfoPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////

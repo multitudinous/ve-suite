@@ -213,6 +213,11 @@ public:
     ///Tell if we are in Desktop mode
     bool IsScreenAligned();
 
+    ///Get the GLTransformInfoPtr for the purposes of obtaining the view matrix
+    ///NOTE: The view matrix data is the only data that is useable outside
+    ///      of having the specific viewport that the data is respective too.
+    const GLTransformInfoPtr GetFirstGLTransformInfo() const;
+    
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -274,7 +279,7 @@ private:
 
     ///Inverteded world dcs values
     gmtl::Matrix44d mInvertedWorldDCS;
-
+    
 #ifdef VE_SOUND
     ///
     Sound* m_sound;
