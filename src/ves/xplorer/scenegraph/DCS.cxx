@@ -340,7 +340,7 @@ gmtl::Matrix44d DCS::GetMat()
     return _vjMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::SetMat( gmtl::Matrix44d& input )
+void DCS::SetMat( const gmtl::Matrix44d& input )
 {
     gmtl::Vec3d scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
     gmtl::Vec3d scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );

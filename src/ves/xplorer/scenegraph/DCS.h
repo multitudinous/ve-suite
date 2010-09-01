@@ -167,7 +167,7 @@ public:
 
     ///Set the matrix for this transform
     ///\param input Matrix with all transform information
-    void SetMat( gmtl::Matrix44d& input );
+    void SetMat( const gmtl::Matrix44d& input );
 
     ///Set just the roation portion of this transform with the 4x4 matrix
     ///\param input Matrix with pure rotations
