@@ -65,10 +65,11 @@ if sca_util.GetPlatform() == "win32":
 
     env.Append(BUILDERS = {'makespec': makespecBuilder, 'freeze' : freezeBuilder})
     env.makespec(target = makespecTarget ,source = makespecSrc)
-    env.freeze(target = freezeTarget, source = build_py)
+    #Depends( makespecTarget, launcherPyFiles)    
+    #Depends(pj('dist', 'velauncher.exe'), makespecTarget)
+    env.freeze(target = pj('dist', 'velauncher.exe'), source = build_py)
 
-    
-    Depends('velauncher.exe', launcherPyFiles)
+    Depends(pj('dist', 'velauncher.exe'), launcherPyFiles)
     launcherBundle.addFiles( pj('dist', 'velauncher.exe'),"",False )
 
 else:
