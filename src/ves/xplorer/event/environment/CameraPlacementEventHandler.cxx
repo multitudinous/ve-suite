@@ -216,7 +216,7 @@ void CameraPlacementEventHandler::Execute(
 
         //We need to transform center point into camera space
         //In the future the center point will be in world coordinates
-        center = center * osg::Matrixd( sceneManager.GetWorldDCS()->GetMat().mData );
+        center = center * osg::Matrixd( sceneManager.GetNavDCS()->GetMat().mData );
         gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
         deviceHandler.SetCenterPoint( &tempCenter );
 
@@ -236,7 +236,7 @@ void CameraPlacementEventHandler::Execute(
         //Hand the node we are interested in off to the animation engine
         NavigationAnimationEngine& nae =
             *(NavigationAnimationEngine::instance());
-        nae.SetDCS( sceneManager.GetWorldDCS() );
+        nae.SetDCS( sceneManager.GetNavDCS() );
 
         osg::Matrixd tempMatrix( selectedMatrix.mData );
         tempMatrix =

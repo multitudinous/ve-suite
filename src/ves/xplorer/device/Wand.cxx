@@ -543,7 +543,7 @@ void Wand::ProcessHit()
         << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+            ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
 
         return;
     }
@@ -621,7 +621,7 @@ void Wand::ProcessHit()
             << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+            ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -641,7 +641,7 @@ void Wand::DrawLine( const osg::Vec3d& start, const osg::Vec3d& end )
     ///Transform from juggler space to world space
     vrjWandMat = 
         ves::xplorer::scenegraph::SceneManager::instance()->
-        GetInvertedWorldDCS() * myMat * vrjWandMat;
+        GetInvertedNavMatrix() * myMat * vrjWandMat;
     
     const osg::Matrixd tempOsgMatrix( vrjWandMat.getData() );
     m_wandPAT->setMatrix( tempOsgMatrix );
@@ -755,7 +755,7 @@ void Wand::SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
     {
         osg::Matrixd inverseCameraTransform(
             ves::xplorer::scenegraph::SceneManager::instance()->
-            GetInvertedWorldDCS().getData() );
+            GetInvertedNavMatrix().getData() );
         
         startPoint = startPoint * inverseCameraTransform;
         endPoint = endPoint * inverseCameraTransform;
@@ -937,7 +937,7 @@ double* Wand::GetPlaneEquationConstantsNormalToWand()
     Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
     ///Transform from juggler space to world space
     Matrix44d worldWandMat =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat() * vjMat;
+        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->GetMat() * vjMat;
     ///Normalize vector
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, -1.0f );

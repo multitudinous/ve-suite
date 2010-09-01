@@ -619,7 +619,7 @@ void VjObs_i::GetCfdStateVariables( void )
 
     this->mStates->clusterTime_since_start = time_since_start;
 
-    gmtl::Matrix44d matrix = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat();
+    gmtl::Matrix44d matrix = ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->GetMat();
 
     //std::cout << "master: " << std::endl << matrix << std::endl;
     for( int i = 0;i < 16;i++ )
@@ -693,7 +693,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
             matrix.mData[i] = this->mStates->clusterMatrix[i];
         }
         //std::cout << "slave: " << std::endl << matrix << std::endl;
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
+        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->SetMat( matrix );
 
         time_since_start = this->mStates->clusterTime_since_start;
         if( TextureBasedVizHandler::instance()->GetActiveTextureManager() )

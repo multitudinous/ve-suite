@@ -321,7 +321,7 @@ void DeviceHandler::SetSelectedDCS( scenegraph::DCS* selectedDCS )
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::UnselectObjects()
 {
-    mActiveDCS = scenegraph::SceneManager::instance()->GetWorldDCS();
+    mActiveDCS = scenegraph::SceneManager::instance()->GetNavDCS();
 
     if( mSelectedDCS.valid() )
     {

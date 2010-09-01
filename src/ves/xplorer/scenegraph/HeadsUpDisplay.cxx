@@ -256,7 +256,7 @@ void HeadsUpDisplay::LatePreFrame()
     if( mGeometryWCS->GetDCS()->getNodeMask() != 0 )
     {
         osg::Quat temp = ves::xplorer::scenegraph::SceneManager::instance()->
-            GetWorldDCS()->getAttitude();
+            GetNavDCS()->getAttitude();
         osg::Quat quat( temp.x(), temp.z(), -temp.y(), temp.w() );
 
         mGeometryWCS->GetDCS()->setAttitude( quat );

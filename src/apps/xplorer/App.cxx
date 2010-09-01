@@ -708,10 +708,10 @@ void App::latePreFrame()
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame SceneManager", 20 );
-        ves::xplorer::scenegraph::SceneManager::instance()->PreFrameUpdate();
+        ves::xplorer::scenegraph::SceneManager::instance()->LatePreFrameUpdate();
         gmtl::Matrix44d tempNavMatrix = 
             ves::xplorer::scenegraph::SceneManager::instance()->
-                GetInvertedWorldDCS();
+                GetInvertedNavMatrix();
         gmtl::Vec4d tempVec( 0.0, -10000.0, 10000.0, 0.0 );
         tempVec = tempNavMatrix * tempVec;
         light_0->setPosition( 

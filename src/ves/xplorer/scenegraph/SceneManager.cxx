@@ -78,6 +78,7 @@
 #include <jccl/RTRC/ConfigManager.h>
 
 #include <gmtl/gmtl.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -102,7 +103,7 @@ SceneManager::SceneManager()
     mLogoSwitch( NULL ),
     mNavSwitch( NULL ),
     mActiveNavDCS( NULL ),
-    worldDCS( NULL ),
+    m_navDCS( NULL ),
     mNetworkDCS( NULL ),
 #ifdef VE_SOUND
     m_sound( NULL ),
@@ -184,6 +185,8 @@ void SceneManager::InitScene()
         "|  1. Initializing.................................... SceneManager |" 
         << std::endl;
 
+    m_vrjHead.init( "VJHead" );
+
     //mRootNode = new ves::xplorer::scenegraph::Group();
     if( !mRootNode.valid() )
     {
@@ -235,10 +238,10 @@ void SceneManager::InitScene()
     mNavSwitch = new ves::xplorer::scenegraph::Switch();
     mNavSwitch->setName( "Nav Switch" );
     
-    worldDCS = new ves::xplorer::scenegraph::DCS();
-    worldDCS->SetName( "World DCS" );
+    m_navDCS = new ves::xplorer::scenegraph::DCS();
+    m_navDCS->SetName( "World DCS" );
     //Setup world nav switch
-    mNavSwitch->addChild( worldDCS.get() );
+    mNavSwitch->addChild( m_navDCS.get() );
     
     //Setup logo nav switch
     mNavSwitch->addChild( new ves::xplorer::scenegraph::DCS() );
@@ -267,7 +270,7 @@ void SceneManager::InitScene()
 
     mRootNode->addChild( m_clrNode.get() );
     m_clrNode->addChild( mLogoSwitch.get() );
-    //Add the worlddcs here because the nav matrix is pulled out
+    //Add the m_navDCS here because the nav matrix is pulled out
     //App.cxx and applied to the view matrix
     mRootNode->addChild( mNavSwitch.get() );
     ///Try to load the osgPT Polytans plugin to load all
@@ -307,32 +310,12 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
         m_glTransformInfoMap.find( viewport );
     if( itr != m_glTransformInfoMap.end() )
     {
-        m_lastAccessedGLInfo = itr->second;
         return itr->second;
     }
 
     std::cout << "SceneManager::GetGLTransformInfo - "
               << "GLTransformInfo not found!" << std::endl;
 
-    return GLTransformInfoPtr();
-}
-////////////////////////////////////////////////////////////////////////////////
-const GLTransformInfoPtr SceneManager::GetFirstGLTransformInfo() const
-{
-    std::cout << " num scene infos " << m_glTransformInfoMap.size() << std::endl;
-    std::cout << m_lastAccessedGLInfo->GetCameraMatrix() << std::endl;
-    std::cout << m_lastAccessedGLInfo->GetVrjCenterViewMatrix() << std::endl;
-    std::cout << m_lastAccessedGLInfo->GetCenterViewMatrix() << std::endl;
-    //GLTransformInfoMap::const_reverse_iterator itr =
-    //    m_glTransformInfoMap.rbegin();
-    //if( itr != m_glTransformInfoMap.end() )
-    {
-        return m_lastAccessedGLInfo;
-    }
-    
-    std::cout << "SceneManager::GetFirstGLTransformInfo - "
-        << "GLTransformInfo not found!" << std::endl;
-    
     return GLTransformInfoPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -361,14 +344,44 @@ manipulator::ManipulatorManager& SceneManager::GetManipulatorManager() const
     return *m_manipulatorManager.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-DCS* const SceneManager::GetWorldDCS() const
+DCS* const SceneManager::GetNavDCS() const
 {
-    return worldDCS.get();
+    return m_navDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& SceneManager::GetInvertedWorldDCS() const
+const gmtl::Matrix44d& SceneManager::GetInvertedNavMatrix() const
 {
-    return mInvertedWorldDCS;
+    return m_invertedNavMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd& SceneManager::GetInvertedNavMatrixOSG() const
+{
+    return m_invertedNavMatrixOSG;
+}
+////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& SceneManager::GetHeadMatrix() const
+{
+    return m_vrjHeadMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& SceneManager::GetGlobalViewMatrix() const
+{
+    return m_globalViewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd& SceneManager::GetGlobalViewMatrixOSG() const
+{
+    return m_globalViewMatrixOSG;
+}
+////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& SceneManager::GetInvertedGlobalViewMatrix() const
+{
+    return m_invertedGlobalViewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Matrixd& SceneManager::GetInvertedGlobalViewMatrixOSG() const
+{
+    return m_invertedGlobalViewMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* const SceneManager::GetNetworkDCS() const
@@ -485,18 +498,27 @@ void SceneManager::SetActiveSwitchNode( int activeNode )
     ///information is defined on a per node basis.
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneManager::PreFrameUpdate()
+void SceneManager::LatePreFrameUpdate()
 {
     if( !mNavSwitch->getValue( 1 ) )
     {
-        mInvertedWorldDCS = mActiveNavDCS->GetMat();
-        mInvertedWorldDCS = gmtl::invert( mInvertedWorldDCS );
+        gmtl::Matrix44d navMatrix = mActiveNavDCS->GetMat();
+        gmtl::invert( m_invertedNavMatrix, navMatrix );
+        m_invertedNavMatrixOSG.set( m_invertedNavMatrix.mData );
+        
+        m_vrjHeadMatrix = 
+            gmtl::convertTo< double >( m_vrjHead->getData() );
+        m_globalViewMatrix = m_vrjHeadMatrix * navMatrix;
+        m_globalViewMatrixOSG.set( m_globalViewMatrix.mData );
+        
+        gmtl::invert( m_invertedGlobalViewMatrix, m_globalViewMatrix );
+        m_invertedGlobalViewMatrixOSG.set( m_globalViewMatrix.mData );     
     }
     else
     {
-        mInvertedWorldDCS = gmtl::identity( mInvertedWorldDCS );
+        m_invertedNavMatrix = gmtl::identity( m_invertedNavMatrix );
         static_cast< ves::xplorer::scenegraph::DCS* >( 
-            mNavSwitch->getChild( 1 ) )->SetMat( mInvertedWorldDCS );
+            mNavSwitch->getChild( 1 ) )->SetMat( m_invertedNavMatrix );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

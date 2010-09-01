@@ -231,7 +231,7 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
     ///Since the math implies we are doing a delta translation
     ///we need to go grab where we previously were
     double* temp = vxs::SceneManager::instance()->
-        GetWorldDCS()->GetVETranslationArray();
+        GetNavDCS()->GetVETranslationArray();
     ///Add our distance and previous position back in and get our new end point
     gmtl::Vec3d pos;
     pos[ 0 ] = - osgOrigPosition[ 0 ] + temp[ 0 ];
@@ -240,7 +240,7 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
     
     ///Hand the node we are interested in off to the animation engine
     vx::NavigationAnimationEngine::instance()->SetDCS(
-        vxs::SceneManager::instance()->GetWorldDCS() );
+        vxs::SceneManager::instance()->GetNavDCS() );
     
     ///Hand our created end points off to the animation engine
     vx::NavigationAnimationEngine::instance()->SetAnimationEndPoints(

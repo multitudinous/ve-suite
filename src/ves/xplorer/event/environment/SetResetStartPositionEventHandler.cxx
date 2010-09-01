@@ -85,7 +85,7 @@ void SetResetStartPositionEventHandler::Execute( const ves::open::xml::XMLObject
         
         DataValuePairPtr quatStartPosition( new DataValuePair());
         OneDDoubleArrayPtr quatData( new OneDDoubleArray( 0 ) );
-        osg::Quat quat = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
+        osg::Quat quat = ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->getAttitude();
         quatData->AddElementToArray( quat[ 0 ] );
         quatData->AddElementToArray( quat[ 1 ] );
         quatData->AddElementToArray( quat[ 2 ] );
@@ -95,7 +95,7 @@ void SetResetStartPositionEventHandler::Execute( const ves::open::xml::XMLObject
         
         DataValuePairPtr positionStartPosition( new DataValuePair() );
         OneDDoubleArrayPtr positionsData( new OneDDoubleArray( 0 ) );
-        osg::Vec3d trans = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->getPosition();
+        osg::Vec3d trans = ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->getPosition();
         positionsData->AddElementToArray( trans[ 0 ] );
         positionsData->AddElementToArray( trans[ 1 ] );
         positionsData->AddElementToArray( trans[ 2 ] );

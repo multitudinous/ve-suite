@@ -117,7 +117,7 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
     }
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > world =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS();
 
     osg::Quat rot_quat;
     osg::Quat world_quat = world->getAttitude();

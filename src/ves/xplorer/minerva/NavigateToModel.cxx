@@ -99,7 +99,7 @@ void NavigateToModel::Execute ( CommandPtr command, MinervaManager& manager )
 
   /// Tell the animation engine to set the world dcs.
   ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
-    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
     
   /// Tell the animation engine where to go.
   ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(

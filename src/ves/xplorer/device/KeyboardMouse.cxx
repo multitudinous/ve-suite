@@ -680,7 +680,7 @@ void KeyboardMouse::SkyCam()
     //m_sceneManager.GetActiveSwitchNode()->SetMat( matrix );
 
     //Grab the current matrix
-    osg::ref_ptr< scenegraph::DCS > activeSwitchDCS = m_sceneManager.GetWorldDCS();
+    osg::ref_ptr< scenegraph::DCS > activeSwitchDCS = m_sceneManager.GetNavDCS();
 
     //reset view
     activeSwitchDCS->SetQuat( *mResetAxis );
@@ -1338,7 +1338,7 @@ void KeyboardMouse::ResetTransforms()
     gmtl::Matrix44d matrix;
     gmtl::identity( matrix );
 
-    osg::ref_ptr< scenegraph::DCS > worldDCS = m_sceneManager.GetWorldDCS();
+    osg::ref_ptr< scenegraph::DCS > worldDCS = m_sceneManager.GetNavDCS();
     worldDCS->SetMat( matrix );
     worldDCS->SetQuat( *mResetAxis );
     worldDCS->SetTranslationArray( *mResetPosition );
@@ -1568,7 +1568,7 @@ void KeyboardMouse::ProcessSelection()
 
     //We need to transform center point into camera space
     //In the future the center point will be in world coordinates
-    center = center * osg::Matrixd( m_sceneManager.GetWorldDCS()->GetMat().mData );
+    center = center * osg::Matrixd( m_sceneManager.GetNavDCS()->GetMat().mData );
     //center = center * m_currentGLTransformInfo->GetViewMatrixOSG();
     mCenterPoint->set( center.x(), center.y(), center.z() );
 

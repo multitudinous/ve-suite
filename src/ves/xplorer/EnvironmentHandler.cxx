@@ -323,7 +323,7 @@ void EnvironmentHandler::InitScene()
     //
     //std::cout << "| 8. Initializing................................. Virtual cursors |" << std::endl;
     //cursor = new cfdCursor( arrow,
-    //                              ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(),
+    //                              ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS(),
     //                              ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
 
     //
@@ -331,7 +331,7 @@ void EnvironmentHandler::InitScene()
     //
     std::cout 
         << "| Initializing......................................... cfdQuatCams |" << std::endl;
-    ves::xplorer::cfdQuatCamHandler::instance()->SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+    ves::xplorer::cfdQuatCamHandler::instance()->SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
     
     //
     // Initiate the Performer Stored Binary objects.

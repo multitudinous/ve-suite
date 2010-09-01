@@ -50,6 +50,7 @@
 #include <osg/ref_ptr>
 #include <osg/ClearNode>
 #include <osg/FrameStamp>
+#include <osg/Matrix>
 
 // --- VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
@@ -57,6 +58,8 @@
 #include <vrj/Display/ViewportPtr.h>
 
 #include <vpr/Util/Singleton.h>
+
+#include <gadget/Type/PositionInterface.h>
 
 #include <gmtl/Matrix.h>
 
@@ -136,10 +139,6 @@ public:
     ///
     highlight::HighlightManager& GetHighlightManager() const;
 
-    ///Get the inverted world DCS matrix
-    ///\return The inverted matrix
-    const gmtl::Matrix44d& GetInvertedWorldDCS() const;
-
     ///Return the manipulator root node of the scenegraph
     manipulator::ManipulatorManager& GetManipulatorManager() const;
 
@@ -155,17 +154,44 @@ public:
 
     ///Return the world DCS of the scenegraph
     ///\return The world DCS
-    DCS* const GetWorldDCS() const;
+    DCS* const GetNavDCS() const;
 
-    ///???
-    ///\param param
+    ///Get the inverted world DCS matrix
+    ///\return The inverted matrix
+    const gmtl::Matrix44d& GetInvertedNavMatrix() const;
+    
+    ///Get the inverted world DCS matrix
+    ///\return The inverted matrix
+    const osg::Matrixd& GetInvertedNavMatrixOSG() const;
+
+    ///Return the head matrix
+    ///\return The matrix
+    const gmtl::Matrix44d& GetHeadMatrix() const;
+
+    ///Return the global view matrix
+    ///\return The matrix
+    const gmtl::Matrix44d& GetGlobalViewMatrix() const;
+
+    ///Return the global view matrix
+    ///\return The matrix
+    const osg::Matrixd& GetGlobalViewMatrixOSG() const;
+    
+    ///Return the global view matrix
+    ///\return The inverted matrix
+    const gmtl::Matrix44d& GetInvertedGlobalViewMatrix() const;
+    
+    ///Return the global view matrix
+    ///\return The inverted matrix
+    const osg::Matrixd& GetInvertedGlobalViewMatrixOSG() const;
+    
+    ///Initialize member variables for scene manager
     void Initialize();
 
     ///Initialize the scene
     void InitScene();
 
-    ///PreFrameUpdate call to sync DCS information across cluster
-    void PreFrameUpdate();
+    ///LatePreFrameUpdate call to sync DCS information across cluster
+    void LatePreFrameUpdate();
 
     ///
     void PushBackGLTransformInfo(
@@ -213,11 +239,6 @@ public:
     ///Tell if we are in Desktop mode
     bool IsScreenAligned();
 
-    ///Get the GLTransformInfoPtr for the purposes of obtaining the view matrix
-    ///NOTE: The view matrix data is the only data that is useable outside
-    ///      of having the specific viewport that the data is respective too.
-    const GLTransformInfoPtr GetFirstGLTransformInfo() const;
-    
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -271,17 +292,34 @@ private:
     osg::ref_ptr< DCS > mActiveNavDCS;
 
     ///Node to control navigation
-    osg::ref_ptr< DCS > worldDCS;
+    osg::ref_ptr< DCS > m_navDCS;
 
     ///Node to hold a network view of the system under investigation
-    //osg::ref_ptr< DCS > networkDCS;
     osg::ref_ptr< osg::Group > mNetworkDCS;
 
+    ///VR Juggler head matrix
+    gmtl::Matrix44d m_vrjHeadMatrix;
+
     ///Inverteded world dcs values
-    gmtl::Matrix44d mInvertedWorldDCS;
-    
+    gmtl::Matrix44d m_invertedNavMatrix;
+
+    ///Inverted OSG nav matrix
+    osg::Matrixd m_invertedNavMatrixOSG;
+
+    ///Inverteded world dcs values
+    gmtl::Matrix44d m_invertedGlobalViewMatrix;
+
+    ///Inverted OSG view matrix
+    osg::Matrixd m_invertedGlobalViewMatrixOSG;
+
+    ///Inverteded world dcs values
+    gmtl::Matrix44d m_globalViewMatrix;
+
+    ///Inverted OSG view matrix
+    osg::Matrixd m_globalViewMatrixOSG;
+
 #ifdef VE_SOUND
-    ///
+    ///Sound file to play as background audio for VE-Suite
     Sound* m_sound;
 #endif
 
@@ -326,11 +364,9 @@ private:
     ///can have more viewports than active at a given time
     typedef std::map< vrj::ViewportPtr, GLTransformInfoPtr > GLTransformInfoMap;
     GLTransformInfoMap m_glTransformInfoMap;
-    
-    ///The last vrj::Viewport that was queried in draw or other context
-    ///specific code.
-    GLTransformInfoPtr m_lastAccessedGLInfo;
 
+    ///VRJuggler's head positional interface
+    gadget::PositionInterface m_vrjHead; 
 };
 } //end scenegraph
 } //end xplorer

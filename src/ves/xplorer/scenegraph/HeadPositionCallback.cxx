@@ -86,7 +86,7 @@ void HeadPositionCallback::operator()(
                    jugglerHeadPoint.mData[ 1 ] + 0.0f);
     
     gmtl::Matrix44d worldMat = 
-        vxs::SceneManager::instance()->GetInvertedWorldDCS();
+        vxs::SceneManager::instance()->GetInvertedNavMatrix();
     
     startPoint = worldMat * startPoint;
     gmtl::Quatd invertedQuat = gmtl::makeRot< gmtl::Quatd >( worldMat );

@@ -81,7 +81,7 @@ void CoordinateSystemTransform::apply( osg::Node& node )
         {
             mStartToStopMatrixWithoutLocal *=
                 ves::xplorer::scenegraph::SceneManager::instance()->
-                    GetWorldDCS()->GetMat();
+                    GetNavDCS()->GetMat();
         }
 
         for( size_t i = 0; i < _nodePath.size() - 1; ++i )

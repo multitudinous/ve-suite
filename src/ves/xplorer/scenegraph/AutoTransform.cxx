@@ -192,7 +192,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
         
         ///Transform from juggler space to world space
         gmtl::Point3d worldWandMat =
-            ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedWorldDCS() * jugglerHeadPointTrans;
+            ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix() * jugglerHeadPointTrans;
         eye.set( worldWandMat[ 0 ], worldWandMat[ 1 ], worldWandMat[ 2 ] );
     }
     else

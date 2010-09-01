@@ -445,7 +445,7 @@ void Gloves::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+            ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
 
         return;
     }
@@ -493,7 +493,7 @@ void Gloves::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+            ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -824,7 +824,7 @@ double* Gloves::GetPlaneEquationConstantsNormalToWand()
     Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
     ///Transform from juggler space to world space
     Matrix44d worldWandMat =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat() * vjMat;
+        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->GetMat() * vjMat;
     ///Normalize vector
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, -1.0f );
@@ -1084,7 +1084,7 @@ void Gloves::UpdateRightHandGlove()
     gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
         gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
     gmtl::Matrix44d tempCamera = 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedWorldDCS();
+        ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
     hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
     mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
 
@@ -1176,7 +1176,7 @@ void Gloves::UpdateLeftHandGlove()
     gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
                                                              gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
     gmtl::Matrix44d tempCamera = 
-    ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedWorldDCS();
+    ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
     hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
     mLeftHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
     
