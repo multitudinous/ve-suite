@@ -64,6 +64,7 @@ sources = cppSources1
 sources += sca_util.getSourcesRecursive( srcDir )
 
 lib_env.Append(LIBS = ['ves_open_xml',
+                       'ves_xplorer',
                        'ves_xplorer_data',
                        'ves_xplorer_command',
                        'ves_xplorer_eventmanager',
@@ -71,6 +72,7 @@ lib_env.Append(LIBS = ['ves_open_xml',
                       ])
 lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'open', 'xml'),
+                           pj('#', buildDir, 'src', 'ves', 'xplorer'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'command'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
