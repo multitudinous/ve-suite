@@ -301,7 +301,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
               buttonData[ 2 ] == gadget::Digital::ON )
     {
         double* tempWandDir = GetDirection();
-        vprDEBUG( vesDBG, 2 ) << "|\tWand direction :"
+        vprDEBUG( vesDBG, 3 ) << "|\tWand direction :"
             << tempWandDir[ 0 ] << " : "
             << tempWandDir[ 1 ] << " : " << tempWandDir[ 2 ]
             << std::endl << vprDEBUG_FLUSH;
