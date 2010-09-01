@@ -69,7 +69,7 @@ if sca_util.GetPlatform() == "win32":
 
     
     Depends('velauncher.exe', launcherPyFiles)
-    launcherBundle.addFiles( freezeTarget )
+    launcherBundle.addFiles( pj('dist', 'velauncher.exe'),"",False )
 
 else:
     makespecAction = '%s --onefile --out=%s --path=%s ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir)
