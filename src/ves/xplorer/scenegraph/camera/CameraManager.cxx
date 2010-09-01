@@ -63,6 +63,8 @@
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/LineSegmentIntersector>
 
+#include <gmtl/gmtl.h>
+
 using namespace ves::xplorer::scenegraph::camera;
 using namespace ves::xplorer::scenegraph;
 
@@ -106,9 +108,15 @@ bool CameraManager::addChild( std::string const& name )
 {
     osg::ref_ptr< CameraObject > cameraObject = new CameraObject();
     cameraObject->setName( name );
-    DCS& dcs = cameraObject->GetDCS();     
-    dcs.SetMat( ves::xplorer::scenegraph::SceneManager::instance()->
-        GetInvertedGlobalViewMatrix() );
+    DCS& dcs = cameraObject->GetDCS();
+    const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( -90 ) ), 1, 0, 0 );
+    gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+    ///We need to rotate the camera geometry 90 initially so that the geometry
+    ///is in VR Juggler space (y up) so that when the view matrix is multiplied 
+    ///in the 90 is taken back out.
+    myMat = ves::xplorer::scenegraph::SceneManager::instance()->
+        GetGlobalViewMatrix() * myMat;
+    dcs.SetMat( myMat );
 
     return osg::Group::addChild( cameraObject.get() );
 }

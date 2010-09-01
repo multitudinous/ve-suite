@@ -508,10 +508,10 @@ void SceneManager::LatePreFrameUpdate()
         
         m_vrjHeadMatrix = 
             gmtl::convertTo< double >( m_vrjHead->getData() );
-        //const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
-        //const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
-        //m_vrjHeadMatrix = myMat * m_vrjHeadMatrix;
-        m_globalViewMatrix = m_vrjHeadMatrix * navMatrix;
+        const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
+        const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+        m_vrjHeadMatrix = myMat * m_vrjHeadMatrix;
+        m_globalViewMatrix =  m_invertedNavMatrix * m_vrjHeadMatrix;
         m_globalViewMatrixOSG.set( m_globalViewMatrix.mData );
         
         gmtl::invert( m_invertedGlobalViewMatrix, m_globalViewMatrix );
