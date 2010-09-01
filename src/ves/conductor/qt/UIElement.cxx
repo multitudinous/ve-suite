@@ -51,8 +51,15 @@ namespace ves
 {
 namespace conductor
 {
-
-UIElement::UIElement( )
+    
+UIElement::UIElement( ):
+    mIsMinimized( false ),
+    mUIMatrixDirty( false ),
+    mUITransform( 0 ),
+    mElementTransform( 0 ),
+    mElementMatrixDirty( false ),
+    mAnimationOn( false ),
+    mGeode( 0 )
 {
 
 }
