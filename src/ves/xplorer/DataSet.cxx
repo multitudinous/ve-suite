@@ -96,6 +96,8 @@
 //Used for strcpy to setup the data translator code
 #include <cstring>
 
+//#include <osgDB/WriteFile>
+
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 using namespace ves::builder::DataLoader;
@@ -1633,6 +1635,8 @@ void DataSet::CreateBoundingBoxGeode( void )
         bboxActors.at( i )->Delete();
     }
     bboxActors.clear();
+
+    //osgDB::writeNodeFile( *static_cast< osg::Group* >( m_visualBBox.get() ), "bbox.osg" ); 
 }
 ////////////////////////////////////////////////////////////////////////////////
 //create wireframe to ensure accurate representation
