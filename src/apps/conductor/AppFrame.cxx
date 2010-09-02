@@ -1045,8 +1045,8 @@ void AppFrame::Save( wxCommandEvent& event )
         canvas->Update();
         wxFileName vesFileName( mVESFileName );
 
-        //if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
-        if( !::wxFileName::IsDirWritable( ::wxGetCwd() ) )
+        if( !::wxFileName::IsDirWritable( ::wxGetCwd() ) || 
+           !::wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
         {
             wxString tempMessage = 
                 _( "Cannot write file " ) + 
@@ -1110,7 +1110,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
             break;
         }
 
-        if( vesFileName.FileExists() )
+        if( vesFileName.FileExists() && ::wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
         {
             wxString tempMessage = _( "Do you want to replace " ) + 
                 vesFileName.GetFullName() + _( "?" );
@@ -2767,7 +2767,7 @@ void AppFrame::OnDataLogging( wxCommandEvent& event )
                 break;
             }
             
-            if( vesFileName.FileExists() )
+            if( vesFileName.FileExists() && wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
             {
                 wxString tempMessage = _( "Do you want to replace " ) + 
                 vesFileName.GetFullName() + _( "?" );
@@ -2782,7 +2782,6 @@ void AppFrame::OnDataLogging( wxCommandEvent& event )
         }
         while( answer == wxID_NO );
         
-        //if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
         if( !::wxFileName::IsDirWritable( ::wxGetCwd() ) )
         {
             wxString tempMessage = _( "Cannot write file " ) + vesFileName.GetFullName() + _( "?" );
