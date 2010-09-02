@@ -52,6 +52,7 @@
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
+#include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
 #ifdef QT_ON
 #include <ves/xplorer/eventmanager/EventManager.h>
@@ -263,11 +264,28 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     if( ( buttonData[ 5 ] == gadget::Digital::TOGGLE_ON ) ||
         ( buttonData[ 5 ] == gadget::Digital::ON ) )
     {
-        if( cptEnabled )
+        if( cptEnabled && ( buttonData[ 5 ] == gadget::Digital::TOGGLE_ON ) )
         {
-            ;
+            ves::xplorer::scenegraph::camera::CameraObject* activeCamera =
+                cameraManager.GetActiveCameraObject();
+            unsigned int activeNum = 
+                cameraManager.getChildIndex( 
+                static_cast< osg::Group* >( activeCamera ) );
+            if( activeNum + 1 < cameraManager.getNumChildren() )
+            {
+                activeNum += 1;
+            }
+            else
+            {
+                activeNum = 0;
+            }
+            
+            cameraManager.SetActiveCameraObject( 
+                static_cast< ves::xplorer::scenegraph::camera::CameraObject* >( 
+                cameraManager.getChild( activeNum ) ), true );
         }
-        else
+        
+        if( !cptEnabled )
         {
             DeviceHandler::instance()->UnselectObjects();
         }
@@ -276,7 +294,6 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     else if(( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) ||
             ( buttonData[ 1 ] == gadget::Digital::ON ) )
     {
-        m_buttonPushed = true;
         if( cptEnabled && ( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) )
         {
             open::xml::DataValuePairPtr dvp( new open::xml::DataValuePair() );
@@ -284,8 +301,10 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             dvp->SetData( "AddCameraObject", addFlag );
             cameraManager.UpdateConductorData( dvp );
         }
-        else
+        
+        if( !cptEnabled )
         {
+            m_buttonPushed = true;
             FreeRotateAboutWand();
         }
     }
@@ -523,7 +542,7 @@ void Wand::ProcessHit()
         
         return;
     }
-    
+
     //Search for first item that is not the laser
     osg::Node* objectHit( NULL );
     for( osgUtil::LineSegmentIntersector::Intersections::iterator itr = 
@@ -548,6 +567,19 @@ void Wand::ProcessHit()
         return;
     }
 
+    ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetCameraManager();
+    bool cptEnabled = cameraManager.IsCPTEnabled();
+    if( cptEnabled )
+    {
+        if( m_cameraManager.Handle( scenegraph::camera::Event::RELEASE,
+            *m_beamLineSegment.get() ) )
+        {
+            vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit Selected a Camera"
+                << std::endl << vprDEBUG_FLUSH;
+        }
+    }    
+    
     //Now find the id for the cad
     //selectedGeometry = objectHit._geode;
     ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( objectHit );
