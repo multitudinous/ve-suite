@@ -110,7 +110,6 @@ void NormalizeVisitor::apply( osg::PositionAttitudeTransform& node )
     {
         osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
         SetupNormalizeForStateSet( stateset.get(), &node );
-        //return;
     }
 
     osg::NodeVisitor::traverse( node );
@@ -144,6 +143,13 @@ void NormalizeVisitor::SetupNormalizeForStateSet( osg::StateSet* stateset,
         if( (m.getScale()[ 0 ] == 1.0f) && (m.getScale()[ 1 ] == 1.0f) && (m.getScale()[ 2 ] == 1.0f) )
         {
             stateset->setMode( GL_RESCALE_NORMAL, osg::StateAttribute::OFF );
+        }
+        else
+        {
+            //If the user has a group node with a scale and then the user
+            //adds a file at run time the rescale of normals will not take
+            //effect.
+            stateset->setMode( GL_RESCALE_NORMAL, osg::StateAttribute::ON );
         }
     }
 }
