@@ -146,7 +146,7 @@ public:
 
     ///Processes device events
     ///This should be pure virtual, but isn't because of GlobalBase
-    virtual void ProcessEvents( ves::open::xml::CommandPtr command ){;}
+    virtual void ProcessEvents( ves::open::xml::CommandPtr command );
 
     ///This is a pure virtual function from GlobalBase
     virtual void UpdateCommand();

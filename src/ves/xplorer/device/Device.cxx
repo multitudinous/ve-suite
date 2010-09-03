@@ -52,6 +52,8 @@
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/PolytopeIntersector>
 
+#include <boost/concept_check.hpp>
+
 using namespace ves::xplorer;
 using namespace ves::xplorer::device;
 
@@ -61,16 +63,16 @@ Device::Device( const Device::Type& type )
     GlobalBase(),
     m_enabled( false ),
     m_type( type ),
-    mCenterPoint( NULL ),
     mCenterPointThreshold( NULL ),
     mCenterPointJump( NULL ),
     mResetPosition( NULL ),
+    mCenterPoint( NULL ),
     mResetAxis( NULL ),
     m_physicsSimulator( *scenegraph::PhysicsSimulator::instance() ),
     m_sceneManager( *scenegraph::SceneManager::instance() ),
     m_characterController( m_sceneManager.GetCharacterController() ),
-    m_cameraManager( m_sceneManager.GetCameraManager() ),
-    m_manipulatorManager( m_sceneManager.GetManipulatorManager() )
+    m_manipulatorManager( m_sceneManager.GetManipulatorManager() ),
+    m_cameraManager( m_sceneManager.GetCameraManager() )
 {
     ;
 }
@@ -82,8 +84,8 @@ Device::Device( const Device& device )
     m_physicsSimulator( device.m_physicsSimulator ),
     m_sceneManager( device.m_sceneManager ),
     m_characterController( device.m_characterController ),
-    m_cameraManager( device.m_cameraManager ),
-    m_manipulatorManager( device.m_manipulatorManager )
+    m_manipulatorManager( device.m_manipulatorManager ),
+    m_cameraManager( device.m_cameraManager )
 {
     ;
 }
@@ -116,6 +118,11 @@ Wand* Device::AsWand()
 const Device::Type& Device::GetType() const
 {
     return m_type;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::ProcessEvents( ves::open::xml::CommandPtr command )
+{
+    boost::ignore_unused_variable_warning( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateCommand()
@@ -241,12 +248,14 @@ const bool& Device::IsEnabled()
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
 {
-    ;
+    boost::ignore_unused_variable_warning( startPoint );
+    boost::ignore_unused_variable_warning( endPoint );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
-    ;
+    boost::ignore_unused_variable_warning( startPoint );
+    boost::ignore_unused_variable_warning( endPoint );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetResetWorldPosition(

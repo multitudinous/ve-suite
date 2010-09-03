@@ -79,35 +79,30 @@ vprSingletonImp( NavigationAnimationEngine );
 ////////////////////////////////////////////////////////////////////////////////
 NavigationAnimationEngine::NavigationAnimationEngine()
     :
-    pointCounter( 0 ),
-    movementIntervalCalc( 0.01 ),
-    movementSpeed( 10.0f ),
-    lastCommandId( 0 ),
-    currentFrame( 0 ),
-    writeFrame( 0 ),
-    thisQuatCam( 0 ),
-    t( 0.0f ),
     numQuatCams( 0 ),
     numPointsInFlyThrough( 0 ),
     activecam( false ),
-    _runFlyThrough( false ),
-    writeReadComplete( false ),
+    pointCounter( 0 ),
     cam_id( 0 ),
     activeFlyThrough( -1 ),
-    quatCamDirName( "./" )
+    lastCommandId( 0 ),
+    currentFrame( 0 ),
+    writeFrame( 0 ),
+    t( 0.0f ),
+    movementIntervalCalc( 0.01 ),
+    movementSpeed( 10.0f ),
+    frameTimer( new vpr::Timer() ),
+    mBeginAnim( false ),
+    mSetCenterPoint( false ),
+    mCenterPointDCS( 0 )
 {
     flyThroughList.clear();
     completionTest.push_back( 0 );
-    frameTimer = new vpr::Timer();
-
-    quatCamFileName = "stored_viewpts_flythroughs.vel";
 
     mEventHandlers[ std::string( "QC_LOAD_STORED_POINTS" ) ] =
         new ves::xplorer::event::QuatCamLoadFileEventHandler();
     mEventHandlers[ std::string( "QC_CLEAR_QUAT_DATA" ) ] =
         new ves::xplorer::event::QuatCamClearDataEventHandler();
-
-    mBeginAnim = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 NavigationAnimationEngine::~NavigationAnimationEngine()
@@ -119,42 +114,7 @@ void NavigationAnimationEngine::SetDCS( ves::xplorer::scenegraph::DCS* worldDCS 
 {
     _worldDCS = worldDCS;
 }
-////////////////////////////////////////////////////////////////////////////////
-/*void NavigationAnimationEngine::ClearQuaternionData()
-{
-    TurnOffMovement();
 
-    for( size_t i = 0; i < QuatCams.size(); ++i )
-    {
-        delete QuatCams.at( i );
-    }
-    QuatCams.clear();
-
-    flyThroughList.clear();
-
-    //More hacking to initialize the flythroughlist
-    //This forces us to only have one flythrought per ves file
-    if( flyThroughList.empty() )
-    {
-        //AddNewFlythrough();
-    }
-
-    UpdateViewGUIPointData();
-}*/
-////////////////////////////////////////////////////////////////////////////////
-/*void NavigationAnimationEngine::Relocate(
-ves::xplorer::scenegraph::DCS* worldDCS )
-{
-    gmtl::Matrix44d vjm;
-
-    double temp = GetQuatCamIncrementor();
-
-    if( t >= 1.0f )
-    {
-        activecam = false;
-        t = 0.0f;
-    }
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::ProcessCommand()
 {
@@ -259,22 +219,9 @@ void NavigationAnimationEngine::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::UpdateCommand()
 {
-    std::cerr << "doing nothing in cfdQuatCamHandler::UpdateCommand()"
+    std::cout << "|\tNavigationAnimationEngine::UpdateCommand doing nothing "
               << std::endl;
 }
-////////////////////////////////////////////////////////////////////////////////
-/*double NavigationAnimationEngine::getLinearDistance(
-    gmtl::Vec3d vjVecLast, gmtl::Vec3d vjVecNext )
-{
-    double distance;
-    gmtl::Vec3d temp;
-
-    temp = vjVecNext - vjVecLast;
-
-    distance = gmtl::length( temp );
-
-    return distance;
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 double NavigationAnimationEngine::GetQuatCamIncrementor()
 {
@@ -303,8 +250,9 @@ void NavigationAnimationEngine::SetAnimationEndPoints(
     mSetCenterPoint = setCenterPoint;
     mCenterPointDCS = centerPointDCS;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool NavigationAnimationEngine::IsActive()
 {
     return mBeginAnim;
 }
+////////////////////////////////////////////////////////////////////////////////

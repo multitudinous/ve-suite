@@ -67,13 +67,13 @@ vprSingletonImp( DeviceHandler );
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
     :
-    mActiveDCS( scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() ),
-    mSelectedDCS( NULL ),
-    mDeviceMode( "World Navigation" ),
-    mResetCenterPointPosition( 0.0, 0.1, 0.0 ),
-    mCenterPoint( mResetCenterPointPosition ),
     mCenterPointThreshold( 0.1 ),
     mCenterPointJump( 10.0 ),
+    mCenterPoint( mResetCenterPointPosition ),
+    mResetCenterPointPosition( 0.0, 0.1, 0.0 ),
+    mDeviceMode( "World Navigation" ),
+    mActiveDCS( scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() ),
+    mSelectedDCS( NULL ),
     m_deviceBeingProcessed( NULL )
 {
     //Initialize glove device

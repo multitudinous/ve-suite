@@ -113,42 +113,25 @@ public:
 
     bool IsActive();
 
-protected:
-    ///
-    unsigned int numQuatCams;
-    ///
-    unsigned int numFlyThroughs;
-    ///
-    unsigned int* numPointsInFlyThrough;
-    
-    ///
-    int cfdId;
-    ///
-    int cfdIso_value;
-    
+private:
     ///Update the gui with the new data
     void UpdateViewGUIPointData();
 
     ///Map of event handlers for texture-based vis
     std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
+    ///
     void Relocate( ves::xplorer::scenegraph::DCS* worldDCS );
+    ///
     double GetQuatCamIncrementor();
 
-private:
+    ///
+    unsigned int numQuatCams;
+    ///
+    unsigned int* numPointsInFlyThrough;
     ///
     bool activecam;
     ///
-    bool _runFlyThrough;
-    ///
-    bool writeReadComplete;
-    ///
-    bool onMasterNode;
-
-    ///
     unsigned int pointCounter;
-
-    ///
-    int run;
     ///
     int cam_id;
     ///
@@ -159,49 +142,31 @@ private:
     int currentFrame;
     ///
     int writeFrame;
-
     ///
     double t;
-    ///
-    double rotvec[ 3 ];
-    ///
-    double angle;
     ///
     double movementIntervalCalc;
     ///
     double movementSpeed;
-
-    ///
-    std::string _param;
-    ///
-    std::string quatCamFileName;
-    ///
-    std::string quatCamDirName;
-
     ///
     std::vector< cfdQuatCam* > QuatCams;
     ///
     std::vector< std::vector< int > > flyThroughList;
     ///
     std::vector< int > completionTest;
-
     ///
     vpr::Timer* frameTimer;
-
-    ///
-    cfdQuatCam* thisQuatCam;
-
     ///
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
-
+    ///
     gmtl::Vec3d mEndVec;
-
+    ///
     gmtl::Quatd mEndQuat;
-
+    ///
     bool mBeginAnim;
-
+    ///
     bool mSetCenterPoint;
-
+    ///
     ves::xplorer::scenegraph::DCS* mCenterPointDCS;
 
 };
