@@ -238,25 +238,13 @@ void CameraPlacementEventHandler::Execute(
             *(NavigationAnimationEngine::instance());
         nae.SetDCS( sceneManager.GetNavDCS() );
 
-        osg::Matrixd tempMatrix( selectedMatrix.mData );
-        tempMatrix =
-            osg::Matrixd::inverse( tempMatrix ) *
-            newCameraObject->GetInitialViewMatrix();
-
-        /*
-        osg::Camera& camera = newCameraObject->GetCamera();
-        camera.setViewMatrix( tempMatrix );
-        osg::Vec3d eye, up, ctr;
-        osg::Matrixd viewMatrix( selectedMatrix.mData );
-        viewMatrix.getLookAt( eye, ctr, up );
-        osg::Vec3d viewVector = ctr - eye;
-        viewVector.normalize();
-        viewVector *= 10.0;
-        viewMatrix.setTrans( viewMatrix.getTrans() + viewVector );
-        */
-
         //Hand our created end points off to the animation engine
         selectedMatrix = gmtl::invert( selectedMatrix );
+        const gmtl::Matrix44d tempHeadMatrix = sceneManager.GetHeadMatrix();
+        const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
+        gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+        selectedMatrix = tempHeadMatrix * myMat * selectedMatrix;
+
         gmtl::Vec3d navToPoint =
             gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
         gmtl::Quatd rotationPoint =
