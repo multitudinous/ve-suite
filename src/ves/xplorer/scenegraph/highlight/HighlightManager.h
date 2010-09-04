@@ -121,6 +121,8 @@ public:
     ///
     void RegisterNodeAndHighlight( osg::Node* inNode, CircleHighlight* circle );
 
+    ///Create a new highlight circle for a given node path and node
+    void CreateHighlightCircle( osg::Node* inNode, osg::NodePath& nodePath );
 protected:
     ///Destructor
     virtual ~HighlightManager();

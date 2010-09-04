@@ -1077,25 +1077,7 @@ void KeyboardMouse::OnMouseRelease( gadget::InputArea& inputArea )
                 break;
             }
 
-            if( highlightManager.IsNodeCircled( node ) )
-            {
-                break;
-            }
-
-            const std::string& tempTagName = 
-                highlightManager.GetNextTagName();
-            osg::Vec3 eyePoint;
-            osg::ref_ptr< scenegraph::highlight::CircleHighlight >
-                circleHighlight =
-                    new scenegraph::highlight::CircleHighlight();
-            osg::ref_ptr< osg::Node > tempCircle = 
-                scenegraph::CreateCircleHighlight(
-                eyePoint, nodePath, *node, tempTagName );
-            circleHighlight->addChild( tempCircle );
-
-            highlightManager.RegisterNodeAndHighlight( node, circleHighlight.get() );
-
-            highlightManager.addChild( circleHighlight.get() );
+            highlightManager.CreateHighlightCircle( node, nodePath );
 
             break;
         }

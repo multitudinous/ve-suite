@@ -253,3 +253,25 @@ void HighlightManager::RegisterNodeAndHighlight( osg::Node* inNode, CircleHighli
     }
     m_nodeToCircleHighlights[ inNode ] = circle;
 }
+////////////////////////////////////////////////////////////////////////////////
+void HighlightManager::CreateHighlightCircle( osg::Node* inNode, osg::NodePath& nodePath )
+{
+    if( IsNodeCircled( inNode ) )
+    {
+        return;
+    }
+
+    const std::string& tempTagName = GetNextTagName();
+    osg::Vec3 eyePoint;
+    osg::ref_ptr< scenegraph::highlight::CircleHighlight >
+        circleHighlight = new scenegraph::highlight::CircleHighlight();
+    osg::ref_ptr< osg::Node > tempCircle = 
+        scenegraph::CreateCircleHighlight(
+        eyePoint, nodePath, *inNode, tempTagName );
+    circleHighlight->addChild( tempCircle );
+    
+    RegisterNodeAndHighlight( inNode, circleHighlight.get() );
+    
+    addChild( circleHighlight.get() );
+}
+////////////////////////////////////////////////////////////////////////////////

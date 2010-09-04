@@ -45,6 +45,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
+#include <ves/xplorer/scenegraph/Select.h>
 
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
@@ -523,15 +524,12 @@ void Wand::UpdateSelectionLine( bool drawLine )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::ProcessHit()
 {
-    osgUtil::IntersectionVisitor objectBeamIntersectVisitor( m_beamLineSegment.get() );
-
-    rootNode->accept( objectBeamIntersectVisitor );
-
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        scenegraph::TestForIntersections( *m_beamLineSegment.get(),
+                                     *m_sceneManager.GetModelRoot() );
+    
     //Unselect the previous selected DCS
     DeviceHandler::instance()->UnselectObjects();
-
-    osgUtil::LineSegmentIntersector::Intersections& intersections =
-        m_beamLineSegment->getIntersections();
     
     //Now find the new selected DCS
     if( intersections.empty() )
@@ -572,11 +570,22 @@ void Wand::ProcessHit()
     bool cptEnabled = cameraManager.IsCPTEnabled();
     if( cptEnabled )
     {
+        scenegraph::highlight::HighlightManager& highlightManager =
+            m_sceneManager.GetHighlightManager();
         if( m_cameraManager.Handle( scenegraph::camera::Event::RELEASE,
             *m_beamLineSegment.get() ) )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit Selected a Camera"
                 << std::endl << vprDEBUG_FLUSH;
+        }
+        else if( highlightManager.IsToggled() )
+        {            
+            //If we found a low level node
+            osg::NodePath nodePath = intersections.begin()->nodePath;
+            nodePath.pop_back();
+            osg::Node* node = nodePath[ nodePath.size() - 1 ];
+            
+            highlightManager.CreateHighlightCircle( node, nodePath );
         }
     }    
     
