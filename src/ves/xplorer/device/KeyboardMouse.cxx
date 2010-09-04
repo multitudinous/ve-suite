@@ -1053,34 +1053,51 @@ void KeyboardMouse::OnMouseRelease( gadget::InputArea& inputArea )
 
             scenegraph::highlight::HighlightManager& highlightManager =
                 m_sceneManager.GetHighlightManager();
-            if( highlightManager.IsToggled() )
+            if( !highlightManager.IsToggled() )
             {
-                osgUtil::LineSegmentIntersector::Intersections& intersections =
-                    scenegraph::TestForIntersections(
-                    *mLineSegmentIntersector.get(),
-                    *m_sceneManager.GetModelRoot() );
-
-                //If we found a low level node
-                if( !intersections.empty() )
-                {
-                    osg::NodePath nodePath = intersections.begin()->nodePath;
-                    nodePath.pop_back();
-                    osg::Node* node = nodePath[ nodePath.size() - 1 ];
-                    if( node )
-                    {
-                        osg::Vec3 eyePoint;
-                        osg::ref_ptr< scenegraph::highlight::CircleHighlight >
-                            circleHighlight =
-                                new scenegraph::highlight::CircleHighlight();
-                            circleHighlight->addChild(
-                                scenegraph::CreateCircleHighlight(
-                                    eyePoint, nodePath, *node, "Label A" ) );
-                        highlightManager.addChild( circleHighlight.get() );
-
-                        break;
-                    }
-                }
+                break;
             }
+
+            osgUtil::LineSegmentIntersector::Intersections& intersections =
+                scenegraph::TestForIntersections(
+                *mLineSegmentIntersector.get(),
+                *m_sceneManager.GetModelRoot() );
+
+            //If we found a low level node
+            if( intersections.empty() )
+            {
+                break;
+            }
+
+            osg::NodePath nodePath = intersections.begin()->nodePath;
+            nodePath.pop_back();
+            osg::Node* node = nodePath[ nodePath.size() - 1 ];
+            if( !node )
+            {
+                break;
+            }
+
+            if( highlightManager.IsNodeCircled( node ) )
+            {
+                break;
+            }
+
+            const std::string& tempTagName = 
+                highlightManager.GetNextTagName();
+            osg::Vec3 eyePoint;
+            osg::ref_ptr< scenegraph::highlight::CircleHighlight >
+                circleHighlight =
+                    new scenegraph::highlight::CircleHighlight();
+            osg::ref_ptr< osg::Node > tempCircle = 
+                scenegraph::CreateCircleHighlight(
+                eyePoint, nodePath, *node, tempTagName );
+            circleHighlight->addChild( tempCircle );
+
+            highlightManager.RegisterNodeAndHighlight( node, circleHighlight.get() );
+
+            highlightManager.addChild( circleHighlight.get() );
+
+            break;
         }
 
         if( m_manipulatorManager.IsEnabled() )

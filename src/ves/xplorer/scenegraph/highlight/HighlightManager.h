@@ -112,6 +112,15 @@ public:
     ///
     void Toggle( bool const& toggle = true );
 
+    ///Return an incremented tag name
+    const std::string& GetNextTagName();
+
+    ///Set the node this circle highlight is associated with
+    bool IsNodeCircled( osg::Node* inNode );
+    
+    ///
+    void RegisterNodeAndHighlight( osg::Node* inNode, CircleHighlight* circle );
+
 protected:
     ///Destructor
     virtual ~HighlightManager();
@@ -129,6 +138,13 @@ private:
     ///The active highlight
     CircleHighlight* m_activeCircleHighlight;
 
+    ///Store tag names
+    std::vector< std::string > m_tagNames;
+    
+    ///Store nodes associated with highlight circles
+    std::map< osg::Node*, CircleHighlight* > m_nodeToCircleHighlights;
+    typedef std::map< osg::Node*, CircleHighlight* >::const_iterator 
+        NodeToCircleHighlightsIter;
 };
 } //end highlight
 } //end scenegraph

@@ -63,6 +63,8 @@
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/LineSegmentIntersector>
 
+#include <boost/lexical_cast.hpp>
+
 using namespace ves::xplorer::scenegraph::highlight;
 using namespace ves::xplorer::scenegraph;
 
@@ -94,14 +96,16 @@ HighlightManager::HighlightManager(
     :
     osg::Group( highlightManager, copyop ),
     m_enabled( highlightManager.m_enabled ),
-    m_activeCircleHighlight( highlightManager.m_activeCircleHighlight )
+    m_activeCircleHighlight( highlightManager.m_activeCircleHighlight ),
+    m_tagNames( highlightManager.m_tagNames )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 HighlightManager::~HighlightManager()
 {
-    ;
+    m_tagNames.clear();
+    m_nodeToCircleHighlights.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool HighlightManager::addChild( CircleHighlight* child )
@@ -162,6 +166,8 @@ void HighlightManager::removeChildren()
     //SetActiveCircleHighlight( NULL );
 
     _children.clear();
+    m_tagNames.clear();
+    m_nodeToCircleHighlights.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool HighlightManager::replaceChild(
@@ -220,3 +226,30 @@ void HighlightManager::UpdateConductorData()
     communication::CommunicationHandler::instance()->SetXMLCommand( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
+const std::string& HighlightManager::GetNextTagName()
+{
+    std::string tempName("Label ");
+    size_t numNames = m_tagNames.size();
+    tempName.append( boost::lexical_cast<std::string>( numNames ) );
+    m_tagNames.push_back( tempName );
+    return *(m_tagNames.end()-1);
+}
+////////////////////////////////////////////////////////////////////////////////
+bool HighlightManager::IsNodeCircled( osg::Node* inNode )
+{
+    NodeToCircleHighlightsIter iter = m_nodeToCircleHighlights.find( inNode );
+    if( iter != m_nodeToCircleHighlights.end() )
+    {
+        return true;
+    }
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void HighlightManager::RegisterNodeAndHighlight( osg::Node* inNode, CircleHighlight* circle )
+{
+    if( IsNodeCircled( inNode ) )
+    {
+        return;
+    }
+    m_nodeToCircleHighlights[ inNode ] = circle;
+}
