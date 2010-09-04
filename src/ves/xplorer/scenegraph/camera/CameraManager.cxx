@@ -124,7 +124,7 @@ bool CameraManager::addChild( std::string const& name )
 CameraObject* const CameraManager::ConvertNodeToCameraObject(
     osg::Node* const node )
 {
-    return static_cast< CameraObject* >( node );
+    return dynamic_cast< CameraObject* >( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::Enable( const bool& enable )
