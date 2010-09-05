@@ -492,6 +492,7 @@ void CameraObject::CreateGeometry()
         "varying vec4 eyePos; \n"
         "varying vec3 lightPos; \n"
         "varying vec3 normal; \n"
+        "uniform vec3 glowColor; \n"
 
         "const vec3 ambMat  = vec3( 0.368627, 0.368421, 0.368421 ); \n"
         "const vec3 diffMat = vec3( 0.886275, 0.885003, 0.885003 ); \n"
@@ -512,7 +513,8 @@ void CameraObject::CreateGeometry()
             "vec3 totalSpecular = \n"
                 "gl_LightSource[ 0 ].specular.rgb * specMat * pow( RDotL, 15.0 ); \n"
 
-            "gl_FragColor = vec4( totalAmbient + totalDiffuse + totalSpecular, 1.0 ); \n"
+            "gl_FragData[ 0 ] = vec4( totalAmbient + totalDiffuse + totalSpecular, 1.0 ); \n"
+            "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
         "} \n";
 
         osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
