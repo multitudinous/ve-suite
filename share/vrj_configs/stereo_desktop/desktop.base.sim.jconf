@@ -4,7 +4,7 @@
    <elements>
       <user name="User1" version="1">
          <head_position>VJHead</head_position>
-         <interocular_distance>0.069</interocular_distance>
+         <interocular_distance>0.0</interocular_distance>
       </user>
       <simulated_digital_device name="SimWandButtons" version="2">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
@@ -263,7 +263,7 @@
             </key_modifier_pair>
          </key_pair>
          <initial_position>0.0</initial_position>
-         <initial_position>1.0668</initial_position>
+         <initial_position>0.0</initial_position>
          <initial_position>0.0</initial_position>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>

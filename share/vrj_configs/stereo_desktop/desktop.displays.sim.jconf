@@ -49,18 +49,18 @@
                <size>1.0</size>
                <size>1.0</size>
                <view>Left Eye</view>
-               <lower_left_corner>-1.2192</lower_left_corner>
-               <lower_left_corner>0.1524</lower_left_corner>
-               <lower_left_corner>-1.8288</lower_left_corner>
-               <lower_right_corner>1.2192</lower_right_corner>
-               <lower_right_corner>0.1524</lower_right_corner>
-               <lower_right_corner>-1.8288</lower_right_corner>
-               <upper_right_corner>1.2192</upper_right_corner>
-               <upper_right_corner>1.9812</upper_right_corner>
-               <upper_right_corner>-1.8288</upper_right_corner>
-               <upper_left_corner>-1.2192</upper_left_corner>
-               <upper_left_corner>1.9812</upper_left_corner>
-               <upper_left_corner>-1.8288</upper_left_corner>
+               <lower_left_corner>-1.25</lower_left_corner>
+               <lower_left_corner>-1.0</lower_left_corner>
+               <lower_left_corner>-1.5</lower_left_corner>
+               <lower_right_corner>1.25</lower_right_corner>
+               <lower_right_corner>-1.0</lower_right_corner>
+               <lower_right_corner>-1.5</lower_right_corner>
+               <upper_right_corner>1.25</upper_right_corner>
+               <upper_right_corner>1.0</upper_right_corner>
+               <upper_right_corner>-1.5</upper_right_corner>
+               <upper_left_corner>-1.25</upper_left_corner>
+               <upper_left_corner>1.0</upper_left_corner>
+               <upper_left_corner>-1.5</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
