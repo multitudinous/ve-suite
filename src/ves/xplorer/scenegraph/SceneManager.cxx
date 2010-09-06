@@ -410,14 +410,23 @@ void SceneManager::_createLogo()
 
     if( !mLogoNode.valid() )
     {
-        double translation[ 3 ] = { -1.7, 4.6, 3.1 };
+        mLogoNode = new ves::xplorer::scenegraph::DCS();
+        if( IsDesktopMode() )
+        {
+            double translation[ 3 ] = { -1.7, 4.6, 0.0 };
+            mLogoNode->SetTranslationArray( translation );
+        }
+        else
+        {
+            double translation[ 3 ] = { -1.7, 4.6, 3.1 };
+            mLogoNode->SetTranslationArray( translation );
+        }
+
         osg::Quat quat( -1.0, osg::Vec3( 0, 0, 1 ) );
         double scale[ 3 ] = { 0.0065, 0.0065, 0.0065 };
-
-        mLogoNode = new ves::xplorer::scenegraph::DCS();
-        mLogoNode->SetTranslationArray( translation );
         mLogoNode->SetQuat( quat );
         mLogoNode->SetScaleArray( scale );
+        mLogoNode->setName( "Logo Node" );
 
         //m_blueArrow = new ves::xplorer::scenegraph::CADEntity( 
         //    BlueArrow(), mLogoNode.get(), true, "Off" );
