@@ -443,6 +443,8 @@ void CameraPlacementEventHandler::Execute(
                 GetCamera().setComputeNearFarMode(
                 osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
         }
+        
+        cameraManager.GetActiveCameraObject()->Update();
         break;
     }
     case PROJECTION_EFFECT_ON_OFF:
