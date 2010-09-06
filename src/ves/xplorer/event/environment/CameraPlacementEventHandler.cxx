@@ -127,6 +127,11 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
         FOCAL_RANGE;
     mCommandNameToInt[ "MAX_CIRCLE_OF_CONFUSION" ] =
         MAX_CIRCLE_OF_CONFUSION;
+
+    mCommandNameToInt[ "AUTO_COMPUTER_NEAR_FAR_PLANE" ] =
+        AUTO_COMPUTER_NEAR_FAR_PLANE;
+    mCommandNameToInt[ "CAMERA_MANAGER_ON_OFF" ] =
+        CAMERA_MANAGER_ON_OFF;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementEventHandler::~CameraPlacementEventHandler()
@@ -404,9 +409,40 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair(
             "depthOfFieldEffectOnOff" )->GetData( selection );
 
+        //bool onOff = ( selection != 0 );
+        //cameraManager.GetActiveCameraObject()->
+        //    DisplayDepthOfFieldEffect( onOff );
+        break;
+    }
+    case CAMERA_MANAGER_ON_OFF:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "cameraManagerOnOff" )->GetData( selection );
+        
         bool onOff = ( selection != 0 );
-        //mCameraEntity->DisplayDepthOfFieldEffect( onOff );
         cameraManager.EnableCPT( onOff );
+        break;
+    }
+    case AUTO_COMPUTER_NEAR_FAR_PLANE:
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "autoComputeNearFarPlane" )->GetData( selection );
+        
+        bool onOff = ( selection != 0 );
+        if( onOff )
+        {
+            cameraManager.GetActiveCameraObject()->GetCamera()->
+                setComputeNearFarMode(
+                osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+        }
+        else
+        {
+            cameraManager.GetActiveCameraObject()->GetCamera()->
+                setComputeNearFarMode(
+                osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+        }
         break;
     }
     case PROJECTION_EFFECT_ON_OFF:

@@ -111,6 +111,9 @@ public:
         FOCAL_DISTANCE,
         FOCAL_RANGE,
         MAX_CIRCLE_OF_CONFUSION,
+        
+        AUTO_COMPUTER_NEAR_FAR_PLANE,
+        CAMERA_MANAGER_ON_OFF
     };
 
     ///Set the cfdModel

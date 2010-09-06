@@ -265,7 +265,7 @@ bool CameraPlacementToolUIDialog::TransferDataToWindow()
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::Lock( bool l )
+void CameraPlacementToolUIDialog::Lock( bool WXUNUSED( l ) )
 {
     ;
 }
@@ -338,11 +338,21 @@ void CameraPlacementToolUIDialog::BuildGUI()
     imageDirectoryText->Wrap( -1 );
     imageManagementSizer->Add( imageDirectoryText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    m_imageDirPickerCtrl = new wxDirPickerCtrl( mainPanel, CPT_IMAGE_DIR_PICKER_CTRL, wxT(""), wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
+    m_imageDirPickerCtrl = new wxDirPickerCtrl( mainPanel, CPT_IMAGE_DIR_PICKER_CTRL, ::wxGetCwd(), wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
     imageManagementSizer->Add( m_imageDirPickerCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     managementSettingsSizer->Add( imageManagementSizer, 0, wxEXPAND, 5 );
 
+	wxStaticLine* managementSettingsSeparator1;
+	managementSettingsSeparator1 = new wxStaticLine( mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	managementSettingsSizer->Add( managementSettingsSeparator1, 0, wxEXPAND | wxALL, 5 );
+	
+	wxString m_cameraManagerButtonChoices[] = { wxT("Off"), wxT("On") };
+	int m_cameraManagerButtonNChoices = sizeof( m_cameraManagerButtonChoices ) / sizeof( wxString );
+	m_cameraManagerButton = new wxRadioBox( mainPanel, wxID_ANY, wxT("Camera Manager"), wxDefaultPosition, wxDefaultSize, m_cameraManagerButtonNChoices, m_cameraManagerButtonChoices, 1, wxRA_SPECIFY_ROWS );
+	m_cameraManagerButton->SetSelection( 0 );
+	managementSettingsSizer->Add( m_cameraManagerButton, 0, 0, 5 );
+	    
     mainPanelSizer->Add( managementSettingsSizer, 0, wxALL|wxEXPAND, 10 );
 
     wxStaticBoxSizer* highlightToolSettingsSizer;
@@ -676,6 +686,21 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     projectionSettingsSizer->Add( aspectRatioSizer, 0, wxALL | wxEXPAND, 5 );
 
+	wxBoxSizer* autoComputerFarPlaneSizer;
+	autoComputerFarPlaneSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxString m_autoComputeFarButtonChoices[] = { wxT("Off"), wxT("On") };
+	int m_autoComputeFarButtonNChoices = 
+        sizeof( m_autoComputeFarButtonChoices ) / sizeof( wxString );
+	m_autoComputeFarButton = 
+        new wxRadioBox( cameraPanel, wxID_ANY, wxT("Auto Compute Far Plane"), 
+        wxDefaultPosition, wxDefaultSize, m_autoComputeFarButtonNChoices, 
+        m_autoComputeFarButtonChoices, 1, wxRA_SPECIFY_ROWS );
+	m_autoComputeFarButton->SetSelection( 0 );
+	autoComputerFarPlaneSizer->Add( m_autoComputeFarButton, 0, 0, 5 );
+	
+	projectionSettingsSizer->Add( autoComputerFarPlaneSizer, 1, wxEXPAND, 5 );
+    
     wxBoxSizer* nearPlaneSizer;
     nearPlaneSizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -941,6 +966,17 @@ void CameraPlacementToolUIDialog::BuildGUI()
     //Add HUD display to scene graph
     wxCommandEvent newEvent;
     OnCameraWindowOnOffRadioBox( newEvent );
+    
+    // Connect Events
+	m_autoComputeFarButton->
+        Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
+        wxCommandEventHandler( 
+        CameraPlacementToolUIDialog::OnAutoComputerFarPlane ), NULL, this );
+
+	m_cameraManagerButton->
+        Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
+        wxCommandEventHandler( 
+        CameraPlacementToolUIDialog::OnCameraManagerEvent ), NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ClearInstructions()
@@ -1110,7 +1146,7 @@ void CameraPlacementToolUIDialog::OnNextCameraButton(
 
     m_currentCameraSelection = m_cameraComboBox->GetSelection();
     if( m_currentCameraSelection == -1 ||
-        m_currentCameraSelection == count - 1 )
+        m_currentCameraSelection == int( count - 1 ) )
     {
         m_currentCameraSelection = 0;
     }
@@ -1354,7 +1390,7 @@ void CameraPlacementToolUIDialog::OnNextMarkerButton(
 
     m_currentMarkerSelection = m_markerComboBox->GetSelection();
     if( m_currentMarkerSelection == -1 ||
-        m_currentMarkerSelection == count - 1 )
+        m_currentMarkerSelection == int( count - 1 ) )
     {
         m_currentMarkerSelection = 0;
     }
@@ -1440,7 +1476,7 @@ void CameraPlacementToolUIDialog::OnRemoveAllMarkersButton(
 void CameraPlacementToolUIDialog::OnDepthOfFieldEffectOnOffRadioBox(
     wxCommandEvent& WXUNUSED( event ) )
 {
-    unsigned int selection = mProjectionEffectOnOff->GetSelection();
+    unsigned int selection = mDepthOfFieldEffectOnOff->GetSelection();
 
     mCommandName = "DEPTH_OF_FIELD_EFFECT_ON_OFF";
 
@@ -1995,7 +2031,7 @@ void CameraPlacementToolUIDialog::UpdateCameraData()
         dvp->GetData( value );
 
         m_currentCameraSelection = value;
-        if( m_currentCameraSelection == m_cameraComboBox->GetStrings().size() )
+        if( m_currentCameraSelection == int( m_cameraComboBox->GetStrings().size() ) )
         {
             m_currentCameraSelection = -1;
             m_cameraComboBox->SetValue( wxT( "Select a Camera" ) );
@@ -2042,5 +2078,51 @@ void CameraPlacementToolUIDialog::UpdateMarkerData()
     m_markerComboBox->SetStringSelection( markerName );
 
     ++m_markerNameNum;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnAutoComputerFarPlane( wxCommandEvent& WXUNUSED( event ) )
+{
+    unsigned int selection = m_autoComputeFarButton->GetSelection();
+    //0 = On
+    //1 = Off
+    if( selection )
+    {
+        mNearPlaneSpinCtrl->Disable();
+        mNearPlaneSlider->Disable();
+        mFarPlaneSpinCtrl->Disable();
+        mFarPlaneSlider->Disable();
+    }
+    else
+    {
+        mNearPlaneSpinCtrl->Enable();
+        mNearPlaneSlider->Enable();
+        mFarPlaneSpinCtrl->Enable();
+        mFarPlaneSlider->Enable();
+    }
+
+    mCommandName = "AUTO_COMPUTER_NEAR_FAR_PLANE";
+    
+    ves::open::xml::DataValuePairSharedPtr 
+        tempDVP( new ves::open::xml::DataValuePair() );
+    tempDVP->SetData( "autoComputeNearFarPlane", selection );
+    mInstructions.push_back( tempDVP );
+    
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnCameraManagerEvent( wxCommandEvent& WXUNUSED( event ) )
+{
+    unsigned int selection = m_cameraManagerButton->GetSelection();
+    
+    mCommandName = "CAMERA_MANAGER_ON_OFF";
+    
+    ves::open::xml::DataValuePairSharedPtr 
+        tempDVP( new ves::open::xml::DataValuePair() );
+    tempDVP->SetData( "cameraManagerOnOff", selection );
+    mInstructions.push_back( tempDVP );
+    
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////

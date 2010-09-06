@@ -162,6 +162,9 @@ private:
     void OnMaxCircleOfConfusionText( wxCommandEvent& event );
     void OnMaxCircleOfConfusionSlider( wxCommandEvent& WXUNUSED( event ) );
 
+    void OnAutoComputerFarPlane( wxCommandEvent& event );
+    void OnCameraManagerEvent( wxCommandEvent& event );
+    
     bool EnsureSliders( int activeSliderID );
 
     void UpdateFieldOfViewControls();
@@ -210,6 +213,8 @@ private:
     wxButton* m_saveAllImagesButton;
     wxDirPickerCtrl* m_imageDirPickerCtrl;
 
+    wxRadioBox* m_cameraManagerButton;
+
     wxToggleButton* m_toggleHighlightToolButton;
     wxBitmapButton* m_prevMarkerButton;
     wxComboBox* m_markerComboBox;
@@ -233,6 +238,9 @@ private:
     wxSlider* mFieldOfViewSlider;
     ves::conductor::util::wxSpinCtrlDbl* mAspectRatioSpinCtrl;
     wxSlider* mAspectRatioSlider;
+    
+    wxRadioBox* m_autoComputeFarButton;
+
     ves::conductor::util::wxSpinCtrlDbl* mNearPlaneSpinCtrl;
     wxSlider* mNearPlaneSlider;
     ves::conductor::util::wxSpinCtrlDbl* mFarPlaneSpinCtrl;
