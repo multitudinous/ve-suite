@@ -229,6 +229,10 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "MAX_CIRCLE_OF_CONFUSION" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "AUTO_COMPUTER_NEAR_FAR_PLANE" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "CAMERA_MANAGER_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()
