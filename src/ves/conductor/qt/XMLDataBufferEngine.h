@@ -60,7 +60,7 @@ namespace ves
 {
 namespace conductor
 {
-class VE_GUIPLUGINS_EXPORTS XMLDataBufferEngine
+class VE_CONDUCTOR_QTUI_EXPORTS XMLDataBufferEngine
 {
 private:
     /// Required so that vpr::Singleton can instantiate this class.

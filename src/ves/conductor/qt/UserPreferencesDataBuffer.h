@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef USER_PREFERENCES_DATA_BUFFER_H
-#define USER_PREFERENCES_DATA_BUFFER_H
+#ifndef QT_USER_PREFERENCES_DATA_BUFFER_H
+#define QT_USER_PREFERENCES_DATA_BUFFER_H
 /*!\file UserPreferencesDataBuffer.h
 UserPreferencesDataBuffer API
 */
@@ -54,7 +54,7 @@ namespace ves
 {
 namespace conductor
 {
-class VE_GUIPLUGINS_EXPORTS UserPreferencesDataBuffer
+class VE_CONDUCTOR_QTUI_EXPORTS UserPreferencesDataBuffer
 {
 private:
     // Required so that vpr::Singleton can instantiate this class.

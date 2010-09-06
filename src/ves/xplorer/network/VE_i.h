@@ -57,7 +57,7 @@ namespace xplorer
 {
 namespace network
 {
-class  VE_i : public virtual POA_Body::UI
+class VE_XPLORER_NETWORK_EXPORTS VE_i : public virtual POA_Body::UI
 {
 public:
     //Constructor

@@ -31,13 +31,16 @@
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
 
+// This file has to be included first on Windows, or the compiler will complain about u_int in an ACE header file.
+#include <ves/xplorer/network/VE_i.h>
+
 #include <ves/conductor/qt/NetworkLoader.h>
+
 #include <ves/conductor/qt/XMLDataBufferEngine.h>
 #include <ves/conductor/qt/UserPreferencesDataBuffer.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
-#include <ves/xplorer/network/VE_i.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -49,7 +52,6 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #include <ves/util/commands/Minerva.h>
-
 
 namespace ves
 {

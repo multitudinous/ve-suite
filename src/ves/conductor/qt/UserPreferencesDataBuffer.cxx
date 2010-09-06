@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/conductor/UserPreferencesDataBuffer.h>
+#include <ves/conductor/qt/UserPreferencesDataBuffer.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
