@@ -110,7 +110,7 @@ void ManipulatorEventHandler::Execute(
     manipulatorDVP->GetData( data );
     if( data == "ENABLE" )
     {
-        manipulatorManager->Enable();
+        manipulatorManager.Enable();
         sceneManipulator->Enable();
 
         if( ves::xplorer::DeviceHandler::instance()->GetSelectedDCS() )
@@ -120,7 +120,7 @@ void ManipulatorEventHandler::Execute(
     }
     else if( data == "DISABLE" )
     {
-        manipulatorManager->Enable( false );
+        manipulatorManager.Enable( false );
         sceneManipulator->Enable( false );
         sceneManipulator->Hide();
     }
