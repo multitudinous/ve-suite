@@ -22,8 +22,6 @@
 #include <Minerva/Core/Functions/ReadFile.h>
 #include <Minerva/Core/Layers/RasterLayerWms.h>
 
-#include <Minerva/Interfaces/IFeature.h>
-
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 
@@ -213,17 +211,13 @@ EventHandler::RasterLayer* EventHandler::_createFileSystemLayerFromCommand ( Com
     std::string filename;
     filenameData->GetData ( filename );
 
-    Usul::Interfaces::IUnknown::QueryPtr unknown ( Minerva::Core::Functions::readFile ( filename ) );
-    Minerva::Interfaces::IFeature::QueryPtr iFeature ( unknown.get() );
-    Minerva::Core::Data::Feature::RefPtr feature ( iFeature.valid() ? iFeature->feature() : 0x0 );
+    Minerva::Core::Data::Feature::RefPtr feature ( Minerva::Core::Functions::readFile ( filename ) );
     RasterLayer::RefPtr rasterLayer ( dynamic_cast<RasterLayer*> ( feature.get() ) );
 
     if ( rasterLayer.valid() )
     {
       vprDEBUG( vesDBG, 0 ) << "|Creating layer from file " << filename << vprDEBUG_FLUSH;
 
-      unknown = static_cast<Usul::Interfaces::IUnknown*> ( 0x0 );
-      iFeature = static_cast<Minerva::Interfaces::IFeature*> ( 0x0 );
       feature = 0x0;
 
       rasterLayer->objectId ( guid );

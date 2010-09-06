@@ -53,10 +53,10 @@
 #include <string>
 #include <map>
 
+namespace Minerva { namespace Common { class Extents; } }
 namespace Minerva { namespace Core { namespace TileEngine { class Body; } } }
-namespace Minerva { namespace Core { namespace Data { class Camera; } } }
-namespace Minerva { namespace Core { namespace Layers { class RasterLayer; class RasterGroup; } } }
-namespace Minerva { namespace Core { template<class T> class Extents; } }
+namespace Minerva { namespace Core { namespace Data { class Camera; class Container; } } }
+namespace Minerva { namespace Core { namespace Layers { class RasterLayer; } } }
 namespace Usul { namespace Jobs { class Manager; } }
 namespace osg { class Matrixd; class osg::Vec2d; }
 
@@ -73,7 +73,7 @@ public:
 
     typedef ves::open::xml::CommandPtr CommandPtr;
     typedef Minerva::Core::TileEngine::Body Body;
-    typedef Minerva::Core::Extents<osg::Vec2d> Extents;
+    typedef Minerva::Common::Extents Extents;
 
     void AddEarthToScene();
     void AddElevationLayer ( Minerva::Core::Layers::RasterLayer* );
@@ -105,7 +105,7 @@ public:
 
 private:
 
-    bool _removeLayer ( Minerva::Core::Layers::RasterGroup *group, const std::string& guid, Extents& extents );
+    bool _removeLayer ( Minerva::Core::Data::Container *group, const std::string& guid, Extents& extents );
 
     void _loadPlugins();
     void _unloadPlugins();

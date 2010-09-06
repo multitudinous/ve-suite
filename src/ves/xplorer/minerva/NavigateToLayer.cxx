@@ -73,8 +73,8 @@ void NavigateToLayer::Execute ( CommandPtr command, MinervaManager& manager )
     return;
   }
 
-  Minerva::Core::Extents<osg::Vec2d> extents ( layer->extents() );
-  osg::Vec2d center ( extents.center() );
+  Minerva::Common::Extents extents ( layer->extents() );
+  Usul::Math::Vec2d center ( extents.center() );
   const double diameter ( 2.0 * osg::PI * 6378137.0 );
   const double metersPerDegree ( diameter / 360.0 );
   const double length ( ( extents.maximum() - extents.minimum() ).length() );

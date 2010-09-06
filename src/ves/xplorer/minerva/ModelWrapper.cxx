@@ -11,15 +11,9 @@
 
 using namespace ves::xplorer::minerva;
 
-USUL_IMPLEMENT_IUNKNOWN_MEMBERS ( ModelWrapper, ModelWrapper::BaseClass );
 
-#if MINERVA_VERSION < 10100
-typedef Usul::Interfaces::IPlanetCoordinates IPlanetCoordinates;
-typedef Usul::Interfaces::IElevationDatabase IElevationDatabase;
-#else
-typedef Minerva::Interfaces::IPlanetCoordinates IPlanetCoordinates;
-typedef Minerva::Interfaces::IElevationDatabase IElevationDatabase;
-#endif
+typedef Minerva::Common::IPlanetCoordinates IPlanetCoordinates;
+typedef Minerva::Common::IElevationDatabase IElevationDatabase;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -29,12 +23,13 @@ typedef Minerva::Interfaces::IElevationDatabase IElevationDatabase;
 
 ModelWrapper::ModelWrapper() : BaseClass(),
   _cadEntity ( 0x0 ),
-  _offset ( 0.0, 0.0, 0.0 )
+  _offset ( 0.0, 0.0, 0.0 ),
+  _parent ( 0x0 )
 {
   // ves units are in feet.  Add the conversion to meters.
   this->toMeters ( 0.3048 );
 
-  this->altitudeMode ( Minerva::Core::Data::Geometry::RELATIVE_TO_GROUND );
+  this->altitudeMode ( Minerva::Core::Data::ALTITUDE_MODE_RELATIVE_TO_GROUND );
 }
 
 
@@ -46,24 +41,8 @@ ModelWrapper::ModelWrapper() : BaseClass(),
 
 ModelWrapper::~ModelWrapper()
 {
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-//
-//  Query for the interface.
-//
-///////////////////////////////////////////////////////////////////////////////
-
-Usul::Interfaces::IUnknown* ModelWrapper::queryInterface ( unsigned long iid )
-{
-  switch ( iid )
-  {
-  case Minerva::Interfaces::IElevationChangedListener::IID:
-    return static_cast<Minerva::Interfaces::IElevationChangedListener*> ( this );
-  default:
-    return BaseClass::queryInterface ( iid );
-  }
+  _cadEntity = 0x0;
+  _parent = 0x0;
 }
 
 
@@ -164,4 +143,15 @@ void ModelWrapper::setTranslationOffset ( double x, double y, double z )
 {
   Guard guard ( this->mutex() );
   _offset.set ( x, y, z );
+}
+
+// Set/get the parent.
+void ModelWrapper::SetParent ( Minerva::Core::Data::DataObject* parent )
+{
+  _parent = parent;
+}
+
+Minerva::Core::Data::DataObject* ModelWrapper::GetParent() const
+{
+  return _parent;
 }

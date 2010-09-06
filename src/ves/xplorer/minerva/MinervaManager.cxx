@@ -23,6 +23,7 @@
 
 #include <Minerva/Config.h>
 #include <Minerva/Version.h>
+#include <Minerva/Common/Extents.h>
 #include <Minerva/Core/Data/Camera.h>
 #include <Minerva/Core/TileEngine/Body.h>
 #include <Minerva/Core/Functions/MakeBody.h>
@@ -68,22 +69,9 @@ namespace Detail
   }
 }
 
-#if MINERVA_VERSION < 10100
-typedef Usul::Interfaces::IRasterLayer IRasterLayer;
-typedef Usul::Interfaces::ILayer ILayer;
-typedef Usul::Interfaces::ILayerExtents ILayerExtents;
-typedef Usul::Interfaces::IPlanetCoordinates IPlanetCoordinates;
-typedef Usul::Interfaces::IElevationDatabase IElevationDatabase;
-#else
-#include <Minerva/Interfaces/IRasterLayer.h>
-#include <Minerva/Interfaces/ILayer.h>
-#include <Minerva/Interfaces/ILayerExtents.h>
-typedef Minerva::Interfaces::IRasterLayer IRasterLayer;
-typedef Minerva::Interfaces::ILayer ILayer;
-typedef Minerva::Interfaces::ILayerExtents ILayerExtents;
-typedef Minerva::Interfaces::IPlanetCoordinates IPlanetCoordinates;
-typedef Minerva::Interfaces::IElevationDatabase IElevationDatabase;
-#endif
+typedef Minerva::Common::IPlanetCoordinates IPlanetCoordinates;
+typedef Minerva::Common::IElevationDatabase IElevationDatabase;
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Constructor.
@@ -266,7 +254,10 @@ std::cout << " models 1 " << std::endl;
     if ( model.valid() )
     {
 std::cout << " models 2 " << std::endl;
-      _body->vectorData()->add ( Usul::Interfaces::IUnknown::QueryPtr ( model.get() ) );
+      Minerva::Core::Data::DataObject::RefPtr dataObject ( new Minerva::Core::Data::DataObject );
+      model->SetParent ( dataObject.get() );
+
+      _body->vectorData()->add ( dataObject.get() );
       this->UpdateModel ( model );
 std::cout << " models 3 " << std::endl;
     }
@@ -336,8 +327,8 @@ void MinervaManager::ClearModels()
 
 void MinervaManager::AddModel ( const std::string& guid, ModelWrapper* model )
 {
-  // Unreference anything we may have.
-  Usul::Pointers::unreference ( _models[guid] );
+  // Remove anything we may have.
+  this->RemoveModel ( guid );
   
   // Add the model to our map, even though the body may be null.
   // When the body is created, add the models.
@@ -346,7 +337,10 @@ void MinervaManager::AddModel ( const std::string& guid, ModelWrapper* model )
 
   if ( 0x0 != _body )
   {
-    _body->vectorData()->add ( Usul::Interfaces::IUnknown::QueryPtr ( model ) );
+    Minerva::Core::Data::DataObject::RefPtr dataObject ( new Minerva::Core::Data::DataObject );
+    model->SetParent ( dataObject.get() );
+
+    _body->vectorData()->add ( dataObject.get() );
 
     this->UpdateModel ( model );
   }
@@ -409,9 +403,10 @@ void MinervaManager::RemoveModel ( const std::string& guid )
   {
     if ( 0x0 != _body )
     {
-      _body->vectorData()->remove ( Usul::Interfaces::IUnknown::QueryPtr ( wrapper ) );
+      _body->vectorData()->remove ( wrapper->GetParent() );
     }
 
+    Usul::Pointers::unreference ( _models[guid] );
     _models.erase ( guid );
   }
 }
@@ -458,7 +453,7 @@ void MinervaManager::AddElevationLayer ( Minerva::Core::Layers::RasterLayer* lay
     return;
 
 
-  _body->elevationAppend ( IRasterLayer::QueryPtr ( layer ) );
+  _body->elevationAppend ( layer );
 }
 
 
@@ -473,7 +468,7 @@ void MinervaManager::AddRasterLayer ( Minerva::Core::Layers::RasterLayer* layer 
   if ( 0x0 == _body || 0x0 == layer )
     return;
 
-  _body->rasterAppend ( IRasterLayer::QueryPtr ( layer ) );
+  _body->rasterAppend ( layer );
 }
 
 
@@ -488,9 +483,8 @@ void MinervaManager::RemoveElevationLayer ( const std::string& guid )
   if ( 0x0 == _body )
     return;
 
-  // This dynamic cast should always be true.
-  typedef Minerva::Core::TileEngine::Body::RasterGroup RasterGroup;
-  RasterGroup::RefPtr group ( dynamic_cast<RasterGroup*> ( _body->elevationData().get() ) );
+  typedef Minerva::Core::Data::Container Container;
+  Container::RefPtr group ( _body->elevationData() );
   Extents extents;
   this->_removeLayer ( group.get(), guid, extents );
 }
@@ -508,8 +502,8 @@ void MinervaManager::RemoveRasterLayer ( const std::string& guid )
     return;
 
   // This dynamic cast should always be true.
-  typedef Minerva::Core::TileEngine::Body::RasterGroup RasterGroup;
-  RasterGroup::RefPtr group ( dynamic_cast<RasterGroup*> ( _body->rasterData().get() ) );
+  typedef Minerva::Core::Data::Container Container;
+  Container::RefPtr group ( _body->rasterData() );
 
   Extents extents;
   if ( this->_removeLayer ( group.get(), guid, extents ) )
@@ -525,41 +519,19 @@ void MinervaManager::RemoveRasterLayer ( const std::string& guid )
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-bool MinervaManager::_removeLayer ( Minerva::Core::Layers::RasterGroup *group, const std::string& guid, Extents& extents )
+bool MinervaManager::_removeLayer ( Minerva::Core::Data::Container *group, const std::string& guid, Extents& extents )
 {
-    typedef Minerva::Core::TileEngine::Body::RasterGroup RasterGroup;
-    typedef Minerva::Core::TileEngine::Body::RasterLayer RasterLayer;
-    typedef RasterGroup::Layers Layers;
-    typedef RasterGroup::IRasterLayer IRasterLayer;
+    typedef Minerva::Core::Data::Container Container;
 
     if( 0x0 != group )
     {
-        // The api doesn't support removing by a guid, so this is a little ugly.
-        IRasterLayer::RefPtr layerToRemove ( 0x0 );
-
-        // Loop through all the layers and look for a layer that matches our guid.
-        Layers layers;
-        group->layers ( layers );
-        for ( Layers::iterator iter = layers.begin(); iter != layers.end(); ++iter )
-        {
-            ILayer::QueryPtr layer ( *iter );
-            if ( layer.valid() && guid == layer->guid() )
-            {
-                layerToRemove = *iter;
-            }
-        }
-
+        Minerva::Core::Data::Feature::RefPtr feature ( group->find ( guid ) );
+        
         // If we found a layer, remove it.
-        if ( layerToRemove.valid() )
+        if ( feature.valid() )
         {
-            group->remove ( layerToRemove.get() );
-
-            ILayerExtents::QueryPtr le ( layerToRemove );
-            const double minLon ( le.valid() ? le->minLon() : -180.0 );
-            const double minLat ( le.valid() ? le->minLat() : -90.0 );
-            const double maxLon ( le.valid() ? le->maxLon() : 180.0 );
-            const double maxLat ( le.valid() ? le->maxLat() : 90.0 );
-            extents = Extents ( minLon, minLat, maxLon, maxLat );
+            group->remove ( feature.get() );
+            extents = feature->extents();
 
             return true;
         }
@@ -620,7 +592,7 @@ namespace {
     virtual ~FindLayer() {}
     virtual void visit ( Minerva::Core::Layers::RasterLayer & currentLayer )
     {
-      if ( guid == currentLayer.guid() )
+      if ( guid == currentLayer.objectId() )
       {
         layer = &currentLayer;
       }

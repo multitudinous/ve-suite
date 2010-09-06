@@ -20,6 +20,8 @@
 
 #include <ves/util/commands/Minerva.h>
 
+#include <boost/assert.hpp>
+
 using namespace ves::xplorer::minerva;
 
 
@@ -70,6 +72,11 @@ void PropertiesHandler::Execute ( CommandPtr command, MinervaManager& manager )
   latitudeData->GetData ( latitude );
 
   ModelWrapper::RefPtr modelWrapper ( this->GetOrCreateModel ( nodeId, manager ) );
-  modelWrapper->location ( osg::Vec3d ( longitude, latitude, 0.0 ) );
-  manager.UpdateModel ( modelWrapper.get() );
+
+  // Model wrapper may be null if no CAD exists with node id.
+  if ( modelWrapper.valid() )
+  {
+    modelWrapper->location ( osg::Vec3d ( longitude, latitude, 0.0 ) );
+    manager.UpdateModel ( modelWrapper.get() );
+  }
 }

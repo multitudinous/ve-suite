@@ -12,19 +12,14 @@
 
 #include <Minerva/Version.h>
 #include <Minerva/Core/Data/Model.h>
-#include <Minerva/Interfaces/IElevationChangedListener.h>
-//#include <Minerva/Core/Data/Polygon.h>
-#if MINERVA_VERSION < 10100
-#include <Usul/Interfaces/IElevationDatabase.h>
-#include <Usul/Interfaces/IPlanetCoordinates.h>
-#else
-#include <Minerva/Interfaces/IElevationDatabase.h>
-#include <Minerva/Interfaces/IPlanetCoordinates.h>
-#endif
+#include <Minerva/Common/IElevationChangedListener.h>
+#include <Minerva/Common/IElevationDatabase.h>
+#include <Minerva/Common/IPlanetCoordinates.h>
 
 #include <osg/Vec3d>
 
 namespace ves { namespace xplorer { namespace scenegraph { class CADEntity; } } }
+namespace Minerva { namespace Core { namespace Data { class DataObject; } } }
 
 namespace ves {
 namespace xplorer {
@@ -32,8 +27,7 @@ namespace minerva {
 
 
 class VE_XPLORER_EXPORTS ModelWrapper : 
-  public Minerva::Core::Data::Model,
-  public Minerva::Interfaces::IElevationChangedListener
+  public Minerva::Core::Data::Model
 {
 public:
 
@@ -41,8 +35,7 @@ public:
   typedef ves::xplorer::scenegraph::CADEntity CADEntity;
   typedef BaseClass::Extents Extents;
 
-  USUL_DECLARE_QUERY_POINTERS ( ModelWrapper );
-  USUL_DECLARE_IUNKNOWN_MEMBERS;
+  USUL_DECLARE_REF_POINTERS ( ModelWrapper );
 
   ModelWrapper();
 
@@ -56,13 +49,15 @@ public:
   /// Set/get the cad entity.
   void SetCADEntity ( CADEntity * );
   CADEntity* GetCADEntity() const;
-#if MINERVA_VERSION < 10100
-  void UpdateMatrix ( Usul::Interfaces::IPlanetCoordinates* planet, Usul::Interfaces::IElevationDatabase* elevation );
-#else
-  void UpdateMatrix ( Minerva::Interfaces::IPlanetCoordinates* planet, Minerva::Interfaces::IElevationDatabase* elevation );
-#endif
+
+  void UpdateMatrix ( Minerva::Common::IPlanetCoordinates* planet, Minerva::Common::IElevationDatabase* elevation );
+
   // Set the translation offset of cad in feet.
   void setTranslationOffset ( double x, double y, double z );
+
+  // Set/get the parent.
+  void SetParent ( Minerva::Core::Data::DataObject* parent );
+  Minerva::Core::Data::DataObject* GetParent() const;
 
 protected:
 
@@ -73,6 +68,7 @@ private:
   CADEntity *_cadEntity;
 
   osg::Vec3d _offset;
+  Minerva::Core::Data::DataObject *_parent;
 };
 
 
