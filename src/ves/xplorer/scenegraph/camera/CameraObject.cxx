@@ -279,6 +279,7 @@ void CameraObject::Initialize()
 
     //Add the subgraph to render
     m_camera->addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
+    m_camera->addChild( &SceneManager::instance()->GetHighlightManager() );
     addChild( m_camera.get() );
 
     //Create DCS
