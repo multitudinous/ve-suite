@@ -72,7 +72,8 @@ ManipulatorManager::ManipulatorManager()
         depth.get(), 
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-    Enable();
+    //Manipulators are off on the gui by default
+    //Enable();
 
     //Create rotate twist dragger
     m_rotateTwist = new RotateTwist();
