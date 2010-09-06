@@ -696,7 +696,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
         new wxRadioBox( cameraPanel, wxID_ANY, wxT("Auto Compute Far Plane"), 
         wxDefaultPosition, wxDefaultSize, m_autoComputeFarButtonNChoices, 
         m_autoComputeFarButtonChoices, 1, wxRA_SPECIFY_ROWS );
-	m_autoComputeFarButton->SetSelection( 0 );
+	m_autoComputeFarButton->SetSelection( 1 );
 	autoComputerFarPlaneSizer->Add( m_autoComputeFarButton, 0, 0, 5 );
 	
 	projectionSettingsSizer->Add( autoComputerFarPlaneSizer, 1, wxEXPAND, 5 );
@@ -1056,6 +1056,12 @@ void CameraPlacementToolUIDialog::OnAddCameraButton(
         static_cast< unsigned int >( m_currentCameraSelection ) );
     mInstructions.push_back( dvpII );
 
+    unsigned int selection = m_autoComputeFarButton->GetSelection();
+    ves::open::xml::DataValuePairSharedPtr autoDVP(
+        new ves::open::xml::DataValuePair() );
+    autoDVP->SetData( "autoComputeNearFarPlane", selection );
+    mInstructions.push_back( autoDVP );
+    
     SendCommandsToXplorer();
     ClearInstructions();
 }
@@ -1943,6 +1949,12 @@ void CameraPlacementToolUIDialog::ProjectionUpdate()
         "projectionFarPlane", mProjectionData[ 3 ] );
     mInstructions.push_back( projectionFarPlaneDVP );
 
+    unsigned int selection = m_autoComputeFarButton->GetSelection();
+    ves::open::xml::DataValuePairSharedPtr autoDVP(
+        new ves::open::xml::DataValuePair() );
+    autoDVP->SetData( "autoComputeNearFarPlane", selection );
+    mInstructions.push_back( autoDVP );
+    
     SendCommandsToXplorer();
     ClearInstructions();
 }

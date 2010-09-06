@@ -190,7 +190,7 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair( "addCameraObject" )->GetData( name );
 
         cameraManager.addChild( name );
-
+        
         //break;
     }
     case SELECT_CAMERA_OBJECT:
@@ -207,6 +207,27 @@ void CameraPlacementEventHandler::Execute(
 
         cameraManager.SetActiveCameraObject( newCameraObject );
 
+        if( commandName == ADD_CAMERA_OBJECT )
+        {
+            unsigned int selection = 0;
+            command->GetDataValuePair(
+                "autoComputeNearFarPlane" )->GetData( selection );
+            
+            bool onOff = ( selection != 0 );
+            if( onOff )
+            {
+                cameraManager.GetActiveCameraObject()->
+                    GetCamera().setComputeNearFarMode(
+                    osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+            }
+            else
+            {
+                cameraManager.GetActiveCameraObject()->
+                    GetCamera().setComputeNearFarMode(
+                    osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+            }
+        }
+        
         //Right now we are saying you must have a DCS
         scenegraph::DCS& selectedDCS = newCameraObject->GetDCS();
         gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
@@ -443,7 +464,7 @@ void CameraPlacementEventHandler::Execute(
                 GetCamera().setComputeNearFarMode(
                 osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
         }
-        
+
         cameraManager.GetActiveCameraObject()->Update();
         break;
     }
@@ -589,6 +610,22 @@ void CameraPlacementEventHandler::Execute(
         activeCameraObject->GetCamera().setProjectionMatrixAsPerspective(
             projectionData[ 0 ], projectionData[ 1 ],
             projectionData[ 2 ], projectionData[ 3 ] );
+
+        unsigned int selection = 0;
+        command->GetDataValuePair(
+            "autoComputeNearFarPlane" )->GetData( selection );
+        
+        bool onOff = ( selection != 0 );
+        if( onOff )
+        {
+            activeCameraObject->GetCamera().setComputeNearFarMode(
+                osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+        }
+        else
+        {
+            activeCameraObject->GetCamera().setComputeNearFarMode(
+                osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+        }
 
         activeCameraObject->Update();
 
