@@ -1,5 +1,5 @@
 #!python
-EnsureSConsVersion(1,2,0)
+EnsureSConsVersion(1,3,0)
 # See this page for more information about these options
 # http://scons.org/wiki/GoFastButton
 SetOption('max_drift', 1)
@@ -488,11 +488,11 @@ if os.path.exists(options_cache):
 # setup common windows specific variables for the build
 if GetPlatform() == 'win32':
     if ARGUMENTS.has_key("MSVS_VERSION"):
-        tempEnv[ 'MSVS_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
+        tempEnv[ 'MSVC_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
     elif "MSVS_VERSION" in tempArchWinEnv:
-        tempEnv[ 'MSVS_VERSION' ] = tempArchWinEnv[ "MSVS_VERSION" ]
+        tempEnv[ 'MSVC_VERSION' ] = tempArchWinEnv[ "MSVS_VERSION" ]
     else:
-        tempEnv[ 'MSVS_VERSION' ] = "8.0"
+        tempEnv[ 'MSVC_VERSION' ] = "8.0"
 
     if ARGUMENTS.has_key("MSVS_ARCH"):
         tempEnv[ 'MSVS_ARCH' ] = ARGUMENTS[ 'MSVS_ARCH' ]
@@ -501,10 +501,22 @@ if GetPlatform() == 'win32':
     else:
         tempEnv[ 'MSVS_ARCH' ] = "x86"
 
-    tempEnv[ 'MSVS_USE_MFC_DIRS' ] = "1"
+    tempEnv['TARGET_ARCH'] = tempEnv[ 'MSVS_ARCH' ]
+    #tempEnv['MSVC_BATCH'] = "1"
+    #tempEnv[ 'MSVS_USE_MFC_DIRS' ] = "1"
+    #tempEnv[ 'MSVC_USE_SCRIPT' ] = True
     tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = "1"
     #tempEnv['ENV'][ 'SCONS_MSCOMMON_DEBUG' ] = "test.log"
-    print "Using MSVS version %s and for CPU architecture %s." %(tempEnv[ 'MSVS_VERSION' ],tempEnv[ 'MSVS_ARCH' ])
+
+#tempEnv['CCCOMSTR'] = "Compiling static object $TARGET"
+#tempEnv['SHCCCOMSTR'] = "Compiling static object $TARGET"
+#tempEnv['SHCXXCOMSTR'] = "Compiling static object $TARGET"
+#tempEnv['SHLINKCOMSTR'] = "Linking $TARGET"
+#tempEnv['CXXCOMSTR'] = "Compiling static object $TARGET"
+#tempEnv['LDMODULECOMSTR'] = "Linking $TARGET"
+#tempEnv['LINKCOMSTR'] = "Linking $TARGET"
+# Setup a configure build directory for each unique build type
+tempEnv['CONFIGUREDIR'] = pj( RootDir, options_cache + "_cache_dir" )
 
 ## Create Environment builder from scons addons
 ## At this point the scons tool is initialized (e.g msvc, g++,...)
@@ -520,6 +532,9 @@ else:
     base_bldr.setCpuArch()
 ## Finally get the environment
 baseEnv = base_bldr.buildEnvironment(None,None,**tempEnv)
+if GetPlatform() == 'win32':
+    print "Using MSVS version %s and for CPU architecture %s." %(baseEnv[ 'MSVC_VERSION' ],baseEnv[ 'MSVS_ARCH' ])
+
 ## Now build commands will be colored
 #col = colorizer()
 #col.colorize( baseEnv )
@@ -536,9 +551,6 @@ InnoSetup.generate(baseEnv)
 # Add qt Tools
 qt46.generate(baseEnv)
 
-# Setup a configure build directory for each unique build type
-baseEnv['CONFIGUREDIR'] = options_cache + "_cache_dir"
-
 # Setup help text
 help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
@@ -546,7 +558,7 @@ baseEnv.Help(help_text)
 if not SConsAddons.Util.hasHelpFlag():
     # setup initial windows build environment before the options are processed
     if GetPlatform() == 'win32':
-        print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
+        #print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
         # This flag is needed because some packages still use win32 even on win64 systems
         baseEnv.AppendUnique( CPPDEFINES = ['WIN32'] )
         if baseEnv[ 'MSVS_ARCH' ] == "x86":
