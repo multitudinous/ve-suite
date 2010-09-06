@@ -433,14 +433,14 @@ void CameraPlacementEventHandler::Execute(
         bool onOff = ( selection != 0 );
         if( onOff )
         {
-            cameraManager.GetActiveCameraObject()->GetCamera()->
-                setComputeNearFarMode(
+            cameraManager.GetActiveCameraObject()->
+                GetCamera().setComputeNearFarMode(
                 osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
         }
         else
         {
-            cameraManager.GetActiveCameraObject()->GetCamera()->
-                setComputeNearFarMode(
+            cameraManager.GetActiveCameraObject()->
+                GetCamera().setComputeNearFarMode(
                 osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
         }
         break;
