@@ -307,7 +307,7 @@ opts.Add('tecplot_sdk', 'Provide the directory to the root of the Tecplot SDK.',
 opts.Add('ARCH', 'CPU architecture (ia32, x64)', GetArch() )
 if GetPlatform() == 'win32':
     opts.Add('MSVS_ARCH', 'CPU architecture (x86, amd64)', 'x86')
-    opts.Add('MSVS_VERSION', 'MSVS version (9.0,8.0)', '8.0')
+    opts.Add('MSVC_VERSION', 'MSVS version (9.0,8.0)', '8.0')
 
 #opts.Add( 'CharacterController', 'If "yes", then integrate CharacterController into the build', 'no' )
 #opts.Add( 'TransformManipulator', 'If "yes", then integrate TransformManipulator into the build', 'no' )
@@ -487,10 +487,12 @@ if os.path.exists(options_cache):
 
 # setup common windows specific variables for the build
 if GetPlatform() == 'win32':
-    if ARGUMENTS.has_key("MSVS_VERSION"):
-        tempEnv[ 'MSVC_VERSION' ] = ARGUMENTS[ 'MSVS_VERSION' ]
+    if ARGUMENTS.has_key("MSVC_VERSION"):
+        tempEnv[ 'MSVC_VERSION' ] = ARGUMENTS[ 'MSVC_VERSION' ]
     elif "MSVS_VERSION" in tempArchWinEnv:
         tempEnv[ 'MSVC_VERSION' ] = tempArchWinEnv[ "MSVS_VERSION" ]
+    elif "MSVC_VERSION" in tempArchWinEnv:
+        tempEnv[ 'MSVC_VERSION' ] = tempArchWinEnv[ "MSVC_VERSION" ]
     else:
         tempEnv[ 'MSVC_VERSION' ] = "8.0"
 
