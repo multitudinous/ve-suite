@@ -45,7 +45,8 @@ namespace conductor
 * This class is intended to be completely separate of the UI, and should compile,
 * link, and be functional even in the absence of a UI library (Qt, Wx, etc.)
 **/
-class NetworkLoader {
+class NetworkLoader 
+{
     public:
         NetworkLoader(  );
         ~NetworkLoader();
