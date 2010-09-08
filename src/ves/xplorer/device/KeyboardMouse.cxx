@@ -376,9 +376,43 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             m_currMouse = mouse_evt->getButton();
             m_keys.set( m_currMouse );
 #ifdef QT_ON
+            eventmanager::InteractionEvent::buttonType button;
+            switch (m_currMouse)
+            {
+                case gadget::MBUTTON1:
+                {
+                    button = eventmanager::InteractionEvent::button_1;
+                    break;
+                }
+                case gadget::MBUTTON2:
+                {
+                    button = eventmanager::InteractionEvent::button_2;
+                    break;
+                }
+                case gadget::MBUTTON3:
+                {
+                    button = eventmanager::InteractionEvent::button_3;
+                    break;
+                }
+                case gadget::MBUTTON4:
+                {
+                    button = eventmanager::InteractionEvent::button_4;
+                    break;
+                }
+                case gadget::MBUTTON5:
+                {
+                    button = eventmanager::InteractionEvent::button_5;
+                    break;
+                }
+                default:
+                {
+                    button = eventmanager::InteractionEvent::button_1;
+                    break;
+                }
+            }
             eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonPress,
-                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_1,
-                                eventmanager::InteractionEvent::button_1, 0.0, 0.0,
+                                0, 0, 0, mouse_evt->getState(), button,
+                                button, 0.0, 0.0,
                                 mouse_evt->getX(), mouse_evt->getY() );
 
             // Signal returns true if this event should not be propagated on
@@ -404,9 +438,43 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
             m_currMouse = mouse_evt->getButton();
             m_keys.reset( m_currMouse );
 #ifdef QT_ON
+            eventmanager::InteractionEvent::buttonType button;
+            switch (m_currMouse)
+            {
+                case gadget::MBUTTON1:
+                {
+                    button = eventmanager::InteractionEvent::button_1;
+                    break;
+                }
+                case gadget::MBUTTON2:
+                {
+                    button = eventmanager::InteractionEvent::button_2;
+                    break;
+                }
+                case gadget::MBUTTON3:
+                {
+                    button = eventmanager::InteractionEvent::button_3;
+                    break;
+                }
+                case gadget::MBUTTON4:
+                {
+                    button = eventmanager::InteractionEvent::button_4;
+                    break;
+                }
+                case gadget::MBUTTON5:
+                {
+                    button = eventmanager::InteractionEvent::button_5;
+                    break;
+                }
+                default:
+                {
+                    button = eventmanager::InteractionEvent::button_1;
+                    break;
+                }
+            }
             eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonRelease,
-                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_1,
-                                eventmanager::InteractionEvent::button_1, 0.0, 0.0,
+                                0, 0, 0, mouse_evt->getState(), button,
+                                button, 0.0, 0.0,
                                 mouse_evt->getX(), mouse_evt->getY() );
 
             if( *mInteractionSignal( ie ) )
