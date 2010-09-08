@@ -444,19 +444,49 @@ void UIElementQt::_sendEvent( ves::xplorer::eventmanager::InteractionEvent* even
     // 1. Does not deal with scroll events
     // 2. Always assumes left mouse button and never actually looks at which button.
     // 3. Does not look at modifier keys.
+    Qt::MouseButton button;
+    switch (event->Button)
+    {
+        case InteractionEvent::button_none:
+        {
+            button = Qt::NoButton;
+            break;
+        }
+        case InteractionEvent::button_1:
+        {
+            button = Qt::LeftButton;
+            break;
+        }
+        case InteractionEvent::button_2:
+        {
+            button = Qt::MidButton;
+            break;
+        }
+        case InteractionEvent::button_3:
+        {
+            button = Qt::RightButton;
+            break;
+        }
+        default:
+        {
+            button = Qt::NoButton;
+            break;
+        }
+    }
+    
     switch( event->EventType )
     {
     case InteractionEvent::buttonPress:
     {
-        QMouseEvent e( QEvent::MouseButtonPress, QPoint( x, y ), globalPos, Qt::LeftButton,
-                       Qt::LeftButton, Qt::NoModifier );
+        QMouseEvent e( QEvent::MouseButtonPress, QPoint( x, y ), globalPos, button,
+                       button, Qt::NoModifier );
         qt_sendSpontaneousEvent( this->viewport( ), &e );
     }
         break;
     case InteractionEvent::buttonRelease:
     {
-        QMouseEvent e( QEvent::MouseButtonRelease, QPoint( x, y ), globalPos, Qt::LeftButton,
-                       Qt::LeftButton, Qt::NoModifier );
+        QMouseEvent e( QEvent::MouseButtonRelease, QPoint( x, y ), globalPos, button,
+                       button, Qt::NoModifier );
         qt_sendSpontaneousEvent( this->viewport( ), &e );
     }
         break;
@@ -471,7 +501,7 @@ void UIElementQt::_sendEvent( ves::xplorer::eventmanager::InteractionEvent* even
         else
         {
             QMouseEvent e( QEvent::MouseMove, QPoint( x, y ), globalPos, Qt::NoButton,
-                           Qt::LeftButton, Qt::NoModifier );
+                           button, Qt::NoModifier );
             qt_sendSpontaneousEvent( this->viewport( ), &e );
         }
     }
