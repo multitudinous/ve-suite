@@ -82,7 +82,7 @@ void HeadPositionCallback::operator()(
     gmtl::Point3d startPoint;
     startPoint.set(
                    jugglerHeadPoint.mData[ 0 ] - 3.5f,
-                   -jugglerHeadPoint.mData[ 2 ] + 10.0f,
+                   -jugglerHeadPoint.mData[ 2 ] + 8.0f,
                    jugglerHeadPoint.mData[ 1 ] + 0.0f);
     
     gmtl::Matrix44d worldMat = 

@@ -199,7 +199,7 @@ void CameraObject::Initialize()
     m_camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
     m_camera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
     m_camera->setRenderTargetImplementation(
-        osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
+        osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER );
     m_camera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     //Keep visibility within user defined near and far planes
     m_camera->setComputeNearFarMode(
@@ -279,7 +279,7 @@ void CameraObject::Initialize()
 
     //Add the subgraph to render
     m_camera->addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
-    m_camera->addChild( &SceneManager::instance()->GetHighlightManager() );
+    //m_camera->addChild( &SceneManager::instance()->GetHighlightManager() );
     addChild( m_camera.get() );
 
     //Create DCS

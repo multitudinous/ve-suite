@@ -293,10 +293,10 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     }
     else
     {
-        (*cameraViewQuadVertices)[ 0 ].set( -1.0,  0.01, -1.0 );
-        (*cameraViewQuadVertices)[ 1 ].set(  1.0,  0.01, -1.0 );
-        (*cameraViewQuadVertices)[ 2 ].set(  1.0,  0.01,  1.0 );
-        (*cameraViewQuadVertices)[ 3 ].set( -1.0,  0.01,  1.0 );
+        (*cameraViewQuadVertices)[ 0 ].set( -1.5,  0.01, -1.5 );
+        (*cameraViewQuadVertices)[ 1 ].set(  1.5,  0.01, -1.5 );
+        (*cameraViewQuadVertices)[ 2 ].set(  1.5,  0.01,  1.5 );
+        (*cameraViewQuadVertices)[ 3 ].set( -1.5,  0.01,  1.5 );
     }
 
     //Get the texture coordinates for the quad
