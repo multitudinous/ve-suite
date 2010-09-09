@@ -764,9 +764,11 @@
     <para>When John starts VE-Launcher, he sees this:</para>
 
     <figure>
+      <title>Example (a)</title>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="images/02-jd-launcher-window.png" />
+          <imagedata fileref="images/02-jd-launcher-window.png"></imagedata>
         </imageobject>
       </mediaobject>
     </figure>
@@ -776,9 +778,11 @@
     button to find it.</para>
 
     <figure>
+      <title>Example (b)</title>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="images/02-jd-launcher-window-b.png" />
+          <imagedata fileref="images/02-jd-launcher-window-b.png"></imagedata>
         </imageobject>
       </mediaobject>
     </figure>
@@ -790,9 +794,11 @@
     Desktop Mode will allow users to change the CE name.</para>
 
     <figure>
+      <title>Example (c)</title>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="images/02-jd-launcher-window-c.png" />
+          <imagedata fileref="images/02-jd-launcher-window-c.png"></imagedata>
         </imageobject>
       </mediaobject>
     </figure>
@@ -801,9 +807,11 @@
     user-input value. Now John can change the CE name and port.</para>
 
     <figure>
+      <title>Example (d)</title>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="images/02-jd-launcher-window-d.png" />
+          <imagedata fileref="images/02-jd-launcher-window-d.png"></imagedata>
         </imageobject>
       </mediaobject>
     </figure>
@@ -813,9 +821,11 @@
     window.</para>
 
     <figure>
+      <title>Example (e)</title>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="images/02-jd-launcher-mode-settings.png" />
+          <imagedata fileref="images/02-jd-launcher-mode-settings.png"></imagedata>
         </imageobject>
       </mediaobject>
     </figure>
@@ -826,9 +836,11 @@
     on the list. He clicks the Edit Configuration List button.</para>
 
     <figure>
+      <title>Example (f)</title>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="images/02-jd-launcher-xplorer-config.jpg" />
+          <imagedata fileref="images/02-jd-launcher-xplorer-config.jpg"></imagedata>
         </imageobject>
       </mediaobject>
     </figure>
@@ -837,9 +849,11 @@
     directory. He selects the appropriate file and clicks Open.</para>
 
     <figure>
+      <title>Example (g)</title>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="images/02-jd-launcher-choose-config.jpg" />
+          <imagedata fileref="images/02-jd-launcher-choose-config.jpg"></imagedata>
         </imageobject>
       </mediaobject>
     </figure>
@@ -850,9 +864,11 @@
     it "Plant Design" so he can remember which project it is for.</para>
 
     <figure>
+      <title>Example (h)</title>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="images/02-jd-launcher-rename-standalone.jpg" />
+          <imagedata fileref="images/02-jd-launcher-rename-standalone.jpg"></imagedata>
         </imageobject>
       </mediaobject>
     </figure>

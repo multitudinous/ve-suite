@@ -8,251 +8,266 @@
          xmlns:db="http://docbook.org/ns/docbook">
   <title>Using Physics in VE-Suite</title>
 
-  <para>VE-Suite's physics functionality makes representations of interactions
-  in VE-Suite more realistic.</para>
+  <section>
+    <title>Working with an Example</title>
 
-  <para>To use VE-Suite's physics functionality, start VE-Suite as described
-  in Chapter 3, Creating Content in VE-Suite. In VE-Conductor, go to the File
-  menu and click Open ..</para>
+    <para>VE-Suite's physics functionality makes representations of
+    interactions in VE-Suite more realistic.</para>
 
-  <para>Navigate to the directory where your file is located and, in Files of
-  Type, select <code>*.ves</code>. Select the appropriate file (to demonstrate
-  the physics functionality, we use <code>simple_physics_boxes.ves</code>,
-  which is located in the <code>share/vesuite/examples/simple</code>
-  directory) and click Open.</para>
+    <para>To use VE-Suite's physics functionality, start VE-Suite as described
+    in Chapter 3, Creating Content in VE-Suite. In VE-Conductor, go to the
+    File menu and click Open ...</para>
 
-  <figure>
-    <title>Selecting a .ves file to use physics in VE-Suite</title>
+    <para>Navigate to the directory where your file is located and, in Files
+    of Type, select <code>*.ves</code>. Select the appropriate file (to
+    demonstrate the physics functionality, we use
+    <code>simple_physics_boxes.ves</code>, which is located in the
+    <code>share/vesuite/examples/simple</code> directory) and click
+    Open.</para>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsOpenSimplePhysicsBoxes.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+    <para>The visualization will open in the VE-Xplorer window. Use the Frame
+    All and other keyboard and mouse commands to change the view (see Chapter
+    3.3 for navigation instructions).</para>
 
-  <para>The visualization will open in the VE-Xplorer window. Use the Frame
-  All and other keyboard and mouse commands to change the view (see Chapter
-  3.3 for navigation instructions).</para>
+    <para><figure>
+        <title>Use the Frame All command to change the view</title>
 
-  <figure>
-    <title>Use the Frame All command to change the view</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/PhysicsSimpleBoxesCropped01.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>For each new file that is loaded in VE-Suite, the physics must
+    be enabled. To do this, right-click on the plugin and click on Enable
+    Physics.</para>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsSimpleBoxesCropped01.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+    <para>The physics functionality must also be turned on in VE-Conductor. To
+    do this, click on the Physics On/Off button in the VE-Conductor
+    toolbar.</para>
 
-  <para>For each new file that is loaded in VE-Suite, the physics must be
-  enabled. To do this, right-click on the plugin and click on Enable
-  Physics.</para>
+    <para><figure>
+        <title>Turn the physics functionality on</title>
 
-  <para>The physics functionality must also be turned on in VE-Conductor. To
-  do this, click on the Physics On/Off button in the VE-Conductor
-  toolbar.</para>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/PhysicsTurnOn.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>In addition to the Physics On/Off button, there are five more
+    buttons in the Conductor toolbar that can be used to manipulate a
+    visualization. The Start Simulation button starts the simulation.</para>
 
-  <figure>
-    <title>Turn the physics functionality on</title>
+    <para><figure>
+        <title>Start the simulation</title>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsTurnOn.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/PhysicsStartSimulation.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>Clicking the Start Simulation button using the
+    <code>simple_physics_boxes.ves</code> file causes the green object to move
+    to meet the orange object. After running the simulation, this is what you
+    should see:</para>
 
-  <para>In addition to the Physics On/Off button, there are five more buttons
-  in the Conductor toolbar that can be used to manipulate a visualization. The
-  Start Simulation button starts the simulation.</para>
+    <para><figure>
+        <title>Results of physics simulation example</title>
 
-  <figure>
-    <title>Start the simulation</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/PhysicsSimpleBoxesCropped02.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>The toolbar also allows you to view the simulation step by step
+    rather than all at once. To view one step of the simulation at a time,
+    click the Step Simulation button.</para>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsStartSimulation.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+    <para><figure>
+        <title>Simulations can be viewed one step at a time</title>
 
-  <para>Clicking the Start Simulation button using the
-  <code>simple_physics_boxes.ves</code> file causes the green object to move
-  to meet the orange object. After running the simulation, this is what you
-  should see:</para>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/PhysicsStepSimulation.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>To reset the simulation to its original position, click the
+    Reset Simulation button.</para>
 
-  <figure>
-    <title>Results of physics simulation example</title>
+    <para><figure>
+        <title>Reset the simulation to its original position</title>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsSimpleBoxesCropped02.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/PhysicsResetSimulation.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>When running longer simulations, you might want to pause the
+    simulation while it is running. To do so, click the Pause Simulation
+    button.</para>
 
-  <para>The toolbar also allows you to view the simulation step by step rather
-  than all at once. To view one step of the simulation at a time, click the
-  Step Simulation button.</para>
+    <para><figure>
+        <title>Pause the simulation</title>
 
-  <figure>
-    <title>Simulations can be viewed one step at a time</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/PhysicsPauseSimulation.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>The physics capability in VE-Suite also includes a Character
+    Controller. To demonstrate the Character Controller, we will use the
+    <code>character_demo.ves</code> file (also located in the
+    <code>share/vesuite/examples/simple</code> directory).</para>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsStepSimulation.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+    <para>After loading the character_demo.ves file, click on the Character
+    Controller button in Conductor.</para>
 
-  <para>To reset the simulation to its original position, click the Reset
-  Simulation button.</para>
+    <para><figure>
+        <title>Starting the character controller</title>
 
-  <figure>
-    <title>Reset the simulation to its original position</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/PhysicsCharacterController.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>Use the Frame All and other keyboard and mouse commands to
+    change the view (see Chapter 3.3 for navigation instructions). You should
+    see something similar to this on your screen:</para>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsResetSimulation.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+    <para><figure>
+        <title>Character controller</title>
 
-  <para>When running longer simulations, you might want to pause the
-  simulation while it is running. To do so, click the Pause Simulation
-  button.</para>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/PhysicsCharacterController02cropped.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </figure>The tables below provide keyboard and mouse commands for
+    interacting with the visualization in character mode.</para>
 
-  <figure>
-    <title>Pause the simulation</title>
+    <para><table>
+        <title>Keyboard Commands</title>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsPauseSimulation.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>A</entry>
 
-  <para>The physics capability in VE-Suite also includes a Character
-  Controller. To demonstrate the Character Controller, we will use the
-  <code>character_demo.ves</code> file (also located in the
-  <code>share/vesuite/examples/simple</code> directory).</para>
+              <entry>Strafe left</entry>
+            </row>
 
-  <para>After loading the character_demo.ves file, click on the Character
-  Controller button in Conductor.</para>
+            <row>
+              <entry>S</entry>
 
-  <figure>
-    <title>Starting the character controller</title>
+              <entry>Walk/Run backward</entry>
+            </row>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsCharacterController.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+            <row>
+              <entry>W</entry>
 
-  <para>Use the Frame All and other keyboard and mouse commands to change the
-  view (see Chapter 3.3 for navigation instructions). You should see something
-  similar to this on your screen:</para>
+              <entry>Walk/Run forward</entry>
+            </row>
 
-  <figure>
-    <title>Character controller</title>
+            <row>
+              <entry>D</entry>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/PhysicsCharacterController02cropped.png"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+              <entry>Strafe right</entry>
+            </row>
 
-  <para>The tables below provide keyboard and mouse commands for interacting
-  with the visualization in character mode.</para>
+            <row>
+              <entry>C</entry>
 
-  <table>
-    <title>Keyboard Commands</title>
+              <entry>Fly down (not implemented)</entry>
+            </row>
 
-    <tgroup cols="2">
-      <tbody>
-        <row>
-          <entry>A</entry>
+            <row>
+              <entry>Space Bar</entry>
 
-          <entry>Strafe left</entry>
-        </row>
+              <entry>Jump/Fly up (not implemented)</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table><table>
+        <title>Mouse Commands</title>
 
-        <row>
-          <entry>S</entry>
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>Left mouse button</entry>
 
-          <entry>Walk/Run backward</entry>
-        </row>
+              <entry>Rotate the camera about the xz-axes</entry>
+            </row>
 
-        <row>
-          <entry>W</entry>
+            <row>
+              <entry>Left mouse button - mod:shift</entry>
 
-          <entry>Walk/Run forward</entry>
-        </row>
+              <entry>Physics picking using Bullet p2p constraint</entry>
+            </row>
 
-        <row>
-          <entry>D</entry>
+            <row>
+              <entry>Middle mouse button - Scroll Up</entry>
 
-          <entry>Strafe right</entry>
-        </row>
+              <entry>Zoom in to the character</entry>
+            </row>
 
-        <row>
-          <entry>C</entry>
+            <row>
+              <entry>Middle mouse button</entry>
 
-          <entry>Fly down (not implemented)</entry>
-        </row>
+              <entry><emphasis>not currently used</emphasis></entry>
+            </row>
 
-        <row>
-          <entry>Space Bar</entry>
+            <row>
+              <entry>Middle mouse button - Scroll Down</entry>
 
-          <entry>Jump/Fly up (not implemented)</entry>
-        </row>
-      </tbody>
-    </tgroup>
-  </table>
+              <entry>Zoom out from the character</entry>
+            </row>
 
-  <table>
-    <title>Mouse Commands</title>
+            <row>
+              <entry>Right mouse button</entry>
 
-    <tgroup cols="2">
-      <tbody>
-        <row>
-          <entry>Left mouse button</entry>
+              <entry>Rotate the camera and the character about the
+              xz-axes</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table></para>
+  </section>
 
-          <entry>Rotate the camera about the xz-axes</entry>
-        </row>
+  <section>
+    <title>Creating Physics Data Step by Step</title>
 
-        <row>
-          <entry>Left mouse button - mod:shift</entry>
+    <para>This section will describe how to create physics data in VE-Suite
+    using a simple example.</para>
 
-          <entry>Physics picking using Bullet p2p constraint</entry>
-        </row>
+    <para>First, load <code>simple.ves</code> in the same way you loaded
+    <code>simple_physics_boxes.ves</code> in the previous section of this
+    chapter. Right-click on DefaultPlugin in the VE-Conductor Network window
+    and click on Geometry Config. This will open the CADTree Manager.</para>
 
-        <row>
-          <entry>Middle mouse button - Scroll Up</entry>
+    <para>Expand the Model_Geometry tree by clicking on the arrow. In this
+    example, you should see three nodes: eightCorners, Surface0.75, and
+    Surface0.75_cloned. Each node corresponds to a different part of the
+    visualization: eightCorners corresponds to the bounding box, while
+    Surface0.75 and Surface0.75_cloned each correponds to one of the white
+    polygonal objects.</para>
 
-          <entry>Zoom in to the character</entry>
-        </row>
+    <para>Initialize physics on a node by right-clicking on it and selecting
+    Initialize Physics. The CADTree Manager will open. Click on the Physics
+    tab to set the Physics Properties (Mass, Friction, Restitution), Motion
+    Type, LOD Type, Mesh Type, and Mesh Decimation). Each node must be
+    initialized before physics can be run.</para>
 
-        <row>
-          <entry>Middle mouse button</entry>
+    <para>Once you have initialized physics, the Initialize Physics option
+    will no longer be available when you right-click on a node. To edit the
+    physics properties of a node, right-click and select Properties... This
+    will open the CADTree Manager with the Physics tab, where you can edit
+    your previously set physics properties.</para>
 
-          <entry><emphasis>not currently used</emphasis></entry>
-        </row>
+    <para>Note: You must reset the simulation before editing a node's physics
+    properties.</para>
 
-        <row>
-          <entry>Middle mouse button - Scroll Down</entry>
-
-          <entry>Zoom out from the character</entry>
-        </row>
-
-        <row>
-          <entry>Right mouse button</entry>
-
-          <entry>Rotate the camera and the character about the xz-axes</entry>
-        </row>
-      </tbody>
-    </tgroup>
-  </table>
+    <para>Initializing physics on a node also enables you to pick up
+    individual parts of a visualization and move them. Simply hold down the
+    Shift key and left-click on the object to drag it within the plane of the
+    screen.</para>
+  </section>
 </chapter>

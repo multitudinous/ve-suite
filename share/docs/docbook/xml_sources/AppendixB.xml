@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appendix version="5.0" xmlns="http://docbook.org/ns/docbook"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
+          xmlns:svg="http://www.w3.org/2000/svg"
+          xmlns:m="http://www.w3.org/1998/Math/MathML"
+          xmlns:html="http://www.w3.org/1999/xhtml"
+          xmlns:db="http://docbook.org/ns/docbook">
+  <title>Quickstart Guide</title>
+
+  <section>
+    <title>Getting Started with VE-Suite</title>
+
+    <para>To install VE-Suite:</para>
+
+    <para><orderedlist>
+        <listitem>
+          <para>Run the dependencies installer (vesuite_deps1.1.7.exe) and
+          make a note of the folder</para>
+        </listitem>
+
+        <listitem>
+          <para>Run the VE-Suite installer (vesuite1.1.7_11671.exe) and make a
+          note of the folder location</para>
+        </listitem>
+      </orderedlist><emphasis role="bold">Note:</emphasis> You will need to
+    know the folder locations later, so be sure to remember them or write them
+    down.</para>
+
+    <para>To start VE-Launcher:</para>
+
+    <para><orderedlist>
+        <listitem>
+          <para>Double-click on the VE-Suite shortcut, which will be located
+          on the desktop after VE-Suite is installed</para>
+        </listitem>
+
+        <listitem>
+          <para>Point VE-Launcher to its dependencies. This directory should
+          be named VE_Suite.#.#_Dependencies</para>
+        </listitem>
+
+        <listitem>
+          <para>Once you have set the dependencies directory, click OK to open
+          the VE-Suite Launcher window</para>
+        </listitem>
+
+        <listitem>
+          <para>Click the Launch VE-Suite ubtton to start VE-Suite</para>
+        </listitem>
+      </orderedlist><emphasis role="bold">Note:</emphasis> You can find more
+    information about VE-Launcher's settings in Chapter 12 of the VE-Suite
+    documentation.</para>
+
+    <para>To view sample data in VE-Suite:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Click on the File menu, then click Open ...</para>
+      </listitem>
+
+      <listitem>
+        <para>Navigate to the VE-Suite install location, then to the
+        <code>share/vesuite/examples/simple</code> directory</para>
+      </listitem>
+
+      <listitem>
+        <para>Click on <code>simple.ves</code> to select it, then click Open
+        to load it in VE-Suite. If the scene is not initially visible, hold
+        down the right mouse button and drag up in the VE-Xplorer window to
+        pull the camera back.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Loading Data and Connecting</title>
+
+    <para>To create a new plugin:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Use VE-Launcher to start VE-Suite, or click on the New Document
+        button to clear the design space</para>
+      </listitem>
+
+      <listitem>
+        <para>Double-click on the Available Plugins folder in the VE-Conductor
+        Network window</para>
+      </listitem>
+
+      <listitem>
+        <para>Double-click on the DefaultPlugin folder that appears below the
+        Available Plugins folder</para>
+      </listitem>
+
+      <listitem>
+        <para>Right-click on the gray DefaultPlugin box that appears in the
+        pane on the right side of the Available Objects window to access the
+        plugin's menu, and select the Geometry Config option</para>
+      </listitem>
+
+      <listitem>
+        <para>A new window, the CADTree Manager, will open on the design
+        canvas. To select a geometry file, right-click on the Model_Geometry
+        icon in the canvas and select Add Node..., then Load CAD
+        file...</para>
+      </listitem>
+
+      <listitem>
+        <para>Another window will open. Choose the file type, then select the
+        file and click Open</para>
+      </listitem>
+
+      <listitem>
+        <para>Name the object you loaded, then click OK to insert it into the
+        plugin</para>
+      </listitem>
+
+      <listitem>
+        <para>Click Close on the CADTree Manager</para>
+      </listitem>
+
+      <listitem>
+        <para>To load the information for the plugin's node into the rest of
+        VE-Suite, click on the Connection menu and then on Submit Job</para>
+      </listitem>
+    </orderedlist>
+
+    <para>The starting logo in VE-Xplorer should be replaced by the objects in
+    the plugins you submitted. If you cannot see the objects you loaded, hold
+    down the right mouse button and drag up inside the VE-Xplorer window to
+    pull back the camera. Continue doing so until you can see the
+    scene.</para>
+  </section>
+</appendix>

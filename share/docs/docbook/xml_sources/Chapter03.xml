@@ -18,125 +18,28 @@
     <para>Plugins are set up through the Available Objects window. Click on
     the New Document button to make sure the design space is clear.</para>
 
-    <figure>
-      <title>Clearing the design space</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-cleardesignspace.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>To create a new plugin, double-click on the DefaultPlugin directory
-    below the Available Plugins directory in the VE-Conductor Network
+    <para>To create a new plugin, double-click on the DefaultPlugin directory,
+    which is in the Available Plugins directory in the VE-Conductor Network
     window.</para>
-
-    <figure>
-      <title>VE-Conductor Network window</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-plugins03.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
 
     <para>Right-click on the gray DefaultPlugin box that appears in the pane
     on the right side of the window to access the plugin's menu, and select
     the Geometry Config option.</para>
-
-    <figure>
-      <title>Select the Geometry Config option</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-plugins04.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
 
     <para>A new window, the CADTree Manager, will open. This holds the objects
     that are inserted into the plugin. To select a geometry file, right-click
     on the Model_Geometry icon and select Add Node..., then Load CAD
     file...</para>
 
-    <figure>
-      <title>To select a geometry file, click Load CAD file...</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-plugins06.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
     <para>In the dialog box that opens, choose the appropriate file type, then
-    select the file and click the Open button.</para>
-
-    <figure>
-      <title>Loading a CAD file</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-plugins07.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>Name the object you loaded, then click the OK button to insert it
-    into the plugin.</para>
-
-    <figure>
-      <title>Name the CAD object</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-plugins08.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>Click Close on the CADTree Manager.</para>
-
-    <figure>
-      <title>Close the CADTree Manager before loading the plugin
-      information</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-plugins09.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
+    select the file (e.g., <code>Surface0.75.stl</code>) and click the Open
+    button. Name the object you loaded, then click the OK button to insert it
+    into the plugin. Click Close on the CADTree Manager.</para>
 
     <para>To load the information for the plugin's node into the rest of
-    VE-Suite, click on the Connection menu and select Submit Job.</para>
-
-    <figure>
-      <title>Click Submit Job to load the information into the rest of
-      VE-Suite</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-plugins10.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>The starting logo in Xplorer should be replaced by the objects in
-    the plugins you submitted.</para>
-
-    <figure>
-      <title>Use the keyboard or mouse to manipulate the camera and bring the
-      object into view</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-plugins11-cropped.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
+    VE-Suite, click on the Connection menu and select Submit Job. The starting
+    logo in Xplorer should be replaced by the objects in the plugins you
+    submitted.</para>
 
     <para>If the object is not initially visible in the Xplorer window, it may
     be outside the viewing region. Hold down the right mouse button and drag
@@ -157,17 +60,6 @@
       <para>To load multiple geometry objects in VE-Suite, continue adding CAD
       file nodes in the same way that you loaded a single CAD file.</para>
 
-      <figure>
-        <title>To load multiple geometry objects, continue adding CAD file
-        nodes</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-plugins06.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
       <para>If you want to load multiple instances of the same object, its CAD
       file can be loaded multiple times. However, that wastes memory. A better
       way to load multiple instances of the same object is to load the object
@@ -175,46 +67,14 @@
       memory. To clone an object, right-click on it and select Clone
       Node…</para>
 
-      <figure>
-        <title>To load multiple instances of the sae object, select Clone
-        Node...</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-clone-node.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
       <para>New assemblies can also be created for grouping geometry objects.
       Right-click the appropriate assembly, then select Add Node..., then
       Create New Assembly...</para>
-
-      <figure>
-        <title>New assemblies can be created for grouping geometry
-        objects</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-create-new-assembly.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
 
       <para>To quickly populate an assembly, the entire geometry object tree
       can be loaded from another project. First, select the appropriate
       geometry tree in the CADTree Manger, then click the Save As... button to
       save it as a <code>.veg</code> file.</para>
-
-      <figure>
-        <title>Loading a geometry object tree</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-save-as-veg.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
 
       <para>Next, open the geometry tree where the first geometry tree is to
       be moved, right-click the assembly where it is to be moved, then select
@@ -247,7 +107,7 @@
 
       <para>An assembly's transform properties can also be edited, but keep in
       mind that an assembly’s transformation also affects its members. See the
-      Chapter 3.2, Geometry In-Depth, for more information on
+      Chapter 3.2.1, Loading Objects and Assemblies, for more information on
       assemblies.</para>
 
       <!-- TODO: add olink for Chapter 3 -->
@@ -305,22 +165,11 @@
       Attributes tab, and right-click the Material attribute to be
       changed.</para>
 
-      <para>On Windows, the color dialog box looks like this:</para>
-
-      <figure>
-        <title>Windows color dialog box</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-windows-palette.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>A color can be chosen from the Basic colors palette, or the color
-      map and luminosity slider can help you create custom colors. Custom
-      colors do not need to be added to the Custom colors palette. They will
-      be forgotten once the dialog is closed.</para>
+      <para>In a Windows color dialog box, color can be chosen from the Basic
+      colors palette, or the color map and luminosity slider can help you
+      create custom colors. Custom colors do not need to be added to the
+      Custom colors palette. They will be forgotten once the dialog is
+      closed.</para>
 
       <para>When creating a custom color, make sure to check the luminosity
       slider as well as the Color/Solid preview box next to the Hue/Sat/Lum
@@ -329,23 +178,10 @@
 
       <para>Click OK to set the new color.</para>
 
-      <para>On non-Windows systems, the color dialog box looks like
-      this:</para>
-
-      <figure>
-        <title>Non-Windows color dialog box</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-non-windows-colorwheel.jpg"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>A color can be chosen from the Palette, or the color ring and
-      triangle can be used to create a custom color. The bar below the color
-      ring shows the current color on the left and the new color on the
-      right.</para>
+      <para>In a non-Windows color dialog box, a color can be chosen from the
+      Palette, or the color ring and triangle can be used to create a custom
+      color. The bar below the color ring shows the current color on the left
+      and the new color on the right.</para>
 
       <para>To make a custom color, choose its hue by clicking in the color
       ring, then choose its saturation and value by clicking in the color
@@ -434,20 +270,8 @@
     <section>
       <title>Navigation Pane</title>
 
-      <para>To open the Navigation Pane, select it from the VE-Xplorer
-      menu.</para>
-
-      <figure>
-        <title>Select Navigation Pane from the VE-Xplorer menu</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-navpane-01.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>The Navigation Pane looks like this:</para>
+      <para>To open the Navigation Pane, select it from the VE-Xplorer menu.
+      The Navigation Pane looks like this:</para>
 
       <figure>
         <title>Navigation Pane</title>
@@ -506,16 +330,6 @@
       holding the wand moves you in that direction. Holding down the Left
       Shoulder button and pointing to the left will rotate the camera to its
       left.</para>
-
-      <figure>
-        <title>Wands can be used to navigate VE-Suite</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-remotediagram.jpg"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
     </section>
 
     <section>
@@ -866,16 +680,6 @@
     <para>To display the FPS counter, go to the VE-Xplorer menu and select
     Display, then Frame Rate. VE-Xplorer will display the FPS in the lower
     right corner of its window.</para>
-
-    <figure>
-      <title>Displaying the frame rate</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-frame-rate.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
 
     <para>To display the coordinate compass, go to the VE-Xplorer menu and
     select Display, then Coord System. VE-Xplorer will display the coordinate

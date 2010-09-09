@@ -35,84 +35,25 @@
     users can double-click on the VE-Suite desktop icon or on
     <code>velauncher.exe</code> in the <code>VE-Suite/bin</code> directory.
     UNIX/Linux users should navigate by terminal into VE-Suite’s
-    <code>/bin</code> directory and enter
-    <code>python.velauncher.py</code>.</para>
-
-    <figure>
-      <title>VE-Launcher window</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-launcher.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
+    <code>/bin</code> directory and enter <code>python
+    velauncher.py</code>.</para>
 
     <para>If this is the first time VE-Launcher has been run after
     installation, you will be asked for the dependencies directory (see
-    Chapter 1.3, Setting the Runtime Environment) before you are shown the
+    Chapter 1.5, Setting the Runtime Environment) before you are shown the
     main window.</para>
 
-    <!-- TODO: add olink for Chapter 1.3, Setting the Runtime Environment -->
+    <!-- TODO: add olink for Chapter 1.5, Setting the Runtime Environment -->
 
-    <para>VE-Launcher's more advanced commands are discussed in Chapter 13,
+    <para>VE-Launcher's more advanced commands are discussed in Chapter 12,
     Launcher. For now, make sure Desktop Mode is selected and click the Launch
     button. VE-Launcher will launch the Name Service, VE-Conductor, and
     VE-Xplorer in Desktop Mode.</para>
 
-    <!-- TODO: add olink for Chapter 8 -->
+    <!-- TODO: add olink for Chapter 12-->
 
-    <para>For more information about VE-Launcher, read Chapter 13.</para>
+    <para>For more information about VE-Launcher, read Chapter 12.</para>
 
-    <!-- TODO: add olink for Chapter 8 -->
-
-    <section>
-      <title>Xplorer from the Command Line</title>
-
-      <para>Users who want to customize how Xplorer starts can launch it from
-      the command line. Here is how the command should be set up:</para>
-
-      <orderedlist>
-        <listitem>
-          <para><code>ves_xplorer</code> : Executable call. The name may vary,
-          depending on how VE-Suite was built.</para>
-        </listitem>
-
-        <listitem>
-          <para><code>-ORBInitRefNameService=corbaloc:iiop:localhost:1239/NameService</code>
-          : CORBA arguments. Xplorer accepts any CORBA arguments passed to
-          it.</para>
-        </listitem>
-
-        <listitem>
-          <para><code>/home/users/mgroves/VE-Suite1.0.3/RHEL_4/share/stereo_desktop/desktop.jconf</code>
-          : Juggler configuration files. If a file is passed to Xplorer, it is
-          read as a Juggler configuration file.</para>
-        </listitem>
-
-        <listitem>
-          <para><code>-VESDesktop 1280 1024</code> : Two flags can be set for
-          Xplorer:</para>
-
-          <orderedlist>
-            <listitem>
-              <para><code>-VESDesktop [height][width]</code>: Runs Xplorer in
-              Desktop Mode. <code>[height]</code> and <code>[width]</code> are
-              the screen's dimensions.</para>
-            </listitem>
-
-            <listitem>
-              <para><code>-VESCluster [master computer name]:</code> Runs
-              Xplorer in cluster mode. <code>[master computer name]</code>
-              should be the computer name of the master in the graphics
-              cluster.</para>
-            </listitem>
-          </orderedlist>
-        </listitem>
-      </orderedlist>
-
-      <para>This method of launching Xplorer is only needed in rare
-      cases.</para>
-    </section>
+    <!-- TODO: add olink for Chapter 12-->
   </section>
 </chapter>

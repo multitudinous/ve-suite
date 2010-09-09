@@ -12,7 +12,7 @@
   dependencies (see Chapter 14, Dependencies) and set the environment
   variables (see Chapter 15, Setting the Environment).</para>
 
-  <!-- TODO: Add olinks to Chapter 8, Dependencies and Chapter 9, Setting the Environment -->
+  <!-- TODO: Add olinks to Chapter 14, Dependencies and Chapter 15, Setting the Environment -->
 
   <section>
     <title>UNIX/Linux Build Instructions</title>
@@ -27,7 +27,7 @@
     file has been properly edited, type <code>gmake</code>. The UNIX build
     system is based on Doozer, which is included with VR Juggler.</para>
 
-    <!-- TODO: Add olink to Chapter 9, Setting the Environment-->
+    <!-- TODO: Add olink to Chapter 15, Setting the Environment-->
 
     <para>Supported base configurations available:</para>
 
@@ -74,7 +74,7 @@
       Environment) and launch a session of Visual Studio with the VE-Suite
       project loaded, then run the batch file:</para>
 
-      <!-- TODO: Add olink to Chapter 9, Setting the Environment-->
+      <!-- TODO: Add olink to Chapter 15, Setting the Environment-->
 
       <para><code> $(VE_SUITE_HOME)VE_Installerbuild.bat </code></para>
 

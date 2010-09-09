@@ -630,7 +630,7 @@
       <para>For specific details on writing Doxygen-compliant and standardized
       comments, see Chapter 21, Documentation Notes.</para>
 
-      <!-- TODO: Add olink to Chapter 16, Documentation Notes -->
+      <!-- TODO: Add olink to Chapter 21, Documentation Notes -->
     </section>
 
     <section>
@@ -639,10 +639,10 @@
       <para>Comments should tell why something is coded the way it is. At
       every point where you choose between different options, insert a comment
       describing which choice you made and why. Comments need to be formatted
-      for compatibility with Doxygen. See Chapter 10, Troubleshooting Guide,
+      for compatibility with Doxygen. See Chapter 9, Troubleshooting Guide,
       for further detail.</para>
 
-      <!-- TODO: Add olink to Chapter 11, Trouble Shooting Guide -->
+      <!-- TODO: Add olink to Chapter 9, Troubleshooting Guide -->
 
       <para>Use a standard copyright/disclaimer comment block at the top of
       each source file.</para>
@@ -650,10 +650,10 @@
   </section>
 
   <section>
-    <title>Docbook Documentation</title>
+    <title>DocBook Documentation</title>
 
     <para>The following sections provide guidelines for editing the VE-Suite
-    documentation using Docbook.</para>
+    documentation using DocBook.</para>
 
     <section>
       <title>Typefaces</title>
@@ -667,13 +667,13 @@
       <para><literal>Go to VE-Suite's &lt;code&gt;bin&lt;/code&gt; directory
       and type &lt;code&gt;python velauncher.py&lt;/code&gt;.</literal></para>
 
-      <para>yields this in the docbook output:</para>
+      <para>yields this in the DocBook output:</para>
 
       <para>Go to VE-Suite's <code>bin</code> directory and type <code>python
       velauncher.py</code>.</para>
 
       <para>To draw users' attention to an important piece of information,
-      type NOTE: and tag it with the Docbook emphasis role bold. That is,
+      type NOTE: and tag it with the DocBook emphasis role bold. That is,
       enter this:</para>
 
       <para><literal>&lt;emphasis

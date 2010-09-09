@@ -28,16 +28,6 @@
     use VE-Launcher to open VE-Suite in Desktop Mode. Load the geometry file,
     <code>PrISUmblend.obj</code>.</para>
 
-    <figure>
-      <title>Load PrISUmblend.obj</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/VisPrISUmblendobj.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
     <para>Keep the CADTree Manager open. Right-click on the Model_Geometry
     directory and choose Properties. A CAD Properties window will open. This
     can be used to transform the file's dimensions. To fit PrISUm's geometry
@@ -220,16 +210,6 @@
     display the PrISUm car. Use the navigation pane, the mouse, or the
     VE-Xplorer--&gt;View--&gt;Frame All command to adjust the camera until the
     view is satisfactory.</para>
-
-    <figure>
-      <title>Data display in VE-Suite</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/VisPrISUmCropped01.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
   </section>
 
   <section>
@@ -240,18 +220,8 @@
     <code>prisum.ves</code>. You might need to clear the design space by
     clicking on the New button in VE-Conductor.</para>
 
-    <figure>
-      <title>Clear the design space</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/VisClearDesignSpace.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>Make sure to save your work before clearning the design
-    space.</para>
+    <para><emphasis role="bold">NOTE:</emphasis> Make sure to save your work
+    before clearning the design space.</para>
 
     <section>
       <title>Scalar Planes</title>
@@ -494,7 +464,7 @@
       keyboard. The polydata will be created, usually as
       <code>outFile.vtk</code>.</para>
 
-      <!-- TODO: add olink for Chapter 2 -->
+      <!-- TODO: add olink for Chapter 13-->
 
       <para>Start VE-Suite. Navigate into the Data Set Config window to load
       the datasets, then open the Surface Data Directory option and left-click

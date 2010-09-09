@@ -8,39 +8,51 @@
          xmlns:db="http://docbook.org/ns/docbook">
   <title>Installation and Setup</title>
 
-  <para>Support is provided at the following locations:</para>
+  <section>
+    <title>Support</title>
 
-  <itemizedlist>
-    <listitem>
-      <para><link
-      xlink:href="https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/">VE-Suite
-      Bugzilla</link>, VE-Suite's interface for bug tracking. Users and
-      developers can view and submit bugs.</para>
-    </listitem>
+    <para>Support is provided at the following locations:</para>
 
-    <listitem>
-      <para>An email list for VE-Suite users will be set up soon</para>
-    </listitem>
-  </itemizedlist>
+    <itemizedlist>
+      <listitem>
+        <para><link
+        xlink:href="https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/">VE-Suite
+        Bugzilla</link>, VE-Suite's interface for bug tracking. Users and
+        developers can view and submit bugs.</para>
+      </listitem>
 
-  <para>Installation of VE-Suite is fairly straightforward. Visit the <link
-  xlink:href="http://www.vesuite.org/download.php">Downloads</link> section
-  and locate your operating system.</para>
+      <listitem>
+        <para><link
+        xlink:href="http://groups.google.com/group/ve-suite-devel?msg=subscribe">The
+        VE-Suite Developers email list</link></para>
+      </listitem>
+    </itemizedlist>
 
-  <para><emphasis role="bold">Windows:</emphasis> Two installers are provided
-  for Windows. Each installer will guide you through the process of selecting
-  various options. One installer, <code>vesuite#.#.#_####.exe</code>, contains
-  the core VE-Suite binaries and <code>.dll</code> files. The dependencies
-  installer, <code>vesuite_deps#.#.#.exe</code>, contains the binaries and
-  <code>.dll</code> files of VE-Suite's dependencies, arranged to include
-  <code>bin</code>, <code>lib</code>, and <code>share</code>
-  subdirectories.</para>
+    <para>Installation of VE-Suite is fairly straightforward. Visit the <link
+    xlink:href="http://www.vesuite.org/download.php">Downloads</link> section
+    and locate your operating system.</para>
 
-  <para><emphasis role="bold">Unix:</emphasis> A <code>tar.gz</code> file of
-  the current release of VE-Suite is provided. You can extract the
-  <code>VE-Suite.#.#.#</code> directory from it. Instead of one central
-  dependencies directory, we provide the dependencies' rpm files. Be sure to
-  install the necessary dependencies before running VE-Suite.</para>
+    <para><emphasis role="bold">Windows:</emphasis> Two installers are
+    provided for Windows. Each installer will guide you through the process of
+    selecting various options. One installer,
+    <code>vesuite#.#.#_####.exe</code>, contains the core VE-Suite binaries
+    and <code>.dll</code> files. The dependencies installer,
+    <code>vesuite_deps#.#.#.exe</code>, contains the binaries and
+    <code>.dll</code> files of VE-Suite's dependencies, arranged to include
+    <code>bin</code>, <code>lib</code>, and <code>share</code>
+    subdirectories.</para>
+
+    <para><emphasis role="bold">Unix:</emphasis> A <code>tar.gz</code> file of
+    the current release of VE-Suite is provided. You can extract the
+    <code>VE-Suite.#.#.#</code> directory from it. Instead of one central
+    dependencies directory, we provide the dependencies' rpm files. Be sure to
+    install the necessary dependencies before running VE-Suite.</para>
+
+    <para><emphasis role="bold">Macintosh:</emphasis> One installer is
+    provided for Macintosh OS: VE-Suite Installer 20xx-xx-xx.pkg. It contains
+    the core VE-Sute binaries and .dll files as well as the binaries and .dll
+    files of VE-Suite's dependencies.</para>
+  </section>
 
   <section>
     <title>Windows Installation</title>
@@ -49,18 +61,6 @@
     as other installations. The user chooses which components to install,
     their locations, their Start Menu folder, and whether to add an icon to
     the desktop.</para>
-
-    <figure>
-      <title>Installing VE-Suite</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata contentdepth="" contentwidth="" depth=""
-                     fileref="images/windowsinstallsetup.png" scalefit="1"
-                     width=""></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
 
     <para>One important consideration is which components to install. In large
     setups, certain computers will run the NameServer while others will handle
@@ -95,6 +95,13 @@
   </section>
 
   <section>
+    <title>Macintosh OS Installation</title>
+
+    <para>One installer is provided for Macintosh OS. Just double-click the
+    install file to run it and follow the directions.</para>
+  </section>
+
+  <section>
     <title>Setting the Runtime Environment</title>
 
     <para>In previous versions, VE-Suite's runtime environment was set through
@@ -107,38 +114,22 @@
     VE-Suite's directory or starting it from a different directory will pass
     the wrong value to VE-Suite, causing errors.</emphasis></para>
 
-    <para>The dependencies directory is the only variable that needs to be set
-    manually. The first time you start VE-Launcher, you will be asked to find
-    the dependencies directory. On Windows, the dependencies directory is
+    <para>On Windows and UNIX/Linux, the dependencies directory needs to be
+    set manually. The first time you start VE-Launcher, you will be asked to
+    find the dependencies directory. On Windows, the dependencies directory is
     <code>VE_Suite.#.#.#_Dependencies</code>.</para>
-
-    <figure>
-      <title>Setting dependencies on Windows</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/01-browse.jpg"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
 
     <para>On UNIX/Linux, multiple dependencies can be chosen. The only one
     that needs to be specifically selected is VR Juggler's directory.</para>
-
-    <figure>
-      <title>Setting dependencies on UNIX/Linux</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/01-linux-set-deps.jpg"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
 
     <para>If you are upgrading from an earlier version of VE-Suite, the
     dependencies' directories can be changed by selecting the dependency and
     clicking the Delete button, or clicking the Add button and selecting a new
     directory.</para>
+
+    <para>On Macintosh OS, the dependencies directory does not need to be
+    manually set. The first time you start VE-Launcher, it is already
+    set.</para>
   </section>
 
   <section>
