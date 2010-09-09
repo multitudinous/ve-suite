@@ -53,15 +53,12 @@
 #include <osg/AnimationPath>
 
 // --- C/C++ Libraries --- //
-#include <cassert>
-#include <cctype>
 #include <sstream>
 #include <fstream>
 #include <istream>
 #include <string>
-#include <cctype>
 #include <iostream>
-#include <strstream>
+
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -163,7 +160,7 @@ void CADAnimationEventHandler::_readData( std::string animFile )
         std::cout << "\nSuccessfully opened "<<animFile.c_str()<<" file\n" <<std::endl;
     }
 
-    char temp[1024];
+    //char temp[1024];
     float scale = 1.0f;
     float roationConv = 1.0f;
 
@@ -194,7 +191,7 @@ void CADAnimationEventHandler::_readData( std::string animFile )
     std::string testString;
     while ( !inputFile.eof() )
     {
-	    getline(inputFile, testString);
+	    std::getline(inputFile, testString);
         std::istringstream inputStream(testString);
         
         inputStream>>   tempData[0]>>tempData[1]>>tempData[2]>>tempData[3]>>tempData[4]>>tempData[5]>>
