@@ -37,19 +37,23 @@
 
 #include <ves/VEConfig.h>
 
-class VE_OPEN_MODULE_EXPORTS Body_AMH_Executive_i
-: public virtual POA_Body::AMH_Executive
+class VE_OPEN_MODULE_EXPORTS Body_AMH_Executive_i 
+    : 
+    public virtual POA_Body::AMH_Executive
 {
 public:
-    Body_AMH_Executive_i(PortableServer::POA_ptr poa, POA_Body::Unit_ptr unitModule);
+    Body_AMH_Executive_i(PortableServer::POA_ptr poa,
+                         CosNaming::NamingContext_ptr nc,
+                         POA_Body::Unit_ptr unitModule, 
+                         POA_Body::UI_ptr uiModule);
     
     virtual ~Body_AMH_Executive_i(void);
     
-    virtual void GetImportData (
+    /*virtual void GetImportData (
                                 Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                 ::CORBA::Long module_id,
                                 ::CORBA::Long port_id
-                                ) = 0;
+                                ) = 0;*/
 
     virtual void SetModuleMessage (
                                    Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
@@ -57,7 +61,7 @@ public:
                                    const char * msg
                                    ) = 0;
 
-    virtual void SetModuleResult (
+    /*virtual void SetModuleResult (
                                   Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                   ::CORBA::Long module_id,
                                   const char * result
@@ -66,7 +70,7 @@ public:
     virtual void GetModuleResult (
                                   Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                   ::CORBA::Long module_id
-                                  ) = 0;
+                                  ) = 0;*/
     
     virtual void SetNetwork (
                              Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
@@ -136,9 +140,9 @@ public:
                                ::CORBA::Long flag
                                ) = 0;
     
-    virtual void GetGlobalMod (
+    /*virtual void GetGlobalMod (
                                Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
-                               ) = 0;
+                               ) = 0;*/
 
     virtual void Query (
                         Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
@@ -164,7 +168,39 @@ public:
                             ::CORBA::Long module_id,
                             const char * param
                             ) = 0;
+protected:    
+    std::map< std::string, Body::Unit_var > m_modUnits;
+    ///Map to store connections from all of the VE-Xplorer and VE-Conductor
+    ///UI interfaces
+    std::map<std::string, Body::UI_var> m_uiMap;
     
+    std::map< std::string, Execute_Thread* > m_execThread;
+    std::map< std::string, QueryThread* > m_queryThreads;
+    
+    CosNaming::NamingContext_var m_namingContext;
+    ///AMI handler for asynchronous calls to conductor
+    Body_AMI_UIHandler_i m_uiAMIHandler;
+    
+    VE_CE::Utilities::Network*   m_network;
+    VE_CE::Utilities::Scheduler* m_scheduler;
+    
+    Types::ArrayLong m_watchList;
+    
+    ACE_Thread_Mutex m_mutex;
+    ACE_Thread_Mutex m_query;
+
+    std::string GetResults( int rt );
+    
+    void execute_next_mod( long module_id );
+
+    void ClientMessage( const char *msg );
+    
+    void execute( std::string );
+    
+private:
+    PortableServer::POA_var m_poa;
+    POA_Body::Unit_var m_unit;
+    POA_Body::UI_var m_ui;
 };
 
 #endif

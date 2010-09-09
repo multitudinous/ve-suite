@@ -80,7 +80,7 @@ Body_Executive_i::~Body_Executive_i( void )
     delete _scheduler;
 }
 
-char * Body_Executive_i::GetImportData(
+/*char * Body_Executive_i::GetImportData(
     CORBA::Long module_id,
     CORBA::Long port_id
     ACE_ENV_ARG_DECL
@@ -113,11 +113,6 @@ ACE_THROW_SPEC((
 
         if( oport->have_data() )
         {
-            /*Package p;
-            p.SetSysId("temp.xml");
-            p.intfs.push_back(oport->_data);
-
-            str = p.Save(rv);*/
             std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
             nodes.push_back( std::pair< CommandPtr, std::string  >( oport->GetPortData(), std::string( "vecommand" ) ) );
             std::string fileName( "returnString" );
@@ -149,7 +144,7 @@ ACE_THROW_SPEC((
     _mutex.release();
 
     return CORBA::string_dup( str.c_str() );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute( std::string mn )
 {
@@ -172,177 +167,6 @@ void Body_Executive_i::execute( std::string mn )
             //ClientMessage(msg.c_str());
         }
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Body_Executive_i::SetExportData(
-    CORBA::Long module_id,
-    CORBA::Long port_id,
-    const char * data
-    ACE_ENV_ARG_DECL
-)
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
-{
-    _mutex.acquire();
-
-    XMLReaderWriter networkWriter;
-    networkWriter.UseStandaloneDOMDocumentManager();
-    networkWriter.ReadFromString();
-    networkWriter.ReadXMLData( std::string( data ), "Command", "vecommand" );
-    //delete data;
-    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
-
-    // Should only be one item. But, maybe later...
-    if( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortData(
-                port_id, boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) ) )
-       )
-    {
-        std::string msg = "Unable to set mod id# "
-                          + boost::lexical_cast<std::string>( module_id )
-                          + ", port id# "
-                          + boost::lexical_cast<std::string>( port_id )
-                          + "'s port data\n";
-        ClientMessage( msg.c_str() );
-    }
-}
-
-char * Body_Executive_i::GetExportData(
-    CORBA::Long module_id,
-    CORBA::Long port_id
-    ACE_ENV_ARG_DECL
-)
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
-{
-    _mutex.acquire();
-    //std::cout << "VE-CE : GetExportData "<< module_id << " " << port_id << std::endl;
-
-    //Interface intf;
-    CommandPtr portData( new Command() );
-    if( !_network->GetModule( _network->moduleIdx( module_id ) )->getPortData( port_id, portData ) )
-    {
-        std::string msg = "Mod #"
-                          + boost::lexical_cast<std::string>( module_id )
-                          + " IPort, id #"
-                          + boost::lexical_cast<std::string>( port_id )
-                          + " has no data\n" ;
-        ClientMessage( msg.c_str() );
-        _mutex.release();
-        return CORBA::string_dup( "" );
-    }
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< CommandPtr, std::string  >( portData, std::string( "vecommand" ) ) );
-    std::string fileName( "returnString" );
-    XMLReaderWriter netowrkWriter;
-    netowrkWriter.UseStandaloneDOMDocumentManager();
-    netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-
-    //bool        rv;
-    //std::string str;
-
-    //Package p;
-    //p.SetSysId("temp.xml");
-    //p.intfs.push_back(intf);
-
-    //str = p.Save(rv);
-
-    _mutex.release();
-
-    //if(rv)
-    return CORBA::string_dup( fileName.c_str() );
-}
-
-void Body_Executive_i::SetProfileData(
-    CORBA::Long module_id,
-    CORBA::Long port_id,
-    const Types::Profile & data
-)
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
-{
-    _mutex.acquire();
-
-    std::cout << "VE-CE : SetProfileData " << module_id << " " << port_id << std::endl;
-
-
-    if( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortProfile( port_id, &data ) )
-    {
-        std::string msg = "Unable to set mod id# "
-                          + boost::lexical_cast<std::string>( module_id )
-                          + ", port id# "
-                          + boost::lexical_cast<std::string>( port_id )
-                          + "'s port profile\n";
-        ClientMessage( msg.c_str() );
-    }
-    else
-    {
-        ; //std::cout << "SetPortProfile success\n";
-    }
-
-    _mutex.release();
-}
-
-void Body_Executive_i::GetProfileData(
-    CORBA::Long module_id,
-    CORBA::Long port_id,
-    Types::Profile_out data
-)
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
-{
-    _mutex.acquire();
-
-    std::cout << "VE-CE : GetProfileData " << module_id << " " << port_id << std::endl;
-
-    Module *mod = _network->GetModule( _network->moduleIdx( module_id ) );
-    if( !mod )
-    {
-        std::cerr << "VE-CE : Cannot find module, id# " << module_id << std::endl;
-        return;
-    }
-    IPort *iport = mod->getIPort( mod->iportIdx( port_id ) );
-
-    if( iport && iport->nconnections() )
-    {
-        Connection* conn = iport->connection( 0 ); // should only have one connection
-        OPort* oport = conn->get_oport();
-
-        if( oport->have_profile() )
-        {
-            data = new Types::Profile( *( oport->_profile ) );
-        }
-        else
-        {
-            std::string msg = "Mod #"
-                              + boost::lexical_cast<std::string>( module_id )
-                              + " IPort, id #"
-                              + boost::lexical_cast<std::string>( port_id )
-                              + " has no Profile\n" ;
-            std::cerr << msg;
-            ClientMessage( msg.c_str() );
-        }
-    }
-    else
-    {
-        std::string msg = "Unable to get Profile from mod #"
-                          + boost::lexical_cast<std::string>( module_id )
-                          + " IPort, id #"
-                          + boost::lexical_cast<std::string>( port_id )
-                          + "\n" ;
-        std::cerr << msg;
-        ClientMessage( msg.c_str() );
-    }
-
-    _mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute_next_mod( long module_id )
@@ -574,7 +398,7 @@ ACE_THROW_SPEC((
     //_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////
-void Body_Executive_i::SetModuleResult(
+/*void Body_Executive_i::SetModuleResult(
     CORBA::Long module_id,
     const char * result
 )
@@ -600,9 +424,9 @@ ACE_THROW_SPEC((
     ClientMessage( msg.c_str() );
 
     _mutex.release();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
-char * Body_Executive_i::GetModuleResult(
+/*char * Body_Executive_i::GetModuleResult(
     CORBA::Long module_id
 )
 ACE_THROW_SPEC((
@@ -613,7 +437,7 @@ ACE_THROW_SPEC((
     boost::ignore_unused_variable_warning( module_id );
     std::cout << "VE-CE : Body_Executive_i::GetModuleResult has been replaced with the query function." << std::endl;
     return CORBA::string_dup( "" );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetNetwork(
     const char * network
@@ -1201,7 +1025,7 @@ ACE_THROW_SPEC((
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-CORBA::Long Body_Executive_i::GetGlobalMod(
+/*CORBA::Long Body_Executive_i::GetGlobalMod(
     Types::ArrayLong_out ids
 )
 ACE_THROW_SPEC((
@@ -1212,7 +1036,7 @@ ACE_THROW_SPEC((
     boost::ignore_unused_variable_warning( ids );
 
     return CORBA::Long( 0 );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetID(
     const char * moduleName,

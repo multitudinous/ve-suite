@@ -12,19 +12,19 @@ sources = Split("""
 """)
 
 sources.append( pj('idl','Body_AMI_UIHandler_i.cxx') )
-sources.append( pj('idl','Body_AMH_VEXplorerResponseHandler_i.cxx') )
-sources.append( pj('idl','Body_AMH_ExecutiveResponseHandler_i.cxx') )
-sources.append( pj('idl','Body_AMH_Executive_i.cxx') )
-sources.append( pj('idl','Body_AMI_UnitHandler_i.cxx') )
+#sources.append( pj('idl','Body_AMH_VEXplorerResponseHandler_i.cxx') )
+#sources.append( pj('idl','Body_AMH_ExecutiveResponseHandler_i.cxx') )
+#sources.append( pj('idl','Body_AMH_Executive_i.cxx') )
+#sources.append( pj('idl','Body_AMI_UnitHandler_i.cxx') )
 
 headers  = glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.cpp'))
 headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.h'))
 headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.inl'))
 headers.append( pj( 'idl','Body_AMI_UIHandler_i.h') )
-headers.append( pj( 'idl','Body_AMH_VEXplorerResponseHandler_i.h') )
-headers.append( pj( 'idl','Body_AMH_ExecutiveResponseHandler_i.h') )
-headers.append( pj( 'idl','Body_AMH_Executive_i.h') )
-headers.append( pj( 'idl','Body_AMI_UnitHandler_i.h') )
+#headers.append( pj( 'idl','Body_AMH_VEXplorerResponseHandler_i.h') )
+#headers.append( pj( 'idl','Body_AMH_ExecutiveResponseHandler_i.h') )
+#headers.append( pj( 'idl','Body_AMH_Executive_i.h') )
+#headers.append( pj( 'idl','Body_AMI_UnitHandler_i.h') )
 
 lib_env = ves_pkg.getEnv().Clone()
 

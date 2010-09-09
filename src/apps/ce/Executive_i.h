@@ -42,7 +42,7 @@
 
 #include <ves/open/moduleS.h>
 
-#include <ves/open/idl/Body_AMI_UIHandler_i.h>
+#include <ves/ce/Body_AMI_UIHandler_i.h>
 
 #include <string>
 #include <vector>
@@ -99,7 +99,7 @@ protected:
 
 public:
 
-    virtual char * GetImportData(
+    /*virtual char * GetImportData(
         CORBA::Long module_id,
         CORBA::Long port_id
         ACE_ENV_ARG_DECL
@@ -107,50 +107,7 @@ public:
     ACE_THROW_SPEC((
                        CORBA::SystemException
                        , Error::EUnknown
-                   ) );
-
-    virtual void SetExportData(
-        CORBA::Long module_id,
-        CORBA::Long port_id,
-        const char * data
-        ACE_ENV_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
-
-    virtual char * GetExportData(
-        CORBA::Long module_id,
-        CORBA::Long port_id
-        ACE_ENV_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
-
-    virtual void SetProfileData(
-        CORBA::Long module_id,
-        CORBA::Long port_id,
-        const Types::Profile & data
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_ih.cpp:43
-
-    virtual void GetProfileData(
-        CORBA::Long module_id,
-        CORBA::Long port_id,
-        Types::Profile_out data
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_ih.cpp:43
+                   ) );*/
 
     virtual void SetModuleMessage(
         CORBA::Long module_id,
@@ -162,7 +119,7 @@ public:
                        , Error::EUnknown
                    ) );
 
-    virtual void SetModuleResult(
+    /*virtual void SetModuleResult(
         CORBA::Long module_id,
         const char * result
     )
@@ -179,7 +136,7 @@ public:
                        CORBA::SystemException
                        , Error::EUnknown
                    ) );// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_ih.cpp:43
+// be/be_visitor_operation/operation_ih.cpp:43*/
 
     virtual void SetNetwork(
         const char * network
@@ -312,13 +269,13 @@ public:
                    ) );// TAO_IDL - Generated from
 // be/be_visitor_operation/operation_ih.cpp:43
 
-    virtual CORBA::Long GetGlobalMod(
+    /*virtual CORBA::Long GetGlobalMod(
         Types::ArrayLong_out ids
     )
     ACE_THROW_SPEC((
                        CORBA::SystemException
                        , Error::EUnknown
-                   ) );
+                   ) );*/
 
     virtual void SetID( const char * moduleName, ::CORBA::Long id )
     ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
