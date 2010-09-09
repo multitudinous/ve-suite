@@ -36,7 +36,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 Body_AMI_UIHandler_i::Body_AMI_UIHandler_i( void )
 {}
-
+////////////////////////////////////////////////////////////////////////////////
+Body_AMI_UIHandler_i::Body_AMI_UIHandler_i(
+    PortableServer::POA_ptr p,
+    Body::AMH_ExecutiveResponseHandler_ptr rh)
+    :
+    m_poa( PortableServer::POA::_duplicate( p ) ),
+    m_responseHandler( Body::AMH_ExecutiveResponseHandler::_duplicate( rh ) )
+{
+    
+}
 // Implementation skeleton destructor
 ////////////////////////////////////////////////////////////////////////////////
 Body_AMI_UIHandler_i::~Body_AMI_UIHandler_i( void )
@@ -132,8 +141,11 @@ ACE_THROW_SPEC((
                    ::Error::EUnknown
                ) )
 {
-    // Add your implementation here
-    throw CORBA::NO_IMPLEMENT();
+    m_responseHandler->SetModuleMessage();
+    
+    std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
+    PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
+    m_poa->deactivate_object( oid.in() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::Raise_excep(
@@ -143,8 +155,32 @@ ACE_THROW_SPEC((
                    ::CORBA::SystemException
                ) )
 {
-    // Add your implementation here
-    throw CORBA::NO_IMPLEMENT();
+    // Here, we need to extract the exception from this holder, and package
+    // it in another so the AMH response handler may forward it on.
+    try
+    {
+        excep_holder->raise_exception();
+    }
+    catch(const CORBA::Exception& ex)
+    {
+        CORBA::Exception* local_ex = ex._tao_duplicate();
+        ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( local_ex );
+        m_responseHandler->SetModuleMessage_excep( &amh_excep_holder );
+    }
+    catch(...)
+    {
+        std::cout
+            << "Raise_excep got an unknown exception"
+            << std::endl;
+        
+        CORBA::Exception* unknown_ex = new CORBA::UNKNOWN;
+        ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( unknown_ex );
+        m_responseHandler_->SetModuleMessage_excep( &amh_excep_holder );
+    }
+    
+    std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
+    PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
+    m_poa->deactivate_object( oid.in() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetXplorerData()
@@ -174,11 +210,11 @@ ACE_THROW_SPEC((
                    ::Error::EUnknown
                ) )
 { 
-    /*this->response_handler_->SetCommand();
+    m_responseHandler->SetParams();
     
-    std::cout << "inner_callback_i deactivating self" << std::endl;
-    PortableServer::ObjectId_var oid = this->poa_->servant_to_id(this);
-    this->poa_->deactivate_object (oid.in());*/
+    std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
+    PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
+    m_poa->deactivate_object( oid.in() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetCommand_excep( 
@@ -187,6 +223,31 @@ ACE_THROW_SPEC((
                    ::CORBA::SystemException
                ) )
 {
-    throw CORBA::NO_IMPLEMENT();
+    // Here, we need to extract the exception from this holder, and package
+    // it in another so the AMH response handler may forward it on.
+    try
+    {
+        excep_holder->raise_exception();
+    }
+    catch(const CORBA::Exception& ex)
+    {
+        CORBA::Exception* local_ex = ex._tao_duplicate();
+        ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( local_ex );
+        m_responseHandler->SetParams_excep( &amh_excep_holder );
+    }
+    catch(...)
+    {
+        std::cout
+            << "SetParams_excep got an unknown exception"
+            << std::endl;
+        
+        CORBA::Exception *unknown_ex = new CORBA::UNKNOWN;
+        ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( unknown_ex );
+        m_responseHandler_->SetParams_excep( &amh_excep_holder );
+    }
+    
+    std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
+    PortableServer::ObjectId_var oid = m_poa->servant_to_id(this);
+    m_poa->deactivate_object (oid.in());
 }
 ////////////////////////////////////////////////////////////////////////////////

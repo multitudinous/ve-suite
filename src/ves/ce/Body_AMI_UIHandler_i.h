@@ -170,6 +170,9 @@ public:
     ACE_THROW_SPEC ((
       ::CORBA::SystemException
     ));
-    
+
+private:
+    PortableServer::POA_var m_poa;
+    Body::AMH_ExecutiveResponseHandler_var m_responseHandler;
 };
 #endif// BODY_AMI_UI_HANDLER_I_H

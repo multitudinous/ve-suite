@@ -49,130 +49,108 @@ class VE_OPEN_MODULE_EXPORTS Body_AMI_UnitHandler_i
 {
 public:
     // Constructor 
-    Body_AMI_UnitHandler_i (void);
+    Body_AMI_UnitHandler_i();
+
+    Body_AMI_UnitHandler_i(PortableServer::POA_ptr p,
+                         Body::AMH_ExecutiveResponseHandler_ptr rh);
     
     // Destructor 
-    virtual ~Body_AMI_UnitHandler_i (void);
+    virtual ~Body_AMI_UnitHandler_i();
     
     virtual
-    void StartCalc (
-                    void);
+    void StartCalc();
     
     virtual
-    void StartCalc_excep (
-                          ::Messaging::ExceptionHolder * excep_holder);
+    void StartCalc_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void StopCalc (
-                   void);
+    void StopCalc();
     
     virtual
-    void StopCalc_excep (
-                         ::Messaging::ExceptionHolder * excep_holder);
+    void StopCalc_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void PauseCalc (
-                    void);
+    void PauseCalc();
     
     virtual
-    void PauseCalc_excep (
-                          ::Messaging::ExceptionHolder * excep_holder);
+    void PauseCalc_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void Resume (
-                 void);
+    void Resume();
     
     virtual
-    void Resume_excep (
-                       ::Messaging::ExceptionHolder * excep_holder);
+    void Resume_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void GetStatusMessage (
-                           const char * ami_return_val);
+    void GetStatusMessage(const char * ami_return_val);
     
     virtual
-    void GetStatusMessage_excep (
-                                 ::Messaging::ExceptionHolder * excep_holder);
+    void GetStatusMessage_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void GetUserData (
-                      const char * ami_return_val);
+    void GetUserData(const char * ami_return_val);
     
     virtual
-    void GetUserData_excep (
-                            ::Messaging::ExceptionHolder * excep_holder);
+    void GetUserData_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void SetParams (
-                    void);
+    void SetParams();
     
     virtual
-    void SetParams_excep (
-                          ::Messaging::ExceptionHolder * excep_holder);
+    void SetParams_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void SetID (
-                void);
+    void SetID();
     
     virtual
-    void SetID_excep (
-                      ::Messaging::ExceptionHolder * excep_holder);
+    void SetID_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void SetCurID (
-                   void);
+    void SetCurID();
     
     virtual
-    void SetCurID_excep (
-                         ::Messaging::ExceptionHolder * excep_holder);
+    void SetCurID_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void GetID (
-                const ::Types::ArrayLong & ami_return_val);
+    void GetID(const ::Types::ArrayLong & ami_return_val);
     
     virtual
-    void GetID_excep (
-                      ::Messaging::ExceptionHolder * excep_holder);
+    void GetID_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void GetCurID (
-                   ::CORBA::Long ami_return_val);
+    void GetCurID(::CORBA::Long ami_return_val);
     
     virtual
-    void GetCurID_excep (
-                         ::Messaging::ExceptionHolder * excep_holder);
+    void GetCurID_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void SetName (
-                  void);
+    void SetName();
     
     virtual
-    void SetName_excep (
-                        ::Messaging::ExceptionHolder * excep_holder);
+    void SetName_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void GetName (
-                  const char * ami_return_val);
+    void GetName(const char * ami_return_val);
     
     virtual
-    void GetName_excep (
-                        ::Messaging::ExceptionHolder * excep_holder);
+    void GetName_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void Query (
-                const char * ami_return_val);
+    void Query(const char * ami_return_val);
     
     virtual
-    void Query_excep (
-                      ::Messaging::ExceptionHolder * excep_holder);
+    void Query_excep(::Messaging::ExceptionHolder * excep_holder);
     
     virtual
-    void DeleteModuleInstance (
-                               void);
+    void DeleteModuleInstance();
     
     virtual
-    void DeleteModuleInstance_excep (
-                                     ::Messaging::ExceptionHolder * excep_holder);
+    void DeleteModuleInstance_excep(
+        ::Messaging::ExceptionHolder * excep_holder);
+
+private:
+    PortableServer::POA_var m_poa;
+    Body::AMH_ExecutiveResponseHandler_var m_responseHandler;
 };
 #endif
 

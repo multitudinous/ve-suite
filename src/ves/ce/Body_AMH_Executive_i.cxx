@@ -130,10 +130,58 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
     boost::ignore_unused_variable_warning( module_id );
     // send a unit message to all uis
     //std::string message = std::string( "SetModuleMessage ") + std::string( msg );
-    std::string message = std::string( msg );
+    //std::string message = std::string( msg );
     //_mutex.acquire();
-    ClientMessage( message.c_str() );
+    //ClientMessage( message.c_str() );
     //_mutex.release();
+    
+    
+    // The callback handler servant instance holds on to a reference to the
+    // AMH response handler. That way, it can forward the reply back to the
+    // originial client after getting the reply from the inner server.
+    PortableServer::ServantBase_var servant = new Body_AMI_UIHandler_i(this->poa_.in(),
+                                                                   _tao_rh);
+    PortableServer::ObjectId_var objid =
+    this->poa_->activate_object(servant.in());
+    CORBA::Object_var obj = this->poa_->id_to_reference (objid.in());
+    
+    AMI_InnerHandler_var cb =  AMI_InnerHandler::_narrow(obj.in());
+    
+    // forward the request on to the inner server, with the callback handler
+    // reference.
+    this->inner_->sendc_answer (cb.in(),question);
+    
+    std::cout << "VE-CE : Output = " << msg;
+    for( std::map<std::string, Body::UI_var>::iterator
+        iter = m_uiMap.begin(); iter != m_uiMap.end(); )
+    {
+        std::cout << "VE-CE : " << msg << " to -> " << iter->first << std::endl;
+        try
+        {
+            iter->second->_non_existent();
+            //iter->second->Raise( msg );
+            iter->second->sendc_Raise( cb.in(), msg );
+            ++iter;
+        }
+        catch( CORBA::Exception& ex )
+        {
+            std::cout << "VE-CE : " << iter->first 
+            << " is obsolete." << std::endl
+            << ex._info().c_str() << std::endl;
+            // it seems this call should be blocked as we are messing with
+            // a map that is used everywhere
+            m_uiMap.erase( iter++ );
+        }
+        catch( std::exception& ex )
+        {
+            std::cout << "VE-CE : another kind of exception " 
+            << std::endl << ex.what() << std::endl;
+        }
+    }
+    
+    // nothing else to do. Our client will block until the callback handler
+    // forwards the reply.
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*    void Body_AMH_Executive_i::SetModuleResult (
@@ -611,7 +659,7 @@ void Body_AMH_Executive_i::RegisterUnit (
     return CORBA::Long( 0 );
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::Query (
+    void Body_AMH_Executive_i::Query(
                         Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                         const char * commands
                         ) 
@@ -771,30 +819,49 @@ void Body_AMH_Executive_i::SetParams(
     ///We are going to abuse this function for the moment to try out sending
     ///data asynchronously to condcutor and xplorer from the units
     ///to try dynamic data passing to xplorer and conductor.
-    
+
     ///AMI call
     Body::AMI_UIHandler_var uiComAMIHandler = m_uiAMIHandler._this();
     for( std::map<std::string, Body::UI_var>::iterator
         iter = m_uiMap.begin(); iter != m_uiMap.end(); )
     {
-        if( iter->first.compare(0,2, "UI", 0, 2) != 0 )
+        /*if( iter->first.compare(0,2, "UI", 0, 2) != 0 )
         {
             ++iter;
             continue;
-        }
+        }*/
         
         try
         {
             iter->second->_non_existent();
             //iter->second->SetCommand( param );
-            iter->second->sendc_SetCommand( uiComAMIHandler.in(), param );
+            //iter->second->sendc_SetCommand( uiComAMIHandler.in(), param );
+            
+            // The callback handler servant instance holds on to a reference to the
+            // AMH response handler. That way, it can forward the reply back to the
+            // originial client after getting the reply from the inner server.
+            PortableServer::ServantBase_var servant = 
+                new Body_AMI_UIHandler_i( m_poa.in(), _tao_rh );
+            PortableServer::ObjectId_var objid =
+                m_poa->activate_object( servant.in() );
+            CORBA::Object_var obj = m_poa->id_to_reference( objid.in() );
+            
+            ::Body::AMI_UIHandler_var cb = ::Body::AMI_UIHandler::_narrow( obj.in() );
+            
+            // forward the request on to the inner server, with the callback handler
+            // reference.
+            iter->second->sendc_SetCommand( cb.in(), param );
+            
+            // nothing else to do. Our client will block until the callback handler
+            // forwards the reply.
+            
             ++iter;
         }
         catch( CORBA::Exception&  ex )
         {
             std::cout << "VE-CE::SetParams : " << iter->first 
-            << " is obsolete." << std::endl
-            << ex._info().c_str() << std::endl;
+                << " is obsolete." << std::endl
+                << ex._info().c_str() << std::endl;
             // it seems this call should be blocked as we are messing with
             // a map that is used everywhere
             m_uiMap.erase( iter++ );
@@ -802,7 +869,7 @@ void Body_AMH_Executive_i::SetParams(
         catch( std::exception& ex )
         {
             std::cout << "VE-CE::SetParams : another kind of exception " 
-            << std::endl << ex.what() << std::endl;
+                << std::endl << ex.what() << std::endl;
             ++iter;
         }
     }
