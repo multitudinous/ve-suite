@@ -31,4 +31,3 @@ env = ves_pkg.getEnv().Clone()
 #sys.stdout.write("Done generating documentation\n")
  
 env.Doxygen(pj('#', 'share','docs','doxygen','Doxyfile') )
-print "test output"
