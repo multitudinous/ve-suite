@@ -214,12 +214,12 @@ class Launch:
             sourceFile.close()
             ##Master call
             print "***MASTER CALL: %s***" %(self.settings["ClusterMaster"]) ##TESTER
-            self.ExecuteClusterScript(self.settings["ClusterMaster"])
+            self.ExecuteClusterScript(self.settings["ClusterMaster"], "master")
             sleep(self.settings["MasterWait"])
             ##Slave calls
             for comp in self.settings["ClusterSlaves"]:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-                self.ExecuteClusterScript(comp)
+                self.ExecuteClusterScript(comp, "slave")
                 sleep(self.settings["SlaveWait"])
             ##Delete the cluster file afterwards when VE_Suite is terminated.
             ##To see the deletion code, please look at velServerKillWindow.py and
@@ -637,14 +637,14 @@ class Launch:
             print "Error! Windows linking into Unix cluster function."
 
         
-    def ExecuteClusterScript(self, nodeName):
+    def ExecuteClusterScript(self, nodeName, nodeStatus = "slave"):
         """Executes the ClusterScript for nodeName on Windows."""
         if windows:
             print "Executing %s!" %nodeName
             ##Do a regular call if the initial machine's the node.
             if gethostname() == nodeName.split('.')[0]:
                 try:
-                    subprocess.Popen(self.XplorerCall())
+                    subprocess.Popen(self.XplorerCall(nodeStatus))
                 except OSError:
                     exe = "ves_xplorer"
                     print "Xplorer Call Error, \"%s\" not found on your environment."
