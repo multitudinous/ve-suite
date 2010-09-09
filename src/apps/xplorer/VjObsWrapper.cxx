@@ -128,7 +128,7 @@ VjObsWrapper::~VjObsWrapper( void )
     //delete _vjObs;
     try
     {
-        m_orbPtr->shutdown( true );
+        m_orbPtr->shutdown( false );
     }
     catch( ... )
     {
