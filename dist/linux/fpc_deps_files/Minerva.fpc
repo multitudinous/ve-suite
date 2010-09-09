@@ -1,13 +1,13 @@
 prefix=${fp_file_cwd}/../..
 exec_prefix=${prefix}
-libdir=${exec_prefix}/bin
+libdir=${exec_prefix}/lib
 includedir=${prefix}/include/cadkit
 
 Name: Minerva
 Description: Minerva GIS
 Provides: Minerva
-Requires: Boost.Filesystem 
+Requires:
 Version: 1.0
-Libs: -L${libdir} -lMinerva -lUsul -lMinervaDataSource -lSerializeXML -lXmlTree -lMinervaOsgTools -lboost_date_time-gcc43-mt -lboost_regex-gcc43-mt -lboost_thread-gcc43-mt
-Cflags: -I${includedir}
+Libs: -L${libdir} -lMinervaCore -lMinervaCommon -lUsul -lMinervaOsgTools -lXmlTree -lMinervaDocument -lSerializeXML -lMinervaGeoNames -lMinervaGeoRSS -lMinervaNetwork -lMinervaKml
+Cflags: -I${includedir} -I/opt/local/include
 Arch: noarch
