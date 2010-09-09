@@ -81,7 +81,7 @@
 
 #include <ves/util/commands/Minerva.h>
 #ifdef MINERVA_GIS_SUPPORT
-#include <Minerva/Core/Utilities/GeoCode.h>
+#include <Minerva/Network/GeoCode.h>
 #endif
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
@@ -1617,8 +1617,8 @@ void CADNodePropertiesDlg::_onGeocodeEvent( wxCommandEvent& event )
     if( false == location.empty() )
     {
 #ifdef MINERVA_GIS_SUPPORT
-        Minerva::Core::Utilities::GeoCode geocode;
-        Minerva::Core::Utilities::GeoCode::Result result( geocode ( location ) );
+        Minerva::Network::GeoCode geocode;
+        Minerva::Network::GeoCode::Result result( geocode ( location ) );
         
         if( result.success )
         {
