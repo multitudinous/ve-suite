@@ -31,18 +31,49 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include <ves/open/idl/Body_AMH_Executive_i.h>
+#include <ves/ce/Body_AMH_Executive_i.h>
+
+#include <ves/open/xml/model/ModelCreator.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
+#include <ves/open/xml/cad/CADCreator.h>
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/DataValuePairPtr.h>
+
+#include <ves/ce/Execute_Thread.h>
+
+#include <ves/ce/Body_AMI_UIHandler_i.h>
+#include <ves/ce/Body_AMI_UnitHandler_i.h>
+
+#include <ves/ce/util/Network.h>
+#include <ves/ce/util/Scheduler.h>
+#include <ves/ce/util/Module.h>
+#include <ves/ce/util/Connection.h>
+#include <ves/ce/util/IPort.h>
+#include <ves/ce/util/OPort.h>
+
+#include <ace/OS.h>
+
+///Boost includes
+#include <boost/concept_check.hpp>
+#include <boost/lexical_cast.hpp>
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+using namespace ves::open::xml;
+using namespace VE_CE::Utilities;
+using namespace ves::ce;
 
 ////////////////////////////////////////////////////////////////////////////////
-Body_AMH_Executive_i::Body_AMH_Executive_i(PortableServer::POA_ptr poa,
-                                           CosNaming::NamingContext_ptr nc,
-                                           POA_Body::Unit_ptr unitModule, 
-                                           POA_Body::UI_ptr uiModule)
+Body_AMH_Executive_i::Body_AMH_Executive_i(PortableServer::POA_ptr poa)
     :
     m_poa( PortableServer::POA::_duplicate( poa ) ),
-    m_namingContext( CosNaming::NamingContext::_duplicate( nc ) ),
-    m_unit( POA_Body::Unit::_duplicate( unitModule ) ),
-    m_ui( POA_Body::UI::_duplicate( uiModule ) ),
     m_network( new Network() ),
     m_scheduler( new Scheduler( m_network ) )
 {
@@ -59,17 +90,18 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
     delete m_scheduler;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*    void Body_AMH_Executive_i::GetImportData (
+/*
+void Body_AMH_Executive_i::GetImportData (
                                 Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                 ::CORBA::Long module_id,
                                 ::CORBA::Long port_id
                                 ) 
 {
-    _mutex.acquire();
+    m_mutex.acquire();
     
     std::cout << "VE-CE : GetImportData " << module_id << " " << port_id << std::endl;
     
-    Module *mod = _network->GetModule( _network->moduleIdx( module_id ) );
+    Module *mod = m_network->GetModule( m_network->moduleIdx( module_id ) );
     if( !mod )
     {
         std::cerr << "Cannot find module, id# " << module_id << std::endl;
@@ -116,12 +148,12 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
         ClientMessage( msg.c_str() );
     }
     
-    _mutex.release();
+    m_mutex.release();
     
     return CORBA::string_dup( str.c_str() );
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::SetModuleMessage (
+void Body_AMH_Executive_i::SetModuleMessage (
                                    Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                    ::CORBA::Long module_id,
                                    const char * msg
@@ -131,25 +163,9 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
     // send a unit message to all uis
     //std::string message = std::string( "SetModuleMessage ") + std::string( msg );
     //std::string message = std::string( msg );
-    //_mutex.acquire();
+    //m_mutex.acquire();
     //ClientMessage( message.c_str() );
-    //_mutex.release();
-    
-    
-    // The callback handler servant instance holds on to a reference to the
-    // AMH response handler. That way, it can forward the reply back to the
-    // originial client after getting the reply from the inner server.
-    PortableServer::ServantBase_var servant = new Body_AMI_UIHandler_i(this->poa_.in(),
-                                                                   _tao_rh);
-    PortableServer::ObjectId_var objid =
-    this->poa_->activate_object(servant.in());
-    CORBA::Object_var obj = this->poa_->id_to_reference (objid.in());
-    
-    AMI_InnerHandler_var cb =  AMI_InnerHandler::_narrow(obj.in());
-    
-    // forward the request on to the inner server, with the callback handler
-    // reference.
-    this->inner_->sendc_answer (cb.in(),question);
+    //m_mutex.release();
     
     std::cout << "VE-CE : Output = " << msg;
     for( std::map<std::string, Body::UI_var>::iterator
@@ -158,8 +174,21 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
         std::cout << "VE-CE : " << msg << " to -> " << iter->first << std::endl;
         try
         {
+            // The callback handler servant instance holds on to a reference to the
+            // AMH response handler. That way, it can forward the reply back to the
+            // originial client after getting the reply from the inner server.
+            PortableServer::ServantBase_var servant = new Body_AMI_UIHandler_i(this->m_poa.in(),
+                                                                               _tao_rh);
+            PortableServer::ObjectId_var objid =
+            this->m_poa->activate_object(servant.in());
+            CORBA::Object_var obj = this->m_poa->id_to_reference (objid.in());
+            
+            ::Body::AMI_UIHandler_var cb =  ::Body::AMI_UIHandler::_narrow(obj.in());
+            
+            // forward the request on to the inner server, with the callback handler
+            // reference.
+            
             iter->second->_non_existent();
-            //iter->second->Raise( msg );
             iter->second->sendc_Raise( cb.in(), msg );
             ++iter;
         }
@@ -184,13 +213,14 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
     
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*    void Body_AMH_Executive_i::SetModuleResult (
+/*
+void Body_AMH_Executive_i::SetModuleResult (
                                   Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                   ::CORBA::Long module_id,
                                   const char * result
                                   ) 
 {
-    _mutex.acquire();
+    m_mutex.acquire();
     
     XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
@@ -199,17 +229,17 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
     //delete result;
     std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
     
-    _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( objectVector );
+    m_network->GetModule( m_network->moduleIdx( module_id ) )->SetResultsData( objectVector );
     
     std::string msg = "Mod id# "
     + boost::lexical_cast<std::string>( module_id )
     + "'s Execution is done\n";
     ClientMessage( msg.c_str() );
     
-    _mutex.release();
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::GetModuleResult (
+void Body_AMH_Executive_i::GetModuleResult (
                                   Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                   ::CORBA::Long module_id
                                   ) 
@@ -219,26 +249,27 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
     return CORBA::string_dup( "" );
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::SetNetwork (
+void Body_AMH_Executive_i::SetNetwork (
                              Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                              const char * network
                              ) 
 {
-    _mutex.acquire();
+    boost::ignore_unused_variable_warning( _tao_rh );
+    m_mutex.acquire();
     //Clear old network and schedule
-    _network->clear();
-    _scheduler->clear();
+    m_network->clear();
+    m_scheduler->clear();
     
     // Keep track of power requirements
     //_module_powers.clear();
     //_thermal_input.clear();
     std::string strNetwork( network );
     
-    if( _network->parse( strNetwork ) )
+    if( m_network->parse( strNetwork ) )
     {
-        _mutex.release();
+        m_mutex.release();
         // Make the new schedule
-        if( !_scheduler->schedule( 0 ) )
+        if( !m_scheduler->schedule( 0 ) )
         {
             ClientMessage( "Problem in VE-Suite Schedule\n" );
             return;
@@ -246,24 +277,25 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
         else
         {
             ClientMessage( "Successfully Scheduled VE-Suite Network\n" );
-            _scheduler->print_schedule();
+            m_scheduler->print_schedule();
         }
     }
     else
     {
-        _mutex.release();
+        m_mutex.release();
         ClientMessage( "Problem in VE-CE SetNetwork\n" );
         return;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::SetModuleUI (
+void Body_AMH_Executive_i::SetModuleUI (
                               Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                               ::CORBA::Long module_id,
                               const char * ui
                               ) 
 {
-    _mutex.acquire();
+    boost::ignore_unused_variable_warning( _tao_rh );
+    m_mutex.acquire();
     
     ///I don't think this function is used. We may be able to remove it.
     XMLReaderWriter networkWriter;
@@ -272,83 +304,89 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
     networkWriter.ReadXMLData( std::string( ui ), "Command", "vecommand" );
     std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
     
-    _network->GetModule( _network->moduleIdx( module_id ) )->SetInputData( objectVector );
-    _network->GetModule( _network->moduleIdx( module_id ) )->_need_execute = 1;
-    _network->GetModule( _network->moduleIdx( module_id ) )->_return_state = 0;
+    m_network->GetModule( m_network->moduleIdx( module_id ) )->SetInputData( objectVector );
+    m_network->GetModule( m_network->moduleIdx( module_id ) )->_need_execute = 1;
+    m_network->GetModule( m_network->moduleIdx( module_id ) )->_return_state = 0;
     
-    _mutex.release();
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::GetNetwork (
+void Body_AMH_Executive_i::GetNetwork(
                              Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                             const char * moduleName
-                             ) 
+                             const char * moduleName ) 
 {
-    _mutex.acquire();
-    std::string xmlNetwork = _network->GetNetworkString();
-    _mutex.release();
+    m_mutex.acquire();
+    std::string xmlNetwork = m_network->GetNetworkString();
+    m_mutex.release();
     
     if( xmlNetwork.empty() )
     {
-        m_uiMap[ moduleName ]->Raise( "No Current VE-Suite Network Present In VE-CE.\n" );
-        //ClientMessage( "No Current VES Network Present In VE-CE.\n" );
+        ::Body::UI_ptr tempUI = m_uiMap[ moduleName ];
+        // The callback handler servant instance holds on to a reference to the
+        // AMH response handler. That way, it can forward the reply back to the
+        // originial client after getting the reply from the inner server.
+        PortableServer::ServantBase_var servant = new Body_AMI_UIHandler_i(this->m_poa.in(),
+                                                                           _tao_rh);
+        PortableServer::ObjectId_var objid =
+        this->m_poa->activate_object(servant.in());
+        CORBA::Object_var obj = this->m_poa->id_to_reference (objid.in());
+        
+        ::Body::AMI_UIHandler_var cb =  ::Body::AMI_UIHandler::_narrow(obj.in());
+        
+        // forward the request on to the inner server, with the callback handler
+        // reference.
+        
+        tempUI->_non_existent();
+        tempUI->sendc_Raise( cb.in(), 
+                            "No Current VE-Suite Network Present In VE-CE.\n" );
     }
     
-    return CORBA::string_dup( xmlNetwork.c_str() );
+    _tao_rh->GetNetwork( CORBA::string_dup( xmlNetwork.c_str() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::SetWatchList (
+void Body_AMH_Executive_i::SetWatchList (
                                Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                const ::Types::ArrayLong & id
                                ) 
 {
-    _mutex.acquire();
+    boost::ignore_unused_variable_warning( _tao_rh );
+    m_mutex.acquire();
     
-    watch_list_ = id;
+    m_watchList = id;
     
-    _mutex.release();
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::GetWatchList (
+void Body_AMH_Executive_i::GetWatchList (
                                Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                                ) 
 {
-    _mutex.acquire();
-    
-    // Stuff here
-    
-    _mutex.release();
-    
-    return new ::Types::ArrayLong( watch_list_ );
+    ::Types::ArrayLong_var tempArray = new ::Types::ArrayLong( m_watchList );
+    _tao_rh->GetWatchList( tempArray );
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::GetStatus (
+void Body_AMH_Executive_i::GetStatus (
                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                             ) 
 {
-    _mutex.acquire();
-    
-    // Stuff here
-    
-    _mutex.release();
-    
-    return CORBA::string_dup( "" );//str.c_str());//"yang";//0;
+    _tao_rh->GetStatus( "Body_AMH_Executive_i::GetStatus is not implemented" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::StartCalc (
+void Body_AMH_Executive_i::StartCalc (
                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                             ) 
 {
-    _scheduler->reset();
+    boost::ignore_unused_variable_warning( _tao_rh );
+    m_scheduler->reset();
     
-    if( _scheduler->snodes_size() == 0 )
+    if( m_scheduler->snodes_size() == 0 )
     {
         return;
     }
     
-    _mutex.acquire();
+    m_mutex.acquire();
     
-    int rt = _scheduler->execute( 0 ) - 1;
+    int rt = m_scheduler->execute( 0 ) - 1;
     
     if( rt < 0 )
     {
@@ -357,7 +395,7 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
     else
     {
         std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-        const std::vector< CommandPtr > inputList = _network->GetModule( rt )->GetVEModel()->GetInputs();
+        const std::vector< CommandPtr > inputList = m_network->GetModule( rt )->GetVEModel()->GetInputs();
         for( size_t k = 0; k < inputList.size(); ++k )
         {
             nodes.push_back( std::pair< CommandPtr, std::string  >(
@@ -373,19 +411,19 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
         try
         {
             ClientMessage( "Initial Execute\n" );
-            if( !_mod_units.empty() )
+            if( !m_modUnits.empty() )
             {
-                std::string moduleName = _network->GetModule( rt )->GetModuleName();
-                if( _mod_units.find( moduleName ) != _mod_units.end() )
+                std::string moduleName = m_network->GetModule( rt )->GetModuleName();
+                if( m_modUnits.find( moduleName ) != m_modUnits.end() )
                 {
                     //This must be called because the raw model is not passed
                     //to the unit anymore. Only the input variables are passed
                     //to the unit. This should be changed in the future so 
                     //that the veopen model data is passed directly to
                     //the respective unit.
-                    unsigned int tempID = _network->GetModule( rt )->get_id();
-                    _mod_units[ moduleName ]->SetParams( tempID, fileName.c_str() );
-                    _mod_units[ moduleName ]->SetCurID( tempID );
+                    unsigned int tempID = m_network->GetModule( rt )->get_id();
+                    m_modUnits[ moduleName ]->SetParams( tempID, fileName.c_str() );
+                    m_modUnits[ moduleName ]->SetCurID( tempID );
                     // This starts a chain reaction which eventually leads to Execute_Thread
                     // which calls executenextmod in this class
                     // by having the thread do that all subsequent modules get executed
@@ -405,22 +443,22 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
         catch ( CORBA::Exception& ex )
         {
             std::cerr << "Initial Execute, cannot contact Module "
-            << _network->GetModule( rt )->GetModuleName() 
+            << m_network->GetModule( rt )->GetModuleName() 
             << std::endl << ex._info().c_str() << std::endl;
         }
     }
     
-    _mutex.release();
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::StopCalc (
+void Body_AMH_Executive_i::StopCalc (
                            Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                            ) 
 {
-    _mutex.acquire();
+    m_mutex.acquire();
     // Stop all units
     std::map<std::string, Body::Unit_var>::iterator iter;
-    for( iter = _mod_units.begin(); iter != _mod_units.end(); )
+    for( iter = m_modUnits.begin(); iter != m_modUnits.end(); )
     {
         try
         {
@@ -432,22 +470,22 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
         {
             // it seems this call should be blocked as we are messing with
             // a map that is used everywhere
-            UnRegisterUnit( iter->first.c_str() );
+            UnRegisterUnit( _tao_rh, iter->first.c_str() );
             // Not sure if increment here or not
-            _mod_units.erase( iter++ );
+            m_modUnits.erase( iter++ );
         }
     }
-    _mutex.release();
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::PauseCalc (
+void Body_AMH_Executive_i::PauseCalc (
                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                             ) 
 {
-    _mutex.acquire();
+    m_mutex.acquire();
     // Pause all units
     std::map<std::string, Body::Unit_var>::iterator iter;
-    for( iter = _mod_units.begin(); iter != _mod_units.end(); )
+    for( iter = m_modUnits.begin(); iter != m_modUnits.end(); )
     {
         try
         {
@@ -460,22 +498,22 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
             // std::cout << iter->first <<" is obsolete." << std::endl;
             // it seems this call should be blocked as we are messing with
             // a map that is used everywhere
-            UnRegisterUnit( iter->first.c_str() );
+            UnRegisterUnit( _tao_rh, iter->first.c_str() );
             // Not sure if increment here or not
-            _mod_units.erase( iter++ );
+            m_modUnits.erase( iter++ );
         }
     }
-    _mutex.release();
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::Resume (
+void Body_AMH_Executive_i::Resume (
                          Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                          ) 
 {
-    _mutex.acquire();
+    m_mutex.acquire();
     // Resume all the modules
     std::map<std::string, Body::Unit_var>::iterator iter;
-    for( iter = _mod_units.begin(); iter != _mod_units.end(); )
+    for( iter = m_modUnits.begin(); iter != m_modUnits.end(); )
     {
         try
         {
@@ -488,53 +526,70 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
             // std::cout << iter->first <<" is obsolete." << std::endl;
             // it seems this call should be blocked as we are messing with
             // a map that is used everywhere
-            UnRegisterUnit( iter->first.c_str() );
+            UnRegisterUnit( _tao_rh, iter->first.c_str() );
             // Not sure if increment here or not
-            _mod_units.erase( iter++ );
+            m_modUnits.erase( iter++ );
         }
     }
-    _mutex.release();
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::RegisterUI (
+void Body_AMH_Executive_i::RegisterUI (
                              Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                              const char * UIName,
                              ::Body::UI_ptr ui
                              ) 
 {
-    _mutex.acquire();
+    m_mutex.acquire();
     
     std::string tempName( UIName );
-    //delete UIName;
     try
     {
-        Body::UI_var ui = Body::UI::_duplicate( ui_ptr );
-        if( CORBA::is_nil( ui ) )
+        ::Body::UI_var tempUI = ::Body::UI::_duplicate( ui );
+        if( CORBA::is_nil( tempUI ) )
+        {    
             std::cerr << "NULL UI" << std::endl;
+        }
         
-        m_uiMap[ tempName ] = ui;
+        m_uiMap[ tempName ] = tempUI;
         
-        _mutex.release();
+        m_mutex.release();
         std::string msg = tempName + " Connected to VE-CE\n";
-        ui->Raise( msg.c_str() );
-        //ClientMessage( msg.c_str() );
-        std::cerr << tempName << " : registered a UI" << std::endl;
+        
+        // The callback handler servant instance holds on to a reference to the
+        // AMH response handler. That way, it can forward the reply back to the
+        // originial client after getting the reply from the inner server.
+        PortableServer::ServantBase_var servant = new Body_AMI_UIHandler_i(this->m_poa.in(),
+                                                                           _tao_rh);
+        PortableServer::ObjectId_var objid =
+        this->m_poa->activate_object(servant.in());
+        CORBA::Object_var obj = this->m_poa->id_to_reference (objid.in());
+        
+        ::Body::AMI_UIHandler_var cb =  ::Body::AMI_UIHandler::_narrow(obj.in());
+        
+        // forward the request on to the inner server, with the callback handler
+        // reference.
+        
+        tempUI->_non_existent();
+        tempUI->sendc_Raise( cb.in(), msg.c_str() );
+        std::cout << tempName << " : registered a UI" << std::endl;
     }
     catch ( CORBA::Exception& ex )
     {
         std::cerr << "Can't call UI name " << tempName
-        << " " << ex._info().c_str() << std::endl;
-        _mutex.release();
+            << " " << ex._info().c_str() << std::endl;
+        m_mutex.release();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::UnRegisterUI (
+void Body_AMH_Executive_i::UnRegisterUI (
                                Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                const char * UIName
                                ) 
 {
+    boost::ignore_unused_variable_warning( _tao_rh );
     std::map<std::string, Body::UI_var>::iterator iter;
-    _mutex.acquire();
+    m_mutex.acquire();
     // Add your implementation here
     std::string strUI( UIName );    
     //delete UIName;
@@ -544,45 +599,46 @@ Body_AMH_Executive_i::~Body_AMH_Executive_i()
         m_uiMap.erase( iter );
         std::cout << "VE-CE : " << strUI << " Unregistered!\n";
     }  
-    _mutex.release();
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::UnRegisterUnit (
+void Body_AMH_Executive_i::UnRegisterUnit (
                                  Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                  const char * UnitName
                                  ) 
 {
-    _mutex.acquire();
+    boost::ignore_unused_variable_warning( _tao_rh );
+    m_mutex.acquire();
     
     std::map<std::string, Execute_Thread*>::iterator iter;
-    iter = _exec_thread.find( std::string( UnitName ) );
+    iter = m_execThread.find( std::string( UnitName ) );
     std::string message =  std::string( "Going to unregister unit " ) + 
     UnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
-    if( iter != _exec_thread.end() )
+    if( iter != m_execThread.end() )
     {
         ACE_Task_Base::cleanup( iter->second, NULL );
         //if( iter->second )
         //    delete iter->second;
         
-        _exec_thread.erase( iter );
+        m_execThread.erase( iter );
         std::cout << "VE-CE : " << UnitName << " Unregistered!\n";
     }
     
-    std::map< std::string, QueryThread* >::iterator iterQuery;
-    iterQuery = queryThreads.find( std::string( UnitName ) );
-    if( iterQuery != queryThreads.end() )
+    /*std::map< std::string, QueryThread* >::iterator iterQuery;
+    iterQuery =  m_queryThreads.find( std::string( UnitName ) );
+    if( iterQuery !=  m_queryThreads.end() )
     {
         ACE_Task_Base::cleanup( iterQuery->second, NULL );
         //if( iterQuery->second )
         //    delete iterQuery->second;
         
-        queryThreads.erase( iterQuery );
+         m_queryThreads.erase( iterQuery );
         std::cout << "VE-CE : " << UnitName << " Query Unregistered!\n";
-    }
+    }*/
     message = std::string( "Successfully unregistered " ) + UnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
-    _mutex.release();
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMH_Executive_i::RegisterUnit (
@@ -592,6 +648,7 @@ void Body_AMH_Executive_i::RegisterUnit (
                                ::CORBA::Long flag
                                ) 
 {
+    boost::ignore_unused_variable_warning( _tao_rh );
     boost::ignore_unused_variable_warning( flag );
     // When this is called, a unit is already binded to the name service,
     // so this call can get it's reference from the name service
@@ -601,17 +658,17 @@ void Body_AMH_Executive_i::RegisterUnit (
     std::string message =  std::string( "Going to register unit " ) + strUnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
     
-    _mod_units[ strUnitName ] = Body::Unit::_duplicate( unit );
+    m_modUnits[ strUnitName ] = Body::Unit::_duplicate( unit );
     
     std::map<std::string, Execute_Thread*>::iterator iter;
-    iter = _exec_thread.find( strUnitName );
+    iter = m_execThread.find( strUnitName );
     
-    if( iter == _exec_thread.end() )
+    if( iter == m_execThread.end() )
     {
         // CLEAN THIS UP IN UNREGISTER UNIT !
-        Execute_Thread *ex = new Execute_Thread( _mod_units[ strUnitName ], ( Body_Executive_i* )this );
+        Execute_Thread *ex = new Execute_Thread( m_modUnits[ strUnitName ], this );
         ex->activate();
-        _exec_thread[ strUnitName ] = ex;
+        m_execThread[ strUnitName ] = ex;
     }
     else //replace it with new reference
     {
@@ -620,19 +677,19 @@ void Body_AMH_Executive_i::RegisterUnit (
         {
             delete iter->second;
         }
-        Execute_Thread *ex = new Execute_Thread( _mod_units[ strUnitName ], ( Body_Executive_i* )this );
+        Execute_Thread *ex = new Execute_Thread( m_modUnits[ strUnitName ], this );
         ex->activate();
-        _exec_thread[ strUnitName ] = ex;
+        m_execThread[ strUnitName ] = ex;
     }
     
-    std::map<std::string, QueryThread* >::iterator iterQuery;
-    iterQuery = queryThreads.find( strUnitName );
+    /*std::map<std::string, QueryThread* >::iterator iterQuery;
+    iterQuery =  m_queryThreads.find( strUnitName );
     
-    if( iterQuery == queryThreads.end() )
+    if( iterQuery ==  m_queryThreads.end() )
     {
-        QueryThread* query = new QueryThread( _mod_units[ strUnitName ] );
+        QueryThread* query = new QueryThread( m_modUnits[ strUnitName ] );
         query->activate();
-        queryThreads[ strUnitName ] = query;
+         m_queryThreads[ strUnitName ] = query;
     }
     else
     {
@@ -641,10 +698,10 @@ void Body_AMH_Executive_i::RegisterUnit (
         {
             delete iterQuery->second;
         }
-        QueryThread* query = new QueryThread( _mod_units[ strUnitName ] );
+        QueryThread* query = new QueryThread( m_modUnits[ strUnitName ] );
         query->activate();
-        queryThreads[ strUnitName ] = query;
-    }
+         m_queryThreads[ strUnitName ] = query;
+    }*/
     
     message = std::string( "Successfully registered " ) + strUnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
@@ -659,17 +716,18 @@ void Body_AMH_Executive_i::RegisterUnit (
     return CORBA::Long( 0 );
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::Query(
+void Body_AMH_Executive_i::Query(
                         Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                         const char * commands
                         ) 
 {
-    _mutex.acquire();
+    boost::ignore_unused_variable_warning( _tao_rh );
+    m_mutex.acquire();
     // read the command to get the module name and module id
     XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
-    networkWriter.ReadXMLData( command, "Command", "vecommand" );
+    networkWriter.ReadXMLData( commands, "Command", "vecommand" );
     std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
     
     //std::string moduleName;
@@ -722,58 +780,61 @@ void Body_AMH_Executive_i::RegisterUnit (
     if( !vendorUnit.empty() )
     {
         //find the unit the normal way
-        iter = _mod_units.find( vendorUnit );
+        iter = m_modUnits.find( vendorUnit );
     }
     else
     {
         // if we are doing an aspen type query and do not have
         // a unit name or module id
         //std::cout << "aspen query" << std::endl;
-        iter = _mod_units.begin();
+        iter = m_modUnits.begin();
     }
     
-    if( iter == _mod_units.end() )
+    if( iter == m_modUnits.end() )
     {
         std::cout << "VE-CE : No units to query" << std::endl;
-        _mutex.release();
-        return 0;
+        m_mutex.release();
+        std::string testString( "NULL" );
+        _tao_rh->Query( testString.c_str() );
+        return;
     }
     
-    std::string queryString;
     
-    std::map< std::string, QueryThread* >::iterator queryIter;
-    queryIter = queryThreads.find( iter->first );
-    queryIter->second->QueryData( status, moduleId );
+    // The callback handler servant instance holds on to a reference to the
+    // AMH response handler. That way, it can forward the reply back to the
+    // originial client after getting the reply from the inner server.
+    PortableServer::ServantBase_var servant = 
+        new ves::ce::Body_AMI_UnitHandler_i( m_poa.in(), _tao_rh );
+    PortableServer::ObjectId_var objid =
+    this->m_poa->activate_object(servant.in());
+    CORBA::Object_var obj = this->m_poa->id_to_reference (objid.in());
     
-    std::string returnString;
-    //( returnString != "NULL" ) && 
-    while( returnString.empty() )
-    {
-        ACE_OS::sleep( 1 );
-        returnString = queryIter->second->GetQueryData();
-    }
-    //queryString.assign( queryIter->second->GetQueryData() );
-    queryString.assign( returnString );
-    _mutex.release();
+    ::Body::AMI_UnitHandler_var cb = ::Body::AMI_UnitHandler::_narrow(obj.in());
     
-    return CORBA::string_dup( queryString.c_str() );
+    // forward the request on to the inner server, with the callback handler
+    // reference.
+
+    iter->second->_non_existent();
+    iter->second->SetCurID( moduleId );
+    iter->second->sendc_Query( cb.in(), CORBA::string_dup( status.c_str() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::SetID (
+void Body_AMH_Executive_i::SetID (
                         Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                         const char * moduleName,
                         ::CORBA::Long id
                         ) 
 {
+    boost::ignore_unused_variable_warning( _tao_rh );
     std::map< std::string, Body::Unit_var >::iterator iter;
-    _mutex.acquire();
+    m_mutex.acquire();
     
-    iter = _mod_units.find( std::string( moduleName ) );
-    if( iter == _mod_units.end() )
+    iter = m_modUnits.find( std::string( moduleName ) );
+    if( iter == m_modUnits.end() )
     {
         std::string msg = "Could not find " + std::string( moduleName ) + " unit\n";
         ClientMessage( msg.c_str() );
-        _mutex.release();
+        m_mutex.release();
         return;
     }
     
@@ -781,14 +842,14 @@ void Body_AMH_Executive_i::RegisterUnit (
     {
         iter->second->_non_existent();
         iter->second->SetID( id );
-        _mutex.release();
+        m_mutex.release();
     }
     catch ( CORBA::Exception & )
     {
         std::cout << "VE-CE : " << iter->first << " is obsolete." << std::endl;
-        _mod_units.erase( iter );
-        _mutex.release();
-        UnRegisterUnit( moduleName );
+        m_modUnits.erase( iter );
+        m_mutex.release();
+        UnRegisterUnit( _tao_rh, moduleName );
     }
     catch ( ... )
     {
@@ -796,12 +857,13 @@ void Body_AMH_Executive_i::RegisterUnit (
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-    void Body_AMH_Executive_i::DeleteModuleInstance (
+void Body_AMH_Executive_i::DeleteModuleInstance (
                                        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                        const char * moduleName,
                                        ::CORBA::Long module_id
                                        ) 
 {
+    boost::ignore_unused_variable_warning( _tao_rh );
     boost::ignore_unused_variable_warning( moduleName );
     boost::ignore_unused_variable_warning( module_id );
     // Add your implementation here
@@ -814,6 +876,7 @@ void Body_AMH_Executive_i::SetParams(
                         const char * param
                         )
 {
+    boost::ignore_unused_variable_warning( _tao_rh );
     boost::ignore_unused_variable_warning( moduleName );
     boost::ignore_unused_variable_warning( module_id );
     ///We are going to abuse this function for the moment to try out sending
@@ -821,7 +884,6 @@ void Body_AMH_Executive_i::SetParams(
     ///to try dynamic data passing to xplorer and conductor.
 
     ///AMI call
-    Body::AMI_UIHandler_var uiComAMIHandler = m_uiAMIHandler._this();
     for( std::map<std::string, Body::UI_var>::iterator
         iter = m_uiMap.begin(); iter != m_uiMap.end(); )
     {
@@ -908,15 +970,15 @@ void Body_AMH_Executive_i::ClientMessage( const char *msg )
 std::string Body_AMH_Executive_i::GetResults( int rt )
 {
     //This onyl works for serial exectuion and for units with 1 input and output port
-    Module* nextModule = _network->GetModule( rt );
-    if( _mod_units.find( nextModule->GetModuleName() ) == 
-       _mod_units.end() )
+    Module* nextModule = m_network->GetModule( rt );
+    if( m_modUnits.find( nextModule->GetModuleName() ) == 
+       m_modUnits.end() )
     {
         std::cerr <<  "VE-CE : Cannot find running unit " 
         << nextModule->GetModuleName() << std::endl
         << "The units that are registerd are " << std::endl;
         for( std::map< std::string, Body::Unit_var >::const_iterator iter = 
-            _mod_units.begin(); iter != _mod_units.end(); ++iter )
+            m_modUnits.begin(); iter != m_modUnits.end(); ++iter )
         {
             std::cout << "Unit name = " << iter->first << std::endl;
         }
@@ -940,7 +1002,7 @@ std::string Body_AMH_Executive_i::GetResults( int rt )
             Module* m = oport->get_module();
             std::cout << "Upstream Module Name: " << m->GetModuleName() 
             << " and ID " << m->get_id() << std::endl;
-            //previousModuleIndex = _network->moduleIdx( m->get_id() );
+            //previousModuleIndex = m_network->moduleIdx( m->get_id() );
             {
                 std::string unitResultsData = "NULL";
                 //THis code needs to get ALL upstream modules for this particular module.
@@ -966,8 +1028,20 @@ std::string Body_AMH_Executive_i::GetResults( int rt )
                 networkWriter.UseStandaloneDOMDocumentManager();
                 networkWriter.WriteXMLDocument( nodes, upstreamResultsData, "Command" );
                 //Now query the unit for data
-                unitResultsData = Query( upstreamResultsData.c_str() );
                 
+                {
+                    PortableServer::ObjectId_var oid = m_poa->servant_to_id(this);
+                    CORBA::Object_var obj = m_poa->id_to_reference( oid.in() );
+                    ::Body::AMH_ExecutiveResponseHandler_var cb =
+                        ::Body::AMH_ExecutiveResponseHandler::_narrow( obj.in() );
+                    
+                    const char* tempResult = 0;
+                    Query( cb.in(), upstreamResultsData.c_str() );
+                    cb->Query( tempResult );
+                    unitResultsData = tempResult;
+                    m_poa->deactivate_object( oid.in() );
+                }
+
                 if( unitResultsData != "NULL" )
                 {
                     XMLReaderWriter networkReader;
@@ -1010,7 +1084,7 @@ std::string Body_AMH_Executive_i::GetResults( int rt )
 void Body_AMH_Executive_i::execute_next_mod( long module_id )
 {
     ///This is the 0 based number of the index for the module_id
-    int moduleIndex = _network->moduleIdx( module_id );
+    int moduleIndex = m_network->moduleIdx( module_id );
     if( moduleIndex < 0 )
     {
         std::cerr << "Unit ID " << module_id << " cannot be found in the list"
@@ -1021,15 +1095,15 @@ void Body_AMH_Executive_i::execute_next_mod( long module_id )
     //module_id is the currently active module_id and this function
     //is determining which is the next module to execute
     //id is module jsut executed
-    std::string msg( "" );
+    std::string msg;
     
-    std::string mod_type = _network->GetModule( moduleIndex )->GetModuleName();
-    if( _mod_units.find( mod_type ) != _mod_units.end() )
+    std::string mod_type = m_network->GetModule( moduleIndex )->GetModuleName();
+    if( m_modUnits.find( mod_type ) != m_modUnits.end() )
     {
         try
         {
-            _mod_units[ mod_type ]->_non_existent();
-            msg = _mod_units[ mod_type ]->GetStatusMessage();
+            m_modUnits[ mod_type ]->_non_existent();
+            msg = m_modUnits[ mod_type ]->GetStatusMessage();
         }
         catch ( CORBA::Exception & )
         {
@@ -1060,7 +1134,9 @@ void Body_AMH_Executive_i::execute_next_mod( long module_id )
         return;
     }
     
-    CommandPtr returnState =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
+    CommandPtr returnState = 
+        boost::dynamic_pointer_cast<ves::open::xml::Command>( 
+        objectVector.at( 0 ) );
     
     long rs;
     // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
@@ -1073,7 +1149,7 @@ void Body_AMH_Executive_i::execute_next_mod( long module_id )
     //delete the object vector
     objectVector.clear();
     
-    _network->GetModule( moduleIndex )->_return_state = rs;
+    m_network->GetModule( moduleIndex )->_return_state = rs;
     //If we have an error - see above
     if( rs == 1 )
     {
@@ -1085,9 +1161,9 @@ void Body_AMH_Executive_i::execute_next_mod( long module_id )
     //1 -> n where 1 is the first module executed and so on
     //rt is the next module index and -1 is subtracted to make the number 0 based
     //to be able to index into the vector of modules stored in the network class
-    int rt = _scheduler->execute( _network->GetModule( moduleIndex ) ) - 1;
+    int rt = m_scheduler->execute( m_network->GetModule( moduleIndex ) ) - 1;
     std::cout << "VE-CE::execute_next_mod Vector id of next module to execute " 
-    << rt << " Just executed module ID " << module_id << std::endl;
+        << rt << " Just executed module ID " << module_id << std::endl;
     if( rt < 0 )
     {
         ClientMessage( "VE-Suite Network Execution Complete\n" );
@@ -1098,15 +1174,15 @@ void Body_AMH_Executive_i::execute_next_mod( long module_id )
     
     try
     {
-        unsigned int tempID = _network->GetModule( rt )->get_id();
-        _mod_units[ _network->GetModule( rt )->GetModuleName() ]->
+        unsigned int tempID = m_network->GetModule( rt )->get_id();
+        m_modUnits[ m_network->GetModule( rt )->GetModuleName() ]->
         SetCurID( tempID );
         if( resultsData != "NULL" )
         {
-            _mod_units[ _network->GetModule( rt )->GetModuleName()]->
+            m_modUnits[ m_network->GetModule( rt )->GetModuleName()]->
             SetParams( tempID, resultsData.c_str() );
         }
-        execute( _network->GetModule( rt )->GetModuleName() );
+        execute( m_network->GetModule( rt )->GetModuleName() );
     }
     catch ( CORBA::Exception& ex )
     {
@@ -1119,13 +1195,13 @@ void Body_AMH_Executive_i::execute( std::string mn )
 {
     std::string msg;
     
-    if( _exec_thread.find( mn ) == _exec_thread.end() )
+    if( m_execThread.find( mn ) == m_execThread.end() )
     {
         std::cerr << "Cannot find execution thread for " << mn << std::endl;
     }
     else
     {
-        if( !_exec_thread[mn]->needexecute() )
+        if( !m_execThread[mn]->needexecute() )
         {
             msg = "Failed to execute " + mn + "\n";
             //ClientMessage(msg.c_str());

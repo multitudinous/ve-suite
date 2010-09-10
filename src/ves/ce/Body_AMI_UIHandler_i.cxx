@@ -31,7 +31,9 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include <ves/open/idl/Body_AMI_UIHandler_i.h>
+#include <ves/ce/Body_AMI_UIHandler_i.h>
+
+using namespace ves::ce;
 
 ////////////////////////////////////////////////////////////////////////////////
 Body_AMI_UIHandler_i::Body_AMI_UIHandler_i( void )
@@ -175,7 +177,7 @@ ACE_THROW_SPEC((
         
         CORBA::Exception* unknown_ex = new CORBA::UNKNOWN;
         ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( unknown_ex );
-        m_responseHandler_->SetModuleMessage_excep( &amh_excep_holder );
+        m_responseHandler->SetModuleMessage_excep( &amh_excep_holder );
     }
     
     std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
@@ -243,7 +245,7 @@ ACE_THROW_SPEC((
         
         CORBA::Exception *unknown_ex = new CORBA::UNKNOWN;
         ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( unknown_ex );
-        m_responseHandler_->SetParams_excep( &amh_excep_holder );
+        m_responseHandler->SetParams_excep( &amh_excep_holder );
     }
     
     std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;

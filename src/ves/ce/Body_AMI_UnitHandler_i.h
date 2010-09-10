@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef BODY_AMI_UNIT_HANDLER_I_H
-#define BODY_AMI_UNIT_HANDLER_I_H
+#ifndef VES_CE_BODY_AMI_UNIT_HANDLER_I_H
+#define VES_CE_BODY_AMI_UNIT_HANDLER_I_H
 /*!\file Body_AMI_UnitHandler_i.h
  *Interface for sending information from Xplorer/CE Asynchronously to Condutor
  */
@@ -43,9 +43,13 @@
 #include <ves/open/moduleS.h>
 
 #include <ves/VEConfig.h>
-
-class VE_OPEN_MODULE_EXPORTS Body_AMI_UnitHandler_i
-: public virtual POA_Body::AMI_UnitHandler
+namespace ves
+{
+namespace ce
+{
+class VE_CE_EXPORTS Body_AMI_UnitHandler_i 
+    : 
+    public virtual POA_Body::AMI_UnitHandler
 {
 public:
     // Constructor 
@@ -152,5 +156,7 @@ private:
     PortableServer::POA_var m_poa;
     Body::AMH_ExecutiveResponseHandler_var m_responseHandler;
 };
+}
+}
 #endif
 

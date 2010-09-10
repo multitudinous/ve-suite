@@ -30,75 +30,92 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <ves/ce/Body_AMH_Executive_i.h>
+
 #include <ace/Task.h>
 #include <ace/OS.h>
-#include <apps/ce/QueryThread.h>
+#include <ves/ce/Execute_Thread.h>
 
 #include <iostream>
+using namespace ves::ce;
 
-QueryThread::QueryThread( Body::Unit_var m ) :
+Execute_Thread::Execute_Thread( Body::Unit_var m, Body_AMH_Executive_i* ex ) :
         _mod( m ),
-        isComplete( true )
-{
-    shutdown = false;
-}
+        _is_exec( false ),
+        _executive( ex )
+{}
 ////////////////////////////////////////////////////////////////////////////////
-QueryThread::~QueryThread()
-{
-    shutdown = true;
-}
+Execute_Thread::~Execute_Thread()
+{}
 ////////////////////////////////////////////////////////////////////////////////
-int QueryThread::svc( void )
+int Execute_Thread::svc( void )
 {
-    while( !shutdown )
+    while( true )
     {
-        while( isComplete )
+        while( true )
         {
-            ACE_OS::sleep( 1 );
+            _mutex.acquire();
+            if( _is_exec )
+                break;
+
+            _mutex.release();
+
+            ACE_OS::sleep( 2 );
+        }
+
+        _mutex.release();
+        try
+        {
+            _mod->StartCalc();
+        }
+        catch ( CORBA::Exception & )
+        {
+            std::cout << "Module Execution Messed up." << std::endl;
         }
 
         _mutex.acquire();
+        _is_exec = false;
+        _mutex.release();
+
         try
         {
-            _mod->_non_existent();
-            _mod->SetCurID( moduleId );
-            queryData.assign( _mod->Query( CORBA::string_dup( queryCommand.c_str() ) ) );
+            // This function returns the id of the currently executed module
+            long id = static_cast< long >( _mod->GetCurID() );
+            _executive->execute_next_mod( id );
         }
-        catch ( CORBA::Exception &ex )
+        catch ( CORBA::Exception & )
         {
-            std::cout << "Module Query Messed up." << std::endl;
-            std::cerr << "CORBA exception raised! : " << ex._name() << std::endl;
-            std::cerr << ex._info().c_str() << std::endl;
-            queryData = "NULL";
+            std::cout << "Module GetID Messed up." << std::endl;
         }
-        _mutex.release();
-        isComplete = true;
     }
-    return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void QueryThread::QueryData( std::string command, CORBA::Long modId )
+int Execute_Thread::lock ()
 {
     _mutex.acquire();
-    queryCommand = command;
-    queryData.erase();
-    moduleId = modId;
+    return 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+int Execute_Thread::unlock()
+{
     _mutex.release();
-    isComplete = false;
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool QueryThread::GettingData( void )
+int Execute_Thread::needexecute()
 {
-    return isComplete;
-}
-////////////////////////////////////////////////////////////////////////////////
-std::string QueryThread::GetQueryData( void )
-{
-    std::string tempData;
-    if( isComplete )
+    int ret = 1;
+    _mutex.acquire();
+    if( _is_exec == true )
     {
-        tempData = queryData;
+        ret = 0;
     }
-    return tempData;
+    else
+    {
+        _is_exec = true;
+    }
+    _mutex.release();
+
+    return ret;
 }
 

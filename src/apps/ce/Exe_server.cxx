@@ -36,7 +36,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 
 #include <ves/open/moduleC.h>
-#include <apps/ce/Executive_i.h>
+#include <ves/ce/Body_AMH_Executive_i.h>
 
 #include <iostream>
 
@@ -109,12 +109,13 @@ int main( int argc, char* argv[] )
         poa_manager->activate();
 
         //Create the Servant, pass in the pointer of the naming context
-        Body_Executive_i exec_i( naming_context.in() );
+        PortableServer::ServantBase_var exec_i;
+        exec_i = new ves::ce::Body_AMH_Executive_i( child_poa.in() );
 
         PortableServer::ObjectId_var id =
             PortableServer::string_to_ObjectId( "Executive" );
 
-        child_poa->activate_object_with_id( id.in(), &exec_i );
+        child_poa->activate_object_with_id( id.in(), exec_i.in() );
 
         //Activate it to obtain the object reference
         CORBA::Object_var objectRef = child_poa->id_to_reference( id.in() );

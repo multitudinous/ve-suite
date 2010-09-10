@@ -42,7 +42,7 @@
 
 #include <ves/open/moduleS.h>
 
-#include <ves/ce/Body_AMI_UIHandler_i.h>
+#include <ves/open/idl/Body_AMI_UIHandler_i.h>
 
 #include <string>
 #include <vector>
