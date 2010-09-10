@@ -212,7 +212,7 @@ void CameraPlacementEventHandler::Execute(
             unsigned int selection = 0;
             command->GetDataValuePair(
                 "autoComputeNearFarPlane" )->GetData( selection );
-            
+
             bool onOff = ( selection != 0 );
             if( onOff )
             {
@@ -227,7 +227,7 @@ void CameraPlacementEventHandler::Execute(
                     osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
             }
         }
-        
+
         //Right now we are saying you must have a DCS
         scenegraph::DCS& selectedDCS = newCameraObject->GetDCS();
         gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
@@ -440,32 +440,39 @@ void CameraPlacementEventHandler::Execute(
         unsigned int selection = 0;
         command->GetDataValuePair(
             "cameraManagerOnOff" )->GetData( selection );
-        
+
         bool onOff = ( selection != 0 );
         cameraManager.EnableCPT( onOff );
         break;
     }
     case AUTO_COMPUTER_NEAR_FAR_PLANE:
     {
+        scenegraph::camera::CameraObject* const activeCameraObject =
+            cameraManager.GetActiveCameraObject();
+
+        if( !activeCameraObject )
+        {
+            return;
+        }
+
         unsigned int selection = 0;
         command->GetDataValuePair(
             "autoComputeNearFarPlane" )->GetData( selection );
-        
+
         bool onOff = ( selection != 0 );
         if( onOff )
         {
-            cameraManager.GetActiveCameraObject()->
-                GetCamera().setComputeNearFarMode(
+            activeCameraObject->GetCamera().setComputeNearFarMode(
                 osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
         }
         else
         {
-            cameraManager.GetActiveCameraObject()->
-                GetCamera().setComputeNearFarMode(
+            activeCameraObject->GetCamera().setComputeNearFarMode(
                 osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
         }
 
-        cameraManager.GetActiveCameraObject()->Update();
+        activeCameraObject->Update();
+
         break;
     }
     case PROJECTION_EFFECT_ON_OFF:
@@ -475,17 +482,17 @@ void CameraPlacementEventHandler::Execute(
             "projectionEffectOnOff" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
-        //mCameraEntity->DisplayProjectionEffect( onOff );
+        cameraManager.DisplayProjectionEffect( onOff );
 
         break;
     }
     case PROJECTION_EFFECT_OPACITY:
     {
         double value = 0;
-        command->
-            GetDataValuePair( "projectionEffectOpacity" )->GetData( value );
+        command->GetDataValuePair(
+            "projectionEffectOpacity" )->GetData( value );
 
-        //mCameraEntity->SetProjectionEffectOpacity( value );
+        cameraManager.SetProjectionEffectOpacity( value );
 
         break;
     }
@@ -614,7 +621,7 @@ void CameraPlacementEventHandler::Execute(
         unsigned int selection = 0;
         command->GetDataValuePair(
             "autoComputeNearFarPlane" )->GetData( selection );
-        
+
         bool onOff = ( selection != 0 );
         if( onOff )
         {

@@ -33,6 +33,11 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
+#include <ves/xplorer/scenegraph/camera/CameraManager.h>
+#include <ves/xplorer/scenegraph/camera/CameraObject.h>
+
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 
@@ -80,6 +85,11 @@ void UnselectObjectsEventHandler::Execute(
 
     if( command->GetCommandName() == "UNSELECT_OBJECTS" )
     {
+        scenegraph::SceneManager& sceneManager =
+            *scenegraph::SceneManager::instance();
+        scenegraph::camera::CameraManager& cameraManager =
+            sceneManager.GetCameraManager();
+        cameraManager.SetActiveCameraObject( NULL, true );
         ves::xplorer::DeviceHandler::instance()->UnselectObjects();
     }
 }

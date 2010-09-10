@@ -36,7 +36,7 @@
 #include <ves/xplorer/scenegraph/camera/CameraObjectCallback.h>
 //#include "DepthOfFieldTechnique.h"
 //#include "DepthHelperTechnique.h"
-//#include "ProjectionTechnique.h"
+#include <ves/xplorer/scenegraph/technique/ProjectionTechnique.h>
 
 // --- VE-Suite Includes --- //
 //#include <ves/xplorer/environment/HeadsUpDisplay.h>
@@ -86,16 +86,18 @@ namespace camera
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-CameraObject::CameraObject()
+CameraObject::CameraObject(
+    technique::ProjectionTechnique* const projectionTechnique,
+    osg::TexGenNode* const texGenNode )
     :
     osg::Group(),
     //osg::PositionAttitudeTransform(),
     m_initialViewMatrix(),
     m_mvpt(),
-    m_texGenNode( NULL ),
+    m_texGenNode( texGenNode ),
     //mDepthOfFieldTechnique( NULL ),
     //mDepthHelperTechnique( NULL ),
-    //mProjectionTechnique( NULL ),
+    m_projectionTechnique( projectionTechnique ),
     //mHeadsUpDisplay( NULL ),
     m_camera( NULL ),
     m_dcs( NULL ),
@@ -128,7 +130,7 @@ CameraObject::CameraObject(
     m_texGenNode( cameraObject.m_texGenNode.get() ),
     //mDepthOfFieldTechnique( camera.mDepthOfFieldTechnique ),
     //mDepthHelperTechnique( camera.mDepthHelperTechnique ),
-    //mProjectionTechnique( camera.mProjectionTechnique ),
+    m_projectionTechnique( cameraObject.m_projectionTechnique ),
     //mHeadsUpDisplay( camera.mHeadsUpDisplay ),
     m_camera( cameraObject.m_camera.get() ),
     m_dcs( cameraObject.m_dcs.get() ),
@@ -154,22 +156,7 @@ CameraObject::CameraObject(
 ////////////////////////////////////////////////////////////////////////////////
 CameraObject::~CameraObject()
 {
-    /*
-    mHeadsUpDisplay->GetCamera()->removeChild( mCameraViewQuadDCS.get() );
-    mHeadsUpDisplay->GetCamera()->removeChild( mDepthHelperQuadDCS.get() );
-
-    mCameraViewQuadDCS->SetTechnique( "Default" );
-    mCameraViewQuadDCS->RemoveTechnique( "DepthOfField" );
-    delete mDepthOfFieldTechnique;
-
-    mDepthHelperQuadDCS->SetTechnique( "Default" );
-    mDepthHelperQuadDCS->RemoveTechnique( "DepthHelper" );
-    delete mDepthHelperTechnique;
-
-    mPluginDCS->SetTechnique( "Default" );
-    mPluginDCS->RemoveTechnique( "Projection" );
-    delete mProjectionTechnique;
-    */
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::ComputeNearFarPlanes( bool const& enable )
@@ -293,8 +280,8 @@ void CameraObject::Initialize()
     m_mvpt = osg::Matrix::identity();
 
     //Initialize m_texGenNode
-    m_texGenNode = new osg::TexGenNode();
-    m_texGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
+    //m_texGenNode = new osg::TexGenNode();
+    //m_texGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
     //m_texGenNode->setTextureUnit( 0 );
     //addChild( m_texGenNode.get() );
 
@@ -932,13 +919,10 @@ void CameraObject::Update()
     (*mDepthHelperQuadVertices)[ 3 ].set( 0.0,         1.0, -1.0 );
     mDepthHelperQuadGeometry->dirtyDisplayList();
     mDepthHelperQuadGeometry->dirtyBound();
-
-    //Update the uniforms
-    mProjectionTechnique->GetNearPlaneUniform()->set(
-        static_cast< float >( nearPlane ) );
-    mProjectionTechnique->GetFarPlaneUniform()->set(
-        static_cast< float >( farPlane ) );
     */
+    //Update the uniforms
+    m_projectionTechnique->SetNearPlane( static_cast< float >( nearPlane ) );
+    m_projectionTechnique->SetFarPlane( static_cast< float >( farPlane ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::SetRenderQuadTexture( osg::Geode& geode )

@@ -43,6 +43,8 @@
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 #include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 
+#include <ves/xplorer/scenegraph/technique/ProjectionTechnique.h>
+
 #include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -59,6 +61,7 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
+#include <osg/TexGenNode>
 
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/LineSegmentIntersector>
@@ -74,9 +77,12 @@ CameraManager::CameraManager()
     osg::Group(),
     m_enabled( false ),
     m_cptEnabled( false ),
+    m_projectEffect( false ),
     m_activeCameraObject( NULL ),
     m_rttQuad( NULL ),
-    m_rttQuadTransform( new osg::PositionAttitudeTransform() )
+    m_rttQuadTransform( new osg::PositionAttitudeTransform() ),
+    m_projectionTechnique( new technique::ProjectionTechnique() ),
+    m_texGenNode( new osg::TexGenNode() )
 {
     Enable();
 
@@ -87,6 +93,16 @@ CameraManager::CameraManager()
 
     m_rttQuad = CreateMasterCameraQuad();
     m_rttQuadTransform->addChild( m_rttQuad.get() );
+
+    //Initialize m_projectionTechnique
+    scenegraph::Group& gpm =
+        SceneManager::instance()->GetGraphicalPluginManager();
+    gpm.AddTechnique( "Projection", m_projectionTechnique );
+    m_projectionTechnique->SetAlpha( 0.3 );
+
+    //Initialize m_texGenNode
+    m_texGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
+    m_texGenNode->setTextureUnit( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraManager::CameraManager(
@@ -94,7 +110,11 @@ CameraManager::CameraManager(
     :
     osg::Group( cameraManager, copyop ),
     m_enabled( cameraManager.m_enabled ),
-    m_activeCameraObject( cameraManager.m_activeCameraObject )
+    m_cptEnabled( cameraManager.m_cptEnabled ),
+    m_activeCameraObject( cameraManager.m_activeCameraObject ),
+    m_rttQuad( cameraManager.m_rttQuad.get() ),
+    m_rttQuadTransform( cameraManager.m_rttQuadTransform.get() ),
+    m_projectionTechnique( cameraManager.m_projectionTechnique )
 {
     ;
 }
@@ -106,13 +126,15 @@ CameraManager::~CameraManager()
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::addChild( std::string const& name )
 {
-    osg::ref_ptr< CameraObject > cameraObject = new CameraObject();
+    osg::ref_ptr< CameraObject > cameraObject =
+        new CameraObject( m_projectionTechnique, m_texGenNode.get() );
     cameraObject->setName( name );
     DCS& dcs = cameraObject->GetDCS();
-    const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( -90 ) ), 1, 0, 0 );
+    const gmtl::AxisAngled myAxisAngle(
+        osg::DegreesToRadians( double( -90 ) ), 1, 0, 0 );
     gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
     ///We need to rotate the camera geometry 90 initially so that the geometry
-    ///is in VR Juggler space (y up) so that when the view matrix is multiplied 
+    ///is in VR Juggler space (y up) so that when the view matrix is multiplied
     ///in the 90 is taken back out.
     myMat = ves::xplorer::scenegraph::SceneManager::instance()->
         GetGlobalViewMatrix() * myMat;
@@ -125,6 +147,42 @@ CameraObject* const CameraManager::ConvertNodeToCameraObject(
     osg::Node* const node )
 {
     return dynamic_cast< CameraObject* >( node );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::DisplayProjectionEffect(
+    bool const& onOff,
+    bool const& calledByGUI )
+{
+    scenegraph::Group& gpm =
+        SceneManager::instance()->GetGraphicalPluginManager();
+    if( calledByGUI )
+    {
+        m_projectEffect = onOff;
+        if( m_projectEffect )
+        {
+            gpm.addChild( m_texGenNode.get() );
+            if( m_activeCameraObject )
+            {
+                gpm.SetTechnique( "Projection" );
+            }
+        }
+        else
+        {
+            gpm.removeChild( m_texGenNode.get() );
+            gpm.SetTechnique( "Default" );
+        }
+    }
+    else
+    {
+        if( onOff )
+        {
+            gpm.SetTechnique( "Projection" );
+        }
+        else
+        {
+            gpm.SetTechnique( "Default" );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::Enable( const bool& enable )
@@ -244,12 +302,18 @@ void CameraManager::SetActiveCameraObject(
     if( cameraObject )
     {
         cameraObject->SetRenderQuadTexture( *(m_rttQuad.get()) );
-        cameraObject->EnableCamera();
         m_rttQuadTransform->setNodeMask( 1 );
+        cameraObject->EnableCamera();
+        cameraObject->Update();
     }
     else
     {
         m_rttQuadTransform->setNodeMask( 0 );
+    }
+
+    if( m_projectEffect )
+    {
+        DisplayProjectionEffect( cameraObject, false );
     }
 
     //Set the active camera
@@ -273,6 +337,11 @@ void CameraManager::SetCameraViewQuadResolution( unsigned int const& scale )
 bool CameraManager::setChild( unsigned int i, CameraObject* node )
 {
     return osg::Group::setChild( i, node );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::SetProjectionEffectOpacity( double const& value )
+{
+    m_projectionTechnique->SetAlpha( static_cast< float >( value ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* CameraManager::CreateMasterCameraQuad()

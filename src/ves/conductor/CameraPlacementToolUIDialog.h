@@ -238,7 +238,7 @@ private:
     wxSlider* mFieldOfViewSlider;
     ves::conductor::util::wxSpinCtrlDbl* mAspectRatioSpinCtrl;
     wxSlider* mAspectRatioSlider;
-    
+
     wxRadioBox* m_autoComputeFarButton;
 
     ves::conductor::util::wxSpinCtrlDbl* mNearPlaneSpinCtrl;

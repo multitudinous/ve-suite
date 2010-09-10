@@ -58,6 +58,11 @@ namespace scenegraph
 {
 class DCS;
 
+namespace technique
+{
+class ProjectionTechnique;
+}
+
 namespace camera
 {
 
@@ -76,7 +81,9 @@ class VE_SCENEGRAPH_EXPORTS CameraObject : public osg::Group
 {
 public:
     ///Constructor
-    CameraObject();
+    CameraObject(
+        technique::ProjectionTechnique* const projectionTechnique,
+        osg::TexGenNode* const texGenNode );
 
     ///
     CameraObject(
@@ -84,7 +91,48 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::camera, CameraObject );
+    virtual osg::Object* cloneType() const
+    {
+        return new CameraObject( m_projectionTechnique, m_texGenNode );
+    }
+
+    ///
+    virtual osg::Object* clone( const osg::CopyOp& copyop ) const
+    {
+        return new CameraObject( *this, copyop );
+    }
+
+    ///
+    virtual bool isSameKindAs( const osg::Object* obj ) const
+    {
+        return dynamic_cast< const CameraObject* >( obj ) != NULL;
+    }
+
+    ///
+    virtual const char* className() const
+    {
+        return "CameraObject";
+    }
+
+    ///
+    virtual const char* libraryName() const
+    {
+        return "ves::xplorer::scenegraph::camera";
+    }
+
+    ///
+    virtual void accept( osg::NodeVisitor& nv )
+    {
+        if( nv.validNodeMask( *this ) )
+        {
+            nv.pushOntoNodePath( this );
+            nv.apply( *this );
+            nv.popFromNodePath();
+        }
+    }
+
+    ///
+    //META_Node( ves::xplorer::scenegraph::camera, CameraObject );
 
     ///Set the quad that this rtt camera should render into
     void SetRenderQuadTexture( osg::Geode& geode );
@@ -220,7 +268,7 @@ private:
     //cpt::DepthHelperTechnique* mDepthHelperTechnique;
 
     ///
-    //cpt::ProjectionTechnique* mProjectionTechnique;
+    technique::ProjectionTechnique* m_projectionTechnique;
 
     ///Pointer to the HeadsUpDisplay for xplorer window
     //ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;

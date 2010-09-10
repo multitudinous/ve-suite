@@ -60,6 +60,12 @@ namespace xplorer
 {
 namespace scenegraph
 {
+
+namespace technique
+{
+class ProjectionTechnique;
+}
+
 namespace camera
 {
 class CameraObject;
@@ -90,6 +96,11 @@ public:
 
     ///
     CameraObject* const ConvertNodeToCameraObject( osg::Node* const node );
+
+    ///
+    void DisplayProjectionEffect(
+        bool const& onOff,
+        bool const& calledByGUI = true );
 
     ///
     void Enable( const bool& enable = true );
@@ -137,12 +148,16 @@ public:
     virtual bool setChild( unsigned int i, CameraObject* node );
 
     ///
+    void SetProjectionEffectOpacity( double const& value );
+
+    ///
     void WriteAllImageFiles( std::string const& saveImageDir );
 
     ///Send camera manager data to conductor to enable the gui
     ///to be in sync with Xplorer
     void UpdateConductorData( ves::open::xml::DataValuePairPtr inDvp = 
         ves::open::xml::DataValuePairPtr() );
+
 protected:
     ///Destructor
     virtual ~CameraManager();
@@ -158,6 +173,9 @@ private:
     ///This controls if the camera placement tool is enabled
     bool m_cptEnabled;
 
+    ///
+    bool m_projectEffect;
+
     ///The active rtt view camera
     CameraObject* m_activeCameraObject;
 
@@ -166,6 +184,12 @@ private:
 
     ///PAT node for non desktop mode
     osg::ref_ptr< osg::PositionAttitudeTransform > m_rttQuadTransform;
+
+    ///
+    technique::ProjectionTechnique* m_projectionTechnique;
+
+    ///Used to generate texture coordinates for camera projection
+    osg::ref_ptr< osg::TexGenNode > m_texGenNode;
 
 };
 } //end camera
