@@ -617,10 +617,10 @@ void GraphicalPluginManager::ConnectToCE()
         _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
         std::cout << "|\tConnected to the Executive " << std::endl;
     }
-    catch ( CORBA::Exception& )
+    catch( CORBA::Exception& ex )
     {
         std::cerr << "|\tExecutive not present or VEClient registration error"
-            << std::endl;
+            << ex._info().c_str() << std::endl;
         ui_i = 0;
     }
 }    
@@ -743,14 +743,24 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
             nodes.clear();
             //Get results
-            const char* tempResult = this->_exec->Query( status.c_str() );
-            std::string resultData = tempResult;
-            newPlugin->SetModuleResults( resultData );
-            if( resultData.empty() || resultData == "NULL" )
+            try
             {
-                parentResultsFailed = true;
+                const char* tempResult = this->_exec->Query( status.c_str() );
+                std::string resultData = tempResult;
+                newPlugin->SetModuleResults( resultData );
+                if( resultData.empty() || resultData == "NULL" )
+                {
+                    parentResultsFailed = true;
+                }
+                if( tempResult )
+                {
+                    delete tempResult;
+                }
             }
-            delete tempResult;
+            catch( ... )
+            {
+                ;
+            }
         }
 
         newPlugin->ProcessOnSubmitJob();
