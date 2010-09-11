@@ -159,6 +159,7 @@ void Body_AMH_Executive_i::SetModuleMessage (
                                    const char * msg
                                    ) 
 {
+    _tao_rh->SetModuleMessage();
     boost::ignore_unused_variable_warning( module_id );
     // send a unit message to all uis
     //std::string message = std::string( "SetModuleMessage ") + std::string( msg );
@@ -254,7 +255,7 @@ void Body_AMH_Executive_i::SetNetwork (
                              const char * network
                              ) 
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
+    //boost::ignore_unused_variable_warning( _tao_rh );
     m_mutex.acquire();
     //Clear old network and schedule
     m_network->clear();
@@ -272,6 +273,7 @@ void Body_AMH_Executive_i::SetNetwork (
         if( !m_scheduler->schedule( 0 ) )
         {
             ClientMessage( "Problem in VE-Suite Schedule\n" );
+            _tao_rh->SetNetwork();
             return;
         }
         else
@@ -284,8 +286,8 @@ void Body_AMH_Executive_i::SetNetwork (
     {
         m_mutex.release();
         ClientMessage( "Problem in VE-CE SetNetwork\n" );
-        return;
     }
+    _tao_rh->SetNetwork();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMH_Executive_i::SetModuleUI (
@@ -294,7 +296,6 @@ void Body_AMH_Executive_i::SetModuleUI (
                               const char * ui
                               ) 
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
     m_mutex.acquire();
     
     ///I don't think this function is used. We may be able to remove it.
@@ -307,6 +308,8 @@ void Body_AMH_Executive_i::SetModuleUI (
     m_network->GetModule( m_network->moduleIdx( module_id ) )->SetInputData( objectVector );
     m_network->GetModule( m_network->moduleIdx( module_id ) )->_need_execute = 1;
     m_network->GetModule( m_network->moduleIdx( module_id ) )->_return_state = 0;
+    
+    _tao_rh->SetModuleUI();
     
     m_mutex.release();
 }
@@ -376,7 +379,7 @@ void Body_AMH_Executive_i::StartCalc (
                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                             ) 
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
+    _tao_rh->StartCalc();
     m_scheduler->reset();
     
     if( m_scheduler->snodes_size() == 0 )
@@ -455,6 +458,8 @@ void Body_AMH_Executive_i::StopCalc (
                            Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                            ) 
 {
+    _tao_rh->StopCalc();
+    
     m_mutex.acquire();
     // Stop all units
     std::map<std::string, Body::Unit_var>::iterator iter;
@@ -482,6 +487,7 @@ void Body_AMH_Executive_i::PauseCalc (
                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                             ) 
 {
+    _tao_rh->StopCalc();
     m_mutex.acquire();
     // Pause all units
     std::map<std::string, Body::Unit_var>::iterator iter;
@@ -510,6 +516,7 @@ void Body_AMH_Executive_i::Resume (
                          Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                          ) 
 {
+    _tao_rh->Resume();
     m_mutex.acquire();
     // Resume all the modules
     std::map<std::string, Body::Unit_var>::iterator iter;
@@ -540,6 +547,8 @@ void Body_AMH_Executive_i::RegisterUI (
                              ::Body::UI_ptr ui
                              ) 
 {
+    _tao_rh->RegisterUI();
+
     m_mutex.acquire();
     
     std::string tempName( UIName );
@@ -587,7 +596,7 @@ void Body_AMH_Executive_i::UnRegisterUI (
                                const char * UIName
                                ) 
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
+    //boost::ignore_unused_variable_warning( _tao_rh );
     std::map<std::string, Body::UI_var>::iterator iter;
     m_mutex.acquire();
     // Add your implementation here
@@ -598,7 +607,8 @@ void Body_AMH_Executive_i::UnRegisterUI (
     {
         m_uiMap.erase( iter );
         std::cout << "VE-CE : " << strUI << " Unregistered!\n";
-    }  
+    }
+    _tao_rh->UnRegisterUI();
     m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -607,7 +617,7 @@ void Body_AMH_Executive_i::UnRegisterUnit (
                                  const char * UnitName
                                  ) 
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
+    _tao_rh->UnRegisterUnit();
     m_mutex.acquire();
     
     std::map<std::string, Execute_Thread*>::iterator iter;
@@ -648,7 +658,8 @@ void Body_AMH_Executive_i::RegisterUnit (
                                ::CORBA::Long flag
                                ) 
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
+    _tao_rh->RegisterUnit();
+    //boost::ignore_unused_variable_warning( _tao_rh );
     boost::ignore_unused_variable_warning( flag );
     // When this is called, a unit is already binded to the name service,
     // so this call can get it's reference from the name service
@@ -721,7 +732,7 @@ void Body_AMH_Executive_i::Query(
                         const char * commands
                         ) 
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
+    //boost::ignore_unused_variable_warning( _tao_rh );
     m_mutex.acquire();
     // read the command to get the module name and module id
     XMLReaderWriter networkWriter;
@@ -825,7 +836,8 @@ void Body_AMH_Executive_i::SetID (
                         ::CORBA::Long id
                         ) 
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
+    _tao_rh->SetID();
+    //boost::ignore_unused_variable_warning( _tao_rh );
     std::map< std::string, Body::Unit_var >::iterator iter;
     m_mutex.acquire();
     
@@ -863,9 +875,10 @@ void Body_AMH_Executive_i::DeleteModuleInstance (
                                        ::CORBA::Long module_id
                                        ) 
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
+    //boost::ignore_unused_variable_warning( _tao_rh );
     boost::ignore_unused_variable_warning( moduleName );
     boost::ignore_unused_variable_warning( module_id );
+    _tao_rh->DeleteModuleInstance();
     // Add your implementation here
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -876,7 +889,6 @@ void Body_AMH_Executive_i::SetParams(
                         const char * param
                         )
 {
-    boost::ignore_unused_variable_warning( _tao_rh );
     boost::ignore_unused_variable_warning( moduleName );
     boost::ignore_unused_variable_warning( module_id );
     ///We are going to abuse this function for the moment to try out sending

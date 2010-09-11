@@ -221,9 +221,10 @@ void GraphicalPluginManager::UnRegisterExecutive()
             std::cout << "|\tDisconnect from VE-CE succeeded!" << std::endl;
         }
     }
-    catch ( CORBA::Exception& )
+    catch ( CORBA::Exception& ex )
     {
         std::cerr << "|\tDisconnect from VE_CE failed!" << std::endl;
+        std::cerr << ex._info().c_str() << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
