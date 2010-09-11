@@ -540,15 +540,23 @@ class Launch:
             f.close()
         else:
             pass
+        
+        #ves_userName = os.popen("whoami").readline().split()[0]
+        ves_machineName = gethostname()
+        vesOutFile = "ves."+ves_machineName+".out"
+
         self.clusterTemplate += "\n"
         self.clusterTemplate += "%s\n" %drive
         self.clusterTemplate += "cd %s\n" %self.settings["Directory"]
         self.clusterTemplate += "\n"
         self.clusterTemplate += self.clusterScript
         self.clusterTemplate += "\n"
-        self.clusterTemplate += "%s\n" %string.join(self.XplorerCall())
         if self.settings["Debug"]:
+            self.clusterTemplate = "%s > %s.log\n" %( string.join(self.XplorerCall()), vesOutFile )
             self.clusterTemplate += "pause\n"
+        else:
+            self.clusterTemplate += "%s\n" %string.join(self.XplorerCall())
+
         return
 
 
@@ -644,7 +652,11 @@ class Launch:
             ##Do a regular call if the initial machine's the node.
             if gethostname() == nodeName.split('.')[0]:
                 try:
-                    subprocess.Popen(self.XplorerCall(nodeStatus))
+                    #subprocess.Popen(self.XplorerCall(nodeStatus))
+                    subprocess.Popen(self.XplorerCall(nodeStatus), 
+                                 stdin = self.inputSource, 
+                                 stdout = self.outputDestination, 
+                                 stderr = self.outputDestination)
                 except OSError:
                     exe = "ves_xplorer"
                     print "Xplorer Call Error, \"%s\" not found on your environment."
