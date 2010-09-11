@@ -70,9 +70,6 @@ HeadPositionCallback::HeadPositionCallback( const HeadPositionCallback& ctc, con
 void HeadPositionCallback::operator()(
     osg::Node* node, osg::NodeVisitor* nv )
 {
-    /*osg::ref_ptr< osg::Geode > mt =
-        static_cast< osg::Geode* >( node );*/
-
     //Do work to place texture
     gmtl::Matrix44d vjHeadMat =
         gmtl::convertTo< double >( mHead->getData() );
@@ -82,7 +79,7 @@ void HeadPositionCallback::operator()(
     gmtl::Point3d startPoint;
     startPoint.set(
                    jugglerHeadPoint.mData[ 0 ] - 3.5f,
-                   -jugglerHeadPoint.mData[ 2 ] + 8.0f,
+                   -jugglerHeadPoint.mData[ 2 ] + 9.0f,
                    jugglerHeadPoint.mData[ 1 ] + 0.0f);
     
     gmtl::Matrix44d worldMat = 
