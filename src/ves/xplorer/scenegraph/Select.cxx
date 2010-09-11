@@ -134,7 +134,7 @@ osg::Node* CreateCircleHighlight(
     tempVRJMat.set( matrix.ptr() );
     gmtl::Point3d tempOrigin;
     tempOrigin = tempVRJMat*tempOrigin;
-    tempVRJMat = gmtl::makeTrans< gmtl::Matrix44d >( tempPoint );
+    tempVRJMat = gmtl::makeTrans< gmtl::Matrix44d >( tempOrigin );
     matrix.set( tempVRJMat.mData );
 
     
