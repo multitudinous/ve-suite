@@ -61,9 +61,9 @@ using namespace ves::open::xml;
 CADNode::CADNode( const std::string& name )
         :
         ves::open::xml::XMLObject(),
-        mMakeTransparentOnVis( true ),
-        m_visibility( true ),
+        m_name( name ),
         m_type( "Node" ),
+        m_visibility( true ),
         m_physics( false ),
         m_mass( 1.0f ),
         m_friction( 1.0f ),
@@ -71,7 +71,7 @@ CADNode::CADNode( const std::string& name )
         mPhysicsMesh( "Bounding Box" ),
         m_decimationValue( "Exact" ),
         mOpacity( 1.f ),
-        m_name( name ),
+        mMakeTransparentOnVis( true ),
         m_longitude( 0.0 ),
         m_latitude( 0.0 )
 {
