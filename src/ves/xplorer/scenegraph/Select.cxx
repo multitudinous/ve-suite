@@ -47,6 +47,8 @@
 #include <osgwTools/AbsoluteModelTransform.h>
 #include <osgwTools/Shapes.h>
 
+#include <gmtl/gmtl.h>
+
 namespace ves
 {
 namespace xplorer
@@ -128,7 +130,14 @@ osg::Node* CreateCircleHighlight(
     osg::NodePath newNP = nodePath;
     newNP.pop_back();
     osg::Matrix matrix = osg::computeLocalToWorld( newNP );
+    gmtl::Matrix44d tempVRJMat;
+    tempVRJMat.set( matrix.ptr() );
+    gmtl::Point3d tempOrigin;
+    tempOrigin = tempVRJMat*tempOrigin;
+    tempVRJMat = gmtl::makeTrans< gmtl::Matrix44d >( tempPoint );
+    matrix.set( tempVRJMat.mData );
 
+    
     circlegeode = new osg::Geode();
     osg::Geometry* circleGeom(
         osgwTools::makeWireCircle( radius, subdivisions ) );
