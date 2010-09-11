@@ -159,7 +159,6 @@ void Body_AMH_Executive_i::SetModuleMessage (
                                    const char * msg
                                    ) 
 {
-    _tao_rh->SetModuleMessage();
     boost::ignore_unused_variable_warning( module_id );
     // send a unit message to all uis
     //std::string message = std::string( "SetModuleMessage ") + std::string( msg );
@@ -379,11 +378,11 @@ void Body_AMH_Executive_i::StartCalc (
                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                             ) 
 {
-    _tao_rh->StartCalc();
     m_scheduler->reset();
     
     if( m_scheduler->snodes_size() == 0 )
     {
+        _tao_rh->StartCalc();
         return;
     }
     
@@ -451,15 +450,14 @@ void Body_AMH_Executive_i::StartCalc (
         }
     }
     
+    _tao_rh->StartCalc();
     m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMH_Executive_i::StopCalc (
                            Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                            ) 
-{
-    _tao_rh->StopCalc();
-    
+{    
     m_mutex.acquire();
     // Stop all units
     std::map<std::string, Body::Unit_var>::iterator iter;
@@ -480,6 +478,7 @@ void Body_AMH_Executive_i::StopCalc (
             m_modUnits.erase( iter++ );
         }
     }
+    _tao_rh->StopCalc();
     m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -487,7 +486,6 @@ void Body_AMH_Executive_i::PauseCalc (
                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                             ) 
 {
-    _tao_rh->StopCalc();
     m_mutex.acquire();
     // Pause all units
     std::map<std::string, Body::Unit_var>::iterator iter;
@@ -509,6 +507,7 @@ void Body_AMH_Executive_i::PauseCalc (
             m_modUnits.erase( iter++ );
         }
     }
+    _tao_rh->PauseCalc();
     m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -516,7 +515,6 @@ void Body_AMH_Executive_i::Resume (
                          Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                          ) 
 {
-    _tao_rh->Resume();
     m_mutex.acquire();
     // Resume all the modules
     std::map<std::string, Body::Unit_var>::iterator iter;
@@ -538,6 +536,7 @@ void Body_AMH_Executive_i::Resume (
             m_modUnits.erase( iter++ );
         }
     }
+    _tao_rh->Resume();
     m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -547,8 +546,6 @@ void Body_AMH_Executive_i::RegisterUI (
                              ::Body::UI_ptr ui
                              ) 
 {
-    _tao_rh->RegisterUI();
-
     m_mutex.acquire();
     
     std::string tempName( UIName );
@@ -589,6 +586,7 @@ void Body_AMH_Executive_i::RegisterUI (
             << " " << ex._info().c_str() << std::endl;
         m_mutex.release();
     }
+    _tao_rh->RegisterUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMH_Executive_i::UnRegisterUI (
@@ -617,7 +615,6 @@ void Body_AMH_Executive_i::UnRegisterUnit (
                                  const char * UnitName
                                  ) 
 {
-    _tao_rh->UnRegisterUnit();
     m_mutex.acquire();
     
     std::map<std::string, Execute_Thread*>::iterator iter;
@@ -648,6 +645,7 @@ void Body_AMH_Executive_i::UnRegisterUnit (
     }*/
     message = std::string( "Successfully unregistered " ) + UnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
+    _tao_rh->UnRegisterUnit();
     m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -658,7 +656,6 @@ void Body_AMH_Executive_i::RegisterUnit (
                                ::CORBA::Long flag
                                ) 
 {
-    _tao_rh->RegisterUnit();
     //boost::ignore_unused_variable_warning( _tao_rh );
     boost::ignore_unused_variable_warning( flag );
     // When this is called, a unit is already binded to the name service,
@@ -716,6 +713,7 @@ void Body_AMH_Executive_i::RegisterUnit (
     
     message = std::string( "Successfully registered " ) + strUnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
+    _tao_rh->RegisterUnit();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*    void Body_AMH_Executive_i::GetGlobalMod (
@@ -836,7 +834,6 @@ void Body_AMH_Executive_i::SetID (
                         ::CORBA::Long id
                         ) 
 {
-    _tao_rh->SetID();
     //boost::ignore_unused_variable_warning( _tao_rh );
     std::map< std::string, Body::Unit_var >::iterator iter;
     m_mutex.acquire();
@@ -854,17 +851,19 @@ void Body_AMH_Executive_i::SetID (
     {
         iter->second->_non_existent();
         iter->second->SetID( id );
+        _tao_rh->SetID();
         m_mutex.release();
     }
-    catch ( CORBA::Exception & )
+    catch( CORBA::Exception& )
     {
         std::cout << "VE-CE : " << iter->first << " is obsolete." << std::endl;
         m_modUnits.erase( iter );
         m_mutex.release();
         UnRegisterUnit( _tao_rh, moduleName );
     }
-    catch ( ... )
+    catch( ... )
     {
+        _tao_rh->SetID();
         std::cout << "VE-CE : another kind of exception " << std::endl;
     }
 }
