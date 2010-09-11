@@ -188,6 +188,7 @@ const TextureImagePtr Shader::GetTextureImage( unsigned int textureUnit )
         std::cout << "Texture Unit: " << textureUnit << " doesn't exist!" << std::endl;
         std::cout << "Shader::GetTextureImage() " << std::endl;
     }
+    return TextureImagePtr();
 }
 ////////////////////////////////////////////////////
 const UniformPtr Shader::GetUniform( const std::string& uniformName )
@@ -200,7 +201,7 @@ const UniformPtr Shader::GetUniform( const std::string& uniformName )
             return mUniformList.at( i );
         }
     }
-    //return 0x0000000;
+    return UniformPtr();
 }
 ////////////////////////////////////////////////
 const UniformPtr Shader::GetUniform( unsigned int index )
