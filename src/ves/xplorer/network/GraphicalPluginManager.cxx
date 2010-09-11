@@ -745,7 +745,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             //Get results
             try
             {
-                const char* tempResult = this->_exec->Query( status.c_str() );
+                const char* tempResult = _exec->Query( status.c_str() );
                 std::string resultData = tempResult;
                 newPlugin->SetModuleResults( resultData );
                 if( resultData.empty() || resultData == "NULL" )
@@ -757,9 +757,10 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
                     delete tempResult;
                 }
             }
-            catch( ... )
+            catch( CORBA::Exception& ex )
             {
-                ;
+                std::cerr << "|\tExecutive Query error"
+                    << ex._info().c_str() << std::endl;
             }
         }
 
