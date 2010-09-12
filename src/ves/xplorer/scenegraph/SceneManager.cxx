@@ -224,8 +224,122 @@ void SceneManager::InitScene()
             setDistanceModel( osgAudio::InverseDistance );
         osgAudio::SoundManager::instance()->getEnvironment()->
             setDopplerFactor( 1 );
-        
-        osg::ref_ptr< osgAudio::SoundRoot > soundRoot = new osgAudio::SoundRoot();
+/*        
+#ifdef ENABLE_SUBSYSTEM_FMOD
+        std::vector< std::string > driverNames;
+        std::vector< std::string > driverPriorities;
+        driverPriorities.push_back( "surround71" );
+        driverPriorities.push_back( "surround51" );
+        driverPriorities.push_back( "surround50" );
+        driverPriorities.push_back( "surround41" );
+        driverPriorities.push_back( "surround40" );
+        driverPriorities.push_back( "default" );
+        ///driverPriorities.push_back( "iec958" );
+        for( size_t i = 0; i < driverPriorities.size(); ++i )
+        {
+            std::vector::const_iterator iter = 
+                std::find( driverNames.begin(), 
+                            driverNames.end(), 
+                            driverPriorities.at( i ) );
+            if( iter != driverNames.end() )
+            {
+                size_t driverNumber = iter - driverNames.begin();
+                result = fmodSystem->setDriver( driverNumber );
+                if( result == FMOD_OK )
+                {
+                    break;
+                }
+            }
+        }
+        //Setup the driver to use on linux with fmod
+        FMOD::System* fmodSystem = 
+            osgAudio::SoundManager::instance()->getEnvironment()->getSystem();
+        int numDrivers;
+        FMOD_RESULT result;
+        result = fmodSystem->getNumDrivers( &numDrivers );
+        if( numDrivers > 0 )
+        {
+            std::cout << "Initializing FMOD. Detected " 
+                << numDrivers << " drivers." << std::endl;
+            numDrivers -= 1;
+            for( int idx = numDrivers; idx >= 0; --idx )
+            {
+                const int nameLen( 128 );
+                char name[ nameLen - 1 ];
+                FMOD_GUID guid;
+                result = fmodSystem->getDriverInfo( idx, name, nameLen, &guid );
+                std::string driverName( name );
+                std::cout << idx << ": " << name << std::endl;
+                if( driverName == "surround71" )
+                {
+                    result = fmodSystem->setDriver( idx );
+                    if( result == FMOD_OK )
+                    {
+                        break;
+                    }
+                }
+                else if( driverName == "surround51" )
+                {
+                    result = fmodSystem->setDriver( idx );
+                    if( result == FMOD_OK )
+                    {
+                        break;
+                    }
+                }
+                else if( driverName == "surround50" )
+                {
+                    result = fmodSystem->setDriver( idx );
+                    if( result == FMOD_OK )
+                    {
+                        break;
+                    }
+                }
+                else if( driverName == "surround40" )
+                {
+                    result = fmodSystem->setDriver( idx );
+                    if( result == FMOD_OK )
+                    {
+                        break;
+                    }
+                }
+                else if( driverName == "surround41" )
+                {
+                    result = fmodSystem->setDriver( idx );
+                    if( result == FMOD_OK )
+                    {
+                        break;
+                    }
+                }
+                else if( driverName == "default" )
+                {
+                    result = fmodSystem->setDriver( idx );
+                    if( result == FMOD_OK )
+                    {
+                        break;
+                    }
+                }
+                //else if( driverName == "iec958" )
+                //{
+                //    result = fmodSystem->setDriver( idx );
+                //    if( result == FMOD_OK )
+                //    {
+                //        break;
+                //    }
+                //}
+                else
+                {
+                    result = fmodSystem->setDriver( 0 );
+                    if( result == FMOD_OK )
+                    {
+                        break;
+                    }
+                }
+            }
+        }        
+#endif
+*/
+        osg::ref_ptr< osgAudio::SoundRoot > soundRoot = 
+            new osgAudio::SoundRoot();
         soundRoot->setName( "Sound Root" );
         mRootNode->addChild( soundRoot.get() );
     }
