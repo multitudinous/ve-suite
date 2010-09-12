@@ -512,7 +512,8 @@ class Launch:
 
     def ReadClusterTemplate(self):
         """Prepares the cluster template (for Windows)."""
-        clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', "cluster.bat")
+        #clusterFilePathMaster = os.path.join('C:\\WINDOWS', 'Temp', "cluster.master.bat")
+        #clusterFilePathSlave = os.path.join('C:\\WINDOWS', 'Temp', "cluster.slave.bat")
         drive = "%s:" %self.settings["Directory"].split(':')[0]
         user = os.getenv('USERNAME')
         self.clusterCall = ["psexec", "<SLAVE GOES HERE>",
@@ -551,11 +552,21 @@ class Launch:
         self.clusterTemplate += "\n"
         self.clusterTemplate += self.clusterScript
         self.clusterTemplate += "\n"
+
+        slaveCommand = string.join(self.XplorerCall("slave"))
+        masterCommand = string.join(self.XplorerCall("master"))
+        
         if self.settings["Debug"]:
-            self.clusterTemplate = "%s > %s.log\n" %( string.join(self.XplorerCall()), vesOutFile )
+            self.clusterTemplate += 'if %1 == "slave" (%s  >> %s.log) else (%s >> %s.log)\n' %(slaveCommand, vesOutFile, masterCommand, vesOutFile)
             self.clusterTemplate += "pause\n"
         else:
-            self.clusterTemplate += "%s\n" %string.join(self.XplorerCall())
+            self.clusterTemplate += 'if %1 == "slave" (%s) else (%s)\n' %(slaveCommand, masterCommand)
+
+        #if self.settings["Debug"]:
+        #    self.clusterTemplate = "%s > %s.log\n" %( string.join(self.XplorerCall()), vesOutFile )
+        #    self.clusterTemplate += "pause\n"
+        #else:
+        #    self.clusterTemplate += "%s\n" %string.join(self.XplorerCall())
 
         return
 
