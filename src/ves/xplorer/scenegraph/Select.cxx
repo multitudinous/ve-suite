@@ -136,7 +136,6 @@ osg::Node* CreateCircleHighlight(
     tempOrigin = tempVRJMat*tempOrigin;
     tempVRJMat = gmtl::makeTrans< gmtl::Matrix44d >( tempOrigin );
     matrix.set( tempVRJMat.mData );
-
     
     circlegeode = new osg::Geode();
     osg::Geometry* circleGeom(
