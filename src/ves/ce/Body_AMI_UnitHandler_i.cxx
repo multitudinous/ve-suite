@@ -226,7 +226,7 @@ void Body_AMI_UnitHandler_i::Query( const char* ami_return_val )
 {
     m_responseHandler->Query( ami_return_val );
     
-    std::cout << "Body_AMI_UnitHandler_i deactivating self" << std::endl;
+    std::cout << "Body_AMI_UnitHandler_i deactivating self " << ami_return_val <<"."<< std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
     m_poa->deactivate_object( oid.in() );
 }
@@ -257,7 +257,7 @@ void Body_AMI_UnitHandler_i::Query_excep (
         m_responseHandler->Query_excep( &amh_excep_holder );
     }
     
-    std::cout << "Body_AMI_UnitHandler_i deactivating self" << std::endl;
+    //std::cout << "Body_AMI_UnitHandler_i deactivating self" << std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id(this);
     m_poa->deactivate_object (oid.in());
 }

@@ -578,11 +578,11 @@ void Body_AMH_Executive_i::RegisterUI (
         
         tempUI->_non_existent();
         tempUI->sendc_Raise( cb.in(), msg.c_str() );
-        std::cout << tempName << " : registered a UI" << std::endl;
+        std::cout << "VE-CE : " << tempName << " : registered a UI" << std::endl;
     }
     catch ( CORBA::Exception& ex )
     {
-        std::cerr << "Can't call UI name " << tempName
+        std::cerr << "VE-CE : Can't call UI name " << tempName
             << " " << ex._info().c_str() << std::endl;
         m_mutex.release();
     }
@@ -823,9 +823,21 @@ void Body_AMH_Executive_i::Query(
     // forward the request on to the inner server, with the callback handler
     // reference.
 
-    iter->second->_non_existent();
-    iter->second->SetCurID( moduleId );
-    iter->second->sendc_Query( cb.in(), CORBA::string_dup( status.c_str() ) );
+    try
+    {
+        iter->second->_non_existent();
+        iter->second->SetCurID( moduleId );
+        iter->second->sendc_Query( cb.in(), CORBA::string_dup( status.c_str() ) );
+    }
+    catch ( CORBA::Exception &ex )
+    {
+        std::cout << "VE-CE : Module Query Messed up." << std::endl;
+        std::cerr << "VE-CE : CORBA exception raised: " << ex._name() << std::endl;
+        std::cerr << ex._info().c_str() << std::endl;
+        std::string testString( "NULL" );
+        _tao_rh->Query( testString.c_str() );
+    }
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMH_Executive_i::SetID (
@@ -852,13 +864,11 @@ void Body_AMH_Executive_i::SetID (
         iter->second->_non_existent();
         iter->second->SetID( id );
         _tao_rh->SetID();
-        m_mutex.release();
     }
     catch( CORBA::Exception& )
     {
         std::cout << "VE-CE : " << iter->first << " is obsolete." << std::endl;
         m_modUnits.erase( iter );
-        m_mutex.release();
         UnRegisterUnit( _tao_rh, moduleName );
     }
     catch( ... )
@@ -866,6 +876,7 @@ void Body_AMH_Executive_i::SetID (
         _tao_rh->SetID();
         std::cout << "VE-CE : another kind of exception " << std::endl;
     }
+    m_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMH_Executive_i::DeleteModuleInstance (
@@ -986,12 +997,12 @@ std::string Body_AMH_Executive_i::GetResults( int rt )
        m_modUnits.end() )
     {
         std::cerr <<  "VE-CE : Cannot find running unit " 
-        << nextModule->GetModuleName() << std::endl
-        << "The units that are registerd are " << std::endl;
+            << nextModule->GetModuleName() << std::endl
+            << "The units that are registerd are " << std::endl;
         for( std::map< std::string, Body::Unit_var >::const_iterator iter = 
             m_modUnits.begin(); iter != m_modUnits.end(); ++iter )
         {
-            std::cout << "Unit name = " << iter->first << std::endl;
+            std::cout << "VE-CE : Unit name = " << iter->first << std::endl;
         }
         return "return";
     }
@@ -1011,8 +1022,8 @@ std::string Body_AMH_Executive_i::GetResults( int rt )
             Connection* conn = iport->connection( j );
             OPort* oport = conn->get_oport();
             Module* m = oport->get_module();
-            std::cout << "Upstream Module Name: " << m->GetModuleName() 
-            << " and ID " << m->get_id() << std::endl;
+            std::cout << "VE-CE : Upstream Module Name: " << m->GetModuleName() 
+                << " and ID " << m->get_id() << std::endl;
             //previousModuleIndex = m_network->moduleIdx( m->get_id() );
             {
                 std::string unitResultsData = "NULL";
@@ -1045,9 +1056,12 @@ std::string Body_AMH_Executive_i::GetResults( int rt )
                     CORBA::Object_var obj = m_poa->id_to_reference( oid.in() );
                     ::Body::AMH_ExecutiveResponseHandler_var cb =
                         ::Body::AMH_ExecutiveResponseHandler::_narrow( obj.in() );
-                    
-                    const char* tempResult = 0;
+                    //::Body::Executive_var exec = Body::Executive::_narrow( obj.in() );
+
+                    char* tempResult = 0;
+                    //tempResult = exec->Query( upstreamResultsData.c_str() );
                     Query( cb.in(), upstreamResultsData.c_str() );
+                    //We need to get the results back from the query of this unit
                     cb->Query( tempResult );
                     unitResultsData = tempResult;
                     m_poa->deactivate_object( oid.in() );
