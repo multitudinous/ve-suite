@@ -760,7 +760,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             }
             catch( CORBA::Exception& ex )
             {
-                std::cerr << "|\tExecutive Query error"
+                std::cerr << "|\tExecutive Query error: "
                     << ex._info().c_str() << std::endl;
             }
         }
