@@ -144,7 +144,7 @@ int main( int argc, char* argv[] )
         // Finally destroy the ORB
         orb->destroy();
     }
-    catch ( CORBA::Exception& ex )
+    catch( CORBA::Exception& ex )
     {
         std::cerr 
             << "CORBA exception raised : Unable to connect to Naming Service!" 
