@@ -1024,7 +1024,7 @@ std::string Body_AMH_Executive_i::GetResults( int rt )
             Module* m = oport->get_module();
             std::cout << "VE-CE : Upstream Module Name: " << m->GetModuleName() 
                 << " and ID " << m->get_id() << std::endl;
-            //previousModuleIndex = m_network->moduleIdx( m->get_id() );
+
             {
                 std::string unitResultsData = "NULL";
                 //THis code needs to get ALL upstream modules for this particular module.
@@ -1052,19 +1052,28 @@ std::string Body_AMH_Executive_i::GetResults( int rt )
                 //Now query the unit for data
                 
                 {
-                    PortableServer::ObjectId_var oid = m_poa->servant_to_id(this);
-                    CORBA::Object_var obj = m_poa->id_to_reference( oid.in() );
-                    ::Body::AMH_ExecutiveResponseHandler_var cb =
-                        ::Body::AMH_ExecutiveResponseHandler::_narrow( obj.in() );
-                    //::Body::Executive_var exec = Body::Executive::_narrow( obj.in() );
-
-                    char* tempResult = 0;
-                    //tempResult = exec->Query( upstreamResultsData.c_str() );
-                    Query( cb.in(), upstreamResultsData.c_str() );
-                    //We need to get the results back from the query of this unit
-                    cb->Query( tempResult );
-                    unitResultsData = tempResult;
-                    m_poa->deactivate_object( oid.in() );
+                    std::map<std::string, Body::Unit_var>::const_iterator 
+                        iter = m_modUnits.find( m->GetModuleName() );
+                    
+                    if( iter == m_modUnits.end() )
+                    {
+                        std::cout << "VE-CE : No units to query" << std::endl;
+                    }
+                    
+                    try
+                    {
+                        iter->second->_non_existent();
+                        iter->second->SetCurID( m->get_id() );
+                        unitResultsData = 
+                            iter->second->Query( 
+                            CORBA::string_dup( upstreamResultsData.c_str() ) );
+                    }
+                    catch ( CORBA::Exception &ex )
+                    {
+                        std::cout << "VE-CE : Module Query Messed up." << std::endl;
+                        std::cerr << "VE-CE : CORBA exception raised: " << ex._name() << std::endl;
+                        std::cerr << ex._info().c_str() << std::endl;
+                    }
                 }
 
                 if( unitResultsData != "NULL" )
@@ -1086,17 +1095,17 @@ std::string Body_AMH_Executive_i::GetResults( int rt )
         }
     }
     //Then set inputs on next module
-    previousModuleResultsCommands.push_back( std::pair< CommandPtr, std::string  >(
-                                                                                   modelResults, std::string( "vecommand" ) ) );
+    previousModuleResultsCommands.push_back( 
+        std::pair< CommandPtr, std::string  >( modelResults, std::string( "vecommand" ) ) );
     
     
     //Now get the input data for the current model
     const std::vector< CommandPtr > inputList = 
-    nextModule->GetVEModel()->GetInputs();
+        nextModule->GetVEModel()->GetInputs();
     for( size_t k = 0; k < inputList.size(); ++k )
     {
-        previousModuleResultsCommands.push_back( std::pair< CommandPtr, std::string  >(
-                                                                                       inputList.at( k ), std::string( "vecommand" ) ) );
+        previousModuleResultsCommands.push_back( 
+            std::pair< CommandPtr, std::string  >( inputList.at( k ), std::string( "vecommand" ) ) );
     }
     std::string resultsData;
     resultsData.assign( "returnString" );
@@ -1112,8 +1121,8 @@ void Body_AMH_Executive_i::execute_next_mod( long module_id )
     int moduleIndex = m_network->moduleIdx( module_id );
     if( moduleIndex < 0 )
     {
-        std::cerr << "Unit ID " << module_id << " cannot be found in the list"
-        << " of available units." << std::endl;
+        std::cerr << "Unit ID " << module_id 
+            << " cannot be found in the list of available units." << std::endl;
         return;
     }
     
@@ -1133,13 +1142,14 @@ void Body_AMH_Executive_i::execute_next_mod( long module_id )
         catch ( CORBA::Exception & )
         {
             std::cerr << "Cannot contact module id " << module_id
-            << " name " << mod_type << std::endl;
+                << " name " << mod_type << std::endl;
             return;
         }
     }
     else
     {
-        std::cerr << "Module name " << mod_type << " is not yet connected." << std::endl;
+        std::cerr << "Module name " << mod_type 
+            << " is not yet connected." << std::endl;
         return;
     }
     

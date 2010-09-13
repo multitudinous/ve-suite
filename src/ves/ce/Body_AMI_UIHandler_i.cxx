@@ -145,7 +145,7 @@ ACE_THROW_SPEC((
 {
     m_responseHandler->SetModuleMessage();
     
-    std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
+    //std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
     m_poa->deactivate_object( oid.in() );
 }
@@ -180,7 +180,7 @@ ACE_THROW_SPEC((
         m_responseHandler->SetModuleMessage_excep( &amh_excep_holder );
     }
     
-    std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
+    //std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
     m_poa->deactivate_object( oid.in() );
 }
@@ -214,7 +214,7 @@ ACE_THROW_SPEC((
 { 
     m_responseHandler->SetParams();
     
-    std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
+    //std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
     m_poa->deactivate_object( oid.in() );
 }
