@@ -38,6 +38,8 @@
 // --- OSG Includes --- //
 #include <osg/Node>
 #include <osg/Geode>
+#include <osg/StateSet>
+#include <osg/LineWidth>
 
 #include <osgUtil/IntersectionVisitor>
 
@@ -71,8 +73,8 @@ osgUtil::LineSegmentIntersector::Intersections& TestForIntersections(
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* FindVESObject( osg::NodePath& nodePath )
 {
-    osg::NodePath::reverse_iterator itr = nodePath.rbegin();
-    for( itr; itr != nodePath.rend(); ++itr )
+    for( osg::NodePath::reverse_iterator itr = nodePath.rbegin(); 
+        itr != nodePath.rend(); ++itr )
     {
         osg::Node::DescriptionList descList = (*itr)->getDescriptions();
         for( size_t i = 0; i < descList.size(); ++i )
@@ -138,19 +140,26 @@ osg::Node* CreateCircleHighlight(
     matrix.set( tempVRJMat.mData );
     
     circlegeode = new osg::Geode();
-    osg::Geometry* circleGeom(
-        osgwTools::makeWireCircle( radius, subdivisions ) );
-    circlegeode->addDrawable( circleGeom );
-    circleat = new AutoTransform();
-    circleat->addChild( circlegeode.get() );
-    circleat->SetAutoRotateMode(
-        ves::xplorer::scenegraph::AutoTransform::ROTATE_TO_CAMERA );
-    circleat->SetAutoScaleToScreen( false );
-    circleat->SetPosition( position );
-    amt = new osgwTools::AbsoluteModelTransform();
-    amt->addChild( circleat.get() );
-    //Setup Absolute Model Transform to mimic transforms of nodepath
-    amt->setMatrix( matrix );
+    osg::ref_ptr< osg::Array > circleColor;
+    //Circle geometry
+    {
+        osg::Geometry* circleGeom(
+            osgwTools::makeWireCircle( radius, subdivisions ) );
+        circlegeode->addDrawable( circleGeom );
+        circleColor = circleGeom->getColorArray();
+
+        circleat = new AutoTransform();
+        circleat->addChild( circlegeode.get() );
+        circleat->SetAutoRotateMode(
+            ves::xplorer::scenegraph::AutoTransform::ROTATE_TO_CAMERA );
+        circleat->SetAutoScaleToScreen( false );
+        circleat->SetPosition( position );
+
+        amt = new osgwTools::AbsoluteModelTransform();
+        amt->addChild( circleat.get() );
+        //Setup Absolute Model Transform to mimic transforms of nodepath
+        amt->setMatrix( matrix );
+    }
 
     //Add a line segment from the circle to the text.
     {
@@ -161,11 +170,10 @@ osg::Node* CreateCircleHighlight(
         verts->resize( 2 );
         (*verts)[ 0 ] = lineEnd;
         (*verts)[ 1 ] = textPos;
+
         lineGeom->setVertexArray( verts );
-
-        lineGeom->setColorArray( circleGeom->getColorArray() );
+        lineGeom->setColorArray( circleColor.get() );
         lineGeom->setColorBinding( osg::Geometry::BIND_OVERALL );
-
         lineGeom->addPrimitiveSet( new osg::DrawArrays( GL_LINES, 0, 2 ) );
     }
 
@@ -221,14 +229,17 @@ osg::Node* CreateCircleHighlight(
 
     //TBD application responsibility?
     //turn off depth testing on our subgraph
-    amt->getOrCreateStateSet()->setMode(
-        GL_LIGHTING,
+    osg::ref_ptr< osg::StateSet > stateset = amt->getOrCreateStateSet();
+    stateset->setMode( GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
-    amt->getOrCreateStateSet()->setMode(
-        GL_DEPTH_TEST,
+    stateset->setMode( GL_DEPTH_TEST,
         osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
-    amt->getOrCreateStateSet()->setRenderBinDetails( 1000, "RenderBin" );
-
+    stateset->setRenderBinDetails( 1000, "RenderBin" );
+    //Set circle attributes
+    osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+    lineWidth->setWidth( 3 );
+    stateset->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
+    
     return( amt.release() );
 }
 ////////////////////////////////////////////////////////////////////////////////
