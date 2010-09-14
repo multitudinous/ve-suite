@@ -165,6 +165,13 @@ void WarrantyToolGP::PreFrameUpdate()
         return;
     }
     
+    if( !m_keyboard->GetMousePickEvent() )
+    {
+        return;
+    }
+
+    FindPartNodeAndHighlightNode();
+    
     if( !m_groupedTextTextures.valid() )
     {
         return;
@@ -173,10 +180,6 @@ void WarrantyToolGP::PreFrameUpdate()
     if( !m_groupedTextTextures->AnimationComplete() )
     {
         m_groupedTextTextures->UpdateTexturePosition();
-    }
-
-    if( !m_keyboard->GetMousePickEvent() )
-    {
         return;
     }
 
@@ -257,7 +260,7 @@ void WarrantyToolGP::PreFrameUpdate()
     //If we are in interactive mode to mouse over things
         //Find part we are over
         //active text texture with the info
-        //highlight all associated nodes
+        //highlight all associated nodes    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
@@ -879,8 +882,7 @@ void WarrantyToolGP::CreateDB()
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateTextTextures()
 {
-    m_textTrans = 
-        new ves::xplorer::scenegraph::DCS();
+    m_textTrans = new ves::xplorer::scenegraph::DCS();
     m_textTrans->getOrCreateStateSet()->addUniform(
         new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
     
@@ -1181,5 +1183,39 @@ void WarrantyToolGP::ParseDataBase( const std::string& csvFilename )
             opVisitor1( mDCS.get(), false, true, 0.3f );
         mAddingParts = true;
     }    
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::FindPartNodeAndHighlightNode()
+{
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
+        m_keyboard->GetLineSegmentIntersector();
+
+    osgUtil::IntersectionVisitor intersectionVisitor( intersectorSegment.get() );
+
+    //Add the IntersectVisitor to the root Node so that all geometry will be
+    //checked and no transforms are done to the line segement
+    mDCS->accept( intersectionVisitor );
+
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        intersectorSegment->getIntersections();
+    //figure out which text texutre we found
+    osg::Node* objectHit = 0;
+    //bool foundMatch = false;
+    //osg::Node* tempParent = 0;
+    for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+        intersections.begin(); itr != intersections.end(); ++itr )
+    {
+        objectHit = *( itr->nodePath.rbegin() );
+        std::cout << objectHit->getName() << std::endl;
+        for( size_t i = 0; i < itr->nodePath.size(); ++i )
+        {
+            std::cout << itr->nodePath.at( i )->getName() << std::endl;
+        }
+
+        //ves::xplorer::scenegraph::FindParentWithNameVisitor 
+        //    findParent( objectHit, "VES_TextTexture", false );
+        
+        //tempParent = findParent.GetParentNode();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -79,7 +79,9 @@ public:
 protected:
 
 private:
+    ///Create the db for the tool to grab dat from
     void CreateDB();
+    ///Create the list of textures
     void CreateTextTextures();
     ///Strip characters from datafile
     void StripCharacters( std::string& data, const std::string& character );
@@ -87,11 +89,17 @@ private:
     void ParseDataFile( const std::string& csvFilename );
     ///Parse the db file selected by the user
     void ParseDataBase( const std::string& csvFilename );
+    ///Render the displays
     void RenderTextualDisplay( bool onOff );
+    ///Create a db query from the ui
     void CreateDBQuery( ves::open::xml::DataValuePairPtr dvp );
+    ///Strip dollar signs from a string
     void StripDollarCharacters( std::string& data );
+    ///Replace spaces in a string with under scores
     void ReplaceSpacesCharacters( std::string& data );
-
+    ///Find a list of nodes with part number names
+    void FindPartNodeAndHighlightNode();
+    
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;
