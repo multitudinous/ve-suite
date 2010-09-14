@@ -311,13 +311,13 @@ void CameraManager::SetActiveCameraObject(
         m_rttQuadTransform->setNodeMask( 0 );
     }
 
-    if( m_projectEffect )
-    {
-        DisplayProjectionEffect( cameraObject, false );
-    }
-
     //Set the active camera
     m_activeCameraObject = cameraObject;
+
+    if( m_projectEffect )
+    {
+        DisplayProjectionEffect( m_projectEffect, false );
+    }
 
     //Send active object to conductor if we need to
     if( sendDataToConductor )
