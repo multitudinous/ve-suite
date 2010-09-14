@@ -30,8 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #include <ves/ce/Body_AMI_UIHandler_i.h>
+
+#include <boost/concept_check.hpp>
 
 using namespace ves::ce;
 
@@ -70,6 +71,7 @@ ACE_THROW_SPEC((
                    ::CORBA::SystemException
                ) )
 {
+    boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
@@ -91,6 +93,7 @@ ACE_THROW_SPEC((
                    ::CORBA::SystemException
                ) )
 {
+    boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
@@ -112,6 +115,7 @@ ACE_THROW_SPEC((
                    ::CORBA::SystemException
                ) )
 {
+    boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
@@ -133,6 +137,7 @@ ACE_THROW_SPEC((
                    ::CORBA::SystemException
                ) )
 {
+    boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
@@ -202,6 +207,7 @@ ACE_THROW_SPEC((
                    ::CORBA::SystemException
                ) )
 {
+    boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
@@ -248,7 +254,7 @@ ACE_THROW_SPEC((
         m_responseHandler->SetParams_excep( &amh_excep_holder );
     }
     
-    std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
+    //std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id(this);
     m_poa->deactivate_object (oid.in());
 }
