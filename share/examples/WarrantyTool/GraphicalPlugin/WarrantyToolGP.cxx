@@ -157,33 +157,29 @@ void WarrantyToolGP::InitializeNode(
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PreFrameUpdate()
 {
-    //If the keymbaord mouse selected something
-    //std::cout << " here 1 " << std::endl;
-    //ves::xplorer::device::KeyboardMouse* kbMouse = dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );    
     if( !m_keyboard )
     {
         return;
     }
-    
+        
+    if( m_groupedTextTextures.valid() )
+    {
+        if( !m_groupedTextTextures->AnimationComplete() )
+        {
+            m_groupedTextTextures->UpdateTexturePosition();
+            return;
+        }
+    }
+
+    //If the keymbaord mouse selected something
     if( !m_keyboard->GetMousePickEvent() )
     {
         return;
     }
 
     FindPartNodeAndHighlightNode();
-    
-    if( !m_groupedTextTextures.valid() )
-    {
-        return;
-    }
 
-    if( !m_groupedTextTextures->AnimationComplete() )
-    {
-        m_groupedTextTextures->UpdateTexturePosition();
-        return;
-    }
-
-    //if( m_groupedTextTextures.valid() )
+    if( m_groupedTextTextures.valid() )
     {
         //Get the intersection visitor from keyboard mouse or the wand
         osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
@@ -215,7 +211,7 @@ void WarrantyToolGP::PreFrameUpdate()
             //size_t found = objectName.find( "VES_TextTexture" );
             if( tempParent )
             {
-                std::string objectName = tempParent->getName();
+                //std::string objectName = tempParent->getName();
                 //std::cout << "name " << objectName << std::endl;
                 //std::cout << "found " << objectName << std::endl;
                 //tempParent = objectHit;
@@ -1187,6 +1183,11 @@ void WarrantyToolGP::ParseDataBase( const std::string& csvFilename )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::FindPartNodeAndHighlightNode()
 {
+    if( !m_cadRootNode )
+    {
+        return;
+    }
+
     osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
         m_keyboard->GetLineSegmentIntersector();
 
@@ -1194,28 +1195,192 @@ void WarrantyToolGP::FindPartNodeAndHighlightNode()
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
-    mDCS->accept( intersectionVisitor );
+    m_cadRootNode->accept( intersectionVisitor );
 
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         intersectorSegment->getIntersections();
-    //figure out which text texutre we found
+    if( intersections.empty() )
+    {
+        return;
+    }
+    
+    //Reset all of the graphical effects
+    m_assemblyPartNumbers.clear();    
+    {
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight2( 
+            m_cadRootNode, "", false, true );
+        
+        ves::xplorer::scenegraph::util::OpacityVisitor opVisitor1( 
+            m_cadRootNode, false, true, 0.3f );
+    }
+    
+    //Find the part numbers of the nodes we hit
     osg::Node* objectHit = 0;
-    //bool foundMatch = false;
-    //osg::Node* tempParent = 0;
+    osg::Node* tempParent = 0;
     for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
         intersections.begin(); itr != intersections.end(); ++itr )
     {
         objectHit = *( itr->nodePath.rbegin() );
-        std::cout << objectHit->getName() << std::endl;
-        for( size_t i = 0; i < itr->nodePath.size(); ++i )
+        //std::cout << "Top Node " << objectHit->getName() << std::endl;
+        const std::string prtname = ".PRT";
+        ves::xplorer::scenegraph::FindParentWithNameVisitor findPRT( 
+            objectHit, prtname, false );
+        tempParent = findPRT.GetParentNode();
+
+        std::string nodeName;
+        
+        if( !tempParent )
         {
-            std::cout << itr->nodePath.at( i )->getName() << std::endl;
+            std::string asmname(".ASM");
+            ves::xplorer::scenegraph::FindParentWithNameVisitor findASM( 
+                objectHit, asmname, false );
+            tempParent = findASM.GetParentNode();
+            if( tempParent )
+            {
+                nodeName = tempParent->getName();
+                GetPartNumberFromNodeName( nodeName );
+            }
+        }
+        else
+        {
+            nodeName = tempParent->getName();
+            GetPartNumberFromNodeName( nodeName );
+        }
+        
+        if( !nodeName.empty() )
+        {
+            std::vector< std::string >::const_iterator iter = 
+                std::find( m_assemblyPartNumbers.begin(), 
+                m_assemblyPartNumbers.end(), nodeName );
+            if( iter == m_assemblyPartNumbers.end() )
+            {
+                m_assemblyPartNumbers.push_back( nodeName );
+            }
         }
 
-        //ves::xplorer::scenegraph::FindParentWithNameVisitor 
-        //    findParent( objectHit, "VES_TextTexture", false );
-        
-        //tempParent = findParent.GetParentNode();
+        //std::cout << "Found Node " << tempParent->getName() << std::endl;
+        //for( size_t i = 0; i < itr->nodePath.size(); ++i )
+        //{
+        //    std::cout << itr->nodePath.at( i )->getName() << std::endl;
+        //}
     }
+
+    ///Now we will setup the textual displays for the list of part numbers found
+    RenderTextualDisplay( false );
+    bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+    boost::ignore_unused_variable_warning( removed );
+
+    m_groupedTextTextures = new ves::xplorer::scenegraph::GroupedTextTextures();
+    
+    std::ostringstream outString;
+    outString << "Number of parts found " << m_assemblyPartNumbers.size();
+    mCommunicationHandler->SendConductorMessage( outString.str() );
+
+    bool failedLoad = false;
+    float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+    std::string partNumber;
+    std::string partNumberHeader;
+    for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
+    {
+        ves::xplorer::scenegraph::TextTexture* tempText = 0;
+        try
+        {
+            tempText = new ves::xplorer::scenegraph::TextTexture();
+        }
+        catch(...)
+        {
+            m_groupedTextTextures = 0;
+            failedLoad = true;
+            break;
+        }
+        partNumber = m_assemblyPartNumbers.at( i );
+        tempText->SetTextColor( textColor );
+        tempText->SetTitle( partNumber );
+
+        //Now lets create the db query
+        //SELECT * FROM Parts WHERE Part_Number = "AH116104"
+        Poco::Data::Session session("SQLite", m_dbFilename );
+        Statement select( session );
+        std::ostringstream queryString;
+        try
+        {
+            queryString << "SELECT * FROM Parts WHERE Part_Number = \"" << partNumber <<"\"";
+            select << queryString.str().c_str(),now;
+        }
+        catch( Poco::Data::DataException& ex )
+        {
+            std::cout << ex.displayText() << std::endl;
+            continue;
+        }
+        catch( ... )
+        {
+            mCommunicationHandler->SendConductorMessage( "Query is bad." );
+            continue;
+        }
+        
+        // create a RecordSet 
+        Poco::Data::RecordSet rs(select);
+        size_t numQueries = rs.rowCount();
+        if( numQueries > 0 )
+        {
+            std::size_t cols = rs.columnCount();
+            //iterate over all rows and columns
+            bool more = false;
+            more = rs.moveFirst();
+            
+            std::ostringstream tempTextData;
+            for (std::size_t col = 0; col < cols; ++col)
+            {
+                partNumberHeader = rs.columnName(col);
+                
+                if( partNumberHeader != "Part_Number" )
+                {
+                    tempTextData << rs.columnName(col) << ": " 
+                    << rs[col].convert<std::string>() << "\n";
+                }
+            }
+            
+            const std::string partText = tempTextData.str();
+            tempText->UpdateText( partText );
+        }
+
+        m_groupedTextTextures->AddTextTexture( partNumber, tempText );
+
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
+            m_cadRootNode, partNumber, true, true, 
+            osg::Vec3( 0.57255, 0.34118, 1.0 ) );
+    }
+    
+    if( !failedLoad )
+    {
+        m_groupedTextTextures->UpdateListPositions();
+        
+        m_textTrans->addChild( m_groupedTextTextures.get() );
+        
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
+            m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );  
+    }
+
+    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
+{
+    {
+        size_t index = nodeName.find( '_' );
+        if ( index != std::string::npos )
+        {
+            nodeName.erase( index, nodeName.length() - index  );
+        }
+    }
+    
+    {
+        size_t index = nodeName.find( '.' );
+        if ( index != std::string::npos )
+        {
+            nodeName.erase( index, nodeName.length() - index  );
+        }
+    }
+    //std::cout << nodeName << std::endl;    
 }
 ////////////////////////////////////////////////////////////////////////////////

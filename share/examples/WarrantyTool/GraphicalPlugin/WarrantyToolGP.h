@@ -99,7 +99,9 @@ private:
     void ReplaceSpacesCharacters( std::string& data );
     ///Find a list of nodes with part number names
     void FindPartNodeAndHighlightNode();
-    
+    ///Get the part number from the node name
+    void GetPartNumberFromNodeName( std::string& nodeName );
+
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;
