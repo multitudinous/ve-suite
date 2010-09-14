@@ -316,7 +316,8 @@ void CameraManager::SetActiveCameraObject(
 
     if( m_projectEffect )
     {
-        DisplayProjectionEffect( m_projectEffect, false );
+        //Implicit conversion of pointer to bool; no different than "if( pointer )"
+        DisplayProjectionEffect( cameraObject, false );
     }
 
     //Send active object to conductor if we need to
