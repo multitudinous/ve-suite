@@ -316,8 +316,13 @@ void CameraManager::SetActiveCameraObject(
 
     if( m_projectEffect )
     {
-        //Implicit conversion of pointer to bool; no different than "if( pointer )"
-        DisplayProjectionEffect( cameraObject, false );
+        bool enableGlobalProjectionEffects(cameraObject);
+        //If we are setting the active camera to null AND we have selected that
+        //the projection effect should be used for all cameras then we need to 
+        //disable all projection effects across all cameras. We use the 
+        //cameraObject pointer in conjuction with the m_projectEffect as the 
+        //mechanism to determine if this is the case. 
+        DisplayProjectionEffect( enableGlobalProjectionEffects, false );
     }
 
     //Send active object to conductor if we need to
