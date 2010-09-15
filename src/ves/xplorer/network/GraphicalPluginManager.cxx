@@ -480,6 +480,9 @@ void GraphicalPluginManager::LoadDataFromCE()
         //If we have an earth we need to clear it when we load a new model
         ves::xplorer::minerva::MinervaManager::instance()->Clear();
 #endif
+        //Clear the highlight circles
+        ves::xplorer::scenegraph::SceneManager::instance()->
+            GetHighlightManager().removeChildren();
         // Get Network and parse it
         GetEverything();
         ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( false );
