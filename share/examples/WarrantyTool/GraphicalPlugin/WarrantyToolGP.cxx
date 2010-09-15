@@ -171,92 +171,20 @@ void WarrantyToolGP::PreFrameUpdate()
         }
     }
 
-    //If the keymbaord mouse selected something
+    //If the mouse made a pick event
     if( !m_keyboard->GetMousePickEvent() )
     {
         return;
     }
 
-    FindPartNodeAndHighlightNode();
+    //If we had keyboard input then try and highlight the cad
+    bool pickedParts = FindPartNodeAndHighlightNode();
 
-    if( m_groupedTextTextures.valid() )
+    //If we did not pick any parts and we have already queried for data
+    if( m_groupedTextTextures.valid() && !pickedParts )
     {
-        //Get the intersection visitor from keyboard mouse or the wand
-        osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
-            m_keyboard->GetLineSegmentIntersector();
-        
-        osgUtil::IntersectionVisitor intersectionVisitor(
-            intersectorSegment.get() );
-
-        //Add the IntersectVisitor to the root Node so that all geometry will be
-        //checked and no transforms are done to the line segement
-        m_textTrans->accept( intersectionVisitor );
-
-        osgUtil::LineSegmentIntersector::Intersections& intersections =
-            intersectorSegment->getIntersections();
-        //figure out which text texutre we found
-        osg::Node* objectHit = 0;
-        bool foundMatch = false;
-        osg::Node* tempParent = 0;
-        for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
-            intersections.begin(); itr != intersections.end(); ++itr )
-        {
-            objectHit = *( itr->nodePath.rbegin() );
-            
-            ves::xplorer::scenegraph::FindParentWithNameVisitor 
-                findParent( objectHit, "VES_TextTexture", false );
-            
-            tempParent = findParent.GetParentNode();
-
-            //size_t found = objectName.find( "VES_TextTexture" );
-            if( tempParent )
-            {
-                //std::string objectName = tempParent->getName();
-                //std::cout << "name " << objectName << std::endl;
-                //std::cout << "found " << objectName << std::endl;
-                //tempParent = objectHit;
-                foundMatch = true;
-                break;
-            }
-        }
-        //Update which one is in front
-        if( foundMatch )
-        {
-            //ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( static_cast< osg::Group* >( objectHit )->getParent( 0 ) );
-            ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( tempParent );
-            m_groupedTextTextures->MakeTextureActive( tempKey );
-            const std::string partName = m_groupedTextTextures->GetKeyForTexture( tempKey );
-            ves::xplorer::scenegraph::DCS* tempModelNodes = this->mModel->GetModelCADHandler()->GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );            
-            for( std::vector< std::string >::const_iterator it = m_assemblyPartNumbers.begin(); it != m_assemblyPartNumbers.end(); ++it)
-            {
-                /*std::ostringstream tempTextData;
-                tempTextData
-                    << "Part Number: " << it->get<0>() << "\n"
-                    << "Description: " << it->get<1>() << "\n"
-                    << "Claims: " << it->get<2>() << "\n"
-                    << "FPM: " << it->get<4>();
-                */
-                //ves::xplorer::scenegraph::TextTexture* tempText = new ves::xplorer::scenegraph::TextTexture();
-                //std::string tempKey = "test_" + it->get<0>();
-                //boost::lexical_cast<std::string>( std::distance( assem.begin(), it) );
-                //std::string partText = tempTextData.str();
-                //std::cout << " here 1 " << (*it) << std::endl;
-                //tempText->UpdateText( partText );
-                //m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
-
-                ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-                    highlight( tempModelNodes, (*it), true, true, osg::Vec3( 0.57255, 0.34118, 1.0 ) );
-            }
-
-            ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-                highlight( tempModelNodes, partName, true, true );//,
-                          //osg::Vec3( 0.34118, 1.0, 0.57255, 1.0 ) );
-        }
+        PickTextTextures();
     }
-    //If we are in interactive mode to mouse over things
-        //Find part we are over
-        //active text texture with the info
-        //highlight all associated nodes    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
@@ -1181,11 +1109,11 @@ void WarrantyToolGP::ParseDataBase( const std::string& csvFilename )
     }    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::FindPartNodeAndHighlightNode()
+bool WarrantyToolGP::FindPartNodeAndHighlightNode()
 {
     if( !m_cadRootNode )
     {
-        return;
+        return false;
     }
 
     osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
@@ -1201,7 +1129,7 @@ void WarrantyToolGP::FindPartNodeAndHighlightNode()
         intersectorSegment->getIntersections();
     if( intersections.empty() )
     {
-        return;
+        return false;
     }
     
     //Reset all of the graphical effects
@@ -1358,10 +1286,12 @@ void WarrantyToolGP::FindPartNodeAndHighlightNode()
         m_textTrans->addChild( m_groupedTextTextures.get() );
         
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
-            m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );  
+            m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );
     }
 
     mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
+    
+    return (m_assemblyPartNumbers.size() && !failedLoad);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
@@ -1382,5 +1312,80 @@ void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
         }
     }
     //std::cout << nodeName << std::endl;    
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::PickTextTextures()
+{
+    //Get the intersection visitor from keyboard mouse or the wand
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
+    m_keyboard->GetLineSegmentIntersector();
+    
+    osgUtil::IntersectionVisitor intersectionVisitor(
+                                                     intersectorSegment.get() );
+    
+    //Add the IntersectVisitor to the root Node so that all geometry will be
+    //checked and no transforms are done to the line segement
+    m_textTrans->accept( intersectionVisitor );
+    
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+    intersectorSegment->getIntersections();
+    //figure out which text texutre we found
+    osg::Node* objectHit = 0;
+    bool foundMatch = false;
+    osg::Node* tempParent = 0;
+    for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+        intersections.begin(); itr != intersections.end(); ++itr )
+    {
+        objectHit = *( itr->nodePath.rbegin() );
+        
+        ves::xplorer::scenegraph::FindParentWithNameVisitor 
+        findParent( objectHit, "VES_TextTexture", false );
+        
+        tempParent = findParent.GetParentNode();
+        
+        //size_t found = objectName.find( "VES_TextTexture" );
+        if( tempParent )
+        {
+            //std::string objectName = tempParent->getName();
+            //std::cout << "name " << objectName << std::endl;
+            //std::cout << "found " << objectName << std::endl;
+            //tempParent = objectHit;
+            foundMatch = true;
+            break;
+        }
+    }
+    //Update which one is in front
+    if( foundMatch )
+    {
+        //ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( static_cast< osg::Group* >( objectHit )->getParent( 0 ) );
+        ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( tempParent );
+        m_groupedTextTextures->MakeTextureActive( tempKey );
+        const std::string partName = m_groupedTextTextures->GetKeyForTexture( tempKey );
+        ves::xplorer::scenegraph::DCS* tempModelNodes = this->mModel->GetModelCADHandler()->GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );            
+        for( std::vector< std::string >::const_iterator it = m_assemblyPartNumbers.begin(); it != m_assemblyPartNumbers.end(); ++it)
+        {
+            /*std::ostringstream tempTextData;
+             tempTextData
+             << "Part Number: " << it->get<0>() << "\n"
+             << "Description: " << it->get<1>() << "\n"
+             << "Claims: " << it->get<2>() << "\n"
+             << "FPM: " << it->get<4>();
+             */
+            //ves::xplorer::scenegraph::TextTexture* tempText = new ves::xplorer::scenegraph::TextTexture();
+            //std::string tempKey = "test_" + it->get<0>();
+            //boost::lexical_cast<std::string>( std::distance( assem.begin(), it) );
+            //std::string partText = tempTextData.str();
+            //std::cout << " here 1 " << (*it) << std::endl;
+            //tempText->UpdateText( partText );
+            //m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
+            
+            ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+            highlight( tempModelNodes, (*it), true, true, osg::Vec3( 0.57255, 0.34118, 1.0 ) );
+        }
+        
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlight( tempModelNodes, partName, true, true );//,
+        //osg::Vec3( 0.34118, 1.0, 0.57255, 1.0 ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

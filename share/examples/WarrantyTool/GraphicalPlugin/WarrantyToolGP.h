@@ -98,10 +98,12 @@ private:
     ///Replace spaces in a string with under scores
     void ReplaceSpacesCharacters( std::string& data );
     ///Find a list of nodes with part number names
-    void FindPartNodeAndHighlightNode();
+    bool FindPartNodeAndHighlightNode();
     ///Get the part number from the node name
     void GetPartNumberFromNodeName( std::string& nodeName );
-
+    ///Change text textures
+    void PickTextTextures();
+    
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;
