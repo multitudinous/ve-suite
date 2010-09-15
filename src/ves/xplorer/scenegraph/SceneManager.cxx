@@ -522,94 +522,96 @@ void SceneManager::_createLogo()
         mLogoSwitch = new ves::xplorer::scenegraph::Switch();
     }
 
-    if( !mLogoNode.valid() )
+    if( mLogoNode.valid() )
     {
-        mLogoNode = new ves::xplorer::scenegraph::DCS();
-        if( IsDesktopMode() )
-        {
-            double translation[ 3 ] = { -1.7, 4.6, 0.0 };
-            mLogoNode->SetTranslationArray( translation );
-        }
-        else
-        {
-            double translation[ 3 ] = { -1.7, 4.6, 3.1 };
-            mLogoNode->SetTranslationArray( translation );
-        }
-
-        osg::Quat quat( -1.0, osg::Vec3( 0, 0, 1 ) );
-        double scale[ 3 ] = { 0.0065, 0.0065, 0.0065 };
-        mLogoNode->SetQuat( quat );
-        mLogoNode->SetScaleArray( scale );
-        mLogoNode->setName( "Logo Node" );
-
-        //m_blueArrow = new ves::xplorer::scenegraph::CADEntity( 
-        //    BlueArrow(), mLogoNode.get(), true, "Off" );
-        //m_greyArrow = new ves::xplorer::scenegraph::CADEntity( 
-        //    GreyArrow(), mLogoNode.get(), true, "Off" );
-        //m_orangeArrow = new ves::xplorer::scenegraph::CADEntity( 
-        //    OrangeArrow(), mLogoNode.get(), true, "Off" );
-        m_veText = new ves::xplorer::scenegraph::CADEntity( 
-            VE(), mLogoNode.get(), true, "Off" );
-        m_suiteText = new ves::xplorer::scenegraph::CADEntity( 
-            Suite(), mLogoNode.get(), true, "Off" );
-
-        char phong_vertex[] =
-            "varying vec4 color; \n"
-            "varying vec3 eyePos; \n"
-            "varying vec3 lightPos; \n"
-            "varying vec3 normal; \n"
-
-            "void main() \n"
-            "{ \n"
-            "gl_Position=ftransform(); \n"
-
-            "color=gl_Color; \n"
-            "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
-            "lightPos=gl_LightSource[0].position.xyz; \n"
-            "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
-            "} \n";
-
-        char phong_fragment[] =
-            "uniform vec3 glowColor; \n"
-
-            "varying vec4 color; \n"
-            "varying vec3 eyePos; \n"
-            "varying vec3 lightPos; \n"
-            "varying vec3 normal; \n"
-
-            "void main() \n"
-            "{ \n"
-            "vec3 N=normalize(normal); \n"
-            "vec3 L=normalize(lightPos); \n"
-            "float NDotL=max(dot(N,L),0.0); \n"
-
-            "vec3 V=normalize(eyePos); \n"
-            "vec3 R=reflect(V,N); \n"
-            "float RDotL=max(dot(R,L),0.0); \n"
-
-            "vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*color.rgb; \n"
-            "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*color.rgb*NDotL; \n"
-            "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*color.rgb*pow(RDotL,20.0); \n"
-
-            "vec3 temp=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
-
-            "gl_FragData[ 0 ] = vec4( temp, 1.0 ); \n"
-            "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-            "} \n";
-
-        osg::ref_ptr< osg::StateSet > stateset = mLogoNode->getOrCreateStateSet();
-        osg::ref_ptr< osg::Program > program = new osg::Program;
-
-        osg::ref_ptr< osg::Shader > vertex_shader = 
-            new osg::Shader( osg::Shader::VERTEX, phong_vertex );
-        program->addShader( vertex_shader.get() );
-
-        osg::ref_ptr< osg::Shader > fragment_shader = 
-            new osg::Shader( osg::Shader::FRAGMENT, phong_fragment );
-        program->addShader( fragment_shader.get() );
-
-        stateset->setAttribute( program.get() );
+        return;
     }
+
+    mLogoNode = new ves::xplorer::scenegraph::DCS();
+    if( IsDesktopMode() )
+    {
+        double translation[ 3 ] = { -1.7, 4.6, 0.0 };
+        mLogoNode->SetTranslationArray( translation );
+    }
+    else
+    {
+        double translation[ 3 ] = { -1.7, 4.6, 3.1 };
+        mLogoNode->SetTranslationArray( translation );
+    }
+
+    osg::Quat quat( -1.0, osg::Vec3( 0, 0, 1 ) );
+    double scale[ 3 ] = { 0.0065, 0.0065, 0.0065 };
+    mLogoNode->SetQuat( quat );
+    mLogoNode->SetScaleArray( scale );
+    mLogoNode->setName( "Logo Node" );
+
+    //m_blueArrow = new ves::xplorer::scenegraph::CADEntity( 
+    //    BlueArrow(), mLogoNode.get(), true, "Off" );
+    //m_greyArrow = new ves::xplorer::scenegraph::CADEntity( 
+    //    GreyArrow(), mLogoNode.get(), true, "Off" );
+    //m_orangeArrow = new ves::xplorer::scenegraph::CADEntity( 
+    //    OrangeArrow(), mLogoNode.get(), true, "Off" );
+    m_veText = new ves::xplorer::scenegraph::CADEntity( 
+        VE(), mLogoNode.get(), true, "Off" );
+    m_suiteText = new ves::xplorer::scenegraph::CADEntity( 
+        Suite(), mLogoNode.get(), true, "Off" );
+
+    char phong_vertex[] =
+        "varying vec4 color; \n"
+        "varying vec3 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+        "gl_Position=ftransform(); \n"
+
+        "color=gl_Color; \n"
+        "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
+        "lightPos=gl_LightSource[0].position.xyz; \n"
+        "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
+        "} \n";
+
+    char phong_fragment[] =
+        "uniform vec3 glowColor; \n"
+
+        "varying vec4 color; \n"
+        "varying vec3 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+        "vec3 N=normalize(normal); \n"
+        "vec3 L=normalize(lightPos); \n"
+        "float NDotL=max(dot(N,L),0.0); \n"
+
+        "vec3 V=normalize(eyePos); \n"
+        "vec3 R=reflect(V,N); \n"
+        "float RDotL=max(dot(R,L),0.0); \n"
+
+        "vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*color.rgb; \n"
+        "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*color.rgb*NDotL; \n"
+        "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*color.rgb*pow(RDotL,20.0); \n"
+
+        "vec3 temp=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
+
+        "gl_FragData[ 0 ] = vec4( temp, 1.0 ); \n"
+        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+        "} \n";
+
+    osg::ref_ptr< osg::StateSet > stateset = mLogoNode->getOrCreateStateSet();
+    osg::ref_ptr< osg::Program > program = new osg::Program;
+
+    osg::ref_ptr< osg::Shader > vertex_shader = 
+        new osg::Shader( osg::Shader::VERTEX, phong_vertex );
+    program->addShader( vertex_shader.get() );
+
+    osg::ref_ptr< osg::Shader > fragment_shader = 
+        new osg::Shader( osg::Shader::FRAGMENT, phong_fragment );
+    program->addShader( fragment_shader.get() );
+
+    stateset->setAttribute( program.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetActiveSwitchNode( int activeNode )
@@ -631,8 +633,10 @@ void SceneManager::LatePreFrameUpdate()
         
         m_vrjHeadMatrix = 
             gmtl::convertTo< double >( m_vrjHead->getData() );
-        const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
-        const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+        const gmtl::AxisAngled myAxisAngle( 
+            osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
+        const gmtl::Matrix44d myMat = 
+            gmtl::make< gmtl::Matrix44d >( myAxisAngle );
         m_vrjHeadMatrix = myMat * m_vrjHeadMatrix;
         m_globalViewMatrix =  m_invertedNavMatrix * m_vrjHeadMatrix;
         m_globalViewMatrixOSG.set( m_globalViewMatrix.mData );
