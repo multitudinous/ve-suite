@@ -1,3 +1,69 @@
+2009-10-07 20:31  arthur
+
+	* [r135] svn2html.css: trim trailing whitespace
+
+2009-10-07 20:18  arthur
+
+	* [r134] svn2cl.xsl, svn2html.xsl: fix line wrapping problem thanks
+	  to Peter Samuelson <peter@p12n.org>, Mike Hommey
+	  <mh@glandium.org> and others (see http://bugs.debian.org/546990)
+
+2009-06-12 22:00  arthur
+
+	* [r133] README, authors.xml, svn2cl.1, svn2html.xsl: replace
+	  references to ch.tudelft.nl with arthurdejong.org
+
+2009-02-02 21:20  arthur
+
+	* [r132] svn2cl.xsl: another simplification to get path stripping
+	  compacter
+
+2009-02-02 21:00  arthur
+
+	* [r131] svn2cl.xsl: simplification in printing path names
+
+2009-02-02 20:33  arthur
+
+	* [r130] svn2cl.xsl: correctly flag additions
+
+2009-01-13 22:27  arthur
+
+	* [r129] svn2cl.xsl, svn2html.xsl: properly get the previous
+	  sibling fixing a problem when --group-by-day and
+	  --ignore-message-starting were used
+
+2009-01-13 21:45  arthur
+
+	* [r128] svn2html.xsl: perform URL highlighting (very basic)
+
+2009-01-13 21:44  arthur
+
+	* [r127] svn2cl.sh: run svn info (not svn log) with
+	  --non-interactive and don't hide errors
+
+2008-12-21 15:41  arthur
+
+	* [r125] ChangeLog, NEWS, svn2cl.1, svn2cl.sh, svn2cl.xsl,
+	  svn2html.xsl: get files ready for 0.11 release
+
+2008-09-22 21:34  arthur
+
+	* [r124] svn2cl.sh: fix for OpenBSD's ksh by Carlo Marcelo Arenas
+	  Belon <carenas@sajinet.com.pe>
+
+2008-06-03 19:03  arthur
+
+	* [r123] svn2cl.sh: make awk command configurable
+
+2008-06-03 19:02  arthur
+
+	* [r122] svn2cl.sh: don't use GNU extensions to awk syntax
+
+2008-04-06 13:37  arthur
+
+	* [r120] ChangeLog, NEWS, README, TODO, svn2cl.1, svn2cl.sh,
+	  svn2cl.xsl, svn2html.xsl: get files ready for 0.10 release
+
 2008-04-06 13:27  arthur
 
 	* [r119] svn2cl.1: include not about default revision range that is
