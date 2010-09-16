@@ -52,5 +52,7 @@ xsltBuilder = Builder(action = xsltAction, single_source = True, suffix = "", ch
 env.Append(BUILDERS = {'xslt': xsltBuilder})
 env.xslt(target = chLogTarget, source = chLogSrc)
 
+#./external/svn2cl/svn2cl.sh --linelen=80 --break-before-msg=1 --title="VE-Suite ChangeLog" --group-by-day --separate-daylogs --html . --revision HEAD:14782
+
 sys.stdout.write("ChangeLog and ChangeLog.xml files are successfully created\n")
 
