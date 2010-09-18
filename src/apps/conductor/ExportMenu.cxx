@@ -138,7 +138,7 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
     SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnDOTFile( wxCommandEvent& event )
+void ExportMenu::OnDOTFile( wxCommandEvent& WXUNUSED( event ) )
 {
     wxFileDialog dialog( NULL, _T( "Save OSG Graph File..." ),
                          ::wxGetCwd(),

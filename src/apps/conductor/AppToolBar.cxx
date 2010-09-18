@@ -462,7 +462,7 @@ void AppToolBar::CreateAppToolBar()
     EnableTool( APP_TOOL_BAR_PHYSICS_STEP, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppToolBar::OnEraseBackGround( wxEraseEvent& event )
+void AppToolBar::OnEraseBackGround( wxEraseEvent& WXUNUSED( event ) )
 {
     ;
 }
@@ -477,12 +477,12 @@ void AppToolBar::OnOpen( wxCommandEvent& event )
     m_appFrame->Open( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppToolBar::OnPaint( wxPaintEvent& event )
+void AppToolBar::OnPaint( wxPaintEvent& WXUNUSED( event ) )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppToolBar::OnResetCenterPoint( wxCommandEvent& event )
+void AppToolBar::OnResetCenterPoint( wxCommandEvent& WXUNUSED( event ) )
 {
     std::string mode = "Reset";
     DataValuePairPtr dvp( new DataValuePair() );
@@ -803,7 +803,7 @@ void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppToolBar::OnUnselectObjects( wxCommandEvent& event )
+void AppToolBar::OnUnselectObjects( wxCommandEvent& WXUNUSED( event ) )
 {
     SetToolNormalBitmap(
         m_prevDeviceMode,

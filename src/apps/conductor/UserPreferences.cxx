@@ -81,10 +81,10 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
     :
-    m_lodScale( 1 ),
     m_nearFarEntry( 0 ),
     m_nearFar( 0.000005 ),
-    m_draggerScalingValue( 64.0 )
+    m_draggerScalingValue( 64.0 ),
+    m_lodScale( 1 )
 {
     xplorerColor.push_back( 0.0f );
     xplorerColor.push_back( 0.0f );
@@ -106,10 +106,10 @@ UserPreferences::UserPreferences( wxWindow* parent,
                                   const wxSize& size,
                                   long style )
     :
-    m_lodScale( 1 ),
     m_nearFarEntry( 0 ),
     m_nearFar( 0.000005 ),
-    m_draggerScalingValue( 64.0 )
+    m_draggerScalingValue( 64.0 ),
+    m_lodScale( 1 )
 {
     Create( parent, id, caption, pos, size, style );
 }
@@ -157,8 +157,6 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::CreateControls()
 {
-    UserPreferences* userPrefDialog = this;
-
     CreateButtons( wxOK | wxCANCEL | wxHELP );
 
     wxCheckBox* backgroundColorChkBx = 0;
@@ -330,7 +328,7 @@ void UserPreferences::OnPhysicsDebuggerCheck( wxCommandEvent& event )
         "PHYSICS_COMMAND", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferences::OnNearFarRatio( wxCommandEvent& event )
+void UserPreferences::OnNearFarRatio( wxCommandEvent& WXUNUSED( event ) )
 {
     m_nearFarEntry->GetValue().ToDouble( &m_nearFar );
     
@@ -357,7 +355,7 @@ void UserPreferences::OnConductorCheck( wxCommandEvent& event )
     preferenceMap[ ConvertUnicode( mode.c_str() )] =  tempList->IsChecked( selection );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
+void UserPreferences::OnSetBackgroundColor( wxCommandEvent& WXUNUSED( event ) )
 {
     CommandPtr bkColor = UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" );
     if( bkColor->GetCommandName() != "NULL" )
@@ -414,7 +412,7 @@ void UserPreferences::OnShutdownXplorer( wxCommandEvent& event )
     preferenceMap[ ConvertUnicode( mode.c_str() )] = event.IsChecked();
 }
 ////////////////////////////////////////////////////////
-void UserPreferences::OnLODScale( wxScrollEvent& event )
+void UserPreferences::OnLODScale( wxScrollEvent& WXUNUSED( event ) )
 {
     m_lodScale = m_lodScaleSlider->GetValue();
     
@@ -459,6 +457,7 @@ void UserPreferences::ReadConfiguration( void )
                                      _T( "/" ) +
                                      wxString( iter->first.c_str(), wxConvUTF8 ),
                                      &iter->second, false );
+            
             xplorerColor.clear();
             if( iter->first == "Use Preferred Background Color" )
             {
@@ -524,7 +523,7 @@ void UserPreferences::ReadConfiguration( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferences::WriteConfiguration( void )
+void UserPreferences::WriteConfiguration()
 {
     wxConfig* cfg = dynamic_cast<wxConfig*>( wxConfig::Get() );
     wxString key = _T( "UserPreferences" );
@@ -632,7 +631,7 @@ void UserPreferences::OnDraggerScalingCheck( wxCommandEvent& event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferences::OnDraggerScalingValue( wxCommandEvent& event )
+void UserPreferences::OnDraggerScalingValue( wxCommandEvent& WXUNUSED( event ) )
 {
     m_draggerScalingEntry->GetValue().ToDouble( &m_draggerScalingValue );
 
