@@ -276,15 +276,24 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             
             unsigned int checkBox;
             dvp->GetData( checkBox );
-            if( checkBox )
+            size_t numChildren = m_cadRootNode->getNumChildren();
+            for( size_t i = 0; i < numChildren; ++i )
             {
-                ves::xplorer::scenegraph::util::ToggleNodesVisitor
-                    toggleNodes( m_cadRootNode, false, lowerCasePartNumbers );
-            }
-            else
-            {
-                ves::xplorer::scenegraph::util::ToggleNodesVisitor
-                    toggleNodes( m_cadRootNode, true, lowerCasePartNumbers );
+                osg::Node* childNode = m_cadRootNode->getChild( i );
+                unsigned int nodeMask = childNode->getNodeMask();
+                if( nodeMask )
+                {
+                    if( checkBox )
+                    {                
+                        ves::xplorer::scenegraph::util::ToggleNodesVisitor
+                            toggleNodes( childNode, false, lowerCasePartNumbers );
+                    }
+                    else
+                    {
+                        ves::xplorer::scenegraph::util::ToggleNodesVisitor
+                            toggleNodes( childNode, true, lowerCasePartNumbers );
+                    }
+                }
             }
         }
         else if( dvp->GetDataName() == "WARRANTY_FILE" )
