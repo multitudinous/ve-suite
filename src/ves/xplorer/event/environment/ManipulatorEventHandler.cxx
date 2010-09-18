@@ -1,6 +1,6 @@
-/*************** <auto-copyright.rb BEGIN do not edit this line> *************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2010 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -23,13 +23,13 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-01-19 14:39:10 -0700 (Mon, 19 Jan 2009) $
- * Version:       $Rev: 12099 $
- * Author:        $Author: mccdo $
- * Id:            $Id: DeviceModeEH.cxx 12099 2009-01-19 21:39:10Z mccdo $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.rb END do not edit this line> **************/
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/environment/ManipulatorEventHandler.h>

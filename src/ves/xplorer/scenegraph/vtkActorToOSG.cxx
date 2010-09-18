@@ -1,6 +1,6 @@
-/*************** <auto-copyright.rb BEGIN do not edit this line> *************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2010 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -29,7 +29,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.rb END do not edit this line> **************/
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 //C++ source - fIVE|Analyse - Copyright (C) 2002-2003 Michael Gronager, UNI-C
 //Distributed under the terms of the GNU Library General Public License (LGPL)
 //as published by the Free Software Foundation.

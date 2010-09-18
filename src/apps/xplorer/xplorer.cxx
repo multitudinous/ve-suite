@@ -1,6 +1,6 @@
 /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2010 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -22,6 +22,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
+ * -----------------------------------------------------------------
  * Date modified: $Date$
  * Version:       $Rev$
  * Author:        $Author$

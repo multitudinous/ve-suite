@@ -1,6 +1,6 @@
 /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2010 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2008-03-13 20:07:47 -0600 (Thu, 13 Mar 2008) $
- * Version:       $Rev: 10811 $
- * Author:        $Author: jaredabo $
- * Id:            $Id: TwoDStringArray.cxx 10811 2008-03-14 02:07:47Z jaredabo $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/

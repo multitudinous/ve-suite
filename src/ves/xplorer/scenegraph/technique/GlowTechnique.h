@@ -1,6 +1,6 @@
 /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2010 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-05-13 14:11:06 -0600 (Wed, 13 May 2009) $
- * Version:       $Rev: 12682 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: GlowTechnique.h 12682 2009-05-13 20:11:06Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/

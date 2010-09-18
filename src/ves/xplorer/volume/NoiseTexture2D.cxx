@@ -1,7 +1,7 @@
 
-/*************** <auto-copyright.rb BEGIN do not edit this line> *************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2010 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -30,7 +30,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.rb END do not edit this line> **************/
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/NoiseTexture2D.h>
