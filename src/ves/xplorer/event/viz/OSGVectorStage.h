@@ -67,23 +67,23 @@ public:
 private:
 
     //an m x n texture is used to transfer data
-    int tm; 
-    int tn;
+    //int tm; 
+    //int tn;
 
     //two utility functions used to determine tm and tn, since texture dimension needs to be 2^n
-    int mylog2(unsigned x);
-    int mypow2(unsigned x);
+    //int mylog2(unsigned x);
+    //int mypow2(unsigned x);
 
     //create the glyph arrow in OSG
     void createArrow( osg::Geometry& geom, int nInstances=1, float scale2=1.0 );
 
     //create the position array based on the passed in VTK points
-    float* createPositionArray( int m, int n , vtkPoints* points);
+    //float* createPositionArray( int m, int n , vtkPoints* points);
     
     //create the attitude (rotation) array based on the passed VTK dataArray (dataArray should have 3 components per tuple)
-    float* createAttitudeArray( int m, int n, vtkDataArray* dataArray);
+    //float* createAttitudeArray( int m, int n, vtkDataArray* dataArray);
 
     //create the scalar data array based on the passed VTK dataArray (dataArray should have 1 components per tuple)
-    float* createScalarArray( int m, int n, vtkDataArray* dataArray);
+    //float* createScalarArray( int m, int n, vtkDataArray* dataArray);
 
 };

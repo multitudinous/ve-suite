@@ -52,7 +52,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 OSGVectorStage::OSGVectorStage(void)
 {
-    tm=tn=0;
+    //tm=tn=0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 OSGVectorStage::~OSGVectorStage(void)
@@ -151,7 +151,7 @@ void OSGVectorStage::createArrow( osg::Geometry& geom, int nInstances, float sca
     //    geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-float* OSGVectorStage::createPositionArray( int m, int n , vtkPoints* points)
+/*float* OSGVectorStage::createPositionArray( int m, int n , vtkPoints* points)
 {
     float* pos = new float[ m * n * 3 ];
     float* posI = pos;
@@ -277,7 +277,7 @@ int OSGVectorStage::mypow2(unsigned x)
         x--;
     }
     return l;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* glyph, std::string vectorName, std::string scalarName, float scaleFactor )
 {
