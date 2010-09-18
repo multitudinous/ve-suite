@@ -129,36 +129,66 @@ ModelHandler::ModelHandler( void )
 
     activeCommand  = ves::open::xml::CommandPtr();
 
-    _eventHandlers[ std::string( "SET_ROOT_CAD_NODE" )] = new ves::xplorer::event::CADSetRootNodeEventHandler();
-    _eventHandlers[ std::string( "CAD_TRANSFORM_UPDATE" )] = new ves::xplorer::event::CADTransformEventHandler();
-    _eventHandlers[ std::string( "CAD_ADD_ANIMATION_TO_NODE" )] = new ves::xplorer::event::CADAnimationEventHandler();
-    _eventHandlers[ std::string( "CAD_ADD_NODE" )] = new ves::xplorer::event::CADAddNodeEventHandler();
-    _eventHandlers[ std::string( "CAD_DELETE_NODE" )] = new ves::xplorer::event::CADDeleteNodeEventHandler();
-    _eventHandlers[ std::string( "CAD_ADD_ATTRIBUTE_TO_NODE" )] = new ves::xplorer::event::CADAddAttributeEventHandler();
-    _eventHandlers[ std::string( "CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE" )] = new ves::xplorer::event::CADSetActiveAttributeEventHandler();
-    _eventHandlers[ std::string( "CAD_SET_NODE_NAME" )] = new ves::xplorer::event::CADSetNameEventHandler();
-    _eventHandlers[ std::string( "CAD_TOGGLE_NODE" )] = new ves::xplorer::event::CADToggleEventHandler();
-    _eventHandlers[ std::string( "CHANGE_ACTIVE_MODEL" )] = new ves::xplorer::event::ActiveModelEventHandler();
-    _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" )] = new ves::xplorer::event::MaterialUpdateEventHandler();
-    _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_MODE" )] = new ves::xplorer::event::MaterialModeUpdateEventHandler();
-    _eventHandlers[ std::string( "CAD_REMOVE_ATTRIBUTE" )] = new ves::xplorer::event::CADRemoveAttributeEventHandler();
-    _eventHandlers[ std::string( "CAD_MOVE_NODE" )] = new ves::xplorer::event::CADMoveNodeEventHandler();
-    _eventHandlers[ std::string( "UPDATE_MODEL_DATASETS" )] = new ves::xplorer::event::AddVTKDataSetEventHandler();
-    _eventHandlers[ std::string( "Change Bounding Box State" )] = new ves::xplorer::event::BBoxEventHandler();
-    _eventHandlers[ std::string( "Change Wire Frame State" )] = new ves::xplorer::event::WireframeEventHandler();
-    _eventHandlers[ std::string( "Change Axes State" )] = new ves::xplorer::event::AxesEventHandler();
-    _eventHandlers[ std::string( "Change Axes Labels" )] = new ves::xplorer::event::AxesLabelsEventHandler();
-    _eventHandlers[ std::string( "Change Scalar Bar State" )] = new ves::xplorer::event::ScalarBarEventHandler();
-    _eventHandlers[ std::string( "DATA_TRANSFORM_UPDATE" )] = new ves::xplorer::event::DataTransformEventHandler();
-    _eventHandlers[ std::string( "Enable/Disable Sound" )] = new ves::xplorer::event::SoundActivateEventHandler();
-    _eventHandlers[ std::string( "Add New Sound" )] = new ves::xplorer::event::SoundAddNewEventHandler();
-    _eventHandlers[ std::string( "INITIALIZE_PHYSICS" )] = new ves::xplorer::event::CADInitializePhysicsEventHandler();
-    _eventHandlers[ std::string( "PHYSICS_MESH" )] = new ves::xplorer::event::CADPhysicsMeshEventHandler();
-    _eventHandlers[ std::string( "PHYSICS_PROPERTIES" )] = new ves::xplorer::event::CADPhysicsPropertiesEventHandler();
-    _eventHandlers[ std::string( "CAD_OPACITY_UPDATE" )] = new ves::xplorer::event::CADSetOpacityEventHandler();
-    _eventHandlers[ std::string( "Xplorer Toggle Plugin Events" )] = new ves::xplorer::event::cad::TogglePluginsEventHandler();
-    _eventHandlers[ std::string( "Move to cad" )] = new ves::xplorer::event::cad::NavigateToEventHandler();
-    _eventHandlers[ std::string( "Culling Settings" )] = new ves::xplorer::event::cad::OcclusionSettingsEventHandler();
+    _eventHandlers[ std::string( "SET_ROOT_CAD_NODE" )] = 
+        new ves::xplorer::event::CADSetRootNodeEventHandler();
+    _eventHandlers[ std::string( "CAD_TRANSFORM_UPDATE" )] = 
+        new ves::xplorer::event::CADTransformEventHandler();
+    _eventHandlers[ std::string( "CAD_ADD_ANIMATION_TO_NODE" )] = 
+        new ves::xplorer::event::CADAnimationEventHandler();
+    _eventHandlers[ std::string( "CAD_ADD_NODE" )] = 
+        new ves::xplorer::event::CADAddNodeEventHandler();
+    _eventHandlers[ std::string( "CAD_DELETE_NODE" )] = 
+        new ves::xplorer::event::CADDeleteNodeEventHandler();
+    _eventHandlers[ std::string( "CAD_ADD_ATTRIBUTE_TO_NODE" )] = 
+        new ves::xplorer::event::CADAddAttributeEventHandler();
+    _eventHandlers[ std::string( "CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE" )] = 
+        new ves::xplorer::event::CADSetActiveAttributeEventHandler();
+    _eventHandlers[ std::string( "CAD_SET_NODE_NAME" )] = 
+        new ves::xplorer::event::CADSetNameEventHandler();
+    _eventHandlers[ std::string( "CAD_TOGGLE_NODE" )] = 
+        new ves::xplorer::event::CADToggleEventHandler();
+    _eventHandlers[ std::string( "CHANGE_ACTIVE_MODEL" )] = 
+        new ves::xplorer::event::ActiveModelEventHandler();
+    _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" )] = 
+        new ves::xplorer::event::MaterialUpdateEventHandler();
+    _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_MODE" )] = 
+        new ves::xplorer::event::MaterialModeUpdateEventHandler();
+    _eventHandlers[ std::string( "CAD_REMOVE_ATTRIBUTE" )] = 
+        new ves::xplorer::event::CADRemoveAttributeEventHandler();
+    _eventHandlers[ std::string( "CAD_MOVE_NODE" )] = 
+        new ves::xplorer::event::CADMoveNodeEventHandler();
+    _eventHandlers[ std::string( "UPDATE_MODEL_DATASETS" )] = 
+        new ves::xplorer::event::AddVTKDataSetEventHandler();
+    _eventHandlers[ std::string( "Change Bounding Box State" )] = 
+        new ves::xplorer::event::BBoxEventHandler();
+    _eventHandlers[ std::string( "Change Wire Frame State" )] = 
+        new ves::xplorer::event::WireframeEventHandler();
+    _eventHandlers[ std::string( "Change Axes State" )] = 
+        new ves::xplorer::event::AxesEventHandler();
+    _eventHandlers[ std::string( "Change Axes Labels" )] = 
+        new ves::xplorer::event::AxesLabelsEventHandler();
+    _eventHandlers[ std::string( "Change Scalar Bar State" )] = 
+        new ves::xplorer::event::ScalarBarEventHandler();
+    _eventHandlers[ std::string( "DATA_TRANSFORM_UPDATE" )] = 
+        new ves::xplorer::event::DataTransformEventHandler();
+    _eventHandlers[ std::string( "Enable/Disable Sound" )] = 
+        new ves::xplorer::event::SoundActivateEventHandler();
+    _eventHandlers[ std::string( "Add New Sound" )] = 
+        new ves::xplorer::event::SoundAddNewEventHandler();
+    _eventHandlers[ std::string( "INITIALIZE_PHYSICS" )] = 
+        new ves::xplorer::event::CADInitializePhysicsEventHandler();
+    _eventHandlers[ std::string( "PHYSICS_MESH" )] = 
+        new ves::xplorer::event::CADPhysicsMeshEventHandler();
+    _eventHandlers[ std::string( "PHYSICS_PROPERTIES" )] = 
+        new ves::xplorer::event::CADPhysicsPropertiesEventHandler();
+    _eventHandlers[ std::string( "CAD_OPACITY_UPDATE" )] = 
+        new ves::xplorer::event::CADSetOpacityEventHandler();
+    _eventHandlers[ std::string( "Xplorer Toggle Plugin Events" )] = 
+        new ves::xplorer::event::cad::TogglePluginsEventHandler();
+    _eventHandlers[ std::string( "Move to cad" )] = 
+        new ves::xplorer::event::cad::NavigateToEventHandler();
+    _eventHandlers[ std::string( "Culling Settings" )] = 
+        new ves::xplorer::event::cad::OcclusionSettingsEventHandler();
     
 #ifdef QT_ON
     // Register signal(s) with EventManager
