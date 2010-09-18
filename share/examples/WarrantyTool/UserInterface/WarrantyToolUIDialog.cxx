@@ -89,9 +89,9 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUIDialog::WarrantyToolUIDialog()
     :
-    mPartNumberEntry( 0 ),
+    MachineInfoDlg( 0 ),
     mServiceList( 0 ),
-    MachineInfoDlg( 0 )
+    mPartNumberEntry( 0 )
 {
     ;
 }
@@ -101,9 +101,9 @@ WarrantyToolUIDialog::WarrantyToolUIDialog(
     int id, 
     ves::conductor::util::CORBAServiceList* service )
     :
-    MachineInfoDlg( parent ),
-    mPartNumberEntry( 0 ),
-    mServiceList( service )
+    MachineInfoDlg( parent, id ),
+    mServiceList( service ),
+    mPartNumberEntry( 0 )
 {    
     m_variableChoice01->Disable();
     m_variableLogicOperator01->Disable();
@@ -206,8 +206,8 @@ void WarrantyToolUIDialog::ParseDataFile( const std::string& csvFilename )
 {
     std::string sLine;
     std::string sCol1, sCol3, sCol4;
-    double fCol2;
-    int iCol5, iCol6;
+    //double fCol2;
+    //int iCol5, iCol6;
 
     CSVParser parser;
 
@@ -565,6 +565,7 @@ const std::string WarrantyToolUIDialog::GetTextFromChoice( wxChoice* variable,
     std::string variableString = ConvertUnicode( variable->GetStringSelection().c_str() );
     
     std::string logicString = ConvertUnicode( logicOperator->GetStringSelection().c_str() );
+    const std::string uiLogicString = logicString;
     if( logicString == "Less Than" )
     {
         logicString = "<";
@@ -585,15 +586,39 @@ const std::string WarrantyToolUIDialog::GetTextFromChoice( wxChoice* variable,
     {
         logicString = "LIKE";
     }
+    else if( logicString == "Not Like" )
+    {
+        logicString = "NOT LIKE";
+    }
+    else if( logicString == "Begins With" )
+    {
+        logicString = "LIKE";
+    }
+    else if( logicString == "Does Not Begin With" )
+    {
+        logicString = "NOT LIKE";
+    }
     
     std::string inputString = ConvertUnicode( textInput->GetValue().c_str() );
     double tempData;
     if( !textInput->GetValue().ToDouble( &tempData ) )
     {
         //If it is a string and we are doing a wild card search
-        if( logicString == "LIKE" )
+        if( uiLogicString == "Like" )
         {
             inputString = "'%" + inputString + "%'";
+        }
+        else if( uiLogicString == "Not Like" )
+        {
+            inputString = "'%" + inputString + "%'";
+        }
+        else if( uiLogicString == "Begins With" )
+        {
+            inputString = "'" + inputString + "%'";
+        }
+        else if( uiLogicString == "Does Not Begin With" )
+        {
+            inputString = "'" + inputString + "%'";
         }
         else
         {

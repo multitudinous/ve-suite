@@ -53,7 +53,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
     m_variableChoice00->SetSelection( 0 );
     bSizer2->Add( m_variableChoice00, 0, wxALL, 5 );
     
-    wxString m_variableLogicOperator00Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like") };
+    wxString m_variableLogicOperator00Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like"), wxT("Not Like"), wxT("Begins With"), wxT("Does Not Begin With")};
     int m_variableLogicOperator00NChoices = sizeof( m_variableLogicOperator00Choices ) / sizeof( wxString );
     m_variableLogicOperator00 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_variableLogicOperator00NChoices, m_variableLogicOperator00Choices, 0 );
     m_variableLogicOperator00->SetSelection( 0 );
@@ -78,7 +78,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
     m_variableChoice01->SetSelection( 0 );
     bSizer21->Add( m_variableChoice01, 0, wxALL, 5 );
     
-    wxString m_variableLogicOperator01Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like") };
+    wxString m_variableLogicOperator01Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like"), wxT("Not Like"), wxT("Begins With"), wxT("Does Not Begin With") };
     int m_variableLogicOperator01NChoices = sizeof( m_variableLogicOperator01Choices ) / sizeof( wxString );
     m_variableLogicOperator01 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_variableLogicOperator01NChoices, m_variableLogicOperator01Choices, 0 );
     m_variableLogicOperator01->SetSelection( 0 );
@@ -103,7 +103,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
     m_variableChoice02->SetSelection( 0 );
     bSizer22->Add( m_variableChoice02, 0, wxALL, 5 );
     
-    wxString m_variableLogicOperator02Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like") };
+    wxString m_variableLogicOperator02Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like"), wxT("Not Like"), wxT("Begins With"), wxT("Does Not Begin With") };
     int m_variableLogicOperator02NChoices = sizeof( m_variableLogicOperator02Choices ) / sizeof( wxString );
     m_variableLogicOperator02 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_variableLogicOperator02NChoices, m_variableLogicOperator02Choices, 0 );
     m_variableLogicOperator02->SetSelection( 0 );
@@ -128,7 +128,7 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
     m_variableChoice03->SetSelection( 0 );
     bSizer221->Add( m_variableChoice03, 0, wxALL, 5 );
     
-    wxString m_variableLogicOperator03Choices[] = { wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like") };
+    wxString m_variableLogicOperator03Choices[] = {wxT("Less Than"), wxT("Greater Than"), wxT("Equal"), wxT("Not Equal"), wxT("Like"), wxT("Not Like"), wxT("Begins With"), wxT("Does Not Begin With") };
     int m_variableLogicOperator03NChoices = sizeof( m_variableLogicOperator03Choices ) / sizeof( wxString );
     m_variableLogicOperator03 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_variableLogicOperator03NChoices, m_variableLogicOperator03Choices, 0 );
     m_variableLogicOperator03->SetSelection( 0 );

@@ -87,8 +87,6 @@ public:
         PART_SELECTION
     };
 
-protected:
-
 private:
     void StripCharacters( std::string& data, const std::string& character );
 
@@ -111,7 +109,6 @@ private:
     ///Description of part numbers loaded from csv files
     std::vector< std::string > mPartNumberDescriptions;
     wxComboBox* mPartListCMB;
-private:
     wxArrayString m_partNumberStrings;
     wxArrayString m_columnStrings;
     
