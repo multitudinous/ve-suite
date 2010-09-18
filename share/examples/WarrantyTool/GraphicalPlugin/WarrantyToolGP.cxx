@@ -1150,15 +1150,15 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
     {
         objectHit = *( itr->nodePath.rbegin() );
         //std::cout << "Top Node " << objectHit->getName() << std::endl;
+        //First we see if the name has prt in the part name
         const std::string prtname = ".PRT";
-        ves::xplorer::scenegraph::FindParentWithNameVisitor findPRT( 
-            objectHit, prtname, false );
+        ves::xplorer::scenegraph::FindParentWithNameVisitor findPRT( objectHit, prtname, false );
         tempParent = findPRT.GetParentNode();
-
         std::string nodeName;
         
         if( !tempParent )
         {
+            //Then we see if it has asm in the part name
             std::string asmname(".ASM");
             ves::xplorer::scenegraph::FindParentWithNameVisitor findASM( 
                 objectHit, asmname, false );
@@ -1175,6 +1175,21 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             GetPartNumberFromNodeName( nodeName );
         }
         
+        //Then we just get the base part and start traversing up the node path
+        //to find a node with a name and go with that
+        if( !tempParent )
+        {
+            size_t increment = 1;
+            while( nodeName.empty() )
+            {
+                tempParent = *( itr->nodePath.rbegin() + increment );
+                nodeName = tempParent->getName();
+                ++increment;
+            }
+            
+            GetPartNumberFromNodeName( nodeName );
+        }
+
         if( !nodeName.empty() )
         {
             std::vector< std::string >::const_iterator iter = 
@@ -1186,7 +1201,6 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             }
         }
 
-        //std::cout << "Found Node " << tempParent->getName() << std::endl;
         //for( size_t i = 0; i < itr->nodePath.size(); ++i )
         //{
         //    std::cout << itr->nodePath.at( i )->getName() << std::endl;
@@ -1279,7 +1293,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             osg::Vec3( 0.57255, 0.34118, 1.0 ) );
     }
     
-    if( !failedLoad )
+    if( !failedLoad && (m_assemblyPartNumbers.size() > 0) )
     {
         m_groupedTextTextures->UpdateListPositions();
         
@@ -1296,6 +1310,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
 {
+    //std::cout << "Before " << nodeName << std::endl;    
     {
         size_t index = nodeName.find( '_' );
         if ( index != std::string::npos )
@@ -1311,7 +1326,18 @@ void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
             nodeName.erase( index, nodeName.length() - index  );
         }
     }
-    //std::cout << nodeName << std::endl;    
+
+    {
+        size_t index = nodeName.find( ' ' );
+        if ( index != std::string::npos )
+        {
+            nodeName.erase( index, nodeName.length() - index  );
+        }
+    }
+    
+    boost::algorithm::to_upper( nodeName );
+
+    //std::cout << "After " << nodeName << std::endl;    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PickTextTextures()
