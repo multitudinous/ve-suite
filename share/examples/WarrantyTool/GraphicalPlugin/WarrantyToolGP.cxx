@@ -110,7 +110,8 @@ WarrantyToolGP::WarrantyToolGP()
     mAddingParts( false ),
     m_keyboard( 0 ),
     m_groupedTextTextures( 0 ),
-    m_cadRootNode( 0 )
+    m_cadRootNode( 0 ),
+    m_hasPromiseDate( false )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
@@ -256,6 +257,8 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 opVisitor1( m_cadRootNode, false, true, 0.3f );
             
             bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+            boost::ignore_unused_variable_warning( removed );
+
             RenderTextualDisplay( false );
 
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
@@ -393,7 +396,8 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     std::map< int, std::vector< std::string > > csvDataMap;
     
     m_partNumberColumn = 0;
-    m_promiseDateColumn = -1;
+    m_promiseDateColumn = 0;
+    m_hasPromiseDate = false;
     while( parser.getPos() < sLine.size() )
     {
         parser >> sCol1; // Feed the line to the parser
@@ -417,6 +421,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
         //if( boost::algorithm::ifind_first( sCol1, "promise_date" ) )
         if( boost::algorithm::iequals( sCol1, "promise_date" ) )
         {
+            m_hasPromiseDate = true;
             m_promiseDateColumn = columnCount;
         }
         columnCount += 1;
@@ -446,7 +451,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
             parser >> sCol1;
             StripDollarCharacters( sCol1 );
             boost::algorithm::trim( sCol1 );
-            if( i == m_promiseDateColumn )
+            if( m_hasPromiseDate && (i == m_promiseDateColumn) )
             {
                 //convert date to uniform string
                 try
@@ -689,12 +694,14 @@ void WarrantyToolGP::CreateDB()
         }
         catch( boost::bad_lexical_cast& ex )
         {
-            std::cout << "Is string data " << tempData.at( i ).first << std::endl;
-            std::cout << "Data is " << tempData.at( i ).second << std::endl;
-            std::cout << ex.what() << std::endl;
+            std::cout << "|\tIs string data " 
+                << tempData.at( i ).first << std::endl;
+            std::cout << "|\tData is " 
+                << tempData.at( i ).second << std::endl;
+            std::cout << "|\t"<< ex.what() << std::endl;
             isString = true;
 
-            if( i == m_promiseDateColumn )
+            if( m_hasPromiseDate && (i == m_promiseDateColumn) )
             {
                 isString = false;
                 isDate = true;
@@ -759,7 +766,7 @@ void WarrantyToolGP::CreateDB()
                 //std::cout << ex.what() << std::endl;
                 isString = true;
                 
-                if( i == m_promiseDateColumn )
+                if( m_hasPromiseDate && (i == m_promiseDateColumn) )
                 {
                     isString = false;
                     isDate = true;

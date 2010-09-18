@@ -131,7 +131,9 @@ private:
     ///Root of the CAD models
     ves::xplorer::scenegraph::DCS* m_cadRootNode;
     ///Column number for the promise date
-    int m_promiseDateColumn;
+    size_t m_promiseDateColumn;
+    ///Determine if we have a promise date column
+    bool m_hasPromiseDate;
     //Column number for the part numbers
     size_t m_partNumberColumn;
     ///Vector map to be used to create the DB
