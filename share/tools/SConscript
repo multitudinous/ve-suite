@@ -4,6 +4,7 @@ Import( 'GetPlatform baseEnv ves_pkg' )
 toolsSubdirs = Split("""
     builder
     vea
+    daycent
 """)
 # not needed anymore since we have screen capture working in xplorer
 #desktop_wallpaper
