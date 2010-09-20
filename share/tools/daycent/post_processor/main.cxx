@@ -61,8 +61,6 @@
 #include <Poco/Data/RecordSet.h>
 #include <Poco/Data/SQLite/Connector.h>
 
-#include "csvparser.h"
-
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
