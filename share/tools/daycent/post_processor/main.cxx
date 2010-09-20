@@ -43,6 +43,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/tokenizer.hpp>
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/replace.hpp>
@@ -67,12 +68,9 @@ namespace fs = boost::filesystem;
 
 ///Prototypes
 std::vector<std::string> GetFilesInDirectory( const std::string dir, const std::string extension );
-void ParseDataFile( std::string csvFilename );
-void CreateDB();
+void ParseDataFile( std::string csvFilename, std::string dbTableName );
 void RegisterDB();
 
-std::map< std::string, std::vector< std::pair< std::string, std::string > > > m_dataMap;
-std::map< int, std::vector< std::string > > m_csvDataMap;
 std::string m_dbFilename( "sample.db" );
 ///End Prototypes
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,8 +79,12 @@ int main( int argc, char* argv[] )
     std::string root( "./" );
     std::string extension( ".lis" );
     //Iterate over all of the directories
-    std::vector< std::string > lisFiles = GetFilesInDirectory( root, extension );
     //Find if a file has a .lis extension
+    std::vector< std::string > lisFiles = GetFilesInDirectory( root, extension );
+    //Open the file and parse it
+    //Add the data from each .lis file to an .lis specific table in a db
+    RegisterDB();
+    //Iterate over the files
     for( size_t i = 0; i < lisFiles.size(); ++i )
     {
         std::string dbTableName = lisFiles.at( i );
@@ -90,9 +92,10 @@ int main( int argc, char* argv[] )
         boost::algorithm::replace_last( dbTableName, extension, "" );
         boost::algorithm::replace_all( dbTableName, "/", "_" );
         std::cout << dbTableName << " " << lisFiles.at( i ) << std::endl;
+        
+        ParseDataFile( lisFiles.at( i ), dbTableName );
     }
-    //Open the file and parse it
-    //Add the data from each .lis file to an .lis specific table in a db
+
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,14 +132,14 @@ std::vector<std::string> GetFilesInDirectory( const std::string dir, const std::
                         }
                     }
                 }
-                catch ( const std::exception& ex )
+                catch( const std::exception& ex )
                 {
                     std::cout << ex.what() << std::endl;
                 }
             }
         }
     }
-    catch ( const std::exception& ex )
+    catch( const std::exception& ex )
     {
         std::cout << ex.what() << std::endl;
     }
@@ -155,55 +158,78 @@ void RegisterDB()
 {
     // register SQLite connector
     Poco::Data::SQLite::Connector::registerConnector();
-    
+    //
     m_dbFilename = "sample.db";
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CreateDB()
+void ParseDataFile( std::string csvFilename, std::string dbTableName )
 {
-    // create a session
+    std::ifstream infile( csvFilename.c_str() );
+    
+    infile.seekg( 0, std::ios::end);
+    std::streampos length = infile.tellg();
+    infile.seekg (0, std::ios::beg);
+
+    char* buffer = new char [ length ];
+    infile.read( buffer, (length) );
+    infile.close();
+
+    std::string networkData( buffer );
+    delete [] buffer;
+    boost::algorithm::replace_all( networkData, "\r", "" );
+    
+    typedef boost::tokenizer< boost::escaped_list_separator<char> > Tok;
+    boost::escaped_list_separator<char> sep( "", " \n", "");
+    Tok tok( networkData, sep );
+    std::string tempTok;
+    double tempDouble = 0;
+    size_t columnCount1 = 0;
+    std::vector< std::string > columnNames;
+    Tok::iterator firstDouble;
+    for(Tok::iterator tok_iter = tok.begin(); tok_iter != tok.end(); ++tok_iter)
+    {
+        tempTok = *tok_iter;
+        if( tempTok.empty() )
+        {
+            continue;
+        }
+        //std::cout << "<" << tempTok << "> ";
+            
+        try
+        {
+            tempDouble = boost::lexical_cast<double>( tempTok );
+            firstDouble = tok_iter;
+            break;
+            //std::cout << tempDouble << " "; 
+        }
+        catch( boost::bad_lexical_cast& ex )
+        {
+            //std::cout << tempTok << " ";
+            columnNames.push_back( tempTok );
+            columnCount1 +=1;
+        }
+    }
+    std::cout << "Column Count " << columnCount1 << std::endl;
+    
+    //////////////////////////////
+    //////////////////////////////
+
     Poco::Data::Session session("SQLite", m_dbFilename );
     //manage open and closing the session our self so that the population of the
     //db is faster
     session.begin();
     // drop sample table, if it exists
-    session << "DROP TABLE IF EXISTS Parts", Poco::Data::now;
-    
-    // (re)create table
-    //session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claim_Cost DOUBLE, FPM DOUBLE, CCPM DOUBLE, By VARCHAR)", now;
+    std::ostringstream dropTable;
+    dropTable << "DROP TABLE IF EXISTS " << dbTableName;
+    session << dropTable.str().c_str(), Poco::Data::now;
     
     std::ostringstream createCommand;
-    createCommand << "CREATE TABLE Parts (";
-    std::vector< std::pair< std::string, std::string > > tempData = m_dataMap.begin()->second;
-    for( size_t i = 0; i < tempData.size(); ++i )
+    createCommand << "CREATE TABLE " << dbTableName << " (";
+    for( size_t i = 0; i < columnNames.size(); ++i )
     {
-        bool isString = false;
-        bool isDate = false;
-        try
-        {
-            double test = boost::lexical_cast<double>( tempData.at( i ).second );
-            boost::ignore_unused_variable_warning( test );   
-        }
-        catch( boost::bad_lexical_cast& ex )
-        {
-            std::cout << "|\tIs string data " 
-            << tempData.at( i ).first << std::endl;
-            std::cout << "|\tData is " 
-            << tempData.at( i ).second << std::endl;
-            std::cout << "|\t"<< ex.what() << std::endl;
-            isString = true;
-        }
+        createCommand << "'" << columnNames.at( i ) << "' DOUBLE";
         
-        if( isString )
-        {
-            createCommand << "'" << tempData.at( i ).first << "' VARCHAR";
-        }
-        else
-        {
-            createCommand << "'" << tempData.at( i ).first << "' DOUBLE";
-        }
-        
-        if( i < tempData.size() - 1 )
+        if( i < columnCount1 - 1 )
         {
             createCommand << ",";
         }
@@ -220,52 +246,44 @@ void CreateDB()
         return;
     }
     
+    //////////////////////////////
+    //////////////////////////////
+    
+    size_t columnCounter = 0;
     std::ostringstream insertCommand;
-    std::map< std::string, std::vector< std::pair< std::string, std::string > > >::iterator iter;
-    for( iter = m_dataMap.begin(); iter != m_dataMap.end(); ++iter )
+    for(Tok::iterator tok_iter = firstDouble; tok_iter != tok.end(); ++tok_iter)
     {
-        tempData = iter->second;
-        insertCommand << "INSERT INTO Parts VALUES(";
-        for( size_t i = 0; i < tempData.size(); ++i )
+        tempTok = *tok_iter;
+        if( tempTok.empty() )
         {
-            bool isString = false;
-            bool isDate = false;
-            double tempDouble = 0;
-            try
-            {
-                tempDouble = boost::lexical_cast<double>( tempData.at( i ).second );
-            }
-            catch( boost::bad_lexical_cast& ex )
-            {
-                //std::cout << "Bad Field " << tempData.at( i ).first << std::endl;
-                //std::cout << ex.what() << std::endl;
-                isString = true;
-            }
-            
-            if( isString )
-            {
-                insertCommand << "'"<< tempData.at( i ).second << "'";
-            }
-            else if( isDate )
-            {
-                insertCommand << "'"<< tempData.at( i ).second << "'";
-            }
-            else
-            {
-                insertCommand << tempDouble;
-            }
-            
-            if( i < tempData.size() - 1 )
-            {
-                insertCommand << ",";
-            }            
+            continue;
         }
-        insertCommand << ")";
-        
-        //insertCommand << "INSERT INTO Parts VALUES('" << tempData.at( 2 ).second << "','" << tempData.at( 3 ).second << "'," << boost::lexical_cast<int>( tempData.at( 4 ).second )
-        //    << "," << boost::lexical_cast<double>( tempData.at( 5 ).second ) << "," << boost::lexical_cast<double>( tempData.at( 6 ).second )
-        //    << "," <<  boost::lexical_cast<double>( tempData.at( 7 ).second ) << ",'" << tempData.at( 8 ).second << "')";
+        //std::cout << "<" << tempTok << "> ";
+
+        try
         {
+            tempDouble = boost::lexical_cast<double>( tempTok );
+            if( columnCounter == 0 )
+            {
+                insertCommand << "INSERT INTO " << dbTableName << " VALUES(";
+            }
+        }
+        catch( boost::bad_lexical_cast& ex )
+        {
+            ;
+        }
+        
+        insertCommand << tempDouble;
+    
+        if( columnCounter < columnCount1 - 1 )
+        {
+            insertCommand << ",";
+            ++columnCounter;
+        }
+        else
+        {
+            insertCommand << ")";
+            //std::cout << insertCommand.str() << std::endl;
             Poco::Data::Statement insert( session );
             try
             {
@@ -276,122 +294,11 @@ void CreateDB()
                 std::cout << ex.displayText() << std::endl;
             }
             insertCommand.str("");
+            columnCounter = 0;
         }
     }
-    
+
     //Now close the session to match the previous being statement
     session.commit();    
-}
-////////////////////////////////////////////////////////////////////////////////
-void ParseDataFile( std::string csvFilename )
-{
-    std::string sLine;
-    std::string sCol1, sCol3, sCol4;
-    
-    CSVParser parser;
-    
-    std::ifstream infile( csvFilename.c_str() );
-    //Get file name string from directory passed in
-    boost::filesystem::path csvFile( csvFilename.c_str(), 
-                                    boost::filesystem::no_check );
-    //Set m_dbFilename with the filename of the csv file
-    //csvFile.replace_extension( ".db" );
-    //m_dbFilename = csvFile.filename();
-    
-    //std::streampos beforeNetwork;
-    //beforeNetwork = inFile.tellg();
-    
-    infile.seekg( 0, std::ios::end);
-    std::streampos length = infile.tellg();
-    infile.seekg (0, std::ios::beg);
-    
-    //Now we have passed the network data so record it
-    //std::streampos afterNetwork;
-    //afterNetwork = inFile.tellg();
-    //go back to the beginning of the network
-    //inFile.seekg( beforeNetwork );
-    // allocate memory:
-    char* buffer = new char [ length ];
-    // read data as a block:
-    infile.read( buffer, (length) );
-    //std::ofstream tester4 ("tester4.txt");
-    //tester4<<buffer<<std::endl;
-    //tester4.close();
-    infile.close();
-    std::string networkData( buffer );
-    delete [] buffer;
-    boost::algorithm::replace_all( networkData, "\r", "" );
-    
-    //std::cout << networkData << std::endl;
-    //build network information
-    //CreateNetworkInformation( networkData );
-    std::istringstream iss;
-    iss.str( networkData );
-    
-    std::getline(iss, sLine); // Get a line
-    parser << sLine; // Feed the line to the parser
-    size_t columnCount = 0;
-    std::map< int, std::vector< std::string > > csvDataMap;
-    
-    while( parser.getPos() < sLine.size() )
-    {
-        parser >> sCol1; // Feed the line to the parser
-        //std::cout << sCol1 << std::endl;
-        std::vector< std::string > data;
-        if( sCol1.empty() )
-        {
-            std::ostringstream headerTemp;
-            headerTemp << "N/A " << columnCount;
-            sCol1 = headerTemp.str();
-        }
-        //ReplaceSpacesCharacters( sCol1 );
-        data.push_back( sCol1 );
-        //std::vector< std::string > data;
-        csvDataMap[ columnCount ] = data;
-
-        columnCount += 1;
-    }
-    
-    while( iss.good() )
-    {
-        std::getline(iss, sLine); // Get a line
-        
-        if( !iss.good() )
-        {
-            break;
-        }
-        
-        if (sLine == "")
-            continue;
-        
-        //boost::algorithm::replace_all( sLine, "'", "" );
-        //boost::algorithm::replace_all( sLine, "%", "" );
-        
-        parser << sLine; // Feed the line to the parser
-        for( size_t i = 0; i < columnCount; ++i )
-        {
-            parser >> sCol1;
-            //StripDollarCharacters( sCol1 );
-            boost::algorithm::trim( sCol1 );
-
-            csvDataMap[ i ].push_back( sCol1 );
-        }
-    }
-    //iss.close();
-    m_csvDataMap = csvDataMap;
-    /*mLoadedPartNumbers = csvDataMap[ m_partNumberColumn ];
-    for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
-    {
-        std::vector< std::pair< std::string, std::string > > partData;
-        for( size_t j = 0; j < columnCount; ++j )
-        {
-            partData.push_back( std::pair< std::string, std::string >( csvDataMap[ j ].at( 0 ), csvDataMap[ j ].at( i ) ) );
-        }
-        
-        if( !mLoadedPartNumbers.at( i ).empty() )
-        {
-            m_dataMap[ mLoadedPartNumbers.at( i ) ] = partData;
-        }
-    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
