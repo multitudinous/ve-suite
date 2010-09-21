@@ -91,6 +91,9 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph
                         pj('#', buildDir, 'src', 'ves', 'open','xml')])
 
 tao_options.apply( lib_env )
+#see if we need to compile minerva in
+if minerva_options.isAvailable():
+	minerva_options.apply( lib_env )
 boost_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 if osgal_options.isAvailable():
@@ -99,6 +102,7 @@ if osgal_options.isAvailable():
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 osgworks_options.apply( lib_env )
+
 xerces_options.apply( lib_env )
 
 # Needed since Device and KeyboardMouse send events to new UI
@@ -142,7 +146,6 @@ if minerva_options.isAvailable():
 	base_header_srcs = sca_util.getHeadersRecursive( srcDir )
 	sources += map(lambda s: pj('minerva', s), base_plugin_srcs)
 	headers += map(lambda s: pj('minerva', s), base_header_srcs)
-	minerva_options.apply( lib_env )
 
 lib_env.AppendUnique( CPPDEFINES = ['VE_XPLORER_LIBRARY','VE_XPLORER_NETWORK_LIBRARY','VE_GRAPHICALPLUGINS_LIBRARY'])
 
