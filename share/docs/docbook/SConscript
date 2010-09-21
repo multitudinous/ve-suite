@@ -10,7 +10,7 @@ env = ves_pkg.getEnv().Clone()
 #Tool Directory
 DOCBOOKBASE = pj(RootDir,'external','DocBook')
 DOCBOOK_XSL = pj(DOCBOOKBASE,'docbook-xsl-1.75.2')
-DOCBOOK_FO = pj(DOCBOOKBASE,'fop-0.95')
+DOCBOOK_FO = pj(DOCBOOKBASE,'fop-1.0')
 HTML_XSL = pj(DOCBOOK_XSL,'html','docbook.xsl')
 CHUNK_HTML_XSL = pj(DOCBOOK_XSL,'html','chunk.xsl')
 #CHUNK_HTML_XSL = pj(DOCBOOK_FO,'stylesheet','html.xsl')
@@ -112,16 +112,16 @@ env.Append(BUILDERS = {
 ##Build the docs.
 env.xmlResolve(srcs)
 
-env.Depends( foedSrcs, resolvedSrcs)
+#env.Depends( foedSrcs, resolvedSrcs)
 env.fo(resolvedSrcs)
 
-env.Depends( htmlTargets, resolvedSrcs)
+#env.Depends( htmlTargets, resolvedSrcs)
 env.html(target = htmlTargets, source = resolvedSrcs)
 
-env.Depends( htmlChunkTargets, resolvedSrcs)
+#env.Depends( htmlChunkTargets, resolvedSrcs)
 env.htmlChunk(target = htmlChunkTargets, source = resolvedSrcs)
 
-env.Depends( pdfTargets, foedSrcs)
+#env.Depends( pdfTargets, foedSrcs)
 env.pdf(target = pdfTargets, source = foedSrcs)
 
 # now install everything
