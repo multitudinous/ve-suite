@@ -281,17 +281,14 @@ void MinervaManager::AddEarthToScene()
 
   for ( Models::iterator iter = _models.begin(); iter != _models.end(); ++iter )
   {
-std::cout << " models 1 " << std::endl;
     ModelWrapper::RefPtr model ( iter->second );
     if ( model.valid() )
     {
-std::cout << " models 2 " << std::endl;
       Minerva::Core::Data::DataObject::RefPtr dataObject ( new Minerva::Core::Data::DataObject );
       model->SetParent ( dataObject.get() );
 
       _body->vectorData()->add ( dataObject.get() );
       this->UpdateModel ( model );
-std::cout << " models 3 " << std::endl;
     }
   }
 }

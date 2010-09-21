@@ -147,11 +147,11 @@ EventHandler::RasterLayer* EventHandler::_createRasterLayerFromCommand ( Command
     }
     else
     {
-      vprDEBUG( vesDBG, 0 ) << "|Cannot create layer of type " << type << std::endl;
+      vprDEBUG( vesDBG, 0 ) << "|\tCannot create layer of type " << type << std::endl << vprDEBUG_FLUSH;
     }
   }
   
-  vprDEBUG( vesDBG, 0 ) << "|Cannot determine type of layer. " << std::endl;
+  vprDEBUG( vesDBG, 0 ) << "|\tCannot determine type of layer. " << std::endl << vprDEBUG_FLUSH;
   return 0x0;
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@ EventHandler::RasterLayer* EventHandler::_createWMSLayerFromCommand ( CommandPtr
     RasterLayerWms::RefPtr layer ( new RasterLayerWms ( extents, server, options ) );
     layer->objectId ( guid );
 
-    vprDEBUG( vesDBG, 0 ) << "|Creating WMS layer with " << std::endl 
+    vprDEBUG( vesDBG, 0 ) << "|\tCreating WMS layer with " << std::endl 
       << "Server: " << server  << std::endl 
       << "Layers: " << layers  << std::endl 
       << "Styles: " << styles  << std::endl 
@@ -248,7 +248,7 @@ EventHandler::RasterLayer* EventHandler::_createFileSystemLayerFromCommand ( Com
 
     if ( rasterLayer.valid() )
     {
-      vprDEBUG( vesDBG, 0 ) << "|Creating layer from file " << filename << vprDEBUG_FLUSH;
+      vprDEBUG( vesDBG, 0 ) << "|\tCreating layer from file " << filename << std::endl << vprDEBUG_FLUSH;
 
       feature = 0x0;
 
