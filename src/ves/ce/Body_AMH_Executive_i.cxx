@@ -908,13 +908,7 @@ void Body_AMH_Executive_i::SetParams(
     ///AMI call
     for( std::map<std::string, Body::UI_var>::iterator
         iter = m_uiMap.begin(); iter != m_uiMap.end(); )
-    {
-        /*if( iter->first.compare(0,2, "UI", 0, 2) != 0 )
-        {
-            ++iter;
-            continue;
-        }*/
-        
+    {   
         try
         {
             iter->second->_non_existent();
