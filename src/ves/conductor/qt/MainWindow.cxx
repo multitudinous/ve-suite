@@ -34,23 +34,32 @@
 
 #include "MainWindow.h"
 #include <ves/conductor/qt/ui_MainWindow.h>
+#include <QtGui/QPaintEvent>
 
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 #include<ves/conductor/qt/NetworkLoader.h>
+#include<ves/conductor/qt/CADFileLoader.h>
 
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelCADHandler.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/convenience.hpp>
 
 #include <iostream>
-#include <QtGui/QPaintEvent>
 
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    mActiveTab( "" )
 {
     ui->setupUi(this);
     
@@ -68,13 +77,25 @@ MainWindow::MainWindow(QWidget* parent) :
     
     // Create set of default dialogs that can be added as tabs
     mVisualizationTab = new ves::conductor::Visualization( 0 );
+    mScenegraphTreeTab = new ves::conductor::TreeTab();
 
     // Connect to the ActiveModelChangedSignal so we can show the correct 
     // tabs when the model changes
-    typedef boost::signals2::signal< void ( const std::string& ) > AMCSignal_type;
-    AMCSignal_type::slot_type slotFunctor( boost::bind( &MainWindow::OnActiveModelChanged, this, _1 ) );
-    ves::xplorer::eventmanager::SlotWrapper< AMCSignal_type > slotWrapper( slotFunctor );
-    ves::xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "ModelHandler.ActiveModelChangedSignal", &slotWrapper, mConnections );
+    {
+        typedef boost::signals2::signal< void ( const std::string& ) > AMCSignal_type;
+        AMCSignal_type::slot_type slotFunctor( boost::bind( &MainWindow::OnActiveModelChanged, this, _1 ) );
+        ves::xplorer::eventmanager::SlotWrapper< AMCSignal_type > slotWrapper( slotFunctor );
+        ves::xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "ModelHandler.ActiveModelChangedSignal", &slotWrapper, mConnections );
+    }
+    
+    // Connect to ObjectPickedSignal so we can update the scenegraph tree view when
+    // an object is picked
+    {
+        typedef boost::signals2::signal< void ( osg::NodePath& ) > ObjectPickedSignal_type;
+        ObjectPickedSignal_type::slot_type slotFunctor( boost::bind( &MainWindow::OnObjectPicked, this, _1 ) );
+        ves::xplorer::eventmanager::SlotWrapper< ObjectPickedSignal_type > slotWrapper( slotFunctor );
+        ves::xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "KeyboardMouse.ObjectPickedSignal", &slotWrapper, mConnections );
+    }
 }
 
 MainWindow::~MainWindow()
@@ -139,6 +160,43 @@ void MainWindow::RemoveAllTabs()
     mTabbedWidgets.clear();
 }
 
+void MainWindow::ActivateTab( QWidget* widget )
+{
+    // Get the widget's index and call the (int) overloaded version
+    ActivateTab( ui->tabWidget->indexOf( widget ) );
+}
+
+void MainWindow::ActivateTab( const std::string& tabLabel )
+{
+    std::map< std::string, QWidget* >::iterator iter = mTabbedWidgets.find( tabLabel );
+    if( iter != mTabbedWidgets.end() )
+    {
+        // Get the associated widget and call the (QWidget*) overloaded version
+        ActivateTab( iter->second );
+    }
+}
+
+/// This version is the final destination of the other overloaded versions.
+/// All base functionality should happen here.
+void MainWindow::ActivateTab( int index )
+{
+    if( index < ui->tabWidget->count() )
+    {
+        ui->tabWidget->setCurrentIndex( index );
+    }
+}
+
+void MainWindow::on_tabWidget_currentChanged( int index )
+{
+    // Store off the name of this tab so this tab can be reactivated when 
+    // tabs get added/moved/removed. We use the name rather than the index
+    // because the index could change. We use the name rather than the widget
+    // because in our scheme, the widget on a tab page might be replaced by
+    // a different widget, but given the same name. The name indicates
+    // tab functionality for us, so the name is treated as primary.
+    mActiveTab = ui->tabWidget->tabText( index ).toStdString();
+}
+
 void MainWindow::on_actionFile_triggered()
 {
     mFileOpsStack->Show();
@@ -159,24 +217,50 @@ void MainWindow::on_actionOpen_triggered()
     // Make mFileDialog manage its own lifetime and memory
     mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
     mFileDialog->setFileMode( QFileDialog::ExistingFile );
-    mFileDialog->setNameFilter(tr("VES Files (*.ves)"));
+    QStringList filters;
+    filters << "All Supported Files (*.ves *.osg *.ive *.stl *.wrl *.iv *.obj *.pfb *.flt *.dxf *.3ds)"
+            << "VES Files (*.ves)"
+            << "OSG files (*.osg *.ive)"
+            << "STL files (*.stl)"
+            << "VRML/Inventor files (*.wrl *.iv)"
+            << "OBJ files (*.obj)"
+            << "Performer Binary files (*.pfb)"
+            << "Flight files (*.flt)"
+            << "DXF files (*.dxf)"
+            << "3DS files (*.3ds)"
+            << "All Files (*.*)";
+    //mFileDialog->setNameFilter(tr("VES Files (*.ves)"));
+    mFileDialog->setNameFilters( filters );
     
     QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)), 
                       this, SLOT(onFileOpenSelected(QString)) );
     QObject::connect( mFileDialog, SIGNAL(rejected()), this,
                       SLOT( onFileCancelled() ) );
                       
-    ui->tabWidget->setCurrentIndex( AddTab( mFileDialog, "Open File" ) );
+    ActivateTab( AddTab( mFileDialog, "Open File" ) );
 }
 
 void MainWindow::onFileOpenSelected( QString fileName )
 {
-    ves::conductor::NetworkLoader loader;
-    loader.LoadVesFile( fileName.toStdString() );
+    boost::filesystem::path file( fileName.toStdString() );
+    std::string extension( boost::filesystem::extension( file ) );
+    
+    if( !extension.compare( ".ves" ) )
+    {
+        // It's a ves file, likely with a network
+        ves::conductor::NetworkLoader loader;
+        loader.LoadVesFile( file.string() );
+    }
+    else
+    {
+        // Assume it's a cad file for now
+        ves::conductor::CADFileLoader loader;
+        loader.LoadCADFile( file.string() );
+    }
     
     RemoveTab( mFileDialog );
     
-    if (mFileDialog)
+    if ( mFileDialog != 0 )
     {
         mFileDialog->close();
         mFileDialog = 0;
@@ -196,18 +280,37 @@ void MainWindow::onFileCancelled()
 
 void MainWindow::OnActiveModelChanged( const std::string& modelID )
 {   
-    // We will get rid of all existing tabs, then open only those appropriate 
+    // We get rid of all existing tabs, then open only those appropriate 
     // to the active model.
+    
+    std::string LastKnownActive = mActiveTab;
     
     RemoveAllTabs();
     
-    // Not sure if this will work on Mac or Windows....
+    // Show visualization tab?
     ves::xplorer::Model* model =  
         ves::xplorer::ModelHandler::instance()->GetActiveModel( );
-       
+        
     if( model->GetNumberOfCfdDataSets() > 0 )
     {
         AddTab( mVisualizationTab, "Visualization" );
     }
+    
+    // Show the scenegraph tree
+    AddTab( mScenegraphTreeTab, "Scenegraph" );
+    
+    // Reactivate the last-known active tab
+    ActivateTab( LastKnownActive );
+}
+
+void MainWindow::OnObjectPicked( osg::NodePath& nodePath )
+{    
+    // This is a bit hackish. Instead of re-reading the scenegraph every time a new
+    // selection is made, we should be hooked up to signals for changes to the 
+    // scenegraph so we can re-read at the appropriate time. The only operation 
+    // that *should* be done here is OpenToAndSelect.
+    mScenegraphTreeTab->PopulateWithRoot( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+    
+    mScenegraphTreeTab->OpenToAndSelect( nodePath );
 }
     

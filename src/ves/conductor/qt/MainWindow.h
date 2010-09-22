@@ -36,6 +36,7 @@
 #include <QtGui/QFileDialog>
 
 #include <ves/conductor/qt/IconStack.h>
+#include <ves/conductor/qt/TreeTab.h>
 
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
@@ -63,6 +64,15 @@ public:
     
     /// Remove all existing tabs. Does not delete the underlying widgets.
     void RemoveAllTabs();
+    
+    /// Activate tab containing @c widget
+    void ActivateTab( QWidget* widget );
+    
+    /// Activate tab with label @c tabLabel
+    void ActivateTab( const std::string& tabLabel );
+    
+    /// Activate tab at index @c index
+    void ActivateTab( int index );
 
 protected:
     void changeEvent(QEvent* e);
@@ -71,25 +81,37 @@ protected:
     /// appropriate tabs can be shown when the active model changes.
     void OnActiveModelChanged( const std::string& modelID );
     
+    // Is connected to KeyboardMouse.ObjectPickedSignal so the scenegraph
+    // tree selection is synchronized with object selection.
+    void OnObjectPicked( osg::NodePath& nodePath );
+    
 protected Q_SLOTS:
     
-    /// Called when the file operations icon on the main toolbar is clicked
-    void on_actionFile_triggered(); ///< Autoconnected slot
+    /// Called when the file operations icon on the main toolbar is clicked.
+    /// Autoconnected slot
+    void on_actionFile_triggered(); 
     
-    /// Called when the open file icon of the file operations stack is clicked
-    void on_actionOpen_triggered(); ///< Autoconnected slot
+    /// Called when the open file icon of the file operations stack is clicked.
+    /// Autoconnected slot
+    void on_actionOpen_triggered(); 
     
     /// Called when a valid file selection is made via the file open dialog.
     void onFileOpenSelected( QString fileName );
     
     /// Called when the file selection dialog has been cancelled
     void onFileCancelled();
+    
+    /// Called when current tab is changed.
+    /// Autoconnected slot
+    void on_tabWidget_currentChanged( int index );
 
 private:
     Ui::MainWindow* ui;
     QFileDialog* mFileDialog;
     IconStack* mFileOpsStack;
+    ves::conductor::TreeTab* mScenegraphTreeTab;
     std::map< std::string, QWidget* > mTabbedWidgets;
+    std::string mActiveTab;
     
     /// Maintains the list of signals this object is connected to
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;

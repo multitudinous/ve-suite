@@ -22,6 +22,9 @@ cppSources = lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'IconStack.h')]
 cppSources += lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'TreeTab.h')]
+cppSources += lib_env.qt_moc(source)
+
 source = [pj(buildSrcDir,'MainWindow.h')]
 cppSources += lib_env.qt_moc(source)
 
@@ -47,6 +50,9 @@ cppSources += lib_env.qt_rcc(source)
 source = [pj(buildSrcDir,'titlebar.ui')]
 cppHeaders = lib_env.qt_uic(source)
 
+source = [pj(buildSrcDir,'TreeTab.ui')]
+cppHeaders += lib_env.qt_uic(source)
+
 source = [pj(buildSrcDir,'MainWindow.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
@@ -70,7 +76,8 @@ lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_xplorer_data',
                        'ves_xplorer_command',
                        'ves_xplorer_eventmanager',
-                       'QtSolutions_PropertyBrowser-2.5'
+                       'QtSolutions_PropertyBrowser-2.5',
+                       'osgQtTree'
                       ])
 lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'open', 'xml'),
@@ -78,7 +85,8 @@ lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'command'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
-                           pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src')
+                           pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src'),
+                           pj('#', buildDir, 'external', 'osgQtTree', 'src')
                          ])
 
 if GetPlatform() != 'darwin':
