@@ -41,6 +41,7 @@
 #include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/environment/cfdEnum.h>
+#include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
@@ -97,12 +98,12 @@ using namespace ves::open::xml;
 Wand::Wand()
     :
     Device( WAND ),
-    subzeroFlag( 0 ),
-    rotationFlag( 1 ),
-    m_distance( 1000 ),
     cursorLen( 1.0 ),
     translationStepSize( 0.75 ),
     rotationStepSize( 1.0 ),
+    rotationFlag( 1 ),
+    subzeroFlag( 0 ),
+    m_distance( 1000 ),
     m_buttonPushed( false )
 {
     wand.init( "VJWand" );
@@ -167,6 +168,10 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         << std::endl << vprDEBUG_FLUSH;
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
+    if( !activeDCS )
+    {
+        return;
+    }
 
     //If the wand does not exist
     if( wand->isStupefied() )
@@ -258,7 +263,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     ///Check and see if the cpt is enabled so that we can handle
     ///button events differently
     ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetCameraManager();
+        m_sceneManager.GetCameraManager();
     bool cptEnabled = cameraManager.IsCPTEnabled();
 
     //Process a selection event from a toggle off event just like in KM
@@ -272,6 +277,9 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             unsigned int activeNum = 
                 cameraManager.getChildIndex( 
                 static_cast< osg::Group* >( activeCamera ) );
+            
+            ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+
             if( activeNum + 1 < cameraManager.getNumChildren() )
             {
                 activeNum += 1;
@@ -281,9 +289,59 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
                 activeNum = 0;
             }
             
-            cameraManager.SetActiveCameraObject( 
+            ves::xplorer::scenegraph::camera::CameraObject* newCameraObject = 
                 static_cast< ves::xplorer::scenegraph::camera::CameraObject* >( 
-                cameraManager.getChild( activeNum ) ), true );
+                cameraManager.getChild( activeNum ) );
+            cameraManager.SetActiveCameraObject( newCameraObject, true );
+            
+            //Right now we are saying you must have a DCS
+            scenegraph::DCS& selectedDCS = newCameraObject->GetDCS();
+            gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
+            
+            //Set the connection between the scene manipulator and the selected dcs
+            //sceneManipulator->Connect( &selectedDCS );
+            
+            //If dcs is from a camera object, we want to rotate about local zero point
+            //osg::Vec3d center( 0.0, 0.0, 0.0 );
+            //center = center * osg::Matrixd( selectedMatrix.mData );
+            //sceneManipulator->SetPosition( center );
+            
+            //We need to transform center point into camera space
+            //In the future the center point will be in world coordinates
+            //center = center * osg::Matrixd( sceneManager.GetNavDCS()->GetMat().mData );
+            //gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
+            //deviceHandler.SetCenterPoint( &tempCenter );
+            
+            //Set the selected DCS
+            ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( &selectedDCS );
+            
+            //Need to do this for multi-pass techniques
+            if( m_sceneManager.IsRTTOn() )
+            {
+                selectedDCS.SetTechnique( "Glow" );
+            }
+            else
+            {
+                selectedDCS.SetTechnique( "Select" );
+            }
+            
+            //Hand the node we are interested in off to the animation engine
+            NavigationAnimationEngine& nae =
+                *(NavigationAnimationEngine::instance());
+            nae.SetDCS( m_sceneManager.GetNavDCS() );
+            
+            //Hand our created end points off to the animation engine
+            selectedMatrix = gmtl::invert( selectedMatrix );
+            const gmtl::Matrix44d tempHeadMatrix = m_sceneManager.GetHeadMatrix();
+            const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
+            gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+            selectedMatrix = tempHeadMatrix * myMat * selectedMatrix;
+            
+            gmtl::Vec3d navToPoint =
+                gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
+            gmtl::Quatd rotationPoint =
+                gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
+            nae.SetAnimationEndPoints( navToPoint, rotationPoint );
         }
         
         if( !cptEnabled )
