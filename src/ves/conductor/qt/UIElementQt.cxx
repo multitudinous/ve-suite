@@ -474,36 +474,57 @@ void UIElementQt::_sendEvent( ves::xplorer::eventmanager::InteractionEvent* even
         }
     }
     
+    Qt::MouseButton buttons;
+    switch (event->Buttons)
+    {
+        case InteractionEvent::button_none:
+        {
+            buttons = Qt::NoButton;
+            break;
+        }
+        case InteractionEvent::button_1:
+        {
+            buttons = Qt::LeftButton;
+            break;
+        }
+        case InteractionEvent::button_2:
+        {
+            buttons = Qt::MidButton;
+            break;
+        }
+        case InteractionEvent::button_3:
+        {
+            buttons = Qt::RightButton;
+            break;
+        }
+        default:
+        {
+            buttons = Qt::NoButton;
+            break;
+        }
+    }
+    
     switch( event->EventType )
     {
     case InteractionEvent::buttonPress:
     {
         QMouseEvent e( QEvent::MouseButtonPress, QPoint( x, y ), globalPos, button,
-                       button, Qt::NoModifier );
+                       buttons, Qt::NoModifier );
         qt_sendSpontaneousEvent( this->viewport( ), &e );
     }
         break;
     case InteractionEvent::buttonRelease:
     {
         QMouseEvent e( QEvent::MouseButtonRelease, QPoint( x, y ), globalPos, button,
-                       button, Qt::NoModifier );
+                       buttons, Qt::NoModifier );
         qt_sendSpontaneousEvent( this->viewport( ), &e );
     }
         break;
     case InteractionEvent::pointerMotion:
     {
-        if( event->Buttons == InteractionEvent::button_none )
-        {
-            QMouseEvent e( QEvent::MouseMove, QPoint( x, y ), globalPos, Qt::NoButton,
-                           Qt::NoButton, Qt::NoModifier );
-            qt_sendSpontaneousEvent( this->viewport( ), &e );
-        }
-        else
-        {
-            QMouseEvent e( QEvent::MouseMove, QPoint( x, y ), globalPos, Qt::NoButton,
-                           button, Qt::NoModifier );
-            qt_sendSpontaneousEvent( this->viewport( ), &e );
-        }
+        QMouseEvent e( QEvent::MouseMove, QPoint( x, y ), globalPos, Qt::NoButton,
+                        buttons, Qt::NoModifier );
+        qt_sendSpontaneousEvent( this->viewport( ), &e );   
     }
         break;
     case InteractionEvent::keyPress:
