@@ -37,6 +37,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/model/Model.h>
 
+#include <ves/xplorer/command/CommandManager.h>
+
 #include <iostream>
 
 #include <vpr/Sync/Guard.h>
@@ -247,17 +249,24 @@ void VE_i::SetCommand( const char* openXMLCommand )
     std::vector<ves::open::xml::XMLObjectPtr> xmlObjects;
     xmlObjects = networkReader.GetLoadedXMLObjects();
     
-    ves::open::xml::CommandPtr temp = 
-    boost::dynamic_pointer_cast< ves::open::xml::Command >( 
-                                                           xmlObjects.at( 0 ) );
-    if( !temp )
+    for( size_t i = 0; i < xmlObjects.size(); ++i )
     {
-        std::cout << "NULL command from ce" << std::endl;
+        ves::open::xml::CommandPtr temp = 
+            boost::dynamic_pointer_cast< ves::open::xml::Command >( 
+            xmlObjects.at( i ) );
+        if( !temp )
+        {
+            std::cerr << "|\tVE_i::SetCommand : CommandPtr is null" << std::endl;
+        }
+        else
+        {
+            ///Pass data off to xplorer if the command is one from
+            ///ce about data
+            ves::xplorer::command::CommandManager::instance()->
+                AddXMLCommand( temp );
+        }
     }
     
-    ///Pass data off to xplorer if the command is one from
-    ///ce about data
-    //m_commandNameMap[ temp->GetCommandName()] = temp;
     xmlObjects.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
