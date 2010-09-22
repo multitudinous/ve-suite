@@ -210,6 +210,10 @@ KeyboardMouse::KeyboardMouse()
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< HideShowUISignal_type >( &mHideShowUISignal ),
         "KeyboardMouse.HideShowUISignal");
+        
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &mObjectPickedSignal ),
+        "KeyboardMouse.ObjectPickedSignal" );
 #endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1665,15 +1669,11 @@ void KeyboardMouse::ProcessSelection()
                           
     // Change the active model to the one corresponding to this piece of geometry
     ves::xplorer::ModelHandler::instance()->SetActiveModel( newSelectedDCS->GetModelData()->GetID() );
-//     ves::open::xml::DataValuePairPtr dataValuePair(
-//     new ves::open::xml::DataValuePair() );
-//     dataValuePair->SetData( "CHANGE_ACTIVE_MODEL", newSelectedDCS->GetModelData()->GetID() );
-// 
-//     ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-//     veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
-//     veCommand->AddDataValuePair( dataValuePair );
-// 
-//     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+    
+    // Can't just pass in local variable nodePath because it is altered in call to 
+    // FindVESObject
+    osg::NodePath np = intersections.begin()->nodePath;
+    mObjectPickedSignal( np );
 #endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////

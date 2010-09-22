@@ -388,6 +388,9 @@ private:
 
     typedef boost::signals2::signal<void ( )> HideShowUISignal_type;
     HideShowUISignal_type mHideShowUISignal;
+    
+    typedef boost::signals2::signal< void (osg::NodePath&) > ObjectPickedSignal_type;
+    ObjectPickedSignal_type mObjectPickedSignal;
 #endif // QT_ON
 
 };
