@@ -84,11 +84,11 @@
 #include <iostream>
 
 //#define VES_SRTT_DEBUG
-#ifndef _DARWIN
+/*#ifndef _DARWIN
 #define VES_USE_MSMRT_CALLBACK
 #define VES_USE_KEEP_FBOS_BOUND_CALLBACK
 #define VES_USE_MULTISAMPLING
-#endif
+#endif*/
 
 using namespace ves::xplorer;
 
