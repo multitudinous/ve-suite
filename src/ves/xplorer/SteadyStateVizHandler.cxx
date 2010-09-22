@@ -128,11 +128,6 @@ SteadyStateVizHandler::SteadyStateVizHandler()
         new ves::xplorer::event::VectorEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SteadyStateVizHandler::Initialize( std::string param )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::~SteadyStateVizHandler()
 {
     runIntraParallelThread = false;

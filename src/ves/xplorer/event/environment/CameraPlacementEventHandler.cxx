@@ -337,6 +337,11 @@ void CameraPlacementEventHandler::Execute(
             return;
         }
 
+        if( !sceneManager.IsMasterNode() )
+        {
+            return;
+        }
+
         std::string saveImageDir;
         command->GetDataValuePair(
             "saveImageDirectory" )->GetData( saveImageDir );
@@ -351,6 +356,11 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair(
             "saveImageDirectory" )->GetData( saveImageDir );
 
+        if( !sceneManager.IsMasterNode() )
+        {
+            return;
+        }
+        
         cameraManager.WriteAllImageFiles( saveImageDir );
 
         break;

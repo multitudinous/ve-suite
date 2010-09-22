@@ -118,9 +118,6 @@ private:
     vprSingletonHeader( SteadyStateVizHandler );
 
 public:
-    ///Initialize the sshandler claass
-    void Initialize( std::string );
-
     ///Destructor functions since destructors don't get called yet
     //void CleanUp();
     ///Called once by cfdApp to create any necessary objects

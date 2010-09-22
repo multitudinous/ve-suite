@@ -510,9 +510,11 @@ void App::initScene()
 
     //Set rtt mode for devices
     ves::xplorer::scenegraph::SceneManager::instance()->SetRTT( mRTT );
+    //Tell scenemanager if we are the master node
+    ves::xplorer::scenegraph::SceneManager::instance()->
+        SetMasterNode( m_vjobsWrapper->IsMaster() );
 
     // create steady state visualization objects
-    SteadyStateVizHandler::instance()->Initialize( std::string() );
     SteadyStateVizHandler::instance()->InitScene();
 
     //create the volume viz handler

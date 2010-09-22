@@ -239,6 +239,13 @@ public:
     ///Tell if we are in Desktop mode
     bool IsScreenAligned();
 
+    ///Tell if we are the master node
+    ///Returns true if in desktop mode as well
+    bool IsMasterNode();
+
+    ///Set if it is the master node
+    void SetMasterNode( bool isMasterNode );
+    
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -358,6 +365,9 @@ private:
 
     ///Flag to tell if we are using screen aligned normals
     bool m_screenAlignedNormals;
+
+    ///Tell if we are on the master node
+    bool m_isMasterNode;
 
     ///This containes a map to context specific data given a viewport
     ///This map should never be returned to the user as the map

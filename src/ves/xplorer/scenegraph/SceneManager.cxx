@@ -120,7 +120,8 @@ SceneManager::SceneManager()
     mCharacterController( NULL ),
     m_isRTTOn( false ),
     m_isDesktopMode( false ),
-    m_screenAlignedNormals( true )
+    m_screenAlignedNormals( true ),
+    m_isMasterNode( true )
 {
     ;
 }
@@ -750,5 +751,15 @@ void SceneManager::SetScreenAlignedNormals( bool isScreenAligned )
 bool SceneManager::IsScreenAligned()
 {
     return m_screenAlignedNormals;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::SetMasterNode( bool isMasterNode )
+{
+    m_isMasterNode = isMasterNode;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool SceneManager::IsMasterNode()
+{
+    return m_isMasterNode;
 }
 ////////////////////////////////////////////////////////////////////////////////
