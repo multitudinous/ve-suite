@@ -355,6 +355,11 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     {
         if( cptEnabled && ( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) )
         {
+            if( !m_sceneManager.IsMasterNode() )
+            {
+                return;
+            }
+
             open::xml::DataValuePairPtr dvp( new open::xml::DataValuePair() );
             unsigned int addFlag = 1;
             dvp->SetData( "AddCameraObject", addFlag );

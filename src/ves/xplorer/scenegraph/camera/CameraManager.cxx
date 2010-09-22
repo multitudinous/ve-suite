@@ -471,6 +471,11 @@ osg::Node* CameraManager::GetCameraManagerQuad()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::UpdateConductorData( ves::open::xml::DataValuePairPtr inDvp )
 {
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsMasterNode() )
+    {
+        return;
+    }
+
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
     command->SetCommandName( "UPDATE_ACTIVE_CAMERA_OBJECT" );
 

@@ -607,11 +607,7 @@ void cfdQuatCamHandler::PreFrameUpdate()
         CommandManager::instance()->GetXMLCommand();
     if( tempCommand )
     {
-        vprDEBUG( vesDBG, 3 )
-            << "|\tcfdQuatCamHandler::PreFrameUpdate Command Name : "
-            << tempCommand->GetCommandName()
-            << std::endl << vprDEBUG_FLUSH;
-        std::map< std::string, ves::xplorer::event::EventHandler* >::iterator
+        std::map< std::string, ves::xplorer::event::EventHandler* >::const_iterator
             currentEventHandler;
         currentEventHandler = mEventHandlers.find(
             tempCommand->GetCommandName() );
