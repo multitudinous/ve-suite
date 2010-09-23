@@ -71,6 +71,8 @@ VEAnimationGraphicalPlugin::VEAnimationGraphicalPlugin()
     m_keyboard( 0 )
 {
     mObjectName = "Valve";
+    ///Set the name of the commands we want to capture from the dynsim unit
+    mEventHandlerMap[ "OPCData" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VEAnimationGraphicalPlugin::~VEAnimationGraphicalPlugin()
@@ -177,6 +179,25 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
                 }
             }
         }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void VEAnimationGraphicalPlugin::SetCurrentCommand(
+    ves::open::xml::CommandPtr command )
+{
+    if( !command )
+    {
+        return;
+    }
+    
+    const std::string commandName = command->GetCommandName();
+    std::cout << "Command Name " << commandName << std::endl;
+    
+    size_t numDVPs = command->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < numDVPs; ++i )
+    {
+        std::cout << command->GetDataValuePair( i )->GetDataName() << std::endl;
+        ///Do something with the dvp data
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

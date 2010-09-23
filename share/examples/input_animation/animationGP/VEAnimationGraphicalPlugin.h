@@ -44,6 +44,9 @@ namespace display
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
+
+#include <ves/open/xml/CommandPtr.h>
+
 #include <osg/Switch>
 
 namespace ves
@@ -70,13 +73,20 @@ class DCS;
 class VE_USER_PLUGIN_EXPORTS VEAnimationGraphicalPlugin : public ves::xplorer::plugin::PluginBase
 {
 public:
+    ///Constructor
     VEAnimationGraphicalPlugin();
+    ///Destructor
     virtual ~VEAnimationGraphicalPlugin();
 
+    ///Initialize the scenegraph with graphics models
     virtual void InitializeNode( osg::Group* veworldDCS );
-    virtual void PreFrameUpdate(); 
-       
+    ///Check if anything needs updated graphically
+    virtual void PreFrameUpdate();
+    ///Process the current command in the queue from the dynsim unit
+    virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
+
 private:
+    ///Keyboard helper pointer
     ves::xplorer::device::KeyboardMouse* m_keyboard;
 /*
     osg::ref_ptr< osg::Node > _fermentorGeometry;
