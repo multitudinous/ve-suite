@@ -61,13 +61,12 @@
 #include <osgSim/ColorRange>
 #include <osg/Vec3d>
 
-// --- C/C++ Libraries --- //
-
+using namespace opcgp;
 
 ////////////////////////////////////////////////////////////////////////////////
 VEAnimationGraphicalPlugin::VEAnimationGraphicalPlugin()
     :
-    PluginBase(),
+    ves::xplorer::plugin::PluginBase(),
     m_keyboard( 0 )
 {
     mObjectName = "Valve";

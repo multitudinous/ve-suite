@@ -34,14 +34,6 @@
 #ifndef VE_ANIMATION_GRAPHICAL_PLUGIN_H
 #define VE_ANIMATION_GRAPHICAL_PLUGIN_H
 
-// --- My Includes --- //
-class Shaders;
-
-namespace display
-{
-    class DigitalGauge;
-}
-
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
 
@@ -58,18 +50,12 @@ namespace device
 {
 class KeyboardMouse;
 }
-
-namespace scenegraph
-{
-class DCS;
-}
-
 } //end xplorer
 } //end ves
 
-// --- C/C++ Libraries --- //
-#include <map>
 
+namespace opcgp
+{
 class VE_USER_PLUGIN_EXPORTS VEAnimationGraphicalPlugin : public ves::xplorer::plugin::PluginBase
 {
 public:
@@ -105,10 +91,9 @@ private:
     osg::ref_ptr< osg::Node > m_closeGeometry;
     osg::ref_ptr< osg::Switch > m_valueAnimation;
     int mButton;
-
-
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( VEAnimationGraphicalPlugin )
-
+    
+}
 #endif //VE_ANIMATION_GRAPHICAL_PLUGIN_H

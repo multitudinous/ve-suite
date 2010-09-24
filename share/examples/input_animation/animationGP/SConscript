@@ -29,10 +29,11 @@ vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
+   lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 
-lib = ves_pkg.createLoadableModule( 'animationGP', lib_env,
+lib = ves_pkg.createLoadableModule( 'VEAnimationGraphicalPlugin', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'input_animation', 'Plugins', 'GE', host_type ) )  
 
 lib.addSources( sources )
