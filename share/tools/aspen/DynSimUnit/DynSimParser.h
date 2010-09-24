@@ -55,6 +55,7 @@ public:
     int OpenFile( std::string filename );
     //bool ConnectToOPC();
     std::vector< std::pair< std::string, std::string > > ReadVars();
+    //std::map< std::string, std::pair< std::string, VARTYPE > > ReadVars();
     //std::string GetOPCValue( const std::string& );
     std::string GetOPCValues( );
     void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
@@ -131,6 +132,7 @@ private:
     std::map< std::string, block > others;
     std::map< std::string, flowsheet > flowsheets;
     std::vector< std::pair< std::string, std::string > > nameAndValues;
+    //std::map< std::string, std::pair < std::string, VARTYPE> > nameValVar;
     std::string m_opcFlowsheetName;
     std::vector< std::string > m_opcBlocks;
     std::vector< std::string > m_opcVariables;

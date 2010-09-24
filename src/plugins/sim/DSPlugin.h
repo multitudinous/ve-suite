@@ -65,6 +65,7 @@ protected:
     void OnConnect( wxCommandEvent& event );
     void OnAddVariable( wxCommandEvent& event );
     void OnTimer( wxTimerEvent& event );
+    void QueryForAllVariables( wxCommandEvent& event );
     wxMenu* mDynSimMenu;
     std::vector< std::string > m_opcList;
     std::vector< std::string > m_selectedOpcList;

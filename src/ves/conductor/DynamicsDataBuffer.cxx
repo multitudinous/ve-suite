@@ -182,7 +182,7 @@ void DynamicsDataBuffer::Disable( )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicsDataBuffer::Update( )
+/*void DynamicsDataBuffer::Update( )
 {
     //we should be checking that there are values that need to be monitored
     //if not skip over
@@ -225,4 +225,4 @@ void DynamicsDataBuffer::Update( )
 
         vpr::System::msleep( 10 );
     }
-}
+}*/

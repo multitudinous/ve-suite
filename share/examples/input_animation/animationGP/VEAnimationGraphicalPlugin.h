@@ -91,6 +91,10 @@ private:
     osg::ref_ptr< osg::Node > m_closeGeometry;
     osg::ref_ptr< osg::Switch > m_valueAnimation;
     int mButton;
+
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_rotationDCS;
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_translationDCS;
+    double m_valveHeight;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( VEAnimationGraphicalPlugin )

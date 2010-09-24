@@ -139,7 +139,7 @@ int DynSimParser::OpenFile( std::string filename )
 
     //create the command
     std::string command =
-        "C:/SIMSCI/DSS43/GUI/Bin/runSIM4ME_Dynsim.bat \"C:\\Documents and Settings\\tjordan\\Desktop\\VES_DynSim\\amon\\Ammonia_Reactor.s4m\"";
+        "C:/SIMSCI/DSS44/GUI/Bin/runSIM4ME_Dynsim.bat \"C:\\Documents and Settings\\tjordan\\Desktop\\VES_DynSim\\amon\\Ammonia_Reactor.s4m\"";
 
     //make the call
     return system( command.c_str() );
@@ -751,7 +751,7 @@ std::string DynSimParser::CreateVESNetwork()
         flowSheetModel->SetPluginName( sheetIter->second.name );
         flowSheetModel->SetPluginType( "SimUOPlugin" );
         flowSheetModel->SetVendorName( "DYNSIMUNIT" );
-        flowSheetModel->SetIconFilename( "C:/SIMSCI/DSS43/GUI/Images/ClassIcons/" + sheetIter->second.cls + ".gif" );
+        flowSheetModel->SetIconFilename( "C:/SIMSCI/DSS44/GUI/Images/ClassIcons/" + sheetIter->second.cls + ".gif" );
         //flowSheetModel->SetIconFilename( sheetIter->second.cls );
         flowSheetModel->SetIconRotation( 0 );
         flowSheetModel->SetIconScale( 1 );
@@ -773,31 +773,62 @@ std::string DynSimParser::CreateVESNetwork()
             streamIter != sheetIter->second.streams.end();
             ++streamIter )
         {
-            if( !streamIter->second.cls.empty() )
+            if( !streamIter->second.cls.empty() &&
+                streamIter->second.ports.size() > 0 )
             {
                 ves::open::xml::model::LinkPtr
                     xmlLink( new ves::open::xml::model::Link() );
                 if( !streamIter->second.ports[0].dataFlow.compare("input") )
                 {
-                    xmlLink->GetToModule()->SetData(
-                        streamIter->second.ports[0].modelName,
-                        static_cast< long int >( streamIter->second.ports[0].modelId ) );
-                    xmlLink->GetFromModule()->SetData(
-                        streamIter->second.ports[1].modelName,
-                        static_cast< long int >( streamIter->second.ports[1].modelId ) );
-                    *(xmlLink->GetFromPort()) = static_cast< long int >( streamIter->second.ports[1].id );
-                    *(xmlLink->GetToPort()) = static_cast< long int >( streamIter->second.ports[0].id );
+                    if( streamIter->second.ports.size() > 1 )
+                    {
+                        xmlLink->GetToModule()->SetData(
+                            streamIter->second.ports[0].modelName,
+                            static_cast< long int >( streamIter->second.ports[0].modelId ) );
+                        xmlLink->GetFromModule()->SetData(
+                            streamIter->second.ports[1].modelName,
+                            static_cast< long int >( streamIter->second.ports[1].modelId ) );
+                        *(xmlLink->GetFromPort()) = static_cast< long int >( streamIter->second.ports[1].id );
+                        *(xmlLink->GetToPort()) = static_cast< long int >( streamIter->second.ports[0].id );
+                    }
+                    //if it only has one port
+                    /*else
+                    {
+                        xmlLink->GetToModule()->SetData(
+                            streamIter->second.ports[0].modelName,
+                            static_cast< long int >( streamIter->second.ports[0].modelId ) );
+                        xmlLink->GetFromModule()->SetData(
+                            streamIter->second.ports[1].modelName,
+                            static_cast< long int >( streamIter->second.ports[1].modelId ) );
+                        *(xmlLink->GetFromPort()) = static_cast< long int >( streamIter->second.ports[1].id );
+                        *(xmlLink->GetToPort()) = static_cast< long int >( streamIter->second.ports[0].id );
+                    }*/
                 }
-                else
+                else if( !streamIter->second.ports[0].dataFlow.compare("output") )
                 {
-                    xmlLink->GetToModule()->SetData(
-                        streamIter->second.ports[1].modelName,
-                        static_cast< long int >( streamIter->second.ports[1].modelId ) );
-                    xmlLink->GetFromModule()->SetData(
-                        streamIter->second.ports[0].modelName,
-                        static_cast< long int >( streamIter->second.ports[0].modelId ) );
-                    *(xmlLink->GetFromPort()) = static_cast< long int >( streamIter->second.ports[0].id );
-                    *(xmlLink->GetToPort()) = static_cast< long int >( streamIter->second.ports[1].id );
+                    if( streamIter->second.ports.size() > 1 )
+                    {
+                        xmlLink->GetToModule()->SetData(
+                            streamIter->second.ports[1].modelName,
+                            static_cast< long int >( streamIter->second.ports[1].modelId ) );
+                        xmlLink->GetFromModule()->SetData(
+                            streamIter->second.ports[0].modelName,
+                            static_cast< long int >( streamIter->second.ports[0].modelId ) );
+                        *(xmlLink->GetFromPort()) = static_cast< long int >( streamIter->second.ports[0].id );
+                        *(xmlLink->GetToPort()) = static_cast< long int >( streamIter->second.ports[1].id );
+                    }
+                    //if it only has one port
+                    /*else
+                    {
+                        xmlLink->GetToModule()->SetData(
+                            streamIter->second.ports[1].modelName,
+                            static_cast< long int >( streamIter->second.ports[1].modelId ) );
+                        xmlLink->GetFromModule()->SetData(
+                            streamIter->second.ports[0].modelName,
+                            static_cast< long int >( streamIter->second.ports[0].modelId ) );
+                        *(xmlLink->GetFromPort()) = static_cast< long int >( streamIter->second.ports[0].id );
+                        *(xmlLink->GetToPort()) = static_cast< long int >( streamIter->second.ports[1].id );
+                    }*/
                 }
 
                 xmlLink->SetLinkName( streamIter->first );
@@ -938,66 +969,81 @@ std::string DynSimParser::CreateVESNetwork()
 std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string imageType )
 {
     std::string dynsimInstallPath( "C:/SIMSCI" );
-    std::string dynsimXMLPath = dynsimInstallPath + std::string("/DSS43/GUI/IconPalette/DynsimEngine/" );
-    std::string dynsimIconPath = dynsimInstallPath + std::string("/DSS43/GUI/Images/ClassIcons/");
+    std::string dynsimXMLPath = dynsimInstallPath + std::string("/DSS44/GUI/IconPalette/DynsimEngine/" );
+    std::string dynsimIconPath = dynsimInstallPath + std::string("/DSS44/GUI/Images/ClassIcons/");
     std::string xmlFilePath = dynsimXMLPath + xmlName + std::string( ".xml" );
-    mParser->parse( xmlFilePath.c_str() );
     
-    mCommandDocument = mParser->getDocument();
-    root_elem = mCommandDocument->getDocumentElement();
-    DOMNodeList* iconList = root_elem->getElementsByTagName(
-        XMLString::transcode( "Icon" ) );
-
     std::string gifName;
-
-    int iconEntryCount = iconList->getLength();
-    //loop over all icon entries and grab those that have the ImageNormal icon type
-    for( int i = 0; i < iconEntryCount; i++ )
+    std::ifstream inFile( xmlFilePath.c_str(), std::ifstream::in );
+    
+    //test that the file exists
+    if(inFile.is_open())
     {
-        //xmlIcon tempIcon;
-        DOMElement* iconElement =
-            dynamic_cast<DOMElement*> ( iconList->item( i ) );
-        char* fUnicodeForm = XMLString::transcode( 
-            iconElement->getAttribute( XMLString::transcode( "Type" ) ) );
-        std::string type( fUnicodeForm );
+        //if( imageType.empty() )
+        //{
+        //    imageType = "ImageNormal";
+        //}
 
-        //change this ImageNormal to the value of the entry from the xml file
-        //once we parse it out
-        if( !type.compare( imageType ) )
-        {            
-            //gif
-            DOMNodeList* filenameList = iconElement->getElementsByTagName (
-                XMLString::transcode("FileName") );
-            DOMElement* fileElement =
-                dynamic_cast<DOMElement*> ( filenameList->item( 0 ) );
-            DOMText* rawText = dynamic_cast< DOMText* > ( fileElement->getFirstChild() );
-            fUnicodeForm =
-                XMLString::transcode( rawText->getData() );
-            std::string gif( fUnicodeForm );
+        mParser->parse( xmlFilePath.c_str() );
+       
+        mCommandDocument = mParser->getDocument();
+        root_elem = mCommandDocument->getDocumentElement();
+        DOMNodeList* iconList = root_elem->getElementsByTagName(
+            XMLString::transcode( "Icon" ) );
 
-            //scheme
-            char* fUnicodeForm = XMLString::transcode(
-                iconElement->getAttribute( XMLString::transcode( "Scheme" ) ) );
-            std::string scheme( fUnicodeForm );
+        int iconEntryCount = iconList->getLength();
+        //loop over all icon entries and grab those that have the ImageNormal icon type
+        for( int i = 0; i < iconEntryCount; i++ )
+        {
+            //xmlIcon tempIcon;
+            DOMElement* iconElement =
+                dynamic_cast<DOMElement*> ( iconList->item( i ) );
+            char* fUnicodeForm = XMLString::transcode( 
+                iconElement->getAttribute( XMLString::transcode( "Type" ) ) );
+            std::string type( fUnicodeForm );
 
-            //if scheme returns empty there is no scheme attr so end the search
-            if( scheme.empty() )
-            {
-                gifName = gif;
-                break;
-            }
-            else
-            {
-                //scheme = 3D end the search
-                if( !scheme.compare( "3D" ) )
+            //change this ImageNormal to the value of the entry from the xml file
+            //once we parse it out
+            if( !type.compare( imageType ) )
+            {            
+                //gif
+                DOMNodeList* filenameList = iconElement->getElementsByTagName (
+                    XMLString::transcode("FileName") );
+                DOMElement* fileElement =
+                    dynamic_cast<DOMElement*> ( filenameList->item( 0 ) );
+                DOMText* rawText = dynamic_cast< DOMText* > ( fileElement->getFirstChild() );
+                fUnicodeForm =
+                    XMLString::transcode( rawText->getData() );
+                std::string gif( fUnicodeForm );
+
+                //scheme
+                char* fUnicodeForm = XMLString::transcode(
+                    iconElement->getAttribute( XMLString::transcode( "Scheme" ) ) );
+                std::string scheme( fUnicodeForm );
+
+                //if scheme returns empty there is no scheme attr so end the search
+                if( scheme.empty() )
                 {
                     gifName = gif;
                     break;
                 }
-                //else scheme = 2D continue
+                else
+                {
+                    //scheme = 3D end the search
+                    if( !scheme.compare( "3D" ) )
+                    {
+                        gifName = gif;
+                        break;
+                    }
+                    //else scheme = 2D continue
+                }
             }
-        }
 
+        }
+    }
+    else
+    {
+        gifName = xmlName + ".gif";
     }
 
     //return the full path
@@ -1301,8 +1347,14 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
 ///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::AddOPCVariable( const std::string& var )
 {
-    m_opcVariables.push_back( var );
-    UpdateOPCList();
+    std::vector<std::string>::const_iterator pos = 
+        lower_bound( m_opcVariables.begin(), m_opcVariables.end(), var );  
+
+    if( pos != m_opcVariables.end() || m_opcVariables.empty() )
+    {
+        m_opcVariables.push_back( var );
+        UpdateOPCList();
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::UpdateOPCList( )
@@ -1356,7 +1408,10 @@ void DynSimParser::UpdateOPCList( )
 
 ///////////////////////////////////////////////////////////////////////////////
 std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
+//std::map< std::string, std::pair< std::string, VARTYPE > > DynSimParser::ReadVars()
 {
+    UpdateOPCList();
+
     CComSafeArray<VARIANT> * values;
     values = new CComSafeArray<VARIANT>();
     values->Create();
@@ -1378,21 +1433,32 @@ std::vector< std::pair< std::string, std::string > > DynSimParser::ReadVars()
         values->GetSafeArrayPtr(), errors->GetSafeArrayPtr(), &quality, &timestamp );
 
     //std::vector< std::pair< std::string, std::string > > nameAndValues;
+    //nameValVar.clear();
     nameAndValues.clear();
 
     for( int i = 1; i <= count; i++)
     {
-        values->GetAt(i).ChangeType(VT_BSTR);
         std::pair< std::string, std::string > nameNval;
+        //std::pair< std::string, VARTYPE > tempValVar;
+        //std::pair< std::string, std::pair< std::string, VARTYPE> > tempNameValVar;
+
+        //tempValVar.second = values->GetAt(i).vt;
+        values->GetAt(i).ChangeType(VT_BSTR);
 
         //this entry has the opc prefix appended
         //nameNval.first = _bstr_t( itemIDs->GetAt(i) );
         //this one doesn't - +1 is for the "_"
         std::string temp = _bstr_t( itemIDs->GetAt(i) );
         nameNval.first = temp.substr( m_opcFlowsheetName.size() + 1,
-            temp.size() - (m_opcFlowsheetName.size() + 1) - (temp.size() - temp.find(".") ) );
-        
+            temp.size() - (m_opcFlowsheetName.size() + 1) - (temp.size() - temp.find(".") ) );        
         nameNval.second = _bstr_t( values->GetAt(i).bstrVal );
+        
+        //nameValVar[
+        //temp.substr( m_opcFlowsheetName.size() + 1,
+        //    temp.size() - (m_opcFlowsheetName.size() + 1) - (temp.size() - temp.find(".") ) )] = tempValVar;
+
+
+        //tempNameValVar.second = tempValVar;
         nameAndValues.push_back( nameNval );
     }
 
@@ -1471,6 +1537,17 @@ std::string DynSimParser::GetOPCValues( )
         varAndValues->AddDataValuePair( entry );
     }
 
+    //std::map< std::string, std::pair< std::string, VARTYPE > >::iterator iter;
+    //for( iter = nameValVar.begin();
+    //    iter != nameValVar.end();
+    //    ++iter )
+    //{
+    //    ves::open::xml::DataValuePairPtr
+    //         entry( new ves::open::xml::DataValuePair() );
+    //    entry->SetData( iter->first, iter->second.first );
+    //    varAndValues->AddDataValuePair( entry );
+    //}
+
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
     nodes.push_back( 
@@ -1545,15 +1622,73 @@ void DynSimParser::SetOPCValues( std::vector< std::pair < std::string, std::stri
         tempValue.bstrVal = bstrValue;
 
         //NEED TO ADD CONVERSION TO THE PROPER TYPE using ChangeType()
-
+        //currently hardcoded to Integer
         values->SetAt( i, tempValue );
+        
+        //get the correct vartype and set it before send data
+        //values->GetAt(i).ChangeType( nameValVar[varAndValues[i-1].first].second );
+
+        //temporary very bloated way of getting the vartype
+            
+        
+        //Get a list of the available OPC variables for a given unit of
+            std::string tempVar;
+            long browserCount = browser->GetCount();
+            for( long j = 1; j <= browserCount; j++ )
+            {
+                _bstr_t itemName = browser->Item( j );
+                std::string temp = itemName;
+                if( temp.find( varAndValues[i-1].first ) != std::string::npos )
+                {
+                    tempVar = temp;
+                    break;
+                }
+            }
+
+            CComSafeArray<BSTR> * tempItemIDs;
+            tempItemIDs = new CComSafeArray<BSTR>( 2);
+            
+            CComSafeArray<long> * tempClientID;
+            tempClientID = new CComSafeArray<long>( 2 );
+            
+            CComSafeArray<long> * tempServerID;
+            tempServerID = new CComSafeArray<long>( );
+            tempServerID->Create();
+            
+            CComSafeArray<long> * tempErrors;
+            tempErrors = new CComSafeArray<long>();
+            tempErrors->Create();
+
+            tempItemIDs->SetAt( 1, browser->GetItemID( tempVar.c_str() ) );
+            tempClientID->SetAt( 1, 1 );
+            
+            OPCItemsPtr tempItems;
+            HRESULT hr = items->AddItems( 1,tempItemIDs->GetSafeArrayPtr(),
+                tempClientID->GetSafeArrayPtr(), tempServerID->GetSafeArrayPtr(),
+                tempErrors->GetSafeArrayPtr());
+
+            CComSafeArray<VARIANT> * tempValue;
+            tempValue = new CComSafeArray<VARIANT>();
+            tempValue->Create();
+
+            VARIANT tempQuality;
+            VariantInit(&tempQuality);
+
+            VARIANT tempTimestamp;
+            VariantInit(&tempTimestamp);
+
+            long count = tempServerID->GetUpperBound();
+            //This function reads the value, quality and timestamp information for one
+            //or more items in a group.
+            group->SyncRead( OPCDataSource::OPCDevice, 1, tempServerID->GetSafeArrayPtr(),
+                tempValue->GetSafeArrayPtr(), tempErrors->GetSafeArrayPtr(), &tempQuality, &tempTimestamp );
+            
+        values->GetAt(i).ChangeType( tempValue->GetAt(1).vt );
+
+        //This function writes the value more items in a group.
+        setGroup->SyncWrite( count, setServerID->GetSafeArrayPtr(),
+            values->GetSafeArrayPtr(), errors->GetSafeArrayPtr() );
     }
-
-    //This function reads the value, quality and timestamp information for one
-    //or more items in a group.
-    setGroup->SyncWrite( count, setServerID->GetSafeArrayPtr(),
-        values->GetSafeArrayPtr(), errors->GetSafeArrayPtr() );
-
     groups->Remove( _T( "SetGroup" ) );
 }
 

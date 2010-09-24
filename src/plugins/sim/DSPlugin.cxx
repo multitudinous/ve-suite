@@ -35,6 +35,7 @@
 #include "DSPlugin.h"
 #include "DSOpenDialog.h"
 #include "OPCDlg.h"
+#include "OpcUOVarDialog.h"
 
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
@@ -56,6 +57,7 @@
 #include <wx/window.h>
 #include <wx/filedlg.h>
 #include <wx/filename.h>
+#include <wx/grid.h>
 
 using namespace ves::open::xml::model;
 using namespace ves::open::xml;
@@ -68,6 +70,7 @@ BEGIN_EVENT_TABLE( DSPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( DSPLUGIN_CONNECT, DSPlugin::OnConnect )
     //EVT_TIMER( DSPLUGIN_TIMER_ID, DSPlugin::OnTimer )
     EVT_MENU( DSPLUGIN_ADDVAR, DSPlugin::OnAddVariable )
+    EVT_MENU( DSPLUGIN_ALLVAR, DSPlugin::QueryForAllVariables )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( DSPlugin, ves::conductor::UIPluginBase )
@@ -253,12 +256,14 @@ wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mDynSimMenu = new wxMenu();
     mDynSimMenu->Append( DSPLUGIN_OPEN_SIM, _( "Open" ) );
     mDynSimMenu->Enable( DSPLUGIN_OPEN_SIM, true );
-    //mDynSimMenu->Append( DSPLUGIN_CREATE_OPC_LIST, _( "Create List") );
-    //mDynSimMenu->Enable( DSPLUGIN_CREATE_OPC_LIST, true );
+    mDynSimMenu->Append( DSPLUGIN_CREATE_OPC_LIST, _( "Create List") );
+    mDynSimMenu->Enable( DSPLUGIN_CREATE_OPC_LIST, true );
     mDynSimMenu->Append( DSPLUGIN_CONNECT, _( "Connect to OPC") );
     mDynSimMenu->Enable( DSPLUGIN_CONNECT, true );
-    //mDynSimMenu->Append( DSPLUGIN_ADDVAR, _( "ADD VAR") );
-    //mDynSimMenu->Enable( DSPLUGIN_ADDVAR, true );
+    mDynSimMenu->Append( DSPLUGIN_ADDVAR, _( "ADD VAR") );
+    mDynSimMenu->Enable( DSPLUGIN_ADDVAR, true );
+    mDynSimMenu->Append( DSPLUGIN_ALLVAR, _( "ALL VAR") );
+    mDynSimMenu->Enable( DSPLUGIN_ALLVAR, true );
     baseMenu->Insert( 0, DSPLUGIN_DYNSIM_MENU,   _( "DynSim" ), mDynSimMenu,
                     _( "Used in conjunction with DynSim" ) );
     baseMenu->Enable( DSPLUGIN_DYNSIM_MENU, true );
@@ -307,7 +312,7 @@ void DSPlugin::OnConnect( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnAddVariable( wxCommandEvent& event )
 {
-    ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
+    /*ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("addVariable");
 
     ves::open::xml::DataValuePairPtr
@@ -326,7 +331,32 @@ void DSPlugin::OnAddVariable( wxCommandEvent& event )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     std::string nw_str = serviceList->Query( status );
-    DynamicsDataBuffer::instance()->Enable();
+    DynamicsDataBuffer::instance()->Enable();*/
+
+    //new
+    /*ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
+    monitor->SetCommandName("addVariable");
+    
+    wxString varName = WxGrid->GetRowLabelValue( monitorRow );
+    std::string temp = ConvertUnicode( mCompName.c_str() ) + "." +
+        ConvertUnicode( varName.c_str() );
+
+    ves::open::xml::DataValuePairPtr
+        variables( new ves::open::xml::DataValuePair() );
+    variables->SetData( "variable", temp.c_str() );
+    monitor->AddDataValuePair( variables );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr,
+        std::string >( monitor, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    std::string nw_str = mServiceList->Query( status );*/
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > DSPlugin::GetAvailableVariables()
@@ -352,3 +382,56 @@ void DSPlugin::OnTimer( wxTimerEvent& event )
 {
     DynamicsDataBuffer::instance()->Update();
 }*/
+
+///////////////////////////////////////////////////////////////////////////////
+void DSPlugin::QueryForAllVariables( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent() );
+    for( int i = 0; i < m_opcList.size(); i++ )
+    {
+        //Query Unit for all opc variables available
+        std::string pluginName = m_opcList[i].c_str();
+        ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+        returnState->SetCommandName( "getAllOPCVariables" );
+        ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
+        data->SetData( std::string( "ModuleName" ), ConvertUnicode( pluginName.c_str() ) );
+        returnState->AddDataValuePair( data );
+        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+        nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+        XMLReaderWriter commandWriter;
+        std::string status = "returnString";
+        commandWriter.UseStandaloneDOMDocumentManager();
+        commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+        std::string nw_str = serviceList->Query( status );
+
+        ves::open::xml::XMLReaderWriter networkReader;
+        networkReader.UseStandaloneDOMDocumentManager();
+        networkReader.ReadFromString();
+        networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+        std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+            networkReader.GetLoadedXMLObjects();
+        ves::open::xml::CommandPtr cmd =
+            boost::dynamic_pointer_cast<ves::open::xml::Command>
+            ( objectVector.at( 0 ) );
+
+        params->SetComponentName( pluginName );
+        params->SetServiceList( serviceList );
+
+        //loop over all pairs
+        int numdvps = cmd->GetNumberOfDataValuePairs();
+        for( size_t i = 0; i < numdvps; i++ )
+        {
+            std::string name;
+            std::string value;
+            ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+            name = pair->GetDataName( );
+            pair->GetData( value );
+            params->SetData( wxString( (pluginName + "." + name).c_str(), wxConvUTF8 ), wxString( value.c_str(), wxConvUTF8 ) );
+        }
+    }
+    //populate dialog
+    params->ShowModal();
+    params->Destroy();
+}
