@@ -168,7 +168,8 @@ private:
     bool mSetCenterPoint;
     ///
     ves::xplorer::scenegraph::DCS* mCenterPointDCS;
-
+    ///The last angle 
+    double m_lastAngle;
 };
 } //end xplorer
 } //end ves

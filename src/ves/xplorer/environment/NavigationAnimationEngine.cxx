@@ -123,97 +123,87 @@ void NavigationAnimationEngine::ProcessCommand()
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::PreFrameUpdate()
 {
-    /*if( activecam )
+    if( !mBeginAnim )
     {
-        double vecDistance;
+        return;
+    }
 
-        if( t == 0.0f )
-        {
-            gmtl::Vec3d vjVecTemp;
-            double* veTransTemp = _worldDCS->GetVETranslationArray();
-            for( int i = 0; i < 3; ++i )
-            {
-                vjVecTemp[ i ] = veTransTemp[ i ];
-            }
-            vecDistance = getLinearDistance(
-                vjVecTemp, QuatCams.at( cam_id )->GetTrans() );
-        }
-        else
-        {
-            vecDistance = getLinearDistance(
-                QuatCams.at( cam_id )->GetLastTrans(),
-                QuatCams.at( cam_id )->GetTrans() );
-        }
+    //optimize
+    movementIntervalCalc = 0.01;
+        //1 / ( vecDistance / ( movementSpeed * frameTimer->getTiming() ));
 
-        //
-    }*/
-    if( mBeginAnim )
+    //change
+    GetQuatCamIncrementor();
+
+    gmtl::Quatd tempResQuat;
+    gmtl::Vec3d tempVec;
+    gmtl::Vec3d curVec;
+
+    //osg vec to gmtl vec
+    double* temp = _worldDCS->GetVETranslationArray();
+    for( int i = 0; i < 3; ++i )
     {
-        //optimize
-        movementIntervalCalc = 0.01;
-            //1 / ( vecDistance / ( movementSpeed * frameTimer->getTiming() ));
+        curVec[ i ] = temp[ i ];
+    }
 
-        //change
-        GetQuatCamIncrementor();
+    //convert osg quat to gmtl quat
+    osg::Quat tempWorldQuat = _worldDCS->GetQuat();
+    gmtl::Quatd tempQuat( tempWorldQuat[0], tempWorldQuat[1],
+        tempWorldQuat[2], tempWorldQuat[3] );
 
-        gmtl::Quatd tempResQuat;
-        gmtl::Vec3d tempVec;
-        gmtl::Vec3d curVec;
+    //See if we only have a small distance left to travel. If so then lets 
+    //exit the animation
+    gmtl::Vec3d deltaLeft = mEndVec - curVec;
+    float length = gmtl::length( deltaLeft );
+    gmtl::AxisAngled currentAngle;
+    gmtl::set( currentAngle, tempQuat );
+    double angle = currentAngle.getAngle();
+    double deltaAngle = gmtl::Math::abs( m_lastAngle - angle );
+    m_lastAngle = angle;
+    if( deltaAngle < 0.01 && length < 0.01 )
+    {
+        ///Override what was determined earlier because we know we do
+        ///not have to move that far.
+        t = 1.0f;
+        mBeginAnim = false;
+    }
+    
+    //interpolate the rotation and translation
+    gmtl::lerp( tempVec, t, curVec, mEndVec );
+    gmtl::slerp( tempResQuat, t, tempQuat, mEndQuat );
+    
+    //convert gmtl vec to double *
+    double tempConvVec[3] ;
+    tempConvVec[0] = tempVec[0];
+    tempConvVec[1] = tempVec[1];
+    tempConvVec[2] = tempVec[2];
 
-        //osg vec to gmtl vec
-        double* temp = _worldDCS->GetVETranslationArray();
-        for( int i = 0; i < 3; ++i )
-        {
-            curVec[ i ] = temp[ i ];
-        }
+    _worldDCS->SetTranslationArray( tempConvVec );
 
-        //convert osg quat to gmtl quat
-        osg::Quat tempWorldQuat = _worldDCS->GetQuat();
-        gmtl::Quatd tempQuat( tempWorldQuat[0], tempWorldQuat[1],
-            tempWorldQuat[2], tempWorldQuat[3] );
+    //convert gmtl quat to osg quat
+    osg::Quat tempOSGQuat(
+        tempResQuat[0], tempResQuat[1], tempResQuat[2], tempResQuat[3] );
+    
+    //rotate and translate
+    _worldDCS->SetQuat( tempOSGQuat );
+    if( mSetCenterPoint == true && !mBeginAnim )
+    {
+        //Move the center point to the center of the selected object
+        osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
+            new ves::xplorer::scenegraph::CoordinateSystemTransform(
+            ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
+                mCenterPointDCS, true );
+        gmtl::Matrix44d localToWorldMatrix =
+            cst->GetTransformationMatrix( false );
 
-        //interpolate the rotation and translation
-        gmtl::lerp( tempVec, t, curVec, mEndVec );
-        gmtl::slerp( tempResQuat, t, tempQuat, mEndQuat );
-
-        //convert gmtl vec to double *
-        double tempConvVec[3] ;
-        tempConvVec[0] = tempVec[0];
-        tempConvVec[1] = tempVec[1];
-        tempConvVec[2] = tempVec[2];
-
-        //gmtl::Quatd tempRotQuat = gmtl::makeRot< gmtl::Quatd >( curVec, tempVec );
-        //tempQuat = tempRotQuat * tempQuat;
-
-        _worldDCS->SetTranslationArray( tempConvVec );
-
-        //convert gmtl quat to osg quat
-        //osg::Quat tempOSGQuat(
-        //    mEndQuat[0], mEndQuat[1], mEndQuat[2], mEndQuat[3] );
-        osg::Quat tempOSGQuat(
-            tempResQuat[0], tempResQuat[1], tempResQuat[2], tempResQuat[3] );
-        
-        //rotate and translate
-        _worldDCS->SetQuat( tempOSGQuat );
-        if( mSetCenterPoint == true && !mBeginAnim )
-        {
-            //Move the center point to the center of the selected object
-            osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
-                new ves::xplorer::scenegraph::CoordinateSystemTransform(
-                ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-                    mCenterPointDCS, true );
-            gmtl::Matrix44d localToWorldMatrix =
-                cst->GetTransformationMatrix( false );
-
-            //Multiplying by the new local matrix mCenterPoint
-            osg::Matrixd tempMatrix;
-            tempMatrix.set( localToWorldMatrix.getData() );
-            osg::Vec3d center =
-                mCenterPointDCS->getBound().center() * tempMatrix;
-            gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
-            ves::xplorer::DeviceHandler::instance()->
-                SetCenterPoint( &tempCenter );
-        }
+        //Multiplying by the new local matrix mCenterPoint
+        osg::Matrixd tempMatrix;
+        tempMatrix.set( localToWorldMatrix.getData() );
+        osg::Vec3d center =
+            mCenterPointDCS->getBound().center() * tempMatrix;
+        gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
+        ves::xplorer::DeviceHandler::instance()->
+            SetCenterPoint( &tempCenter );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -247,6 +237,7 @@ void NavigationAnimationEngine::SetAnimationEndPoints(
     mEndVec = navToPoint;
     mEndQuat = rotationPoint;
     t = 0.0f;
+    m_lastAngle = 0.0;
     mSetCenterPoint = setCenterPoint;
     mCenterPointDCS = centerPointDCS;
 }
