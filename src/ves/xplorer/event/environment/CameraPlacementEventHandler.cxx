@@ -232,19 +232,26 @@ void CameraPlacementEventHandler::Execute(
         scenegraph::DCS& selectedDCS = newCameraObject->GetDCS();
         gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
 
-        //Set the connection between the scene manipulator and the selected dcs
-        sceneManipulator->Connect( &selectedDCS );
-
         //If dcs is from a camera object, we want to rotate about local zero point
         osg::Vec3d center( 0.0, 0.0, 0.0 );
         center = center * osg::Matrixd( selectedMatrix.mData );
-        sceneManipulator->SetPosition( center );
 
-        //We need to transform center point into camera space
-        //In the future the center point will be in world coordinates
-        center = center * osg::Matrixd( sceneManager.GetNavDCS()->GetMat().mData );
-        gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
-        deviceHandler.SetCenterPoint( &tempCenter );
+        //Set the connection between the scene manipulator and the selected dcs
+        if( sceneManager.GetManipulatorManager().IsEnabled() )
+        {
+            sceneManipulator->Connect( &selectedDCS );
+            sceneManipulator->SetPosition( center );
+        }
+
+        if( sceneManager.IsDesktopMode() )
+        {
+            //We need to transform center point into camera space
+            //In the future the center point will be in world coordinates
+            center = 
+                center * osg::Matrixd( sceneManager.GetNavDCS()->GetMat().mData );
+            gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
+            deviceHandler.SetCenterPoint( &tempCenter );
+        }            
 
         //Set the selected DCS
         deviceHandler.SetSelectedDCS( &selectedDCS );
@@ -259,23 +266,26 @@ void CameraPlacementEventHandler::Execute(
             selectedDCS.SetTechnique( "Select" );
         }
 
-        //Hand the node we are interested in off to the animation engine
-        NavigationAnimationEngine& nae =
-            *(NavigationAnimationEngine::instance());
-        nae.SetDCS( sceneManager.GetNavDCS() );
+        if( sceneManager.IsDesktopMode() )
+        {
+            //Hand the node we are interested in off to the animation engine
+            NavigationAnimationEngine& nae =
+                *(NavigationAnimationEngine::instance());
+            nae.SetDCS( sceneManager.GetNavDCS() );
 
-        //Hand our created end points off to the animation engine
-        selectedMatrix = gmtl::invert( selectedMatrix );
-        const gmtl::Matrix44d tempHeadMatrix = sceneManager.GetHeadMatrix();
-        const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
-        gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
-        selectedMatrix = tempHeadMatrix * myMat * selectedMatrix;
+            //Hand our created end points off to the animation engine
+            selectedMatrix = gmtl::invert( selectedMatrix );
+            const gmtl::Matrix44d tempHeadMatrix = sceneManager.GetHeadMatrix();
+            const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
+            gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+            selectedMatrix = tempHeadMatrix * myMat * selectedMatrix;
 
-        gmtl::Vec3d navToPoint =
-            gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
-        gmtl::Quatd rotationPoint =
-            gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
-        nae.SetAnimationEndPoints( navToPoint, rotationPoint );
+            gmtl::Vec3d navToPoint =
+                gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
+            gmtl::Quatd rotationPoint =
+                gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
+            nae.SetAnimationEndPoints( navToPoint, rotationPoint );
+        }
 
         break;
     }
