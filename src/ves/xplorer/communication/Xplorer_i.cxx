@@ -146,7 +146,7 @@ ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 void Body_VEXplorer_i::RegisterUI( const char* UIName, ::Body::UI_ptr ui )
 ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-    std::cout << "Body_VEXplorer_i::RegisterUI Registering " << UIName << std::endl;
+    std::cout << "|\tBody_VEXplorer_i::RegisterUI Registering " << UIName << std::endl;
     uiCom[std::string( UIName )] = Body::UI::_duplicate( ui );
 }
 ////////////////////////////////////////////////////////////////////////////////
