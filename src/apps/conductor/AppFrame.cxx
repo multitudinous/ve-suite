@@ -1979,8 +1979,8 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED( event ) )
     {
         // create pane and set appropriate vars
         navPane = new NavigationPane( this );
-        navPane->Connect( wxEVT_DESTROY, 
-            wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), NULL, this );
+        //navPane->Connect( wxEVT_DESTROY, 
+        //    wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), NULL, this );
     }
     // now show it
     navPane->Show();
@@ -2828,8 +2828,8 @@ void AppFrame::LaunchCPTPane( wxCommandEvent& WXUNUSED( event ) )
         // create pane and set appropriate vars
         m_cptDialog = 
             new CameraPlacementToolUIDialog( this, wxID_ANY, serviceList );
-        m_cptDialog->Connect( wxEVT_DESTROY, 
-            wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), NULL, this );
+        //m_cptDialog->Connect( wxEVT_DESTROY, 
+        //    wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), NULL, this );
         if( GetDisplayMode() == "Desktop" )
         {
             wxRect canvasPosition = _treeView->GetRect();
