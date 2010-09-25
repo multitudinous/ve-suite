@@ -339,6 +339,8 @@ private:
     ///
     osg::ref_ptr< osg::Light > m_light;
 
+    ///Image counter imcrementor so that we do not overwrite old images
+    size_t m_imageCounter;
 };
 } //end camera
 } //end scenegraph

@@ -74,6 +74,10 @@
 // --- STL Includes --- //
 #include <iostream>
 
+#include <boost/lexical_cast.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+
 //#define VES_USE_MULTISAMPLING
 
 namespace ves
@@ -114,7 +118,8 @@ CameraObject::CameraObject(
     //mDepthHelperQuadGeode( NULL ),
     //mDepthHelperQuadGeometry( NULL ),
     //mDepthHelperQuadVertices( NULL ),
-    m_light( NULL )
+    m_light( NULL ),
+    m_imageCounter( 0 )
 {
     Initialize();
 }
@@ -956,7 +961,19 @@ osg::Texture2D* CameraObject::CreateViewportTexture(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::WriteImageFile( std::string const& saveImageDir )
 {
-    std::string filename = saveImageDir + "/" + getName() + ".png";
+    std::string imageNumber = 
+        boost::lexical_cast< std::string >( m_imageCounter );
+    const std::string baseFilename = saveImageDir + "/" + getName() + "_";
+    const std::string extension = ".png";
+    std::string filename = baseFilename + imageNumber + extension;
+
+    while( boost::filesystem::exists( filename ) )
+    {
+        imageNumber = boost::lexical_cast< std::string >( ++m_imageCounter );
+
+        filename = baseFilename + imageNumber + extension;
+    }
+    
     osgDB::writeImageFile( *(m_colorImage.get()), filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
