@@ -395,7 +395,7 @@ void DSPlugin::QueryForAllVariables( wxCommandEvent& event )
         ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
         returnState->SetCommandName( "getAllOPCVariables" );
         ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
-        data->SetData( std::string( "ModuleName" ), ConvertUnicode( pluginName.c_str() ) );
+        data->SetData( std::string( "ModuleName" ), pluginName.c_str() );
         returnState->AddDataValuePair( data );
         std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
         nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
@@ -416,7 +416,7 @@ void DSPlugin::QueryForAllVariables( wxCommandEvent& event )
             boost::dynamic_pointer_cast<ves::open::xml::Command>
             ( objectVector.at( 0 ) );
 
-        params->SetComponentName( pluginName );
+        params->SetComponentName( wxString( pluginName.c_str(), wxConvUTF8 ) );
         params->SetServiceList( serviceList );
 
         //loop over all pairs

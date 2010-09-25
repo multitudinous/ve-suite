@@ -92,7 +92,7 @@ enum
     DSPLUGIN_CONNECT,
     DSPLUGIN_TIMER_ID,
     DSPLUGIN_ADDVAR,
-
+    DSPLUGIN_ALLVAR,
 
     //
     //DSOpenDialog

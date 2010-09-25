@@ -47,8 +47,6 @@
 
 #include <vector>
 
-#include "OpcUOPlugin.h"
-
 #undef OpcUOVarDialog_STYLE
 #if wxCHECK_VERSION( 2, 9, 0 )
 #define OpcUOVarDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
