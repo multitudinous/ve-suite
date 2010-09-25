@@ -51,6 +51,8 @@
 
 #include <gmtl/gmtl.h>
 
+#include <boost/concept_check.hpp>
+
 namespace ves
 {
 namespace xplorer
@@ -97,11 +99,13 @@ osg::Node* CreateCircleHighlight(
     const osg::Node& pickedNode,
     const std::string& labelText )
 {
+    boost::ignore_unused_variable_warning( eyePoint );
+
     const std::string textAnnotation( labelText );
 
     //Determine Subdivision and Radius settings for current viewpoint (stub for now)
-    osg::BoundingSphere sphere( pickedNode.getBound() );
-    const double radius( sphere.radius() );
+    osg::BoundingSphere sphere( pickedNode.computeBound() );//pickedNode.getBound() );
+    double radius( sphere.radius() );
     //osg::Vec3 dVec( sphere.center() - eyePoint );
     //const double distance( dVec.length() );
 
@@ -112,12 +116,6 @@ osg::Node* CreateCircleHighlight(
     osg::notify( osg::DEBUG_FP ) << "  Using subdiv "
                                  << subdivisions << std::endl;
 
-    //Determine text pos and line segment endpoints
-    osg::Vec3 textDirection( 1.0, 1.0, 0.0 );
-    textDirection.normalize();
-    osg::Vec3 lineEnd( textDirection * radius );
-    osg::Vec3 textPos( textDirection * radius * 1.4 );
-
     //Structure:
     //AbsoluteModelTransform->AutoTransform->CircleGeode->Circle (Geometry)
     //                                 \-->Line segment (Geometry)
@@ -127,17 +125,39 @@ osg::Node* CreateCircleHighlight(
     osg::ref_ptr< osgwTools::AbsoluteModelTransform > amt;
 
     //Determine position of highlight
-    osg::Vec3 position( 0.0, 0.0, 0.0 );
+    osg::Vec3d position( 0.0, 0.0, 0.0 );
     position = pickedNode.getBound().center();
     osg::NodePath newNP = nodePath;
     newNP.pop_back();
     osg::Matrix matrix = osg::computeLocalToWorld( newNP );
-    gmtl::Matrix44d tempVRJMat;
-    tempVRJMat.set( matrix.ptr() );
-    gmtl::Point3d tempOrigin;
-    tempOrigin = tempVRJMat*tempOrigin;
-    tempVRJMat = gmtl::makeTrans< gmtl::Matrix44d >( tempOrigin );
-    matrix.set( tempVRJMat.mData );
+    //Manipulate the center position and the radius so that the highlights
+    //are properly positioned.
+    {
+        radius *= matrix.getScale()[0];
+        gmtl::Matrix44d centerMat;
+        centerMat.set( matrix.ptr() );
+        centerMat[0][3] = 0.0;
+        centerMat[1][3] = 0.0;
+        centerMat[2][3] = 0.0;
+        gmtl::Point3d bsCenter;
+        bsCenter.set( position.ptr() );
+        bsCenter = centerMat * bsCenter;
+        position.set( bsCenter[0], bsCenter[2], bsCenter[2] );
+        
+        gmtl::Matrix44d tempVRJMat;
+        tempVRJMat.set( matrix.ptr() );
+        
+        gmtl::Point3d tempOrigin;
+        tempOrigin = tempVRJMat*tempOrigin;
+        tempVRJMat = gmtl::makeTrans< gmtl::Matrix44d >( tempOrigin );
+        matrix.set( tempVRJMat.mData );
+    }
+
+    //Determine text pos and line segment endpoints
+    osg::Vec3 textDirection( 1.0, 1.0, 0.0 );
+    textDirection.normalize();
+    osg::Vec3 lineEnd( textDirection * radius );
+    osg::Vec3 textPos( textDirection * radius * 1.4 );
     
     circlegeode = new osg::Geode();
     osg::ref_ptr< osg::Array > circleColor;
