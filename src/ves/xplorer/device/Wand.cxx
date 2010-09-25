@@ -652,8 +652,8 @@ void Wand::ProcessHit()
         {            
             //If we found a low level node
             osg::NodePath nodePath = intersections.begin()->nodePath;
-            nodePath.pop_back();
             osg::Node* node = nodePath[ nodePath.size() - 1 ];
+            //nodePath.pop_back();
             
             highlightManager.CreateHighlightCircle( node, nodePath );
             return;

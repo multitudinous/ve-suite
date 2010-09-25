@@ -1142,8 +1142,8 @@ void KeyboardMouse::OnMouseRelease( gadget::InputArea& inputArea )
             }
 
             osg::NodePath nodePath = intersections.begin()->nodePath;
-            nodePath.pop_back();
             osg::Node* node = nodePath[ nodePath.size() - 1 ];
+
             if( !node )
             {
                 break;

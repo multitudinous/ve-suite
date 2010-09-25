@@ -128,7 +128,7 @@ osg::Node* CreateCircleHighlight(
     osg::Vec3d position( 0.0, 0.0, 0.0 );
     position = pickedNode.getBound().center();
     osg::NodePath newNP = nodePath;
-    newNP.pop_back();
+
     osg::Matrix matrix = osg::computeLocalToWorld( newNP );
     //Manipulate the center position and the radius so that the highlights
     //are properly positioned.
@@ -150,6 +150,7 @@ osg::Node* CreateCircleHighlight(
         gmtl::Point3d tempOrigin;
         tempOrigin = tempVRJMat*tempOrigin;
         tempVRJMat = gmtl::makeTrans< gmtl::Matrix44d >( tempOrigin );
+        //Reset the matrix with rotation and scale
         matrix.set( tempVRJMat.mData );
     }
 
