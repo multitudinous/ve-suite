@@ -272,11 +272,18 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     {
         if( cptEnabled && ( buttonData[ 5 ] == gadget::Digital::TOGGLE_ON ) )
         {
+            if( cameraManager.getNumChildren() == 0 )
+            {
+                return;
+            }
             ves::xplorer::scenegraph::camera::CameraObject* activeCamera =
                 cameraManager.GetActiveCameraObject();
-            unsigned int activeNum = 
-                cameraManager.getChildIndex( 
-                static_cast< osg::Group* >( activeCamera ) );
+            unsigned int activeNum = 0;
+            if( activeCamera )
+            {
+                activeNum = cameraManager.getChildIndex( 
+                    static_cast< osg::Group* >( activeCamera ) );
+            }
             
             ves::xplorer::DeviceHandler::instance()->UnselectObjects();
 
@@ -649,6 +656,7 @@ void Wand::ProcessHit()
             osg::Node* node = nodePath[ nodePath.size() - 1 ];
             
             highlightManager.CreateHighlightCircle( node, nodePath );
+            return;
         }
     }    
     
