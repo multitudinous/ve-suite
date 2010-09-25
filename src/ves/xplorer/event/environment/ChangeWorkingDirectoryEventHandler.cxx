@@ -80,7 +80,8 @@ void ChangeWorkingDirectoryEventHandler::Execute( const ves::open::xml::XMLObjec
     DataValuePairPtr activeModelDVP = command->GetDataValuePair( "WORKING_DIRECTORY" );
     std::string newWorkingDir;
     activeModelDVP->GetData( newWorkingDir );
-    std::cout << newWorkingDir << std::endl;
+    std::cout << "|\tThe new working directory is " 
+        << newWorkingDir << std::endl;
 
     if( newWorkingDir.empty() )
     {
@@ -106,8 +107,6 @@ void ChangeWorkingDirectoryEventHandler::Execute( const ves::open::xml::XMLObjec
     //A new working directory also means that 
     //the STORED scenes are no longer valid
     ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();
-    //Since Xplorer does not really have a "new" eh clear the osgOQ stuff here
-    //ves::xplorer::scenegraph::SceneManager::instance()->ResetOcclusionQueryContext();
 }
 ///////////////////////////////////////////////////////////////////////
 ChangeWorkingDirectoryEventHandler& ChangeWorkingDirectoryEventHandler::operator=( const ChangeWorkingDirectoryEventHandler& rhs )
