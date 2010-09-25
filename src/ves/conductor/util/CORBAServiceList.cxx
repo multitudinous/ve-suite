@@ -77,11 +77,15 @@ CORBAServiceList::~CORBAServiceList()
         delete p_ui_i;
         p_ui_i = 0;
     }
-    //m_orb->destroy();
+    
+    if( !CORBA::is_nil( m_orb.in() ) )
+    {
+        m_orb->destroy();
+    }
 
     /*try
     {
-        m_orb->shutdown( true );
+        m_orb->shutdown( false );
     }
     catch( ... )
     {
@@ -96,7 +100,7 @@ CORBAServiceList::~CORBAServiceList()
     {
         ;//do nothing
     }
-    delete m_orbThread;    */
+    delete m_orbThread;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetArgcArgv( int argc, char** argv )
@@ -554,15 +558,6 @@ VjObs_ptr CORBAServiceList::GetXplorerPointer( void )
 void CORBAServiceList::MessageLog( const char* msg )
 {
     wxLogMessage(  wxString( msg, wxConvUTF8 ) );
-/*
-    if( pelog == NULL )
-    {
-        pelog = new PEThread();
-        //pelog->activate();
-    }
-
-    return pelog;
-*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
