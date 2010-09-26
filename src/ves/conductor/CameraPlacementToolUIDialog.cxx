@@ -252,7 +252,15 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolUIDialog::~CameraPlacementToolUIDialog()
 {
-    ;
+	m_cameraManagerButton->
+        Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
+        wxCommandEventHandler( CameraPlacementToolUIDialog::OnCameraManagerEvent ), NULL, this );
+	m_pictureModeButton->
+        Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
+        wxCommandEventHandler( CameraPlacementToolUIDialog::OnPictureModeEvent ), NULL, this );
+	m_autoComputeFarButton->
+        Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
+        wxCommandEventHandler( CameraPlacementToolUIDialog::OnAutoComputerFarPlane ), NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraPlacementToolUIDialog::TransferDataFromWindow()
@@ -347,12 +355,23 @@ void CameraPlacementToolUIDialog::BuildGUI()
     managementSettingsSeparator1 = new wxStaticLine( mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
     managementSettingsSizer->Add( managementSettingsSeparator1, 0, wxEXPAND | wxALL, 5 );
 
+	wxBoxSizer* cameraManagerSettingsSizer;
+	cameraManagerSettingsSizer = new wxBoxSizer( wxHORIZONTAL );
+
     wxString m_cameraManagerButtonChoices[] = { wxT("Off"), wxT("On") };
     int m_cameraManagerButtonNChoices = sizeof( m_cameraManagerButtonChoices ) / sizeof( wxString );
     m_cameraManagerButton = new wxRadioBox( mainPanel, wxID_ANY, wxT("Camera Manager"), wxDefaultPosition, wxDefaultSize, m_cameraManagerButtonNChoices, m_cameraManagerButtonChoices, 1, wxRA_SPECIFY_ROWS );
     m_cameraManagerButton->SetSelection( 0 );
-    managementSettingsSizer->Add( m_cameraManagerButton, 0, 0, 5 );
+    cameraManagerSettingsSizer->Add( m_cameraManagerButton, 0, 0, 5 );
 
+	wxString m_pictureModeButtonChoices[] = { wxT("On"), wxT("Off") };
+	int m_pictureModeButtonNChoices = sizeof( m_pictureModeButtonChoices ) / sizeof( wxString );
+	m_pictureModeButton = new wxRadioBox( mainPanel, wxID_ANY, wxT("Picture Mode"), wxDefaultPosition, wxDefaultSize, m_pictureModeButtonNChoices, m_pictureModeButtonChoices, 1, wxRA_SPECIFY_ROWS );
+	m_pictureModeButton->SetSelection( 0 );
+	cameraManagerSettingsSizer->Add( m_pictureModeButton, 0, wxLEFT|wxRIGHT, 5 );
+	
+	managementSettingsSizer->Add( cameraManagerSettingsSizer, 1, wxEXPAND, 5 );
+    
     mainPanelSizer->Add( managementSettingsSizer, 0, wxALL|wxEXPAND, 10 );
 
     wxStaticBoxSizer* highlightToolSettingsSizer;
@@ -983,6 +1002,11 @@ void CameraPlacementToolUIDialog::BuildGUI()
         Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
         wxCommandEventHandler( 
         CameraPlacementToolUIDialog::OnCameraManagerEvent ), NULL, this );
+    
+    m_pictureModeButton->
+        Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
+        wxCommandEventHandler( 
+        CameraPlacementToolUIDialog::OnPictureModeEvent ), NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ClearInstructions()
@@ -2138,6 +2162,39 @@ void CameraPlacementToolUIDialog::OnCameraManagerEvent( wxCommandEvent& WXUNUSED
     ves::open::xml::DataValuePairSharedPtr 
         tempDVP( new ves::open::xml::DataValuePair() );
     tempDVP->SetData( "cameraManagerOnOff", selection );
+    mInstructions.push_back( tempDVP );
+    
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnPictureModeEvent( wxCommandEvent& WXUNUSED( event ) )
+{
+    unsigned int selection = m_cameraManagerButton->GetSelection();
+    
+    if( selection )
+    {
+        m_addCameraButton->Disable();
+        m_prevCameraButton->Disable();
+        m_cameraComboBox->Disable();
+        m_nextCameraButton->Disable();
+        m_deleteCameraButton->Disable();
+        m_removeAllCamerasButton->Disable();
+    }
+    else
+    {
+        m_addCameraButton->Enable();
+        m_prevCameraButton->Enable();
+        m_cameraComboBox->Enable();
+        m_nextCameraButton->Enable();
+        m_deleteCameraButton->Enable();
+        m_removeAllCamerasButton->Enable();
+    }
+    mCommandName = "PICTURE_ON_OFF";
+    
+    ves::open::xml::DataValuePairSharedPtr 
+    tempDVP( new ves::open::xml::DataValuePair() );
+    tempDVP->SetData( "pictureModeOnOff", selection );
     mInstructions.push_back( tempDVP );
     
     SendCommandsToXplorer();

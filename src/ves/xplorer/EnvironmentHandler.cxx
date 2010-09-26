@@ -233,6 +233,8 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "CAMERA_MANAGER_ON_OFF" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "PICTURE_ON_OFF" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()
@@ -407,10 +409,7 @@ void EnvironmentHandler::LatePreFrameUpdate()
     if( tempCommand )
     {
         const std::string commandName = tempCommand->GetCommandName();
-        vprDEBUG( vesDBG, 3 ) << "|\tEnvironmentHandler::LatePreFrameUpdate Command Name : "
-            << commandName
-            << std::endl << vprDEBUG_FLUSH;
-        std::map<std::string, ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
+        std::map<std::string, ves::xplorer::event::EventHandler*>::const_iterator currentEventHandler;
         currentEventHandler = _eventHandlers.find( commandName );
         if( currentEventHandler != _eventHandlers.end() )
         {

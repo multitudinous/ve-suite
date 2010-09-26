@@ -36,6 +36,7 @@
 
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/device/Wand.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -85,16 +86,26 @@ void DeviceEventHandler::Execute(
 
     ves::open::xml::DataValuePairPtr deviceDVP =
         command->GetDataValuePair( "EnableDeviceData" );
-    if( !deviceDVP )
+    if( deviceDVP )
     {
+        std::vector< long > data;
+        deviceDVP->GetData( data );
+        device::Device::Type type = 
+            static_cast< device::Device::Type >( data.front() );
+        DeviceHandler::instance()->EnableDevice( type, data.back() );
         return;
     }
-
-    std::vector< long > data;
-    deviceDVP->GetData( data );
-    device::Device::Type type =
-        static_cast< device::Device::Type >( data.front() );
-    DeviceHandler::instance()->EnableDevice( type, data.back() );
+    
+    deviceDVP = command->GetDataValuePair( "CAD Selection Mode" );
+    if( deviceDVP )
+    {
+        unsigned int cadSelection;
+        deviceDVP->GetData( cadSelection );
+        static_cast< ves::xplorer::device::Wand* >( 
+            DeviceHandler::instance()->GetDevice( device::Device::WAND ) )->
+            SetCADSelectionMode( cadSelection );
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler& DeviceEventHandler::operator=(

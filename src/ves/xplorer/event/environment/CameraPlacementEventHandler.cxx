@@ -132,6 +132,8 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
         AUTO_COMPUTER_NEAR_FAR_PLANE;
     mCommandNameToInt[ "CAMERA_MANAGER_ON_OFF" ] =
         CAMERA_MANAGER_ON_OFF;
+    mCommandNameToInt[ "PICTURE_ON_OFF" ] =
+        PICTURE_ON_OFF;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementEventHandler::~CameraPlacementEventHandler()

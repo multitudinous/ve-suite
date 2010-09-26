@@ -32,10 +32,13 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/camera/CameraObjectCallback.h>
+#include <ves/xplorer/scenegraph/camera/HeadCameraObjectCallback.h>
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
+#include <gmtl/gmtl.h>
 
 // --- OSG Includes --- //
 #include <osg/Camera>
@@ -44,7 +47,7 @@
 using namespace ves::xplorer::scenegraph::camera;
 
 ////////////////////////////////////////////////////////////////////////////////
-CameraObjectCallback::CameraObjectCallback()
+HeadCameraObjectCallback::HeadCameraObjectCallback()
     :
     osg::Object(),
     osg::NodeCallback(),
@@ -54,7 +57,7 @@ CameraObjectCallback::CameraObjectCallback()
     m_dcsMatrix( 0, 0 ) = 0.0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraObjectCallback::CameraObjectCallback( const CameraObjectCallback& input )
+HeadCameraObjectCallback::HeadCameraObjectCallback( const HeadCameraObjectCallback& input )
     :
     osg::Object( input ),
     osg::NodeCallback( input ),
@@ -66,12 +69,12 @@ CameraObjectCallback::CameraObjectCallback( const CameraObjectCallback& input )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraObjectCallback::~CameraObjectCallback()
+HeadCameraObjectCallback::~HeadCameraObjectCallback()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
+void HeadCameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
     osg::ref_ptr< CameraObject > cameraObject =
         static_cast< CameraObject* >( node );
@@ -80,8 +83,19 @@ void CameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     {
         traverse( node, nv );
     }
+
+    DCS& dcs = cameraObject->GetDCS();
+    const gmtl::AxisAngled myAxisAngle(
+        osg::DegreesToRadians( double( -90 ) ), 1, 0, 0 );
+    gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+    ///We need to rotate the camera geometry 90 initially so that the geometry
+    ///is in VR Juggler space (y up) so that when the view matrix is multiplied
+    ///in the 90 is taken back out.
+    myMat = ves::xplorer::scenegraph::SceneManager::instance()->
+    GetGlobalViewMatrix() * myMat;
+    dcs.SetMat( myMat );
     
-    osg::Matrixd tempMatrix( cameraObject->GetDCS().GetMat().getData() );
+    osg::Matrixd tempMatrix( dcs.GetMat().getData() );
     if( tempMatrix != m_dcsMatrix )
     {
         m_dcsMatrix = tempMatrix;

@@ -104,7 +104,8 @@ Wand::Wand()
     rotationFlag( 1 ),
     subzeroFlag( 0 ),
     m_distance( 1000 ),
-    m_buttonPushed( false )
+    m_buttonPushed( false ),
+    m_cadSelectionMode( false )
 {
     wand.init( "VJWand" );
     head.init( "VJHead" );
@@ -349,11 +350,13 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             gmtl::Quatd rotationPoint =
                 gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
             nae.SetAnimationEndPoints( navToPoint, rotationPoint );
+            return;
         }
         
         if( !cptEnabled )
         {
             DeviceHandler::instance()->UnselectObjects();
+            return;
         }
     }
     //Free rotation
@@ -364,6 +367,14 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         {
             if( !m_sceneManager.IsMasterNode() )
             {
+                return;
+            }
+
+            if( cameraManager.IsPictureMode() )
+            {
+                std::string tempDir( "." );
+                cameraManager.GetActiveCameraObject()->
+                    WriteImageFile( tempDir );
                 return;
             }
 
@@ -408,6 +419,17 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     else if( buttonData[ 4 ] == gadget::Digital::TOGGLE_ON ||
               buttonData[ 4 ] == gadget::Digital::ON )
     {
+        if( m_cadSelectionMode && 
+           ( buttonData[ 4 ] == gadget::Digital::TOGGLE_ON ) )
+        {
+            if( m_unselectedCADFiles.size() )
+            {
+                m_unselectedCADFiles.back()->setNodeMask( 1 );
+                m_unselectedCADFiles.pop_back();
+            }
+            return;
+        }
+
         m_buttonPushed = true;
         world_quat = *mResetAxis;
         for( unsigned int i = 0; i < 3; ++i )
@@ -653,15 +675,22 @@ void Wand::ProcessHit()
             //If we found a low level node
             osg::NodePath nodePath = intersections.begin()->nodePath;
             osg::Node* node = nodePath[ nodePath.size() - 1 ];
-            //nodePath.pop_back();
             
             highlightManager.CreateHighlightCircle( node, nodePath );
             return;
         }
     }    
     
+    if( m_cadSelectionMode )
+    {
+        osg::NodePath nodePath = intersections.begin()->nodePath;
+        osg::Node* node = nodePath[ nodePath.size() - 1 ];
+        node->setNodeMask( 0 );
+        m_unselectedCADFiles.push_back( node );
+        return;
+    }
+
     //Now find the id for the cad
-    //selectedGeometry = objectHit._geode;
     ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( objectHit );
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( parentNode.valid() )
@@ -1162,5 +1191,10 @@ void Wand::MakeWandLine()
     m_wandPAT->setNodeMask( 0 );
     m_wandPAT->addChild( beamGeode.get() );
     rootNode->asGroup()->addChild( m_wandPAT );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::SetCADSelectionMode( bool cadSelectionMode )
+{
+    m_cadSelectionMode = cadSelectionMode;
 }
 ////////////////////////////////////////////////////////////////////////////////

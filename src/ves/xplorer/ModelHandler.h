@@ -50,6 +50,8 @@
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/Mutex.h>
 
+#include <osg/Node>
+
 #include <vector>
 #include <string>
 #include <map>
@@ -133,16 +135,22 @@ public:
     ///Should this call be in the texture manager singleton not modelhandler
     ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet( void );
     bool GetVisOption();
-protected:
-    vtkPolyData* _GetArrowPolyData();
 private:
+    ///Create the arrow polydata
+    vtkPolyData* _GetArrowPolyData();
+    ///The current active dataset
     DataSet* activeDataset;
+    ///The current command
     ves::open::xml::CommandPtr activeCommand;
+    ///THe active model
     Model* _activeModel;
-
+    ///Active texture based dataset
     ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;
+    ///Is this texture based
     bool tbased;
+    ///The pd arrow for datasets
     vtkPolyData* arrow;
+    ///The list of models being maintained
     std::vector< Model* > _modelList;
     // Used to store data for multi-dataset functions
     //std::string oldDatasetName;
@@ -157,7 +165,6 @@ private:
     std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* > m_filenameToCADMap;
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
-    
 #ifdef QT_ON
     typedef boost::signals2::signal<void ( const std::string& )> ActiveModelChangedSignal_type;
     ActiveModelChangedSignal_type mActiveModelChangedSignal;

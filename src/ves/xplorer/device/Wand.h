@@ -151,6 +151,9 @@ public:
     //void UpdateDeltaWandPosition();
     ///Get the plane equation constants normal to the wand in world space
     double* GetPlaneEquationConstantsNormalToWand();
+    
+    ///Set wether when selecting parts if the parts will be turned off
+    void SetCADSelectionMode( bool cadSelectionMode );
 
 protected:
     ///Set the start and end point
@@ -221,6 +224,10 @@ private:
     osg::Quat m_rotIncrement;
     ///Array to hold work translation
     double m_worldTrans[ 3 ];
+    ///Control the cad selection setting
+    bool m_cadSelectionMode;
+    ///Keep track fo the cad files that the user has unselected with the wand
+    std::vector< osg::Node* > m_unselectedCADFiles;
 
 #ifdef QT_ON
     typedef boost::signals2::signal<void (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;

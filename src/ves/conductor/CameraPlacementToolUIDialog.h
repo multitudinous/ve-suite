@@ -164,7 +164,8 @@ private:
 
     void OnAutoComputerFarPlane( wxCommandEvent& event );
     void OnCameraManagerEvent( wxCommandEvent& event );
-    
+    void OnPictureModeEvent( wxCommandEvent& event );
+
     bool EnsureSliders( int activeSliderID );
 
     void UpdateFieldOfViewControls();
@@ -214,6 +215,7 @@ private:
     wxDirPickerCtrl* m_imageDirPickerCtrl;
 
     wxRadioBox* m_cameraManagerButton;
+    wxRadioBox* m_pictureModeButton;
 
     wxToggleButton* m_toggleHighlightToolButton;
     wxBitmapButton* m_prevMarkerButton;

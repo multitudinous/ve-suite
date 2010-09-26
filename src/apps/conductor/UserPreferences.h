@@ -103,16 +103,6 @@ public:
                      const wxSize& size = SYMBOL_USERPREFERENCES_SIZE,
                      long style = SYMBOL_USERPREFERENCES_STYLE );
 
-    enum
-    {
-        ID_NAVIGATION_CHKBX,
-        ID_BACKGROUND_COLOR_BUTTON,
-        ID_SHUTDOWN_XPLORER,
-        ID_GEOMETRY_LOD_SCALE_SLIDER,
-        ID_CONDUCTOR_CHKBX,
-        ID_PHYSICS_DEBUGGER_CHKBX
-    };
-
     virtual ~UserPreferences();
 
     /// Creation
@@ -147,6 +137,8 @@ public:
     void OnDraggerScalingCheck( wxCommandEvent& event );
     ///The scaling values
     void OnDraggerScalingValue( wxCommandEvent& event );
+    ///The cad selection value
+    void OnCADSelectionEvent( wxCommandEvent& event );
     ///Should we show tooltips?
     static bool ShowToolTips();
 

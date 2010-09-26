@@ -113,7 +113,8 @@ public:
         MAX_CIRCLE_OF_CONFUSION,
         
         AUTO_COMPUTER_NEAR_FAR_PLANE,
-        CAMERA_MANAGER_ON_OFF
+        CAMERA_MANAGER_ON_OFF,
+        PICTURE_ON_OFF
     };
 
     ///Set the cfdModel

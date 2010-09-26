@@ -82,7 +82,9 @@ CameraManager::CameraManager()
     m_rttQuad( NULL ),
     m_rttQuadTransform( new osg::PositionAttitudeTransform() ),
     m_projectionTechnique( new technique::ProjectionTechnique() ),
-    m_texGenNode( new osg::TexGenNode() )
+    m_texGenNode( new osg::TexGenNode() ),
+    m_isPictureMode( false ),
+    m_headShotCamera( 0 )
 {
     Enable();
 
@@ -509,5 +511,34 @@ void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )
             //error output!
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::SetPictureMode( bool isPictureMode )
+{
+    m_isPictureMode = isPictureMode;
+    if( m_isPictureMode )
+    {
+        addChild( "HeadShot" );
+        m_headShotCamera = 
+            ConvertNodeToCameraObject( getChild( getNumChildren() - 1 ) );
+        
+        SetActiveCameraObject( m_headShotCamera );
+        
+        m_headShotCamera->MakeHeadTrackedCamera();
+    }
+    else
+    {
+        removeChild( m_headShotCamera );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+bool CameraManager::IsPictureMode()
+{
+    return m_isPictureMode;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::LatePreFrameUpdate()
+{
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -533,9 +533,6 @@ void ModelHandler::PreFrameUpdate( void )
         ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
     if( activeCommand )
     {
-        vprDEBUG( vesDBG, 3 ) << "|\tModelHandler::PreFrameUpdate Command Name : "
-            << activeCommand->GetCommandName() << std::endl << vprDEBUG_FLUSH;
-    
         std::map<std::string, ves::xplorer::event::EventHandler*>::iterator 
             currentEventHandler = 
                 _eventHandlers.find( activeCommand->GetCommandName() );

@@ -34,6 +34,8 @@
 // --- My Includes --- //
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 #include <ves/xplorer/scenegraph/camera/CameraObjectCallback.h>
+#include <ves/xplorer/scenegraph/camera/HeadCameraObjectCallback.h>
+
 //#include "DepthOfFieldTechnique.h"
 //#include "DepthHelperTechnique.h"
 #include <ves/xplorer/scenegraph/technique/ProjectionTechnique.h>
@@ -908,7 +910,7 @@ void CameraObject::Update()
     m_frustumGeometry->dirtyDisplayList();
     m_frustumGeometry->dirtyBound();
 
-    const double aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
+    //const double aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
 
     /*
     (*mCameraViewQuadVertices)[ 0 ].set( 0.0,         0.0, -1.0 );
@@ -977,7 +979,14 @@ void CameraObject::WriteImageFile( std::string const& saveImageDir )
     osgDB::writeImageFile( *(m_colorImage.get()), filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
+void CameraObject::MakeHeadTrackedCamera()
+{
+    setUpdateCallback( new HeadCameraObjectCallback() );
+    ShowCameraGeometry( false );
+    ShowFrustumGeometry( false );
+    ComputeNearFarPlanes( true );
+}
+////////////////////////////////////////////////////////////////////////////////
 } //end camera
 } //end scenegraph
 } //end xplorer

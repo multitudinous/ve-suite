@@ -229,6 +229,9 @@ public:
     ///
     void WriteImageFile( std::string const& saveImageDir );
 
+    ///Setup this camera to be tied to the head position
+    void MakeHeadTrackedCamera();
+    
 protected:
     ///Destructor
     virtual ~CameraObject();

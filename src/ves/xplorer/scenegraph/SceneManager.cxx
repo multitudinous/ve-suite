@@ -651,6 +651,8 @@ void SceneManager::LatePreFrameUpdate()
         static_cast< ves::xplorer::scenegraph::DCS* >( 
             mNavSwitch->getChild( 1 ) )->SetMat( m_invertedNavMatrix );
     }
+    
+    m_cameraManager->LatePreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PushBackGLTransformInfo(

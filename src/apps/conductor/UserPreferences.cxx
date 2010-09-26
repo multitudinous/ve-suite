@@ -73,7 +73,8 @@ BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
     EVT_COMMAND_SCROLL( USERPREFENCES_GEOMETRY_LOD_SCALE_SLIDER, UserPreferences::OnLODScale )
     EVT_CHECKBOX( USERPREFENCES_NEAR_FAR_CHKBX, UserPreferences::OnNearFarCheck )
     EVT_TEXT_ENTER( USERPREFENCES_NEAR_FAR_RATIO, UserPreferences::OnNearFarRatio )
-    EVT_CHECKBOX( ID_PHYSICS_DEBUGGER_CHKBX, UserPreferences::OnPhysicsDebuggerCheck )
+    EVT_CHECKBOX( USERPREFENCES_PHYSICS_DEBUGGER_CHKBX, UserPreferences::OnPhysicsDebuggerCheck )
+    EVT_CHECKBOX( USERPREFENCES_CAD_SELECTION, UserPreferences::OnCADSelectionEvent )
     EVT_CHECKBOX( USERPREFENCES_VIEW_ALIGNED_NORMALS_CHKBX, UserPreferences::OnViewAlignedCheck )
     EVT_CHECKBOX( USERPREFENCES_DRAGGER_SCALING_CHKBX, UserPreferences::OnDraggerScalingCheck )
     EVT_TEXT_ENTER( USERPREFENCES_DRAGGER_SCALING_VALUE, UserPreferences::OnDraggerScalingValue )
@@ -130,6 +131,7 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
     preferenceMap[ "Set Near-Far Ratio" ] = false;
     preferenceMap[ "Physics Debugger" ] = false;
     preferenceMap[ "Script Logger" ] = false;
+    preferenceMap[ "CAD Selection" ] = false;
 
     preferenceMap[ "Screen Aligned Normals" ] = true;
     preferenceMap[ "Dragger Scaling" ] = false;
@@ -199,7 +201,8 @@ void UserPreferences::CreateControls()
     nearFarSizer->Add( nearFarChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
     nearFarSizer->Add( m_nearFarEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxCheckBox* physicsDebuggerChkBx = new wxCheckBox( panel, ID_PHYSICS_DEBUGGER_CHKBX, wxT( "Physics Debugger" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    wxCheckBox* physicsDebuggerChkBx = new wxCheckBox( panel, USERPREFENCES_PHYSICS_DEBUGGER_CHKBX, wxT( "Physics Debugger" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    wxCheckBox* cadSelectionChkBx = new wxCheckBox( panel, USERPREFENCES_CAD_SELECTION, wxT( "CAD Selection" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     wxCheckBox* scriptLoggerChkBx = new wxCheckBox( panel, wxNewId(), wxT( "Script Logger" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
 
     wxCheckBox* screenAlignedChkBx = new wxCheckBox( panel, USERPREFENCES_VIEW_ALIGNED_NORMALS_CHKBX, wxT( "Screen Aligned Normals" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
@@ -238,6 +241,9 @@ void UserPreferences::CreateControls()
     physicsDebuggerChkBx->SetValue( preferenceMap[ "Physics Debugger" ] );
     physicsDebuggerChkBx->IsChecked();
 
+    cadSelectionChkBx->SetValue( preferenceMap[ "CAD Selection" ] );
+    cadSelectionChkBx->IsChecked();
+    
     scriptLoggerChkBx->SetValue( preferenceMap[ "Script Logger" ] );
     scriptLoggerChkBx->IsChecked();
     
@@ -261,6 +267,7 @@ void UserPreferences::CreateControls()
     itemBoxSizer3->Add( zNavChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( nearFarSizer, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( physicsDebuggerChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
+    itemBoxSizer3->Add( cadSelectionChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( scriptLoggerChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( screenAlignedChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( draggerScalingSizer, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
@@ -644,6 +651,27 @@ void UserPreferences::OnDraggerScalingValue( wxCommandEvent& WXUNUSED( event ) )
     
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
     
-    UserPreferencesDataBuffer::instance()->SetCommand( "DRAGGER_SCALING_VALUE", veCommand );    
+    UserPreferencesDataBuffer::instance()->
+        SetCommand( "DRAGGER_SCALING_VALUE", veCommand );    
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnCADSelectionEvent( wxCommandEvent& event )
+{
+    wxString mode =
+        dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
+    preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
+    
+    // Create the command and data value pairs
+    DataValuePairPtr dataValuePair( new DataValuePair() );
+    dataValuePair->SetData( "CAD Selection Mode", 
+                           static_cast< unsigned int >( event.IsChecked() ) );
+    CommandPtr veCommand( new Command() );
+    veCommand->SetCommandName( std::string( "ENABLE_DEVICE" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    
+    CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+    
+    UserPreferencesDataBuffer::instance()->
+        SetCommand( "ENABLE_DEVICE", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
