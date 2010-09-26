@@ -34,6 +34,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/command/CommandManager.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/device/Wand.h>
@@ -89,12 +90,12 @@ DeviceHandler::DeviceHandler()
     //Initialize tablet device
     device = new device::Wand();
     device->Enable();
-    m_deviceMap[ device::Device::TABLET ] = device;
+    m_deviceMap[ device::Device::WAND ] = device;
 
     //Initialize eand device
     device = new device::Tablet();
     device->Enable();
-    m_deviceMap[ device::Device::WAND ] = device;
+    m_deviceMap[ device::Device::TABLET ] = device;
 
     device = NULL;
 
@@ -171,6 +172,9 @@ void DeviceHandler::ExecuteCommands()
         device::Device* device = itr->second;
         if( device->IsEnabled() )
         {
+            vprDEBUG( vesDBG, 1 ) << "|\tDeviceHandler::ExecuteCommands Executing: "
+                << tempCommand->GetCommandName()
+                << std::endl << vprDEBUG_FLUSH;
             tempEvent->SetGlobalBaseObject( device );
             tempEvent->Execute( tempCommand );
         } 

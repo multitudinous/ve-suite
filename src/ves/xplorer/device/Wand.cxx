@@ -429,14 +429,17 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             }
             return;
         }
-
-        m_buttonPushed = true;
-        world_quat = *mResetAxis;
-        for( unsigned int i = 0; i < 3; ++i )
+        
+        if( !m_cadSelectionMode )
         {
-            m_worldTrans[ i ] = -mResetPosition->at( i );
-            //world_quat[ i ] = 0.0f;
-            mCenterPoint->mData[ i ] = 0.0f;
+            m_buttonPushed = true;
+            world_quat = *mResetAxis;
+            for( unsigned int i = 0; i < 3; ++i )
+            {
+                m_worldTrans[ i ] = -mResetPosition->at( i );
+                //world_quat[ i ] = 0.0f;
+                mCenterPoint->mData[ i ] = 0.0f;
+            }
         }
     }
     else if( buttonData[ 2 ] == gadget::Digital::TOGGLE_OFF )
@@ -680,7 +683,7 @@ void Wand::ProcessHit()
             return;
         }
     }    
-    
+
     if( m_cadSelectionMode )
     {
         osg::NodePath nodePath = intersections.begin()->nodePath;
