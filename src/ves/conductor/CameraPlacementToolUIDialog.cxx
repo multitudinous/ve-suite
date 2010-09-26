@@ -364,7 +364,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
     m_cameraManagerButton->SetSelection( 0 );
     cameraManagerSettingsSizer->Add( m_cameraManagerButton, 0, 0, 5 );
 
-	wxString m_pictureModeButtonChoices[] = { wxT("On"), wxT("Off") };
+	wxString m_pictureModeButtonChoices[] = { wxT("Off"), wxT("On") };
 	int m_pictureModeButtonNChoices = sizeof( m_pictureModeButtonChoices ) / sizeof( wxString );
 	m_pictureModeButton = new wxRadioBox( mainPanel, wxID_ANY, wxT("Picture Mode"), wxDefaultPosition, wxDefaultSize, m_pictureModeButtonNChoices, m_pictureModeButtonChoices, 1, wxRA_SPECIFY_ROWS );
 	m_pictureModeButton->SetSelection( 0 );
@@ -2170,7 +2170,7 @@ void CameraPlacementToolUIDialog::OnCameraManagerEvent( wxCommandEvent& WXUNUSED
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnPictureModeEvent( wxCommandEvent& WXUNUSED( event ) )
 {
-    unsigned int selection = m_cameraManagerButton->GetSelection();
+    unsigned int selection = m_pictureModeButton->GetSelection();
     
     if( selection )
     {
@@ -2193,7 +2193,7 @@ void CameraPlacementToolUIDialog::OnPictureModeEvent( wxCommandEvent& WXUNUSED( 
     mCommandName = "PICTURE_ON_OFF";
     
     ves::open::xml::DataValuePairSharedPtr 
-    tempDVP( new ves::open::xml::DataValuePair() );
+        tempDVP( new ves::open::xml::DataValuePair() );
     tempDVP->SetData( "pictureModeOnOff", selection );
     mInstructions.push_back( tempDVP );
     

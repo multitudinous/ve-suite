@@ -690,6 +690,13 @@ void CameraPlacementEventHandler::Execute(
 
         break;
     }
+    case PICTURE_ON_OFF:
+    {
+        unsigned int value = 0;
+        command->GetDataValuePair( "pictureModeOnOff" )->GetData( value );
+        cameraManager.SetPictureMode( value );
+        break;
+    }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
