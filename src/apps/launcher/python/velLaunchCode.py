@@ -610,9 +610,9 @@ class Launch:
             ##NOTE: StdOutput written to local /var/tmp file to avoid
             ##network traffic issues. Change " &" to " 2>&1 &" to reroute
             ##StdErrors to local /var/tmp file as well.
-            self.clusterScript += "    %s " % (masterCommand) + '| grep -v -e "Stable buffer is empty." > '
+            self.clusterScript += "    %s " % (masterCommand) + '| grep -v -e "Stable buffer is empty." '
             if self.settings["Debug"]: 
-                self.clusterScript += str(os.path.join('/','var', 'tmp', vesOutFile))
+                self.clusterScript += " > " + str(os.path.join('/','var', 'tmp', vesOutFile))
             #else :
             #    self.clusterScript += os.path.join('/','dev', 'null')
             self.clusterScript += " &\n"
