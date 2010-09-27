@@ -114,6 +114,15 @@ QToolButton:hover
     <property name="title">
      <string>&amp;VE-Xplorer</string>
     </property>
+    <widget class="QMenu" name="menuGIS">
+     <property name="title">
+      <string>GIS</string>
+     </property>
+     <addaction name="actionAdd_Planet"/>
+     <addaction name="actionRemove_Planet"/>
+     <addaction name="actionConfigure_Layers"/>
+    </widget>
+    <addaction name="menuGIS"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -211,6 +220,21 @@ QToolButton:hover
    </property>
    <property name="toolTip">
     <string>Open and save files</string>
+   </property>
+  </action>
+  <action name="actionAdd_Planet">
+   <property name="text">
+    <string>Add Planet</string>
+   </property>
+  </action>
+  <action name="actionRemove_Planet">
+   <property name="text">
+    <string>Remove Planet</string>
+   </property>
+  </action>
+  <action name="actionConfigure_Layers">
+   <property name="text">
+    <string>Configure Layers...</string>
    </property>
   </action>
  </widget>

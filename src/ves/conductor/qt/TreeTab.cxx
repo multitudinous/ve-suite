@@ -35,6 +35,7 @@
 
 #include <ves/conductor/qt/TreeTab.h>
 #include <osgQtTree/osgQtTree.h>
+#include <osgQtTree/treemodel.h>
 
 namespace ves
 {

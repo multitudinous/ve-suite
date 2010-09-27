@@ -1,6 +1,6 @@
 /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2010 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -23,57 +23,40 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
- * Author:        $Author$
- * Id:            $Id$
+ * Date modified: $Date: 2009-06-28 23:47:14 -0700 (Sun, 28 Jun 2009) $
+ * Version:       $Rev: 12939 $
+ * Author:        $Author: akubach $
+ * Id:            $Id: LayersTree.cxx 12939 2009-06-29 06:47:14Z akubach $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#pragma once
+#include <ves/conductor/qt/minerva/LayersTree.h>
 
-#include <QWidget>
-#include <QAbstractItemModel>
-#include <QModelIndex>
+#include <Minerva/Qt/Widgets/LayersTree.h>
 
-#include <osg/Node>
+#include <QtGui/QVBoxLayout>
 
-namespace Ui {
-    class TreeTab;
+using namespace ves::conductor::qt::minerva;
+
+LayersTree::LayersTree ( QWidget *parent ) : BaseClass ( parent ),
+  mLayersTree ( 0x0 )
+{
+  mLayersTree = new Minerva::QtWidgets::LayersTree;
+
+  QVBoxLayout *layout ( new QVBoxLayout );
+  layout->addWidget ( mLayersTree );
+
+  this->setLayout ( layout );
 }
 
-class TreeModel;
-
-namespace ves
+LayersTree::~LayersTree()
 {
-namespace conductor
+  delete mLayersTree;
+  mLayersTree = 0x0;
+}
+
+void LayersTree::buildTree ( Minerva::Core::Data::Feature * feature )
 {
-
-class TreeTab : public QWidget {
-    Q_OBJECT
-public:
-    TreeTab(QWidget *parent = 0);
-    ~TreeTab();
-
-    /// Clear the tree and underlying model
-    void Clear();
-
-    /// Set the root node of the tree and have it populate the model starting
-    /// at this root
-    void PopulateWithRoot( osg::Node* root );
-
-    /// Open tree view to the leaf specified in nodepath, if possible.
-    QModelIndex OpenToAndSelect( osg::NodePath& nodepath );
-
-protected:
-    void changeEvent(QEvent *e);
-
-private:
-    Ui::TreeTab *ui;
-
-    TreeModel* mModel;
-};
-
-} // namespace conductor
-} // namespace ves
+  mLayersTree->buildTree ( feature );
+}

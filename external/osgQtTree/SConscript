@@ -1,4 +1,59 @@
 ###############################################################
 ##Builds osgQtTree
 #!python
-SConscript( dirs = 'src' )
+import os, sys, string, glob
+pj = os.path.join
+import SConsAddons.Util as sca_util
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform osg_options')
+
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgQtTree') )
+buildSrcDir = pj('#',buildDir,'external','osgQtTree')
+
+lib_env = ves_pkg.getEnv().Clone()
+
+mocced = []
+mocsources = [pj(buildSrcDir,'treemodel.h')]
+
+for x in mocsources:
+    mocced += lib_env.qt_moc(x)
+
+openDir2 = os.path.abspath( pj(RootDir,buildDir,'external','osgQtTree') )
+#cppSources1 = map(lambda s: pj(openDir2, '%s' ) %(s), cppSources)
+cppSources = map(lambda s: pj(openDir2, '%s' ) %(s), mocced )
+
+lib_env.Append( CPPPATH = [pj(openDir2)] )
+lib_env.Append(CPPPATH = [pj('#','external')])
+
+headers_list = glob.glob(pj(RootDir, 'external', 'osgQtTree','*.h'))
+headers = map(lambda s: os.path.basename(s), headers_list)
+
+sources_list = glob.glob(pj(RootDir, 'external', 'osgQtTree','*.cxx'))
+sources = map(lambda s: os.path.basename(s), sources_list)
+sources += cppSources
+
+osg_options.apply( lib_env )
+
+lib_env.AppendUnique( CPPDEFINES = ['OSGQTTREE_LIBRARY'] )
+
+if GetPlatform() == 'linux':
+    lib_env.Append( CCFLAGS=['-fPIC'])
+
+if GetPlatform() != 'darwin':
+    Import('qt_options')
+    qt_options.apply(lib_env)
+    lib_env.AppendUnique( CPPDEFINES = ['QT_ON'] )
+else:
+    import qt46
+    qt46.applyQtBuildFlags(lib_env)
+
+#if baseEnv['StaticLibs'] == "yes":
+#lib = ves_pkg.createStaticLibrary('osgQtTree', lib_env,
+#                                               installPrefix = LIBDIR)
+#else:
+lib = ves_pkg.createSharedLibrary('osgQtTree', lib_env,
+                                      installPrefix = LIBDIR)
+
+lib.addHeaders(headers, pj('..','include','osgQtTree') )   
+lib.addSources(sources)
+
+lib.build()

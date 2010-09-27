@@ -40,11 +40,11 @@ private:
     osgTreeItem* activeChild_;
 };
 
-QModelIndex OSGQTTREE_EXPORT findItemIndex( TreeModel* tree, const osg::NodePath& nodepath );
+OSGQTTREE_EXPORT QModelIndex findItemIndex( TreeModel* tree, const osg::NodePath& nodepath );
 
-QModelIndex OSGQTTREE_EXPORT openToAndSelect( QTreeView* view, TreeModel* model, const osg::NodePath& nodepath );
+OSGQTTREE_EXPORT QModelIndex openToAndSelect( QTreeView* view, TreeModel* model, const osg::NodePath& nodepath );
 
-osgTreeItem* OSGQTTREE_EXPORT addTreeItem( TreeItem* parent,
+OSGQTTREE_EXPORT osgTreeItem* addTreeItem( TreeItem* parent,
                                            osg::Node* node,
                                            const std::string& name = "" );
 

@@ -30,16 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #define QT_NO_KEYWORDS
 
 #include "MainWindow.h"
 #include <ves/conductor/qt/ui_MainWindow.h>
 #include <QtGui/QPaintEvent>
 
-
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
-#include<ves/conductor/qt/NetworkLoader.h>
+#include <ves/conductor/qt/NetworkLoader.h>
 #include<ves/conductor/qt/CADFileLoader.h>
+
+#include <ves/xplorer/command/CommandManager.h>
+
+#include <ves/open/xml/Command.h>
 
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
@@ -47,8 +51,14 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
-
 #include <ves/xplorer/scenegraph/SceneManager.h>
+
+#ifdef MINERVA_GIS_SUPPORT
+# include <ves/xplorer/minerva/MinervaManager.h>
+# include <ves/conductor/qt/minerva/LayersTree.h>
+
+#include <Minerva/Core/TileEngine/Body.h>
+#endif
 
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -59,13 +69,14 @@
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    mActiveTab( "" )
+    mActiveTab( "" ),
+    mLayersTree ( 0x0 )
 {
     ui->setupUi(this);
     
     ui->mainToolBar->addAction(ui->actionFile);
     
-    ui->menuBar->close();
+    //ui->menuBar->close();
     
     mFileOpsStack = new IconStack( ui->mainToolBar->widgetForAction( ui->actionFile ), this );
     mFileOpsStack->AddAction( ui->actionNew );
@@ -101,6 +112,12 @@ MainWindow::MainWindow(QWidget* parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+
+#ifdef MINERVA_GIS_SUPPORT
+    delete mLayersTree;
+
+    ves::xplorer::minerva::MinervaManager::instance()->Clear();
+#endif
 }
 
 void MainWindow::changeEvent(QEvent* e)
@@ -282,7 +299,7 @@ void MainWindow::OnActiveModelChanged( const std::string& modelID )
 {   
     // We get rid of all existing tabs, then open only those appropriate 
     // to the active model.
-    
+
     std::string LastKnownActive = mActiveTab;
     
     RemoveAllTabs();
@@ -303,6 +320,40 @@ void MainWindow::OnActiveModelChanged( const std::string& modelID )
     ActivateTab( LastKnownActive );
 }
 
+
+#ifdef MINERVA_GIS_SUPPORT
+void MainWindow::on_actionAdd_Planet_triggered ( bool )
+{
+  ves::xplorer::minerva::MinervaManager::instance()->AddEarthToScene();
+
+  if ( mLayersTree )
+  {
+    this->RemoveTab ( mLayersTree );
+    delete mLayersTree;
+  }
+
+  mLayersTree = new ves::conductor::qt::minerva::LayersTree;
+  mLayersTree->buildTree ( ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody()->container() );
+  ui->tabWidget->setCurrentIndex( AddTab( mLayersTree, "Minerva Layers" ) );
+}
+
+void MainWindow::on_actionRemove_Planet_triggered ( bool )
+{
+  ves::xplorer::minerva::MinervaManager::instance()->Clear();
+
+  if ( mLayersTree )
+  {
+    this->RemoveTab ( mLayersTree );
+    delete mLayersTree;
+    mLayersTree = 0x0;
+  }
+}
+
+void MainWindow::on_actionConfigure_Layers_triggered ( bool )
+{
+}
+#endif
+
 void MainWindow::OnObjectPicked( osg::NodePath& nodePath )
 {    
     // This is a bit hackish. Instead of re-reading the scenegraph every time a new
@@ -313,4 +364,3 @@ void MainWindow::OnObjectPicked( osg::NodePath& nodePath )
     
     mScenegraphTreeTab->OpenToAndSelect( nodePath );
 }
-    

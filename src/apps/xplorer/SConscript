@@ -75,7 +75,7 @@ if baseEnv['MakeQtSupport'] == "yes":
         env.Append(LIBS = ['QtSolutions_PropertyBrowser-2.5'])
         env.Append(LIBPATH = [pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src')])
         env.Append(LIBS = ['osgQtTree'])
-        env.Append(LIBPATH = [pj('#', buildDir, 'external', 'osgQtTree', 'src')])
+        env.Append(LIBPATH = [pj('#', buildDir, 'external', 'osgQtTree')])
     else:
         import qt46
         qt46.applyQtBuildFlags(env)

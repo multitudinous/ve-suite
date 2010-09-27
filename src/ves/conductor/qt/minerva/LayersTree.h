@@ -1,6 +1,6 @@
 /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2010 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2009 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -23,57 +23,47 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
- * Author:        $Author$
- * Id:            $Id$
+ * Date modified: $Date: 2009-06-28 23:47:14 -0700 (Sun, 28 Jun 2009) $
+ * Version:       $Rev: 12939 $
+ * Author:        $Author: akubach $
+ * Id:            $Id: LayersTree.h 12939 2009-06-29 06:47:14Z akubach $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#pragma once
+#ifndef __VES_CONDUCTOR_QT_MINERVA_LAYERS_TREE_H__
+#define __VES_CONDUCTOR_QT_MINERVA_LAYERS_TREE_H__
 
-#include <QWidget>
-#include <QAbstractItemModel>
-#include <QModelIndex>
+#include <QtGui/QWidget>
 
-#include <osg/Node>
+namespace Minerva { namespace QtWidgets { class LayersTree; } }
+namespace Minerva { namespace Core { namespace Data { class Feature; } } }
 
-namespace Ui {
-    class TreeTab;
-}
+namespace ves {
+namespace conductor {
+namespace qt {
+namespace minerva {
 
-class TreeModel;
-
-namespace ves
+class LayersTree : public QWidget
 {
-namespace conductor
-{
-
-class TreeTab : public QWidget {
-    Q_OBJECT
 public:
-    TreeTab(QWidget *parent = 0);
-    ~TreeTab();
 
-    /// Clear the tree and underlying model
-    void Clear();
+  typedef QWidget BaseClass;
 
-    /// Set the root node of the tree and have it populate the model starting
-    /// at this root
-    void PopulateWithRoot( osg::Node* root );
+  LayersTree ( QWidget *parent = 0x0 );
+  virtual ~LayersTree();
 
-    /// Open tree view to the leaf specified in nodepath, if possible.
-    QModelIndex OpenToAndSelect( osg::NodePath& nodepath );
-
-protected:
-    void changeEvent(QEvent *e);
+  void buildTree ( Minerva::Core::Data::Feature * feature );
 
 private:
-    Ui::TreeTab *ui;
 
-    TreeModel* mModel;
+  Minerva::QtWidgets::LayersTree *mLayersTree;
+
 };
 
-} // namespace conductor
-} // namespace ves
+}
+}
+}
+}
+
+#endif // __VES_CONDUCTOR_QT_MINERVA_LAYERS_TREE_H__

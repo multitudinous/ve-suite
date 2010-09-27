@@ -42,6 +42,8 @@
 
 #include <ves/VEConfig.h>
 
+namespace ves { namespace conductor { namespace qt { namespace minerva { class LayersTree; } } } }
+
 namespace Ui 
 {
     class MainWindow;
@@ -105,6 +107,12 @@ protected Q_SLOTS:
     /// Autoconnected slot
     void on_tabWidget_currentChanged( int index );
 
+private Q_SLOTS:
+
+  void on_actionAdd_Planet_triggered ( bool );
+  void on_actionRemove_Planet_triggered ( bool );
+  void on_actionConfigure_Layers_triggered ( bool );
+
 private:
     Ui::MainWindow* ui;
     QFileDialog* mFileDialog;
@@ -118,4 +126,6 @@ private:
     
     // Main tabs that this class owns and manages
     QWidget* mVisualizationTab;
+
+    ves::conductor::qt::minerva::LayersTree *mLayersTree;
 };

@@ -41,6 +41,8 @@
 
 #pragma once
 
+#include <osgQtTree/Export.h>
+
 #include <QAbstractItemModel>
 #include <QModelIndex>
 #include <QVariant>
@@ -48,7 +50,7 @@
 class TreeItem;
 
 
-class TreeModel : public QAbstractItemModel
+class OSGQTTREE_EXPORT TreeModel : public QAbstractItemModel
 {
     Q_OBJECT
 

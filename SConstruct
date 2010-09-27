@@ -368,7 +368,7 @@ else:
 
 #Setup minerva library
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
-									  compileTest = True, headerToCheck = "Minerva/Core/Data/Object.h" )
+									  compileTest = False, headerToCheck = "Minerva/Common/Data/Object.h" )
 #Setup qt on linux
 if GetPlatform() != 'darwin':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
@@ -691,6 +691,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
     if baseEnv[ 'MakeQtSupport' ] == 'yes':
         ves_dirs.append( qtpropertybrowserSubdirs )
+        ves_dirs.append(pj(buildDir, 'external','osgQtTree'))
         if GetPlatform() != 'win32':
             ves_dirs.append( qtTestBuilder )
     
