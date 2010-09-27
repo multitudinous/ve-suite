@@ -521,14 +521,13 @@ void CameraManager::SetPictureMode( bool isPictureMode )
         addChild( "HeadShot" );
         m_headShotCamera = 
             ConvertNodeToCameraObject( getChild( getNumChildren() - 1 ) );
-        
         SetActiveCameraObject( m_headShotCamera );
-        
         m_headShotCamera->MakeHeadTrackedCamera();
     }
     else
     {
         removeChild( m_headShotCamera );
+        m_headShotCamera = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
