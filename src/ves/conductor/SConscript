@@ -69,18 +69,18 @@ lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'open','xml')
                          ])
 
-tao_options.apply( lib_env )
-xerces_options.apply( lib_env )
-wxwidgets_options.apply( lib_env )
-vpr_options.apply( lib_env )
-vtk_options.apply( lib_env )
-
-lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_UTILS_LIBRARY'])
-
 #see if we need to compile minerva in
 if minerva_options.isAvailable():
    lib_env.Append( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
    minerva_options.apply( lib_env )
+
+tao_options.apply( lib_env )
+wxwidgets_options.apply( lib_env )
+vpr_options.apply( lib_env )
+vtk_options.apply( lib_env )
+xerces_options.apply( lib_env )
+
+lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_UTILS_LIBRARY'])
 
 if GetPlatform() == 'win32':
    lib_env.Append( CXXFLAGS = [ '/bigobj' ] )
