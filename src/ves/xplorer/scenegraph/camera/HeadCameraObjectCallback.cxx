@@ -77,11 +77,12 @@ HeadCameraObjectCallback::~HeadCameraObjectCallback()
 void HeadCameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
     osg::ref_ptr< CameraObject > cameraObject =
-        static_cast< CameraObject* >( node );
+        dynamic_cast< CameraObject* >( node );
 
     if( !cameraObject.valid() )
     {
         traverse( node, nv );
+        return;
     }
 
     DCS& dcs = cameraObject->GetDCS();
