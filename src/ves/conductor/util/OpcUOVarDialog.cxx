@@ -30,14 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include "OpcUOVarDialog.h"
+#include <ves/conductor/util/OpcUOVarDialog.h>
+#include <ves/conductor/ConductorLibEnums.h>
 
 using namespace ves::conductor;
+using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( OpcUOVarDialog, wxDialog )
     EVT_CLOSE( OpcUOVarDialog::OnClose )
-    EVT_BUTTON( ID_CANCELBUTTON, OpcUOVarDialog::CancelButtonClick )
-    EVT_BUTTON( ID_SETBUTTON, OpcUOVarDialog::SetButtonClick )
-    EVT_BUTTON( ID_MONITORBUTTON, OpcUOVarDialog::OnMonitorVariable )
+    EVT_BUTTON( OPC_VAR_ID_CANCELBUTTON, OpcUOVarDialog::CancelButtonClick )
+    EVT_BUTTON( OPC_VAR_ID_SETBUTTON, OpcUOVarDialog::SetButtonClick )
+    EVT_BUTTON( OPC_VAR_ID_MONITORBUTTON, OpcUOVarDialog::OnMonitorVariable )
     EVT_GRID_CELL_CHANGE( OpcUOVarDialog::OnCellChange )
     EVT_GRID_SELECT_CELL( OpcUOVarDialog::OnSelectCell )
 END_EVENT_TABLE()
@@ -63,7 +65,7 @@ void OpcUOVarDialog::CreateGUIControls()
     this->SetSizer(WxFlexGridSizer);
     this->SetAutoLayout(true);
 
-    WxGrid = new wxGrid(this, ID_WXGRID, wxPoint(5,5), wxSize(320,120),
+    WxGrid = new wxGrid(this, OPC_VAR_ID_WXGRID, wxPoint(5,5), wxSize(320,120),
         wxVSCROLL | wxHSCROLL);
     WxGrid->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false,
         wxT("Tahoma")));
@@ -78,20 +80,20 @@ void OpcUOVarDialog::CreateGUIControls()
     WxBoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
     WxFlexGridSizer->Add(WxBoxSizer1, 0, wxALIGN_CENTER | wxALL, 5);
 
-    SetButton = new wxButton(this, ID_SETBUTTON, wxT("Set"), wxPoint(5,5),
+    SetButton = new wxButton(this, OPC_VAR_ID_SETBUTTON, wxT("Set"), wxPoint(5,5),
         wxSize(75,25), 0, wxDefaultValidator, wxT("SetButton"));
     SetButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false,
         wxT("Tahoma")));
     WxBoxSizer1->Add(SetButton,0,wxALIGN_CENTER | wxALL,5);
 
-    CancelButton = new wxButton(this, ID_CANCELBUTTON, wxT("Close"),
+    CancelButton = new wxButton(this, OPC_VAR_ID_CANCELBUTTON, wxT("Close"),
         wxPoint(90,5), wxSize(75,25), 0, wxDefaultValidator,
         wxT("CancelButton"));
     CancelButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false,
         wxT("Tahoma")));
     WxBoxSizer1->Add(CancelButton,0,wxALIGN_CENTER | wxALL,5);
 
-    MonitorButton = new wxButton(this, ID_MONITORBUTTON, wxT("Monitor"),
+    MonitorButton = new wxButton(this, OPC_VAR_ID_MONITORBUTTON, wxT("Monitor"),
         wxPoint(115,5), wxSize(75,25), 0, wxDefaultValidator,
         wxT("MonitorButton"));
     MonitorButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false,

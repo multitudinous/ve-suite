@@ -33,7 +33,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "OpcUOPlugin.h"
-#include "OpcUOVarDialog.h"
+#include <ves/conductor/util/OpcUOVarDialog.h>
 #include "DynamicDataDlg.h"
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>

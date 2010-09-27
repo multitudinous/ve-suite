@@ -58,7 +58,9 @@ namespace ves
 {
 namespace conductor
 {
-class OpcUOVarDialog : public wxDialog
+namespace util
+{
+class VE_CONDUCTOR_UTILS_EXPORTS OpcUOVarDialog : public wxDialog
 {
     private:
         DECLARE_EVENT_TABLE();
@@ -101,22 +103,13 @@ class OpcUOVarDialog : public wxDialog
         wxString prefix;
     
     private:
-        enum
-        {
-            ID_MONITORBUTTON = 1006,
-            ID_CANCELBUTTON = 1005,
-            ID_SETBUTTON = 1004,
-            ID_WXGRID = 1002,
-            ID_DUMMY_VALUE_
-        };
-    
-    private:
         void OnClose( wxCloseEvent& event );
         void CreateGUIControls( );
         void OnCellChange( wxGridEvent& event );
         void OnSelectCell( wxGridEvent& event );
         void OnMonitorVariable( wxCommandEvent& event );
 };
+}
 }
 }
 #endif

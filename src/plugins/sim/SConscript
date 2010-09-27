@@ -17,7 +17,7 @@ lib_env.Append( LIBS = ['ves_conductor_plugin',
                         'ves_open_xml' ] )
 lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor' ),
                             pj('#', buildDir, 'src','ves','open', 'xml' ) ] )
-lib_env.Append( CPPPATH = [pj(RootDir, 'src','plugins','opc_unit_operation' ) ] )
+#lib_env.Append( CPPPATH = [] )
 
 vpr_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )

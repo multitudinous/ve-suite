@@ -35,7 +35,7 @@
 #include "DSPlugin.h"
 #include "DSOpenDialog.h"
 #include "OPCDlg.h"
-#include "OpcUOVarDialog.h"
+#include <ves/conductor/util/OpcUOVarDialog.h>
 
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
