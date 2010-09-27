@@ -77,13 +77,7 @@ HeadCameraObjectCallback::~HeadCameraObjectCallback()
 void HeadCameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
     osg::ref_ptr< CameraObject > cameraObject =
-        dynamic_cast< CameraObject* >( node );
-
-    if( !cameraObject.valid() )
-    {
-        traverse( node, nv );
-        return;
-    }
+        static_cast< CameraObject* >( node );
 
     DCS& dcs = cameraObject->GetDCS();
     const gmtl::AxisAngled myAxisAngle(
@@ -93,7 +87,7 @@ void HeadCameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv
     ///is in VR Juggler space (y up) so that when the view matrix is multiplied
     ///in the 90 is taken back out.
     myMat = ves::xplorer::scenegraph::SceneManager::instance()->
-    GetGlobalViewMatrix() * myMat;
+        GetGlobalViewMatrix() * myMat;
     dcs.SetMat( myMat );
     
     osg::Matrixd tempMatrix( dcs.GetMat().getData() );

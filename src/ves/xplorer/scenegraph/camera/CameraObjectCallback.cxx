@@ -74,14 +74,8 @@ CameraObjectCallback::~CameraObjectCallback()
 void CameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
     osg::ref_ptr< CameraObject > cameraObject =
-        dynamic_cast< CameraObject* >( node );
+        static_cast< CameraObject* >( node );
 
-    if( !cameraObject.valid() )
-    {
-        traverse( node, nv );
-        return;
-    }
-    
     osg::Matrixd tempMatrix( cameraObject->GetDCS().GetMat().getData() );
     if( tempMatrix != m_dcsMatrix )
     {
