@@ -295,6 +295,11 @@ void CameraManager::SetActiveCameraObject(
         return;
     }
 
+    if( m_isPictureMode && !cameraObject )
+    {
+        return;
+    }
+
     //Turn off rendering for previously active camera
     if( m_activeCameraObject )
     {
@@ -528,6 +533,7 @@ void CameraManager::SetPictureMode( bool isPictureMode )
     {
         removeChild( m_headShotCamera );
         m_headShotCamera = 0;
+        SetActiveCameraObject( NULL );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

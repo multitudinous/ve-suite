@@ -229,6 +229,7 @@ void CameraObject::Initialize()
 
     //Do this for easy image capture capability
     m_colorImage = new osg::Image();
+    m_colorImage->allocateImage( textureRes.first, textureRes.second, 1, GL_RGB, GL_UNSIGNED_BYTE );
     m_camera->attach(
         osg::Camera::COLOR_BUFFER0, m_colorImage.get(),
         maxSamples, maxSamples );
