@@ -51,6 +51,9 @@ namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 HeadPositionCallback::HeadPositionCallback()
+    :
+    osg::Object(),
+    osg::NodeCallback()
 {
     mHead.init( "VJHead" );
 }
@@ -62,6 +65,7 @@ HeadPositionCallback::~HeadPositionCallback()
 ////////////////////////////////////////////////////////////////////////////////
 HeadPositionCallback::HeadPositionCallback( const HeadPositionCallback& ctc, const osg::CopyOp& copyop )
     :
+    osg::Object( ctc, copyop ),
     osg::NodeCallback( ctc, copyop )
 {
     mHead.init( "VJHead" );
