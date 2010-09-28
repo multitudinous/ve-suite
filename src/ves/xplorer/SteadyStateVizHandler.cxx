@@ -101,11 +101,12 @@ namespace xplorer
 SteadyStateVizHandler::SteadyStateVizHandler()
     :
     _activeObject( 0 ),
-    lastSource( 0 ),
-    computeActorsAndGeodes( false ),
     actorsAreReady( false ),
-    useLastSource( false ),
+    computeActorsAndGeodes( false ),
     texturesActive( false ),
+    lastSource( 0 ),
+    cursor( 0 ),
+    useLastSource( false ),
     transientActors( true )
 {
     vjTh[ 0 ] = 0;
