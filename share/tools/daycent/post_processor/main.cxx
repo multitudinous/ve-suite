@@ -89,6 +89,7 @@ int main( int argc, char* argv[] )
         boost::algorithm::replace_first( dbTableName, root, "" );
         boost::algorithm::replace_last( dbTableName, extension, "" );
         boost::algorithm::replace_all( dbTableName, "/", "_" );
+        boost::algorithm::replace_all( dbTableName, " ", "_" );
         std::cout << dbTableName << " " << lisFiles.at( i ) << std::endl;
         
         ParseDataFile( lisFiles.at( i ), dbTableName );
