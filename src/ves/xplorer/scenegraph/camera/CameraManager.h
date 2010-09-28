@@ -150,8 +150,11 @@ public:
     ///
     void SetProjectionEffectOpacity( double const& value );
 
-    ///
+    ///Write all the images for all of the cameras currently available
     void WriteAllImageFiles( std::string const& saveImageDir );
+
+    ///Write the images for the active camera only
+    void WriteActiveCameraImageFile( std::string const& saveImageDir );
 
     ///Send camera manager data to conductor to enable the gui
     ///to be in sync with Xplorer

@@ -341,14 +341,6 @@ void CameraPlacementEventHandler::Execute(
     }
     case SAVE_CAMERA_IMAGE:
     {
-        scenegraph::camera::CameraObject* const activeCameraObject =
-            cameraManager.GetActiveCameraObject();
-
-        if( !activeCameraObject )
-        {
-            return;
-        }
-
         if( !sceneManager.IsMasterNode() )
         {
             return;
@@ -358,20 +350,20 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair(
             "saveImageDirectory" )->GetData( saveImageDir );
 
-        activeCameraObject->WriteImageFile( saveImageDir );
+        cameraManager.WriteActiveCameraImageFile( saveImageDir );
 
         break;
     }
     case SAVE_ALL_CAMERA_IMAGES:
     {
-        std::string saveImageDir;
-        command->GetDataValuePair(
-            "saveImageDirectory" )->GetData( saveImageDir );
-
         if( !sceneManager.IsMasterNode() )
         {
             return;
         }
+        std::string saveImageDir;
+        command->GetDataValuePair(
+            "saveImageDirectory" )->GetData( saveImageDir );
+        
         
         cameraManager.WriteAllImageFiles( saveImageDir );
 

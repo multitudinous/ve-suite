@@ -519,6 +519,17 @@ void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )
     m_isTakingScreenCap = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CameraManager::WriteActiveCameraImageFile( std::string const& saveImageDir )
+{
+    scenegraph::camera::CameraObject* const activeCameraObject =
+        cameraManager.GetActiveCameraObject();
+    if( activeCameraObject )
+    {
+        activeCameraObject->WriteImageFile( saveImageDir );
+        m_isTakingScreenCap = true;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraManager::SetPictureMode( bool isPictureMode )
 {
     m_isPictureMode = isPictureMode;
