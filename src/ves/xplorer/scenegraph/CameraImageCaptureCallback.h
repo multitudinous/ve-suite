@@ -54,16 +54,12 @@ struct VE_SCENEGRAPH_EXPORTS CameraImageCaptureCallback :
     public osg::Camera::DrawCallback
 {
 public:
-    CameraImageCaptureCallback( const std::string& filename, int w, int h );
+    CameraImageCaptureCallback( const std::string& filename );
 
     virtual void operator()( osg::RenderInfo& ri ) const;
 
 protected:
     std::string m_filename;
-
-    int w_;
-    int h_;
-
 };
 } //end scenegraph
 } //end xplorer

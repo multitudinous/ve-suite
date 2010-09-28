@@ -45,11 +45,9 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraImageCaptureCallback::CameraImageCaptureCallback(
-    const std::string& filename, int w, int h )
+    const std::string& filename )
     :
-    m_filename( filename ),
-    w_( w ),
-    h_( h )
+    m_filename( filename )
 {
     ;
 }
@@ -59,12 +57,16 @@ void CameraImageCaptureCallback::operator()( osg::RenderInfo& ri ) const
     osg::Image* image = new osg::Image();
     std::string fName( m_filename + std::string( ".png" ) );
 
-    osg::notify( osg::ALWAYS ) << "Reading image for file " << fName << " ... " << std::endl;
-    image->readPixels( 0, 0, w_, h_, GL_RGBA, GL_UNSIGNED_BYTE );
+    osg::notify( osg::ALWAYS ) << "Reading image for file " 
+        << fName << " ... " << std::endl;
+    const osg::Viewport* vp = ri.getState()->getCurrentViewport();    
+    image->readPixels( vp->x(), vp->y(), vp->width(), vp->height(), 
+                      GL_RGBA, GL_UNSIGNED_BYTE );
 
-    osg::notify( osg::ALWAYS ) << "  Writing file " << fName << " ... " << std::endl;
+    osg::notify( osg::ALWAYS ) << "Writing file " 
+        << fName << " ... " << std::endl;
     osgDB::writeImageFile( *image, fName );
 
-    osg::notify( osg::ALWAYS ) << "  Capture complete." << std::endl;
+    osg::notify( osg::ALWAYS ) << "Capture complete." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////

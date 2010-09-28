@@ -232,6 +232,9 @@ public:
     ///Setup this camera to be tied to the head position
     void MakeHeadTrackedCamera();
     
+    ///Method to call the frame after taking a screen cap
+    void PostWriteImageFile();
+    
 protected:
     ///Destructor
     virtual ~CameraObject();

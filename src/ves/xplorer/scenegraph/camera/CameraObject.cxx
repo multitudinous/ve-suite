@@ -46,6 +46,7 @@
 #include <ves/xplorer/scenegraph/Masks.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/CameraImageCaptureCallback.h>
 
 // --- vrJuggler Includes --- //
 //#include <gmtl/Xforms.h>
@@ -230,9 +231,6 @@ void CameraObject::Initialize()
     //Do this for easy image capture capability
     m_colorImage = new osg::Image();
     m_colorImage->allocateImage( textureRes.first, textureRes.second, 1, GL_RGB, GL_UNSIGNED_BYTE );
-    m_camera->attach(
-        osg::Camera::COLOR_BUFFER0, m_colorImage.get(),
-        maxSamples, maxSamples );
 
     m_initialViewMatrix.makeLookAt(
         osg::Vec3d( 0.0, 0.0, 0.0 ),
@@ -977,7 +975,10 @@ void CameraObject::WriteImageFile( std::string const& saveImageDir )
         filename = baseFilename + imageNumber + extension;
     }
     
-    osgDB::writeImageFile( *(m_colorImage.get()), filename );
+    ves::xplorer::scenegraph::CameraImageCaptureCallback* cicb = 
+        new ves::xplorer::scenegraph::CameraImageCaptureCallback( filename );
+    m_camera->setPostDrawCallback( cicb );
+    //osgDB::writeImageFile( *(m_colorImage.get()), filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::MakeHeadTrackedCamera()
@@ -986,6 +987,11 @@ void CameraObject::MakeHeadTrackedCamera()
     ShowCameraGeometry( false );
     ShowFrustumGeometry( false );
     ComputeNearFarPlanes( true );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraObject::PostWriteImageFile()
+{
+    m_camera->setPostDrawCallback( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } //end camera

@@ -84,7 +84,7 @@ CameraManager::CameraManager()
     m_projectionTechnique( new technique::ProjectionTechnique() ),
     m_texGenNode( new osg::TexGenNode() ),
     m_isPictureMode( false ),
-    m_headShotCamera( 0 )
+    m_isTakingScreenCap( false )
 {
     Enable();
 
@@ -516,6 +516,7 @@ void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )
             //error output!
         }
     }
+    m_isTakingScreenCap = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::SetPictureMode( bool isPictureMode )
@@ -526,12 +527,12 @@ void CameraManager::SetPictureMode( bool isPictureMode )
         addChild( "HeadShot" );
         m_headShotCamera = 
             ConvertNodeToCameraObject( getChild( getNumChildren() - 1 ) );
-        SetActiveCameraObject( m_headShotCamera );
+        SetActiveCameraObject( m_headShotCamera.get() );
         m_headShotCamera->MakeHeadTrackedCamera();
     }
     else
     {
-        removeChild( m_headShotCamera );
+        removeChild( m_headShotCamera.get() );
         m_headShotCamera = 0;
         SetActiveCameraObject( NULL );
     }
@@ -544,6 +545,18 @@ bool CameraManager::IsPictureMode()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::LatePreFrameUpdate()
 {
-    ;
+    if( m_isTakingScreenCap )
+    {
+        CameraObject* cameraObject( NULL );
+        for( unsigned int i = 0; i < getNumChildren(); ++i )
+        {
+            cameraObject = ConvertNodeToCameraObject( getChild( i ) );
+            if( cameraObject )
+            {
+                cameraObject->PostWriteImageFile();
+            }
+        }
+        m_isTakingScreenCap = false;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

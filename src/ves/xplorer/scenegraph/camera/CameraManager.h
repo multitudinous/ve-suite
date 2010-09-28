@@ -205,7 +205,9 @@ private:
     bool m_isPictureMode;
     
     ///Get head shot camera
-    CameraObject* m_headShotCamera;
+    osg::ref_ptr< CameraObject > m_headShotCamera;
+    ///Tell wether we are taking screen caps
+    bool m_isTakingScreenCap;
 };
 } //end camera
 } //end scenegraph
