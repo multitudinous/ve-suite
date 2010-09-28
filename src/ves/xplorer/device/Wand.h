@@ -58,8 +58,10 @@
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
 #include <osg/Depth>
+#include <osg/ref_ptr>
 
 #include <osgUtil/IntersectVisitor>
+#include <osgUtil/LineSegmentIntersector>
 
 namespace osg
 {
