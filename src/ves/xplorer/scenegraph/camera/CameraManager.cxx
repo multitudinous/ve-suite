@@ -522,7 +522,7 @@ void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )
 void CameraManager::WriteActiveCameraImageFile( std::string const& saveImageDir )
 {
     scenegraph::camera::CameraObject* const activeCameraObject =
-        cameraManager.GetActiveCameraObject();
+        GetActiveCameraObject();
     if( activeCameraObject )
     {
         activeCameraObject->WriteImageFile( saveImageDir );
