@@ -40,7 +40,6 @@
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/CameraImageCaptureCallback.h>
 
 #include <ves/xplorer/scenegraph/rtt/Processor.h>
 #include <ves/xplorer/scenegraph/rtt/UnitCameraAttachmentBypass.h>
