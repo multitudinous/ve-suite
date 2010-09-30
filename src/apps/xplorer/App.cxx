@@ -466,12 +466,9 @@ void App::initScene()
     }
 
     //Define the rootNode, worldDCS, and lighting
-    //ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
-        //mSceneRenderToTexture->GetRootGroup() );
-    ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
-    ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
-    ves::xplorer::scenegraph::SceneManager::instance()->
-        SetFrameStamp( mFrameStamp.get() );
+    SceneManager::instance()->InitScene();
+    SceneManager::instance()->ViewLogo( true );
+    SceneManager::instance()->SetFrameStamp( mFrameStamp.get() );
 
     //Setup the light
     osg::ref_ptr< osg::StateSet > lightStateSet = 
@@ -487,6 +484,12 @@ void App::initScene()
 
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->InitScene();
+
+    //Initialize DeviceHandler
+    DeviceHandler::instance()->Initialize();
+    //Tell the scenemanager about the devices
+    SceneManager::instance()->SetDeviceHandlerGroup( 
+        DeviceHandler::instance()->GetDeviceGroup() );
 
     // navigation and cursor
     EnvironmentHandler::instance()->Initialize();
@@ -816,6 +819,8 @@ void App::postFrame()
         mSceneRenderToTexture->SetImageCameraCallback( false, "" );
         m_captureNextFrame = false;
     }
+
+    SceneManager::instance()->PostFrameUpdate();
 
     vprDEBUG( vesDBG, 3 ) << "|End App::postFrame"
                           << std::endl << vprDEBUG_FLUSH;

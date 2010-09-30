@@ -142,8 +142,6 @@ Wand* Wand::AsWand()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::Initialize()
 {
-    rootNode = ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
-
     m_depth = new osg::Depth();
     m_depth->setFunction( osg::Depth::ALWAYS );
     m_depth->setWriteMask( false );
@@ -1192,7 +1190,8 @@ void Wand::MakeWandLine()
     m_wandPAT = new osg::MatrixTransform();
     m_wandPAT->setNodeMask( 0 );
     m_wandPAT->addChild( beamGeode.get() );
-    rootNode->asGroup()->addChild( m_wandPAT );
+    ves::xplorer::DeviceHandler::instance()->
+        GetDeviceGroup()->addChild( m_wandPAT );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetCADSelectionMode( bool cadSelectionMode )

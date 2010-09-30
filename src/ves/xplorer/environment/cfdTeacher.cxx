@@ -66,11 +66,11 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::cfdTeacher( std::string specifiedDir, osg::Group* worldDCS )
-        :
-        m_currentScene( 0 ),
-        directory( specifiedDir ),
-        dcs( new ves::xplorer::scenegraph::DCS() ),
-        mModelRoot( worldDCS )
+    :
+    dcs( new ves::xplorer::scenegraph::DCS() ),
+    mModelRoot( worldDCS ),
+    m_currentScene( 0 ),
+    directory( specifiedDir )
 {
     vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \"" << this->directory
         << "\"" << std::endl << vprDEBUG_FLUSH;

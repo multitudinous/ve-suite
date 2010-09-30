@@ -187,8 +187,6 @@ private:
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
     int buttonData[ 6 ]; ///<do not know what this does
 
-    int cfdIso_value; ///<Value to translate
-
     gadget::PositionInterface wand; ///<VRJuggler's wand positional interface
     gadget::PositionInterface head; ///<VRJuggler's head positional interface
     gadget::PositionInterface mRightHandPos;

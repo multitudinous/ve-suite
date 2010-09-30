@@ -77,38 +77,11 @@ DeviceHandler::DeviceHandler()
     mSelectedDCS( NULL ),
     m_deviceBeingProcessed( NULL )
 {
-    //Initialize glove device
-    device::Device* device( NULL );
-    device = new device::Gloves();
-    m_deviceMap[ device::Device::GLOVES ] = device;
-
-    //Initialize keyboard mouse device
-    device = new device::KeyboardMouse();
-    device->Enable();
-    m_deviceMap[ device::Device::KEYBOARD_MOUSE ] = device;
-
-    //Initialize tablet device
-    device = new device::Wand();
-    device->Enable();
-    m_deviceMap[ device::Device::WAND ] = device;
-
-    //Initialize eand device
-    device = new device::Tablet();
-    device->Enable();
-    m_deviceMap[ device::Device::TABLET ] = device;
-
-    device = NULL;
-
-    //Set properties in Devices
-    for( DeviceMap::const_iterator itr = m_deviceMap.begin(); 
-        itr != m_deviceMap.end(); ++itr )
-    {
-        device::Device* device = itr->second;
-        device->SetCenterPoint( &mCenterPoint );
-        device->SetCenterPointThreshold( &mCenterPointThreshold );
-        device->SetCenterPointJump( &mCenterPointJump );
-        device->SetResetWorldPosition( &mResetAxis, &mResetPosition );
-    }
+    //Initialize the group that holds all of the devices
+    m_deviceGroup = new osg::Group();
+    m_deviceGroup->setName( "DeviceHandler Group" );
+    scenegraph::SceneManager::instance()->
+        GetRootNode()->addChild( m_deviceGroup.get() );
 
     mEventHandlers[ "ENABLE_DEVICE" ] =
         new event::DeviceEventHandler();
@@ -146,6 +119,42 @@ void DeviceHandler::EnableDevice(
     {
         device::Device* device = itr->second;
         device->Enable( enable );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::Initialize()
+{
+    //Initialize glove device
+    device::Device* device( NULL );
+    device = new device::Gloves();
+    m_deviceMap[ device::Device::GLOVES ] = device;
+    
+    //Initialize keyboard mouse device
+    device = new device::KeyboardMouse();
+    device->Enable();
+    m_deviceMap[ device::Device::KEYBOARD_MOUSE ] = device;
+    
+    //Initialize tablet device
+    device = new device::Wand();
+    device->Enable();
+    m_deviceMap[ device::Device::WAND ] = device;
+    
+    //Initialize eand device
+    device = new device::Tablet();
+    device->Enable();
+    m_deviceMap[ device::Device::TABLET ] = device;
+    
+    device = NULL;
+    
+    //Set properties in Devices
+    for( DeviceMap::const_iterator itr = m_deviceMap.begin(); 
+        itr != m_deviceMap.end(); ++itr )
+    {
+        device::Device* device = itr->second;
+        device->SetCenterPoint( &mCenterPoint );
+        device->SetCenterPointThreshold( &mCenterPointThreshold );
+        device->SetCenterPointJump( &mCenterPointJump );
+        device->SetResetWorldPosition( &mResetAxis, &mResetPosition );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -343,5 +352,10 @@ void DeviceHandler::UnselectObjects()
             sceneManipulator->Disconnect();
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Group* DeviceHandler::GetDeviceGroup()
+{
+    return m_deviceGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -74,12 +74,12 @@ using namespace ves::open::xml;
 Gloves::Gloves()
     :
     Device( GLOVES ),
-    subzeroFlag( 0 ),
-    rotationFlag( 1 ),
-    distance( 1000 ),
     cursorLen( 1.0f ),
     translationStepSize( 0.75f ),
     rotationStepSize( 1.0f ),
+    rotationFlag( 1 ),
+    subzeroFlag( 0 ),
+    distance( 1000 ),
     m_buttonPushed( false ),
     mDebugInfo( false )
 {
@@ -140,8 +140,7 @@ Gloves::Gloves()
     }
     beamLineSegment = new osg::LineSegment();
     
-    mRootNode = 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
+    mRootNode = ves::xplorer::DeviceHandler::instance()->GetDeviceGroup();
 
     Initialize();
 }
@@ -200,7 +199,8 @@ void Gloves::Initialize()
     }
     
     mRightHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::RIGHT, length );
-
+    mRightHand->setName( "Right Hand Glove" );
+    
     if( !mRightHand.valid() )
     {
         std::cerr << "|\tProblems loading right hand model for glove tools." << std::endl;
@@ -222,6 +222,7 @@ void Gloves::Initialize()
     }
     
     mLeftHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::LEFT, length );
+    mLeftHand->setName( "Left Hand Glove" );
 
     if( !mLeftHand.valid() )
     {
@@ -244,6 +245,10 @@ Gloves::~Gloves()
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::ProcessEvents( ves::open::xml::CommandPtr command )
 {
+    if( !m_enabled )
+    {
+        return;
+    }
     UpdateRightHandGlove();
     UpdateLeftHandGlove();
 
@@ -426,7 +431,7 @@ void Gloves::SelectObject()
 
     //Add the IntersectVisitor to the root Node so that all all geometry will be
     //checked and no transforms are done to the Line segement.
-    mRootNode->accept( objectBeamIntersectVisitor );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept( objectBeamIntersectVisitor );
 
     osgUtil::IntersectVisitor::HitList beamHitList;
     beamHitList = objectBeamIntersectVisitor.getHitList( beamLineSegment.get() );

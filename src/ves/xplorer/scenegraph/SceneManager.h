@@ -193,6 +193,9 @@ public:
     ///LatePreFrameUpdate call to sync DCS information across cluster
     void LatePreFrameUpdate();
 
+    ///Called after the draw function
+    void PostFrameUpdate();
+
     ///
     void PushBackGLTransformInfo(
         vrj::ViewportPtr viewport,
@@ -245,6 +248,12 @@ public:
 
     ///Set if it is the master node
     void SetMasterNode( bool isMasterNode );
+    
+    ///Set device handler group node
+    void SetDeviceHandlerGroup( osg::Group* deviceGroup );
+
+    ///Get device handler group node
+    osg::Group& GetDeviceHandlerGroup();
     
 protected:
     ///Create the model for the logo
@@ -376,7 +385,10 @@ private:
     GLTransformInfoMap m_glTransformInfoMap;
 
     ///VRJuggler's head positional interface
-    gadget::PositionInterface m_vrjHead; 
+    gadget::PositionInterface m_vrjHead;
+    
+    ///A reference to the device handler group node
+    osg::ref_ptr< osg::Group > m_deviceHandlerGroup;
 };
 } //end scenegraph
 } //end xplorer

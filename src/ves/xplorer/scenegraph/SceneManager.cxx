@@ -655,6 +655,11 @@ void SceneManager::LatePreFrameUpdate()
     m_cameraManager->LatePreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SceneManager::PostFrameUpdate()
+{
+    m_cameraManager->PostFrameUpdate();
+}
+////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PushBackGLTransformInfo(
     vrj::ViewportPtr viewport,
     GLTransformInfoPtr glTransformInfo )
@@ -763,5 +768,15 @@ void SceneManager::SetMasterNode( bool isMasterNode )
 bool SceneManager::IsMasterNode()
 {
     return m_isMasterNode;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::SetDeviceHandlerGroup( osg::Group* deviceGroup )
+{
+    m_deviceHandlerGroup = deviceGroup;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Group& SceneManager::GetDeviceHandlerGroup()
+{
+    return *m_deviceHandlerGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -202,9 +202,12 @@ void CameraObject::Initialize()
     //Don't set transparency to zero because of image save as .png
     //If we do post processing on this camera we can get rid of that requirement
     m_camera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
-    m_camera->setViewport( 0, 0, 1024, 1024 );
+    m_texWidth = 1024;
+    m_texHeight = 1024;
+    m_camera->setViewport( 0, 0, m_texWidth, m_texHeight );
 
-    std::pair< int, int > textureRes = std::make_pair< int, int >( 1024, 1024 );
+    std::pair< int, int > textureRes = 
+        std::make_pair< int, int >( m_texWidth, m_texHeight );
     m_colorMap = CreateViewportTexture(
         GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
         osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
@@ -229,8 +232,8 @@ void CameraObject::Initialize()
             //< osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get() );
 
     //Do this for easy image capture capability
-    m_colorImage = new osg::Image();
-    m_colorImage->allocateImage( textureRes.first, textureRes.second, 1, GL_RGB, GL_UNSIGNED_BYTE );
+    //m_colorImage = new osg::Image();
+    //m_colorImage->allocateImage( textureRes.first, textureRes.second, 1, GL_RGB, GL_UNSIGNED_BYTE );
 
     m_initialViewMatrix.makeLookAt(
         osg::Vec3d( 0.0, 0.0, 0.0 ),
@@ -273,6 +276,7 @@ void CameraObject::Initialize()
     //Add the subgraph to render
     m_camera->addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
     m_camera->addChild( &SceneManager::instance()->GetHighlightManager() );
+    m_camera->addChild( &SceneManager::instance()->GetDeviceHandlerGroup() );
     addChild( m_camera.get() );
 
     //Create DCS
@@ -976,7 +980,8 @@ void CameraObject::WriteImageFile( std::string const& saveImageDir )
     }
     
     ves::xplorer::scenegraph::CameraImageCaptureCallback* cicb = 
-        new ves::xplorer::scenegraph::CameraImageCaptureCallback( filename );
+        new ves::xplorer::scenegraph::CameraImageCaptureCallback( filename, 
+        m_texWidth, m_texHeight );
     m_camera->setPostDrawCallback( cicb );
     //osgDB::writeImageFile( *(m_colorImage.get()), filename );
 }

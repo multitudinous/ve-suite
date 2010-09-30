@@ -556,6 +556,11 @@ bool CameraManager::IsPictureMode()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::LatePreFrameUpdate()
 {
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::PostFrameUpdate()
+{
     if( m_isTakingScreenCap )
     {
         CameraObject* cameraObject( NULL );

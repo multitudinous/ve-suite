@@ -94,6 +94,9 @@ private:
     vprSingletonHeader( DeviceHandler );
 
 public:
+    ///Initialize all of the devices
+    void Initialize();
+
     ///
     ///\param deviceName
     ///\param enable
@@ -158,6 +161,9 @@ public:
     ///Unselect all currently selected objects
     void UnselectObjects();
 
+    ///Get the group node that is holding the devices
+    osg::Group* GetDeviceGroup();
+    
 protected:
 
 private:
@@ -197,6 +203,9 @@ private:
 
     ///
     device::Device* m_deviceBeingProcessed;
+    
+    ///The group node that holds all device graphical representations
+    osg::ref_ptr< osg::Group > m_deviceGroup;
 
 };
 } //end xplorer

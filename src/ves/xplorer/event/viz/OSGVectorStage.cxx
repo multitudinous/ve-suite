@@ -239,9 +239,6 @@ float* OSGVectorStage::createScalarArray( int m, int n, vtkDataArray* dataArray)
         {
             dataArray->GetTuple(i,&x);
             lut->GetColor(x,rgb);
-            //*scaI++ = x;
-            //*scaI++ = 0.;
-            //*scaI++ = 0.;
             *scaI++ = rgb[0];
             *scaI++ = rgb[1];
             *scaI++ = rgb[2];

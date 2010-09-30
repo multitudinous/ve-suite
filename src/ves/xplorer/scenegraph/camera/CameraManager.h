@@ -171,6 +171,9 @@ public:
     ///Called every frame to update picture snap camera
     void LatePreFrameUpdate();
 
+    ///Called after the draw function
+    void PostFrameUpdate();
+
 protected:
     ///Destructor
     virtual ~CameraManager();

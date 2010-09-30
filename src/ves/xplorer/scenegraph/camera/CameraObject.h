@@ -347,6 +347,9 @@ private:
 
     ///Image counter imcrementor so that we do not overwrite old images
     size_t m_imageCounter;
+    ///Texture size
+    int m_texWidth;
+    int m_texHeight;
 };
 } //end camera
 } //end scenegraph

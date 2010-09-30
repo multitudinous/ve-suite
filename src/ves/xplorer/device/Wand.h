@@ -211,7 +211,6 @@ private:
     osg::ref_ptr< osg::Geode > selectedGeometry; ///<Geometry currently selected
     double m_distance; ///<Used for scaling
     osg::Vec3d LastWandPosition; ///<Stores last wand position
-    osg::Node* rootNode; ///<do not know what this does
 
     ///do not know what this does
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_beamLineSegment;
