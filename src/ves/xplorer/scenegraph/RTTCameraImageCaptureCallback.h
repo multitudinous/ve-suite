@@ -31,14 +31,15 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CAMERA_CALLBACK_H
-#define CAMERA_CALLBACK_H
+#ifndef CAMERA_RTT_IMAGE_CALLBACK_H
+#define CAMERA_RTT_IMAGE_CALLBACK_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
 #include <osg/Camera>
+#include <osg/Texture2D>
 
 // --- STL Includes --- //
 #include <string>
@@ -50,19 +51,20 @@ namespace xplorer
 namespace scenegraph
 {
 
-struct VE_SCENEGRAPH_EXPORTS CameraImageCaptureCallback :
+struct VE_SCENEGRAPH_EXPORTS RTTCameraImageCaptureCallback :
     public osg::Camera::DrawCallback
 {
 public:
-    CameraImageCaptureCallback( const std::string& filename );
+    RTTCameraImageCaptureCallback( const std::string& filename, osg::Texture2D* tex );
 
     virtual void operator()( osg::RenderInfo& ri ) const;
     
 protected:
     std::string m_filename;
+    osg::ref_ptr< osg::Texture2D > m_texture2D;
 };
 } //end scenegraph
 } //end xplorer
 } //end ves
 
-#endif //CAMERA_CALLBACK_H
+#endif //CAMERA_RTT_IMAGE_CALLBACK_H

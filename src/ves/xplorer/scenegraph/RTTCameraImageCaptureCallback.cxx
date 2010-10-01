@@ -31,38 +31,42 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CAMERA_CALLBACK_H
-#define CAMERA_CALLBACK_H
-
 // --- VE-Suite Includes --- //
-#include <ves/VEConfig.h>
+#include <ves/xplorer/scenegraph/RTTCameraImageCaptureCallback.h>
 
 // --- OSG Includes --- //
-#include <osg/Camera>
+#include <osg/Image>
+#include <osg/io_utils>
 
-// --- STL Includes --- //
-#include <string>
+#include <osgDB/WriteFile>
+#include <osgDB/FileUtils>
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
+using namespace ves::xplorer::scenegraph;
 
-struct VE_SCENEGRAPH_EXPORTS CameraImageCaptureCallback :
-    public osg::Camera::DrawCallback
+////////////////////////////////////////////////////////////////////////////////
+RTTCameraImageCaptureCallback::RTTCameraImageCaptureCallback(
+    const std::string& filename, osg::Texture2D* tex )
+    :
+    m_filename( filename ),
+    m_texture2D( tex )
 {
-public:
-    CameraImageCaptureCallback( const std::string& filename );
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void RTTCameraImageCaptureCallback::operator()( osg::RenderInfo& ri ) const
+{
+    osg::ref_ptr< osg::Image > image = m_texture2D->getImage();
 
-    virtual void operator()( osg::RenderInfo& ri ) const;
+    osg::notify( osg::ALWAYS ) << "Reading image for file " 
+        << m_filename << " ... " << std::endl;
+
+    m_texture2D->apply( *( ri.getState() ) );
+    image->readImageFromCurrentTexture( ri.getContextID(), false, GL_UNSIGNED_BYTE );
     
-protected:
-    std::string m_filename;
-};
-} //end scenegraph
-} //end xplorer
-} //end ves
+    osg::notify( osg::ALWAYS ) << "Writing file " 
+        << m_filename << " ... " << std::endl;
 
-#endif //CAMERA_CALLBACK_H
+    osgDB::writeImageFile( *image.get(), m_filename );
+    osg::notify( osg::ALWAYS ) << "Capture complete." << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
