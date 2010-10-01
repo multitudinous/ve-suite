@@ -31,18 +31,18 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CAMERA_CALLBACK_H
-#define CAMERA_CALLBACK_H
+#ifndef CAMERA_CULL_VISITOR_DRAW_CALLBACK_H
+#define CAMERA_CULL_VISITOR_DRAW_CALLBACK_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
 #include <osg/Camera>
-namespace osg
-{
-class Texture2D;
-}
+#include <osg/Node>
+#include <osg/NodeVisitor>
+#include <osg/NodeCallback>
+
 // --- STL Includes --- //
 #include <string>
 
@@ -52,20 +52,19 @@ namespace xplorer
 {
 namespace scenegraph
 {
-
-struct VE_SCENEGRAPH_EXPORTS CameraImageCaptureCallback :
-    public osg::Camera::DrawCallback
+namespace camera
+{
+struct VE_SCENEGRAPH_EXPORTS CameraCullVisitorCallback :
+    public osg::NodeCallback
 {
 public:
-    CameraImageCaptureCallback( const std::string& filename, int w, int h );
+    CameraCullVisitorCallback();
 
-    virtual void operator()( osg::RenderInfo& ri ) const;
+    virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
     
 protected:
-    std::string m_filename;
-    int width;
-    int height;
 };
+}
 } //end scenegraph
 } //end xplorer
 } //end ves

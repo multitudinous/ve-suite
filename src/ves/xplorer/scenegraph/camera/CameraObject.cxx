@@ -35,6 +35,7 @@
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 #include <ves/xplorer/scenegraph/camera/CameraObjectCallback.h>
 #include <ves/xplorer/scenegraph/camera/HeadCameraObjectCallback.h>
+#include <ves/xplorer/scenegraph/camera/CameraCullVisitorCallback.h>
 
 //#include "DepthOfFieldTechnique.h"
 //#include "DepthHelperTechnique.h"
@@ -121,7 +122,7 @@ CameraObject::CameraObject(
     //mDepthHelperQuadGeode( NULL ),
     //mDepthHelperQuadGeometry( NULL ),
     //mDepthHelperQuadVertices( NULL ),
-    m_light( NULL ),
+    //m_light( NULL ),
     m_imageCounter( 0 )
 {
     Initialize();
@@ -178,41 +179,45 @@ void CameraObject::ComputeNearFarPlanes( bool const& enable )
     {
         m_camera->setComputeNearFarMode(
             osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+        m_screenCapCamera->setComputeNearFarMode(
+            osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
     }
     else
     {
         m_camera->setComputeNearFarMode(
             osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-    }
+        m_screenCapCamera->setComputeNearFarMode(
+            osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraObject::Initialize()
+void CameraObject::InitializeCamera( osg::Camera& camera )
 {
-    //Create osg camera for rendering
-    m_camera = new osg::Camera();
-    m_camera->setName( "Camera Object Camera" );
-    m_camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-    m_camera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
-    m_camera->setRenderTargetImplementation(
+    camera.setName( "Camera Object Camera" );
+    camera.setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+    camera.setRenderOrder( osg::Camera::PRE_RENDER, 0 );
+    camera.setRenderTargetImplementation(
         osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER );
-    m_camera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    camera.setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     //Keep visibility within user defined near and far planes
-    m_camera->setComputeNearFarMode(
+    camera.setComputeNearFarMode(
         osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
     //Don't set transparency to zero because of image save as .png
     //If we do post processing on this camera we can get rid of that requirement
-    m_camera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+    camera.setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     m_texWidth = 1024;
     m_texHeight = 1024;
-    m_camera->setViewport( 0, 0, m_texWidth, m_texHeight );
-
+    camera.setViewport( 0, 0, m_texWidth, m_texHeight );
+    
     std::pair< int, int > textureRes = 
-        std::make_pair< int, int >( m_texWidth, m_texHeight );
-    m_colorMap = CreateViewportTexture(
-        GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
-        osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
-        textureRes );
-
+    std::make_pair< int, int >( m_texWidth, m_texHeight );
+    if( !m_colorMap.valid() )
+    {
+        m_colorMap = CreateViewportTexture(
+           GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
+           osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+           textureRes );
+    }
+    
     //Attach a texture and use it as the render target
     int maxSamples( 0 );
 #ifdef VES_USE_MULTISAMPLING
@@ -222,27 +227,42 @@ void CameraObject::Initialize()
         maxSamples = 4;
     }
 #endif
-
-    m_camera->attach(
-        osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
+    
+    camera.attach( osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
         0, 0, false, maxSamples, maxSamples );
-    //Attach the depth texture and use it as the second render target
-    //attach( osg::Camera::COLOR_BUFFER1,
-            //( ves::xplorer::scenegraph::ResourceManager::instance()->get
-            //< osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get() );
+    
+    m_initialViewMatrix.makeLookAt(
+                                   osg::Vec3d( 0.0, 0.0, 0.0 ),
+                                   osg::Vec3d( 0.0, 1.0, 0.0 ),
+                                   osg::Vec3d( 0.0, 0.0, 1.0 ) );
+    camera.setViewMatrix( m_initialViewMatrix );
+    camera.setProjectionMatrixAsPerspective( 40.0, 1.0, 0.1, 5.0 );
+    
+    //Add the subgraph to render
+    camera.addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
+    camera.addChild( &SceneManager::instance()->GetHighlightManager() );
+    camera.addChild( &SceneManager::instance()->GetDeviceHandlerGroup() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraObject::Initialize()
+{
+    //Create osg camera for rendering
+    m_camera = new osg::Camera();
+    InitializeCamera( *(m_camera.get()) );
+    //Add the subgraph to render
+    addChild( m_camera.get() );
 
     //Do this for easy image capture capability
-    //m_colorImage = new osg::Image();
-    //m_colorImage->allocateImage( textureRes.first, textureRes.second, 1, GL_RGB, GL_UNSIGNED_BYTE );
+    m_screenCapCamera = new osg::Camera();
+    InitializeCamera( *(m_screenCapCamera.get()) );
 
-    m_initialViewMatrix.makeLookAt(
-        osg::Vec3d( 0.0, 0.0, 0.0 ),
-        osg::Vec3d( 0.0, 1.0, 0.0 ),
-        osg::Vec3d( 0.0, 0.0, 1.0 ) );
-    m_camera->setViewMatrix( m_initialViewMatrix );
-    m_camera->setProjectionMatrixAsPerspective( 40.0, 1.0, 0.1, 5.0 );
+    m_colorImage = new osg::Image();
+    m_colorImage->
+        allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
+    m_screenCapCamera->
+        attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
 
-    m_light = new osg::Light();
+    /*m_light = new osg::Light();
     m_light->setLightNum( 0 );
     m_light->setAmbient( osg::Vec4( 0.36862, 0.36842, 0.36842, 1.0 ) );
     m_light->setDiffuse( osg::Vec4( 0.88627, 0.88500, 0.88500, 1.0 ) );
@@ -259,7 +279,7 @@ void CameraObject::Initialize()
     //Get correct specular lighting across pipes
     //See http://www.ds.arch.tue.nl/General/Staff/Joran/osg/osg_specular_problem.htm
     lightModel->setLocalViewer( true );
-
+     */
     //Setup the light
     //osg::ref_ptr< osg::StateSet > stateset = m_camera->getOrCreateStateSet();
     //stateset->setAssociatedModes(
@@ -272,12 +292,6 @@ void CameraObject::Initialize()
         //lightModel.get(),
         //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     //m_camera->addChild( lightSource.get() );
-
-    //Add the subgraph to render
-    m_camera->addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
-    m_camera->addChild( &SceneManager::instance()->GetHighlightManager() );
-    m_camera->addChild( &SceneManager::instance()->GetDeviceHandlerGroup() );
-    addChild( m_camera.get() );
 
     //Create DCS
     m_dcs = new DCS();
@@ -350,6 +364,10 @@ void CameraObject::CalculateMatrixMVPT()
              osg::Matrixd::scale( 0.5, 0.5, 0.5 );
 
     m_texGenNode->getTexGen()->setPlanesFromMatrix( m_mvpt );
+    
+    //Now update the screen capture camera since this happens after the 
+    //update callback
+    m_screenCapCamera->setViewMatrix( m_camera->getViewMatrix() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -764,10 +782,10 @@ osg::Matrixd const& CameraObject::GetInitialViewMatrix()
     return m_initialViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Light& CameraObject::GetLight() const
+/*osg::Light& CameraObject::GetLight() const
 {
     return *m_light.get();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 /*
 osg::TexGenNode* CameraObject::GetTexGenNode()
@@ -970,20 +988,19 @@ void CameraObject::WriteImageFile( std::string const& saveImageDir )
         boost::lexical_cast< std::string >( m_imageCounter );
     const std::string baseFilename = saveImageDir + "/" + getName() + "_";
     const std::string extension = ".png";
-    std::string filename = baseFilename + imageNumber + extension;
+    m_filename = baseFilename + imageNumber + extension;
 
-    while( boost::filesystem::exists( filename ) )
+    while( boost::filesystem::exists( m_filename ) )
     {
         imageNumber = boost::lexical_cast< std::string >( ++m_imageCounter );
 
-        filename = baseFilename + imageNumber + extension;
+        m_filename = baseFilename + imageNumber + extension;
     }
     
-    ves::xplorer::scenegraph::CameraImageCaptureCallback* cicb = 
-        new ves::xplorer::scenegraph::CameraImageCaptureCallback( filename, 
-        m_texWidth, m_texHeight );
-    m_camera->setPostDrawCallback( cicb );
-    //osgDB::writeImageFile( *(m_colorImage.get()), filename );
+    removeChild( m_camera.get() );
+    addChild( m_screenCapCamera.get() );
+    
+    m_captureImage = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::MakeHeadTrackedCamera()
@@ -996,7 +1013,10 @@ void CameraObject::MakeHeadTrackedCamera()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::PostWriteImageFile()
 {
-    m_camera->setPostDrawCallback( 0 );
+    osgDB::writeImageFile( *(m_colorImage.get()), m_filename );
+    m_captureImage = false;
+    removeChild( m_screenCapCamera.get() );
+    addChild( m_camera.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } //end camera

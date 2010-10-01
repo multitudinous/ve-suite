@@ -42,6 +42,10 @@
 #include <osg/Group>
 #include <osg/Texture2D>
 
+#include <osgUtil/CullVisitor>
+
+#include <iostream>
+
 namespace osg
 {
 class Camera;
@@ -123,6 +127,13 @@ public:
     ///
     virtual void accept( osg::NodeVisitor& nv )
     {
+        /*if( (nv.getVisitorType() == osg::NodeVisitor::CULL_VISITOR) && m_captureImage  )
+        {
+            osgUtil::CullVisitor* tempVisitor = static_cast< osgUtil::CullVisitor* >( &nv );
+            std::cout << "test cull visitor 1 " << std::endl;
+            tempVisitor->getRenderStage()->setCameraRequiresSetUp( true );
+        }*/
+
         if( nv.validNodeMask( *this ) )
         {
             nv.pushOntoNodePath( this );
@@ -185,7 +196,7 @@ public:
     osg::Matrixd const& GetInitialViewMatrix();
 
     ///
-    osg::Light& GetLight() const;
+    //osg::Light& GetLight() const;
 
     ///
     //osg::TexGenNode* GetTexGenNode();
@@ -242,6 +253,8 @@ protected:
 private:
     ///
     void Initialize();
+    ///
+    void InitializeCamera( osg::Camera& camera );
 
     ///
     void CreateGeometry();
@@ -279,9 +292,12 @@ private:
     ///Pointer to the HeadsUpDisplay for xplorer window
     //ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
 
-    ///
+    ///Default camera used for HUD quad
     osg::ref_ptr< osg::Camera > m_camera;
 
+    ///Screen cap camera used for HUD quad
+    osg::ref_ptr< osg::Camera > m_screenCapCamera;
+    
     ///
     osg::ref_ptr< DCS > m_dcs;
 
@@ -343,13 +359,17 @@ private:
     //osg::ref_ptr< osg::Vec3Array > mDepthHelperQuadVertices;
 
     ///
-    osg::ref_ptr< osg::Light > m_light;
+    //osg::ref_ptr< osg::Light > m_light;
 
     ///Image counter imcrementor so that we do not overwrite old images
     size_t m_imageCounter;
     ///Texture size
     int m_texWidth;
     int m_texHeight;
+    ///Screen cap filename
+    std::string m_filename;
+    ///capture image
+    bool m_captureImage;
 };
 } //end camera
 } //end scenegraph

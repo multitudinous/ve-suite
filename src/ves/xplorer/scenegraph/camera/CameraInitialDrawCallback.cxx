@@ -31,43 +31,29 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CAMERA_CALLBACK_H
-#define CAMERA_CALLBACK_H
-
 // --- VE-Suite Includes --- //
-#include <ves/VEConfig.h>
+#include <ves/xplorer/scenegraph/camera/CameraInitialDrawCallback.h>
 
 // --- OSG Includes --- //
-#include <osg/Camera>
-namespace osg
+#include <osg/Image>
+#include <osg/io_utils>
+#include <osg/Texture2D>
+
+#include <osgDB/WriteFile>
+#include <osgDB/FileUtils>
+
+#include <iostream>
+
+using namespace ves::xplorer::scenegraph;
+
+////////////////////////////////////////////////////////////////////////////////
+CameraInitialDrawCallback::CameraInitialDrawCallback()
 {
-class Texture2D;
+    ;
 }
-// --- STL Includes --- //
-#include <string>
-
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
+////////////////////////////////////////////////////////////////////////////////
+void CameraInitialDrawCallback::operator()( osg::RenderInfo& ri ) const
 {
 
-struct VE_SCENEGRAPH_EXPORTS CameraImageCaptureCallback :
-    public osg::Camera::DrawCallback
-{
-public:
-    CameraImageCaptureCallback( const std::string& filename, int w, int h );
-
-    virtual void operator()( osg::RenderInfo& ri ) const;
-    
-protected:
-    std::string m_filename;
-    int width;
-    int height;
-};
-} //end scenegraph
-} //end xplorer
-} //end ves
-
-#endif //CAMERA_CALLBACK_H
+}
+////////////////////////////////////////////////////////////////////////////////

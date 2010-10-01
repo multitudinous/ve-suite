@@ -37,9 +37,13 @@
 // --- OSG Includes --- //
 #include <osg/Image>
 #include <osg/io_utils>
+#include <osg/Texture2D>
+#include <osg/Camera>
 
 #include <osgDB/WriteFile>
 #include <osgDB/FileUtils>
+
+#include <iostream>
 
 using namespace ves::xplorer::scenegraph;
 
@@ -56,17 +60,25 @@ CameraImageCaptureCallback::CameraImageCaptureCallback(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraImageCaptureCallback::operator()( osg::RenderInfo& ri ) const
 {
-    osg::Image* image = new osg::Image();
+    //std::cout << ri.getCurrentCamera() << std::endl;
+    //m_tex->copyTexImage2D( *ri.getState(), 0, 0, 1024, 1024 );
+    //osg::Camera* camera = ri.getCurrentCamera();
+    //unsigned char* tempCameraImage = camera->data();
+    
+    osg::ref_ptr< osg::Image > image = new osg::Image();
     std::string fName( m_filename );
 
     osg::notify( osg::ALWAYS ) << "Reading image for file " 
         << fName << " ... " << std::endl;
     //const osg::Viewport* vp = ri.getState()->getCurrentViewport();    
     image->readPixels( 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE );
-
+    //image->setImage( 1024, 1024, 0, 0,
+    //                GL_RGB, GL_UNSIGNED_BYTE, tempCameraImage );
+    //image->readPixels( 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE );
+    //image->readImageFromCurrentTexture( ri.getContextID(), false, GL_UNSIGNED_BYTE );
     osg::notify( osg::ALWAYS ) << "Writing file " 
         << fName << " ... " << std::endl;
-    osgDB::writeImageFile( *image, fName );
+    osgDB::writeImageFile( *image.get(), fName );
     osg::notify( osg::ALWAYS ) << "Capture complete." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
