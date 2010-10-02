@@ -128,6 +128,7 @@ protected:
     void OnPartNumberEntry( wxCommandEvent& event );
     void OnTextChkListToggle( wxCommandEvent& event );
     void OnToggleUnselected( wxCommandEvent& event );
+    void OnMouseSelection( wxCommandEvent& event );
     void OnClearData( wxCommandEvent& event );
     void OnQueryApply( wxCommandEvent& event );
     void OnDialogCancel( wxCommandEvent& event );

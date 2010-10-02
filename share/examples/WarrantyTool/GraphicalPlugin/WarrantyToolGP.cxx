@@ -111,7 +111,8 @@ WarrantyToolGP::WarrantyToolGP()
     m_keyboard( 0 ),
     m_groupedTextTextures( 0 ),
     m_cadRootNode( 0 ),
-    m_hasPromiseDate( false )
+    m_hasPromiseDate( false ),
+    m_mouseSelection( false )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
@@ -178,8 +179,13 @@ void WarrantyToolGP::PreFrameUpdate()
         return;
     }
 
+
     //If we had keyboard input then try and highlight the cad
-    bool pickedParts = FindPartNodeAndHighlightNode();
+    bool pickedParts = false;
+    if( m_mouseSelection )
+    {
+        pickedParts = FindPartNodeAndHighlightNode();
+    }
 
     //If we did not pick any parts and we have already queried for data
     if( m_groupedTextTextures.valid() && !pickedParts )
@@ -295,6 +301,12 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                     }
                 }
             }
+        }
+        else if( dvp->GetDataName() == "MOUSE_SELECTION" )
+        {
+            unsigned int checkBox;
+            dvp->GetData( checkBox );
+            m_mouseSelection = checkBox;
         }
         else if( dvp->GetDataName() == "WARRANTY_FILE" )
         {

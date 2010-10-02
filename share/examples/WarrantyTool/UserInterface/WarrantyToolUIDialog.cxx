@@ -122,7 +122,7 @@ WarrantyToolUIDialog::WarrantyToolUIDialog(
     m_textInput03->Disable();
     
     CenterOnParent();
-    SetTitle( _("Deere Analytics Dialog") );
+    SetTitle( _("Deere Analytics") );
 }
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUIDialog::~WarrantyToolUIDialog()
@@ -979,7 +979,6 @@ void WarrantyToolUIDialog::OnCreateTableFromQuery( wxCommandEvent& WXUNUSED( eve
 void WarrantyToolUIDialog::OnTableSelection( wxCommandEvent& WXUNUSED( event ) )
 {
     //SELECT Artists.ArtistName, CDs.Title FROM Artists INNER JOIN CDs ON Artists.ArtistID=CDs.ArtistID;
-    std::string queryCommand;
     int selectedChoice = m_tableChoice1->GetSelection();
     if( selectedChoice == wxNOT_FOUND )
     {
@@ -1002,6 +1001,7 @@ void WarrantyToolUIDialog::OnTableSelection( wxCommandEvent& WXUNUSED( event ) )
         return;
     }
 
+    std::string queryCommand;
     queryCommand = "SELECT * FROM ";
     queryCommand += choice1;
     queryCommand += " INNER JOIN " + choice2;
@@ -1009,5 +1009,20 @@ void WarrantyToolUIDialog::OnTableSelection( wxCommandEvent& WXUNUSED( event ) )
     queryCommand += choice2 + ".Part_Number=" + choice1 + ".Part_Number";
 
     m_queryTextCommandCtrl->ChangeValue( wxString( queryCommand.c_str(), wxConvUTF8 ) );    
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnMouseSelection( wxCommandEvent& event )
+{
+    ves::open::xml::DataValuePairSharedPtr 
+        cameraGeometryOnOffDVP( new ves::open::xml::DataValuePair() );
+    cameraGeometryOnOffDVP->
+        SetData( "MOUSE_SELECTION", 
+        static_cast< unsigned int >( event.IsChecked() ) );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+    command->AddDataValuePair( cameraGeometryOnOffDVP );
+    std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
+    command->SetCommandName( mCommandName );
+    mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////

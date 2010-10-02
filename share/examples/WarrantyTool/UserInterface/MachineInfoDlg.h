@@ -65,6 +65,7 @@ class MachineInfoDlg : public ves::conductor::UIDialog
         wxTextCtrl* m_partTextEntry;
         wxCheckListBox* m_displayTextChkList;
         wxCheckBox* m_toggleUnselected;
+        wxCheckBox* m_mouseSelection;
         wxButton* m_button2;
         wxStdDialogButtonSizer* m_dialogButtons;
         wxButton* m_dialogButtonsOK;
@@ -82,6 +83,7 @@ class MachineInfoDlg : public ves::conductor::UIDialog
         virtual void OnPartNumberEntry( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnTextChkListToggle( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnToggleUnselected( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnMouseSelection( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnClearData( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnQueryApply( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnDialogCancel( wxCommandEvent& event ){ event.Skip(); }

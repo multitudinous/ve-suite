@@ -138,6 +138,8 @@ private:
     size_t m_partNumberColumn;
     ///Vector map to be used to create the DB
     std::map< int, std::vector< std::string > > m_csvDataMap;
+    //Control mouse selection
+    bool m_mouseSelection;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )
