@@ -105,7 +105,7 @@ public:
     void SetTreeItemName( unsigned int id, wxString name );
 
     ///utility functions used to locate an item either for removal or appending
-    wxTreeItemId SearchTree( wxTreeItemId root, int id );
+    wxTreeItemId SearchTree( wxTreeItemId root, unsigned int id );
 
     ///change the item's image - for use with icon chooser
     void ChangeLeafIcon( unsigned int id, std::string path );
