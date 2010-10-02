@@ -107,14 +107,17 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         osg::ref_ptr< osg::Group > rootPartNode = 
             static_cast< osg::Group* >( activePart.get() );
         
-        osgOQ::StatisticsVisitor statsVisitor;
-        rootPartNode->accept( statsVisitor );
-        unsigned int numOQNs = statsVisitor.getNumOQNs();
+        unsigned int numOQNs = 0;
         bool oqPresent = false;
-        std::cout << numOQNs << std::endl;
-        vprDEBUG( vesDBG, 1 ) << "|\t\tThere are currently " << numOQNs
-            << "oq nodes." << std::endl
-            << vprDEBUG_FLUSH;
+
+        {
+            osgOQ::StatisticsVisitor statsVisitor;
+            rootPartNode->accept( statsVisitor );
+            numOQNs = statsVisitor.getNumOQNs();
+            vprDEBUG( vesDBG, 2 ) << "|\t\tThere are currently " << numOQNs
+                << "oq nodes." << std::endl
+                << vprDEBUG_FLUSH;
+        }
         
         if( numOQNs > 0 )
         {
@@ -149,7 +152,7 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 
         if( !oqPresent && occlude )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\t\tCreating new oq nodes " << std::endl
+            vprDEBUG( vesDBG, 2 ) << "|\t\tCreating new oq nodes " << std::endl
                 << vprDEBUG_FLUSH;
             
             osgOQ::OcclusionQueryNonFlatVisitor oqv;
@@ -180,22 +183,16 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         }
         else if( oqPresent && !occlude )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\t\tRemoving oq nodes " << std::endl
+            vprDEBUG( vesDBG, 2 ) << "|\t\tRemoving oq nodes " << std::endl
                 << vprDEBUG_FLUSH;
 
             //remove oq nodes
             osgOQ::RemoveOcclusionQueryVisitor removeOQV;
             rootPartNode->accept( removeOQV );
-            
-            osgOQ::StatisticsVisitor statsVisitor;
-            rootPartNode->accept( statsVisitor );
-            unsigned int numOQNs = statsVisitor.getNumOQNs();
-            std::cout << numOQNs << std::endl;
-            
         }
         else if( oqPresent )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\t\tUpdating oq nodes " << std::endl
+            vprDEBUG( vesDBG, 2 ) << "|\t\tUpdating oq nodes " << std::endl
                 << vprDEBUG_FLUSH;
             //remove oq nodes
             osgOQ::RemoveOcclusionQueryVisitor removeOQV;
@@ -212,10 +209,15 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
             rootPartNode->accept( visibilityThresholdVisitor );
         }
-        vprDEBUG( vesDBG, 1 ) << "|\t\tThere are now " << numOQNs
-            << "oq nodes." << std::endl
-            << vprDEBUG_FLUSH;
         
+        {
+            osgOQ::StatisticsVisitor statsVisitor;
+            rootPartNode->accept( statsVisitor );
+            numOQNs = statsVisitor.getNumOQNs();            
+            vprDEBUG( vesDBG, 2 ) << "|\t\tThere are now " << numOQNs
+                << "oq nodes." << std::endl
+                << vprDEBUG_FLUSH;
+        }        
     }
     catch( ... )
     {
