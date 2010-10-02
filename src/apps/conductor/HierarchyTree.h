@@ -96,19 +96,19 @@ public:
     void AddtoTree( ves::conductor::UIPluginBase *cur_module );
 
     ///remove a module to the tree
-    void RemoveFromTree( unsigned int id );
+    void RemoveFromTree( unsigned int itemId );
     
     ///used with making hierarchy blocks to add a defautl block to new level 
-    void AppendToTree( unsigned int parentID, unsigned int id );
+    void AppendToTree( unsigned int parentID, unsigned int itemId );
     
     ///change the item
-    void SetTreeItemName( unsigned int id, wxString name );
+    void SetTreeItemName( unsigned int itemId, wxString name );
 
     ///utility functions used to locate an item either for removal or appending
-    wxTreeItemId SearchTree( wxTreeItemId root, unsigned int id );
+    wxTreeItemId SearchTree( wxTreeItemId root, unsigned int itemId );
 
     ///change the item's image - for use with icon chooser
-    void ChangeLeafIcon( unsigned int id, std::string path );
+    void ChangeLeafIcon( unsigned int itemId, std::string path );
 
     ///Clear the hierarchy tree
     ///This is called by default by PopulateTree
