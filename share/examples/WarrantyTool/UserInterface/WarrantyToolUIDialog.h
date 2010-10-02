@@ -111,21 +111,27 @@ private:
     wxComboBox* mPartListCMB;
     wxArrayString m_partNumberStrings;
     wxArrayString m_columnStrings;
+    ///The number of tables created by the user
+    size_t m_tableCounter;
+    ///List of tables created by the user
+    std::vector< std::string > m_tableList;
     
 protected:
-	// Handlers for MachineInfoDlg events.
-	void OnDataLoad( wxFileDirPickerEvent& event );
-	void OnVariableAndLogicalChoice( wxCommandEvent& event );
-	void OnCreateInputText( wxCommandEvent& event );
-	void OnTextQueryEnter( wxCommandEvent& event );
-	void OnPartSelection( wxCommandEvent& event );
-	void OnPartNumberEntry( wxCommandEvent& event );
+    // Handlers for MachineInfoDlg events.
+    void OnDataLoad( wxFileDirPickerEvent& event );
+    void OnVariableAndLogicalChoice( wxCommandEvent& event );
+    void OnCreateInputText( wxCommandEvent& event );
+    void OnCreateTableFromQuery( wxCommandEvent& event );
+    void OnTextQueryEnter( wxCommandEvent& event );
+    void OnTableSelection( wxCommandEvent& event );
+    void OnPartSelection( wxCommandEvent& event );
+    void OnPartNumberEntry( wxCommandEvent& event );
     void OnTextChkListToggle( wxCommandEvent& event );
-	void OnQueryApply( wxCommandEvent& event );
-	void OnDialogCancel( wxCommandEvent& event );
-	void OnQueryOK( wxCommandEvent& event );
     void OnToggleUnselected( wxCommandEvent& event );
     void OnClearData( wxCommandEvent& event );
+    void OnQueryApply( wxCommandEvent& event );
+    void OnDialogCancel( wxCommandEvent& event );
+    void OnQueryOK( wxCommandEvent& event );
     
     const std::string GetTextFromChoice( wxChoice* variable,
                                         wxChoice* logicOperator,

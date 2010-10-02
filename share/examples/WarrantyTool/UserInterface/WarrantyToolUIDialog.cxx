@@ -73,6 +73,8 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
+#include <boost/lexical_cast.hpp>
+
 #include <Poco/SharedPtr.h>
 #include <Poco/Tuple.h>
 #include <Poco/Data/SessionFactory.h>
@@ -91,7 +93,8 @@ WarrantyToolUIDialog::WarrantyToolUIDialog()
     :
     MachineInfoDlg( 0 ),
     mServiceList( 0 ),
-    mPartNumberEntry( 0 )
+    mPartNumberEntry( 0 ),
+    m_tableCounter( 0 )
 {
     ;
 }
@@ -103,7 +106,8 @@ WarrantyToolUIDialog::WarrantyToolUIDialog(
     :
     MachineInfoDlg( parent, id ),
     mServiceList( service ),
-    mPartNumberEntry( 0 )
+    mPartNumberEntry( 0 ),
+    m_tableCounter( 0 )
 {    
     m_variableChoice01->Disable();
     m_variableLogicOperator01->Disable();
@@ -667,6 +671,21 @@ void WarrantyToolUIDialog::SubmitQueryCommand()
     //wxArrayInt selections;
     //numStrings = m_displayTextChkList->GetSelections( selections );
     
+    //Setup the table controls
+    if( m_createTableFromQuery->IsChecked() )
+    {
+        std::string tableName = "User_Table_" + 
+            boost::lexical_cast<std::string>( m_tableCounter );
+        m_tableCounter += 1;
+        m_tableList.push_back( tableName );
+        
+        wxString tempTableName( tableName.c_str(), wxConvUTF8 );
+        m_tableChoice1->Append( tempTableName );
+        m_tableChoice2->Append( tempTableName );
+        m_tableChoice3->Append( tempTableName );
+        m_tableChoice4->Append( tempTableName );        
+    }
+
     ves::open::xml::OneDStringArrayPtr textFields( 
         new ves::open::xml::OneDStringArray() );
     for( unsigned int i = 0; i < numStrings; ++i )
@@ -691,8 +710,18 @@ void WarrantyToolUIDialog::SubmitQueryCommand()
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::UpdateQueryDisplay()
 {
+    std::string queryCommand;
+
+    if( m_createTableFromQuery->IsChecked() )
+    {
+        std::string tableName = "User_Table_" + boost::lexical_cast<std::string>( m_tableCounter );
+        queryCommand = "CREATE TABLE " + tableName + " AS SELECT ";
+    }
+    else
+    {
+        queryCommand = "SELECT ";
+    }
     //Setup first variable
-    std::string queryCommand = "SELECT ";
     unsigned int numStrings = m_displayTextChkList->GetCount();
     for( unsigned int i = 0; i < numStrings; ++i )
     {
@@ -915,11 +944,11 @@ void WarrantyToolUIDialog::OnClearData( wxCommandEvent& WXUNUSED( event ) )
         if( m_displayTextChkList->IsChecked( i ) )
         {
             textFields->AddElementToArray( 
-                                          ConvertUnicode( m_displayTextChkList->GetString( i ).c_str() ) );
+                ConvertUnicode( m_displayTextChkList->GetString( i ).c_str() ) );
         }
     }
     ves::open::xml::DataValuePairPtr displayText( 
-                                                 new ves::open::xml::DataValuePair() );
+        new ves::open::xml::DataValuePair() );
     displayText->SetData( "DISPLAY_TEXT_FIELDS", textFields );
     
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
@@ -927,6 +956,58 @@ void WarrantyToolUIDialog::OnClearData( wxCommandEvent& WXUNUSED( event ) )
     command->AddDataValuePair( displayText );
     std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
     command->SetCommandName( mCommandName );
+    
+    //Send commands to clear the user selected tables
+    m_tableList.clear();
+    m_tableCounter = 0;
+    m_tableChoice1->Clear();
+    m_tableChoice2->Clear();
+    m_tableChoice3->Clear();
+    m_tableChoice4->Clear();
+    
     mServiceList->SendCommandStringToXplorer( command );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnCreateTableFromQuery( wxCommandEvent& WXUNUSED( event ) )
+{
+    //CREATE TABLE new_tbl SELECT * FROM orig_tbl;
+    //http://dev.mysql.com/doc/refman/5.0/en/create-table-select.html
+    //http://www.mydigitallife.info/2006/08/23/create-new-table-by-selecting-data-from-other-tables-with-create-table-as/
+    UpdateQueryDisplay();
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnTableSelection( wxCommandEvent& WXUNUSED( event ) )
+{
+    //SELECT Artists.ArtistName, CDs.Title FROM Artists INNER JOIN CDs ON Artists.ArtistID=CDs.ArtistID;
+    std::string queryCommand;
+    int selectedChoice = m_tableChoice1->GetSelection();
+    if( selectedChoice == wxNOT_FOUND )
+    {
+        return;
+    }
+    
+    selectedChoice = m_tableChoice1->GetSelection();
+    if( selectedChoice == wxNOT_FOUND )
+    {
+        return;
+    }
+
+    std::string choice1 = 
+        ConvertUnicode( m_tableChoice1->GetStringSelection().c_str() );
+    std::string choice2 = 
+        ConvertUnicode( m_tableChoice2->GetStringSelection().c_str() );
+
+    if( choice1 == choice2 )
+    {
+        return;
+    }
+
+    queryCommand = "SELECT * FROM ";
+    queryCommand += choice1;
+    queryCommand += " INNER JOIN " + choice2;
+    queryCommand += " ON ";
+    queryCommand += choice2 + ".Part_Number=" + choice1 + ".Part_Number";
+
+    m_queryTextCommandCtrl->ChangeValue( wxString( queryCommand.c_str(), wxConvUTF8 ) );    
 }
 ////////////////////////////////////////////////////////////////////////////////

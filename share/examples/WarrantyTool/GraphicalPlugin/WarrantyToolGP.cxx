@@ -685,7 +685,8 @@ void WarrantyToolGP::CreateDB()
     session.begin();
     // drop sample table, if it exists
     session << "DROP TABLE IF EXISTS Parts", now;
-
+    //SELECT * FROM sqlite_master WHERE tbl_name LIKE 'User_Table_%'
+    
     // (re)create table
     //session << "CREATE TABLE Parts (Part_Number VARCHAR, Description VARCHAR, Claims INT, Claim_Cost DOUBLE, FPM DOUBLE, CCPM DOUBLE, By VARCHAR)", now;
     
@@ -876,13 +877,13 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
     Poco::Data::Session session("SQLite", m_dbFilename );
     Statement select( session );
+    std::string queryString = dvp->GetDataString();
     try
     {
         //select << queryString.c_str(),
         //into( m_selectedAssembly ),
         //now;
         // a simple query
-        std::string queryString = dvp->GetDataString();
         select << queryString.c_str(),now;
         //select.execute();
     }
@@ -903,7 +904,12 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 
     m_groupedTextTextures = 
         new ves::xplorer::scenegraph::GroupedTextTextures();
-        
+    
+    if( !queryString.compare( 0, 12, "CREATE TABLE" ) )
+    {
+        mCommunicationHandler->SendConductorMessage( "Created the table." );
+        return;
+    }
     // create a RecordSet 
     Poco::Data::RecordSet rs(select);
     std::size_t cols = rs.columnCount();

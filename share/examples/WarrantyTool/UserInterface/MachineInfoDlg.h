@@ -32,59 +32,66 @@
 ///////////////////////////////////////////////////////////////////////////////
 class MachineInfoDlg : public ves::conductor::UIDialog 
 {
-	private:
-	
-	protected:
-		wxButton* m_dataLoadButton;
-		wxFilePickerCtrl* m_productDataLoader;
-		wxChoice* m_variableChoice00;
-		wxChoice* m_variableLogicOperator00;
-		wxTextCtrl* m_textInput00;
-		wxChoice* m_logicOperator00;
-		wxChoice* m_variableChoice01;
-		wxChoice* m_variableLogicOperator01;
-		wxTextCtrl* m_textInput01;
-		wxChoice* m_logicOperator01;
-		wxChoice* m_variableChoice02;
-		wxChoice* m_variableLogicOperator02;
-		wxTextCtrl* m_textInput02;
-		wxChoice* m_logicOperator02;
-		wxChoice* m_variableChoice03;
-		wxChoice* m_variableLogicOperator03;
-		wxTextCtrl* m_textInput03;
-		wxTextCtrl* m_queryTextCommandCtrl;
-		wxChoice* m_choice13;
-		wxTextCtrl* m_textCtrl18;
-		wxTextCtrl* m_textCtrl19;
-		wxChoice* m_manualPartSelectionChoice;
-		wxTextCtrl* m_partTextEntry;
-		wxCheckListBox* m_displayTextChkList;
-		wxCheckBox* m_toggleUnselected;
-		wxButton* m_button2;
-		wxStdDialogButtonSizer* m_dialogButtons;
-		wxButton* m_dialogButtonsOK;
-		wxButton* m_dialogButtonsApply;
-		wxButton* m_dialogButtonsCancel;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnDataLoad( wxFileDirPickerEvent& event ){ event.Skip(); }
-		virtual void OnVariableAndLogicalChoice( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCreateInputText( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnTextQueryEnter( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnPartSelection( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnPartNumberEntry( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnTextChkListToggle( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnToggleUnselected( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnClearData( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnQueryApply( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnDialogCancel( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnQueryOK( wxCommandEvent& event ){ event.Skip(); }
-		
-	
-	public:
-		MachineInfoDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Machine Info"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE );
-		~MachineInfoDlg();
-	
+    private:
+    
+    protected:
+        wxButton* m_dataLoadButton;
+        wxFilePickerCtrl* m_productDataLoader;
+        wxChoice* m_variableChoice00;
+        wxChoice* m_variableLogicOperator00;
+        wxTextCtrl* m_textInput00;
+        wxChoice* m_logicOperator00;
+        wxChoice* m_variableChoice01;
+        wxChoice* m_variableLogicOperator01;
+        wxTextCtrl* m_textInput01;
+        wxChoice* m_logicOperator01;
+        wxChoice* m_variableChoice02;
+        wxChoice* m_variableLogicOperator02;
+        wxTextCtrl* m_textInput02;
+        wxChoice* m_logicOperator02;
+        wxChoice* m_variableChoice03;
+        wxChoice* m_variableLogicOperator03;
+        wxTextCtrl* m_textInput03;
+        wxCheckBox* m_createTableFromQuery;
+        wxTextCtrl* m_queryTextCommandCtrl;
+        wxChoice* m_tableChoice1;
+        wxChoice* m_tableChoice2;
+        wxChoice* m_tableChoice3;
+        wxChoice* m_tableChoice4;
+        wxChoice* m_choice13;
+        wxTextCtrl* m_textCtrl18;
+        wxTextCtrl* m_textCtrl19;
+        wxChoice* m_manualPartSelectionChoice;
+        wxTextCtrl* m_partTextEntry;
+        wxCheckListBox* m_displayTextChkList;
+        wxCheckBox* m_toggleUnselected;
+        wxButton* m_button2;
+        wxStdDialogButtonSizer* m_dialogButtons;
+        wxButton* m_dialogButtonsOK;
+        wxButton* m_dialogButtonsApply;
+        wxButton* m_dialogButtonsCancel;
+        
+        // Virtual event handlers, overide them in your derived class
+        virtual void OnDataLoad( wxFileDirPickerEvent& event ){ event.Skip(); }
+        virtual void OnVariableAndLogicalChoice( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnCreateInputText( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnCreateTableFromQuery( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnTextQueryEnter( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnTableSelection( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnPartSelection( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnPartNumberEntry( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnTextChkListToggle( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnToggleUnselected( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnClearData( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnQueryApply( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnDialogCancel( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnQueryOK( wxCommandEvent& event ){ event.Skip(); }
+    
+    
+    public:
+        MachineInfoDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Deere Analytics"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE );
+        ~MachineInfoDlg();
+    
 };
 
 #endif //__MachineInfoDlg__

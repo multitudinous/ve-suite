@@ -11,7 +11,7 @@
 
 MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) 
     : 
-    UIDialog( parent, id, wxT("WarrantyTool_Dialog" ) )
+    UIDialog( parent, id, wxT("Deere Analytics" ) )
 {
     this->SetSizeHints( wxDefaultSize, wxDefaultSize );
     
@@ -140,16 +140,47 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
     bSizer5->Add( bSizer221, 1, wxEXPAND, 5 );
     
     wxStaticBoxSizer* queryTextCommandSizer;
-    queryTextCommandSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Query Command") ), wxVERTICAL );
+    queryTextCommandSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Query Command") ), wxHORIZONTAL );
+    
+    m_createTableFromQuery = new wxCheckBox( this, wxID_ANY, wxT("Create Table"), wxDefaultPosition, wxSize( -1,20 ), wxCHK_2STATE );
+    
+    queryTextCommandSizer->Add( m_createTableFromQuery, 0, wxRIGHT, 5 );
     
     m_queryTextCommandCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
-    queryTextCommandSizer->Add( m_queryTextCommandCtrl, 0, wxEXPAND, 5 );
+    m_queryTextCommandCtrl->SetMinSize( wxSize( 200,-1 ) );
     
+    queryTextCommandSizer->Add( m_queryTextCommandCtrl, 0, wxEXPAND, 5 );
+
     bSizer5->Add( queryTextCommandSizer, 0, wxEXPAND|wxTOP, 5 );
     
     sbSizer2->Add( bSizer5, 1, wxEXPAND, 5 );
     
     bSizer1->Add( sbSizer2, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5 );
+
+    wxStaticBoxSizer* sbSizer101;
+    sbSizer101 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Table Controls") ), wxHORIZONTAL );
+    
+    wxArrayString m_tableChoice1Choices;
+    m_tableChoice1 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( 100,-1 ), m_tableChoice1Choices, 0 );
+    m_tableChoice1->SetSelection( 0 );
+    sbSizer101->Add( m_tableChoice1, 0, wxRIGHT, 5 );
+    
+    wxArrayString m_tableChoice2Choices;
+    m_tableChoice2 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( 100,-1 ), m_tableChoice2Choices, 0 );
+    m_tableChoice2->SetSelection( 0 );
+    sbSizer101->Add( m_tableChoice2, 0, wxRIGHT, 5 );
+    
+    wxArrayString m_tableChoice3Choices;
+    m_tableChoice3 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( 100,-1 ), m_tableChoice3Choices, 0 );
+    m_tableChoice3->SetSelection( 0 );
+    sbSizer101->Add( m_tableChoice3, 0, wxRIGHT, 5 );
+    
+    wxArrayString m_tableChoice4Choices;
+    m_tableChoice4 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( 100,-1 ), m_tableChoice4Choices, 0 );
+    m_tableChoice4->SetSelection( 0 );
+    sbSizer101->Add( m_tableChoice4, 0, wxRIGHT, 5 );
+    
+    bSizer1->Add( sbSizer101, 1, wxALL|wxEXPAND, 5 );
     
     /*wxStaticBoxSizer* sbSizer5;
     sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Color Selection") ), wxVERTICAL );
@@ -258,7 +289,12 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
     m_variableLogicOperator03->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
     m_textInput03->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
     m_textInput03->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
+    m_createTableFromQuery->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnCreateTableFromQuery ), NULL, this );
     m_queryTextCommandCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnTextQueryEnter ), NULL, this );
+    m_tableChoice1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnTableSelection ), NULL, this );
+    m_tableChoice2->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnTableSelection ), NULL, this );
+    m_tableChoice3->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnTableSelection ), NULL, this );
+    m_tableChoice4->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnTableSelection ), NULL, this );
     m_manualPartSelectionChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnPartSelection ), NULL, this );
     m_partTextEntry->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnPartNumberEntry ), NULL, this );
     m_displayTextChkList->Connect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( MachineInfoDlg::OnTextChkListToggle ), NULL, this );
@@ -292,7 +328,12 @@ MachineInfoDlg::~MachineInfoDlg()
     m_variableLogicOperator03->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnVariableAndLogicalChoice ), NULL, this );
     m_textInput03->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
     m_textInput03->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnCreateInputText ), NULL, this );
+    m_createTableFromQuery->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnCreateTableFromQuery ), NULL, this );
     m_queryTextCommandCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnTextQueryEnter ), NULL, this );
+    m_tableChoice1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnTableSelection ), NULL, this );
+    m_tableChoice2->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnTableSelection ), NULL, this );
+    m_tableChoice3->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnTableSelection ), NULL, this );
+    m_tableChoice4->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnTableSelection ), NULL, this );
     m_manualPartSelectionChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MachineInfoDlg::OnPartSelection ), NULL, this );
     m_partTextEntry->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MachineInfoDlg::OnPartNumberEntry ), NULL, this );
     m_displayTextChkList->Disconnect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( MachineInfoDlg::OnTextChkListToggle ), NULL, this );
