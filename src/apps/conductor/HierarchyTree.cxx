@@ -141,7 +141,7 @@ void HierarchyTree::AddtoImageList( wxBitmap icon )
     images->Add( icon );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::PopulateTree( )
+void HierarchyTree::PopulateTree()
 {
     //Reset Tree
     Clear();
@@ -449,10 +449,10 @@ void HierarchyTree::AddtoTree( UIPluginBase* cur_module )
     Expand( m_rootId );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::RemoveFromTree( unsigned int id )
+void HierarchyTree::RemoveFromTree( unsigned int itemId )
 {
     wxTreeItemId root = GetRootItem();
-    wxTreeItemId selected = SearchTree( root, id );
+    wxTreeItemId selected = SearchTree( root, itemId );
 
     if( selected.IsOk() )
     {
@@ -460,7 +460,7 @@ void HierarchyTree::RemoveFromTree( unsigned int id )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
+void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int itemId )
 {
     wxTreeItemId root = GetRootItem();
     wxTreeItemId selected = SearchTree( root, parentID );
@@ -469,7 +469,7 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
     {
         ModuleData* modData = new ModuleData();
 
-        modData->modId = id;
+        modData->modId = itemId;
         modData->modName = "DefaultPlugin";
         modData->systemId = m_canvas->GetActiveNetworkID( );
         
@@ -487,10 +487,10 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::SetTreeItemName( unsigned int id, wxString name )
+void HierarchyTree::SetTreeItemName( unsigned int itemId, wxString name )
 {
     wxTreeItemId root = GetRootItem();
-    wxTreeItemId selected = SearchTree( root, id );
+    wxTreeItemId selected = SearchTree( root, itemId );
 
     if( selected.IsOk() )
     {
@@ -498,10 +498,10 @@ void HierarchyTree::SetTreeItemName( unsigned int id, wxString name )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
+void HierarchyTree::ChangeLeafIcon( unsigned int itemId, std::string path )
 {
     wxTreeItemId root = GetRootItem();
-    wxTreeItemId selected = SearchTree(root, id);
+    wxTreeItemId selected = SearchTree(root, itemId );
   
     if( selected.IsOk() )
     {
@@ -550,7 +550,7 @@ void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
    }
 }
 ///////////////////////////////////////////////////////////////////////////////
-wxTreeItemId HierarchyTree::SearchTree( wxTreeItemId root, int id )
+wxTreeItemId HierarchyTree::SearchTree( wxTreeItemId root, unsigned int itemId )
 {
     wxTreeItemIdValue cookie;
     wxTreeItemId search;
@@ -559,14 +559,14 @@ wxTreeItemId HierarchyTree::SearchTree( wxTreeItemId root, int id )
 
     while( item.IsOk() )
     {
-        ModuleData* modData = ( ModuleData* ) this->GetItemData( item );
-        if( id == modData->modId )
+        ModuleData* modData = static_cast< ModuleData* >( GetItemData( item ) );
+        if( itemId == modData->modId )
         {
             return item;
         }
         if( this->ItemHasChildren( item ) )
         {
-            wxTreeItemId search = SearchTree( item, id );
+            wxTreeItemId search = SearchTree( item, itemId );
             if( search.IsOk() )
             {
                 return search;
