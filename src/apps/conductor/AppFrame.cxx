@@ -85,7 +85,7 @@
 
 #include <ves/util/commands/Minerva.h>
 
-#include <ves/util/icons/ve_icon64x64.xpm>
+//#include <ves/util/icons/ve_icon64x64.xpm>
 #include <ves/util/icons/ve_icon32x32.xpm>
 
 #include "ConductorApp.h"
@@ -290,7 +290,7 @@ AppFrame::AppFrame( wxWindow* parent, wxWindowID id, const wxString& title )
     CreateMenu();
 
     appToolBar = new AppToolBar( this );
-    this->SetToolBar( appToolBar );
+    SetToolBar( appToolBar );
     CreateStatusBar();
     SetStatusText( _( "VE-Conductor Status" ) );
     //SetAutoLayout(true);
@@ -400,9 +400,11 @@ AppFrame::~AppFrame()
         wxProcess::Kill( pids[ i ] );
     }
     
-    delete appToolBar;
-    appToolBar = 0;
-    SetToolBar( 0 );
+    //We do not need to worry about this memory cleanup because wx handles
+    //the destruction of the toolbar
+    //delete appToolBar;
+    //appToolBar = 0;
+    //SetToolBar( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& AppFrame::GetDisplayMode()
@@ -1486,7 +1488,7 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
     //Find for streams
     //alphabetize map
     std::multimap< std::string, int > alphaMapStreams;
-    for( int i = 0; i < network->links.size(); i++ )
+    for( size_t i = 0; i < network->links.size(); i++ )
     {
 
         alphaMapStreams.insert(std::pair< std::string, int >

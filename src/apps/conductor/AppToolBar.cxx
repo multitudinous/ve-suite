@@ -502,7 +502,7 @@ void AppToolBar::OnSave( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnChangeManipulatorMode( wxCommandEvent& event )
 {
-    int currentSelection = event.GetId();
+    unsigned int currentSelection = event.GetId();
     if( m_prevManipulatorMode == currentSelection )
     {
         return;
@@ -686,7 +686,7 @@ void AppToolBar::OnCharacterState( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 {
-    int currentSelection = event.GetId();
+    unsigned int currentSelection = event.GetId();
 
     if( m_prevDeviceMode == currentSelection )
     {
@@ -736,7 +736,7 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 {
-    int currentSelection = event.GetId();
+    unsigned int currentSelection = event.GetId();
     if( m_prevCenterPoint == currentSelection )
     {
         return;
@@ -858,7 +858,7 @@ void AppToolBar::OnPhysicsState( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppToolBar::OnPhysics( wxCommandEvent& event )
 {
-    int currentSelection = event.GetId();
+    unsigned int currentSelection = event.GetId();
     if( m_prevPhysicsSimulation == currentSelection &&
       ( currentSelection == APP_TOOL_BAR_PHYSICS_PLAY ||
         currentSelection == APP_TOOL_BAR_PHYSICS_PAUSE ) )
