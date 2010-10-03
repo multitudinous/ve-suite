@@ -269,6 +269,9 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
                 highlight2( m_cadRootNode, "", false, true );
+            
+            //Clear the db of tables
+            ClearDatabaseUserTables();
         }
         else if( dvp->GetDataName() == "TOGGLE_PARTS" )
         {
@@ -1453,6 +1456,50 @@ void WarrantyToolGP::PickTextTextures()
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor
         highlight( tempModelNodes, partName, true, true );//,
         //osg::Vec3( 0.34118, 1.0, 0.57255, 1.0 ) );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::ClearDatabaseUserTables()
+{
+    Poco::Data::Session session("SQLite", m_dbFilename );
+    
+    Statement select( session );
+    try
+    {
+        std::string queryString = "SELECT name FROM sqlite_master WHERE tbl_name LIKE 'User_Table_%'";
+        select << queryString.c_str(),now;
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
+    catch( ... )
+    {
+        std::cout << "UI Part Number query is bad." << std::endl;
+        return;
+    }
+    
+    // create a RecordSet 
+    Poco::Data::RecordSet tableRS(select);
+    
+    // iterate over all rows and columns
+    bool more = false;
+    try
+    {
+        more = tableRS.moveFirst();
+    }
+    catch( ... )
+    {
+        return;
+    }
+    
+    while (more)
+    {
+        std::string tableName = tableRS[0].convert<std::string>();
+        tableName = "DROP TABLE " + tableName;
+        session << tableName, now;
+        more = tableRS.moveNext();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

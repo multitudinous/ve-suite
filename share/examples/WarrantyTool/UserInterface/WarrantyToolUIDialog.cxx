@@ -797,106 +797,142 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
     
     ///////////////////////////////////////////
     //Get the column names
-    try
     {
-        //std::string queryString = "DESCRIBE Parts";
-        std::string queryString = "SELECT * FROM Parts WHERE rowid = \"1\"";
-        select << queryString.c_str(),now;
-        //select.execute();
-    }
-    catch( Poco::Data::DataException& ex )
-    {
-        std::cout << ex.displayText() << std::endl;
-        return;
-    }
-    catch( Poco::Exception& ex )
-    {
-        std::cout << ex.displayText() << std::endl;
-        return;
-    }
-    catch( ... )
-    {
-        std::cout << "UI Column name query is bad." << std::endl;
-        return;
-    }
-
-    // create a RecordSet 
-    Poco::Data::RecordSet rs(select);
-    std::size_t cols = rs.columnCount();
-    size_t numQueries = rs.rowCount();
-    //std::cout << cols << " " << numQueries << std::endl;
-    //std::cout <<  cols << " " << rs.columnName( 0 ) << std::endl;
-
-    // iterate over all rows and columns
-    /*bool more = false;
-    try
-    {
-        more = rs.moveFirst();
-    }
-    catch( ... )
-    {
-        return;
-    }*/
-    for( size_t i = 0; i < cols; ++i )
-    {
-        wxString columnNames = wxString( rs.columnName( i ).c_str(), wxConvUTF8 );
-        m_columnStrings.Add( columnNames );
-    }
-    /*while (more)
-    {
-        wxString columnNames = wxString( rs[0].convert<std::string>().c_str(), wxConvUTF8 );
-        m_columnStrings.Add( columnNames );
+        try
+        {
+            //std::string queryString = "DESCRIBE Parts";
+            std::string queryString = "SELECT * FROM Parts WHERE rowid = \"1\"";
+            select << queryString.c_str(),now;
+        }
+        catch( Poco::Data::DataException& ex )
+        {
+            std::cout << ex.displayText() << std::endl;
+            return;
+        }
+        catch( Poco::Exception& ex )
+        {
+            std::cout << ex.displayText() << std::endl;
+            return;
+        }
+        catch( ... )
+        {
+            std::cout << "UI Column name query is bad." << std::endl;
+            return;
+        }
         
-        more = rs.moveNext();
-    }*/
+        // create a RecordSet 
+        Poco::Data::RecordSet rs(select);
+        std::size_t cols = rs.columnCount();
+        //size_t numQueries = rs.rowCount();
+        
+        for( size_t i = 0; i < cols; ++i )
+        {
+            wxString columnNames = wxString( rs.columnName( i ).c_str(), wxConvUTF8 );
+            m_columnStrings.Add( columnNames );
+        }
+    }
     ///////////////////////////////////////////
 
     ///////////////////////////////////////////
     //Get the partnumber from the db
-    Statement select2( session );
-
-    //select.reset( session );
-    try
     {
-        std::string queryString = "SELECT Part_Number FROM Parts";
-        select2 << queryString.c_str(),now;
-        //select.execute();
-    }
-    catch( Poco::Data::DataException& ex )
-    {
-        std::cout << ex.displayText() << std::endl;
-        return;
-    }
-    catch( ... )
-    {
-        std::cout << "UI Part Number query is bad." << std::endl;
-        return;
-    }
-
-    // create a RecordSet 
-    Poco::Data::RecordSet partRS(select2);
-    cols = partRS.columnCount();
-    numQueries = partRS.rowCount();
-    
-    // iterate over all rows and columns
-    bool more = false;
-    try
-    {
-        more = partRS.moveFirst();
-    }
-    catch( ... )
-    {
-        return;
-    }
-
-    while (more)
-    {
-        wxString partNames = wxString( partRS[0].convert<std::string>().c_str(), wxConvUTF8 );
-        m_partNumberStrings.Add( partNames );
+        Statement select2( session );
+        try
+        {
+            std::string queryString = "SELECT Part_Number FROM Parts";
+            select2 << queryString.c_str(),now;
+        }
+        catch( Poco::Data::DataException& ex )
+        {
+            std::cout << ex.displayText() << std::endl;
+            return;
+        }
+        catch( ... )
+        {
+            std::cout << "UI Part Number query is bad." << std::endl;
+            return;
+        }
         
-        more = partRS.moveNext();
+        // create a RecordSet 
+        Poco::Data::RecordSet partRS(select2);
+        //std::size_t cols = partRS.columnCount();
+        //std::size_t numQueries = partRS.rowCount();
+        
+        // iterate over all rows and columns
+        bool more = false;
+        try
+        {
+            more = partRS.moveFirst();
+        }
+        catch( ... )
+        {
+            return;
+        }
+        
+        while (more)
+        {
+            wxString partNames = wxString( partRS[0].convert<std::string>().c_str(), wxConvUTF8 );
+            m_partNumberStrings.Add( partNames );
+            
+            more = partRS.moveNext();
+        }
     }
+    ///////////////////////////////////////////
 
+    ///////////////////////////////////////////
+    //Figure out how many tables are present in the database
+    {
+        Statement select3( session );
+        try
+        {
+            std::string queryString = "SELECT name FROM sqlite_master WHERE tbl_name LIKE 'User_Table_%'";
+            select3 << queryString.c_str(),now;
+        }
+        catch( Poco::Data::DataException& ex )
+        {
+            std::cout << ex.displayText() << std::endl;
+            return;
+        }
+        catch( ... )
+        {
+            std::cout << "UI Part Number query is bad." << std::endl;
+            return;
+        }
+        
+        // create a RecordSet 
+        Poco::Data::RecordSet tableRS(select3);
+        //std::size_t cols = tableRS.columnCount();
+        //std::size_t numQueries = tableRS.rowCount();
+        
+        // iterate over all rows and columns
+        bool more = false;
+        try
+        {
+            more = tableRS.moveFirst();
+        }
+        catch( ... )
+        {
+            return;
+        }
+        
+        while (more)
+        {
+            std::string tableName = tableRS[0].convert<std::string>();
+            m_tableCounter += 1;
+            m_tableList.push_back( tableName );
+            
+            wxString tempTableName( tableName.c_str(), wxConvUTF8 );
+            m_tableChoice1->Append( tempTableName );
+            m_tableChoice2->Append( tempTableName );
+            m_tableChoice3->Append( tempTableName );
+            m_tableChoice4->Append( tempTableName );        
+            more = tableRS.moveNext();
+        }
+    }
+    ///////////////////////////////////////////
+
+    ///////////////////////////////////////////
+    //Shutdown the database
     try
     {
         Poco::Data::SQLite::Connector::unregisterConnector();
@@ -909,6 +945,7 @@ void WarrantyToolUIDialog::ParseDataBase( const std::string& csvFilename )
     {
         std::cout << ex.displayText() << std::endl;
     }    
+    ///////////////////////////////////////////
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnToggleUnselected( wxCommandEvent& event )

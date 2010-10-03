@@ -103,6 +103,8 @@ private:
     void GetPartNumberFromNodeName( std::string& nodeName );
     ///Change text textures
     void PickTextTextures();
+    ///Clear the db of all the user defined tables
+    void ClearDatabaseUserTables();
     
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
