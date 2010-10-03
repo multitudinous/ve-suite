@@ -105,7 +105,16 @@ private:
     void PickTextTextures();
     ///Clear the db of all the user defined tables
     void ClearDatabaseUserTables();
-    
+    ///Query specifically for the join command
+    void QueryTableAndHighlightParts( const std::string& tableName, 
+                                     osg::Vec3& glowColor );
+    ///Basic user defined custom query
+    void QueryUserDefinedAndHighlightParts( const std::string& queryString );
+    ///Query and highlight for a join query 
+    void QueryInnerJoinAndHighlightParts( const std::string& queryString );
+    ///Query 3 sets of data to create 3 highlighted group of parts
+    void HighlightPartsInJoinedTabled( const std::string& queryString );
+
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;
@@ -140,8 +149,10 @@ private:
     size_t m_partNumberColumn;
     ///Vector map to be used to create the DB
     std::map< int, std::vector< std::string > > m_csvDataMap;
-    //Control mouse selection
+    ///Control mouse selection
     bool m_mouseSelection;
+    ///Container for the two currently active table names
+    std::pair< std::string, std::string > m_tableNames;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

@@ -542,9 +542,11 @@ void WarrantyToolUIDialog::OnTextChkListToggle( wxCommandEvent& WXUNUSED( event 
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnQueryApply( wxCommandEvent& WXUNUSED( event ) )
 {
-    // TODO: Implement OnQueryApply
     //Submit the command currently in the query text box
-    SubmitQueryCommand();    
+    SubmitQueryCommand();
+    
+    //Once we submit a query we can reset the table creation check box
+    m_createTableFromQuery->SetValue( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnDialogCancel( wxCommandEvent& WXUNUSED( event ) )
@@ -556,9 +558,12 @@ void WarrantyToolUIDialog::OnDialogCancel( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnQueryOK( wxCommandEvent& WXUNUSED( event ) )
 {
-    // TODO: Implement OnQueryOK
     //Submit the command currently in the query text box and close the dialog
     SubmitQueryCommand();
+
+    //Once we submit a query we can reset the table creation check box
+    m_createTableFromQuery->SetValue( false );
+
     Close();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1045,7 +1050,28 @@ void WarrantyToolUIDialog::OnTableSelection( wxCommandEvent& WXUNUSED( event ) )
     queryCommand += " ON ";
     queryCommand += choice2 + ".Part_Number=" + choice1 + ".Part_Number";
 
-    m_queryTextCommandCtrl->ChangeValue( wxString( queryCommand.c_str(), wxConvUTF8 ) );    
+    m_queryTextCommandCtrl->ChangeValue( wxString( queryCommand.c_str(), wxConvUTF8 ) );
+    
+    if( choice1.empty() || choice2.empty() )
+    {
+        return;
+    }
+
+    //Send xplorer the table names that are currently active
+    ves::open::xml::OneDStringArrayPtr tableArray( 
+        new ves::open::xml::OneDStringArray() );
+    tableArray->AddElementToArray( choice1 );
+    tableArray->AddElementToArray( choice2 );
+
+    ves::open::xml::DataValuePairPtr tableDVP( 
+        new ves::open::xml::DataValuePair() );
+    tableDVP->SetData( "SET_ACTIVE_TABLES", tableArray );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+    command->AddDataValuePair( tableDVP );
+    std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
+    command->SetCommandName( mCommandName );
+    mServiceList->SendCommandStringToXplorer( command );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnMouseSelection( wxCommandEvent& event )

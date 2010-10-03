@@ -215,7 +215,8 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             return;
         }
         
-        if( dvp->GetDataName() == "RESET" )
+        const std::string dvpName = dvp->GetDataName();
+        if( dvpName == "RESET" )
         {
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight2( m_cadRootNode, "", false, true );
@@ -224,7 +225,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             opVisitor( m_cadRootNode, false, false, 1.0f );
             mAddingParts = false;
         }
-        else if( dvp->GetDataName() == "ADD" )
+        else if( dvpName == "ADD" )
         {
             //Highlight the respective node
             //Make a user specified part glow
@@ -241,7 +242,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 highlight( m_cadRootNode, m_lastPartNumber, true, true );
             RenderTextualDisplay( true );
         }
-        else if( dvp->GetDataName() == "SCROLL" )
+        else if( dvpName == "SCROLL" )
         {
             m_assemblyPartNumbers.clear();
             //Highlight the respective node
@@ -257,7 +258,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 highlight( m_cadRootNode, m_lastPartNumber, true, true );
             RenderTextualDisplay( true );
         }
-        else if( dvp->GetDataName() == "CLEAR" )
+        else if( dvpName == "CLEAR" )
         {
             ves::xplorer::scenegraph::util::OpacityVisitor 
                 opVisitor1( m_cadRootNode, false, true, 0.3f );
@@ -273,7 +274,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             //Clear the db of tables
             ClearDatabaseUserTables();
         }
-        else if( dvp->GetDataName() == "TOGGLE_PARTS" )
+        else if( dvpName == "TOGGLE_PARTS" )
         {
             std::vector< std::string > lowerCasePartNumbers;
             for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
@@ -305,13 +306,13 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 }
             }
         }
-        else if( dvp->GetDataName() == "MOUSE_SELECTION" )
+        else if( dvpName == "MOUSE_SELECTION" )
         {
             unsigned int checkBox;
             dvp->GetData( checkBox );
             m_mouseSelection = checkBox;
         }
-        else if( dvp->GetDataName() == "WARRANTY_FILE" )
+        else if( dvpName == "WARRANTY_FILE" )
         {
             std::string filename = dvp->GetDataString();
             boost::filesystem::path dataPath( filename );
@@ -338,6 +339,16 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             }*/
             m_keyboard->SetProcessSelection( false );
             CreateTextTextures();
+        }
+        else if( dvpName == "SET_ACTIVE_TABLES" )
+        {
+            std::vector<std::string> stringArray = 
+                boost::static_pointer_cast<ves::open::xml::OneDStringArray>( 
+                dvp->GetDataXMLObject() )->GetArray();
+            
+            m_tableNames = 
+                std::make_pair< std::string, std::string >( 
+                stringArray.at( 0 ), stringArray.at( 1 ) );
         }
     }
     else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
@@ -871,14 +882,8 @@ void WarrantyToolGP::CreateTextTextures()
 void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 {
     mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
-    ves::open::xml::DataValuePairPtr stringDvp = 
-        m_currentCommand->GetDataValuePair( "DISPLAY_TEXT_FIELDS" );
-    
-    std::vector<std::string> stringArray = 
-        boost::static_pointer_cast<ves::open::xml::OneDStringArray>( 
-        stringDvp->GetDataXMLObject() )->GetArray();
-    
-    //m_selectedAssembly.clear();
+
+    //Clear and reset the data containers for the user defined queries
     m_assemblyPartNumbers.clear();    
     {
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
@@ -888,134 +893,23 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
             opVisitor1( m_cadRootNode, false, true, 0.3f );
     }
 
-    //select << "SELECT Part_Number, Description, Claims FROM Parts",
-    //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
-    Poco::Data::Session session("SQLite", m_dbFilename );
-    Statement select( session );
-    std::string queryString = dvp->GetDataString();
-    try
-    {
-        //select << queryString.c_str(),
-        //into( m_selectedAssembly ),
-        //now;
-        // a simple query
-        select << queryString.c_str(),now;
-        //select.execute();
-    }
-    catch( Poco::Data::DataException& ex )
-    {
-        std::cout << ex.displayText() << std::endl;
-        return;
-    }
-    catch( ... )
-    {
-        mCommunicationHandler->SendConductorMessage( "Query is bad." );
-        return;
-    }
-
     RenderTextualDisplay( false );
     bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
     boost::ignore_unused_variable_warning( removed );
+    m_groupedTextTextures = 0;
 
-    m_groupedTextTextures = 
-        new ves::xplorer::scenegraph::GroupedTextTextures();
-    
-    if( !queryString.compare( 0, 12, "CREATE TABLE" ) )
-    {
-        mCommunicationHandler->SendConductorMessage( "Created the table." );
-        return;
-    }
-    // create a RecordSet 
-    Poco::Data::RecordSet rs(select);
-    std::size_t cols = rs.columnCount();
-    size_t numQueries = rs.rowCount();
-    std::ostringstream outString;
-    outString << "Number of parts found " << numQueries;
-    mCommunicationHandler->SendConductorMessage( outString.str() );
-    if( numQueries == 0 )
-    {
-        mCommunicationHandler->SendConductorMessage( "No parts found." );
-        return;
-    }
-    // iterate over all rows and columns
-    bool more = false;
-    try
-    {
-        more = rs.moveFirst();
-    }
-    catch( ... )
-    {
-        return;
-    }
+    //Now lets query things
+    const std::string queryString = dvp->GetDataString();
 
-    bool failedLoad = false;
-    float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
-    std::string partNumber;
-    std::string partNumberHeader;
-    while (more)
+    if( !boost::find_first( queryString, "INNER JOIN" ) )
     {
-        ves::xplorer::scenegraph::TextTexture* tempText = 0;
-        try
-        {
-            tempText = 
-                new ves::xplorer::scenegraph::TextTexture();
-        }
-        catch(...)
-        {
-            m_groupedTextTextures = 0;
-            failedLoad = true;
-            break;
-        }
-        tempText->SetTextColor( textColor );
-
-        std::ostringstream tempTextData;
+        QueryUserDefinedAndHighlightParts( queryString );
+    }
+    else
+    {
+        HighlightPartsInJoinedTabled( queryString );
+    }
         
-        for (std::size_t col = 0; col < cols; ++col)
-        {
-            partNumberHeader = rs.columnName(col);
-            if( partNumberHeader == "Part_Number" )
-            {
-                partNumber = rs[col].convert<std::string>();
-                tempText->SetTitle( partNumber );
-                m_assemblyPartNumbers.push_back( partNumber );
-            }
-
-            //std::vector< std::string >::const_iterator iter = 
-            //    std::find( stringArray.begin(), stringArray.end(), rs.columnName(col) );
-            
-            //if( iter != stringArray.end() )
-            else
-            {
-                tempTextData << rs.columnName(col) << ": " 
-                    << rs[col].convert<std::string>() << "\n";
-            }
-        }
-        const std::string partText = tempTextData.str();
-        tempText->UpdateText( partText );
-        m_groupedTextTextures->AddTextTexture( partNumber, tempText );
-
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( m_cadRootNode, partNumber, true, true, 
-            osg::Vec3( 0.57255, 0.34118, 1.0 ) );
-        
-        //std::vector< osg::ref_ptr< osg::Group > > highlightNodes = 
-        //    highlight.GetFoundNodes();
-        
-        more = rs.moveNext();
-    }
-
-    if( !failedLoad )
-    {
-        m_groupedTextTextures->UpdateListPositions();
-        
-        m_textTrans->addChild( m_groupedTextTextures.get() );
-    
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-            highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
-            //osg::Vec3( 0.34118, 1.0, 0.57255 ) );
-    }
-
-    
     mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
 /*
     //ves::xplorer::scenegraph::util::OpacityVisitor 
@@ -1427,12 +1321,17 @@ void WarrantyToolGP::PickTextTextures()
     //Update which one is in front
     if( foundMatch )
     {
-        //ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( static_cast< osg::Group* >( objectHit )->getParent( 0 ) );
-        ves::xplorer::scenegraph::DCS* tempKey = static_cast< ves::xplorer::scenegraph::DCS* >( tempParent );
+        ves::xplorer::scenegraph::DCS* tempKey = 
+            static_cast< ves::xplorer::scenegraph::DCS* >( tempParent );
         m_groupedTextTextures->MakeTextureActive( tempKey );
-        const std::string partName = m_groupedTextTextures->GetKeyForTexture( tempKey );
-        ves::xplorer::scenegraph::DCS* tempModelNodes = this->mModel->GetModelCADHandler()->GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );            
-        for( std::vector< std::string >::const_iterator it = m_assemblyPartNumbers.begin(); it != m_assemblyPartNumbers.end(); ++it)
+        const std::string partName = 
+            m_groupedTextTextures->GetKeyForTexture( tempKey );
+        ves::xplorer::scenegraph::DCS* tempModelNodes = 
+            mModel->GetModelCADHandler()->
+            GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );            
+        for( std::vector< std::string >::const_iterator 
+            it = m_assemblyPartNumbers.begin(); 
+            it != m_assemblyPartNumbers.end(); ++it)
         {
             /*std::ostringstream tempTextData;
              tempTextData
@@ -1466,7 +1365,8 @@ void WarrantyToolGP::ClearDatabaseUserTables()
     Statement select( session );
     try
     {
-        std::string queryString = "SELECT name FROM sqlite_master WHERE tbl_name LIKE 'User_Table_%'";
+        std::string queryString = 
+            "SELECT name FROM sqlite_master WHERE tbl_name LIKE 'User_Table_%'";
         select << queryString.c_str(),now;
     }
     catch( Poco::Data::DataException& ex )
@@ -1500,6 +1400,388 @@ void WarrantyToolGP::ClearDatabaseUserTables()
         tableName = "DROP TABLE " + tableName;
         session << tableName, now;
         more = tableRS.moveNext();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::HighlightPartsInJoinedTabled( const std::string& queryString )
+{
+    //Work with the first table
+    std::string table = m_tableNames.first;
+    osg::Vec3 glowColor( 0.34118, 1.0, 0.57255 );
+    mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
+
+    QueryTableAndHighlightParts( table, glowColor );
+    
+    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
+    
+    //Work with the first table
+    table = m_tableNames.second;
+    glowColor = osg::Vec3( 0.57255, 0.34118, 1.0 );
+    mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
+    
+    QueryTableAndHighlightParts( table, glowColor );
+    
+    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
+    
+    //Now if we are joining tables we are going to need to color the left 
+    //and the right table
+    mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
+    
+    QueryInnerJoinAndHighlightParts( queryString );
+    
+    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );    
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::QueryTableAndHighlightParts( 
+    const std::string& tableName, osg::Vec3& glowColor )
+{
+    //ves::open::xml::DataValuePairPtr stringDvp = 
+    //m_currentCommand->GetDataValuePair( "DISPLAY_TEXT_FIELDS" );
+    
+    //std::vector<std::string> stringArray;
+    
+    //select << "SELECT Part_Number, Description, Claims FROM Parts",
+    //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
+    Poco::Data::Session session( "SQLite", m_dbFilename );
+    Statement select( session );
+    std::string table = tableName;
+    try
+    {
+        table = "SELECT * FROM " + table;
+        select << table, now;
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
+    catch( ... )
+    {
+        mCommunicationHandler->SendConductorMessage( "Query is bad." );
+        return;
+    }
+    
+    //RenderTextualDisplay( false );
+    //bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+    //boost::ignore_unused_variable_warning( removed );
+    
+    //m_groupedTextTextures = 
+    //new ves::xplorer::scenegraph::GroupedTextTextures();
+    
+    // create a RecordSet 
+    Poco::Data::RecordSet rs(select);
+    std::size_t cols = rs.columnCount();
+    size_t numQueries = rs.rowCount();
+    std::ostringstream outString;
+    outString << "Number of parts found " << numQueries;
+    mCommunicationHandler->SendConductorMessage( outString.str() );
+    if( numQueries == 0 )
+    {
+        mCommunicationHandler->SendConductorMessage( "No parts found." );
+        return;
+    }
+    // iterate over all rows and columns
+    bool more = false;
+    try
+    {
+        more = rs.moveFirst();
+    }
+    catch( ... )
+    {
+        return;
+    }
+    
+    bool failedLoad = false;
+    //float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+    std::string partNumber;
+    std::string partNumberHeader;
+    while (more)
+    {
+        /*ves::xplorer::scenegraph::TextTexture* tempText = 0;
+        try
+        {
+            tempText = 
+            new ves::xplorer::scenegraph::TextTexture();
+        }
+        catch(...)
+        {
+            //m_groupedTextTextures = 0;
+            failedLoad = true;
+            break;
+        }
+        tempText->SetTextColor( textColor );
+        
+        std::ostringstream tempTextData;
+        */
+        for (std::size_t col = 0; col < cols; ++col)
+        {
+            partNumberHeader = rs.columnName(col);
+            if( partNumberHeader == "Part_Number" )
+            {
+                partNumber = rs[col].convert<std::string>();
+                //tempText->SetTitle( partNumber );
+                m_assemblyPartNumbers.push_back( partNumber );
+            }
+            /*else
+            {
+                tempTextData << rs.columnName(col) << ": " 
+                << rs[col].convert<std::string>() << "\n";
+            }*/
+        }
+        //const std::string partText = tempTextData.str();
+        //tempText->UpdateText( partText );
+        //m_groupedTextTextures->AddTextTexture( partNumber, tempText );
+        
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight( m_cadRootNode, partNumber, true, true, glowColor );
+        
+        more = rs.moveNext();
+    }
+    
+    if( !failedLoad )
+    {
+        //m_groupedTextTextures->UpdateListPositions();
+        
+        //m_textTrans->addChild( m_groupedTextTextures.get() );
+        
+        //ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        //highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
+        //osg::Vec3( 0.34118, 1.0, 0.57255 ) );
+    }    
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& queryString )
+{
+    //select << "SELECT Part_Number, Description, Claims FROM Parts",
+    //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
+    Poco::Data::Session session("SQLite", m_dbFilename );
+    Statement select( session );
+    try
+    {
+        //select << queryString.c_str(),
+        //into( m_selectedAssembly ),
+        //now;
+        // a simple query
+        select << queryString.c_str(),now;
+        //select.execute();
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
+    catch( ... )
+    {
+        mCommunicationHandler->SendConductorMessage( "Query is bad." );
+        return;
+    }
+    
+    //RenderTextualDisplay( false );
+    //bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+    //boost::ignore_unused_variable_warning( removed );
+    
+    //m_groupedTextTextures = 
+    //    new ves::xplorer::scenegraph::GroupedTextTextures();
+    
+    // create a RecordSet 
+    Poco::Data::RecordSet rs(select);
+    std::size_t cols = rs.columnCount();
+    size_t numQueries = rs.rowCount();
+    std::ostringstream outString;
+    outString << "Number of parts found " << numQueries;
+    mCommunicationHandler->SendConductorMessage( outString.str() );
+    if( numQueries == 0 )
+    {
+        mCommunicationHandler->SendConductorMessage( "No parts found." );
+        return;
+    }
+    // iterate over all rows and columns
+    bool more = false;
+    try
+    {
+        more = rs.moveFirst();
+    }
+    catch( ... )
+    {
+        return;
+    }
+    
+    bool failedLoad = false;
+    //float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+    std::string partNumber;
+    std::string partNumberHeader;
+    while (more)
+    {
+        /*ves::xplorer::scenegraph::TextTexture* tempText = 0;
+        try
+        {
+            tempText = 
+            new ves::xplorer::scenegraph::TextTexture();
+        }
+        catch(...)
+        {
+            m_groupedTextTextures = 0;
+            failedLoad = true;
+            break;
+        }
+        tempText->SetTextColor( textColor );*/
+        
+        //std::ostringstream tempTextData;
+        
+        for (std::size_t col = 0; col < cols; ++col)
+        {
+            partNumberHeader = rs.columnName(col);
+            if( partNumberHeader == "Part_Number" )
+            {
+                partNumber = rs[col].convert<std::string>();
+                //tempText->SetTitle( partNumber );
+                m_assemblyPartNumbers.push_back( partNumber );
+            }
+            /*else
+            {
+                tempTextData << rs.columnName(col) << ": " 
+                << rs[col].convert<std::string>() << "\n";
+            }*/
+        }
+        //const std::string partText = tempTextData.str();
+        //tempText->UpdateText( partText );
+        //m_groupedTextTextures->AddTextTexture( partNumber, tempText );
+        
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight( m_cadRootNode, partNumber, true, true );
+        
+        //std::vector< osg::ref_ptr< osg::Group > > highlightNodes = 
+        //    highlight.GetFoundNodes();
+        
+        more = rs.moveNext();
+    }
+    
+    if( !failedLoad )
+    {
+        //m_groupedTextTextures->UpdateListPositions();
+        
+        //m_textTrans->addChild( m_groupedTextTextures.get() );
+        
+        //ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        //highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
+        //osg::Vec3( 0.34118, 1.0, 0.57255 ) );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& queryString )
+{
+    //select << "SELECT Part_Number, Description, Claims FROM Parts",
+    //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
+    Poco::Data::Session session("SQLite", m_dbFilename );
+    Statement select( session );
+    try
+    {
+        //select << queryString.c_str(),
+        //into( m_selectedAssembly ),
+        //now;
+        // a simple query
+        select << queryString.c_str(),now;
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
+    catch( ... )
+    {
+        mCommunicationHandler->SendConductorMessage( "Query is bad." );
+        return;
+    }
+    
+    
+    m_groupedTextTextures = 
+        new ves::xplorer::scenegraph::GroupedTextTextures();
+    
+    if( !queryString.compare( 0, 12, "CREATE TABLE" ) )
+    {
+        mCommunicationHandler->SendConductorMessage( "Created the table." );
+        return;
+    }
+    // create a RecordSet 
+    Poco::Data::RecordSet rs(select);
+    std::size_t cols = rs.columnCount();
+    size_t numQueries = rs.rowCount();
+    std::ostringstream outString;
+    outString << "Number of parts found " << numQueries;
+    mCommunicationHandler->SendConductorMessage( outString.str() );
+    if( numQueries == 0 )
+    {
+        mCommunicationHandler->SendConductorMessage( "No parts found." );
+        return;
+    }
+    // iterate over all rows and columns
+    bool more = false;
+    try
+    {
+        more = rs.moveFirst();
+    }
+    catch( ... )
+    {
+        return;
+    }
+    
+    bool failedLoad = false;
+    float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
+    std::string partNumber;
+    std::string partNumberHeader;
+    while (more)
+    {
+        ves::xplorer::scenegraph::TextTexture* tempText = 0;
+        try
+        {
+            tempText = 
+            new ves::xplorer::scenegraph::TextTexture();
+        }
+        catch(...)
+        {
+            m_groupedTextTextures = 0;
+            failedLoad = true;
+            break;
+        }
+        tempText->SetTextColor( textColor );
+        
+        std::ostringstream tempTextData;
+        
+        for (std::size_t col = 0; col < cols; ++col)
+        {
+            partNumberHeader = rs.columnName(col);
+            if( partNumberHeader == "Part_Number" )
+            {
+                partNumber = rs[col].convert<std::string>();
+                tempText->SetTitle( partNumber );
+                m_assemblyPartNumbers.push_back( partNumber );
+            }
+            else
+            {
+                tempTextData << rs.columnName(col) << ": " 
+                << rs[col].convert<std::string>() << "\n";
+            }
+        }
+        const std::string partText = tempTextData.str();
+        tempText->UpdateText( partText );
+        m_groupedTextTextures->AddTextTexture( partNumber, tempText );
+        
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+        highlight( m_cadRootNode, partNumber, true, true, 
+                  osg::Vec3( 0.57255, 0.34118, 1.0 ) );
+        
+        more = rs.moveNext();
+    }
+    
+    if( !failedLoad )
+    {
+        m_groupedTextTextures->UpdateListPositions();
+        
+        m_textTrans->addChild( m_groupedTextTextures.get() );
+        
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
+        //osg::Vec3( 0.34118, 1.0, 0.57255 ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
