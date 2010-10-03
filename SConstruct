@@ -579,15 +579,20 @@ if not SConsAddons.Util.hasHelpFlag():
         buildDir = baseEnv['build_dir']
 
     if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
-        base_bldr.enableDebug()
+        base_bldr.enableDebug( EnvironmentBuilder.STANDARD )
         base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
     else:
-        base_bldr.enableOpt()
         base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
 
+    # setup compiler optimizations
+    if GetPlatform() != 'win32':
+        base_bldr.enableOpt( EnvironmentBuilder.MAXIMUM, ["fast_math"] )
+    else:
+        base_bldr.enableOpt( EnvironmentBuilder.STANDARD, ["fast_math"] )
+
+    # setup compiler warnings
     if GetPlatform() != 'win32':
         base_bldr.enableWarnings( EnvironmentBuilder.MAXIMUM )
-        base_bldr.enableOpt( EnvironmentBuilder.MAXIMUM, ["fast_math"] )
 
     # VTK defines
     baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
