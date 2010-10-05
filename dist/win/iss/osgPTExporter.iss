@@ -9,10 +9,10 @@
 #define MyAppURL "www.vesuite.org"
 #define VEVERSION "1.1.0"
 #define SVNVERSION "14394"
-#define OSGHOME "E:\dev\ves_deps\msvc_9\OSG_2.8.3_msvc-9.0-sp1-x64"
-#define OSGPTEXPORTERHOME "E:\dev\skewmatrix\osgPT\trunk\OSGExport"
+#define OSGHOME "C:\dev\ves_deps\msvs_9.0\OSG_2.8.3_msvc-9.0-sp1-x86"
+#define OSGPTEXPORTERHOME "C:\dev\skewmatrix-vesuite\skewmatrix\osgPT\trunk\OSGExport"
 ; This needs to be vcplugin for x86 and vcplugin64 for x86_64
-#define VCPLUGINDIR "vcplugin64"
+#define VCPLUGINDIR "vcplugin"
 
 [Setup]
 AppName={#MyAppName}
@@ -114,17 +114,17 @@ begin
   Result := 'MyDefaultInstallDir';
   //Check for polytrans first
   //On x86 platforms this statement should be:
-  //if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans','cwd', InstallDir) then begin
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans','cwd', InstallDir) then begin
   //On x86_64 platforms this statement should be:
-  if RegQueryStringValue(HKEY_LOCAL_MACHINE_64, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans64','cwd', InstallDir) then begin
+  //if RegQueryStringValue(HKEY_LOCAL_MACHINE_64, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans64','cwd', InstallDir) then begin
     // Successfully read the value.
     Result := InstallDir;
   end else begin
     // Check for nurgaf now
     //On x86 platforms this statement should be:
-    //if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\NuGraf','cwd', InstallDir) then begin
+    if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\NuGraf','cwd', InstallDir) then begin
     //On x86_64 platforms this statement should be:
-    if RegQueryStringValue(HKEY_LOCAL_MACHINE_64, 'SOFTWARE\Okino Computer Graphics, Inc.\NuGraf64','cwd', InstallDir) then begin
+    //if RegQueryStringValue(HKEY_LOCAL_MACHINE_64, 'SOFTWARE\Okino Computer Graphics, Inc.\NuGraf64','cwd', InstallDir) then begin
       // Successfully read the value.
       Result := InstallDir;
     end else begin
