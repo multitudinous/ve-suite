@@ -590,11 +590,7 @@ void CADNodePropertiesDlg::_addAnimation( wxCommandEvent& event )
                                  ::wxGetCwd(),
                                  _T( "" ),
                                  _T( "Animation Files(*.txt)|*.txt;" ),
-#if wxCHECK_VERSION( 2, 9, 0 )
-                                 wxFD_OPEN | wxFD_FILE_MUST_EXIST );
-#else
-                                 wxOPEN | wxFILE_MUST_EXIST );
-#endif
+                                wxFD_OPEN | wxFD_FILE_MUST_EXIST );
             try
             {
                 if( dialog.ShowModal() == wxID_OK )
@@ -945,11 +941,8 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
                              shaderDir,
                              _T( "" ),
                              _T( "VE-Attribute files (*.vea)|*.vea;" ),
-#if wxCHECK_VERSION( 2, 9, 0 )
                              wxFD_OPEN | wxFD_FILE_MUST_EXIST );
-#else
-                             wxOPEN | wxFILE_MUST_EXIST );
-#endif
+
                      
         if( dialog.ShowModal() != wxID_OK )
         {

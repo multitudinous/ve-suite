@@ -431,11 +431,7 @@ void NavigationPane::BuildPane( void )
         new wxStaticBitmap(
             scrollWindow, -1, wxBitmap( *_imagecoord ),
             wxDefaultPosition, wxSize( 110, 112 ),
-#if wxCHECK_VERSION( 2, 9, 0 )
             wxMINIMIZE_BOX );
-#else
-            wxMINIMIZE_BOX | wxTHICK_FRAME );
-#endif
 
 #if wxCHECK_VERSION( 2, 9, 1 )
     wxGridSizer* picSizer = new wxGridSizer( 1 );

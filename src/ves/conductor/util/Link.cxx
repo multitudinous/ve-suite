@@ -495,11 +495,7 @@ void Link::OnShowAspenName( wxCommandEvent& event )
 
     wxString title;
     title << wxT( "Aspen Name" );
-#if wxCHECK_VERSION( 2, 9, 0 )
     wxString desc = GetName();
-#else
-    wxString desc( GetName().c_str(), wxConvUTF8 );
-#endif
     wxMessageDialog( networkFrame, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -630,11 +626,7 @@ void Link::OnShowAspenDynName( wxCommandEvent& event )
     UILINK_CHECKID( event )
     wxString title;
     title << wxT( "Aspen Name" );
-#if wxCHECK_VERSION( 2, 9, 0 )
     wxString desc = GetName();
-#else
-    wxString desc( GetName().c_str(), wxConvUTF8 );
-#endif
     wxMessageDialog( networkFrame, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////

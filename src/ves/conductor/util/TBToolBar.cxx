@@ -121,11 +121,7 @@ void TextureBasedToolBar::SetScalars( wxArrayString scalarNames )
         if( scalarNames[i] != wxString( "", wxConvUTF8 ) )
         {
             wxFileName fName( scalarNames[i] );
-#if wxCHECK_VERSION( 2, 9, 0 )
             _availableScalars.Add( fName.GetName() );
-#else
-            _availableScalars.Add( wxString( fName.GetName(), wxConvUTF8 ) );
-#endif
         }
         else
         {

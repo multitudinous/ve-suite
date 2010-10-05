@@ -440,11 +440,7 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
                          ::wxGetCwd(),
                          _T( "" ),
                          _T( "VTK DataSet Files (*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;)|*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;|StarCD Parameter File (*.param)|*.param;|EnSight(*.ens;*.case)|*.ens;*.case;|MFIX (*.mfix)|*.mfix;|Fluent (*.cas)|*.cas;|AVS (*.avs)|*.avs;|Dicom (*.dcm)|*.dcm;|STL (*.stl)|*.stl;|All Files (*.*)|*.*" ),
-#if wxCHECK_VERSION( 2, 9, 0 )
                          wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
-#else
-                         wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
-#endif
                          wxDefaultPosition );
     dialog.CentreOnParent();
 
@@ -549,11 +545,7 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
                          ::wxGetCwd(),
                          _T( "" ),
                          _T( "VTK Surface Files (*.vtk;*.vtp)|*.vtk;*.vtp;" ),
-#if wxCHECK_VERSION( 2, 9, 0 )
                          wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
-#else
-                         wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
-#endif
                          wxDefaultPosition );
     dialog.CentreOnParent();
 
@@ -686,11 +678,7 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
                              ::wxGetCwd(),
                              _T( "" ),
                              _T( "VTK Texture Files (*.vti)|*.vti;" ),
-#if wxCHECK_VERSION( 2, 9, 0 )
                              wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
-#else
-                             wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW,
-#endif
                              wxDefaultPosition );
         dialog.CentreOnParent();
         
