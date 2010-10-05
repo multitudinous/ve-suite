@@ -66,15 +66,6 @@ bool ConductorApp::OnInit()
     // this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
     mainFrame = new AppFrame( NULL, ::wxNewId(), _( "VE-Conductor" ) );
 
-    // Problem with generic wxNotebook implementation whereby it doesn't size
-    // properly unless you set the size again
-
-#if defined(__WIN16__) || defined(__WXMOTIF__)
-    int width, height;
-    mainFrame->GetSize( & width, & height );
-    mainFrame->SetSize( -1, -1, width, height );
-#endif
-
     // Now launch the main ui
     mainFrame->Show( true );
     SetTopWindow( mainFrame );

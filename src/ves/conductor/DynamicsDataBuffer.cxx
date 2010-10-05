@@ -48,8 +48,7 @@
 using namespace ves::open::xml;
 using namespace ves::conductor;
 
-//vprSingletonImp( DynamicsDataBuffer );
-vprSingletonImpLifetime(DynamicsDataBuffer, 1);
+vprSingletonImp( DynamicsDataBuffer );
 ////////////////////////////////////////////////////////////////////////////////
 DynamicsDataBuffer::DynamicsDataBuffer( void )
 {

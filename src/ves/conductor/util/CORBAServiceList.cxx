@@ -72,17 +72,6 @@ CORBAServiceList::CORBAServiceList( void )
 ////////////////////////////////////////////////////////////////////////////////
 CORBAServiceList::~CORBAServiceList()
 {    
-    if( p_ui_i )
-    {
-        delete p_ui_i;
-        p_ui_i = 0;
-    }
-    
-    if( !CORBA::is_nil( m_orb.in() ) )
-    {
-        m_orb->destroy();
-    }
-
     /*try
     {
         m_orb->shutdown( false );
@@ -121,7 +110,17 @@ void CORBAServiceList::SetArgcArgv( int argc, char** argv )
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::CleanUp()
 {
-    ;
+    if( p_ui_i )
+    {
+        delete p_ui_i;
+        p_ui_i = 0;
+    }
+    
+    if( !CORBA::is_nil( m_orb.in() ) )
+    {
+        //Causes a shutdown crash on windows
+        //m_orb->destroy();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetNamingContext( CosNaming::NamingContext_ptr naming_context )

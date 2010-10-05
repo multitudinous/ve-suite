@@ -55,8 +55,7 @@ using namespace ves::open::xml;
 using namespace ves::open::xml::model;
 using namespace ves::conductor;
 
-//vprSingletonImp( XMLDataBufferEngine );
-vprSingletonImpLifetime( XMLDataBufferEngine, 1 );
+vprSingletonImp( XMLDataBufferEngine );
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::XMLDataBufferEngine( void )
 {
@@ -76,6 +75,7 @@ XMLDataBufferEngine::XMLDataBufferEngine( void )
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::~XMLDataBufferEngine()
 {
+    CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::CleanUp( void )
@@ -86,7 +86,6 @@ void XMLDataBufferEngine::CleanUp( void )
     m_networkModelMap.clear();
     m_tagMap.clear();
     m_userMap.clear();
-    //m_commandMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*ves::open::xml::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string commandKey )

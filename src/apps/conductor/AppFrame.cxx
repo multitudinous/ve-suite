@@ -356,55 +356,7 @@ AppFrame::AppFrame( wxWindow* parent, wxWindowID id, const wxString& title )
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
 {
-    // Clean up the canvas and plugins first because
-    // if left to wx, on windows things get messy with unloading plugins
-    // and cleaning up memory at the same time
-
-    //Cleanup all the plugins before wx does
-    //mDestoryFrame = true;
-    canvas->CleanUpNetworks();
-    if( canvas )
-    {
-        //wx_nw_splitter->RemoveChild( canvas );
-        canvas->Destroy();
-    }
-
-    //Shutdown xplorer
-    if (( GetDisplayMode() == "Desktop" ) ||
-            ( !preferences->GetMode( "Shut_Down_Xplorer_Option" ) ) )
-    {
-        ExitXplorer();
-    }
-    //serviceList->DisconnectFromXplorer();
-
-    //Store settings to wxConfig to be written out
-    StoreFrameSize( GetRect() );
-    StoreConfig();
-    StoreRecentFile();
-
-    UserPreferencesDataBuffer::instance()->CleanUp();
-    
-    //We have to mannually destroy these to make sure that things shutdown
-    //properly with CORBA. There may be a possible way to get around this but
-    //am not sure.
-    //serviceList->CleanUp();
-    //serviceList = 0;
-
-    //Write the final script file if we need to
-    ves::conductor::util::DataLoggerEngine::instance()->CleanUp();
-    
-    delete m_recentVESFiles;
-    m_recentVESFiles = 0;
-    for( size_t i = 0; i < pids.size(); ++i )
-    {
-        wxProcess::Kill( pids[ i ] );
-    }
-    
-    //We do not need to worry about this memory cleanup because wx handles
-    //the destruction of the toolbar
-    //delete appToolBar;
-    //appToolBar = 0;
-    //SetToolBar( 0 );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& AppFrame::GetDisplayMode()
@@ -570,22 +522,14 @@ void AppFrame::_detectDisplayAndCreate()
     if( GetDisplayMode() == "Desktop" )
     {
         _configureDesktop();
-#if wxCHECK_VERSION( 2, 9, 0 )
         SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX );
-#else
-        SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
-#endif
         //Set min size so all buttons still show and message window displays at least one line
         SetMinSize( wxSize( 600, 100 ) );
     }
     else if( GetDisplayMode() == "Tablet" )
     {
         _configureTablet();
-#if wxCHECK_VERSION( 2, 9, 0 )
         SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX );
-#else
-        SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
-#endif
         //set min size so all buttons still show and message window displays three lines and canvas
         SetMinSize( wxSize( 600, 260 ) );
     }
@@ -709,8 +653,36 @@ void AppFrame::StoreRecentFile()
 void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 {
     DynamicsDataBuffer::instance()->CleanUp();
+    canvas->CleanUpNetworks();
     Close( true );
     serviceList->DisconnectFromCE();
+
+    
+    //Shutdown xplorer
+    if (( GetDisplayMode() == "Desktop" ) ||
+            ( !preferences->GetMode( "Shut_Down_Xplorer_Option" ) ) )
+    {
+        ExitXplorer();
+    }
+    //serviceList->DisconnectFromXplorer();
+
+    //Store settings to wxConfig to be written out
+    StoreFrameSize( GetRect() );
+    StoreConfig();
+    StoreRecentFile();
+    
+    //Write the final script file if we need to
+    ves::conductor::util::DataLoggerEngine::instance()->CleanUp();
+    
+    for( size_t i = 0; i < pids.size(); ++i )
+    {
+        wxProcess::Kill( pids[ i ] );
+    }
+    //We have to mannually destroy these to make sure that things shutdown
+    //properly with CORBA. There may be a possible way to get around this but
+    //am not sure.
+    serviceList->CleanUp();
+    //serviceList = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu()
@@ -1174,11 +1146,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
         ::wxGetCwd(),
         mVESFileName,
         _T( "System files (*.ves)|*.ves|Script files (*.vem)|*.vem" ),
-#if wxCHECK_VERSION( 2, 9, 0 )
         wxFD_OPEN | wxFD_FILE_MUST_EXIST
-#else
-        wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW
-#endif
     );
 
     if( dialog.ShowModal() != wxID_OK )
@@ -1257,11 +1225,7 @@ void AppFrame::Run( wxCommandEvent& WXUNUSED( event ) )
         wxT( "" ),
         wxT( "" ),
         wxT( "Exe files (*.exe)|*.exe" ),
-#if wxCHECK_VERSION( 2, 9, 0 )
-        wxFD_OPEN | wxFD_FILE_MUST_EXIST
-#else
-        wxOPEN | wxFILE_MUST_EXIST | wxFD_PREVIEW
-#endif
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW
     );
 
     if( dialog.ShowModal() != wxID_OK )
