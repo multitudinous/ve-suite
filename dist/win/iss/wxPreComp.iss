@@ -2,14 +2,14 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppVer "2.8.10"
+#define MyAppVer "2.8.11"
 #define MyAppName "wxWidgets Pre-Compile"
 #define MyAppVerName "wxWidgets"
-#define MyAppPublisher "Virtual Engineering Research Group, Iowa State University"
+#define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 
 [Setup]
-AppName={#MyAppName}
+AppName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -40,6 +40,12 @@ TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
 UsePreviousAppDir=false
+VersionInfoVersion=1.0.0
+VersionInfoCompany=SMDS
+VersionInfoProductVersion=1.0.0
+AppVersion=1.0.0
+UninstallDisplayIcon={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
+UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
@@ -55,4 +61,4 @@ Source: {#WXSRCINSTALL}\lib\vc_dll\*.h; DestDir: {app}\lib\vc_dll\; Flags: ignor
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\wxWidgets.fpc.in; DestDir: {app}\lib\vc_dll\flagpoll; DestName: wxWidgets.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 
+Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}
