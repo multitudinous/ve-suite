@@ -40,7 +40,10 @@ if baseEnv['MakeQtSupport'] == "yes":
     env.AppendUnique( CPPDEFINES = ['QT_ON'] )
 
 resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns')]
-   
+
+if GetPlatform() == 'win32':
+    env.Append( LINKFLAGS =['/SUBSYSTEM:WINDOWS'])
+
 prog = ves_pkg.createProgram('ves_conductor' + env["PROGSUFFIX"], env, 'bin',
     True,resources,pj( RootDir, 'src', 'apps', 'conductor','Info.plist'),
     pj( RootDir, 'dist', 'darwin', 'PkgInfo'))
