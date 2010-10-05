@@ -47,7 +47,6 @@ public:
     }
 
     void OnDClick( wxSplitterEvent& event );
-    void SetPaneSize( void );
 
 private:
 

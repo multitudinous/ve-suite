@@ -45,6 +45,8 @@ class AppFrame;
 class ConductorApp : public wxApp
 {
 public:
+    ConductorApp();
+    virtual ~ConductorApp();
     virtual bool OnInit();
     virtual int OnExit();
 

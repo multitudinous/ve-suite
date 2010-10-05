@@ -47,6 +47,15 @@
 IMPLEMENT_APP( ConductorApp );
 
 XERCES_CPP_NAMESPACE_USE
+ConductorApp::ConductorApp()
+{
+    ;
+}
+
+ConductorApp::~ConductorApp()
+{
+    ;
+}
 
 bool ConductorApp::OnInit()
 {
@@ -74,7 +83,7 @@ bool ConductorApp::OnInit()
 
 int ConductorApp::OnExit()
 {
-    delete wxConfigBase::Set(( wxConfigBase* ) NULL );
+    //delete wxConfigBase::Set( NULL );
     XMLPlatformUtils::Terminate();
     return 0;
 }
