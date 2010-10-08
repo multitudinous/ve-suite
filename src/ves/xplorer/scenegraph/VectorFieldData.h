@@ -57,7 +57,8 @@ public:
     osg::Texture3D* getPositionTexture();
     osg::Texture3D* getDirectionTexture();
     osg::Texture3D* getScalarTexture();
-    
+    osg::Texture3D* getDiameterTexture();
+
     osg::Vec3s getTextureSizes();
     unsigned int getDataCount();
     
@@ -66,13 +67,14 @@ public:
     virtual osg::BoundingBox getBoundingBox() = 0;
     
 protected:
-    osg::ref_ptr< osg::Texture3D > _texPos, _texDir, _texScalar;
+    osg::ref_ptr< osg::Texture3D > _texPos, _texDir, _texScalar, _diaScalar;
     osg::Vec3s _texSizes;
     unsigned int _dataSize;
     
     float* _pos;
     float* _dir;
     float* _scalar;
+    float* _dia;
     
     virtual ~VectorFieldData();
     

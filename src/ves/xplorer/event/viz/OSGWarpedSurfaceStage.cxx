@@ -166,48 +166,18 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
                         
     vtkDataArray* dataArray = pointData->GetScalars(colorScalar.c_str());
     double dataRange[2]; 
-    
     dataArray->GetRange(dataRange);
-    //Here we build a color look up table
-    vtkLookupTable* lut = vtkLookupTable::New(); 
-    lut->SetHueRange(0.667, 0);
-    lut->SetRange(dataRange);
-    lut->SetRampToLinear();
-    //lut->SetRampToSCurve();
-    //lut->SetRampToSQRT();
-    lut->Build();
-    //lut->Print( std::cout );
-    vtkIdType numTuples = lut->GetTable()->GetNumberOfTuples();
-    vtkIdType numComponents = lut->GetTable()->GetNumberOfComponents();
-    unsigned char* charLut = 0;
-    //std::cout << " rgb " << lut->GetTable()->GetNumberOfTuples() << " " << lut->GetTable()->GetNumberOfComponents() << " " << charLut << std::endl;
-   //unsigned char* charLut2= lut->GetPointer( 0 );
-    //std::cout << sizeof( charLut2 ) << std::endl;
-    float* newScalarLutArray = new float[ numTuples * 3 ];
-    for( int i = 0; i < numTuples; ++i )
-    {
-        int numLuts = (i*numComponents);
-        int numColorIndex = (i*3);
-        charLut = lut->GetTable()->WritePointer( numLuts, 0 );
-        //std::cout << sizeof( charLut ) << " " << charLut<<  " " << (double*)charLut << std::endl;
-        newScalarLutArray[  numColorIndex + 0 ] = float( charLut[ 0 ] )/255.0f;
-        newScalarLutArray[  numColorIndex + 1 ] = float( charLut[ 1 ] )/255.0f;
-        newScalarLutArray[  numColorIndex + 2 ] = float( charLut[ 2 ] )/255.0f;
-        //newScalarLutArray[  numLuts + 3 ] = float( charLut[ 3 ] )/255.0f;
-        //std::cout << newScalarLutArray[  numLuts + 0 ] << " " 
-        //    << newScalarLutArray[  numLuts + 1 ] << " "
-        //    << newScalarLutArray[  numLuts + 2 ] << " " 
-        //    << newScalarLutArray[  numLuts + 3 ] << std::endl;
-    }
-    //std::string tempString( charLut );
+    
+    //Call to lut tools
+        
     double cVal;
-    double curColor[3];
+    //double curColor[3];
     
     osg::Vec3Array* v = new osg::Vec3Array;
     osg::ref_ptr< osg::Vec3Array> vDest = new osg::Vec3Array;
     std::vector< double > scalarArray;
     osg::Vec3Array* n = new osg::Vec3Array;
-    osg::Vec3Array* colors = new osg::Vec3Array;
+    //osg::Vec3Array* colors = new osg::Vec3Array;
     osg::Vec2Array* tc = new osg::Vec2Array;
 
     //int numCells = polydata->GetNumberOfCells();
@@ -248,7 +218,7 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
     
     {
         osg::Vec3 destVec;
-        osg::Vec3 ccolor;
+        //osg::Vec3 ccolor;
         osg::Vec3 startVec;
         osg::Vec3 normal;
         osg::Vec2 coord;
@@ -271,10 +241,10 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
                 
                 cVal = dataArray->GetTuple1(pts[i]);
                 scalarArray.push_back( cVal );
-                lut->GetColor(cVal,curColor);
+                //lut->GetColor(cVal,curColor);
                 
-                ccolor.set(curColor[0],curColor[1],curColor[2]);
-                colors->push_back( ccolor);
+                //ccolor.set(curColor[0],curColor[1],curColor[2]);
+                //colors->push_back( ccolor);
                 
                 //coord is the cord in the texture for strip x and vertex y in the "scale term" of s and t
                 
@@ -421,18 +391,15 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
     
     {
         // Pass the min/max for the scalar range into the shader as a uniform.
-        osg::Vec2 ts( dataRange[ 0 ], dataRange[ 1 ] );//- (dataRange[ 1 ]*0.10) );
+        osg::Vec2 ts( dataRange[ 0 ], dataRange[ 1 ] );
         osg::ref_ptr< osg::Uniform > scalarMinMaxUniform =
-            new osg::Uniform( "scalarMinMax", osg::Vec2( (float)ts.x(), (float)ts.y() ) );
+            new osg::Uniform( "scalarMinMax", 
+            osg::Vec2( (float)ts.x(), (float)ts.y() ) );
         ss->addUniform( scalarMinMaxUniform.get() );
-    }
-    
-    {        
+
         // Set up the color spectrum.
-        osg::Image* iColorScale = new osg::Image;
-        iColorScale->setImage( int( numTuples ), 1, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-                              (unsigned char*)newScalarLutArray, osg::Image::NO_DELETE );
-        osg::Texture1D* texCS = new osg::Texture1D( iColorScale );
+        osg::Texture1D* texCS = 
+            new osg::Texture1D( CreateColorTextures( dataRange ) );
         texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR);
         texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
         texCS->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
@@ -575,7 +542,6 @@ void OSGWarpedSurfaceStage::createMeshData( osg::Geometry* geom,
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
     reTriangleStripper->Delete();
-    lut->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void OSGWarpedSurfaceStage::SetSurfaceWarpScale( float surfaceScale )
@@ -583,3 +549,47 @@ void OSGWarpedSurfaceStage::SetSurfaceWarpScale( float surfaceScale )
     m_surfaceWarpScale = surfaceScale;
 }
 ////////////////////////////////////////////////////////////////////////////////
+osg::Image* OSGWarpedSurfaceStage::CreateColorTextures( double* dataRange )
+{
+    //Here we build a color look up table
+    vtkLookupTable* lut = vtkLookupTable::New(); 
+    lut->SetHueRange(0.667, 0);
+    lut->SetRange(dataRange);
+    lut->SetRampToLinear();
+    //lut->SetRampToSCurve();
+    //lut->SetRampToSQRT();
+    lut->Build();
+    //lut->Print( std::cout );
+    vtkIdType numTuples = lut->GetTable()->GetNumberOfTuples();
+    vtkIdType numComponents = lut->GetTable()->GetNumberOfComponents();
+    unsigned char* charLut = 0;
+    //std::cout << " rgb " << lut->GetTable()->GetNumberOfTuples() << " " 
+    //<< lut->GetTable()->GetNumberOfComponents() << " " << charLut << std::endl;
+    //unsigned char* charLut2= lut->GetPointer( 0 );
+    //std::cout << sizeof( charLut2 ) << std::endl;
+    float* newScalarLutArray = new float[ numTuples * 3 ];
+    for( int i = 0; i < numTuples; ++i )
+    {
+        int numLuts = (i*numComponents);
+        int numColorIndex = (i*3);
+        charLut = lut->GetTable()->WritePointer( numLuts, 0 );
+        //std::cout << sizeof( charLut ) << " " << charLut<<  " " 
+        //<< (double*)charLut << std::endl;
+        newScalarLutArray[  numColorIndex + 0 ] = float( charLut[ 0 ] )/255.0f;
+        newScalarLutArray[  numColorIndex + 1 ] = float( charLut[ 1 ] )/255.0f;
+        newScalarLutArray[  numColorIndex + 2 ] = float( charLut[ 2 ] )/255.0f;
+        //newScalarLutArray[  numLuts + 3 ] = float( charLut[ 3 ] )/255.0f;
+        //std::cout << newScalarLutArray[  numLuts + 0 ] << " " 
+        //    << newScalarLutArray[  numLuts + 1 ] << " "
+        //    << newScalarLutArray[  numLuts + 2 ] << " " 
+        //    << newScalarLutArray[  numLuts + 3 ] << std::endl;
+    }
+    //std::string tempString( charLut );
+    lut->Delete();
+
+    // Set up the color spectrum.
+    osg::Image* iColorScale = new osg::Image();
+    iColorScale->setImage( int( numTuples ), 1, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
+        (unsigned char*)newScalarLutArray, osg::Image::NO_DELETE );
+    return iColorScale;
+}

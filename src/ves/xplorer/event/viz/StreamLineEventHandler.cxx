@@ -95,6 +95,10 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
         command->GetDataValuePair( "Fade Time" );
     ves::open::xml::DataValuePairPtr animationSpeedDVP = 
         command->GetDataValuePair( "Animation Speed" );
+    ves::open::xml::DataValuePairPtr minValueDVP = 
+        command->GetDataValuePair( "minValue" );
+    ves::open::xml::DataValuePairPtr maxValueDVP = 
+        command->GetDataValuePair( "maxValue" );
     
     if( sizeDVP )
     {
@@ -126,6 +130,39 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
         uniformVal *= 0.1;
         UpdateGeodeUniform( graphicsObject, animationSpeedDVP, "repeatTime", uniformVal );
     }
+    
+    //Setup scalar control
+    if( minValueDVP || maxValueDVP )
+    {
+        double opacityVal = 0;
+        for( size_t i = 0; i < graphicsObject.size(); ++i )
+        {
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
+            geodes = graphicsObject.at( i )->GetGeodes();
+            for( size_t j = 0; j < geodes.size(); ++j )
+            {
+                osg::ref_ptr< osg::Uniform > warpScaleUniform =
+                geodes.at( j )->getDrawable( 0 )->
+                getStateSet()->getUniform( "scalarMinMax" );
+                if( warpScaleUniform.valid() )
+                {
+                    osg::Vec2 opacityValVec;
+                    warpScaleUniform->get( opacityValVec );
+                    if( minValueDVP )
+                    {
+                        minValueDVP->GetData( opacityVal );
+                        opacityValVec[ 0 ] = opacityVal;
+                    }
+                    else
+                    {
+                        maxValueDVP->GetData( opacityVal );
+                        opacityValVec[ 1 ] = opacityVal;
+                    }
+                    warpScaleUniform->set( opacityValVec );
+                }
+            }
+        }
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 StreamLineEventHandler& StreamLineEventHandler::operator=( const StreamLineEventHandler& rhs )

@@ -35,10 +35,6 @@
 //the Testure2D data is used as away to transfer data into the shader
 //It acts as a raw array instead of 2D data
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
 #include <osg/BlendFunc>
@@ -54,6 +50,8 @@
 #include <string>
 #include <deque>
 #include <vector>
+
+#include <ves/xplorer/scenegraph/VTKParticleTextureCreator.h>
 
 class vtkPolyData;
 
@@ -79,48 +77,43 @@ public:
 
     ///create a Group of Stream Lines
     ves::xplorer::scenegraph::Geode* createInstanced(const std::vector< ves::xplorer::DataSet* >& transData, 
-        int mult, const std::string& activeScalar, const std::string& activeVector );
+        const std::string& activeScalar, const std::string& activeVector );
 
     void SetParticleDiameter( int pDiameter );
 
 private:
-    struct Point
-    {
-        double x[ 3 ];
-        vtkIdType vertId;
-    };
-    
-    ///Test if a particular line is backwards
-    bool IsStreamlineBackwards( vtkIdType cellId, vtkPolyData* polydata );
-
     ///Process the streamline to get a list of points
     void ProcessStreamLines( vtkPolyData* polydata );
 
-    ///two utility functions used to determine tm and tn, since texture dimension needs to be 2^n
-    int mylog2(unsigned x);
-    int mypow2(unsigned x);
 
     ///Configure a Geometry to draw a single point, but use the draw instanced PrimitiveSet to draw the point multiple times.
-    void createSLPoint( osg::Geometry& geom, int nInstances, const osg::Vec3 position, const osg::Vec4 color );
+    void createSLPoint( osg::Geometry& geom, int nInstances );
 
     ///create the position array based on the passed in VTK points
     //float* createPositionArray( int numPoints , int mult, vtkPoints* points, const vtkIdType* pts, int &tm, int &tn);
-    float* createPositionArray( int numPoints , int mult, std::deque< Point > pointList, int &tm, int &tn);
+    //float* createPositionArray( int numPoints , int mult, std::deque< Point > pointList, int &tm, int &tn);
 
     ///create strealines
-    void createStreamLines(vtkPolyData* polyData, ves::xplorer::scenegraph::Geode* geode, int mult, const std::string& scalarName);
+    void createStreamLines( ves::xplorer::scenegraph::Geode* geode );
     
     ///create the coloring scalar array
-    float* createScalarArray( vtkIdType numPoints , int mult, vtkPointData* pointdata, std::deque< Point > pointList, int &tm, int &tn, const std::string& scalarName);
+    //float* createScalarArray( vtkIdType numPoints , int mult, vtkPointData* pointdata, std::deque< Point > pointList, int &tm, int &tn, const std::string& scalarName);
 
     ///The map of points to create a streamline line segment    
-    std::vector< std::deque< Point > > m_streamlineList;
-    
+    std::vector< std::deque< ves::xplorer::scenegraph::VTKParticleTextureCreator::Point > > m_streamlineList;
+    ///The raw collection of points
     std::vector< std::vector< std::pair< vtkIdType, double* > > >  m_pointCollection;
+    ///The raw data for the respective points
+    std::vector< std::vector< std::pair< std::string, std::vector< double > > > >  m_dataCollection;
+    ///Container holding all of the datasets for these particles
+    std::vector< ves::xplorer::DataSet* > m_transientDataSet;
+    ///The active vector for the particles
     std::string m_activeVector;
+    ///The active scalar for these particles
     std::string m_activeScalar;
+    ///The bounding box for the particle set
     double m_bb[6];
-
+    ///The desired particle diameter
     float m_particleDiameter;
 
 };

@@ -35,10 +35,6 @@
 //the Testure2D data is used as away to transfer data into the shader
 //It acts as a raw array instead of 2D data
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #include <osgDB/ReadFile>
 #include <osg/Geometry>
 #include <osg/PositionAttitudeTransform>
@@ -87,6 +83,9 @@ public:
     void SetSurfaceWarpScale( float surfaceScale );
 
 private:
+
+    ///Create an color LUT with a given data range
+    osg::Image* CreateColorTextures( double* dataRange );
 
     //an m x n texture is used to transfer data
     int tm; 

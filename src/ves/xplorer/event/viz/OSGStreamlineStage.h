@@ -35,10 +35,6 @@
 //the Testure2D data is used as away to transfer data into the shader
 //It acts as a raw array instead of 2D data
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
 #include <osg/BlendFunc>
@@ -54,6 +50,8 @@
 #include <string>
 #include <deque>
 #include <vector>
+
+#include <ves/xplorer/scenegraph/VTKStreamlineTextureCreator.h>
 
 class vtkPolyData;
 
@@ -83,11 +81,6 @@ public:
     void SetParticleDiameter( int pDiameter );
 
 private:
-    struct Point
-    {
-        double x[ 3 ];
-        vtkIdType vertId;
-    };
     
     ///Test if a particular line is backwards
     bool IsStreamlineBackwards( vtkIdType cellId, vtkPolyData* polydata );
@@ -95,25 +88,22 @@ private:
     ///Process the streamline to get a list of points
     void ProcessStreamLines( vtkPolyData* polydata );
 
-    ///two utility functions used to determine tm and tn, since texture dimension needs to be 2^n
-    int mylog2(unsigned x);
-    int mypow2(unsigned x);
 
     ///Configure a Geometry to draw a single point, but use the draw instanced PrimitiveSet to draw the point multiple times.
     void createSLPoint( osg::Geometry& geom, int nInstances, const osg::Vec3 position, const osg::Vec4 color );
 
     ///create the position array based on the passed in VTK points
     //float* createPositionArray( int numPoints , int mult, vtkPoints* points, const vtkIdType* pts, int &tm, int &tn);
-    float* createPositionArray( int numPoints , int mult, std::deque< Point > pointList, int &tm, int &tn);
+    //float* createPositionArray( int numPoints , int mult, std::deque< Point > pointList, int &tm, int &tn);
 
     ///create strealines
     void createStreamLines(vtkPolyData* polyData, ves::xplorer::scenegraph::Geode* geode, int mult, const char* scalarName);
     
     ///create the coloring scalar array
-    float* createScalarArray( vtkIdType numPoints , int mult, vtkPointData* pointdata, std::deque< Point > pointList, int &tm, int &tn, const char* scalarName);
+    //float* createScalarArray( vtkIdType numPoints , int mult, vtkPointData* pointdata, std::deque< Point > pointList, int &tm, int &tn, const char* scalarName);
 
     ///The map of points to create a streamline line segment    
-    std::vector< std::deque< Point > > m_streamlineList;
+    std::vector< std::deque< ves::xplorer::scenegraph::VTKStreamlineTextureCreator::Point > > m_streamlineList;
     
     std::string m_activeVector;
 

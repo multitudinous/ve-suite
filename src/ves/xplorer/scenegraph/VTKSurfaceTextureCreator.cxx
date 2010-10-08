@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/scenegraph/VTKTextureCreator.h>
+#include <ves/xplorer/scenegraph/VTKSurfaceTextureCreator.h>
 
 #include <osg/Texture2D>
 
@@ -44,7 +44,7 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-VTKTextureCreator::VTKTextureCreator()
+VTKSurfaceTextureCreator::VTKSurfaceTextureCreator()
     : 
     VectorFieldData(),
     m_rawVTKData( 0 )
@@ -52,7 +52,7 @@ VTKTextureCreator::VTKTextureCreator()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::BoundingBox VTKTextureCreator::getBoundingBox()
+osg::BoundingBox VTKSurfaceTextureCreator::getBoundingBox()
 {
     double bounds[6];
     m_rawVTKData->GetPoints()->GetBounds(bounds);
@@ -62,17 +62,17 @@ osg::BoundingBox VTKTextureCreator::getBoundingBox()
     return( bb );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VTKTextureCreator::~VTKTextureCreator()
+VTKSurfaceTextureCreator::~VTKSurfaceTextureCreator()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::SetPolyData( vtkPolyData* rawVTKData )
+void VTKSurfaceTextureCreator::SetPolyData( vtkPolyData* rawVTKData )
 {
     m_rawVTKData = rawVTKData;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::internalLoad()
+void VTKSurfaceTextureCreator::internalLoad()
 {
     // Actual data size would come from file.
     // NOTE: Crash in NVIDIA friver if total _dataSize
@@ -103,7 +103,7 @@ void VTKTextureCreator::internalLoad()
     _texScalar = makeFloatTexture( (unsigned char*)_scalar, 1, osg::Texture2D::NEAREST );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar )
+void VTKSurfaceTextureCreator::createDataArrays( float* pos, float* dir, float* scalar )
 {
     float* posI = pos;
     float* dirI = dir;
@@ -178,14 +178,14 @@ void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar 
     //lut->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::SetActiveVectorAndScalar( const std::string& vectorName, 
+void VTKSurfaceTextureCreator::SetActiveVectorAndScalar( const std::string& vectorName, 
     const std::string& scalarName )
 {
     m_vectorName = vectorName;
     m_scalarName = scalarName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Image* VTKTextureCreator::CreateColorTextures( double* dataRange )
+osg::Image* VTKSurfaceTextureCreator::CreateColorTextures( double* dataRange )
 {
     //Here we build a color look up table
     vtkLookupTable* lut = vtkLookupTable::New(); 

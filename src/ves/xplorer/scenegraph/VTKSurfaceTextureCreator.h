@@ -30,75 +30,53 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#pragma once
+#ifndef VES_XPLORER_SCENEGRAPH_VTK_SURFACE_TEXTURE_CREATOR_H
+#define VES_XPLORER_SCENEGRAPH_VTK_SURFACE_TEXTURE_CREATOR_H
 
-#include <ves/xplorer/event/viz/cfdObjects.h>
+#include <ves/xplorer/scenegraph/VectorFieldData.h>
 
-class vtkPolyDataMapper;
-class vtkWarpVector;
+#include <ves/VEConfig.h>
+
+#include <osg/Vec3>
+
+class vtkPolyData;
 
 namespace ves
 {
 namespace xplorer
 {
-namespace event
+namespace scenegraph
 {
-namespace viz        
-{
-/*!\file ParticleAnimation.h
-ParticleAnimation API
-*/
-/*!\class ves::xplorer::event::viz::ParticleAnimation
-*
-*/
-class VE_XPLORER_EXPORTS ParticleAnimation : public cfdObjects
+// Derived class for testing purposes. generates data at runtime.
+class VE_SCENEGRAPH_EXPORTS VTKSurfaceTextureCreator : public VectorFieldData
 {
 public:
-    ///Constructor.
-    ///\param op_val Set to 1.0.
-    ParticleAnimation();
+    VTKSurfaceTextureCreator();
+    
+    virtual osg::BoundingBox getBoundingBox();
+    
+    void SetPolyData( vtkPolyData* rawVTKData );
+    
+    void SetActiveVectorAndScalar( const std::string& vectorName, 
+        const std::string& scalarName );
 
-    ///Destructor.
-    virtual ~ParticleAnimation();
+    osg::Image* CreateColorTextures( double* dataRange );
 
-    ///Update.
-    virtual void Update( void );
+protected:
+    osg::Vec3 _sizes;
+    vtkPolyData* m_rawVTKData;
+    std::string m_vectorName;
+    std::string m_scalarName;
 
-    ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
-    virtual void UpdateCommand();
-
-    ///Assigns particle option.
-    ///\param option
-    void SetParticleOption( unsigned int option );
-
-    ///Gets particle option.
-    unsigned int GetParticleOption();
-
-    ///Sets particle scale.
-    ///\param x
-    void SetParticleScale( float x );
-
-    ///Gets particle scale.
-    float GetParticleScale();
-
-private:
-    ///Sphere scaling.
-    float GetSphereScaleFactor();
-    ///String to hold color by scalar.
-    std::string colorByScalar;
-    ///Map for vtk.
-    vtkPolyDataMapper *map;
-    ///Warper for vtk.
-    vtkWarpVector* warper;
-    bool warpSurface;///Test for warped surface.
-    double warpedContourScale;///<warped contour scale value
-
-    ///point cloud or variably sized spheres.
-    unsigned int  _particleOption;
-    ///particle scale.
-    float _particleScale;
+    virtual ~VTKSurfaceTextureCreator();
+    
+    virtual void internalLoad();
+    
+    void createDataArrays( float* pos, float* dir, float* scalar );
+    
 };
 }
 }
 }
-}
+
+#endif //VES_XPLORER_SCENEGRAPH_VTK_TEXTURE_CREATOR_H

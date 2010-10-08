@@ -60,7 +60,7 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::event::viz;
 
-ParticleAnimation::ParticleAnimation( float op_val )
+ParticleAnimation::ParticleAnimation()
 {
     this->map = vtkPolyDataMapper::New();
     this->map->SetColorModeToMapScalars();
@@ -109,7 +109,7 @@ void ParticleAnimation::Update()
     {
         OSGParticleStage* particles = new OSGParticleStage();
         geodes.push_back( particles->createInstanced( 
-            GetActiveDataSet()->GetTransientDataSets(), 1,
+            GetActiveDataSet()->GetTransientDataSets(),
             GetActiveDataSet()->GetActiveScalarName(), 
             GetActiveDataSet()->GetActiveVectorName() ) );
         delete particles;

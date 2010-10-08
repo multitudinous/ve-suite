@@ -38,9 +38,10 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 VectorFieldData::VectorFieldData()
     : 
-    _pos( NULL ),
-    _dir( NULL ),
-    _scalar( NULL )
+    _pos( 0 ),
+    _dir( 0 ),
+    _scalar( 0 ),
+    _dia( 0 )
 {
     ;
 }
@@ -63,6 +64,11 @@ osg::Texture3D* VectorFieldData::getDirectionTexture()
 osg::Texture3D* VectorFieldData::getScalarTexture()
 {
     return( _texScalar.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture3D* VectorFieldData::getDiameterTexture()
+{
+    return( _diaScalar.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Vec3s VectorFieldData::getTextureSizes()
@@ -165,7 +171,7 @@ osg::Texture3D* VectorFieldData::makeFloatTexture( unsigned char* data, int numC
         intFormat = GL_RGB32F_ARB;
         pixFormat = GL_RGB;
     }
-    osg::Image* image = new osg::Image;
+    osg::Image* image = new osg::Image();
     //We will let osg manage the raw image data
     image->setImage( s, t, p, intFormat, pixFormat, GL_FLOAT,
         data, osg::Image::USE_NEW_DELETE );

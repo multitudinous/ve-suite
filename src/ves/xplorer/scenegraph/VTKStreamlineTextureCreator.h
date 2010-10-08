@@ -30,14 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VES_XPLORER_SCENEGRAPH_VTK_TEXTURE_CREATOR_H
-#define VES_XPLORER_SCENEGRAPH_VTK_TEXTURE_CREATOR_H
+#ifndef VES_XPLORER_SCENEGRAPH_VTK_STREAMLINE_TEXTURE_CREATOR_H
+#define VES_XPLORER_SCENEGRAPH_VTK_STREAMLINE_TEXTURE_CREATOR_H
 
 #include <ves/xplorer/scenegraph/VectorFieldData.h>
 
 #include <ves/VEConfig.h>
 
 #include <osg/Vec3>
+
+#include <vtkType.h>
+
+#include <string>
+#include <deque>
 
 class vtkPolyData;
 
@@ -48,31 +53,47 @@ namespace xplorer
 namespace scenegraph
 {
 // Derived class for testing purposes. generates data at runtime.
-class VE_SCENEGRAPH_EXPORTS VTKTextureCreator : public VectorFieldData
+class VE_SCENEGRAPH_EXPORTS VTKStreamlineTextureCreator : public VectorFieldData
 {
 public:
-    VTKTextureCreator();
+    VTKStreamlineTextureCreator();
     
     virtual osg::BoundingBox getBoundingBox();
     
     void SetPolyData( vtkPolyData* rawVTKData );
-    
+        
     void SetActiveVectorAndScalar( const std::string& vectorName, 
         const std::string& scalarName );
 
     osg::Image* CreateColorTextures( double* dataRange );
 
+    struct Point
+    {
+        double x[ 3 ];
+        vtkIdType vertId;
+    };
+
+    ///Set the list of points to use for a streamline
+    void SetPointQueue( std::deque< Point >& pointList );
+
+    ///Set the multiplier to use for interpolation purposes
+    void SetPointMultiplier( unsigned int pointMultiplier );
+
 protected:
+    
     osg::Vec3 _sizes;
     vtkPolyData* m_rawVTKData;
     std::string m_vectorName;
     std::string m_scalarName;
-
-    virtual ~VTKTextureCreator();
+    std::deque< Point > m_pointList;
+    
+    size_t m_pointMultiplier;
+    
+    virtual ~VTKStreamlineTextureCreator();
     
     virtual void internalLoad();
     
-    void createDataArrays( float* pos, float* dir, float* scalar );
+    void createDataArrays( float* pos, float* scalar );
     
 };
 }

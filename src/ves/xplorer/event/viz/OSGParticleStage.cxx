@@ -51,6 +51,8 @@
 #include <cmath>
 
 #include <ves/xplorer/util/FindVertexCellsCallback.h>
+#include <ves/xplorer/util/GetScalarDataArraysCallback.h>
+#include <ves/xplorer/util/ProcessScalarRangeCallback.h>
 
 #include <ves/xplorer/scenegraph/Geode.h>
 
@@ -69,7 +71,7 @@ OSGParticleStage::~OSGParticleStage(void)
     vprDEBUG( vesDBG, 1 ) << "|\t\tDeleting Point Array" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances, const osg::Vec3 position, const osg::Vec4 color )
+void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances )
 {
     // Configure a Geometry to draw a single point, but use the draw instanced PrimitiveSet
     // to draw the point multiple times.
@@ -127,183 +129,47 @@ void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances, const
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-//float* OSGParticleStage::createPositionArray( int numPoints, int mult, vtkPoints* points, const vtkIdType* pts, int &tm, int &tn)
-float* OSGParticleStage::createPositionArray( int numPoints, int mult, std::deque< Point > pointList, int &tm, int &tn)
+void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode )
 {
-    //mult is the multiplier to add extra points using linear interplation
-
-    //calculate texture dimension
-    //std::cout << "number of points " << numPoints << std::endl;
-    //std::cout << "number of total points (including multiplier)" << numPoints*mult << std::endl;
-    //We subtract 1 because we have to ignore the end points of the line
-    int totalNumPoints = (numPoints - 1)*mult;
-    int am = mylog2(totalNumPoints)+1;
-    int mm = am/2;
-    int nn = am -am/2;
-    tm = mypow2(mm);
-    tn = mypow2(nn);
-    //std::cout << tm << " "<< tn << std::endl;
-
-    int texSize = tm * tn;
-    //int totalNumPoints = numPoints*mult;
-    float* pos = new float[ texSize * 3 ];
-    float* posI = pos;
-
-    int j=0;
-    double curPoint[3];
-    double nextPoint[3];
-    //points->GetPoint(pts[0], nextPoint); //get the first point
-    nextPoint[ 0 ] = pointList.at(0).x[ 0 ];
-    nextPoint[ 1 ] = pointList.at(0).x[ 1 ];
-    nextPoint[ 2 ] = pointList.at(0).x[ 2 ];
-
-    for( int i=0; i < texSize; ++i )
-    {
-        if( i < totalNumPoints )
-        {    
-            int mod = i%mult;
-            if (mod == 0)
-            {
-                *posI++=(float)nextPoint[0];
-                *posI++=(float)nextPoint[1];
-                *posI++=(float)nextPoint[2];
-
-                curPoint[0]=nextPoint[0];
-                curPoint[1]=nextPoint[1];
-                curPoint[2]=nextPoint[2];
-
-                j++;
-                if (j<numPoints)
-                {
-                    //points->GetPoint(pts[j], nextPoint);
-                    nextPoint[ 0 ] = pointList.at(j).x[ 0 ];
-                    nextPoint[ 1 ] = pointList.at(j).x[ 1 ];
-                    nextPoint[ 2 ] = pointList.at(j).x[ 2 ];
-                }
-            }
-            //If we need to create points we will do a linear interpolation
-            else
-            {
-                std::cerr << "Should not be here" << std::endl;
-                //mod = i%mult;
-                //*posI++=(float)(curPoint[0]+mod*(nextPoint[0]-curPoint[0])/mult);
-                //*posI++=(float)(curPoint[1]+mod*(nextPoint[1]-curPoint[1])/mult);
-                //*posI++=(float)(curPoint[2]+mod*(nextPoint[2]-curPoint[2])/mult);
-            }
-        }
-        else
-        {
-            //std::cerr << "Should not be here" << std::endl;
-            *posI++ = 0.;
-            *posI++ = 0.;
-            *posI++ = 0.;
-        }
-    }
-   
-    return pos;
-}
-////////////////////////////////////////////////////////////////////////////////
-int OSGParticleStage::mylog2(unsigned x)
-{
-    int l = -1; // mylog2(0) will return -1
-    while (x != 0u)
-    {
-        x = x >> 1u;
-        ++l;
-    }
-    return l;
-}
-////////////////////////////////////////////////////////////////////////////////
-int OSGParticleStage::mypow2(unsigned x)
-{
-    int l = 1; // mypow2(0) will return 1
-    while (x != 0u)
-    {
-        l = l << 1u;
-        x--;
-    }
-    return l;
-}
-////////////////////////////////////////////////////////////////////////////////
-float* OSGParticleStage::createScalarArray( vtkIdType numPoints, int mult, vtkPointData* pointData, std::deque< Point > pointList, int &tm, int &tn, const std::string& scalarName)
-{
-    int totalNumPoints = (numPoints - 1)*mult;
-    int am = mylog2(totalNumPoints)+1;
-    int mm = am/2;
-    int nn = am -am/2;
-    tm = mypow2(mm);
-    tn = mypow2(nn);
-    //std::cout << tm << " "<< tn << std::endl;
-
-    float* sca = new float[ tm * tn * 3 ];
-    float* scaI = sca;
-
-    double curColor[3];
-    double nextColor[3];
-
-    vtkDataArray* dataArray = pointData->GetScalars(scalarName.c_str());
-    double dataRange[2]; 
+    ves::xplorer::util::ProcessScalarRangeCallback* scalarRangeCbk = 
+    new ves::xplorer::util::ProcessScalarRangeCallback();
+    ves::xplorer::util::DataObjectHandler* dataObjectHandler = 
+    new ves::xplorer::util::DataObjectHandler();
+    dataObjectHandler->SetDatasetOperatorCallback( scalarRangeCbk );
+    double dataRange[ 2 ] = { 10000000.0, -1000000.0 }; 
+    double** tempRange = new double*[ 1 ];
+    tempRange[ 0 ] = new double[ 2 ];
     
-    dataArray->GetRange(dataRange);
-    
-    //Here we build a color look up table
-    vtkLookupTable *lut = vtkLookupTable::New(); 
-    lut->SetHueRange (0.667, 0.0);
-    lut->SetRange(dataRange);
-    lut->SetRampToLinear();
-    lut->Build();
-
-    double nextVal = dataArray->GetTuple1(pointList.at( 0 ).vertId);
-    lut->GetColor(nextVal,nextColor);
-
-    int j=0;
-    for (int i=0; i<tm*tn; i++)
+    for( size_t i = 0; i < m_transientDataSet.size(); ++i )
     {
-        if (i<totalNumPoints)
-        {    
-            int mod = i%mult;
-            if (mod == 0)
-            {
-                *scaI++=(float)nextColor[0];
-                *scaI++=(float)nextColor[1];
-                *scaI++=(float)nextColor[2];
-
-                curColor[0]=nextColor[0];
-                curColor[1]=nextColor[1];
-                curColor[2]=nextColor[2];
-
-                j++;
-                if (j<numPoints)
-                {
-                    //nextVal = dataArray->GetTuple1(pts[j]);
-                    nextVal = dataArray->GetTuple1(pointList.at( j ).vertId);
-                    lut->GetColor(nextVal,nextColor);
-                }
-            }
-            else
-            {
-                mod = i%mult;
-                *scaI++=(float)(curColor[0]+mod*(nextColor[0]-curColor[0])/mult);
-                *scaI++=(float)(curColor[1]+mod*(nextColor[1]-curColor[1])/mult);
-                *scaI++=(float)(curColor[2]+mod*(nextColor[2]-curColor[2])/mult);
-            }
-        }
-        else
+        vtkDataObject* tempDataSet = m_transientDataSet.at( i )->GetDataSet();
+        dataObjectHandler->OperateOnAllDatasetsInObject( tempDataSet );
+        scalarRangeCbk->GetScalarRange( m_activeScalar, tempRange[ 0 ] );
+        if( tempRange[ 0 ][ 0 ] < dataRange[ 0 ] )
         {
-            *scaI++ = 0.;
-            *scaI++ =  0.;
-            *scaI++ = 0.;
+            dataRange[ 0 ] = tempRange[ 0 ][ 0 ];
+        }
+
+        if( tempRange[ 0 ][ 1 ] > dataRange[ 1 ] )
+        {
+            dataRange[ 1 ] = tempRange[ 0 ][ 1 ];
         }
     }
-           
-    lut->Delete();
-    return sca;
-}
-////////////////////////////////////////////////////////////////////////////////
-void OSGParticleStage::createStreamLines( vtkPolyData* polyData, 
-    ves::xplorer::scenegraph::Geode* geode, int mult, const std::string& scalarName)
-{
-    double x[3];
+    delete [] tempRange[ 0 ];
+    delete [] tempRange;
+
+    delete scalarRangeCbk;
+    delete dataObjectHandler;
+    
+    
+    //double x[3];
+    //We must set these to 0 becuase we do not want to doubly offset
+    //our starting location of the vertecies
+    //x[ 0 ] = 0.;//tempPoint.x[ 0 ];
+    //x[ 1 ] = 0.;//tempPoint.x[ 1 ];
+    //x[ 2 ] = 0.;//tempPoint.x[ 2 ];
+    //osg::Vec3 loc(x[0], x[1], x[2] );
+
     //double bounds[6];
     //points->GetBounds(bounds);
     //VTK does bounds xmin, xmax,....
@@ -313,31 +179,24 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
     size_t numStreamLines = m_streamlineList.size();
     for( size_t i = 0; i < numStreamLines; ++i )
     {                
-        std::deque< Point > tempLine = m_streamlineList.at( i );
-        //Point tempPoint = tempLine.at( 0 );
-        //We must set these to 0 becuase we do not want to doubly offset
-        //our starting location of the vertecies
-        x[ 0 ] = 0.;//tempPoint.x[ 0 ];
-        x[ 1 ] = 0.;//tempPoint.x[ 1 ];
-        x[ 2 ] = 0.;//tempPoint.x[ 2 ];
-
-        int tm=0;
-        int tn=0;
+        std::deque< ves::xplorer::scenegraph::VTKParticleTextureCreator::Point > tempLine = m_streamlineList.at( i );
         
-        float* pos = createPositionArray( tempLine.size(), mult, tempLine, tm, tn );
-        //float* sca = createScalarArray( tempLine.size(), mult, pointData, tempLine, tm, tn, scalarName );
+        osg::ref_ptr< ves::xplorer::scenegraph::VTKParticleTextureCreator > rawVTKData = 
+            new ves::xplorer::scenegraph::VTKParticleTextureCreator();
+        rawVTKData->SetScalarData( m_dataCollection.at( i ) );
+        rawVTKData->SetActiveVectorAndScalar( m_activeVector, m_activeScalar );
+        rawVTKData->SetPointQueue( tempLine );
+        rawVTKData->loadData();
         
-        //int texSizeIndex = tm * tn;
         osg::Geometry* geom = new osg::Geometry;
         // Note:
         // Display Lists and draw instanced are mutually exclusive. Disable
         // display lists and use buffer objects instead.
         geom->setUseDisplayList( false );
         geom->setUseVertexBufferObjects( true );
-        osg::Vec3 loc(x[0], x[1], x[2] );
         //createSLPoint( *geom, cLineNp * mult, loc, osg::Vec4( .5, 1., .6, 1.) );
-        int totalNumberOfPoints = (tempLine.size()-1) * mult;
-        createSLPoint( *geom, totalNumberOfPoints, loc, osg::Vec4( .5, 1., .6, 1.) );
+        int totalNumberOfPoints = tempLine.size();
+        createSLPoint( *geom, totalNumberOfPoints );
         geode->addDrawable( geom );
         
         // Note:
@@ -375,11 +234,32 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             "    }\n"
             "    return false;\n"
             "}\n"
+            // Based on the global 'sizes' uniform that contains the 3D stp texture dimensions,
+            // and the input parameter current instances, generate an stp texture coord that
+            // indexes into a texture to obtain data for this instance.
+            "vec3 \n"
+            "generateTexCoord( const in float fiid ) \n"
+            "{ \n"
+            "    float p1 = fiid / (sizes.x*sizes.y); \n"
+            "    float t1 = fract( p1 ) * sizes.y; \n"
+            
+            "    vec3 tC; \n"
+            "    tC.s = fract( t1 ); \n"
+            "    tC.t = floor( t1 ) / sizes.y; \n"
+            "    tC.p = floor( p1 ) / sizes.z; \n"
+            
+            "    return( tC ); \n"
+            "} \n"
+        
             " \n"
             ///Main program
-            "uniform vec2 sizes; \n"
-            "uniform sampler2D texPos; \n"
-            //"uniform sampler2D texSca; \n"
+            //Setup the color control textures
+            "uniform vec2 scalarMinMax;\n"
+            "uniform sampler1D texCS; \n"
+            //particle vars
+            "uniform vec3 sizes; \n"
+            "uniform sampler3D texPos; \n"
+            "uniform sampler3D scalar; \n"
 
             "uniform float osg_SimulationTime; \n"
             "uniform float totalInstances; \n"
@@ -398,12 +278,11 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             "void main() \n"
             "{ \n"
             // Using the instance ID, generate "texture coords" for this instance.
-            "   const float r = ((float)gl_InstanceID) / sizes.x; \n"
-            "   vec2 tC; \n"
-            "   tC.s = fract( r ); tC.t = floor( r ) / sizes.y; \n"
+            "   const float r = gl_InstanceID; \n"
+            "   vec3 tC = generateTexCoord( r ); \n"
 
             // Get position from the texture.
-            "   vec4 pos = texture2D( texPos, tC ); \n"
+            "   vec4 pos = texture3D( texPos, tC ); \n"
             "   if( discardInstance( pos ) )\n"
             "   {\n"
             "       return;\n"
@@ -466,7 +345,23 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
             // Compute color and lighting.
             //const vec4 scalarV = texture3D( scalar, tC );
             //const vec4 oColor = texture1D( texCS, scalarV.a );
-            "   vec4 color = simpleLighting( vec4( 1.0, 0.0, 0.0, 1.0 ), norm, 0.7, 0.3 ); \n"
+            //New way of mapping colors
+            "   // Scalar texture containg key to color table. \n"
+            "   vec4 activeScalar = texture3D( scalar, tC );\n"
+            "   float normScalarVal = 0.;\n"
+            "   normScalarVal = (activeScalar.a - scalarMinMax.x) / (scalarMinMax.y - scalarMinMax.x);\n"
+            
+            "   if( normScalarVal < 0. )\n"
+            "   {\n"
+            "       normScalarVal = 0.;\n"
+            "   }\n"
+            "   if( normScalarVal > 1. )\n"
+            "   {\n"
+            "       normScalarVal = 1.;\n"
+            "   }\n"
+            "   vec4 colorResult = texture1D( texCS, normScalarVal );\n"
+            "   colorResult[3]=1.0; \n"
+            "   vec4 color = simpleLighting( colorResult, norm, 0.7, 0.3 ); \n"
             //"   vec4 color = vec4( 1.0, 0.0, 0.0, 1.0 ); //texture2D( texSca, tC ); \n"
             "   color[3]=alpha; \n"
             "   gl_FrontColor = color; \n"
@@ -570,14 +465,16 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
 
         // Tells the shader the dimensions of our texture: tm x tn.
         // Required to compute correct texture coordinates from the instance ID.
+        osg::Vec3s ts( rawVTKData->getTextureSizes() );
+
         osg::ref_ptr< osg::Uniform > sizesUniform =
-            new osg::Uniform( "sizes", osg::Vec2( (float)tm, (float)tn ) );
+            new osg::Uniform( "sizes", osg::Vec3( float( ts.x() ), float( ts.y() ), float( ts.z() ) ) );
         ss->addUniform( sizesUniform.get() );
 
         // Tell the shader the total number of instances: tm * tn.
         // Required for animation based on the instance ID.
         osg::ref_ptr< osg::Uniform > totalInstancesUniform =
-            new osg::Uniform( "totalInstances", (float)(tm * tn) );
+            new osg::Uniform( "totalInstances", (float)(rawVTKData->getDataCount()) );
         ss->addUniform( totalInstancesUniform.get() );
 
         // Specify the time in seconds for a given streamline point to fade
@@ -621,43 +518,53 @@ void OSGParticleStage::createStreamLines( vtkPolyData* polyData,
 
         // specify the position texture. The vertex shader will index into
         // this texture to obtain position values for each streamline point.
-        osg::Image* iPos = new osg::Image;
-        iPos->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-            (unsigned char*) pos, osg::Image::USE_NEW_DELETE );
-        osg::Texture2D* texPos = new osg::Texture2D( iPos );
-        texPos->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-        texPos->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
         //NOTE: Texture slot 1 is used by the splotch.png image
-        ss->setTextureAttribute( 0, texPos );
+        {
+            ss->setTextureAttribute( 0, rawVTKData->getPositionTexture() );
+            osg::ref_ptr< osg::Uniform > texPosUniform =
+                new osg::Uniform( "texPos", 0 );
+            ss->addUniform( texPosUniform.get() );
+        }
 
-        osg::ref_ptr< osg::Uniform > texPosUniform =
-            new osg::Uniform( "texPos", 0 );
-        ss->addUniform( texPosUniform.get() );
+        {
+            ss->setTextureAttribute( 2, rawVTKData->getScalarTexture() );
+            osg::ref_ptr< osg::Uniform > texPosUniform =
+            new osg::Uniform( "scalar", 2 );
+            ss->addUniform( texPosUniform.get() );
+        }
         
-        //send down rgb using texture
-        /*osg::Image* iSca = new osg::Image;
-        iSca->setImage( tm, tn, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-            (unsigned char*)sca, osg::Image::USE_NEW_DELETE );
-        osg::Texture2D* texSca = new osg::Texture2D( iSca );
-        texSca->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-        texSca->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-        //NOTE: Texture slot 1 is used by the splotch.png image
-        ss->setTextureAttribute( 2, texSca );
-
-        osg::ref_ptr< osg::Uniform > texScaUniform =
-            new osg::Uniform( "texSca", 2 );
-        ss->addUniform( texScaUniform.get() );*/
+        {            
+            // Pass the min/max for the scalar range into the shader as a uniform.
+            osg::Vec2 ts( dataRange[ 0 ], dataRange[ 1 ] );
+            osg::ref_ptr< osg::Uniform > scalarMinMaxUniform =
+            new osg::Uniform( "scalarMinMax",
+                             osg::Vec2( (float)ts.x(), (float)ts.y() ) );
+            ss->addUniform( scalarMinMaxUniform.get() );
+            
+            // Set up the color spectrum.
+            osg::Texture1D* texCS = 
+            new osg::Texture1D( rawVTKData->CreateColorTextures( dataRange ) );
+            texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR);
+            texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
+            texCS->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+            
+            ss->setTextureAttribute( 2, texCS );
+            osg::ref_ptr< osg::Uniform > texCSUniform = 
+            new osg::Uniform( "texCS", 2 );
+            ss->addUniform( texCSUniform.get() );        
+        }        
     }
    
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced( 
-    const std::vector< ves::xplorer::DataSet* >& transData, int mult, 
+    const std::vector< ves::xplorer::DataSet* >& transData, 
     const std::string& activeScalar, 
     const std::string& activeVector )
 {
     m_pointCollection.clear();
     
+    m_transientDataSet = transData;
     m_activeVector = activeVector;
     m_activeScalar = activeScalar;
     
@@ -668,9 +575,9 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
     dataObjectHandler->SetDatasetOperatorCallback( findVertexCellsCbk );
 
     size_t maxNumPoints = 0;
-    for( size_t i = 0; i < transData.size(); ++i )
+    for( size_t i = 0; i < m_transientDataSet.size(); ++i )
     {
-        vtkDataObject* tempDataSet = transData.at( i )->GetDataSet();
+        vtkDataObject* tempDataSet = m_transientDataSet.at( i )->GetDataSet();
 
         dataObjectHandler->OperateOnAllDatasetsInObject( tempDataSet );
         std::vector< std::pair< vtkIdType, double* > > tempCellGroups = 
@@ -683,6 +590,22 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
         }        
     }
     delete findVertexCellsCbk;
+    
+    ves::xplorer::util::GetScalarDataArraysCallback* getScalarDataArrayCbk = 
+        new ves::xplorer::util::GetScalarDataArraysCallback();
+    dataObjectHandler->SetDatasetOperatorCallback( getScalarDataArrayCbk );
+    for( size_t i = 0; i < m_transientDataSet.size(); ++i )
+    {
+        vtkDataObject* tempDataSet = m_transientDataSet.at( i )->GetDataSet();
+        
+        dataObjectHandler->OperateOnAllDatasetsInObject( tempDataSet );
+        std::vector< std::pair< std::string, std::vector< double > > > tempCellGroups = 
+            getScalarDataArrayCbk->GetCellData();
+        m_dataCollection.push_back( tempCellGroups );
+        getScalarDataArrayCbk->ResetPointGroup();     
+    }
+    
+    delete getScalarDataArrayCbk;
     delete dataObjectHandler;
     
     /*for( size_t i = 0; i < transData.size(); ++i )
@@ -707,12 +630,12 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
     for( size_t i = 0; i < maxNumPoints; ++i )
     {   
         //Iterate through all points
-        std::deque< Point > tempQueue;
-        for( size_t j = 0; j < transData.size(); ++j )
+        std::deque< ves::xplorer::scenegraph::VTKParticleTextureCreator::Point > tempQueue;
+        for( size_t j = 0; j < m_transientDataSet.size(); ++j )
         {
             std::vector< std::pair< vtkIdType, double* > >* activeCellGroups = 
                 &m_pointCollection.at( j );
-            Point tempPoint;
+            ves::xplorer::scenegraph::VTKParticleTextureCreator::Point tempPoint;
             if( i < activeCellGroups->size() )
             {
                 vtkIdType cellid = activeCellGroups->at( i ).first;
@@ -722,6 +645,8 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
                 tempPoint.x[ 1 ] = pointid[ 1 ];
                 tempPoint.x[ 2 ] = pointid[ 2 ];
                 tempPoint.vertId = cellid;
+                delete [] pointid;
+                activeCellGroups->at( i ).second = 0;
             }
             else
             {
@@ -767,6 +692,20 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
         //std::cout << std::endl;
         //std::cout << std::endl;
     }
+    
+    ///Clean up memory now that we have transferred it to the streamline list
+    m_pointCollection.clear();    
+
+    /*for( size_t i = 0; i < m_pointCollection.size(); ++i )
+    {
+        std::vector< std::pair< vtkIdType, double* > >* activeCellGroups = 
+            &m_pointCollection.at( i );
+        size_t numParticleTracks = activeCellGroups->size();
+        for( size_t j = 0; j < numParticleTracks; ++j )
+        {
+            delete [] activeCellGroups->at( j ).second;
+        }
+    }*/
 
     // Essentially a top level Group, a single Geode child, and the
     // Geode contains a single Geometry to draw a sinalg point (but
@@ -778,201 +717,12 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
     //ProcessStreamLines( streamlinePD );
     
     //Now needs to create streams line with the passed in polyData line data
-    createStreamLines( 0, geode, mult, activeScalar );
+    createStreamLines( geode );
     
-    for( size_t i = 0; i < m_pointCollection.size(); ++i )
-    {
-        std::vector< std::pair< vtkIdType, double* > >* activeCellGroups = 
-            &m_pointCollection.at( i );
-        size_t numParticleTracks = activeCellGroups->size();
-        for( size_t j = 0; j < numParticleTracks; ++j )
-        {
-            delete [] activeCellGroups->at( j ).second;
-        }
-    }
-    m_pointCollection.clear();
-
     m_streamlineList.clear();
-    
+    m_dataCollection.clear();
+
     return geode;
-}
-////////////////////////////////////////////////////////////////////////////////
-void OSGParticleStage::ProcessStreamLines( vtkPolyData* polydata )
-{
-    vtkIdType cellId;
-
-    vprDEBUG( vesDBG, 1 )
-        << "|\tNumber of Cells : " << polydata->GetNumberOfCells()
-        << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 )
-        << "|\tNumber of Lines : " << polydata->GetNumberOfLines()
-        << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 )
-        << "|\tNumber of Points : " << polydata->GetNumberOfPoints()
-        << std::endl << vprDEBUG_FLUSH;
-    
-    int numberOfStreamLines = polydata->GetNumberOfLines();
-    if( numberOfStreamLines == 0 )
-    {
-        std::cout << "|\tcfdAnimatedStreamlineCone::Update : Number of streamlines is 0 " << std::endl;
-        return;
-    }
-
-    std::vector< vtkIdList* > streamlineCells;
-
-    for( cellId = 0; cellId < numberOfStreamLines; ++cellId )
-    {
-        vtkIdList* origVertList = polydata->GetCell( cellId )->GetPointIds();
-        streamlineCells.push_back( vtkIdList::New() );
-        streamlineCells.back()->DeepCopy( origVertList ); 
-        vtkIdList* tempVertList = streamlineCells.back();
-        //bool backwards = IsStreamlineBackwards( cellId, polydata );
-        //std::cout << "Is a backwards streamline " << backwards << std::endl;
-        //for( size_t i = 0; i < tempVertList->GetNumberOfIds(); ++i )
-        //{
-        //    std::cout << " " << tempVertList->GetId( i );
-        //}
-        //std::cout << std::endl;
-        
-        bool foundMatch = false;
-        vtkIdList* oldVertList = 0;
-        vtkIdList* newComboVertList = vtkIdList::New();
-        for(size_t i = 0; i < streamlineCells.size() - 1; ++ i )
-        {
-            oldVertList = streamlineCells.at( i );
-            vtkIdType matchId = oldVertList->IsId( tempVertList->GetId( 0 ) );
-            if( matchId > -1 )
-            {
-                //std::cout << "orig ";
-                //for( size_t j = 0; j < oldVertList->GetNumberOfIds(); ++j )
-                //{
-                    //std::cout << " " << oldVertList->GetId( j );
-                //}
-                //std::cout << std::endl;
-                foundMatch = true;
-                vtkIdType numVerts = tempVertList->GetNumberOfIds();
-                for( vtkIdType j = numVerts-1; j >= 0; --j )
-                {
-                    //std::cout << " " << tempVertList->GetId( j );
-                    //oldVertList->InsertId( 0, tempVertList->GetId( j ) );
-                    newComboVertList->InsertNextId( tempVertList->GetId( j ) );
-                }
-                //std::cout << std::endl;
-                for( size_t j = 1; j < oldVertList->GetNumberOfIds(); ++j )
-                {
-                    //std::cout << " " << oldVertList->GetId( j );
-                    newComboVertList->InsertNextId( oldVertList->GetId( j ) );
-                }
-                //std::cout << std::endl;
-
-                //std::cout << "Streamline " <<  m_streamlineCells.size() - 1 
-                //    << " has a point in line " << i << " at index " 
-                //    << matchId << std::endl;
-                break;
-            }
-        }
-
-        if( foundMatch )
-        {
-            //std::cout << "Is a backwards streamline " << backwards << std::endl;
-            //for( size_t i = 0; i < newComboVertList->GetNumberOfIds(); ++i )
-            //{
-            //    std::cout << " " << newComboVertList->GetId( i );
-            //}
-            //std::cout << std::endl;
-
-            oldVertList->DeepCopy( newComboVertList );
-            tempVertList->Delete();
-            newComboVertList->Delete();
-            streamlineCells.pop_back();
-            continue;
-        }
-        
-        newComboVertList->Delete();
-
-        //If it is a standalone backwards line then reorder the points
-        if( IsStreamlineBackwards( cellId, polydata ) )
-        {
-            vtkIdType numVerts = origVertList->GetNumberOfIds();
-            for( size_t i = 0; i < numVerts; ++i )
-            {
-                tempVertList->SetId( i, origVertList->GetId( numVerts - 1 - i ) );
-            }
-        }
-    }
-    //std::cout << "number of combined lines " << m_streamlineCells.size() << std::endl;
-
-    double* x = 0;
-    vtkIdList* tempVertList = 0;
-    vtkPoints* points = polydata->GetPoints();
-    for( size_t i = 0; i < streamlineCells.size(); ++i )
-    {
-        std::deque< Point > tempQueue;
-        
-        //cellId = m_streamlines.at( i ).first;
-        // For forward integrated points
-        //if( cellId != -1 )
-        {
-            tempVertList = streamlineCells.at( i );
-            vtkIdType numVerts = tempVertList->GetNumberOfIds();
-            vprDEBUG( vesDBG, 1 )
-                << "|\t\tNumber of Forward points = " << numVerts
-                << std::endl << vprDEBUG_FLUSH;
-            for( size_t j = 0; j < numVerts; ++j )
-            {
-                x = points->GetPoint( tempVertList->GetId( j ) );
-                vprDEBUG( vesDBG, 3 )
-                    << "|\t\tx[ " << j << " ] = " << x[ 0 ] << " : "
-                    << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
-                Point tempPoint;
-                tempPoint.x[ 0 ] = x[ 0 ];
-                tempPoint.x[ 1 ] = x[ 1 ];
-                tempPoint.x[ 2 ] = x[ 2 ];
-                tempPoint.vertId = tempVertList->GetId( j );
-                tempQueue.push_back( tempPoint );
-            }
-        }
-        m_streamlineList.push_back( tempQueue );
-    }
-    
-    for( size_t i = 0; i < streamlineCells.size(); ++i )
-    {
-        streamlineCells.at( i );
-    }
-    streamlineCells.clear();
-    /*vprDEBUG( vesDBG, 1 ) << "|\t\tmaxNpts = " 
-        << m_maxNPts << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 ) << "|\t\tminNpts = " 
-        << minNpts << std::endl << vprDEBUG_FLUSH;*/
-
-    vprDEBUG( vesDBG, 1 ) << "|\tExiting cfdStreamers Update " << std::endl << vprDEBUG_FLUSH;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool OSGParticleStage::IsStreamlineBackwards( vtkIdType cellId, vtkPolyData* polydata )
-{
-    double x2[ 3 ];
-    double x1[ 3 ];
-    vtkPoints* points = polydata->GetCell( cellId )->GetPoints();
-    points->GetPoint( 0, x1 );
-    vtkIdType globalPointId1 = polydata->FindPoint( x1 );
-    points->GetPoint( 1, x2 );
-    
-    //Create a vector along the streamline from point 0 to point 1
-    double xComp = x2[ 0 ] - x1[ 0 ];
-    double yComp = x2[ 1 ] - x1[ 1 ];
-    double zComp = x2[ 2 ] - x1[ 2 ];
-    
-    polydata->GetPointData()->GetVectors( m_activeVector.c_str() )->GetTuple( globalPointId1, x1 );
-        //GetVectors( GetActiveDataSet()->GetActiveVectorName().c_str() )->
-        //GetTuple( globalPointId1, x1 );
-    
-    bool isBackwards = true;
-    if( ((x1[ 0 ] * xComp) >= 0) && ((x1[ 1 ] * yComp) >= 0) && ((x1[ 2 ] * zComp) >= 0) )
-    {
-        isBackwards = false;
-    }
-    
-    return isBackwards;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void OSGParticleStage::SetParticleDiameter( int pDiameter )
@@ -980,5 +730,3 @@ void OSGParticleStage::SetParticleDiameter( int pDiameter )
     m_particleDiameter = pDiameter;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-

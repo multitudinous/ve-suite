@@ -31,74 +31,56 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
+/*!\file GetScalarDataArraysCallback.h
+GetScalarDataArraysCallback API.
+*/
 
-#include <ves/xplorer/event/viz/cfdObjects.h>
+/*!\class ves::xplorer::util::GetScalarDataArraysCallback
+*
+*/
+class vtkDataSet;
 
-class vtkPolyDataMapper;
-class vtkWarpVector;
+#include <vtkType.h>
+
+#include <ves/VEConfig.h>
+#include <ves/xplorer/util/DataObjectHandler.h>
+
+#include <utility>
+#include <vector>
 
 namespace ves
 {
 namespace xplorer
 {
-namespace event
+namespace util
 {
-namespace viz        
-{
-/*!\file ParticleAnimation.h
-ParticleAnimation API
-*/
-/*!\class ves::xplorer::event::viz::ParticleAnimation
-*
-*/
-class VE_XPLORER_EXPORTS ParticleAnimation : public cfdObjects
+class VE_UTIL_EXPORTS GetScalarDataArraysCallback:
+            public DataObjectHandler::DatasetOperatorCallback
 {
 public:
-    ///Constructor.
-    ///\param op_val Set to 1.0.
-    ParticleAnimation();
+    ///Constructor
+    GetScalarDataArraysCallback();
+    ///Destructor
+    virtual ~GetScalarDataArraysCallback()
+    {;}
+    ///The operation to do on each vtkDataSet in the vtkDataObject
+    ///\param dataset The vtkDataSet to operate on
+    virtual void OperateOnDataset( vtkDataSet* dataset );
 
-    ///Destructor.
-    virtual ~ParticleAnimation();
+    void SetScalarNames( std::vector< std::string > scalarNames );
+    ///Get the vertex cells from this dataset
+    ///\return The vector with the points for this dataset, the first id is 
+    ///the cell id and the second id is the point id
+    //std::vector< std::pair< vtkIdType, vtkIdType > > GetVertexCells();
+    std::vector< std::pair< std::string, std::vector< double > > > GetCellData();
 
-    ///Update.
-    virtual void Update( void );
-
-    ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
-    virtual void UpdateCommand();
-
-    ///Assigns particle option.
-    ///\param option
-    void SetParticleOption( unsigned int option );
-
-    ///Gets particle option.
-    unsigned int GetParticleOption();
-
-    ///Sets particle scale.
-    ///\param x
-    void SetParticleScale( float x );
-
-    ///Gets particle scale.
-    float GetParticleScale();
-
-private:
-    ///Sphere scaling.
-    float GetSphereScaleFactor();
-    ///String to hold color by scalar.
-    std::string colorByScalar;
-    ///Map for vtk.
-    vtkPolyDataMapper *map;
-    ///Warper for vtk.
-    vtkWarpVector* warper;
-    bool warpSurface;///Test for warped surface.
-    double warpedContourScale;///<warped contour scale value
-
-    ///point cloud or variably sized spheres.
-    unsigned int  _particleOption;
-    ///particle scale.
-    float _particleScale;
+    ///Reset the map so that the callback can be used again with out
+    ///reallocating memory for the callback.
+    void ResetPointGroup();
+protected:
+    std::vector< std::string >  m_scalarNames;
+    std::vector< std::pair< std::string, std::vector< double > > >  m_pointGroup;
 };
-}
-}
-}
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce

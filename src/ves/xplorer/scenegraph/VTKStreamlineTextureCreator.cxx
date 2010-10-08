@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/scenegraph/VTKTextureCreator.h>
+#include <ves/xplorer/scenegraph/VTKStreamlineTextureCreator.h>
 
 #include <osg/Texture2D>
 
@@ -44,7 +44,7 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-VTKTextureCreator::VTKTextureCreator()
+VTKStreamlineTextureCreator::VTKStreamlineTextureCreator()
     : 
     VectorFieldData(),
     m_rawVTKData( 0 )
@@ -52,7 +52,7 @@ VTKTextureCreator::VTKTextureCreator()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::BoundingBox VTKTextureCreator::getBoundingBox()
+osg::BoundingBox VTKStreamlineTextureCreator::getBoundingBox()
 {
     double bounds[6];
     m_rawVTKData->GetPoints()->GetBounds(bounds);
@@ -62,23 +62,32 @@ osg::BoundingBox VTKTextureCreator::getBoundingBox()
     return( bb );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VTKTextureCreator::~VTKTextureCreator()
+VTKStreamlineTextureCreator::~VTKStreamlineTextureCreator()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::SetPolyData( vtkPolyData* rawVTKData )
+void VTKStreamlineTextureCreator::SetPointMultiplier( unsigned int pointMultiplier )
+{
+    m_pointMultiplier = pointMultiplier;
+}
+////////////////////////////////////////////////////////////////////////////////
+void VTKStreamlineTextureCreator::SetPolyData( vtkPolyData* rawVTKData )
 {
     m_rawVTKData = rawVTKData;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::internalLoad()
+void VTKStreamlineTextureCreator::SetPointQueue( std::deque< Point >& pointList )
+{
+    m_pointList = pointList;
+}
+////////////////////////////////////////////////////////////////////////////////
+void VTKStreamlineTextureCreator::internalLoad()
 {
     // Actual data size would come from file.
     // NOTE: Crash in NVIDIA friver if total _dataSize
-    // is > 32768.
-    vtkPoints* points = m_rawVTKData->GetPoints();    
-    _dataSize = points->GetNumberOfPoints();
+    // is > 32768.  
+    _dataSize = m_pointList.size()*m_pointMultiplier;
 
     // Determine optimal 3D texture dimensions.
     int s, t, p;
@@ -91,73 +100,80 @@ void VTKTextureCreator::internalLoad()
     //_dir = new float[ size * 3 ];
     //_scalar = new float[ size * 3 ];
     _pos = new float[ s * t * p * 3 ];
-    _dir = new float[ s * t * p * 3 ];
+    //_dir = new float[ s * t * p * 3 ];
     _scalar = new float[ s * t * p ];
     
     // TBD You would replace this line with code to load the data from file.
     // In this example, we just generate test data.
-    createDataArrays( _pos, _dir, _scalar );
+    createDataArrays( _pos, _scalar );
     
     _texPos = makeFloatTexture( (unsigned char*)_pos, 3, osg::Texture2D::NEAREST );
-    _texDir = makeFloatTexture( (unsigned char*)_dir, 3, osg::Texture2D::NEAREST );
-    _texScalar = makeFloatTexture( (unsigned char*)_scalar, 1, osg::Texture2D::NEAREST );
+    _texScalar = makeFloatTexture( (unsigned char*)_scalar, 1, osg::Texture2D::NEAREST );        
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar )
+void VTKStreamlineTextureCreator::createDataArrays( float* pos, float* scalar )
 {
     float* posI = pos;
-    float* dirI = dir;
     float* scalarI = scalar;
     
-    vtkPoints* points = m_rawVTKData->GetPoints();
     vtkPointData* pointData = m_rawVTKData->GetPointData();
-    vtkDataArray* vectorArray = pointData->GetVectors(m_vectorName.c_str());
     vtkDataArray* scalarArray = pointData->GetScalars(m_scalarName.c_str());
-
-    //double dataRange[2]; 
-    //scalarArray->GetRange(dataRange);
     
-    //Here we build a color look up table
-    //vtkLookupTable* lut = vtkLookupTable::New(); 
-    //lut->SetHueRange (0.667, 0.0);
-    //lut->SetRange(dataRange);
-    //lut->SetRampToLinear();
-    //lut->Build();
+    size_t maxData = getDataCount();
+    size_t texSize = _texSizes.x() * _texSizes.y() * _texSizes.z();
+    size_t numActualPoints = m_pointList.size();
+    size_t j = 0;
+    size_t nextIndex = 0;
+    double curPoint[3] = {0,0,0};
+    double nextPoint[3];
+    nextPoint[ 0 ] = m_pointList.at(0).x[ 0 ];
+    nextPoint[ 1 ] = m_pointList.at(0).x[ 1 ];
+    nextPoint[ 2 ] = m_pointList.at(0).x[ 2 ]; 
     
-    double x[3];
-    double val;
-    //double rgb[3];
-    unsigned int maxData = getDataCount();
-    unsigned int texSize = _texSizes.x() * _texSizes.y() * _texSizes.z();
+    double curScalar = 0.0;
+    double multiplierConstant = 1.0f/double(m_pointMultiplier);
+    
     for( size_t i = 0; i < texSize; ++i )
     {
         if( i < maxData )
-        {
-            //Get Position data
-            points->GetPoint( i, x );
-            *posI++ = (float)x[0];
-            *posI++ = (float)x[1];
-            *posI++ = (float)x[2]; 
-
-            if( scalarArray )
+        {            
+            int mod = i%m_pointMultiplier;
+            //If we can get the point directly from the vtk dataset
+            if( mod == 0 )
             {
-                //Setup the color array
-                scalarArray->GetTuple( i, &val );
-                //lut->GetColor( val, rgb );
-                *scalarI++ = val;//rgb[0];
-                //*scalarI++ = rgb[1];
-                //*scalarI++ = rgb[2];
+                *posI++=(float)nextPoint[0];
+                *posI++=(float)nextPoint[1];
+                *posI++=(float)nextPoint[2];
+                
+                curPoint[0]=nextPoint[0];
+                curPoint[1]=nextPoint[1];
+                curPoint[2]=nextPoint[2];
+                
+                nextIndex = j + 1;
+                if( nextIndex < numActualPoints)
+                {
+                    nextPoint[ 0 ] = m_pointList.at(nextIndex).x[ 0 ];
+                    nextPoint[ 1 ] = m_pointList.at(nextIndex).x[ 1 ];
+                    nextPoint[ 2 ] = m_pointList.at(nextIndex).x[ 2 ];
+                }
+                
+                if( j < numActualPoints )
+                {
+                    //Setup the color array
+                    curScalar = scalarArray->GetTuple1( m_pointList.at( j ).vertId );
+                    *scalarI++ = curScalar;                    
+                }
+                ++j;
             }
-
-            if( vectorArray )
+            //If we need to create points we will do a linear interpolation
+            else
             {
-                //Get Vector data
-                vectorArray->GetTuple( i, x );
-                osg::Vec3 v( x[0], x[1], x[2] );
-                v.normalize();
-                *dirI++ = v.x();
-                *dirI++ = v.y();
-                *dirI++ = v.z();
+                *posI++=(float)(curPoint[0]+mod*(nextPoint[0]-curPoint[0])*multiplierConstant);
+                *posI++=(float)(curPoint[1]+mod*(nextPoint[1]-curPoint[1])*multiplierConstant);
+                *posI++=(float)(curPoint[2]+mod*(nextPoint[2]-curPoint[2])*multiplierConstant);
+                //There is no way for us to reasonably interpolate a scalar
+                //value at this point so just use the previous value
+                *scalarI++ = curScalar;
             }
         }
         else
@@ -167,25 +183,18 @@ void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar 
             *posI++ = 0.0; 
 
             *scalarI++ = 0.0;
-            //*scalarI++ = 0.0;
-            //*scalarI++ = 0.0;
-
-            *dirI++ = 0.0;
-            *dirI++ = 0.0;
-            *dirI++ = 0.0;
         }
     }
-    //lut->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::SetActiveVectorAndScalar( const std::string& vectorName, 
+void VTKStreamlineTextureCreator::SetActiveVectorAndScalar( const std::string& vectorName, 
     const std::string& scalarName )
 {
     m_vectorName = vectorName;
     m_scalarName = scalarName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Image* VTKTextureCreator::CreateColorTextures( double* dataRange )
+osg::Image* VTKStreamlineTextureCreator::CreateColorTextures( double* dataRange )
 {
     //Here we build a color look up table
     vtkLookupTable* lut = vtkLookupTable::New(); 

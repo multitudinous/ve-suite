@@ -30,49 +30,55 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/util/FindVertexCellsCallback.h>
+#include <ves/xplorer/util/GetScalarDataArraysCallback.h>
 #include <ves/xplorer/util/cfdAccessoryFunctions.h>
 
 #include <vtkDataSet.h>
 #include <vtkCell.h>
 #include <vtkPoints.h>
+#include <vtkCellData.h>
+#include <vtkDataArray.h>
 
 #include <iostream>
 
 using namespace ves::xplorer::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-FindVertexCellsCallback::FindVertexCellsCallback()
+GetScalarDataArraysCallback::GetScalarDataArraysCallback()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::pair< vtkIdType, double* > > FindVertexCellsCallback::GetVertexCells()
+std::vector< std::pair< std::string, std::vector< double > > > GetScalarDataArraysCallback::GetCellData()
 {
     return m_pointGroup;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FindVertexCellsCallback::OperateOnDataset( vtkDataSet* dataset )
+void GetScalarDataArraysCallback::SetScalarNames( std::vector< std::string > scalarNames )
+{
+    m_scalarNames = scalarNames;
+}
+////////////////////////////////////////////////////////////////////////////////
+void GetScalarDataArraysCallback::OperateOnDataset( vtkDataSet* dataset )
 {
     vtkIdType numCells = dataset->GetNumberOfCells();
-    for( vtkIdType i = 0; i < numCells; ++i )
+    for( size_t j = 0; j < m_scalarNames.size(); ++j )
     {
-        vtkCell* tempCell = dataset->GetCell( i );
-        if( VTK_VERTEX == tempCell->GetCellType() )
+        vtkDataArray* scalarArray = dataset->GetCellData()->GetScalars( m_scalarNames.at( j ).c_str() );
+        std::vector< double > scalarVector;
+        for( vtkIdType i = 0; i < numCells; ++i )
         {
-            std::pair< vtkIdType, double* > tempPair = std::make_pair< vtkIdType, double* >( i, 0 );
-            tempPair.second = new double[3];
-            tempCell->GetPoints()->GetPoint( 0, &*tempPair.second );
-            //double* tempData = tempPair.second;
-            //std::cout << tempPair.first << " " << tempData[ 0 ] 
-            //    << " " << tempData[ 1 ] << " " << tempData[ 2 ] << std::endl;
-
-            m_pointGroup.push_back( tempPair );
+            vtkCell* tempCell = dataset->GetCell( i );
+            if( VTK_VERTEX == tempCell->GetCellType() )
+            {
+                scalarVector.push_back( scalarArray->GetTuple1( i ) );
+            }
         }
+        m_pointGroup.push_back( std::make_pair< std::string, std::vector< double > >( m_scalarNames.at( j ), scalarVector ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FindVertexCellsCallback::ResetPointGroup()
+void GetScalarDataArraysCallback::ResetPointGroup()
 {
     m_pointGroup.clear();
 }

@@ -52,7 +52,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 OSGVectorStage::OSGVectorStage(void)
 {
-    //tm=tn=0;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 OSGVectorStage::~OSGVectorStage(void)
@@ -151,134 +151,8 @@ void OSGVectorStage::createArrow( osg::Geometry& geom, int nInstances, float sca
     //    geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*float* OSGVectorStage::createPositionArray( int m, int n , vtkPoints* points)
-{
-    float* pos = new float[ m * n * 3 ];
-    float* posI = pos;
-
-    int np = points->GetNumberOfPoints();
-    double x[3];
-    //float y[3];
-    for (int i=0; i<m*n; i++)
-    {
-        if (i<np)
-        {            
-            points->GetPoint(i, x);
-            *posI++=(float)x[0];
-            *posI++=(float)x[1];
-            *posI++=(float)x[2]; 
-            //y[ 0 ] = x[0];
-            //y[ 1 ] = x[1];
-            //y[ 2 ] = x[2];
-        }
-        else
-        {
-            *posI++ = 0.;
-            *posI++ =  0.;
-            *posI++ = 0.;
-            //y[ 0 ] = 0.0f;
-            //y[ 1 ] = 0.0f;
-            //y[ 2 ] = 0.0f;
-        }
-        //std::cout << "pos " << y[ 0] << " " << y[ 1] << " " << y[ 2 ] << std::endl;
-    }
-   
-    return pos;
-}
-////////////////////////////////////////////////////////////////////////////////
-float* OSGVectorStage::createAttitudeArray( int m, int n, vtkDataArray* dataArray)
-{
-    float* att = new float[ m * n * 3 ];
-    float* attI = att;
-
-    int nd = dataArray->GetNumberOfTuples();
-    double x[3];
-    for (int i=0; i<m*n; i++)
-    {
-        if (i<nd)
-        {
-            dataArray->GetTuple(i,x);
-            osg::Vec3 v( x[0], x[1], x[2] );
-            v.normalize();
-            *attI++ = v.x();
-            *attI++ = v.y();
-            *attI++ = v.z();
-        }
-        else
-        {
-            *attI++ = 0.;
-            *attI++ = 0.;
-            *attI++ = 0.;
-        }
-    }
-    return att;
-}
-////////////////////////////////////////////////////////////////////////////////
-float* OSGVectorStage::createScalarArray( int m, int n, vtkDataArray* dataArray)
-{
-    float* sca = new float[ m * n * 3 ];
-    float* scaI = sca;
-    double dataRange[2]; 
-    
-    dataArray->GetRange(dataRange);
-    
-    //Here we build a color look up table
-    vtkLookupTable *lut = vtkLookupTable::New(); 
-    lut->SetHueRange (0.667, 0.0);
-    lut->SetRange(dataRange);
-    lut->SetRampToLinear();
-    lut->Build();
-    
-    int nd = dataArray->GetNumberOfTuples();
-    
-    double x;
-    double rgb[3];
-    for (int i=0; i<m*n; i++)
-    {
-        if (i<nd)
-        {
-            dataArray->GetTuple(i,&x);
-            lut->GetColor(x,rgb);
-            *scaI++ = rgb[0];
-            *scaI++ = rgb[1];
-            *scaI++ = rgb[2];
-        }
-        else
-        {
-            *scaI++ = 0.;
-            *scaI++ =  0.;
-            *scaI++ = 0.;
-        }
-    }
-    lut->Delete();
-    return sca;
-}
-////////////////////////////////////////////////////////////////////////////////
-int OSGVectorStage::mylog2(unsigned x)
-{
-    int l = -1; // mylog2(0) will return -1
-    while (x != 0u)
-    {
-        x = x >> 1u;
-        ++l;
-    }
-    return l;
-}
-////////////////////////////////////////////////////////////////////////////////
-int OSGVectorStage::mypow2(unsigned x)
-{
-    int l = 1; // mypow2(0) will return 1
-    while (x != 0u)
-    {
-        l = l << 1u;
-        x--;
-    }
-    return l;
-}*/
-////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* glyph, std::string vectorName, std::string scalarName, float scaleFactor )
 {
-    //std::cout << "creating osg planes" << std::endl;
     //Now pull in the vtk data
     vtkPolyData *polyData = glyph;
     if (polyData==NULL)
@@ -303,8 +177,8 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         return NULL;
     }
     
-    vtkDataArray *vectorArray = pointData->GetVectors(vectorName.c_str());
-    vtkDataArray *scalarArray = pointData->GetScalars(scalarName.c_str());
+    vtkDataArray* vectorArray = pointData->GetVectors(vectorName.c_str());
+    vtkDataArray* scalarArray = pointData->GetScalars(scalarName.c_str());
 
     if (vectorArray==NULL)
     {
@@ -345,7 +219,10 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
 
     //Create the rendering shader
     std::string vertexSource =
-
+        //Setup the color control textures
+        "uniform vec2 scalarMinMax;\n"
+        "uniform sampler1D texCS; \n"
+        //Setup the texture arrays for data
         "uniform vec3 sizes; \n"
         "uniform sampler3D texPos; \n"
         "uniform sampler3D texDir; \n"
@@ -448,21 +325,36 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "   vec4 hoVec = vec4( oVec + pos, 1.0 ); \n"
         "   gl_Position = gl_ModelViewProjectionMatrix * hoVec; \n"
 
+        //Old color mapping
         // Use just the orientation components to transform the normal.
-        //"   mat3 mN = mat3( newX, newY, newZ ); \n"
-        //"   vec3 norm = normalize(gl_NormalMatrix * mN * gl_Normal); \n"
         // Orient the normal.
-        "   vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
+        ////"   vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
         // Diffuse lighting with light at the eyepoint.
-        "   vec4 color = texture3D( scalar, tC ); \n"
-        //"   color = color * dot( norm, vec3( 0, 0, 1 ) ); \n"
-        //"   color[3]=1; \n"
-        //"   gl_FrontColor = vec4( color ); \n"
-        // Compute color and lighting.
-        //const vec4 scalarV = texture3D( scalar, tC );
-        //const vec4 oColor = texture1D( texCS, scalarV.a );
-        "   gl_FrontColor = simpleLighting( color, norm, 0.7, 0.3 ); \n"
+        ////"   vec4 color = texture3D( scalar, tC ); \n"
+        
+        //New way of mapping colors
+        "   // Scalar texture containg key to color table. \n"
+        "   vec4 activeScalar = texture3D( scalar, tC );\n"
+        "   float normScalarVal = 0.;\n"
+        "   normScalarVal = (activeScalar.a - scalarMinMax.x) / (scalarMinMax.y - scalarMinMax.x);\n"
+        
+        "   if( normScalarVal < 0. )\n"
+        "   {\n"
+        "       normScalarVal = 0.;\n"
+        "   }\n"
+        "   if( normScalarVal > 1. )\n"
+        "   {\n"
+        "       normScalarVal = 1.;\n"
+        "   }\n"
+        "   vec4 colorResult = texture1D( texCS, normScalarVal );\n"
+        "   colorResult[3]=1.0; \n"
+        //"   gl_FrontColor = colorResult; \n"
+        //"   vec4 color = colorResult.rgb; \n"
+    
+        //Get the color into GLSL
+        "   gl_FrontColor = simpleLighting( colorResult, norm, 0.7, 0.3 ); \n"
         "} \n";
+
     osg::StateSet* ss = geom->getOrCreateStateSet();
     osg::ref_ptr< osg::Program > program = new osg::Program();
 
@@ -499,7 +391,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
     // Scalar array.
     ss->setTextureAttribute( 2, rawVTKData->getScalarTexture() );
     osg::ref_ptr< osg::Uniform > texScalarUniform =
-    new osg::Uniform( "scalar", 2 );
+        new osg::Uniform( "scalar", 2 );
     ss->addUniform( texScalarUniform.get() );
 
     {
@@ -524,17 +416,29 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         ss->addUniform( uModulo.get() );
     }
     
-    // Set up the color spectrum.
-    //osg::Image* iColorScale = new osg::Image;
-    //iColorScale->setImage( 8, 1, 1, GL_RGBA, GL_RGB, GL_FLOAT,
-    //(unsigned char*)colorScale, osg::Image::NO_DELETE );
-    //osg::Texture1D* texCS = new osg::Texture1D( iColorScale );
-    //texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR);
-    //texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
-
-    //ss->setTextureAttribute( 3, texCS );
-    //osg::ref_ptr< osg::Uniform > texCSUniform = new osg::Uniform( "texCS", 3 );
-    //ss->addUniform( texCSUniform.get() );
+    {
+        double dataRange[2]; 
+        scalarArray->GetRange(dataRange);
+        
+        // Pass the min/max for the scalar range into the shader as a uniform.
+        osg::Vec2 ts( dataRange[ 0 ], dataRange[ 1 ] );
+        osg::ref_ptr< osg::Uniform > scalarMinMaxUniform =
+            new osg::Uniform( "scalarMinMax",
+            osg::Vec2( (float)ts.x(), (float)ts.y() ) );
+        ss->addUniform( scalarMinMaxUniform.get() );
+        
+        // Set up the color spectrum.
+        osg::Texture1D* texCS = 
+            new osg::Texture1D( rawVTKData->CreateColorTextures( dataRange ) );
+        texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR);
+        texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
+        texCS->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+        
+        ss->setTextureAttribute( 2, texCS );
+        osg::ref_ptr< osg::Uniform > texCSUniform = 
+            new osg::Uniform( "texCS", 2 );
+        ss->addUniform( texCSUniform.get() );        
+    }
 
     return geode;
 }

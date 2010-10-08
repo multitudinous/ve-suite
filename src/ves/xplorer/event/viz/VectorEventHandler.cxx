@@ -158,6 +158,10 @@ void VectorEventHandler::ProcessVectorCommand(
         command->GetDataValuePair( "Vector Scale" );
     ves::open::xml::DataValuePairPtr ratioDVP = 
         command->GetDataValuePair( "Vector Ratio" );
+    ves::open::xml::DataValuePairPtr minValueDVP = 
+        command->GetDataValuePair( "minValue" );
+    ves::open::xml::DataValuePairPtr maxValueDVP = 
+        command->GetDataValuePair( "maxValue" );
     
     if( scaleDVP )
     {
@@ -175,4 +179,37 @@ void VectorEventHandler::ProcessVectorCommand(
         ratioDVP->GetData( uniformVal );
         UpdateGeodeUniform( graphicsObject, ratioDVP, "modulo", uniformVal );
     }
+
+    //Setup scalar control
+    if( minValueDVP || maxValueDVP )
+    {
+        double opacityVal = 0;
+        for( size_t i = 0; i < graphicsObject.size(); ++i )
+        {
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
+            geodes = graphicsObject.at( i )->GetGeodes();
+            for( size_t j = 0; j < geodes.size(); ++j )
+            {
+                osg::ref_ptr< osg::Uniform > warpScaleUniform =
+                geodes.at( j )->getDrawable( 0 )->
+                getStateSet()->getUniform( "scalarMinMax" );
+                if( warpScaleUniform.valid() )
+                {
+                    osg::Vec2 opacityValVec;
+                    warpScaleUniform->get( opacityValVec );
+                    if( minValueDVP )
+                    {
+                        minValueDVP->GetData( opacityVal );
+                        opacityValVec[ 0 ] = opacityVal;
+                    }
+                    else
+                    {
+                        maxValueDVP->GetData( opacityVal );
+                        opacityValVec[ 1 ] = opacityVal;
+                    }
+                    warpScaleUniform->set( opacityValVec );
+                }
+            }
+        }
+    }    
 }

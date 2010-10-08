@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/scenegraph/VTKTextureCreator.h>
+#include <ves/xplorer/scenegraph/VTKParticleTextureCreator.h>
 
 #include <osg/Texture2D>
 
@@ -44,41 +44,45 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-VTKTextureCreator::VTKTextureCreator()
+VTKParticleTextureCreator::VTKParticleTextureCreator()
     : 
     VectorFieldData(),
-    m_rawVTKData( 0 )
+    m_rawScalarData( 0 )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::BoundingBox VTKTextureCreator::getBoundingBox()
+osg::BoundingBox VTKParticleTextureCreator::getBoundingBox()
 {
-    double bounds[6];
-    m_rawVTKData->GetPoints()->GetBounds(bounds);
+    double bounds[6] = { 0,0,0,0,0,0 };
+    //m_rawVTKData->GetPoints()->GetBounds(bounds);
     //VTK does bounds xmin, xmax,....
     //OSG does bounds xmin, ymin, zmin, xmax, ymax,...
     osg::BoundingBox bb(bounds[0],bounds[2],bounds[4],bounds[1],bounds[3],bounds[5]);
     return( bb );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VTKTextureCreator::~VTKTextureCreator()
+VTKParticleTextureCreator::~VTKParticleTextureCreator()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::SetPolyData( vtkPolyData* rawVTKData )
+void VTKParticleTextureCreator::SetScalarData( std::vector< std::pair< std::string, std::vector< double > > >& rawScalarData )
 {
-    m_rawVTKData = rawVTKData;
+    m_rawScalarData = &rawScalarData;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::internalLoad()
+void VTKParticleTextureCreator::SetPointQueue( std::deque< Point >& pointList )
+{
+    m_pointList = pointList;
+}
+////////////////////////////////////////////////////////////////////////////////
+void VTKParticleTextureCreator::internalLoad()
 {
     // Actual data size would come from file.
     // NOTE: Crash in NVIDIA friver if total _dataSize
-    // is > 32768.
-    vtkPoints* points = m_rawVTKData->GetPoints();    
-    _dataSize = points->GetNumberOfPoints();
+    // is > 32768.  
+    _dataSize = m_pointList.size();
 
     // Determine optimal 3D texture dimensions.
     int s, t, p;
@@ -91,73 +95,67 @@ void VTKTextureCreator::internalLoad()
     //_dir = new float[ size * 3 ];
     //_scalar = new float[ size * 3 ];
     _pos = new float[ s * t * p * 3 ];
-    _dir = new float[ s * t * p * 3 ];
+    _dia = new float[ s * t * p ];
     _scalar = new float[ s * t * p ];
     
     // TBD You would replace this line with code to load the data from file.
     // In this example, we just generate test data.
-    createDataArrays( _pos, _dir, _scalar );
+    createDataArrays( _pos, _dia, _scalar );
     
     _texPos = makeFloatTexture( (unsigned char*)_pos, 3, osg::Texture2D::NEAREST );
-    _texDir = makeFloatTexture( (unsigned char*)_dir, 3, osg::Texture2D::NEAREST );
-    _texScalar = makeFloatTexture( (unsigned char*)_scalar, 1, osg::Texture2D::NEAREST );
+    _texScalar = makeFloatTexture( (unsigned char*)_scalar, 1, osg::Texture2D::NEAREST );        
+    _diaScalar = makeFloatTexture( (unsigned char*)_dia, 1, osg::Texture2D::NEAREST );        
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar )
+void VTKParticleTextureCreator::createDataArrays( float* pos, float* dia, float* scalar )
 {
     float* posI = pos;
-    float* dirI = dir;
     float* scalarI = scalar;
-    
-    vtkPoints* points = m_rawVTKData->GetPoints();
-    vtkPointData* pointData = m_rawVTKData->GetPointData();
-    vtkDataArray* vectorArray = pointData->GetVectors(m_vectorName.c_str());
-    vtkDataArray* scalarArray = pointData->GetScalars(m_scalarName.c_str());
+    float* diaI = dia;
 
-    //double dataRange[2]; 
-    //scalarArray->GetRange(dataRange);
+    size_t maxData = getDataCount();
+    size_t texSize = _texSizes.x() * _texSizes.y() * _texSizes.z();
     
-    //Here we build a color look up table
-    //vtkLookupTable* lut = vtkLookupTable::New(); 
-    //lut->SetHueRange (0.667, 0.0);
-    //lut->SetRange(dataRange);
-    //lut->SetRampToLinear();
-    //lut->Build();
+    std::vector< double >* scalarVector = 0;
+    std::vector< double >* diameterVector = 0;
+
+    for( size_t i = 0; i < m_rawScalarData->size(); ++i )
+    {
+        if( m_rawScalarData->at( i ).first == m_scalarName )
+        {
+            scalarVector = &m_rawScalarData->at( i ).second;
+        }
+        
+        if( m_rawScalarData->at( i ).first == "DIAMETER" )
+        {
+            diameterVector = &m_rawScalarData->at( i ).second;
+        }
+    }
     
-    double x[3];
-    double val;
-    //double rgb[3];
-    unsigned int maxData = getDataCount();
-    unsigned int texSize = _texSizes.x() * _texSizes.y() * _texSizes.z();
     for( size_t i = 0; i < texSize; ++i )
     {
         if( i < maxData )
-        {
-            //Get Position data
-            points->GetPoint( i, x );
-            *posI++ = (float)x[0];
-            *posI++ = (float)x[1];
-            *posI++ = (float)x[2]; 
-
-            if( scalarArray )
+        {            
+            *posI++=(float)m_pointList.at(i).x[0];
+            *posI++=(float)m_pointList.at(i).x[1];
+            *posI++=(float)m_pointList.at(i).x[2];
+            
+            if( scalarVector )
             {
-                //Setup the color array
-                scalarArray->GetTuple( i, &val );
-                //lut->GetColor( val, rgb );
-                *scalarI++ = val;//rgb[0];
-                //*scalarI++ = rgb[1];
-                //*scalarI++ = rgb[2];
+                *scalarI++ = (float)scalarVector->at( i );
             }
-
-            if( vectorArray )
+            else
             {
-                //Get Vector data
-                vectorArray->GetTuple( i, x );
-                osg::Vec3 v( x[0], x[1], x[2] );
-                v.normalize();
-                *dirI++ = v.x();
-                *dirI++ = v.y();
-                *dirI++ = v.z();
+                *scalarI++ = 0.0;
+            }
+            
+            if( diameterVector )
+            {
+                *diaI++ = (float)diameterVector->at( i );
+            }
+            else
+            {
+                *diaI++ = 0.0;
             }
         }
         else
@@ -167,25 +165,20 @@ void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar 
             *posI++ = 0.0; 
 
             *scalarI++ = 0.0;
-            //*scalarI++ = 0.0;
-            //*scalarI++ = 0.0;
-
-            *dirI++ = 0.0;
-            *dirI++ = 0.0;
-            *dirI++ = 0.0;
+            
+            *diaI++ = 0.0;
         }
     }
-    //lut->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::SetActiveVectorAndScalar( const std::string& vectorName, 
+void VTKParticleTextureCreator::SetActiveVectorAndScalar( const std::string& vectorName, 
     const std::string& scalarName )
 {
     m_vectorName = vectorName;
     m_scalarName = scalarName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Image* VTKTextureCreator::CreateColorTextures( double* dataRange )
+osg::Image* VTKParticleTextureCreator::CreateColorTextures( double* dataRange )
 {
     //Here we build a color look up table
     vtkLookupTable* lut = vtkLookupTable::New(); 
