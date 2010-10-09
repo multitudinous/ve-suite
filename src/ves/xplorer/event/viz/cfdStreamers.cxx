@@ -397,8 +397,18 @@ void cfdStreamers::Update()
                 tempStage->createInstanced( cleanPD->GetOutput(), mult, 
                 GetActiveDataSet()->GetActiveScalarName().c_str(),
                 GetActiveDataSet()->GetActiveVectorName().c_str() );
-
             delete tempStage;
+
+            osg::ref_ptr< osg::Uniform > warpScaleUniform =
+                tempGeode1->getDrawable( 0 )->
+                getStateSet()->getUniform( "scalarMinMax" );
+            double scalarRange[ 2 ] = {0,0};
+            GetActiveDataSet()->GetUserRange( scalarRange );
+            osg::Vec2 opacityValVec;
+            warpScaleUniform->get( opacityValVec );
+            opacityValVec[ 0 ] = scalarRange[ 0 ];
+            opacityValVec[ 1 ] = scalarRange[ 1 ];
+            warpScaleUniform->set( opacityValVec );
 
             geodes.push_back( tempGeode1.get() );
             updateFlag = true;

@@ -161,6 +161,20 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
         //Apply the shader code here instead of calling it from a file as above
         std::string vertexSource =
 
+            //Setup the color control textures
+            "uniform vec2 scalarMinMax;\n"
+            "uniform sampler1D texCS; \n"
+            //streamline vars
+            "uniform vec3 sizes; \n"
+            "uniform sampler3D texPos; \n"
+            "uniform sampler3D scalar; \n"
+
+            "uniform float osg_SimulationTime; \n"
+            "uniform float totalInstances; \n"
+            "uniform float fadeTime; \n"
+            "uniform float repeatTime; \n"
+            "uniform float particleSize; \n"
+
             // Based on the global 'sizes' uniform that contains the 3D stp texture dimensions,
             // and the input parameter current instances, generate an stp texture coord that
             // indexes into a texture to obtain data for this instance.
@@ -177,20 +191,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             
             "    return( tC ); \n"
             "} \n"
-            //Setup the color control textures
-            "uniform vec2 scalarMinMax;\n"
-            "uniform sampler1D texCS; \n"
-            //streamline vars
-            "uniform vec3 sizes; \n"
-            "uniform sampler3D texPos; \n"
-            "uniform sampler3D scalar; \n"
-
-            "uniform float osg_SimulationTime; \n"
-            "uniform float totalInstances; \n"
-            "uniform float fadeTime; \n"
-            "uniform float repeatTime; \n"
-            "uniform float particleSize; \n"
-
+            //Main
             "void main() \n"
             "{ \n"
             // Using the instance ID, generate "texture coords" for this instance.
@@ -276,8 +277,9 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
         {
             // Tell the shader the total number of instances: tm * tn.
             // Required for animation based on the instance ID.
+            osg::Vec3s ts( rawVTKData->getTextureSizes() );
             osg::ref_ptr< osg::Uniform > totalInstancesUniform =
-                new osg::Uniform( "totalInstances", totalNumberOfPoints );
+                new osg::Uniform( "totalInstances", float( ts.x() * ts.y() * ts.z() ) );
             ss->addUniform( totalInstancesUniform.get() );
         }
 
@@ -362,9 +364,9 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
             texCS->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
             
-            ss->setTextureAttribute( 2, texCS );
+            ss->setTextureAttribute( 3, texCS );
             osg::ref_ptr< osg::Uniform > texCSUniform = 
-                new osg::Uniform( "texCS", 2 );
+                new osg::Uniform( "texCS", 3 );
             ss->addUniform( texCSUniform.get() );        
         }        
     }
