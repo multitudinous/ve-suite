@@ -328,7 +328,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         //Old color mapping
         // Use just the orientation components to transform the normal.
         // Orient the normal.
-        ////"   vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
+        "   vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
         // Diffuse lighting with light at the eyepoint.
         ////"   vec4 color = texture3D( scalar, tC ); \n"
         
@@ -434,9 +434,9 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
         texCS->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
         
-        ss->setTextureAttribute( 2, texCS );
+        ss->setTextureAttribute( 3, texCS );
         osg::ref_ptr< osg::Uniform > texCSUniform = 
-            new osg::Uniform( "texCS", 2 );
+            new osg::Uniform( "texCS", 3 );
         ss->addUniform( texCSUniform.get() );        
     }
 
