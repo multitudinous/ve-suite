@@ -126,7 +126,7 @@ void VTKParticleTextureCreator::createDataArrays( float* pos, float* dia, float*
             scalarVector = &m_rawScalarData->at( i ).second;
         }
         
-        if( m_rawScalarData->at( i ).first == "DIAMETER" )
+        if( m_rawScalarData->at( i ).first == "Diameter" )
         {
             diameterVector = &m_rawScalarData->at( i ).second;
         }

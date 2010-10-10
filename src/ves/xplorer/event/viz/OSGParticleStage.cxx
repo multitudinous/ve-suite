@@ -214,6 +214,14 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
 
         //Apply the shader code here instead of calling it from a file as above
         std::string vertexSource =
+            //Setup the color control textures
+            "uniform vec2 scalarMinMax;\n"
+            "uniform sampler1D texCS; \n"
+            //particle vars
+            "uniform vec3 sizes; \n"
+            "uniform sampler3D texPos; \n"
+            "uniform sampler3D scalar; \n"
+            "uniform sampler3D diameter; \n"
             "vec4 \n"
             "simpleLighting( const in vec4 color, const in vec3 normal, const in float diffCont, const in float ambCont ) \n"
             "{ \n"
@@ -253,14 +261,6 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
         
             " \n"
             ///Main program
-            //Setup the color control textures
-            "uniform vec2 scalarMinMax;\n"
-            "uniform sampler1D texCS; \n"
-            //particle vars
-            "uniform vec3 sizes; \n"
-            "uniform sampler3D texPos; \n"
-            "uniform sampler3D scalar; \n"
-
             "uniform float osg_SimulationTime; \n"
             "uniform float totalInstances; \n"
             "uniform float fadeTime; \n"
@@ -287,8 +287,8 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             "   {\n"
             "       return;\n"
             "   }\n"
-            //Set to 0 to have proper addition with gl_Vertex
             "   float userScale = 0.05;\n"
+            //Set to 0 to have proper addition with gl_Vertex
             "   pos.w = 0.; \n" 
             "   vec4 newPos = vec4( (gl_Vertex.xyz * userScale) + pos.xyz, 1.0 );\n"
             "   vec4 v = gl_ModelViewMatrix * newPos; \n"
@@ -318,23 +318,6 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             "       alpha = 1.;\n"
             "   }\n"
 
-        /*"   // Scalar texture containg key to color table. \n"
-        "   vec4 activeScalar = texture2D( scalar, gl_MultiTexCoord0.st );\n"
-        "   float normScalarVal = 0.;\n"
-        "   normScalarVal = (activeScalar.a - scalarMinMax.x) / (scalarMinMax.y - scalarMinMax.x);\n"
-        
-        "   if( normScalarVal < 0. )\n"
-        "   {\n"
-        "       normScalarVal = 0.;\n"
-        "   }\n"
-        "   if( normScalarVal > 1. )\n"
-        "   {\n"
-        "       normScalarVal = 1.;\n"
-        "   }\n"
-        "   vec4 colorResult = texture1D( texCS, normScalarVal );\n"
-        "   colorResult[3]=1.0; \n"
-        //"   gl_FrontColor = colorResult; \n"
-        "   color = colorResult.rgb; \n"*/
             // Orient the normal.
             "   vec3 norm = normalize( gl_NormalMatrix * gl_Normal ); \n"
             // Diffuse lighting with light at the eyepoint.
@@ -529,7 +512,14 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
         {
             ss->setTextureAttribute( 2, rawVTKData->getScalarTexture() );
             osg::ref_ptr< osg::Uniform > texPosUniform =
-            new osg::Uniform( "scalar", 2 );
+                new osg::Uniform( "scalar", 2 );
+            ss->addUniform( texPosUniform.get() );
+        }
+
+        {
+            ss->setTextureAttribute( 3, rawVTKData->getDiameterTexture() );
+            osg::ref_ptr< osg::Uniform > texPosUniform =
+                new osg::Uniform( "diameter", 3 );
             ss->addUniform( texPosUniform.get() );
         }
         
@@ -548,9 +538,9 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
             texCS->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
             
-            ss->setTextureAttribute( 2, texCS );
+            ss->setTextureAttribute( 4, texCS );
             osg::ref_ptr< osg::Uniform > texCSUniform = 
-            new osg::Uniform( "texCS", 2 );
+                new osg::Uniform( "texCS", 4 );
             ss->addUniform( texCSUniform.get() );        
         }        
     }
