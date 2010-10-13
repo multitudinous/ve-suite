@@ -335,7 +335,9 @@ private:
     Splitter* wx_nw_splitter;
     wxMenuBar* menubar;
     AppToolBar* appToolBar;///<The app toolbar
-        
+    ///Shutting down conductor
+    bool m_shuttingDown;
+    
     DECLARE_EVENT_TABLE()
 };
 

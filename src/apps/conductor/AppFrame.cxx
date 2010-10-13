@@ -262,7 +262,8 @@ AppFrame::AppFrame( wxWindow* parent, wxWindowID id, const wxString& title )
     wx_ve_splitter( 0 ),
     wx_nw_splitter( 0 ),
     menubar( 0 ),
-    appToolBar( 0 )
+    appToolBar( 0 ),
+    m_shuttingDown( false )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( int i = 0; i < ::wxGetApp().argc; ++i )
@@ -416,7 +417,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
                                     wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
 
     //make module panel fill the notebook page
-    wxBoxSizer *sizerPanel = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* sizerPanel = new wxBoxSizer( wxVERTICAL );
     sizerPanel->Add( av_modules, 1, wxEXPAND );
     modPage->SetSizer( sizerPanel );
 
@@ -424,7 +425,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     side_pane->AddPage( modPage, wxT( "Modules" ) );
 
     //create hierarchy page
-    wxPanel * hierPage = new wxPanel( side_pane, -1, wxDefaultPosition,
+    wxPanel* hierPage = new wxPanel( side_pane, -1, wxDefaultPosition,
         wxDefaultSize );
     hierarchyTree = new HierarchyTree( hierPage, HIERARCHYTREE_CTRL,
         wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
@@ -652,6 +653,7 @@ void AppFrame::StoreRecentFile()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 {
+    m_shuttingDown = true;
     DynamicsDataBuffer::instance()->CleanUp();
     canvas->CleanUpNetworks();
     Close( true );
@@ -2441,6 +2443,13 @@ void AppFrame::OnChildDestroy( wxWindowDestroyEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 {
+    ///If we are shutting down conductor there is no need to clean anything in
+    ///xplorer up.
+    if( m_shuttingDown )
+    {
+        return;
+    }
+
     {
         // Let xplorer know we are loading a new ves file so that it can do any
         // necessary cleanup, such as resetting the database

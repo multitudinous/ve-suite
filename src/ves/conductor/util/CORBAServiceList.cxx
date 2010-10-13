@@ -119,7 +119,7 @@ void CORBAServiceList::CleanUp()
     if( !CORBA::is_nil( m_orb.in() ) )
     {
         //Causes a shutdown crash on windows
-        //m_orb->destroy();
+        m_orb->destroy();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

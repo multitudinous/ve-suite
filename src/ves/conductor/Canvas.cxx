@@ -179,6 +179,8 @@ Canvas::~Canvas()
         networks.begin(); iter != networks.end(); ++iter )
     {
         //iter->second->RemoveAllEvents();
+        RemoveEventHandler( iter->second );
+        iter->second->RemoveAllEvents();
         delete iter->second;
     }
     networks.clear();
