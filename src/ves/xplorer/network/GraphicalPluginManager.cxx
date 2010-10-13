@@ -700,6 +700,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->SetResourceManager( ves::xplorer::scenegraph::ResourceManager::instance() );
             temp->SetCommunicationHandler( ves::xplorer::communication::CommunicationHandler::instance() );
+            temp->SetGraphicalPluginManager( this );
             temp->SetInteractionDevice( DeviceHandler::instance()->GetDevice(
                 device::Device::KEYBOARD_MOUSE ) );
             

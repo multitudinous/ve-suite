@@ -44,6 +44,8 @@
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
+#include <ves/xplorer/network/GraphicalPluginManager.h>
+
 #include <ves/xplorer/device/Device.h>
 
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
@@ -90,6 +92,7 @@ PluginBase::PluginBase():
         mSceneManager( 0 ),
         mResourceManager( 0 ),
         mCommunicationHandler( 0 ),
+        m_graphicalPluginManager( 0 ),
 #ifdef VE_SOUND
         mSoundManager( 0 ),
 #endif
@@ -249,6 +252,12 @@ void PluginBase::SetPhysicsSimulator(
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 {
     mPhysicsSimulator = physicsSimulator;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginBase::SetGraphicalPluginManager(
+    ves::xplorer::network::GraphicalPluginManager* pluginManager )
+{
+    m_graphicalPluginManager = pluginManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef VE_SOUND

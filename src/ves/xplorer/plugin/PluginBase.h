@@ -75,6 +75,11 @@ namespace device
 class Device;
 }
 
+namespace network
+{
+class GraphicalPluginManager;
+}
+
 namespace scenegraph
 {
 class DCS;
@@ -201,7 +206,13 @@ public:
     ///\param conductorComm The conductor CORBA pointer
     void SetCommunicationHandler( ves::xplorer::communication::CommunicationHandler* commandHandler ); 
     
+    ///Set the graphical plugin manager in the plugin so that plugins can
+    ///have access to the VE-CE and other corba tools
+    void SetGraphicalPluginManager( ves::xplorer::network::GraphicalPluginManager* pluginManager );
+
 #ifdef VE_SOUND
+    ///Provides the sound manager for audio support in xplorer
+    ///\param soundManager The SoundManager
     void SetSoundManager( osgAudio::SoundManager* soundManager );
 #endif
 
@@ -240,7 +251,10 @@ protected:
     ves::open::xml::model::ModelPtr mXmlModel;
     ///Singleton pointers
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
+    ///The graphical plugin manager
+    ves::xplorer::network::GraphicalPluginManager* m_graphicalPluginManager;
 #ifdef VE_SOUND
+    ///The sound manager
     osgAudio::SoundManager* mSoundManager;
 #endif
 
