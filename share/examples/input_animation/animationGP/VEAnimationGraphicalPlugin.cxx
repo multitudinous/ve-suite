@@ -208,16 +208,16 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
     double* tempTrans2 = m_translationDCS2->GetVETranslationArray();
     if( m_switchOnOff > 0)
     {
-        tempTrans[0] = 0.25;
+        tempTrans[0] = 0;
         m_translationDCS->SetTranslationArray( tempTrans );
-        tempTrans2[0] = -0.25;
+        tempTrans2[0] = -0.015;
         m_translationDCS2->SetTranslationArray( tempTrans2 );
     }
     else
     {
-        tempTrans[0] = -0.25;
+        tempTrans[0] = -0.015;
         m_translationDCS->SetTranslationArray( tempTrans );
-        tempTrans2[0] = 0.25;
+        tempTrans2[0] = 0;
         m_translationDCS2->SetTranslationArray( tempTrans2 );
     }
 
@@ -384,7 +384,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
     for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
         intersections.begin(); itr != intersections.end(); ++itr )
     {
-        objectHit = *( itr->nodePath.rbegin() );
+        objectHit = itr->nodePath[2];
         //std::cout << "Top Node " << objectHit->getName() << std::endl;
         //First we see if the name has prt in the part name
         /*const std::string prtname = ".PRT";
