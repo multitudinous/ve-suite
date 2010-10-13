@@ -111,6 +111,7 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 
+    ////////////////////////OLD//////////////////////////////////////////
     //m_idleGeometry = osgDB::readNodeFile( "valve/valve.idle.osg" );
     //m_openGeometry = osgDB::readNodeFile( "valve/valve.opening.osg" );
     //m_closeGeometry = osgDB::readNodeFile( "valve/valve.closing.osg" );
@@ -120,40 +121,43 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     //m_valueAnimation->addChild( m_openGeometry.get() );
     //m_valueAnimation->addChild( m_closeGeometry.get() );
     //m_valueAnimation->setSingleChildOn( 0 );
+    /////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////
-    //m_idleGeometry = osgDB::readNodeFile( "Valve/handwheel.ive" );
-    //m_openGeometry = osgDB::readNodeFile( "Valve/stem.ive" );
-    //m_closeGeometry = osgDB::readNodeFile( "Valve/valve.ive" );
+    ///////////////////VALVE/////////////////////////////////////////////
+    m_handwheelGeometry = osgDB::readNodeFile( "Valve/handwheel.ive" );
+    m_stemGeometry = osgDB::readNodeFile( "Valve/stem.ive" );
+    m_valveGeometry = osgDB::readNodeFile( "Valve/valve.ive" );
     
-	//m_rotationDCS = new ves::xplorer::scenegraph::DCS();
-	//m_translationDCS = new ves::xplorer::scenegraph::DCS();
+	m_rotationDCS = new ves::xplorer::scenegraph::DCS();
+	m_stemTransDCS = new ves::xplorer::scenegraph::DCS();
 
-    //m_rotationDCS->addChild( m_idleGeometry.get() );
-    //m_translationDCS->addChild( m_openGeometry.get() );
-    //m_rotationDCS->addChild( m_translationDCS.get() );
+    m_rotationDCS->addChild( m_handwheelGeometry.get() );
+    m_stemTransDCS->addChild( m_stemGeometry.get() );
+    m_rotationDCS->addChild( m_stemTransDCS.get() );
 
-    //mDCS->addChild( m_closeGeometry.get() );
-    //mDCS->addChild( m_rotationDCS.get() );
-///////////////////////////////////////////////////////////////////////////////
+    mDCS->addChild( m_valveGeometry.get() );
+    mDCS->addChild( m_rotationDCS.get() );
+    ////////////////////////////////////////////////////////////////////
 
-    m_idleGeometry = osgDB::readNodeFile( "Switch/panel.ive" );
-    m_openGeometry = osgDB::readNodeFile( "Switch/go_button.ive" );
-    m_closeGeometry = osgDB::readNodeFile( "Switch/stop_button.ive" );
+    ///////////////////SWITCH///////////////////////////////////////////
+    m_panelGeometry = osgDB::readNodeFile( "Switch/panel.ive" );
+    m_startButtonGeometry = osgDB::readNodeFile( "Switch/go_button.ive" );
+    m_stopButtonGeometry = osgDB::readNodeFile( "Switch/stop_button.ive" );
 
-	m_translationDCS = new ves::xplorer::scenegraph::DCS();
-    m_translationDCS2 = new ves::xplorer::scenegraph::DCS();
+	m_startTransDCS = new ves::xplorer::scenegraph::DCS();
+    m_stopTransDCS = new ves::xplorer::scenegraph::DCS();
 
-    m_translationDCS->addChild( m_openGeometry.get() );
-    m_translationDCS2->addChild( m_closeGeometry.get() );
+    m_startTransDCS->addChild( m_startButtonGeometry.get() );
+    m_stopTransDCS->addChild( m_stopButtonGeometry.get() );
 
-    mDCS->addChild( m_idleGeometry.get() );
-    mDCS->addChild( m_translationDCS.get() );
-    mDCS->addChild( m_translationDCS2.get() );
+    mDCS->addChild( m_panelGeometry.get() );
+    mDCS->addChild( m_startTransDCS.get() );
+    mDCS->addChild( m_stopTransDCS.get() );
+    ////////////////////////////////////////////////////////////////////
 
-    double rot[3] = { 90.0, 0.0, 0.0 };
-    double pos[3] = {-1000.0, -532.0, -10.0 };
-    double scale[3] = { 0.14, 0.14, 0.16 };
+    //double rot[3] = { 90.0, 0.0, 0.0 };
+    //double pos[3] = {-1000.0, -532.0, -10.0 };
+    //double scale[3] = { 0.14, 0.14, 0.16 };
     
     //mDCS->SetTranslationArray( pos );
     //mDCS->SetScaleArray( scale );
@@ -162,11 +166,12 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 ////////////////////////////////////////////////////////////////////////////////
 void VEAnimationGraphicalPlugin::PreFrameUpdate()
 {
-/*//Valve
+    //////////////////////VALVE/////////////////////////////////////////////////
+    //Valve
     double rotRate = 5;
     double transRate = 0.0039;
 
-    double* tempTrans = m_translationDCS->GetVETranslationArray();
+    double* tempTrans = m_stemTransDCS->GetVETranslationArray();
     //if ( gmtl::Math::abs( tempTrans[1] -  m_valveHeight ) > ( transRate) )
     //{
     //    double* tempRot = m_rotationDCS->GetRotationArray();
@@ -200,28 +205,32 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
     }
 	
     tempTrans[1] = m_valveHeight;
-    m_translationDCS->SetTranslationArray( tempTrans );
-*/
-/////////////////////////////////////////////////////////////////////////////////////////////////
+    m_stemTransDCS->SetTranslationArray( tempTrans );
+    
+    ////////////////////////////////////////////////////////////////////////////
 
-    double* tempTrans = m_translationDCS->GetVETranslationArray();
-    double* tempTrans2 = m_translationDCS2->GetVETranslationArray();
+    //////////////////////////SWITCH////////////////////////////////////////////
+
+    //double* tempTrans = m_startTransDCS->GetVETranslationArray();
+    tempTrans = m_startTransDCS->GetVETranslationArray();
+    double* tempTrans2 = m_stopTransDCS->GetVETranslationArray();
     if( m_switchOnOff > 0)
     {
-        tempTrans[0] = 0;
-        m_translationDCS->SetTranslationArray( tempTrans );
-        tempTrans2[0] = -0.015;
-        m_translationDCS2->SetTranslationArray( tempTrans2 );
+        tempTrans[0] = -0.015;
+        m_startTransDCS->SetTranslationArray( tempTrans );
+        tempTrans2[0] = 0;
+        m_stopTransDCS->SetTranslationArray( tempTrans2 );
     }
     else
     {
-        tempTrans[0] = -0.015;
-        m_translationDCS->SetTranslationArray( tempTrans );
-        tempTrans2[0] = 0;
-        m_translationDCS2->SetTranslationArray( tempTrans2 );
+        tempTrans[0] = 0;
+        m_startTransDCS->SetTranslationArray( tempTrans );
+        tempTrans2[0] = -0.015;
+        m_stopTransDCS->SetTranslationArray( tempTrans2 );
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+    
     //Process key board event
     if( m_keyboard )
     {
@@ -300,7 +309,8 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
         return;
     }
     
-    /*if( command->GetDataValuePair("MY_VALVE") )
+    //////////////////////VALVE/////////////////////////////////////////////////
+    /*//if( command->GetDataValuePair("MY_VALVE") )
     {
         std::string percent;
         command->GetDataValuePair("MY_VALVE")->GetData( percent );
@@ -309,15 +319,17 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
         m_valveHeight = 0.125 * test;
     }*/
 
-    /*if( command->GetDataValuePair("MY_VALVE") )
+    if( command->GetDataValuePair("MY_VALVE") )
     {
         std::string percent;
         command->GetDataValuePair("MY_VALVE")->GetData( percent );
         double test = boost::lexical_cast<double>( percent );
         
         m_valveHeight = -0.125 * test;
-    }*/
+    }
+    ////////////////////////////////////////////////////////////////////////////
 
+    ////////////////////SWITCH//////////////////////////////////////////////////
     if( command->GetDataValuePair("MY_SWITCH") )
     {
         std::string percent;
@@ -326,6 +338,7 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
         
         m_switchOnOff = test;
     }
+    ////////////////////////////////////////////////////////////////////////////
 
     const std::string commandName = command->GetCommandName();
     std::cout << "Command Name " << commandName << std::endl;
@@ -394,7 +407,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
         std::string nodeName;
         
         //start button
-        if( objectHit == m_openGeometry )
+        if( objectHit == m_startButtonGeometry )
         {    
             ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
             //input variables;
@@ -419,7 +432,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
             std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
         }
         //stop button
-        else if( objectHit == m_closeGeometry )
+        else if( objectHit == m_stopButtonGeometry )
         {
             ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
             //input variables;
@@ -442,6 +455,11 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
             commandWriter.UseStandaloneDOMDocumentManager();
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
             std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
+        }
+        //handheel
+        else if( objectHit == m_handwheelGeometry )
+        {
+
         }
 
         /*if( !tempParent )

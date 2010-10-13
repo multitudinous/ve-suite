@@ -74,7 +74,7 @@ void OpcUOVarDialog::CreateGUIControls()
     WxGrid->SetRowLabelSize(50);
     WxGrid->SetColLabelSize(25);
     //WxGrid->CreateGrid(0,3,wxGrid::wxGridSelectCells);
-    WxGrid->CreateGrid(0,1,wxGrid::wxGridSelectCells);
+    WxGrid->CreateGrid(0,1,wxGrid::wxGridSelectRows);
     WxFlexGridSizer->Add(WxGrid,0,wxEXPAND | wxALL,5);
 
     WxBoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
@@ -114,11 +114,11 @@ void OpcUOVarDialog::CreateGUIControls()
     //WxGrid->SetColLabelValue( 2, _("Units") );
 
     //this should be done dynamically
-    WxGrid->SetRowLabelSize( 500 );
+    WxGrid->SetRowLabelSize( 100 );
 
     //wxGridCellAttr * readOnly = new wxGridCellAttr();
-    //readOnly->SetReadOnly(true);
-    //WxGrid->SetColAttr( 0, readOnly );
+    //readOnly->SetReadOnly(false);
+    //WxGrid->SetColAttr( 1, readOnly );
     //WxGrid->SetColAttr( 2, readOnly );
     WxFlexGridSizer->SetFlexibleDirection(wxBOTH);
     WxFlexGridSizer->AddGrowableCol(0);
@@ -215,6 +215,7 @@ void OpcUOVarDialog::SetData( wxString name, wxString value )
     //insert all data
     WxGrid->SetRowLabelValue( index, name );
     WxGrid->SetCellValue( index, 0, value );
+    //WxGrid->SetReadOnly(index, 0, false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
