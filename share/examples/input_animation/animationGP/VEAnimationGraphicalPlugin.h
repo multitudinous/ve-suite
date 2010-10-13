@@ -72,6 +72,7 @@ public:
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
 private:
+    void FindPartNodeAndHighlightNode();
     ///Keyboard helper pointer
     ves::xplorer::device::KeyboardMouse* m_keyboard;
 /*
@@ -94,7 +95,9 @@ private:
 
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_rotationDCS;
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_translationDCS;
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_translationDCS2;
     double m_valveHeight;
+    double m_switchOnOff;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( VEAnimationGraphicalPlugin )

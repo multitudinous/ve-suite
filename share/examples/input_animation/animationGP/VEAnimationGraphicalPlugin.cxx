@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- My Includes --- //
+#include <ves/xplorer/network/VE_i.h>
 #include "VEAnimationGraphicalPlugin.h"
 
 // --- VE-Suite Includes --- //
@@ -39,10 +40,12 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/shader/Shader.h>
 #include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/XMLReaderWriter.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
@@ -111,10 +114,6 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     //m_idleGeometry = osgDB::readNodeFile( "valve/valve.idle.osg" );
     //m_openGeometry = osgDB::readNodeFile( "valve/valve.opening.osg" );
     //m_closeGeometry = osgDB::readNodeFile( "valve/valve.closing.osg" );
-
-    m_idleGeometry = osgDB::readNodeFile( "Valve/handwheel.ive" );
-    m_openGeometry = osgDB::readNodeFile( "Valve/stem.ive" );
-    m_closeGeometry = osgDB::readNodeFile( "Valve/valve.ive" );
     
     //m_valueAnimation = new osg::Switch();
     //m_valueAnimation->addChild( m_idleGeometry.get() );
@@ -122,19 +121,40 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     //m_valueAnimation->addChild( m_closeGeometry.get() );
     //m_valueAnimation->setSingleChildOn( 0 );
 
-	m_rotationDCS = new ves::xplorer::scenegraph::DCS();
+///////////////////////////////////////////////////////////////////////////////
+    //m_idleGeometry = osgDB::readNodeFile( "Valve/handwheel.ive" );
+    //m_openGeometry = osgDB::readNodeFile( "Valve/stem.ive" );
+    //m_closeGeometry = osgDB::readNodeFile( "Valve/valve.ive" );
+    
+	//m_rotationDCS = new ves::xplorer::scenegraph::DCS();
+	//m_translationDCS = new ves::xplorer::scenegraph::DCS();
+
+    //m_rotationDCS->addChild( m_idleGeometry.get() );
+    //m_translationDCS->addChild( m_openGeometry.get() );
+    //m_rotationDCS->addChild( m_translationDCS.get() );
+
+    //mDCS->addChild( m_closeGeometry.get() );
+    //mDCS->addChild( m_rotationDCS.get() );
+///////////////////////////////////////////////////////////////////////////////
+
+    m_idleGeometry = osgDB::readNodeFile( "Switch/panel.ive" );
+    m_openGeometry = osgDB::readNodeFile( "Switch/go_button.ive" );
+    m_closeGeometry = osgDB::readNodeFile( "Switch/stop_button.ive" );
+
 	m_translationDCS = new ves::xplorer::scenegraph::DCS();
+    m_translationDCS2 = new ves::xplorer::scenegraph::DCS();
 
-    m_rotationDCS->addChild( m_idleGeometry.get() );
     m_translationDCS->addChild( m_openGeometry.get() );
-    m_rotationDCS->addChild( m_translationDCS.get() );
+    m_translationDCS2->addChild( m_closeGeometry.get() );
 
-    mDCS->addChild( m_closeGeometry.get() );
-    mDCS->addChild( m_rotationDCS.get() );
+    mDCS->addChild( m_idleGeometry.get() );
+    mDCS->addChild( m_translationDCS.get() );
+    mDCS->addChild( m_translationDCS2.get() );
 
     double rot[3] = { 90.0, 0.0, 0.0 };
     double pos[3] = {-1000.0, -532.0, -10.0 };
     double scale[3] = { 0.14, 0.14, 0.16 };
+    
     //mDCS->SetTranslationArray( pos );
     //mDCS->SetScaleArray( scale );
     //mDCS->SetRotationArray( rot );
@@ -142,32 +162,31 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 ////////////////////////////////////////////////////////////////////////////////
 void VEAnimationGraphicalPlugin::PreFrameUpdate()
 {
-
+/*//Valve
     double rotRate = 5;
     double transRate = 0.0039;
 
     double* tempTrans = m_translationDCS->GetVETranslationArray();
-    /*if ( gmtl::Math::abs( tempTrans[1] -  m_valveHeight ) > ( transRate) )
-    {
-        double* tempRot = m_rotationDCS->GetRotationArray();
-        tempRot[2] += rotRate;
-        m_rotationDCS->SetRotationArray( tempRot );
+    //if ( gmtl::Math::abs( tempTrans[1] -  m_valveHeight ) > ( transRate) )
+    //{
+    //    double* tempRot = m_rotationDCS->GetRotationArray();
+    //    tempRot[2] += rotRate;
+    //    m_rotationDCS->SetRotationArray( tempRot );
 
-        if( m_valveHeight > tempTrans[1])
-        {
-            tempTrans[1] += transRate;
-        }
-        else
-        {
-            tempTrans[1] -= transRate;
-        }
-        m_translationDCS->SetTranslationArray( tempTrans );
-    }*/
+    //    if( m_valveHeight > tempTrans[1])
+    //    {
+    //        tempTrans[1] += transRate;
+    //    }
+    //    else
+    //    {
+    //        tempTrans[1] -= transRate;
+    //    }
+    //    m_translationDCS->SetTranslationArray( tempTrans );
+    //}
 
     if ( gmtl::Math::abs( tempTrans[1] -  m_valveHeight ) > ( transRate) )
     {
         double* tempRot = m_rotationDCS->GetRotationArray();
-        tempRot[2] += rotRate;
         if( m_valveHeight > tempTrans[1])
         {
             tempRot[2] -= rotRate;
@@ -182,10 +201,45 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
 	
     tempTrans[1] = m_valveHeight;
     m_translationDCS->SetTranslationArray( tempTrans );
-    //Process key board event
-/*    if( m_keyboard )
+*/
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+    double* tempTrans = m_translationDCS->GetVETranslationArray();
+    double* tempTrans2 = m_translationDCS2->GetVETranslationArray();
+    if( m_switchOnOff > 0)
     {
-        gadget::KeyboardMousePtr tempKeys = 
+        tempTrans[0] = 0.25;
+        m_translationDCS->SetTranslationArray( tempTrans );
+        tempTrans2[0] = -0.25;
+        m_translationDCS2->SetTranslationArray( tempTrans2 );
+    }
+    else
+    {
+        tempTrans[0] = -0.25;
+        m_translationDCS->SetTranslationArray( tempTrans );
+        tempTrans2[0] = 0.25;
+        m_translationDCS2->SetTranslationArray( tempTrans2 );
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Process key board event
+    if( m_keyboard )
+    {
+        //If the mouse made a pick event
+        if( !m_keyboard->GetMousePickEvent() )
+        {
+            return;
+        }
+
+        //If we had keyboard input then try and highlight the cad
+        bool pickedParts = false;
+        //if( m_mouseSelection )
+        {
+            FindPartNodeAndHighlightNode();
+        }
+
+
+        /*gadget::KeyboardMousePtr tempKeys = 
             m_keyboard->GetKeyboardMouseVRJDevice();
             
         //Get the event queue
@@ -199,9 +253,9 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
         }
         
         //Get the modifier key values
-        bool mKeyNone = tempKeys->modifierOnly( gadget::KEY_NONE );
-        bool mKeyShift = tempKeys->modifierOnly( gadget::KEY_SHIFT );
-        bool mKeyAlt = tempKeys->modifierOnly( gadget::KEY_ALT );
+        //bool mKeyNone = tempKeys->modifierOnly( gadget::KEY_NONE );
+        //bool mKeyShift = tempKeys->modifierOnly( gadget::KEY_SHIFT );
+        //bool mKeyAlt = tempKeys->modifierOnly( gadget::KEY_ALT );
         
         //Iterate over the keyboard and mouse events
         gadget::KeyboardMouse::EventQueue::iterator i;
@@ -234,8 +288,8 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
                     break;
                 }
             }
-        }
-    }*/
+        }*/
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VEAnimationGraphicalPlugin::SetCurrentCommand(
@@ -255,13 +309,22 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
         m_valveHeight = 0.125 * test;
     }*/
 
-    if( command->GetDataValuePair("MY_VALVE") )
+    /*if( command->GetDataValuePair("MY_VALVE") )
     {
         std::string percent;
         command->GetDataValuePair("MY_VALVE")->GetData( percent );
         double test = boost::lexical_cast<double>( percent );
         
         m_valveHeight = -0.125 * test;
+    }*/
+
+    if( command->GetDataValuePair("MY_SWITCH") )
+    {
+        std::string percent;
+        command->GetDataValuePair("MY_SWITCH")->GetData( percent );
+        double test = boost::lexical_cast<double>( percent );
+        
+        m_switchOnOff = test;
     }
 
     const std::string commandName = command->GetCommandName();
@@ -283,6 +346,123 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
 		//Set a matrix value to rotate the valve
 		
 		//Move the shaft or rotate the shaft
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
+{
+
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
+        m_keyboard->GetLineSegmentIntersector();
+
+    osgUtil::IntersectionVisitor intersectionVisitor( intersectorSegment.get() );
+
+    //Add the IntersectVisitor to the root Node so that all geometry will be
+    //checked and no transforms are done to the line segement
+    mDCS->accept( intersectionVisitor );
+
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        intersectorSegment->getIntersections();
+    if( intersections.empty() )
+    {
+        return;
+    }
+    
+    //Reset all of the graphical effects
+    /*m_assemblyPartNumbers.clear();    
+    {
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight2( 
+            m_cadRootNode, "", false, true );
+        
+        ves::xplorer::scenegraph::util::OpacityVisitor opVisitor1( 
+            m_cadRootNode, false, true, 0.3f );
+    }*/
+    
+    //Find the part numbers of the nodes we hit
+    osg::Node* objectHit = 0;
+    osg::Node* tempParent = 0;
+    for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+        intersections.begin(); itr != intersections.end(); ++itr )
+    {
+        objectHit = *( itr->nodePath.rbegin() );
+        //std::cout << "Top Node " << objectHit->getName() << std::endl;
+        //First we see if the name has prt in the part name
+        /*const std::string prtname = ".PRT";
+        ves::xplorer::scenegraph::FindParentWithNameVisitor findPRT( objectHit, prtname, false );
+        tempParent = findPRT.GetParentNode();
+        */
+        std::string nodeName;
+        
+        //start button
+        if( objectHit == m_openGeometry )
+        {    
+            ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
+            //input variables;
+            params->SetCommandName( "setOPCValues" );
+
+            //add list to DVP
+            ves::open::xml::DataValuePairPtr
+                inpParams( new ves::open::xml::DataValuePair() );
+            inpParams->SetDataName( "MY_SWITCH.POS" );
+            inpParams->SetDataString( "0" );
+            params->AddDataValuePair( inpParams );
+
+            std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+                nodes;
+            nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
+            std::string >( params, "vecommand" ) );
+
+            ves::open::xml::XMLReaderWriter commandWriter;
+            std::string status="returnString";
+            commandWriter.UseStandaloneDOMDocumentManager();
+            commandWriter.WriteXMLDocument( nodes, status, "Command" );
+            std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
+        }
+        //stop button
+        else if( objectHit == m_closeGeometry )
+        {
+            ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
+            //input variables;
+            params->SetCommandName( "setOPCValues" );
+
+            //add list to DVP
+            ves::open::xml::DataValuePairPtr
+                inpParams( new ves::open::xml::DataValuePair() );
+            inpParams->SetDataName( "MY_SWITCH.POS" );
+            inpParams->SetDataString( "1" );
+            params->AddDataValuePair( inpParams );
+
+            std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+                nodes;
+            nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
+            std::string >( params, "vecommand" ) );
+
+            ves::open::xml::XMLReaderWriter commandWriter;
+            std::string status="returnString";
+            commandWriter.UseStandaloneDOMDocumentManager();
+            commandWriter.WriteXMLDocument( nodes, status, "Command" );
+            std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
+        }
+
+        /*if( !tempParent )
+        {
+            //Then we see if it has asm in the part name
+            std::string asmname(".ASM");
+            ves::xplorer::scenegraph::FindParentWithNameVisitor findASM( 
+                objectHit, asmname, false );
+            tempParent = findASM.GetParentNode();
+            if( tempParent )
+            {
+                nodeName = tempParent->getName();
+                GetPartNumberFromNodeName( nodeName );
+            }
+        }
+        else
+        {
+            nodeName = tempParent->getName();
+            GetPartNumberFromNodeName( nodeName );
+        }
+        */
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

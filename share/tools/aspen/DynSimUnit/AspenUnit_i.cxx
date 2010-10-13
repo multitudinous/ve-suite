@@ -414,6 +414,8 @@ void AspenUnit_i::UpdateVars( )
     {
         std::vector< std::pair< std::string, std::string > > vars =
             dynsim->ReadVars();
+        //std::map< std::string, std::pair< std::string, VARTYPE > > vars =
+        //    dynsim->ReadVars();
 
         if( !vars.empty() )
         {
@@ -424,6 +426,15 @@ void AspenUnit_i::UpdateVars( )
                 AspenLog->SetSel(-1, -1);
                 AspenLog->ReplaceSel( temp.c_str() );
             }
+
+            //dump results to aspen log
+            //std::map< std::string, std::pair< std::string, VARTYPE > >::iterator iter;
+            //for( iter = vars.begin(); iter != vars.end(); ++iter)
+            //{
+            //    std::string temp = iter->first + " " + iter->second.first +"\n";
+            //    AspenLog->SetSel(-1, -1);
+            //    AspenLog->ReplaceSel( temp.c_str() );
+            //}
         }
     }
 }
@@ -468,14 +479,14 @@ void AspenUnit_i::connectWithList( ves::open::xml::CommandPtr cmd )
         //dynsim->ConnectWithList( list );
 }
 
-UINT ThreadFunc ( LPVOID empty );
+//UINT ThreadFunc ( LPVOID empty );
 
-UINT ThreadFunc ( LPVOID empty )
-{
-    AspenUnit_i * temp = (AspenUnit_i *) empty;
-    temp->Monitor();
-    return 0;
-}
+//UINT ThreadFunc ( LPVOID empty )
+//{
+//    AspenUnit_i * temp = (AspenUnit_i *) empty;
+//    temp->Monitor();
+//    return 0;
+//}
 
 ///////////////////////////////////////////////////////////////////////////////
 void AspenUnit_i::connectToOPC( ves::open::xml::CommandPtr cmd )
