@@ -559,9 +559,9 @@ if not SConsAddons.Util.hasHelpFlag():
         # This flag is needed because some packages still use win32 even on win64 systems
         baseEnv.AppendUnique( CPPDEFINES = ['WIN32'] )
         if baseEnv[ 'MSVS_ARCH' ] == "x86":
-            baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86'] )
+            baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X86'], LINKFLAGS = ['/MACHINE:X86','/INCREMENTAL:NO'] )
         else:
-            baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X64'], LINKFLAGS = ['/MACHINE:X64'] )
+            baseEnv.AppendUnique( ARFLAGS = ['/MACHINE:X64'], LINKFLAGS = ['/MACHINE:X64','/INCREMENTAL:NO'] )
 
     # now lets process everything
     opts.Process(baseEnv)                   # Update the options

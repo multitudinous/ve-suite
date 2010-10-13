@@ -116,11 +116,13 @@ void CORBAServiceList::CleanUp()
         p_ui_i = 0;
     }
     
+#ifndef WIN32
     if( !CORBA::is_nil( m_orb.in() ) )
     {
         //Causes a shutdown crash on windows
         m_orb->destroy();
     }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetNamingContext( CosNaming::NamingContext_ptr naming_context )
