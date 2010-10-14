@@ -106,6 +106,7 @@ private:
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_stemTransDCS;
     double m_valveHeight;
     double m_switchOnOff;
+    bool m_valveOnOff;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( VEAnimationGraphicalPlugin )

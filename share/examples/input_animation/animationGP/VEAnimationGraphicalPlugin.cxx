@@ -75,6 +75,7 @@ VEAnimationGraphicalPlugin::VEAnimationGraphicalPlugin()
     m_keyboard( 0 )
 {
     m_valveHeight = 0;
+    m_valveOnOff = true;
     mObjectName = "DSPlugin"; //name of the sheet
     ///Set the name of the commands we want to capture from the dynsim unit
     mEventHandlerMap[ "OPCData" ] = this;
@@ -407,7 +408,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
         std::string nodeName;
         
         //start button
-        if( objectHit == m_startButtonGeometry )
+        if( objectHit == m_stopButtonGeometry )
         {    
             ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
             //input variables;
@@ -432,7 +433,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
             std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
         }
         //stop button
-        else if( objectHit == m_stopButtonGeometry )
+        else if( objectHit == m_startButtonGeometry )
         {
             ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
             //input variables;
@@ -458,8 +459,38 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
         }
         //handheel
         else if( objectHit == m_handwheelGeometry )
-        {
+        {            
+            ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
+            //input variables;
+            params->SetCommandName( "setOPCValues" );
 
+            //add list to DVP
+            ves::open::xml::DataValuePairPtr
+                inpParams( new ves::open::xml::DataValuePair() );
+            inpParams->SetDataName( "MY_VALVE.OP" );
+            //temp
+            if( m_valveOnOff )
+            {
+                inpParams->SetDataString( "0" );
+                m_valveOnOff = false;
+            }
+            else
+            {
+                inpParams->SetDataString( "1" );
+                m_valveOnOff = true;
+            }
+            params->AddDataValuePair( inpParams );
+
+            std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+                nodes;
+            nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
+            std::string >( params, "vecommand" ) );
+
+            ves::open::xml::XMLReaderWriter commandWriter;
+            std::string status="returnString";
+            commandWriter.UseStandaloneDOMDocumentManager();
+            commandWriter.WriteXMLDocument( nodes, status, "Command" );
+            std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
         }
 
         /*if( !tempParent )
