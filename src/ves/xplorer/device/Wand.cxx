@@ -372,7 +372,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             {
                 cameraManager.GetActiveCameraObject()->
                     SetPictureFrameProjection( true );
-                cameraManager.DisplayProjectionEffect( true, false );
+                cameraManager.DisplayProjectionEffect( true, true );
                 return;
             }
 
@@ -401,7 +401,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             {
                 std::string tempDir( "." );
                 cameraManager.WriteActiveCameraImageFile( tempDir );
-                cameraManager.DisplayProjectionEffect( false, false );
+                cameraManager.DisplayProjectionEffect( false, true );
                 cameraManager.GetActiveCameraObject()->
                     SetPictureFrameProjection( false );
                 return;
