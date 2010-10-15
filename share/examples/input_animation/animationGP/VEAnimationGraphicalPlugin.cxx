@@ -122,6 +122,7 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     //m_valueAnimation->addChild( m_openGeometry.get() );
     //m_valueAnimation->addChild( m_closeGeometry.get() );
     //m_valueAnimation->setSingleChildOn( 0 );
+    
     /////////////////////////////////////////////////////////////////////
 
     ///////////////////VALVE/////////////////////////////////////////////
@@ -131,13 +132,28 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     
 	m_rotationDCS = new ves::xplorer::scenegraph::DCS();
 	m_stemTransDCS = new ves::xplorer::scenegraph::DCS();
+	m_valveDCS = new ves::xplorer::scenegraph::DCS();
 
     m_rotationDCS->addChild( m_handwheelGeometry.get() );
     m_stemTransDCS->addChild( m_stemGeometry.get() );
     m_rotationDCS->addChild( m_stemTransDCS.get() );
 
-    mDCS->addChild( m_valveGeometry.get() );
-    mDCS->addChild( m_rotationDCS.get() );
+    m_valveDCS->addChild( m_valveGeometry.get() );
+    m_valveDCS->addChild( m_rotationDCS.get() );
+
+    double rot[3] = { 0.0, 0.0, 90.0 };
+    double pos[3] = {46.8, -79.4, 7.5 };
+    double scale[3] = { 11, 11, 11 };
+    m_valveDCS->SetTranslationArray( pos );
+    m_valveDCS->SetRotationArray( rot );
+
+    m_valveDCS->SetScaleArray( scale );
+    m_valveDCS->SetTechnique( "Select" );
+    //translate valve to proper location
+    mDCS->addChild( m_valveDCS.get() );
+
+    //mDCS->addChild( m_valveGeometry.get() );
+    //mDCS->addChild( m_rotationDCS.get() );
     ////////////////////////////////////////////////////////////////////
 
     ///////////////////SWITCH///////////////////////////////////////////
@@ -147,18 +163,32 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 
 	m_startTransDCS = new ves::xplorer::scenegraph::DCS();
     m_stopTransDCS = new ves::xplorer::scenegraph::DCS();
+	m_switchDCS = new ves::xplorer::scenegraph::DCS();
 
     m_startTransDCS->addChild( m_startButtonGeometry.get() );
     m_stopTransDCS->addChild( m_stopButtonGeometry.get() );
 
-    mDCS->addChild( m_panelGeometry.get() );
-    mDCS->addChild( m_startTransDCS.get() );
-    mDCS->addChild( m_stopTransDCS.get() );
+    m_switchDCS->addChild( m_panelGeometry.get() );
+    m_switchDCS->addChild( m_startTransDCS.get() );
+    m_switchDCS->addChild( m_stopTransDCS.get() );
+
+    double rot2[3] = { 90.0, 0.0, 0.0 };
+    double pos2[3] = {-32.0, -13.0, 7.0 };
+    double scale2[3] = { 5.4, 5.4, 5.4 };
+    m_switchDCS->SetTranslationArray( pos2 );
+    m_switchDCS->SetRotationArray( rot2 );
+    m_switchDCS->SetScaleArray( scale2 );
+    m_switchDCS->SetTechnique( "Select" );
+
+    mDCS->addChild( m_switchDCS.get() );
+
+    //mDCS->addChild( m_panelGeometry.get() );
+    //mDCS->addChild( m_startTransDCS.get() );
+    //mDCS->addChild( m_stopTransDCS.get() );
     ////////////////////////////////////////////////////////////////////
 
     //double rot[3] = { 90.0, 0.0, 0.0 };
     //double pos[3] = {-1000.0, -532.0, -10.0 };
-    //double scale[3] = { 0.14, 0.14, 0.16 };
     
     //mDCS->SetTranslationArray( pos );
     //mDCS->SetScaleArray( scale );
@@ -342,15 +372,15 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
     ////////////////////////////////////////////////////////////////////////////
 
     const std::string commandName = command->GetCommandName();
-    std::cout << "Command Name " << commandName << std::endl;
+    //std::cout << "Command Name " << commandName << std::endl;
     
     size_t numDVPs = command->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numDVPs; ++i )
     {
-        std::cout << command->GetDataValuePair( i )->GetDataName() << std::endl;
+        //std::cout << command->GetDataValuePair( i )->GetDataName() << std::endl;
         std::string percent;
         command->GetDataValuePair(i)->GetData( percent );
-        std::cout << percent << std::endl;
+        //std::cout << percent << std::endl;
         ///Do something with the dvp data        
         //Get the specific dvp for the valve position
         //m_rotationDCS
@@ -398,7 +428,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
     for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
         intersections.begin(); itr != intersections.end(); ++itr )
     {
-        objectHit = itr->nodePath[2];
+        objectHit = itr->nodePath[3];
         //std::cout << "Top Node " << objectHit->getName() << std::endl;
         //First we see if the name has prt in the part name
         /*const std::string prtname = ".PRT";

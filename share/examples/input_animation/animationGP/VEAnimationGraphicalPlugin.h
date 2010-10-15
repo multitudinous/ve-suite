@@ -104,6 +104,8 @@ private:
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_startTransDCS;
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_stopTransDCS;
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_stemTransDCS;
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_valveDCS;
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_switchDCS;
     double m_valveHeight;
     double m_switchOnOff;
     bool m_valveOnOff;
