@@ -370,8 +370,9 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
 
             if( cameraManager.IsPictureMode() )
             {
-                std::string tempDir( "." );
-                cameraManager.WriteActiveCameraImageFile( tempDir );
+                cameraManager.GetActiveCameraObject()->
+                    SetPictureFrameProjection( true );
+                cameraManager.DisplayProjectionEffect( true, false );
                 return;
             }
 
@@ -380,11 +381,31 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             dvp->SetData( "AddCameraObject", addFlag );
             cameraManager.UpdateConductorData( dvp );
         }
-        
+
         if( !cptEnabled )
         {
             m_buttonPushed = true;
             FreeRotateAboutWand();
+        }
+    }
+    else if( buttonData[ 1 ] == gadget::Digital::TOGGLE_OFF )
+    {
+        if( cptEnabled )
+        {
+            if( !m_sceneManager.IsMasterNode() )
+            {
+                return;
+            }
+        
+            if( cameraManager.IsPictureMode() )
+            {
+                std::string tempDir( "." );
+                cameraManager.WriteActiveCameraImageFile( tempDir );
+                cameraManager.DisplayProjectionEffect( false, false );
+                cameraManager.GetActiveCameraObject()->
+                    SetPictureFrameProjection( false );
+                return;
+            }
         }
     }
     //Navigate about z up axis

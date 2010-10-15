@@ -234,6 +234,9 @@ public:
     ///
     void ShowFrustumGeometry( bool const& show = true );
 
+    ///Use the picture frame projection technique
+    void SetPictureFrameProjection( bool const& show = true );
+
     ///
     void Update();
 

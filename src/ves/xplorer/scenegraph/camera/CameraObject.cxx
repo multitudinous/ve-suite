@@ -888,6 +888,11 @@ void CameraObject::ShowFrustumGeometry( bool const& show )
     m_frustumGeode->setNodeMask( show );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CameraObject::SetPictureFrameProjection( bool const& show )
+{
+    m_projectionTechnique->SetPictureFrame( show );
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraObject::Update()
 {
     //Update the MVPT matrix

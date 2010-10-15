@@ -4,6 +4,7 @@ uniform vec3 glowColor;
 uniform float alpha;
 uniform float nearPlane;
 uniform float farPlane;
+uniform bool cameraPictureFrame;
 
 //uniform float focalDistance;
 //uniform float focalRange;
@@ -33,13 +34,35 @@ void main()
     vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q;
     vec4 color0 = vec4( gl_Color.rgb, alpha );
 
-    //If in frustum
-    if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 &&
-        projectionUV.t >= 0.0 && projectionUV.t <= 1.0 &&
-        gl_TexCoord[ 0 ].q >= nearPlane &&
-        gl_TexCoord[ 0 ].q <= farPlane )
+    if( !cameraPictureFrame )
     {
+        //If in frustum
+        if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 &&
+            projectionUV.t >= 0.0 && projectionUV.t <= 1.0 &&
+            gl_TexCoord[ 0 ].q >= nearPlane &&
+            gl_TexCoord[ 0 ].q <= farPlane )
+        {
+            color0.a = 1.0;
+        }
+    }
+    else
+    {
+        //If in frustum
         color0.a = 1.0;
+        if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 &&
+            projectionUV.t >= 0.0 && projectionUV.t <= 1.0 &&
+            gl_TexCoord[ 0 ].q >= 0.01 )
+        {
+            if( projectionUV.s >= 0.02 && projectionUV.s <= 0.98 &&
+                projectionUV.t >= 0.02 && projectionUV.t <= 0.98 )
+            {
+                //color0.rgb = vec3( 0.0, 1.0, 0.0 );
+            }
+            else
+            {
+                color0.rgb = vec3( 1.0, 0.0, 0.0 );
+            }
+        }
     }
 
     //float tempFocalRange = 2.0 / focalRange;

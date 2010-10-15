@@ -60,8 +60,12 @@ ProjectionTechnique::ProjectionTechnique()
     m_focalDistanceUniform(
         new osg::Uniform( osg::Uniform::FLOAT, "focalDistance" ) ),
     m_focalRangeUniform(
-        new osg::Uniform( osg::Uniform::FLOAT, "focalRange" ) )
+        new osg::Uniform( osg::Uniform::FLOAT, "focalRange" ) ),
+    m_pictureFrameUniform(
+        new osg::Uniform( osg::Uniform::BOOL, "cameraPictureFrame" ) )
 {
+    m_pictureFrameUniform->set( false );
+
     DefinePasses();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +106,7 @@ void ProjectionTechnique::DefinePasses()
         stateset->addUniform( m_farPlaneUniform.get() );
         stateset->addUniform( m_focalDistanceUniform.get() );
         stateset->addUniform( m_focalRangeUniform.get() );
+        stateset->addUniform( m_pictureFrameUniform.get() );
 
         AddPass( stateset.get() );
     }
@@ -132,7 +137,11 @@ void ProjectionTechnique::SetFocalRange( float const& focalRange )
     m_focalRangeUniform->set( focalRange );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
+void ProjectionTechnique::SetPictureFrame( bool pictureFrame )
+{
+    m_pictureFrameUniform->set( pictureFrame );
+}
+////////////////////////////////////////////////////////////////////////////////
 } //end technique
 } //end scenegraph
 } //end xplorer
