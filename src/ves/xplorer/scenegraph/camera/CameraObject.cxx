@@ -37,6 +37,8 @@
 #include <ves/xplorer/scenegraph/camera/HeadCameraObjectCallback.h>
 #include <ves/xplorer/scenegraph/camera/CameraCullVisitorCallback.h>
 
+#include <ves/xplorer/scenegraph/util/CallbackSupport.h>
+
 //#include "DepthOfFieldTechnique.h"
 //#include "DepthHelperTechnique.h"
 #include <ves/xplorer/scenegraph/technique/ProjectionTechnique.h>
@@ -48,6 +50,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/CameraImageCaptureCallback.h>
+#include <ves/xplorer/scenegraph/RTTCameraImageCaptureCallback.h>
 
 // --- vrJuggler Includes --- //
 //#include <gmtl/Xforms.h>
@@ -187,7 +190,8 @@ void CameraObject::ComputeNearFarPlanes( bool const& enable )
         m_camera->setComputeNearFarMode(
             osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
         m_screenCapCamera->setComputeNearFarMode(
-            osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );    }
+            osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::InitializeCamera( osg::Camera& camera )
@@ -259,6 +263,7 @@ void CameraObject::Initialize()
     m_colorImage = new osg::Image();
     m_colorImage->
         allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
+    //m_colorMap->setImage( m_colorImage.get() );
     m_screenCapCamera->
         attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
 
@@ -368,6 +373,7 @@ void CameraObject::CalculateMatrixMVPT()
     //Now update the screen capture camera since this happens after the 
     //update callback
     m_screenCapCamera->setViewMatrix( m_camera->getViewMatrix() );
+    m_screenCapCamera->setProjectionMatrix( m_camera->getProjectionMatrix() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -1004,7 +1010,23 @@ void CameraObject::WriteImageFile( std::string const& saveImageDir )
     
     removeChild( m_camera.get() );
     addChild( m_screenCapCamera.get() );
+    /*osg::ref_ptr< ves::xplorer::scenegraph::RTTCameraImageCaptureCallback > 
+        tempCB = 
+        new ves::xplorer::scenegraph::RTTCameraImageCaptureCallback( m_filename, m_colorMap.get() );
     
+    osg::Camera::DrawCallback* pdCB = m_camera->getPostDrawCallback();
+    if( pdCB )
+    {
+        osg::ref_ptr< osgwTools::CompositeDrawCallback > cdc = new osgwTools::CompositeDrawCallback();
+        cdc->getDrawCallbackList().push_back( pdCB );
+        cdc->getDrawCallbackList().push_back( tempCB.get() );
+        m_camera->setPostDrawCallback( cdc.get() );
+    }
+    else
+    {
+        m_camera->setPostDrawCallback( tempCB.get() );
+    }*/
+
     m_captureImage = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1022,6 +1044,18 @@ void CameraObject::PostWriteImageFile()
     m_captureImage = false;
     removeChild( m_screenCapCamera.get() );
     addChild( m_camera.get() );
+    /*osg::Camera::DrawCallback* pdCB = m_camera->getPostDrawCallback();
+    osgwTools::CompositeDrawCallback* cdc = dynamic_cast< osgwTools::CompositeDrawCallback* >( pdCB );
+    
+    if( cdc )
+    {
+        pdCB = cdc->getDrawCallbackList().at( 0 );
+        m_camera->setPostDrawCallback( pdCB );
+    }
+    else
+    {
+        m_camera->setPostDrawCallback( 0 );
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 } //end camera
