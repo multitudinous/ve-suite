@@ -40,6 +40,7 @@
 #include <ves/xplorer/device/Wand.h>
 #include <ves/xplorer/device/Tablet.h>
 #include <ves/xplorer/device/Gloves.h>
+#include <ves/xplorer/device/Pointer.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -134,15 +135,20 @@ void DeviceHandler::Initialize()
     device->Enable();
     m_deviceMap[ device::Device::KEYBOARD_MOUSE ] = device;
     
-    //Initialize tablet device
+    //Initialize wand device
     device = new device::Wand();
     device->Enable();
     m_deviceMap[ device::Device::WAND ] = device;
     
-    //Initialize eand device
+    //Initialize tablet device
     device = new device::Tablet();
     device->Enable();
     m_deviceMap[ device::Device::TABLET ] = device;
+    
+    //Initialize tablet device
+    device = new device::Pointer();
+    //device->Enable();
+    m_deviceMap[ device::Device::POINTER ] = device;
     
     device = NULL;
     

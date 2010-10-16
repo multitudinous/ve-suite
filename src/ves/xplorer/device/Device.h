@@ -94,6 +94,7 @@ class Gloves;
 class KeyboardMouse;
 class Tablet;
 class Wand;
+class Pointer;
 
 /*!\file Device.h
  * Device API
@@ -112,7 +113,8 @@ public:
         GLOVES = 1,
         KEYBOARD_MOUSE = 2,
         TABLET = 3,
-        WAND = 4
+        WAND = 4,
+        POINTER = 5
     };
 
     ///Constructor
@@ -140,6 +142,10 @@ public:
     ///\return
     virtual Wand* AsWand();
 
+    ///
+    ///\return
+    virtual Pointer* AsPointer();
+    
     ///
     ///\return
     const Device::Type& GetType() const;

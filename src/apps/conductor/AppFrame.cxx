@@ -88,6 +88,8 @@
 //#include <ves/util/icons/ve_icon64x64.xpm>
 #include <ves/util/icons/ve_icon32x32.xpm>
 
+#include <boost/concept_check.hpp>
+
 #include "ConductorApp.h"
 #include "UserPreferences.h"
 #include "AvailableModules.h"
@@ -183,6 +185,7 @@ EVT_MENU( APPFRAME_KEYBOARD_MOUSE, AppFrame::ChangeDevice )
 EVT_MENU( APPFRAME_WAND, AppFrame::ChangeDevice )
 EVT_MENU( APPFRAME_TABLET, AppFrame::ChangeDevice )
 EVT_MENU( APPFRAME_GLOVES, AppFrame::ChangeDevice )
+EVT_MENU( APPFRAME_POINTER, AppFrame::ChangeDevice )
 
 EVT_MENU( APPFRAME_DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
@@ -808,37 +811,44 @@ void AppFrame::CreateMenu()
     //help_menu->Enable(V21ID_HELP, false);
     //help_menu->Enable(wxID_ABOUT, true);
 
-    xplorerMenu = new wxMenu();
-    xplorerDeviceMenu = new wxMenu();
-    wxMenuItem* keyboardMouseMenuItem = new wxMenuItem(
-        xplorerDeviceMenu, APPFRAME_KEYBOARD_MOUSE,
-        wxT( "Keyboard/Mouse" ), wxT( "" ), wxITEM_CHECK );
-    wxMenuItem* wandMenuItem = new wxMenuItem(
-        xplorerDeviceMenu, APPFRAME_WAND,
-        wxT( "Wand" ), wxT( "" ), wxITEM_CHECK );
-    wxMenuItem* tabletMenuItem = new wxMenuItem(
-        xplorerDeviceMenu, APPFRAME_TABLET,
-        wxT( "Tablet" ), wxT( "" ), wxITEM_CHECK );
-    wxMenuItem* glovesMenuItem = new wxMenuItem(
-        xplorerDeviceMenu, APPFRAME_GLOVES,
-        wxT( "Gloves" ), wxT( "" ), wxITEM_CHECK );
+    {
+        xplorerDeviceMenu = new wxMenu();
+        wxMenuItem* keyboardMouseMenuItem = new wxMenuItem(
+            xplorerDeviceMenu, APPFRAME_KEYBOARD_MOUSE,
+            wxT( "Keyboard/Mouse" ), wxT( "" ), wxITEM_CHECK );
+        wxMenuItem* wandMenuItem = new wxMenuItem(
+            xplorerDeviceMenu, APPFRAME_WAND,
+            wxT( "Wand" ), wxT( "" ), wxITEM_CHECK );
+        wxMenuItem* tabletMenuItem = new wxMenuItem(
+            xplorerDeviceMenu, APPFRAME_TABLET,
+            wxT( "Tablet" ), wxT( "" ), wxITEM_CHECK );
+        wxMenuItem* glovesMenuItem = new wxMenuItem(
+            xplorerDeviceMenu, APPFRAME_GLOVES,
+            wxT( "Gloves" ), wxT( "" ), wxITEM_CHECK );
+        wxMenuItem* pointerMenuItem = new wxMenuItem(
+            xplorerDeviceMenu, APPFRAME_POINTER,
+            wxT( "Pointer" ), wxT( "" ), wxITEM_CHECK );
+        
+        xplorerDeviceMenu->Append( keyboardMouseMenuItem );
+        xplorerDeviceMenu->Append( wandMenuItem );
+        xplorerDeviceMenu->Append( tabletMenuItem );
+        xplorerDeviceMenu->Append( glovesMenuItem );
+        xplorerDeviceMenu->Append( pointerMenuItem );
+        xplorerDeviceMenu->AppendSeparator();
+        xplorerDeviceMenu->Append( APPFRAME_DEVICE_PROPERTIES, _( "Properties" ) );
+        
+        keyboardMouseMenuItem->Check();
+        wandMenuItem->Check();
+        tabletMenuItem->Check();
+        glovesMenuItem->Check( false );
+        pointerMenuItem->Check( false );
+    }
     
+    xplorerMenu = new wxMenu();
     xplorerJugglerMenu = new wxMenu();
     xplorerDisplayMenu = new wxMenu();
     xplorerViewMenu = new wxMenu();
     wxMenu* xplorerView = new wxMenu();
-
-    xplorerDeviceMenu->Append( keyboardMouseMenuItem );
-    xplorerDeviceMenu->Append( wandMenuItem );
-    xplorerDeviceMenu->Append( tabletMenuItem );
-    xplorerDeviceMenu->Append( glovesMenuItem );
-    xplorerDeviceMenu->AppendSeparator();
-    xplorerDeviceMenu->Append( APPFRAME_DEVICE_PROPERTIES, _( "Properties" ) );
-
-    keyboardMouseMenuItem->Check();
-    wandMenuItem->Check();
-    tabletMenuItem->Check();
-    glovesMenuItem->Check( false );
 
     xplorerDisplayMenu->AppendCheckItem( APPFRAME_FRAME_RATE,        _( "Frame Rate" ) );
     xplorerDisplayMenu->AppendCheckItem( APPFRAME_COORDINATE_SYSTEM, _( "Coord System" ) );
@@ -2043,6 +2053,12 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
 
         break;
     }
+    case APPFRAME_POINTER:
+    {
+        data.push_back( 5 );
+        
+        break;
+    }
     default:
     {
         //Error output
@@ -2611,6 +2627,7 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_CAD" );
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+        boost::ignore_unused_variable_warning( connected );
     }    
     
     // Initialze Minerva.
