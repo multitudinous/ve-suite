@@ -1676,10 +1676,6 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     Statement select( session );
     try
     {
-        //select << queryString.c_str(),
-        //into( m_selectedAssembly ),
-        //now;
-        // a simple query
         select << queryString.c_str(),now;
     }
     catch( Poco::Data::DataException& ex )
@@ -1699,8 +1695,29 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     
     if( !queryString.compare( 0, 12, "CREATE TABLE" ) )
     {
+        //boost::find_first( queryString, " AS " );
+        boost::iterator_range<std::string::const_iterator>::iterator stringIter = boost::find_first( queryString, " AS " ).begin();
+        //std::cout << stringIter - queryString.begin() << std::endl;
+        //Get first position for string above
+        std::size_t numEntries = ( stringIter - queryString.begin() ) + 4;
+        std::string tempString = queryString;
+        //Remove from begining to position of string above
+        tempString.erase( 0, numEntries );
+        //std::cout << tempString << std::endl;
+        //Now rerun select query and color by new color
         mCommunicationHandler->SendConductorMessage( "Created the table." );
-        return;
+        //return;
+        try
+        {
+            Statement select2( session );
+            select2 << tempString.c_str(),now;
+            select.swap( select2 );
+        }
+        catch( Poco::Data::DataException& ex )
+        {
+            std::cout << ex.displayText() << std::endl;
+            return;
+        }       
     }
     // create a RecordSet 
     Poco::Data::RecordSet rs(select);
@@ -1759,7 +1776,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
             else
             {
                 tempTextData << rs.columnName(col) << ": " 
-                << rs[col].convert<std::string>() << "\n";
+                    << rs[col].convert<std::string>() << "\n";
             }
         }
         const std::string partText = tempTextData.str();

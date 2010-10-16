@@ -151,6 +151,7 @@ void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event )
         //Clear all the glow
         cameraGeometryOnOffDVP->SetData( "CLEAR", "CLEAR" );
         mPartNumberList.clear();
+        m_queryTextCommandCtrl->ChangeValue( _("") );
     }
     else if( event.GetId() == GLOW_ADD )
     {
