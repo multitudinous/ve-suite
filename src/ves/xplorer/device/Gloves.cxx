@@ -195,21 +195,26 @@ void Gloves::Initialize()
     if( !handFile.valid() )
     {
         osg::notify( osg::FATAL ) << "HandNode: Can't load handR.ive. Check osgDB data file search path." << std::endl;
-        return;
+        //return;
     }
-    
-    mRightHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::RIGHT, length );
-    mRightHand->setName( "Right Hand Glove" );
-    
-    if( !mRightHand.valid() )
+    else
     {
-        std::cerr << "|\tProblems loading right hand model for glove tools." << std::endl;
-        return;
+        mRightHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::RIGHT, length );
+        mRightHand->setName( "Right Hand Glove" );
+        
+        if( !mRightHand.valid() )
+        {
+            std::cerr << "|\tProblems loading right hand model for glove tools." << std::endl;
+            //return;
+        }
+        else
+        {
+            pos.set( 0, 3, 3 );
+            mRightHand->setPosition( pos );
+            mRightHand->setAttitude( quat );
+            mRightHand->setDebug( mDebugInfo );
+        }
     }
-    pos.set( 0, 3, 3 );
-    mRightHand->setPosition( pos );
-    mRightHand->setAttitude( quat );
-    mRightHand->setDebug( mDebugInfo );
     /////////
     
     /////////
@@ -218,21 +223,26 @@ void Gloves::Initialize()
     if( !handFile.valid() )
     {
         osg::notify( osg::FATAL ) << "HandNode: Can't load handL.ive. Check osgDB data file search path." << std::endl;
-        return;
+        //return;
     }
-    
-    mLeftHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::LEFT, length );
-    mLeftHand->setName( "Left Hand Glove" );
-
-    if( !mLeftHand.valid() )
+    else
     {
-        std::cerr << "|\tProblems loading left hand model for glove tools." << std::endl;
-        return;
+        mLeftHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::LEFT, length );
+        mLeftHand->setName( "Left Hand Glove" );
+        
+        if( !mLeftHand.valid() )
+        {
+            std::cerr << "|\tProblems loading left hand model for glove tools." << std::endl;
+            return;
+        }
+        else
+        {
+            pos.set( 3, 3, 3 );
+            mLeftHand->setPosition( pos );
+            mLeftHand->setAttitude( quat );
+            mLeftHand->setDebug( mDebugInfo );
+        }
     }
-    pos.set( 3, 3, 3 );
-    mLeftHand->setPosition( pos );
-    mLeftHand->setAttitude( quat );
-    mLeftHand->setDebug( mDebugInfo );
     /////////
 
     std::cout << "|\tInitialize Gloves" << std::endl;
