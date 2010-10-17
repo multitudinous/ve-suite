@@ -182,6 +182,9 @@ protected:
     ///Roate about arbitrary axis
     void FreeRotateAboutWand( const bool freeRotate = true );
 
+    ///Ensure that the camera stays above ground.
+    void EnsureCameraStaysAboveGround( osg::Quat& world_quat );
+
 private:
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
     int buttonData[ 6 ]; ///<do not know what this does

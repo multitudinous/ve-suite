@@ -514,46 +514,8 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
 
     world_quat *= rot_quat;
 
-#ifdef MINERVA_GIS_SUPPORT
-    Minerva::Core::TileEngine::Body* tileEngineBody = 
-        ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
-    if( tileEngineBody )
-    {
-        Minerva::Core::TileEngine::LandModel* landModel = 
-            tileEngineBody->landModel();
-
-        osg::Vec3d t ( -worldTrans[0], -worldTrans[1], -worldTrans[2] );
-        osg::Vec3d position ( world_quat.inverse() * t );
-
-        double lat, lon, elevation;
-        landModel->xyzToLatLonHeight( position[0], position[1], 
-            position[2], lat, lon, elevation  );
-        double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
-        Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        gmtl::Point3d jugglerHeadPoint;
-        jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
-        earthElevation += jugglerHeadPoint[ 1 ];
-        if( earthElevation > elevation )
-        {
-            elevation = earthElevation;
-            landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
-                                         position[1], position[2] );
-            position = world_quat * position;
-            worldTrans[0] = -position[0];
-            worldTrans[1] = -position[1];
-            worldTrans[2] = -position[2];
-        }
-    }
-    else 
-#endif
-    //If the GIS rendering engine is on then we do not want to lock to z > 0
-    if( subzeroFlag )
-    {
-        if( worldTrans[ 2 ] > 0 )
-        {
-            worldTrans[ 2 ] = 0;
-        }
-    }
+    gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
+    Device::EnsureCameraStaysAboveGround ( vjHeadMat, worldTrans, world_quat, subzeroFlag );
 
     world->SetTranslationArray( worldTrans );
     world->SetQuat( world_quat );

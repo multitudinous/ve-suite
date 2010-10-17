@@ -70,13 +70,6 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
-#ifdef MINERVA_GIS_SUPPORT
-//These includes must be below the gmlt matrix convert header
-#include <ves/xplorer/minerva/MinervaManager.h>
-#include <Minerva/Core/TileEngine/Body.h>
-#include <Minerva/Core/TileEngine/LandModel.h>
-#endif
-
 // --- OSG Includes --- //
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/Group>
@@ -488,46 +481,8 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
 
         world_quat *= m_rotIncrement;
 
-#ifdef MINERVA_GIS_SUPPORT
-        Minerva::Core::TileEngine::Body* tileEngineBody = 
-        ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
-        if( tileEngineBody )
-        {
-            Minerva::Core::TileEngine::LandModel* landModel = 
-            tileEngineBody->landModel();
-            
-            osg::Vec3d t ( -m_worldTrans[0], -m_worldTrans[1], -m_worldTrans[2] );
-            osg::Vec3d position ( world_quat.inverse() * t );
-            
-            double lat, lon, elevation;
-            landModel->xyzToLatLonHeight( position[0], position[1], 
-                                         position[2], lat, lon, elevation  );
-            double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
-            Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-            gmtl::Point3d jugglerHeadPoint;
-            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
-            earthElevation += jugglerHeadPoint[ 1 ];
-            if( earthElevation > elevation )
-            {
-                elevation = earthElevation;
-                landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
-                                             position[1], position[2] );
-                position = world_quat * position;
-                m_worldTrans[0] = -position[0];
-                m_worldTrans[1] = -position[1];
-                m_worldTrans[2] = -position[2];
-            }
-        }
-        else 
-#endif
-        //If the GIS rendering engine is on then we do not want to lock to z > 0
-        if( subzeroFlag )
-        {
-            if( m_worldTrans[ 2 ] > 0 )
-            {
-                m_worldTrans[ 2 ] = 0;
-            }
-        }
+        gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, world_quat, subzeroFlag );
 
         activeDCS->SetTranslationArray( m_worldTrans );
         activeDCS->SetQuat( world_quat );
@@ -543,46 +498,8 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         
         world_quat *= m_rotIncrement;
         
-#ifdef MINERVA_GIS_SUPPORT
-        Minerva::Core::TileEngine::Body* tileEngineBody = 
-        ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
-        if( tileEngineBody )
-        {
-            Minerva::Core::TileEngine::LandModel* landModel = 
-            tileEngineBody->landModel();
-            
-            osg::Vec3d t ( -m_worldTrans[0], -m_worldTrans[1], -m_worldTrans[2] );
-            osg::Vec3d position ( world_quat.inverse() * t );
-            
-            double lat, lon, elevation;
-            landModel->xyzToLatLonHeight( position[0], position[1], 
-                                         position[2], lat, lon, elevation  );
-            double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
-            Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-            gmtl::Point3d jugglerHeadPoint;
-            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
-            earthElevation += jugglerHeadPoint[ 1 ];
-            if( earthElevation > elevation )
-            {
-                elevation = earthElevation;
-                landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
-                                             position[1], position[2] );
-                position = world_quat * position;
-                m_worldTrans[0] = -position[0];
-                m_worldTrans[1] = -position[1];
-                m_worldTrans[2] = -position[2];
-            }
-        }
-        else 
-#endif
-        //If the GIS rendering engine is on then we do not want to lock to z > 0
-        if( subzeroFlag )
-        {
-            if( m_worldTrans[ 2 ] > 0 )
-            {
-                m_worldTrans[ 2 ] = 0;
-            }
-        }
+        gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, world_quat, subzeroFlag );
 
         activeDCS->SetTranslationArray( m_worldTrans );
         activeDCS->SetQuat( world_quat );

@@ -45,6 +45,7 @@
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Point.h>
+#include <gmtl/Matrix.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -199,6 +200,9 @@ protected:
     ///\param startPoint The start point
     ///\param endPoint The end point
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
+
+    ///Ensure that the camera stays above ground.
+    void EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, double* translation, const osg::Quat& world_quat, int subzeroFlag );
 
     ///
     bool m_enabled;

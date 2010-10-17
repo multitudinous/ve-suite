@@ -43,6 +43,17 @@
 
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
+#include <gmtl/Xforms.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Misc/MatrixConvert.h>
+
+#ifdef MINERVA_GIS_SUPPORT
+//These includes must be below the gmlt matrix convert header
+#include <ves/xplorer/minerva/MinervaManager.h>
+#include <Minerva/Core/TileEngine/Body.h>
+#include <Minerva/Core/TileEngine/LandModel.h>
+#endif
+
 // --- OSG Includes --- //
 #include <osg/Polytope>
 #include <osg/LineSegment>
@@ -268,5 +279,52 @@ void Device::SetResetWorldPosition(
 {
     mResetAxis = quat;
     mResetPosition = pos;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, double* worldTranslation, const osg::Quat& world_quat, int subzeroFlag )
+{
+#ifdef MINERVA_GIS_SUPPORT
+    Minerva::Core::TileEngine::Body* tileEngineBody = 
+    ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
+    if( tileEngineBody )
+    {
+        Minerva::Core::TileEngine::LandModel* landModel = 
+        tileEngineBody->landModel();
+        
+        osg::Vec3d t ( -worldTranslation[0], -worldTranslation[1], -worldTranslation[2] );
+        osg::Vec3d position ( world_quat.inverse() * t );
+        
+        double lat, lon, elevation;
+        landModel->xyzToLatLonHeight( position[0], position[1], 
+                                     position[2], lat, lon, elevation  );
+        double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
+        gmtl::Point3d jugglerHeadPoint;
+        jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( headMatrix );
+        earthElevation += jugglerHeadPoint[ 1 ];
+
+        const double minimunDistanceAboveGround ( 2.0 );
+        earthElevation += minimunDistanceAboveGround;
+
+        if( earthElevation > elevation )
+        {
+            elevation = earthElevation;
+            landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
+                                         position[1], position[2] );
+            position = world_quat * position;
+            worldTranslation[0] = -position[0];
+            worldTranslation[1] = -position[1];
+            worldTranslation[2] = -position[2];
+        }
+    }
+    else
+#endif
+    //If the GIS rendering engine is on then we do not want to lock to z > 0
+    if( subzeroFlag )
+    {
+        if( worldTranslation[ 2 ] > 0 )
+        {
+            worldTranslation[ 2 ] = 0;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
