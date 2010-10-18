@@ -38,22 +38,15 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
 #ifdef VE_SOUND
 #include <ves/xplorer/scenegraph/Sound.h>
 #endif
 
-#include <ves/xplorer/Debug.h>
-
-#include <ves/xplorer/scenegraph/logo/BlueArrow.h>
-#include <ves/xplorer/scenegraph/logo/GreyArrow.h>
-#include <ves/xplorer/scenegraph/logo/OrangeArrow.h>
-#include <ves/xplorer/scenegraph/logo/VE.h>
-#include <ves/xplorer/scenegraph/logo/Suite.h>
-
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
+
+#include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
 #include <osg/Node>
@@ -65,6 +58,8 @@
 #include <osgDB/Registry>
 #include <osgDB/ReaderWriter>
 #include <osgDB/WriteFile>
+#include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -108,11 +103,6 @@ SceneManager::SceneManager()
 #ifdef VE_SOUND
     m_sound( NULL ),
 #endif
-    m_blueArrow( NULL ),
-    m_greyArrow( NULL ),
-    m_orangeArrow( NULL ),
-    m_veText( NULL ),
-    m_suiteText( NULL ),
     m_clrNode( NULL ),
     m_clearColorUniform(
         new osg::Uniform( "clearColor", osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) ) ),
@@ -144,36 +134,6 @@ SceneManager::~SceneManager()
             << std::endl;
     }*/
 #endif
-    //Do nothing right now
-    if( m_blueArrow )
-    {
-        delete m_blueArrow;
-        m_blueArrow = 0;
-    }
-
-    if( m_greyArrow )
-    {
-        delete m_greyArrow;
-        m_greyArrow = 0;
-    }
-
-    if( m_orangeArrow )
-    {
-        delete m_orangeArrow;
-        m_orangeArrow = 0;
-    }
-
-    if( m_veText )
-    {
-        delete m_veText;
-        m_veText = 0;
-    }
-
-    if( m_suiteText )
-    {
-        delete m_suiteText;
-        m_suiteText = 0;
-    }
 
 #ifdef VE_SOUND
     //delete m_sound;
@@ -529,90 +489,43 @@ void SceneManager::_createLogo()
     }
 
     mLogoNode = new ves::xplorer::scenegraph::DCS();
+    mLogoNode->setName( "Logo Node" );
+
     if( IsDesktopMode() )
     {
-        double translation[ 3 ] = { -1.7, 4.6, 0.0 };
-        mLogoNode->SetTranslationArray( translation );
+        mLogoNode->setPosition( osg::Vec3d( -1.7, 10.0, 0.0 ) );
     }
     else
     {
-        double translation[ 3 ] = { -1.7, 4.6, 3.1 };
-        mLogoNode->SetTranslationArray( translation );
+        mLogoNode->setPosition( osg::Vec3d( -1.7, 10.0, 6.0 ) );
     }
 
-    osg::Quat quat( -1.0, osg::Vec3( 0, 0, 1 ) );
-    double scale[ 3 ] = { 0.0065, 0.0065, 0.0065 };
-    mLogoNode->SetQuat( quat );
-    mLogoNode->SetScaleArray( scale );
-    mLogoNode->setName( "Logo Node" );
+    mLogoNode->setAttitude(
+        osg::Quat( osg::DegreesToRadians( -45.0 ),
+        osg::Vec3d( 0.0, 0.0, 1.0 ) ) );
 
-    //m_blueArrow = new ves::xplorer::scenegraph::CADEntity( 
-    //    BlueArrow(), mLogoNode.get(), true, "Off" );
-    //m_greyArrow = new ves::xplorer::scenegraph::CADEntity( 
-    //    GreyArrow(), mLogoNode.get(), true, "Off" );
-    //m_orangeArrow = new ves::xplorer::scenegraph::CADEntity( 
-    //    OrangeArrow(), mLogoNode.get(), true, "Off" );
-    m_veText = new ves::xplorer::scenegraph::CADEntity( 
-        VE(), mLogoNode.get(), true, "Off" );
-    m_suiteText = new ves::xplorer::scenegraph::CADEntity( 
-        Suite(), mLogoNode.get(), true, "Off" );
+    mLogoNode->setScale( osg::Vec3d( 0.01, 0.01, 0.01 ) );
 
-    char phong_vertex[] =
-        "varying vec4 color; \n"
-        "varying vec3 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
+    //Add the logo model
+    osg::ref_ptr< osg::Node > vesuiteNode =
+        osgDB::readNodeFile( "logo/ve-suite.ive" );
+    mLogoNode->addChild( vesuiteNode.get() );
+    /*
+    std::string vsName = osgDB::findDataFile( "phong.vs" );
+    std::string fsName = osgDB::findDataFile( "phong.fs" );
+    osg::ref_ptr< osg::Shader > vs =
+        osg::Shader::readShaderFile( osg::Shader::VERTEX, vsName );
+    osg::ref_ptr< osg::Shader > fs =
+        osg::Shader::readShaderFile( osg::Shader::FRAGMENT, fsName );
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( vs.get() );
+    program->addShader( fs.get() );
 
-        "void main() \n"
-        "{ \n"
-        "gl_Position=ftransform(); \n"
-
-        "color=gl_Color; \n"
-        "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
-        "lightPos=gl_LightSource[0].position.xyz; \n"
-        "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
-        "} \n";
-
-    char phong_fragment[] =
-        "uniform vec3 glowColor; \n"
-
-        "varying vec4 color; \n"
-        "varying vec3 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
-
-        "void main() \n"
-        "{ \n"
-        "vec3 N=normalize(normal); \n"
-        "vec3 L=normalize(lightPos); \n"
-        "float NDotL=max(dot(N,L),0.0); \n"
-
-        "vec3 V=normalize(eyePos); \n"
-        "vec3 R=reflect(V,N); \n"
-        "float RDotL=max(dot(R,L),0.0); \n"
-
-        "vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*color.rgb; \n"
-        "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*color.rgb*NDotL; \n"
-        "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*color.rgb*pow(RDotL,20.0); \n"
-
-        "vec3 temp=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
-
-        "gl_FragData[ 0 ] = vec4( temp, 1.0 ); \n"
-        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-        "} \n";
-
-    osg::ref_ptr< osg::StateSet > stateset = mLogoNode->getOrCreateStateSet();
-    osg::ref_ptr< osg::Program > program = new osg::Program;
-
-    osg::ref_ptr< osg::Shader > vertex_shader = 
-        new osg::Shader( osg::Shader::VERTEX, phong_vertex );
-    program->addShader( vertex_shader.get() );
-
-    osg::ref_ptr< osg::Shader > fragment_shader = 
-        new osg::Shader( osg::Shader::FRAGMENT, phong_fragment );
-    program->addShader( fragment_shader.get() );
-
-    stateset->setAttribute( program.get() );
+    osg::ref_ptr< osg::StateSet > stateset = vesuiteNode->getOrCreateStateSet();
+    stateset->setAttribute(
+        program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetActiveSwitchNode( int activeNode )

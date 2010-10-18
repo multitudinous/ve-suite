@@ -72,7 +72,7 @@ namespace scenegraph
 class DCS;
 class Group;
 class Switch;
-class CADEntity;
+
 #ifdef VE_SOUND
 class Sound;
 #endif
@@ -338,21 +338,6 @@ private:
     ///Sound file to play as background audio for VE-Suite
     Sound* m_sound;
 #endif
-
-    ///The logo
-    CADEntity* m_blueArrow;
-
-    ///
-    CADEntity* m_greyArrow;
-
-    ///
-    CADEntity* m_orangeArrow;
-
-    ///
-    CADEntity* m_veText;
-
-    ///
-    CADEntity* m_suiteText;
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
