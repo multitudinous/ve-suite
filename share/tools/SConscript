@@ -16,7 +16,7 @@ if GetPlatform() == 'win32':
 
     #Should DynSim support be built
     if baseEnv[ 'MakeDynSimSupport' ] != 'no':
-        toolsSubdirs.append( "DynSimUnit" )
+        toolsSubdirs.append( "aspen/DynSimUnit" )
 
     #Should Powersim support be built
     if baseEnv[ 'MakePowersimSupport' ] != 'no':
