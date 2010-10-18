@@ -124,7 +124,7 @@ void GroupedTextTextures::MakeTextureActive( const TextTexture* tempKey )
             listIter != m_transformList.end(); 
             ++listIter )
         {
-            std::cout << tempParent << " " << (*listIter) << std::endl;
+            //std::cout << tempParent << " " << (*listIter) << std::endl;
             if( tempParent == (*listIter) )
             {
                 //std::cout << " found DCS " << std::endl;
@@ -252,6 +252,14 @@ void GroupedTextTextures::UpdateListPositions()
     {
         size_t i = std::distance( m_transformList.begin(), iter );
         UpdateDCSPosition( (*iter), i );
+        if( i > 3 )
+        {
+            (*iter)->setNodeMask( 0 );
+        }
+        else
+        {
+            (*iter)->setNodeMask( 1 );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
