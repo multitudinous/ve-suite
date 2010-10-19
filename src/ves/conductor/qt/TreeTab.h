@@ -33,9 +33,9 @@
 
 #pragma once
 
-#include <QWidget>
-#include <QAbstractItemModel>
-#include <QModelIndex>
+#include <QtGui/QWidget>
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QModelIndex>
 
 #include <osg/Node>
 
