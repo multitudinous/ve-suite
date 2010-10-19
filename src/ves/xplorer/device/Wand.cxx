@@ -356,16 +356,16 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     {
         if( cptEnabled && ( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) )
         {
-            if( !m_sceneManager.IsMasterNode() )
-            {
-                return;
-            }
-
             if( cameraManager.IsPictureMode() )
             {
                 cameraManager.GetActiveCameraObject()->
                     SetPictureFrameProjection( true );
                 cameraManager.DisplayProjectionEffect( true, true );
+                return;
+            }
+
+            if( !m_sceneManager.IsMasterNode() )
+            {
                 return;
             }
 
@@ -385,6 +385,13 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     {
         if( cptEnabled )
         {
+            if( cameraManager.IsPictureMode() )
+            {
+                cameraManager.DisplayProjectionEffect( false, true );
+                cameraManager.GetActiveCameraObject()->
+                    SetPictureFrameProjection( false );
+            }
+
             if( !m_sceneManager.IsMasterNode() )
             {
                 return;
@@ -394,9 +401,6 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             {
                 std::string tempDir( "." );
                 cameraManager.WriteActiveCameraImageFile( tempDir );
-                cameraManager.DisplayProjectionEffect( false, true );
-                cameraManager.GetActiveCameraObject()->
-                    SetPictureFrameProjection( false );
                 return;
             }
         }
