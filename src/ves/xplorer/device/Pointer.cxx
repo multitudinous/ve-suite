@@ -44,6 +44,7 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
+#include <ves/xplorer/scenegraph/util/NormalizeVisitor.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
@@ -154,6 +155,8 @@ void Pointer::Initialize()
             m_pointerDCS->setAttitude( quat );
             osg::Vec3 scale( 0.00328, 0.00328, 0.00328 );
             m_pointerDCS->setScale( scale );
+            
+            ves::xplorer::scenegraph::util::NormalizeVisitor normVis( m_pointerDCS, true );
         }
     }
     /////////
