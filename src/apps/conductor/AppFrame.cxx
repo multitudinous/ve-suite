@@ -140,7 +140,7 @@ using namespace ves::open::xml::shader;
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 EVT_TIMER( APPFRAME_TIMER_ID, AppFrame::OnTimer )
-//EVT_CLOSE( AppFrame::OnFrameClose )
+EVT_CLOSE( AppFrame::OnCloseWindow )
 EVT_MENU( APPFRAME_V21ID_ZOOMIN, AppFrame::ZoomIn )
 EVT_MENU( APPFRAME_V21ID_ZOOMOUT, AppFrame::ZoomOut )
 EVT_MENU( APPFRAME_V21ID_ZOOMALL, AppFrame::ZoomAll )
@@ -241,7 +241,7 @@ AppFrame::AppFrame()
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::AppFrame( wxWindow* parent, wxWindowID id, const wxString& title )
     :
-    wxFrame( parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE&~wxCLOSE_BOX ),
+    wxFrame( parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE ),
     navPane( 0 ),
     deviceProperties( 0 ),
     viewlocPane( 0 ),
@@ -654,28 +654,26 @@ void AppFrame::StoreRecentFile()
     cfg->Flush();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
+void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
 {
     m_shuttingDown = true;
     DynamicsDataBuffer::instance()->CleanUp();
     canvas->CleanUpNetworks();
-    Close( true );
     serviceList->DisconnectFromCE();
 
-    
     //Shutdown xplorer
     if (( GetDisplayMode() == "Desktop" ) ||
-            ( !preferences->GetMode( "Shut_Down_Xplorer_Option" ) ) )
+        ( !preferences->GetMode( "Shut_Down_Xplorer_Option" ) ) )
     {
         ExitXplorer();
     }
     //serviceList->DisconnectFromXplorer();
-
+    
     //Store settings to wxConfig to be written out
     StoreFrameSize( GetRect() );
     StoreConfig();
     StoreRecentFile();
-    
+
     //Write the final script file if we need to
     ves::conductor::util::DataLoggerEngine::instance()->CleanUp();
     
@@ -683,11 +681,21 @@ void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
     {
         wxProcess::Kill( pids[ i ] );
     }
+    pids.clear();
+    
     //We have to mannually destroy these to make sure that things shutdown
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.
     serviceList->CleanUp();
+
     //serviceList = 0;
+    ///Now destroy the window
+    ::wxWindow::Destroy();
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
+{
+    Close( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu()

@@ -114,7 +114,7 @@ public:
     virtual ~AppFrame();
 
     ///Process the close event
-    //void OnFrameClose( wxCloseEvent& event );
+    void OnCloseWindow( wxCloseEvent& event );
     ///Process file quit option
     void FrameClose( wxCommandEvent& event );
     ///Log the creation of windows that are children of AppFrame
