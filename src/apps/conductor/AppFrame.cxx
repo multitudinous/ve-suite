@@ -241,7 +241,7 @@ AppFrame::AppFrame()
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::AppFrame( wxWindow* parent, wxWindowID id, const wxString& title )
     :
-    wxFrame( parent, id, title ),
+    wxFrame( parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE&~wxCLOSE_BOX ),
     navPane( 0 ),
     deviceProperties( 0 ),
     viewlocPane( 0 ),
