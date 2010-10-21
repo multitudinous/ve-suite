@@ -130,7 +130,7 @@ void Pointer::Initialize()
     osg::Quat quat;
     
     /////////
-    osg::ref_ptr< osg::Node > handFile = osgDB::readNodeFile( "pointer.ive" );
+    osg::ref_ptr< osg::Node > handFile = osgDB::readNodeFile( "osg-data/arrowmono.ive" );
     
     if( !handFile.valid() )
     {
@@ -152,6 +152,8 @@ void Pointer::Initialize()
             pos.set( 0, 3, 3 );
             m_pointerDCS->setPosition( pos );
             m_pointerDCS->setAttitude( quat );
+            osg::Vec3 scale( 0.00328, 0.00328, 0.00328 );
+            m_pointerDCS->setScale( scale );
         }
     }
     /////////
