@@ -552,12 +552,19 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             << "|\tCenter " << bb.center() << std::endl
             << "|\tRadius " << bb.radius() << std::endl
             << "|\tMin " << bb._min << std::endl
-            << "|\tMax " << bb._max << std::endl;        
+            << "|\tMax " << bb._max << std::endl;
     }
-    
+
     {
-        ves::xplorer::scenegraph::util::MaterialPresent materialPresent( mCadNode.get() );
-        bool hasMaterial = materialPresent.FileHasMaterial();
+        util::MaterialPresent materialPresent( mCadNode.get() );
+        bool hasTexture = materialPresent.FileHasMaterial();
+        if( hasTexture )
+        {
+            osg::ref_ptr< osg::StateSet > stateset =
+                mCadNode->getOrCreateStateSet();
+            stateset->addUniform(
+                new osg::Uniform( "textureZeroIsBound", true ) );
+        }
     }
     ///Test uuid metanode io and assignment
     /*{

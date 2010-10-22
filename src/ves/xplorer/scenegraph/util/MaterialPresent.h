@@ -30,16 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef VES_XPLORER_SCENEGRAPH_UTIL_MATERIAL_PRESENT_H
 #define VES_XPLORER_SCENEGRAPH_UTIL_MATERIAL_PRESENT_H
+
 /*!\file MaterialPresent.h
 MaterialPresent API
 */
 /*!\class MaterialPresent
 *
 */
+
+// --- VES Includes --- //
 #include <ves/VEConfig.h>
 
+// --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>
 

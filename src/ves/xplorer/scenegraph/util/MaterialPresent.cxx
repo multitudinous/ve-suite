@@ -30,24 +30,28 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
+// --- VES Includes --- //
 #include <ves/xplorer/scenegraph/util/MaterialPresent.h>
 
-// --- OSG Stuff --- //
+// --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Group>
 #include <osg/Material>
 #include <osg/Geometry>
+#include <osg/Texture2D>
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <iostream>
+#include <sstream>
 
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 MaterialPresent::MaterialPresent( osg::Node* osg_node )
-        :
-        NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-        mFileHasMaterial( false )
+    :
+    NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+    mFileHasMaterial( false )
 {
     osg_node->accept( *this );
 }
@@ -135,23 +139,40 @@ bool MaterialPresent::CheckStateSet( osg::StateSet* stateSet )
     osg::ref_ptr< osg::StateSet > tempStateSet = stateSet;
     if( tempStateSet.valid() )
     {
+        /*
         osg::ref_ptr< osg::Material > material = 
             static_cast< osg::Material* >( tempStateSet->
             getAttribute( osg::StateAttribute::MATERIAL ) );
-        
         if( material.valid() )
         {
             return true;
         }
-    
-        osg::StateSet::TextureAttributeList stateSetTal = 
+        */
+
+        osg::StateSet::TextureAttributeList stateSetTal =
             tempStateSet->getTextureAttributeList();
+        for( unsigned int i = 0; i < stateSetTal.size(); ++i )
+        {
+            osg::StateAttribute* sa = stateSet->getTextureAttribute(
+                i, osg::StateAttribute::TEXTURE );
+            //Only worry about 2D textures for now
+            osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
+            if( tex2D )
+            {
+                stateSet->setTextureAttributeAndModes(
+                    i, tex2D, osg::StateAttribute::ON );
+                std::stringstream ss;
+                ss << "tex" << i;
+                stateSet->addUniform( new osg::Uniform( ss.str().c_str(), i ) );
+            }
+        }
+
         if( stateSetTal.size() > 0 )
         {
             return true;
         }
     }
-    
+
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////

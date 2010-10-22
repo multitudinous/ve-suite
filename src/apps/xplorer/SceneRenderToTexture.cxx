@@ -160,12 +160,20 @@ void SceneRenderToTexture::InitRootGroup()
         //Setup the MRT shader to make glow work correctly
         osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
         std::string fragmentSource =
+        "uniform bool textureZeroIsBound; \n"
         "uniform vec3 glowColor; \n"
+        "uniform sampler2D tex0; \n"
 
         "void main() \n"
         "{ \n"
             "gl_FragData[ 0 ] = gl_Color; \n"
             "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+
+            "if( textureZeroIsBound ) \n"
+            "{ \n"
+                //GL_MODULATE
+                "gl_FragData[ 0 ] *= texture2D( tex0, gl_TexCoord[ 0 ].st ); \n"
+            "} \n"
         "} \n";
 
         fragmentShader->setType( osg::Shader::FRAGMENT );
@@ -182,6 +190,9 @@ void SceneRenderToTexture::InitRootGroup()
             program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
+        //
+        stateset->addUniform(
+            new osg::Uniform( "textureZeroIsBound", false ) );
         //Default glow color for any children that don't explicitly set it
         stateset->addUniform(
             new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
