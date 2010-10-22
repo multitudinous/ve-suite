@@ -55,6 +55,7 @@ ToggleNodesVisitor::ToggleNodesVisitor( osg::Node* osg_node, bool toggle,
     setNodeMaskOverride( 1 );
     osg_node->accept( *this );
 
+    //Now we traverse all the parents to make sure they are on
     for( NodePathIter iter = m_nodePaths.begin(); iter != m_nodePaths.end(); ++iter )
     {
         osg::NodePath tempPath = iter->second;
