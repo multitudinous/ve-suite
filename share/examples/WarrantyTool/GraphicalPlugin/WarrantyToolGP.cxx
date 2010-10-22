@@ -292,19 +292,22 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             size_t numChildren = m_cadRootNode->getNumChildren();
             for( size_t i = 0; i < numChildren; ++i )
             {
-                osg::Node* childNode = m_cadRootNode->getChild( i );
+                osg::Group* childNode = m_cadRootNode->getChild( i )->asGroup();
                 unsigned int nodeMask = childNode->getNodeMask();
                 if( nodeMask )
                 {
+                    //We know there is only 1 child because we are dealing 
+                    //with CADEntity
+                    osg::Node* tempChild = childNode->getChild( 0 );
                     if( checkBox )
                     {                
                         ves::xplorer::scenegraph::util::ToggleNodesVisitor
-                            toggleNodes( childNode, false, lowerCasePartNumbers );
+                            toggleNodes( tempChild, false, lowerCasePartNumbers );
                     }
                     else
                     {
                         ves::xplorer::scenegraph::util::ToggleNodesVisitor
-                            toggleNodes( childNode, true, lowerCasePartNumbers );
+                            toggleNodes( tempChild, true, lowerCasePartNumbers );
                     }
                 }
             }
