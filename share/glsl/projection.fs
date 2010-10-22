@@ -34,7 +34,7 @@ void main()
     //vec3 totalSpecular =
         //gl_LightSource[ 0 ].specular.rgb * gl_Color.rgb * pow( RDotL, 15.0 );
 
-    vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q;
+    vec2 projectionUV = gl_TexCoord[ 4 ].st / gl_TexCoord[ 4 ].q;
     vec4 color0 = vec4( gl_Color.rgb, alpha );
 
     if( !cameraPictureFrame )
@@ -42,8 +42,8 @@ void main()
         //If in frustum
         if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 &&
             projectionUV.t >= 0.0 && projectionUV.t <= 1.0 &&
-            gl_TexCoord[ 0 ].q >= nearPlane &&
-            gl_TexCoord[ 0 ].q <= farPlane )
+            gl_TexCoord[ 4 ].q >= nearPlane &&
+            gl_TexCoord[ 4 ].q <= farPlane )
         {
             color0.a = 1.0;
         }
@@ -54,7 +54,7 @@ void main()
         color0.a = 1.0;
         if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 &&
             projectionUV.t >= 0.0 && projectionUV.t <= 1.0 &&
-            gl_TexCoord[ 0 ].q >= 0.01 )
+            gl_TexCoord[ 4 ].q >= 0.01 )
         {
             if( projectionUV.s >= 0.02 && projectionUV.s <= 0.98 &&
                 projectionUV.t >= 0.02 && projectionUV.t <= 0.98 )
@@ -75,11 +75,10 @@ void main()
     //vec4 color1 = vec4( fDepth, blur, 0.0, 1.0 );
 
     gl_FragData[ 0 ] = color0;
-    gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a );
-    
-    if( textureZeroIsBound )
+	if( textureZeroIsBound )
     {
         //GL_MODULATE
         gl_FragData[ 0 ] *= texture2D( tex0, gl_TexCoord[ 0 ].st ); 
     }
+    gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a );
 }
