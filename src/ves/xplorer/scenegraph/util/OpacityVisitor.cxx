@@ -130,7 +130,7 @@ void OpacityVisitor::apply( osg::Geode& node )
         //Colors for the stateset
         osg::ref_ptr< osg::Vec4Array > color_array;
         osg::ref_ptr< osg::Geometry > geom = 
-        node.getDrawable( i )->asGeometry();
+            node.getDrawable( i )->asGeometry();
         if( geom.valid() )
         {
             color_array = 
@@ -250,10 +250,12 @@ void OpacityVisitor::apply( osg::Geode& node )
                 //are transparent when ves files are loaded
                 if( ( storedAlphState == 1.0f ) && ( actualAlphaState == 1.0f ) )
                 {
-                    drawable_material->setAlpha( 
-                                                osg::Material::FRONT_AND_BACK, double( m_alpha ) );
-                    drawable_stateset->setAttribute( drawable_material.get(), 
-                                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );                
+                    drawable_material->
+                        setAlpha( osg::Material::FRONT_AND_BACK, 
+                        double( m_alpha ) );
+                    drawable_stateset->
+                        setAttribute( drawable_material.get(), 
+                        osg::StateAttribute::ON|osg::StateAttribute::PROTECTED );                
                 }
             }
             else
@@ -262,10 +264,12 @@ void OpacityVisitor::apply( osg::Geode& node )
                 //we only care about what the stored state of the material is
                 if( storedAlphState == 1.0f )
                 {
-                    drawable_material->setAlpha( 
-                                                osg::Material::FRONT_AND_BACK, double( m_alpha ) );
-                    drawable_stateset->setAttribute( drawable_material.get(), 
-                                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );               
+                    drawable_material->
+                        setAlpha( osg::Material::FRONT_AND_BACK, 
+                        double( m_alpha ) );
+                    drawable_stateset->
+                        setAttribute( drawable_material.get(), 
+                        osg::StateAttribute::ON|osg::StateAttribute::PROTECTED );               
                 }
             }
         }            
@@ -385,5 +389,142 @@ void OpacityVisitor::SetupSTLBlendingForStateSet( osg::StateSet* stateset )
         stateset->setNestRenderBins( true );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+bool OpacityVisitor::CheckStateSet( osg::StateSet* stateSet )
+{
+    osg::ref_ptr< osg::StateSet > tempStateSet = stateSet;
+    /*if( tempStateSet.valid() )
+    {
+        osg::ref_ptr< osg::Material > material = 
+        static_cast< osg::Material* >( tempStateSet->
+                                      getAttribute( osg::StateAttribute::MATERIAL ) );
+        
+        if( material.valid() )
+        {
+            return true;
+        }
+        //Material from the stateset
+        osg::ref_ptr< osg::Material > drawable_material = 
+        static_cast< osg::Material* >( 
+                                      drawable_stateset->getAttribute( 
+                                                                      osg::StateAttribute::MATERIAL ) );
+        
+        if( mStoreState )
+        {
+            if( drawable_material.valid() && !drawable_stateset->getUserData() )
+            {
+                drawable_stateset->setUserData( 
+                                               new osg::Material( (*drawable_material.get()), 
+                                                                 osg::CopyOp::DEEP_COPY_ALL ) );
+            }
+        }
+        
+        if( drawable_material.valid() )
+        {
+            osg::ref_ptr< osg::Material > temp_drawable_material = 
+            static_cast< osg::Material* >( 
+                                          drawable_stateset->getUserData() );
+            
+            //Used to determine if the stored alpha state of the material
+            //is actually transparent
+            double storedAlphState = 
+            temp_drawable_material->getAmbient( osg::Material::FRONT_AND_BACK )[3] *
+            temp_drawable_material->getDiffuse( osg::Material::FRONT_AND_BACK )[3] *
+            temp_drawable_material->getSpecular( osg::Material::FRONT_AND_BACK )[3] *
+            temp_drawable_material->getEmission( osg::Material::FRONT_AND_BACK )[3];
+            
+            //Used to determine what the actual state of the material is
+            double actualAlphaState = 
+            drawable_material->getAmbient( osg::Material::FRONT_AND_BACK )[3] *
+            drawable_material->getDiffuse( osg::Material::FRONT_AND_BACK )[3] *
+            drawable_material->getSpecular( osg::Material::FRONT_AND_BACK )[3] *
+            drawable_material->getEmission( osg::Material::FRONT_AND_BACK )[3];
+            
+            if( mStoreState )
+            {
+                //If the stored material is opaque then change the surface but if it is 
+                //transparent then do not mess with the surface and if the material
+                //has already been changed then do not change it back to opaque.
+                //This is an issue when an assmebly node is opaque but children 
+                //are transparent when ves files are loaded
+                if( ( storedAlphState == 1.0f ) && ( actualAlphaState == 1.0f ) )
+                {
+                    drawable_material->
+                    setAlpha( osg::Material::FRONT_AND_BACK, 
+                             double( m_alpha ) );
+                    drawable_stateset->
+                    setAttribute( drawable_material.get(), 
+                                 osg::StateAttribute::ON|osg::StateAttribute::PROTECTED );                
+                }
+            }
+            else
+            {
+                //If we are not storing state (ie initializing the node) then
+                //we only care about what the stored state of the material is
+                if( storedAlphState == 1.0f )
+                {
+                    drawable_material->
+                    setAlpha( osg::Material::FRONT_AND_BACK, 
+                             double( m_alpha ) );
+                    drawable_stateset->
+                    setAttribute( drawable_material.get(), 
+                                 osg::StateAttribute::ON|osg::StateAttribute::PROTECTED );               
+                }
+            }
+        }
 
+        osg::StateSet::TextureAttributeList stateSetTal = 
+        tempStateSet->getTextureAttributeList();
+        if( stateSetTal.size() > 0 )
+        {
+            return true;
+        }
+        
+        //Texture for the stateset
+        osg::StateSet::TextureAttributeList drawable_tal = 
+        drawable_stateset->getTextureAttributeList();
+        
+        //See if this drawable had a texture with opacity. If so then do not 
+        //change the render bin information
+        bool transparentTexture = false;
+        osg::ref_ptr< osg::Image > tempImage;
+        for( size_t k = 0; k < drawable_tal.size(); k++ )
+        {
+            osg::ref_ptr< osg::Texture > texture = 
+            static_cast< osg::Texture* >( drawable_stateset->
+                                         getTextureAttribute( k, osg::StateAttribute::TEXTURE ) );
+            unsigned int numImages = texture->getNumImages();
+            for( unsigned int j=0; j<numImages; ++j )
+            {
+                tempImage = texture->getImage( j );
+                if( !tempImage.valid() )
+                {
+                    continue;
+                }
+                transparentTexture = 
+                tempImage->isImageTranslucent();
+                if( transparentTexture )
+                {
+                    break;
+                }
+            }
+            
+            if( transparentTexture )
+            {
+                break;
+            }
+        }
+        
+        //The stateset only needs set at the part level in VE-Suite.
+        //The alpha an material information can be set at the higher level
+        //because otherwise the renderbins end up being nested and cause odd
+        //problems.
+        if( !transparentTexture )
+        {
+            SetupBlendingForStateSet( drawable_stateset.get() );
+        }
+    }
+    */
+    return false;
+}
 ////////////////////////////////////////////////////////////////////////////////

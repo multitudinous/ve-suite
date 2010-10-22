@@ -159,8 +159,8 @@ bool MaterialPresent::CheckStateSet( osg::StateSet* stateSet )
             osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
             if( tex2D )
             {
-                stateSet->setTextureAttributeAndModes(
-                    i, tex2D, osg::StateAttribute::ON );
+                //stateSet->setTextureAttributeAndModes(
+                //    i, tex2D, osg::StateAttribute::ON );
                 std::stringstream ss;
                 ss << "tex" << i;
                 stateSet->addUniform( new osg::Uniform( ss.str().c_str(), i ) );

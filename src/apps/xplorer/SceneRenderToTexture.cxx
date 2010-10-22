@@ -190,7 +190,9 @@ void SceneRenderToTexture::InitRootGroup()
             program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-        //
+        //Used to control whether a file that has been loaded has a texture
+        //attached. This should be used by any shader to ensure that textures
+        //are handled appropriately.
         stateset->addUniform(
             new osg::Uniform( "textureZeroIsBound", false ) );
         //Default glow color for any children that don't explicitly set it

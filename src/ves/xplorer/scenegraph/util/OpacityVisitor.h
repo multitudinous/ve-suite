@@ -78,6 +78,8 @@ private:
     ///so that state can be saved after a file is loaded in
     bool mStoreState;
     bool m_uniqueStateSet;
+    
+    bool CheckStateSet( osg::StateSet* stateSet );
 };
 }
 }
