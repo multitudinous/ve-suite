@@ -16,6 +16,9 @@ uniform bool cameraPictureFrame;
 
 //varying vec4 eyePos;
 
+uniform bool textureZeroIsBound;
+uniform sampler2D tex0;
+
 void main()
 {
     //vec3 N = normalize( normal );
@@ -73,4 +76,10 @@ void main()
 
     gl_FragData[ 0 ] = color0;
     gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a );
+    
+    if( textureZeroIsBound )
+    {
+        //GL_MODULATE
+        gl_FragData[ 0 ] *= texture2D( tex0, gl_TexCoord[ 0 ].st ); 
+    }
 }
