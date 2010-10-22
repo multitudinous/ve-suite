@@ -172,31 +172,31 @@ void VEIntStovemod::InitializeNode( osg::Group* veworldDCS )
 
     baffleOne = new ves::xplorer::scenegraph::CADEntity(
         "baffle_new2.stl", mDCS.get() );
-    baffleOne->GetNode()->ToggleDisplay( false );
+    baffleOne->GetDCS()->ToggleDisplay( false );
 
     baffleTwo = new ves::xplorer::scenegraph::CADEntity(
         "baffle_new2.stl", mDCS.get() );
-    baffleTwo->GetNode()->ToggleDisplay( false );
+    baffleTwo->GetDCS()->ToggleDisplay( false );
 
     baffleThree = new ves::xplorer::scenegraph::CADEntity(
         "baffle_new2.stl", mDCS.get() );
-    baffleThree->GetNode()->ToggleDisplay( false );
+    baffleThree->GetDCS()->ToggleDisplay( false );
 
     baffleFour = new ves::xplorer::scenegraph::CADEntity(
         "baffle_new2.stl", mDCS.get() );
-    baffleFour->GetNode()->ToggleDisplay( false );
+    baffleFour->GetDCS()->ToggleDisplay( false );
 
     baffleFive = new ves::xplorer::scenegraph::CADEntity(
         "baffle_new2.stl", mDCS.get() );
-    baffleFive->GetNode()->ToggleDisplay( false );
+    baffleFive->GetDCS()->ToggleDisplay( false );
 
     baffleSix = new ves::xplorer::scenegraph::CADEntity(
         "baffle_new2.stl", mDCS.get() );
-    baffleSix->GetNode()->ToggleDisplay( false );
+    baffleSix->GetDCS()->ToggleDisplay( false );
 
     baffleSeven = new ves::xplorer::scenegraph::CADEntity( 
         "baffle_new2.stl", mDCS.get() );
-    baffleSeven->GetNode()->ToggleDisplay( false );
+    baffleSeven->GetDCS()->ToggleDisplay( false );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void VEIntStovemod::PreFrameUpdate( void )
@@ -266,49 +266,49 @@ void VEIntStovemod::SetCurrentCommand(ves::open::xml::CommandPtr command)
 
         if( baffleNum == 0 )
         {
-            baffleOne->GetNode()->ToggleDisplay(true);
+            baffleOne->GetDCS()->ToggleDisplay(true);
             baffleOne->GetDCS()->SetTranslationArray(trans);
             baffleOne->GetDCS()->SetScaleArray(scale);
             baffleOne->GetDCS()->SetRotationArray(rotate);
         }
         else if( baffleNum == 1 )
         {
-            baffleTwo->GetNode()->ToggleDisplay(true);
+            baffleTwo->GetDCS()->ToggleDisplay(true);
             baffleTwo->GetDCS()->SetTranslationArray(trans);
             baffleTwo->GetDCS()->SetScaleArray(scale);   
             baffleTwo->GetDCS()->SetRotationArray(rotate);
         }
         else if( baffleNum == 2 )
         {
-            baffleThree->GetNode()->ToggleDisplay(true);
+            baffleThree->GetDCS()->ToggleDisplay(true);
             baffleThree->GetDCS()->SetTranslationArray(trans);
             baffleThree->GetDCS()->SetScaleArray(scale);  
             baffleThree->GetDCS()->SetRotationArray(rotate);
         }
         else if( baffleNum == 3 )
         {
-            baffleFour->GetNode()->ToggleDisplay(true);
+            baffleFour->GetDCS()->ToggleDisplay(true);
             baffleFour->GetDCS()->SetTranslationArray(trans);
             baffleFour->GetDCS()->SetScaleArray(scale);    
             baffleFour->GetDCS()->SetRotationArray(rotate);
         }
         else if( baffleNum == 4 )
         {
-            baffleFive->GetNode()->ToggleDisplay(true);
+            baffleFive->GetDCS()->ToggleDisplay(true);
             baffleFive->GetDCS()->SetTranslationArray(trans);
             baffleFive->GetDCS()->SetScaleArray(scale);   
             baffleFive->GetDCS()->SetRotationArray(rotate);
         }
         else if( baffleNum == 5 )
         {
-            baffleSix->GetNode()->ToggleDisplay(true);
+            baffleSix->GetDCS()->ToggleDisplay(true);
             baffleSix->GetDCS()->SetTranslationArray(trans);
             baffleSix->GetDCS()->SetScaleArray(scale);   
             baffleSix->GetDCS()->SetRotationArray(rotate);
         }
         else if( baffleNum == 6 )
         {
-            baffleSeven->GetNode()->ToggleDisplay(true);
+            baffleSeven->GetDCS()->ToggleDisplay(true);
             baffleSeven->GetDCS()->SetTranslationArray(trans);
             baffleSeven->GetDCS()->SetScaleArray(scale);   
             baffleSeven->GetDCS()->SetRotationArray(rotate);

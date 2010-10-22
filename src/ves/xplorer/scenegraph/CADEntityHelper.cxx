@@ -195,19 +195,19 @@ void CADEntityHelper::SetName( const std::string& name )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::ToggleDisplay( const bool onOff )
+/*void CADEntityHelper::ToggleDisplay( const bool onOff )
 {
     std::string value = ( onOff == true ) ? "ON" : "OFF";
 
     ToggleDisplay( value );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::SetOcclusionCulling( const std::string& cullingSettings )
 {
     m_occlusionSettings = cullingSettings;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::ToggleDisplay( const std::string& onOff )
+/*void CADEntityHelper::ToggleDisplay( const std::string& onOff )
 {
     if( !GetNode() )
     {
@@ -222,7 +222,7 @@ void CADEntityHelper::ToggleDisplay( const std::string& onOff )
     {
         GetNode()->setNodeMask( 0 );
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::LoadFile( const std::string& filename,
                                 const bool isStream )

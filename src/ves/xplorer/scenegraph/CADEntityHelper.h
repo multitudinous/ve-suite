@@ -137,11 +137,11 @@ public:
     ///ON == display this CADEntityHelper
     ///OFF == hide this CADEntityHelper
     ///\param onOff Turn on/off rendering of this CADEntityHelper
-    void ToggleDisplay( const std::string& onOff );
+    //void ToggleDisplay( const std::string& onOff );
 
     ///Toggle the display of this CADEntityHelper on/off
     ///\param onOff Turn on/off rendering of this CADEntityHelper
-    void ToggleDisplay( const bool onOff );
+    //void ToggleDisplay( const bool onOff );
 
     ///Set the node of CADEntityHelper
     ///\param node An osg::Node pointer
