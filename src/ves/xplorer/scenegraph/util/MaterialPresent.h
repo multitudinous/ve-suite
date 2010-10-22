@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef MATERIAL_INITIALIZER_H
-#define MATERIAL_INITIALIZER_H
-/*!\file MaterialInitializer.h
-MaterialInitializer API
+#ifndef VES_XPLORER_SCENEGRAPH_UTIL_MATERIAL_PRESENT_H
+#define VES_XPLORER_SCENEGRAPH_UTIL_MATERIAL_PRESENT_H
+/*!\file MaterialPresent.h
+MaterialPresent API
 */
-/*!\class MaterialInitializer
+/*!\class MaterialPresent
 *
 */
 #include <ves/VEConfig.h>
@@ -51,14 +51,16 @@ namespace scenegraph
 {
 namespace util
 {
-class VE_SCENEGRAPH_UTILS_EXPORTS MaterialInitializer : public osg::NodeVisitor
+class VE_SCENEGRAPH_UTILS_EXPORTS MaterialPresent : public osg::NodeVisitor
 {
 public:
-    MaterialInitializer( osg::Node* osg_node );
-    virtual ~MaterialInitializer();
+    MaterialPresent( osg::Node* osg_node );
+    virtual ~MaterialPresent();
 
     virtual void apply( osg::Node& node );
     virtual void apply( osg::Geode& node );
+
+    bool FileHasMaterial();
 
 private:
     bool mFileHasMaterial;
@@ -69,4 +71,4 @@ private:
 }
 }
 
-#endif //MATERIAL_INITIALIZER_H
+#endif //VES_XPLORER_SCENEGRAPH_UTIL_MATERIAL_PRESENT_H

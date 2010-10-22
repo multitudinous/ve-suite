@@ -39,6 +39,7 @@
 
 #include <ves/xplorer/scenegraph/util/OptVisitor.h>
 #include <ves/xplorer/scenegraph/util/CountsVisitor.h>
+#include <ves/xplorer/scenegraph/util/MaterialPresent.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -554,6 +555,10 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             << "|\tMax " << bb._max << std::endl;        
     }
     
+    {
+        ves::xplorer::scenegraph::util::MaterialPresent materialPresent( mCadNode.get() );
+        bool hasMaterial = materialPresent.FileHasMaterial();
+    }
     ///Test uuid metanode io and assignment
     /*{
         std::string pname = filename + "_uuid.osg";
