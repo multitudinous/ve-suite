@@ -59,7 +59,7 @@ void main()
             if( projectionUV.s >= 0.02 && projectionUV.s <= 0.98 &&
                 projectionUV.t >= 0.02 && projectionUV.t <= 0.98 )
             {
-                //color0.rgb = vec3( 0.0, 1.0, 0.0 );
+                ;
             }
             else
             {
@@ -75,6 +75,7 @@ void main()
     //vec4 color1 = vec4( fDepth, blur, 0.0, 1.0 );
 
     gl_FragData[ 0 ] = color0;
+
 	if( textureZeroIsBound )
     {
         //GL_MODULATE
