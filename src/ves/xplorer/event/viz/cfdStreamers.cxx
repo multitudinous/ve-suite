@@ -182,7 +182,7 @@ void cfdStreamers::Update()
     pdFilter->Delete();
      */
     streamTracer->SetIntegrator( integ );
-    streamTracer->ComputeVorticityOn();
+    streamTracer->SetComputeVorticity( true );
     streamTracer->SetInputArrayToProcess( 0, 0, 0,
        vtkDataObject::FIELD_ASSOCIATION_POINTS, 
        GetActiveDataSet()->GetActiveVectorName().c_str() );
