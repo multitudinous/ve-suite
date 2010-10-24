@@ -379,12 +379,26 @@ void tecplotReader::ProcessAnyVectorData( int numNodalPointsInZone, vtkFloatArra
             std::cout << "Found vector '" << vecName << "'" << std::endl;
 #endif // PRINT_HEADERS
 
+            vtkIdType numTuples = vectorData[ vectorIndex[ 0 ]-1-this->dimension ]->GetNumberOfTuples();
+            bool isPointData = true;
+            vtkIdType pointCount = 0;
+            if( numTuples == this->totalNumberOfNodalPoints )
+            {
+                isPointData = true;
+                pointCount = totalNumberOfNodalPoints;
+            }
+            else if( numTuples == this->totalNumberOfElements )
+            {
+                isPointData = false;
+                pointCount = totalNumberOfElements;
+            }
+            
             vtkFloatArray* vector = vtkFloatArray::New();
             vector->SetName( vecName.c_str() );
-            vector->SetNumberOfTuples( numNodalPointsInZone );
+            vector->SetNumberOfTuples( pointCount );
             vector->SetNumberOfComponents( 3 );
 
-            for( int j = 0; j < numNodalPointsInZone; j++ )
+            for( int j = 0; j < pointCount; j++ )
             {
                 for( int k = 0; k < 3; k++ )
                 {
@@ -400,7 +414,14 @@ void tecplotReader::ProcessAnyVectorData( int numNodalPointsInZone, vtkFloatArra
                 }
             }
 
-            this->ugrid->GetPointData()->AddArray( vector );
+            if( isPointData )
+            {
+                this->ugrid->GetPointData()->AddArray( vector );
+            }
+            else
+            {
+                this->ugrid->GetCellData()->AddArray( vector );
+            }
             vector->Delete();
 
             // reset vectorIndex to look for next vector
