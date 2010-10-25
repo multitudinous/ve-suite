@@ -246,7 +246,7 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             // and the input parameter current instances, generate an stp texture coord that
             // indexes into a texture to obtain data for this instance.
             "vec3 \n"
-            "generateTexCoord( const in float fiid ) \n"
+            "generateTexCoord( in float fiid ) \n"
             "{ \n"
             "    float p1 = fiid / (sizes.x*sizes.y); \n"
             "    float t1 = fract( p1 ) * sizes.y; \n"
@@ -278,8 +278,8 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             "void main() \n"
             "{ \n"
             // Using the instance ID, generate "texture coords" for this instance.
-            "   const float r = gl_InstanceID; \n"
-            "   vec3 tC = generateTexCoord( r ); \n"
+            "   float fInstance = gl_InstanceID; \n"
+            "   vec3 tC = generateTexCoord( fInstance ); \n"
 
             // Get position from the texture.
             "   vec4 pos = texture3D( texPos, tC ); \n"
@@ -301,7 +301,7 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             // Compute a time offset from the InstanceID to emulate motion.
             ///This is just the fraction of the total time that this instance
             ///is of the overal simulation. It varies between 0 and repeat time. 
-            "   float timeOffset = ( ((float)gl_InstanceID) / totalInstances ) * repeatTime; \n"
+            "   float timeOffset = ( fInstance / totalInstances ) * repeatTime; \n"
             ///This creates a sliding window for a number between 0 and repeatTime
             ///Without this sliding window we get no motion in our particles.
             "   float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"

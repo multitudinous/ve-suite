@@ -179,7 +179,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             // and the input parameter current instances, generate an stp texture coord that
             // indexes into a texture to obtain data for this instance.
             "vec3 \n"
-            "generateTexCoord( const in float fiid ) \n"
+            "generateTexCoord( in float fiid ) \n"
             "{ \n"
             "    float p1 = fiid / (sizes.x*sizes.y); \n"
             "    float t1 = fract( p1 ) * sizes.y; \n"
