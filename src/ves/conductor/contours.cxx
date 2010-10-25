@@ -253,7 +253,7 @@ void Contours::CreateControls()
     if( _dataType == "VECTOR" )
     {
         wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
-        wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
+        wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxHORIZONTAL );
         itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
         
         m_gpuToolsChkBox = new wxCheckBox( itemDialog1, CONTOURS_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
@@ -261,7 +261,7 @@ void Contours::CreateControls()
         itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
 
         wxButton* scalarButton = new wxButton( itemDialog1, VECTOR_SCALAR_CONTROL_BUTTON, _T( "Scalar Control" ), wxDefaultPosition, wxDefaultSize, 0 );
-        itemStaticBoxSizer10->Add( scalarButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+        itemStaticBoxSizer10->Add( scalarButton, 0, wxALIGN_CENTER_VECRTICAL | wxALL, 5 );
     }
     
     //////////////////////////    
