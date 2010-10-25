@@ -168,7 +168,9 @@ protected:
     void OnGPUCheckTools( wxCommandEvent& event );
     ///Turn SURF source off and on
     void OnSURFCheckTools( wxCommandEvent& event );
-    
+    ///
+    void OnScalarButton( wxCommandEvent& event );
+
     std::string _dataType;///<Scalar or vector data
     std::string _activeScalar;///Active scalar name
 

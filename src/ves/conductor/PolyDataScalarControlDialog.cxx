@@ -219,7 +219,7 @@ void PolyDataScalarControlDialog::SendData( int activeSliderID )
     }
 
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
-    newCommand->SetCommandName( "LIVE_POLYDATA_UPDATE" );
+    newCommand->SetCommandName( m_commandName );
     
     ves::open::xml::DataValuePairPtr 
         warpSurface( new ves::open::xml::DataValuePair() );
@@ -228,5 +228,10 @@ void PolyDataScalarControlDialog::SendData( int activeSliderID )
 
     ves::conductor::util::CORBAServiceList::instance()->
         SendCommandStringToXplorer( newCommand );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PolyDataScalarControlDialog::SetCommandName( const std::string commandName )
+{
+    m_commandName = commandName;
 }
 ////////////////////////////////////////////////////////////////////////////////

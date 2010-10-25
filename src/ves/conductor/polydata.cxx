@@ -339,6 +339,7 @@ void Polydata::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
 void Polydata::OnScalarButton( wxCommandEvent& WXUNUSED( event ) )
 {
     PolyDataScalarControlDialog scalarDialog( this );
+    scalarDialog.SetCommandName( "LIVE_POLYDATA_UPDATE" );
     scalarDialog.CentreOnParent();
     scalarDialog.ShowModal();
 }

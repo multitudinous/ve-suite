@@ -36,6 +36,8 @@
 #include <ves/conductor/advancedcontours.h>
 #include <ves/conductor/advancedvectors.h>
 
+#include <ves/conductor/PolyDataScalarControlDialog.h>
+
 #include <ves/conductor/util/spinctld.h>
 
 #include <wx/textctrl.h>
@@ -80,7 +82,8 @@ BEGIN_EVENT_TABLE( Contours, wxDialog )
     EVT_TEXT_ENTER( CONTOURS_PLANE_SPINNER, Contours::UpdatePlaneSlider )
     EVT_TEXT( CONTOURS_PLANE_SPINNER, Contours::UpdatePlaneSlider )
     //EVT_COMMAND_SCROLL( CONTOURS_PLANE_SPINNER, Contours::UpdatePlaneSlider )
-    EVT_SCROLLBAR( CONTOURS_PLANE_SPINNER, Contours::UpdatePlaneSlider )
+    EVT_SCROLLBAR( CONTOURS_PLANE_SPINNER,      Contours::UpdatePlaneSlider )
+    EVT_BUTTON( VECTOR_SCALAR_CONTROL_BUTTON,   Contours::OnScalarButton )
     ////@end Contours event table entries
 END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////////
@@ -256,6 +259,9 @@ void Contours::CreateControls()
         m_gpuToolsChkBox = new wxCheckBox( itemDialog1, CONTOURS_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
         m_gpuToolsChkBox->SetValue( false );
         itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
+
+        wxButton* scalarButton = new wxButton( itemDialog1, VECTOR_SCALAR_CONTROL_BUTTON, _T( "Scalar Control" ), wxDefaultPosition, wxDefaultSize, 0 );
+        itemStaticBoxSizer10->Add( scalarButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
     
     //////////////////////////    
@@ -687,6 +693,17 @@ void Contours::SetAvailableDatasets( wxArrayString tempNames )
         {
             m_datasetSelection->Append( m_availableDatasets[i] );
         }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Contours::OnScalarButton( wxCommandEvent& WXUNUSED( event ) )
+{
+    if( _dataType == "VECTOR" )
+    {
+        PolyDataScalarControlDialog scalarDialog( this );
+        scalarDialog.SetCommandName( "LIVE_VECTOR_UPDATE" );
+        scalarDialog.CentreOnParent();
+        scalarDialog.ShowModal();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

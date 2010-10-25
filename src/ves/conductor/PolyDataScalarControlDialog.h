@@ -59,9 +59,13 @@ protected:
     void SendData( int activeSliderID );
 
     std::pair< double, double > m_scalarRange;
+    ///
+    std::string m_commandName;
 public:
     /** Constructor */
     PolyDataScalarControlDialog( wxWindow* parent );
+    ///
+    void SetCommandName( const std::string commandName );
 };
 }
 }
