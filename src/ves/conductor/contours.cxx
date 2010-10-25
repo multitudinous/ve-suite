@@ -261,7 +261,7 @@ void Contours::CreateControls()
         itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
 
         wxButton* scalarButton = new wxButton( itemDialog1, VECTOR_SCALAR_CONTROL_BUTTON, _T( "Scalar Control" ), wxDefaultPosition, wxDefaultSize, 0 );
-        itemStaticBoxSizer10->Add( scalarButton, 0, wxALIGN_CENTER_VECRTICAL | wxALL, 5 );
+        itemStaticBoxSizer10->Add( scalarButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
     
     //////////////////////////    
