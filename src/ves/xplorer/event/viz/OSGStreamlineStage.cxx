@@ -195,7 +195,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "void main() \n"
             "{ \n"
             // Using the instance ID, generate "texture coords" for this instance.
-            "   const float r = gl_InstanceID; \n"
+            "   float r = gl_InstanceID; \n"
             "   vec3 tC = generateTexCoord( r ); \n"
         
             // Get position from the texture.
