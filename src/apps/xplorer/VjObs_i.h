@@ -119,22 +119,22 @@ public:
     ///Determine if we are in cluster mode or not
     bool GetClusterMode( void );
     ///Get the teacher name files
-    VjObs::scalar_p* get_teacher_name() throw( CORBA::SystemException );
+    VjObs::scalar_p* get_teacher_name();
     ///Get the models in IDL format
-    VjObs::Models* GetModels() throw( CORBA::SystemException );
+    VjObs::Models* GetModels();
     ///Get the model with a specific id
     ///\param modelID the model id to get
-    VjObs::Model* GetModel( const char* modelID ) throw( CORBA::SystemException );
+    VjObs::Model* GetModel( const char* modelID );
     ///Get the number of teacher files
-    short get_teacher_num() throw( CORBA::SystemException );
+    short get_teacher_num();
     ///Set the client info flag
     ///\param flag the client info flags
-    void SetClientInfoFlag( short ) throw( CORBA::SystemException );
+    void SetClientInfoFlag( short );
     ///Set the client info data
     ///\param value the client info data
-    void SetClientInfoData( const VjObs::obj_pd &value ) throw( CORBA::SystemException );
+    void SetClientInfoData( const VjObs::obj_pd &value );
     ///Get the client info data
-    VjObs::obj_pd* GetClientInfoData() throw( CORBA::SystemException );
+    VjObs::obj_pd* GetClientInfoData();
     ///Called in latepreframe to sync state variables
     void GetCfdStateVariables( void );
     ///Create the vector with XML Commands to be used by Xplorer
@@ -156,18 +156,18 @@ protected:
 
     ///Get 2d double array for a given input
     ///\param input the given input
-    VjObs::obj_pd* getDouble1D( const char* input ) throw( CORBA::SystemException );
+    VjObs::obj_pd* getDouble1D( const char* input );
     ///Get 2d double array for a given input
     ///\param input the given input to get
-    VjObs::double2DArray* getDouble2D( const char* input ) throw( CORBA::SystemException );
+    VjObs::double2DArray* getDouble2D( const char* input );
     ///Set the command string from conductor
     ///\param value the command
-    void SetCommandString( const char* value ) throw( CORBA::SystemException );
+    void SetCommandString( const char* value );
     ///The iso value to get from xplorer
-    CORBA::Long getIsoValue( void ) throw( CORBA::SystemException );
+    CORBA::Long getIsoValue( void );
     ///Set sc
     ///\param value the sc
-    void setSc( CORBA::Long value ) throw( CORBA::SystemException );
+    void setSc( CORBA::Long value );
     ///get post data
 
     vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
