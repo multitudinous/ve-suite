@@ -59,12 +59,8 @@ Body_UI_i::~Body_UI_i( void )
 
 void Body_UI_i::UpdateNetwork(
     const char * network
-    ACE_ENV_ARG_DECL
+    
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     if( network != NULL )
@@ -78,12 +74,8 @@ ACE_THROW_SPEC((
 void Body_UI_i::UpdateModuleUI(
     CORBA::Long module_id,
     const char * msg
-    ACE_ENV_ARG_DECL
+    
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     if( msg != NULL )
@@ -104,12 +96,8 @@ ACE_THROW_SPEC((
 void Body_UI_i::UpdateModuleResult(
     CORBA::Long module_id,
     const char * msg
-    ACE_ENV_ARG_DECL
+    
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     if( msg != NULL )
@@ -120,12 +108,8 @@ ACE_THROW_SPEC((
 void Body_UI_i::UpdateLinkContent(
     CORBA::Long id,
     const char * msg
-    ACE_ENV_ARG_DECL
+    
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     if( msg != NULL )
@@ -135,12 +119,8 @@ ACE_THROW_SPEC((
 
 void Body_UI_i::Raise(
     const char * notification
-    ACE_ENV_ARG_DECL
+    
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     std::string tempString( notification );
@@ -158,10 +138,6 @@ ACE_THROW_SPEC((
 void Body_UI_i::SetXplorerData(
     const char * xplorerData
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     //std::cout << xplorerData << std::endl;
     //Receive the data from Xplorer
@@ -214,10 +190,6 @@ const ves::open::xml::CommandPtr Body_UI_i::GetXplorerData( const std::string& c
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_UI_i::SetCommand( const char * openXMLCommand )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     //boost::ignore_unused_variable_warning( openXMLCommand ); 
     std::string tempString( const_cast<char*>( openXMLCommand ) );

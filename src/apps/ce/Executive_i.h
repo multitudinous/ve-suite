@@ -99,193 +99,72 @@ protected:
 
 public:
 
-    /*virtual char * GetImportData(
-        CORBA::Long module_id,
-        CORBA::Long port_id
-        ACE_ENV_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );*/
-
     virtual void SetModuleMessage(
         CORBA::Long module_id,
         const char * msg
-        ACE_ENV_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
-
-    /*virtual void SetModuleResult(
-        CORBA::Long module_id,
-        const char * result
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_ih.cpp:43
-
-    virtual char * GetModuleResult(
-        CORBA::Long module_id
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_ih.cpp:43*/
+    );
 
     virtual void SetNetwork(
         const char * network
-        ACE_ENV_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual char * GetNetwork( const char* moduleName
-                               ACE_ENV_ARG_DECL
-                             )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+                             );
 
     virtual void SetModuleUI(
         CORBA::Long module_id,
         const char * ui
-        ACE_ENV_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void SetWatchList(
         const Types::ArrayLong & id
-        ACE_ENV_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual ::Types::ArrayLong * GetWatchList(
-        ACE_ENV_SINGLE_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual char * GetStatus(
-        ACE_ENV_SINGLE_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void StartCalc(
-        ACE_ENV_SINGLE_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void StopCalc(
-        ACE_ENV_SINGLE_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void PauseCalc(
-        ACE_ENV_SINGLE_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void Resume(
-        ACE_ENV_SINGLE_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual char * Query( const char * command
-                          ACE_ENV_SINGLE_ARG_DECL
-                        )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+                        );
 
     virtual void RegisterUI(
         const char * UIName,
         Body::UI_ptr ui
-        ACE_ENV_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void RegisterUnit(
         const char * UnitName,
         Body::Unit_ptr unit,
         CORBA::Long module_id
-        ACE_ENV_ARG_DECL
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void UnRegisterUI(
         const char * UIName
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_ih.cpp:43
+    );
 
     virtual void UnRegisterUnit(
         const char * UnitName
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_ih.cpp:43
+    );
 
-    /*virtual CORBA::Long GetGlobalMod(
-        Types::ArrayLong_out ids
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );*/
+    virtual void SetID( const char * moduleName, ::CORBA::Long id );
 
-    virtual void SetID( const char * moduleName, ::CORBA::Long id )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual void DeleteModuleInstance( const char * moduleName, ::CORBA::Long module_id );
 
-    virtual void DeleteModuleInstance( const char * moduleName, ::CORBA::Long module_id )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
-
-    virtual void SetParams( const char * moduleName, ::CORBA::Long module_id, const char * param )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
-
+    virtual void SetParams( const char * moduleName, ::CORBA::Long module_id, const char * param );
 
     void ClientMessage( const char *msg );
 

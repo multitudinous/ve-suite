@@ -43,10 +43,6 @@ Body_AMI_UIHandler_i::~Body_AMI_UIHandler_i( void )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateNetwork( )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
@@ -55,19 +51,12 @@ ACE_THROW_SPEC((
 void Body_AMI_UIHandler_i::UpdateNetwork_excep(
     ::Messaging::ExceptionHolder * excep_holder
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleUI( )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
@@ -76,19 +65,12 @@ ACE_THROW_SPEC((
 void Body_AMI_UIHandler_i::UpdateModuleUI_excep(
     ::Messaging::ExceptionHolder * excep_holder
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleResult( )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
@@ -97,19 +79,12 @@ ACE_THROW_SPEC((
 void Body_AMI_UIHandler_i::UpdateModuleResult_excep(
     ::Messaging::ExceptionHolder * excep_holder
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateLinkContent()
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
@@ -118,19 +93,12 @@ ACE_THROW_SPEC((
 void Body_AMI_UIHandler_i::UpdateLinkContent_excep(
     ::Messaging::ExceptionHolder * excep_holder
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::Raise()
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
@@ -139,19 +107,12 @@ ACE_THROW_SPEC((
 void Body_AMI_UIHandler_i::Raise_excep(
     ::Messaging::ExceptionHolder * excep_holder
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetXplorerData()
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
@@ -160,19 +121,12 @@ ACE_THROW_SPEC((
 void Body_AMI_UIHandler_i::SetXplorerData_excep(
     ::Messaging::ExceptionHolder * excep_holder
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException
-               ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetCommand()
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 { 
     /*this->response_handler_->SetCommand();
     
@@ -183,9 +137,6 @@ ACE_THROW_SPEC((
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetCommand_excep( 
     ::Messaging::ExceptionHolder * excep_holder)
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException
-               ) )
 {
     throw CORBA::NO_IMPLEMENT();
 }

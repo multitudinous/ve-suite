@@ -61,56 +61,48 @@ Body_VEXplorer_i::~Body_VEXplorer_i( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_VEXplorer_i::GetStatusMessage( )
-ACE_THROW_SPEC(( ::CORBA::SystemException,::Error::EUnknown ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetParams( const char* param )
-ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetID( ::CORBA::Long id )
-ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ::CORBA::Long Body_VEXplorer_i::GetID( )
-ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetName( const char* name )
-ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_VEXplorer_i::GetName()
-ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetNetwork( const char* network )
-ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetCommand( const char* command )
-ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     /*//When starting xplorer it is possible to connect and send a command before
     // xplorer is ready to receive it
@@ -144,14 +136,12 @@ ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::RegisterUI( const char* UIName, ::Body::UI_ptr ui )
-ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     std::cout << "|\tBody_VEXplorer_i::RegisterUI Registering " << UIName << std::endl;
     uiCom[std::string( UIName )] = Body::UI::_duplicate( ui );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::UnRegisterUI( const char* UIName )
-ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();

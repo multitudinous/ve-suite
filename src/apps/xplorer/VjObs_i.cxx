@@ -188,9 +188,6 @@ void VjObs_i::InitCluster( void )
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 VjObs::Model* VjObs_i::GetModel( const char* modelID )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     VjObs::Model_var tempModel = 0;
     tempModel = new VjObs::Model();
@@ -340,9 +337,6 @@ ACE_THROW_SPEC((
 
 /////////////////////////////////////////////////////////////
 VjObs::Models* VjObs_i::GetModels()
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     this->CreateDatasetInfo();
     VjObs::Models* models_ = new VjObs::Models( *_models );
@@ -503,9 +497,6 @@ void VjObs_i::CreateTeacherInfo( void )
 
 /////////////////////////////////////////////////////////////
 VjObs::obj_pd* VjObs_i::getDouble1D( const char* input )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     VjObs::obj_pd_var array1dData;
@@ -528,9 +519,6 @@ ACE_THROW_SPEC((
 }
 
 VjObs::double2DArray* VjObs_i::getDouble2D( const char* input )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     VjObs::double2DArray_var arrayData;
@@ -560,9 +548,6 @@ ACE_THROW_SPEC((
 }
 
 VjObs::scalar_p* VjObs_i::get_teacher_name()
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     CreateTeacherInfo();
     VjObs::scalar_p_var teacher_name_ = new VjObs::scalar_p( teacher_name );
@@ -570,9 +555,6 @@ ACE_THROW_SPEC((
 }
 
 CORBA::Long VjObs_i::getIsoValue()
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     //vprDEBUG(vprDBG_ALL, 0)
@@ -584,9 +566,6 @@ ACE_THROW_SPEC((
 // These functions are called from the java side
 // Need to figure out a better notation so that this all makes sense
 short VjObs_i::get_teacher_num()
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     //vprDEBUG(vprDBG_ALL,0) << "Returning num teacher'" << this->mTeacher->getNumberOfFiles()<< "' to caller\n"
@@ -705,18 +684,12 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
 }
 
 void VjObs_i::SetClientInfoFlag( const short value )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     this->mGetClientInfo = value;
 }
 
 VjObs::obj_pd* VjObs_i::GetClientInfoData()
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     return clientInfoObserverDataArray._retn();    //check this
 }
@@ -751,9 +724,6 @@ void VjObs_i::PreFrameUpdate( void )
 
 ////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::SetCommandString( const char* value )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-               ) )
 {
     //When starting xplorer it is possible to connect and send a command before
     // xplorer is ready to receive it

@@ -59,35 +59,25 @@ public:
     ///Destructor
     virtual ~Body_VEXplorer_i( void );
 
-    virtual char* GetStatusMessage( )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual char* GetStatusMessage( );
 
-    virtual void SetParams( const char* param )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual void SetParams( const char* param );
 
-    virtual void SetID( ::CORBA::Long id )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual void SetID( ::CORBA::Long id );
 
-    virtual ::CORBA::Long GetID( )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual ::CORBA::Long GetID( );
 
-    virtual void SetName( const char* name )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual void SetName( const char* name );
 
-    virtual char* GetName( )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual char* GetName( );
 
-    virtual void SetNetwork( const char* network )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual void SetNetwork( const char* network );
 
-    virtual void SetCommand( const char* command )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual void SetCommand( const char* command );
 
-    virtual void RegisterUI( const char* UIName, ::Body::UI_ptr ui )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual void RegisterUI( const char* UIName, ::Body::UI_ptr ui );
 
-    virtual void UnRegisterUI( const char* UIName )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) );
+    virtual void UnRegisterUI( const char* UIName );
 
     void PreFrameUpdate( void );
     /// Frame sync variables used by osg only at this point

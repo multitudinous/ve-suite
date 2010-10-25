@@ -111,12 +111,7 @@ std::string VE_i::GetStatusString( void )
 
 void VE_i::UpdateNetwork(
     const char * network
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     if( network != NULL )
@@ -127,12 +122,7 @@ ACE_THROW_SPEC((
 void VE_i::UpdateModuleUI(
     CORBA::Long module_id,
     const char * msg
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     if( msg != NULL )
@@ -143,12 +133,7 @@ ACE_THROW_SPEC((
 void VE_i::UpdateModuleResult(
     CORBA::Long module_id,
     const char * msg
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     if( msg != NULL )
@@ -159,12 +144,7 @@ ACE_THROW_SPEC((
 void VE_i::UpdateLinkContent(
     CORBA::Long id,
     const char * msg
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     if( msg != NULL )
@@ -176,12 +156,7 @@ ACE_THROW_SPEC((
 
 void VE_i::Raise(
     const char * notification
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     // Add your implementation here
     if( notification == NULL )
@@ -234,10 +209,6 @@ void VE_i::GetNetworkFromCE( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VE_i::SetCommand( const char* openXMLCommand )
-    ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 { 
     //boost::ignore_unused_variable_warning( openXMLCommand ); 
     std::string tempString( const_cast<char*>( openXMLCommand ) );

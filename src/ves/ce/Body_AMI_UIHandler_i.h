@@ -61,118 +61,71 @@ public:
 
     ///Update the Network from Xplorer
     virtual
-    void UpdateNetwork()
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    void UpdateNetwork();
 
     ///Update the Network from Xplorer
     virtual
     void UpdateNetwork_excep(
         ::Messaging::ExceptionHolder * excep_holder
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException
-                   ) );
+    );
 
     ///???
     virtual
-    void UpdateModuleUI( )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    void UpdateModuleUI( );
 
     ///???
     virtual
     void UpdateModuleUI_excep(
         ::Messaging::ExceptionHolder * excep_holder
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException
-                   ) );
+    );
 
     ///???
     virtual
-    void UpdateModuleResult( )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    void UpdateModuleResult( );
 
     ///???
     virtual
     void UpdateModuleResult_excep(
         ::Messaging::ExceptionHolder * excep_holder
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException
-                   ) );
+    );
 
     ///???
     virtual
-    void UpdateLinkContent( )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    void UpdateLinkContent( );
 
     ///???
     virtual
     void UpdateLinkContent_excep(
         ::Messaging::ExceptionHolder * excep_holder
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException
-                   ) );
+    );
 
     ///???
     virtual
-    void Raise( )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    void Raise( );
 
     ///???
     virtual
     void Raise_excep(
         ::Messaging::ExceptionHolder * excep_holder
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException
-                   ) );
+    );
+
     ///Set the Xplorer data for Conductor to retrieve
     virtual
-    void SetXplorerData( )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    void SetXplorerData( );
+
     ///Set the Xplorer data for Conductor to retrieve
     virtual
     void SetXplorerData_excep(
         ::Messaging::ExceptionHolder * excep_holder
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException
-                   ) );
+    );
                    
     virtual
     void SetCommand (
-                     void)
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+                     void);
     
     virtual
     void SetCommand_excep (
-                           ::Messaging::ExceptionHolder * excep_holder)
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException
-    ));
+                           ::Messaging::ExceptionHolder * excep_holder);
 
 private:
     PortableServer::POA_var m_poa;

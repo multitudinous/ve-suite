@@ -79,72 +79,6 @@ Body_Executive_i::~Body_Executive_i( void )
     delete _network;
     delete _scheduler;
 }
-
-/*char * Body_Executive_i::GetImportData(
-    CORBA::Long module_id,
-    CORBA::Long port_id
-    ACE_ENV_ARG_DECL
-)
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
-{
-    _mutex.acquire();
-
-    std::cout << "VE-CE : GetImportData " << module_id << " " << port_id << std::endl;
-
-    Module *mod = _network->GetModule( _network->moduleIdx( module_id ) );
-    if( !mod )
-    {
-        std::cerr << "Cannot find module, id# " << module_id << std::endl;
-        return CORBA::string_dup( "" );
-    }
-
-    IPort *iport = mod->getIPort( mod->iportIdx( port_id ) );
-
-    //bool        rv = false;
-    std::string str;
-
-    if( iport && iport->nconnections() )
-    {
-        Connection* conn = iport->connection( 0 ); // should only have one connection
-        OPort* oport = conn->get_oport();
-
-        if( oport->have_data() )
-        {
-            std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-            nodes.push_back( std::pair< CommandPtr, std::string  >( oport->GetPortData(), std::string( "vecommand" ) ) );
-            std::string fileName( "returnString" );
-            XMLReaderWriter netowrkWriter;
-            netowrkWriter.UseStandaloneDOMDocumentManager();
-            netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-            str = fileName;
-        }
-        else
-        {
-            std::string msg = "Mod #"
-                              + boost::lexical_cast<std::string>( module_id )
-                              + " IPort, id #"
-                              + boost::lexical_cast<std::string>( port_id )
-                              + " has no data\n" ;
-            ClientMessage( msg.c_str() );
-        }
-    }
-    else
-    {
-        std::string msg = "Unable to get mod #"
-                          + boost::lexical_cast<std::string>( module_id )
-                          + " IPort, id #"
-                          + boost::lexical_cast<std::string>( port_id )
-                          + "\n" ;
-        ClientMessage( msg.c_str() );
-    }
-
-    _mutex.release();
-
-    return CORBA::string_dup( str.c_str() );
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute( std::string mn )
 {
@@ -382,12 +316,7 @@ std::string Body_Executive_i::GetResults( int rt )
 void Body_Executive_i::SetModuleMessage(
     CORBA::Long module_id,
     const char * msg
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     boost::ignore_unused_variable_warning( module_id );
     // send a unit message to all uis
@@ -397,56 +326,10 @@ ACE_THROW_SPEC((
     ClientMessage( message.c_str() );
     //_mutex.release();
 }
-////////////////////////////////////////////////////////////////////////////
-/*void Body_Executive_i::SetModuleResult(
-    CORBA::Long module_id,
-    const char * result
-)
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
-{
-    _mutex.acquire();
-
-    XMLReaderWriter networkWriter;
-    networkWriter.UseStandaloneDOMDocumentManager();
-    networkWriter.ReadFromString();
-    networkWriter.ReadXMLData( std::string( result ), "Command", "vecommand" );
-    //delete result;
-    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
-
-    _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( objectVector );
-
-    std::string msg = "Mod id# "
-                      + boost::lexical_cast<std::string>( module_id )
-                      + "'s Execution is done\n";
-    ClientMessage( msg.c_str() );
-
-    _mutex.release();
-}*/
-////////////////////////////////////////////////////////////////////////////////
-/*char * Body_Executive_i::GetModuleResult(
-    CORBA::Long module_id
-)
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
-{
-    boost::ignore_unused_variable_warning( module_id );
-    std::cout << "VE-CE : Body_Executive_i::GetModuleResult has been replaced with the query function." << std::endl;
-    return CORBA::string_dup( "" );
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetNetwork(
     const char * network
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
     //Clear old network and schedule
@@ -483,12 +366,7 @@ ACE_THROW_SPEC((
 ////////////////////////////////////////////////////////////////////////////////
 char * Body_Executive_i::GetNetwork(
     const char * moduleName
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
     std::string xmlNetwork = _network->GetNetworkString();
@@ -507,10 +385,6 @@ void Body_Executive_i::SetModuleUI(
     CORBA::Long module_id,
     const char * ui
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
 
@@ -530,12 +404,7 @@ ACE_THROW_SPEC((
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetWatchList(
     const Types::ArrayLong & id
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
 
@@ -545,12 +414,7 @@ ACE_THROW_SPEC((
 }
 ////////////////////////////////////////////////////////////////////////////////
 ::Types::ArrayLong * Body_Executive_i::GetWatchList(
-    ACE_ENV_SINGLE_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
 
@@ -562,12 +426,7 @@ ACE_THROW_SPEC((
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * Body_Executive_i::GetStatus(
-    ACE_ENV_SINGLE_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
 
@@ -579,12 +438,7 @@ ACE_THROW_SPEC((
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::StartCalc(
-    ACE_ENV_SINGLE_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _scheduler->reset();
 
@@ -661,12 +515,7 @@ ACE_THROW_SPEC((
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::StopCalc(
-    ACE_ENV_SINGLE_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
     // Stop all units
@@ -692,12 +541,7 @@ ACE_THROW_SPEC((
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::PauseCalc(
-    ACE_ENV_SINGLE_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
     // Pause all units
@@ -724,12 +568,7 @@ ACE_THROW_SPEC((
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::Resume(
-    ACE_ENV_SINGLE_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
     // Resume all the modules
@@ -756,9 +595,7 @@ ACE_THROW_SPEC((
 }
 ////////////////////////////////////////////////////////////////////////////////
 char *  Body_Executive_i::Query( const char * command
-                                 ACE_ENV_SINGLE_ARG_DECL
                                )
-ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
 {
     _mutex.acquire();
     // read the command to get the module name and module id
@@ -858,12 +695,7 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
 void Body_Executive_i::RegisterUI(
     const char * UIName,
     Body::UI_ptr ui_ptr
-    ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
 
@@ -897,10 +729,6 @@ void Body_Executive_i::RegisterUnit(
     Body::Unit_ptr unit,
     CORBA::Long flag
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     boost::ignore_unused_variable_warning( flag );
     // When this is called, a unit is already binded to the name service,
@@ -964,10 +792,6 @@ ACE_THROW_SPEC((
 void Body_Executive_i::UnRegisterUI(
     const char * UIName
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     std::map<std::string, Body::UI_var>::iterator iter;
     _mutex.acquire();
@@ -986,10 +810,6 @@ ACE_THROW_SPEC((
 void Body_Executive_i::UnRegisterUnit(
     const char * UnitName
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
 {
     _mutex.acquire();
 
@@ -1025,27 +845,10 @@ ACE_THROW_SPEC((
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*CORBA::Long Body_Executive_i::GetGlobalMod(
-    Types::ArrayLong_out ids
-)
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
-{
-    boost::ignore_unused_variable_warning( ids );
-
-    return CORBA::Long( 0 );
-}*/
-////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetID(
     const char * moduleName,
     ::CORBA::Long id
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     std::map< std::string, Body::Unit_var >::iterator iter;
     _mutex.acquire();
@@ -1082,10 +885,6 @@ void Body_Executive_i::DeleteModuleInstance(
     const char * moduleName,
     ::CORBA::Long module_id
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     boost::ignore_unused_variable_warning( moduleName );
     boost::ignore_unused_variable_warning( module_id );
@@ -1097,10 +896,6 @@ void Body_Executive_i::SetParams(
     ::CORBA::Long module_id,
     const char * param
 )
-ACE_THROW_SPEC((
-                   ::CORBA::SystemException,
-                   ::Error::EUnknown
-               ) )
 {
     boost::ignore_unused_variable_warning( moduleName );
     boost::ignore_unused_variable_warning( module_id );

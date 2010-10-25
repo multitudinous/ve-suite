@@ -100,7 +100,6 @@ UnitWrapper::~UnitWrapper( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::StartCalc()
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown))
 {
     std::string msg;
     msg = UnitName_ + " :Start Calc called\n";
@@ -108,7 +107,6 @@ void UnitWrapper::StartCalc()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::StopCalc()
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown) )
 {
     std::string msg;
     msg = UnitName_ + " : StopCalc\n";
@@ -116,7 +114,6 @@ void UnitWrapper::StopCalc()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::PauseCalc()
-    ACE_THROW_SPEC((::CORBA::SystemException,::Error::EUnknown) )
 {
     std::string msg;
     msg = UnitName_ + " : PauseCalc\n";
@@ -124,7 +121,6 @@ void UnitWrapper::PauseCalc()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::Resume()
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown) )
 {
     std::string msg;
     msg = UnitName_ + " : Resume\n";
@@ -132,7 +128,6 @@ void UnitWrapper::Resume()
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * UnitWrapper::GetStatusMessage()
-    ACE_THROW_SPEC((::CORBA::SystemException,::Error::EUnknown) )
 {
     // Add your implementation here
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
@@ -156,7 +151,6 @@ char * UnitWrapper::GetStatusMessage()
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * UnitWrapper::GetUserData()
-    ACE_THROW_SPEC((::CORBA::SystemException, ::Error::EUnknown) )
 {
     // Add your implementation here
     char * result = 0;
@@ -164,7 +158,6 @@ char * UnitWrapper::GetUserData()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::SetParams( ::CORBA::Long id, const char * param )
-    ACE_THROW_SPEC((::CORBA::SystemException,::Error::EUnknown) )
 {
     //just send a list command to SetParams
     // the eventhandler will handle the rest
@@ -183,7 +176,6 @@ void UnitWrapper::SetParams( ::CORBA::Long id, const char * param )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::SetID(::CORBA::Long id)
-    ACE_THROW_SPEC((::CORBA::SystemException,::Error::EUnknown) )
 {
     std::ostringstream strm;
     strm << id;
@@ -199,28 +191,24 @@ void UnitWrapper::SetID(::CORBA::Long id)
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::SetCurID( ::CORBA::Long id )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     activeId = id;
     std::cout << UnitName_ << " :SetCurID called" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ::Types::ArrayLong* UnitWrapper::GetID()
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     std::cout << UnitName_ << " :GetID called" << std::endl;
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ::CORBA::Long UnitWrapper::GetCurID()
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     // This function returns the id of the currently executed module
     return activeId;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::SetName( const char * name )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown))
 {
     // Add your implementation here
     UnitName_ = std::string( name );
@@ -228,14 +216,12 @@ void UnitWrapper::SetName( const char * name )
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * UnitWrapper::GetName()
-    ACE_THROW_SPEC((::CORBA::SystemException, ::Error::EUnknown) )
 {
     std::cout << UnitName_ << " :GetName called" << std::endl;
     return CORBA::string_dup( UnitName_.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * UnitWrapper::Query( const char* command )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ))
 {
     //use print statement below to check command coming in
     std::cout << "UnitWrapper::Query called = " << command << std::endl;
@@ -276,7 +262,6 @@ char * UnitWrapper::Query( const char* command )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::DeleteModuleInstance( ::CORBA::Long module_id )
-    ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
     std::ostringstream strm;
     strm << module_id;

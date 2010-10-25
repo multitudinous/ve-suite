@@ -85,138 +85,78 @@ public:
     virtual
     void StartCalc(
 
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     void StopCalc(
 
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     void PauseCalc(
 
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     void Resume(
 
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     char * GetStatusMessage(
 
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     char * GetUserData(
 
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     void SetParams(
         ::CORBA::Long module_id,
         const char * param
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     void SetID(
         ::CORBA::Long id
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     void SetCurID(
         ::CORBA::Long id
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     ::Types::ArrayLong * GetID(
 
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     ::CORBA::Long GetCurID(
 
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
+    );
 
-                   ) );
     virtual
     void SetName(
         const char * name
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     char * GetName(
 
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 
     virtual
     char * Query( const char * command
 
-                )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+                );
 
     virtual
     void DeleteModuleInstance(
         ::CORBA::Long module_id
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
 };
 
 

@@ -89,62 +89,34 @@ public:
 
     virtual void UpdateNetwork(
         const char * network
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void UpdateModuleUI(
         CORBA::Long module_id,
         const char * msg
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void UpdateModuleResult(
         CORBA::Long module_id,
         const char * msg
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void UpdateLinkContent(
         CORBA::Long id,
         const char * msg
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual void Raise(
         const char * notification
-    )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    );
 
     virtual
     void SetXplorerData(
         const char * xplorerData
-    )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    );
     
     virtual
-    void SetCommand( const char * openXMLCommand )
-    ACE_THROW_SPEC((
-                       ::CORBA::SystemException,
-                       ::Error::EUnknown
-                   ) );
+    void SetCommand( const char * openXMLCommand );
     
 
     std::map<int, std::string> m_idToModelName;
