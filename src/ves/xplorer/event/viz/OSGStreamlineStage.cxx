@@ -195,8 +195,8 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "void main() \n"
             "{ \n"
             // Using the instance ID, generate "texture coords" for this instance.
-            "   float r = gl_InstanceID; \n"
-            "   vec3 tC = generateTexCoord( r ); \n"
+            "   float fInstance = gl_InstanceID; \n"
+            "   vec3 tC = generateTexCoord( fInstance ); \n"
         
             // Get position from the texture.
             "   vec4 pos = texture3D( texPos, tC ); \n"
@@ -212,7 +212,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
 
             // Compute a time offset from the InstanceID to
             // emulate motion.
-            "   float timeOffset = ( ((float)gl_InstanceID) / (totalInstances - 1) ) * repeatTime; \n"
+            "   float timeOffset = ( fInstance / (totalInstances - 1) ) * repeatTime; \n"
             "   float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
             "   float alpha = (fadeTime - min( repTimer, fadeTime ))/fadeTime; \n"
         
