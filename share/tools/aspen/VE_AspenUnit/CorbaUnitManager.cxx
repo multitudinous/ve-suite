@@ -242,3 +242,8 @@ bool CorbaUnitManager::CleanUp( void )
 
     return true;
 }
+////////////////////////////////////////////////////////////////////////////////
+Body::Executive_ptr CorbaUnitManager::GetExecutive( void )
+{
+    return exec;
+}

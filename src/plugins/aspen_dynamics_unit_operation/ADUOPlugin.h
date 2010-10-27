@@ -47,14 +47,26 @@ class ADUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( ADUOPlugin )
 
-public:
-    ///Defualt constructor
-    ADUOPlugin();
+private:
     virtual ~ADUOPlugin();
     void OnShowAspenName( wxCommandEvent& event );
     void OnQueryDynamics( wxCommandEvent& event );
+    void OnTimer( wxTimerEvent& event );
+    void StartTimer( float msec  );
+    void StopTimer( wxCommandEvent& event  );
+    void DrawValue( wxDC* dc );
+    void ReadValue( );
+    
+    bool m_monValueExists;
+    std::string m_monValue;
+    wxTimer * m_timer;
+
+public:
+    ///Defualt constructor
+    ADUOPlugin();
     wxString GetConductorName();
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+    void DrawPlugin( wxDC* dc );
 
     wxMenu* mAspenMenu;
     DECLARE_EVENT_TABLE()

@@ -42,10 +42,9 @@ private:
 
     streamXY xy;
     streamXY tempXY;
-
     std::string currentLevelName;
     int levelCount;
-
+    std::vector< std::string > m_adVariables;
     std::vector< streamXY > streamCoordList;
     std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > > > linkPoints;
     std::map< std::string, std::map< std::string, int > > linkTypes;
@@ -55,9 +54,9 @@ private:
     std::map< std::string, std::pair< int, int > > streamPortIDS;
     int redundantID;
     std::string workingDir;
+
     void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName );
     void ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName);
-
     void NewParseFile(const char * dynFile);
     void ReadHeader( std::ifstream &file );
     void ReadEncrypted( std::ifstream &file );
@@ -86,6 +85,10 @@ public:
     void SetValue( std::string modname, std::string paramname,
         std::string value, bool block );
     AspenDynamicsInterface::AspenDynamicsInterface * dyndoc;
+    void AddADVariable( const std::string& var );
+    std::string GetADValues( );
+    bool IsADVarsEmpty();
+    int NumADVars();
 };
 
 #endif

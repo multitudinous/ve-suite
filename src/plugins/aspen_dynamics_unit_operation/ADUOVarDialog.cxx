@@ -31,13 +31,16 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "ADUOVarDialog.h"
+#include <plugins/ConductorPluginEnums.h>
 
 using namespace ves::conductor;
 BEGIN_EVENT_TABLE( ADUOVarDialog, wxDialog )
     EVT_CLOSE( ADUOVarDialog::OnClose )
-    EVT_BUTTON( ID_CANCELBUTTON, ADUOVarDialog::CancelButtonClick )
-    EVT_BUTTON( ID_SETBUTTON, ADUOVarDialog::SetButtonClick )
-    EVT_GRID_CELL_CHANGE( ADUOVarDialog::WxGridCellChange )
+    EVT_BUTTON( AD_VAR_ID_CANCELBUTTON, ADUOVarDialog::CancelButtonClick )
+    EVT_BUTTON( AD_VAR_ID_SETBUTTON, ADUOVarDialog::SetButtonClick )
+    EVT_BUTTON( AD_VAR_ID_MONITORBUTTON, ADUOVarDialog::OnMonitorVariable )
+    EVT_GRID_CELL_CHANGE( ADUOVarDialog::OnCellChange )
+    //EVT_GRID_SELECT_CELL( ADUOVarDialog::OnSelectCell )
 END_EVENT_TABLE()
 
 ADUOVarDialog::ADUOVarDialog(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
@@ -56,25 +59,33 @@ void ADUOVarDialog::CreateGUIControls()
     this->SetSizer(WxFlexGridSizer);
     this->SetAutoLayout(true);
 
-    WxGrid = new wxGrid(this, ID_WXGRID, wxPoint(5,5), wxSize(320,120), wxVSCROLL | wxHSCROLL);
+    WxGrid = new wxGrid(this, AD_VAR_ID_WXGRID, wxPoint(5,5), wxSize(320,120), wxVSCROLL | wxHSCROLL);
     WxGrid->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
     WxGrid->SetDefaultColSize(50);
     WxGrid->SetDefaultRowSize(25);
     WxGrid->SetRowLabelSize(50);
     WxGrid->SetColLabelSize(25);
-    WxGrid->CreateGrid(0,3,wxGrid::wxGridSelectCells);
+    //WxGrid->CreateGrid(0,3,wxGrid::wxGridSelectCells);
+    WxGrid->CreateGrid(0,3,wxGrid::wxGridSelectRows);
     WxFlexGridSizer->Add(WxGrid,0,wxEXPAND | wxALL,5);
 
     WxBoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
     WxFlexGridSizer->Add(WxBoxSizer1, 0, wxALIGN_CENTER | wxALL, 5);
 
-    SetButton = new wxButton(this, ID_SETBUTTON, wxT("Set"), wxPoint(5,5), wxSize(75,25), 0, wxDefaultValidator, wxT("SetButton"));
+    SetButton = new wxButton(this, AD_VAR_ID_SETBUTTON, wxT("Set"), wxPoint(5,5), wxSize(75,25), 0, wxDefaultValidator, wxT("SetButton"));
     SetButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
     WxBoxSizer1->Add(SetButton,0,wxALIGN_CENTER | wxALL,5);
 
-    CancelButton = new wxButton(this, ID_CANCELBUTTON, wxT("Close"), wxPoint(90,5), wxSize(75,25), 0, wxDefaultValidator, wxT("CancelButton"));
+    CancelButton = new wxButton(this, AD_VAR_ID_CANCELBUTTON, wxT("Close"), wxPoint(90,5), wxSize(75,25), 0, wxDefaultValidator, wxT("CancelButton"));
     CancelButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
     WxBoxSizer1->Add(CancelButton,0,wxALIGN_CENTER | wxALL,5);
+
+    MonitorButton = new wxButton(this, AD_VAR_ID_MONITORBUTTON, wxT("Monitor"),
+        wxPoint(115,5), wxSize(75,25), 0, wxDefaultValidator,
+        wxT("MonitorButton"));
+    MonitorButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false,
+        wxT("Tahoma")));
+    WxBoxSizer1->Add(MonitorButton,0,wxALIGN_CENTER | wxALL,5);
 
     SetTitle(wxT("ADUOVarDialog"));
     SetIcon(wxNullIcon);
@@ -89,12 +100,12 @@ void ADUOVarDialog::CreateGUIControls()
     WxGrid->SetColLabelValue( 2, _("Units") );
 
     //this should be done dynamically
-    WxGrid->SetRowLabelSize( 500 );
+    WxGrid->SetRowLabelSize( 100 );
 
-    wxGridCellAttr * readOnly = new wxGridCellAttr();
-    readOnly->SetReadOnly(true);
-    WxGrid->SetColAttr( 0, readOnly );
-    WxGrid->SetColAttr( 2, readOnly );
+    //wxGridCellAttr * readOnly = new wxGridCellAttr();
+    //readOnly->SetReadOnly(true);
+    //WxGrid->SetColAttr( 0, readOnly );
+    //WxGrid->SetColAttr( 2, readOnly );
     WxFlexGridSizer->SetFlexibleDirection(wxBOTH);
     WxFlexGridSizer->AddGrowableCol(0);
     WxFlexGridSizer->AddGrowableRow(0);
@@ -125,7 +136,7 @@ void ADUOVarDialog::SetButtonClick(wxCommandEvent& event)
         std::vector<std::string> paramList;
         
         //component name
-        paramList.push_back( ConvertUnicode( CompName.c_str() ) );
+        paramList.push_back( ConvertUnicode( m_compName.c_str() ) );
 
         //variable name
         wxString varName = WxGrid->GetRowLabelValue( rowsChanged[i] );
@@ -153,7 +164,7 @@ void ADUOVarDialog::SetButtonClick(wxCommandEvent& event)
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
-    ServiceList->Query( status );
+    m_serviceList->Query( status );
 
     wxMessageDialog popup( this, _("Data has been sent to Aspen Dynamics") );
     popup.ShowModal(); 
@@ -185,21 +196,60 @@ void ADUOVarDialog::UpdateSizes()
     WxGrid->AutoSize();
     WxGrid->SetRowLabelAlignment( wxALIGN_LEFT, wxALIGN_CENTRE );
 }
-
-//WxGridCellChange
-void ADUOVarDialog::WxGridCellChange(wxGridEvent& event)
-{
-    rowsChanged.push_back( event.GetRow() );
-}
-
-//WxGridCellChange
-void ADUOVarDialog::SetComponentName( wxString name )
-{
-    CompName = name;
-}
-
+////////////////////////////////////////////////////////////////////////////////
 void ADUOVarDialog::SetServiceList(
     ves::conductor::util::CORBAServiceList * serviceList )
 {
-    this->ServiceList = serviceList;
+    m_serviceList = serviceList;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ADUOVarDialog::OnMonitorVariable( wxCommandEvent& )
+{
+   
+    WxGrid->AppendRows( 1 );
+    wxString mystring;
+    m_monitorRow = WxGrid->GetSelectedRows()[0];
+    mystring << m_monitorRow;
+    WxGrid->SetCellValue( 0, 0, mystring );
+
+    ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
+    monitor->SetCommandName("addVariable");
+    
+    wxString varName = WxGrid->GetRowLabelValue( m_monitorRow );
+    WxGrid->SetCellValue( 0, 1, varName );
+    std::string temp = ConvertUnicode( m_compName.c_str() ) + "." +
+        ConvertUnicode( varName.c_str() );
+
+    ves::open::xml::DataValuePairPtr
+        variables( new ves::open::xml::DataValuePair() );
+    variables->SetData( "variable", temp.c_str() );
+    monitor->AddDataValuePair( variables );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr,
+        std::string >( monitor, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    std::string nw_str = m_serviceList->Query( status );
+    //DynamicsDataBuffer::instance()->Enable();
+}
+///////////////////////////////////////////////////////////////////////////////
+void ADUOVarDialog::OnCellChange(wxGridEvent& event)
+{
+    rowsChanged.push_back( event.GetRow() );
+}
+///////////////////////////////////////////////////////////////////////////////
+void ADUOVarDialog::OnSelectCell(wxGridEvent& event)
+{
+    m_monitorRow =  event.GetRow();
+}
+///////////////////////////////////////////////////////////////////////////////
+void ADUOVarDialog::SetComponentName( wxString name )
+{
+    m_compName = name;
 }

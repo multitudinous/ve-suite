@@ -47,6 +47,10 @@
 #include <fstream>
 #include <iostream>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <boost/bind.hpp>
+
 // Implementation skeleton constructor
 AspenUnit_i::AspenUnit_i( std::string name, CVE_AspenUnitDlg * dialog, 
                          CorbaUnitManager* parent, std::string dir )
@@ -57,7 +61,10 @@ AspenUnit_i::AspenUnit_i( std::string name, CVE_AspenUnitDlg * dialog,
     return_state( 0 ),
     cur_id_( 0 ),
     UnitName_( name ),
-    mWorkingDir( dir )
+    mWorkingDir( dir ),
+    dyn(NULL),
+    bkp(NULL),
+    mQuerying(false)
 {
     ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
@@ -95,6 +102,7 @@ AspenUnit_i::AspenUnit_i( std::string name, CVE_AspenUnitDlg * dialog,
     mQueryCommandNames.insert( "getStreamOutputModuleProperties");
     mQueryCommandNames.insert( "setParam");
     mQueryCommandNames.insert( "setLinkParam");
+    mQueryCommandNames.insert( "addVariable");
 
     dynFlag = false;
     bkpFlag = false;
@@ -398,6 +406,7 @@ char * AspenUnit_i::Query ( const char * query_str
     ::Error::EUnknown
   ))
 {
+    mQuerying = true;
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
@@ -429,31 +438,37 @@ char * AspenUnit_i::Query ( const char * query_str
     if ( cmdname == "getNetwork" )
     {
         returnValue = handleGetNetwork( cmd );
+        mQuerying = false;
         return returnValue;
     }
     else if( cmdname == "openSimulation" )
     {
         returnValue = handleOpenSimulation( cmd );
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "runNetwork" )
     {
         StartCalc();
+        mQuerying = false;
         return CORBA::string_dup( "networkRun" );
     }
     else if ( cmdname == "stepNetwork" )
     {
         StepSim();
+        mQuerying = false;
         return CORBA::string_dup( "networkRun" );
     }
     else if ( cmdname == "showSimulation" )
     {
         ShowAspen();
+        mQuerying = false;
         return CORBA::string_dup( "Simulation Shown." );
     }
     else if ( cmdname == "hideSimulation" )
     {
         HideAspen();
+        mQuerying = false;
         return CORBA::string_dup( "Simulation hidden." );
     }
     else if ( cmdname == "closeSimulation" )
@@ -463,6 +478,7 @@ char * AspenUnit_i::Query ( const char * query_str
         CloseAspen();
         AspenLog->SetSel( -1, -1 );
         AspenLog->ReplaceSel( "closed.\r\n" );
+        mQuerying = false;
         return CORBA::string_dup( "Simulation closed." );
     }
     else if ( cmdname == "saveSimulation" )
@@ -479,22 +495,27 @@ char * AspenUnit_i::Query ( const char * query_str
         {
             AspenLog->SetSel(-1, -1);
             AspenLog->ReplaceSel( "messed up save.\r\n" );
+            mQuerying = false;
         }
+        mQuerying = false;
         return CORBA::string_dup( "Simulation Saved." );
     }
     else if ( cmdname == "saveAsSimulation" )
     {
         returnValue = handleSaveAs( cmd );
+        mQuerying = false;
         return returnValue;
     }
     else if( cmdname == "reinitNetwork" )
     {
         ReinitializeAspen();
+        mQuerying = false;
         return CORBA::string_dup( "Simulation reinitialized." );
     }
     else if( cmdname == "reinitBlock" )
     {
         ReinitializeBlock( cmd );
+        mQuerying = false;
         return CORBA::string_dup( "Block reinitialized." );
     }
 
@@ -504,6 +525,7 @@ char * AspenUnit_i::Query ( const char * query_str
         //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
         returnValue = handleGetModuleParamList( cmd );
         //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "getInputModuleParamList" )
@@ -511,11 +533,13 @@ char * AspenUnit_i::Query ( const char * query_str
         //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
         returnValue = handleGetInputModuleParamList( cmd );
         //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "getInputModuleProperties" )
     {
         returnValue = handleGetInputModuleProperties( cmd );
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "getOutputModuleParamList" )
@@ -523,11 +547,13 @@ char * AspenUnit_i::Query ( const char * query_str
         //executive_->SetModuleMessage(cur_id_,"Querying outputs...\n");
         returnValue = handleGetOutputModuleParamList( cmd );
         //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "getOutputModuleProperties" )
     {
         returnValue = handleGetOutputModuleProperties( cmd );
+        mQuerying = false;
         return returnValue;
     }
 
@@ -537,6 +563,7 @@ char * AspenUnit_i::Query ( const char * query_str
         //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
         returnValue = handleGetStreamModuleParamList( cmd );
         //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "getStreamInputModuleParamList" )
@@ -544,11 +571,13 @@ char * AspenUnit_i::Query ( const char * query_str
         //executive_->SetModuleMessage(cur_id_,"Querying link inputs...\n");
         returnValue = handleGetStreamInputModuleParamList( cmd );
         //executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "getStreamInputModuleProperties" )
     {
         returnValue = handleGetStreamInputModuleProperties( cmd );
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "getStreamOutputModuleParamList" )
@@ -556,11 +585,13 @@ char * AspenUnit_i::Query ( const char * query_str
         //executive_->SetModuleMessage(cur_id_,"Querying link outputs...\n");
         returnValue = handleGetStreamOutputModuleParamList( cmd );
         //executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
+        mQuerying = false;
         return returnValue;
     }
     else if ( cmdname == "getStreamOutputModuleProperties" )
     {
         returnValue = handleGetStreamOutputModuleProperties( cmd );
+        mQuerying = false;
         return returnValue;
     }
 
@@ -568,15 +599,26 @@ char * AspenUnit_i::Query ( const char * query_str
     else if ( cmdname == "setParam" )
     {
         SetParam( cmd );
+        mQuerying = false;
         return CORBA::string_dup( "Param Set" );
     }
     else if ( cmdname == "setLinkParam" )
     {
         SetLinkParam( cmd );
+        mQuerying = false;
         return CORBA::string_dup( "Param Set" );
     }
+    else if ( cmdname == "addVariable" )
+    {
+        addVariable( cmd );
+        mQuerying = false;
+        return( "NULL" );
+    }
     else
+    {
+        mQuerying = false;
         return CORBA::string_dup( "NULL" );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
@@ -680,6 +722,7 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
             Display->SetWindowText( ( filename ).c_str());
             //go through dyn parsing procedure
             dyn->OpenFile( filename.c_str() );
+            m_thread = new vpr::Thread( boost::bind( &AspenUnit_i::Monitor, this ) );
             //dyn->ParseFile((mWorkingDir + filename + ".dynf" ).c_str());
             mFileName = filename;
             firsttime=false;
@@ -699,6 +742,7 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         }
         return CORBA::string_dup(network.c_str());
     }
+    return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* AspenUnit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
@@ -1166,4 +1210,30 @@ void AspenUnit_i::SetLinkParam( ves::open::xml::CommandPtr cmd )
                 temp_vector[2].c_str(), false );
         }
     }
+}
+///////////////////////////////////////////////////////////////////////////////
+void AspenUnit_i::addVariable( ves::open::xml::CommandPtr cmd )
+{
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+    std::string var;
+    pair->GetData( var );
+    dyn->AddADVariable( var.c_str() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void AspenUnit_i::Monitor(  )
+{
+    HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    while (true)
+    {
+        int temp = dyn->NumADVars();
+        bool tempBool = dyn->IsADVarsEmpty();
+        if( connected && !tempBool && dyn )
+        {
+            std::string netPak = dyn->GetADValues( );
+            theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );
+        }
+        vpr::System::msleep( 5 );
+    }
+    CoUninitialize();
 }

@@ -19,6 +19,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 DynParser::DynParser()
+:
+m_adVariables(NULL)
 {
     try
     {
@@ -1456,6 +1458,7 @@ std::string DynParser::GetModuleParams( std::string modname, bool block )
         dyndoc->GetVariableList( modname.c_str(), block );
 
     for(int i = 0; i < variables.size(); i++)
+    //for(int i = 0; i < 2; i++)
     {
         std::vector<std::string> paramList;
 
@@ -2330,11 +2333,6 @@ void DynParser::ReadGraphicsInformation( std::ifstream &file )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//void DynParser::NormalizeForWX()
-//{
-//}
-
-////////////////////////////////////////////////////////////////////////////////
 bool DynParser::PeekFlowsheet( std::ifstream &file )
 {
     std::string temp;
@@ -2373,4 +2371,94 @@ void DynParser::FindNextEntry( std::ifstream &file )
         std::getline( file, temp );
     }
     file.seekg(temppos);
+}
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::AddADVariable( const std::string& var )
+{
+    std::vector<std::string>::const_iterator pos = 
+        find( m_adVariables.begin(), m_adVariables.end(), var );  
+
+    if( pos == m_adVariables.end() || m_adVariables.empty() )
+    {
+        m_adVariables.push_back( var );
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+std::string DynParser::GetADValues( )
+{
+    if( m_adVariables.empty() )
+    {
+        return "NULL";
+    }
+
+    std::vector< std::pair< std::string, std::string > > nameAndValues;
+    //ALL THIS SHOULD BE REPLACED and GetVariableList should be leveraged in
+    //a new function that allows for querying a single variable
+    //READ VALUES
+    for( int i = 0; i < m_adVariables.size(); i++ )
+    {
+        std::pair< std::string, std::string > nameNValue;
+        std::string tempName =
+            m_adVariables[i].substr( 0, m_adVariables[i].find(".") - 1 );
+        std::string tempVar =
+            m_adVariables[i].substr( m_adVariables[i].find(".") - 1,
+            m_adVariables[i].size() );
+        
+        std::vector< std::vector< std::string > > list =
+            dyndoc->GetVariableList( tempName.c_str(), true );
+        
+        for( int j = 0; j < list[i].size(); j++ )
+        {
+            std::string temp = list[j][0];
+            if( temp.compare( tempVar ) == 0 )
+            {
+                nameNValue.first = m_adVariables[i];
+                nameNValue.second = list[j][2];
+                break;
+            }
+        }
+        nameAndValues.push_back( nameNValue );
+    }
+
+    //append the flowsheet name
+    ves::open::xml::CommandPtr varAndValues( new ves::open::xml::Command() );
+    varAndValues->SetCommandName("ADData");
+
+    //loop over the variables and add as dvps
+    for( int i = 0; i < nameAndValues.size(); i++ )
+    {
+         ves::open::xml::DataValuePairPtr
+             entry( new ves::open::xml::DataValuePair() );
+        entry->SetData( nameAndValues[i].first, nameAndValues[i].second );
+        varAndValues->AddDataValuePair( entry );
+    }
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( 
+    std::pair< ves::open::xml::XMLObjectPtr, std::string >
+    ( varAndValues, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return status;
+}
+///////////////////////////////////////////////////////////////////////////////
+bool DynParser::IsADVarsEmpty()
+{
+    return m_adVariables.empty();
+}
+///////////////////////////////////////////////////////////////////////////////
+int DynParser::NumADVars()
+{
+    if( m_adVariables.empty() )
+    {
+        return 0;
+    }
+    else
+    {
+        return m_adVariables.size();
+    }
 }

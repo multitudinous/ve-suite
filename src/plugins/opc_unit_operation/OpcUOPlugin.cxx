@@ -67,9 +67,10 @@ OpcUOPlugin::OpcUOPlugin() :
     mPluginName = wxString( "OpcUO", wxConvUTF8 );
     mDescription = wxString( "OPC Unit Operation Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "OpcUOPlugin" );
-    dynValue = "Ready";
-
+    m_monValue = "NA";
+    m_monValueExists = false;
     StartTimer( 1000 );
+    //m_timer=NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 OpcUOPlugin::~OpcUOPlugin()
@@ -194,8 +195,8 @@ void OpcUOPlugin::DrawValue( wxDC* dc )
     x = x / n_pts;
     y = y / n_pts;
 
-    dc->GetTextExtent( wxString( dynValue.c_str(), wxConvUTF8), &w, &h );
-    dc->DrawText( wxString( dynValue.c_str(), wxConvUTF8 ), int( x - w / 2 + xoff ), pos.y + int( y * 4.0 ) );
+    dc->GetTextExtent( wxString( m_monValue.c_str(), wxConvUTF8), &w, &h );
+    dc->DrawText( wxString( m_monValue.c_str(), wxConvUTF8 ), int( x - w / 2 + xoff ), pos.y + int( y * 4.0 ) );
 }
 
 //this function does a read by querying the unit
@@ -253,11 +254,12 @@ void OpcUOPlugin::ReadValue( )
         std::string tempData;
         //DataValuePairPtr tempDVP = opcData->GetDataValuePair( compName );
         DataValuePairPtr tempDVP = opcData->GetDataValuePair( ConvertUnicode( mPluginName.c_str() ) );
-        dynValue = "NA";
+        //dynValue = "NA";
         if( tempDVP )
         {
             tempDVP->GetData( tempData );
-            dynValue = tempData;
+            m_monValue = tempData;
+            m_monValueExists = true;
         }
     }
 }
@@ -280,7 +282,10 @@ void OpcUOPlugin::DrawPlugin( wxDC* dc )
         DrawIcon( dc );
         DrawID( dc );
         DrawName( dc );
-        DrawValue( dc );
+        if(m_monValueExists)
+        {
+            DrawValue( dc );
+        }
     }
 
     //if highlighted
@@ -297,9 +302,15 @@ void OpcUOPlugin::DrawPlugin( wxDC* dc )
 void OpcUOPlugin::StartTimer( float msec )
 {
     //UIPLUGIN_CHECKID( event )
+    //if( m_timer != NULL )
+    //{
+    //    m_timer->Stop();
+    //    delete m_timer;
+    //    m_timer = NULL;
+    //}
     m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
     m_timer->Start(msec);
-    dynValue = "Initializing";
+    //dynValue = "NA";
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::StopTimer( wxCommandEvent& event )
@@ -327,6 +338,14 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     std::string nw_str = serviceList->Query( status );
+
+    if( nw_str.compare("Error") == 0 || nw_str.compare("NULL") == 0 )
+    {
+        wxString title( "Error" );
+        wxString desc( "Connection Issue." );
+        wxMessageDialog( m_canvas, desc, title ).ShowModal();
+        return;
+    }
 
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();

@@ -76,16 +76,18 @@ class ADUOVarDialog : public wxDialog
         void SetComponentName( wxString name );
         void SetServiceList(
             ves::conductor::util::CORBAServiceList * serviceList );
-        wxString CompName;
-        ves::conductor::util::CORBAServiceList * ServiceList;
+        wxString m_compName;
+        ves::conductor::util::CORBAServiceList * m_serviceList;
 	
 	private:
 		wxButton *CancelButton;
 		wxButton *SetButton;
+		wxButton *MonitorButton;
 		wxBoxSizer *WxBoxSizer1;
 		wxGrid *WxGrid;
 		wxFlexGridSizer *WxFlexGridSizer;
         std::vector< int > rowsChanged;
+        int m_monitorRow;
 		
         std::string ConvertUnicode( const wxChar* data )
         {
@@ -93,21 +95,12 @@ class ADUOVarDialog : public wxDialog
             return tempStr;
         }
         wxString prefix;
-    
-    
-	private:
-		enum
-		{
-			ID_CANCELBUTTON = 1005,
-			ID_SETBUTTON = 1004,
-			ID_WXGRID = 1002,
-			ID_DUMMY_VALUE_
-		};
-	
-	private:
+
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
-        void WxGridCellChange(wxGridEvent& event);
+        void OnCellChange( wxGridEvent& event );
+        void OnSelectCell( wxGridEvent& event );
+        void OnMonitorVariable( wxCommandEvent& event );
 };
 }
 }

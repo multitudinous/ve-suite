@@ -41,7 +41,7 @@ BEGIN_EVENT_TABLE( OpcUOVarDialog, wxDialog )
     EVT_BUTTON( OPC_VAR_ID_SETBUTTON, OpcUOVarDialog::SetButtonClick )
     EVT_BUTTON( OPC_VAR_ID_MONITORBUTTON, OpcUOVarDialog::OnMonitorVariable )
     EVT_GRID_CELL_CHANGE( OpcUOVarDialog::OnCellChange )
-    EVT_GRID_SELECT_CELL( OpcUOVarDialog::OnSelectCell )
+    //EVT_GRID_SELECT_CELL( OpcUOVarDialog::OnSelectCell )
 END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -252,6 +252,13 @@ void OpcUOVarDialog::SetServiceList(
 ////////////////////////////////////////////////////////////////////////////////
 void OpcUOVarDialog::OnMonitorVariable( wxCommandEvent& )
 {
+    if( WxGrid->GetSelectedRows().IsEmpty() )
+    {
+        return;
+    }
+    
+    monitorRow = WxGrid->GetSelectedRows()[0];
+
     ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("addVariable");
     
@@ -276,6 +283,7 @@ void OpcUOVarDialog::OnMonitorVariable( wxCommandEvent& )
 
     std::string nw_str = mServiceList->Query( status );
     //DynamicsDataBuffer::instance()->Enable();
+    //parent->StartTimer( 1000 );
 }
 
 //NEED TO KEEP TRACK OF WHICH VARIABLES ARE ALREADY ADDED

@@ -37,6 +37,7 @@
 #include "VE_AspenUnit.h"
 #include "VE_AspenUnitDlg.h"
 #include "CorbaUnitManager.h"
+#include <vpr/Thread/Thread.h>
 
 #include <set>
 
@@ -66,6 +67,7 @@ protected:
     std::set< std::string > mQueryCommandNames;
     std::string mWorkingDir;
     std::string mFileName;
+    bool mQuerying;
 
 public:
     BKPParser* bkp;
@@ -225,10 +227,14 @@ public:
   char* handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd);
   void SetParam(ves::open::xml::CommandPtr cmd);
   void SetLinkParam( ves::open::xml::CommandPtr cmd );
+  void addVariable( ves::open::xml::CommandPtr cmd );
+  void Monitor( );
+  bool connected;
 
 private:
   bool bkpFlag;
   bool dynFlag;
+  vpr::Thread* m_thread;
 };
 
 

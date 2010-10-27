@@ -33,9 +33,10 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "ADUOPlugin.h"
+#include "ADUOVarDialog.h"
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
-#include "ADUOVarDialog.h"
+#include <ves/conductor/DynamicsDataBuffer.h>
 
 #include <ves/conductor/xpm/square.xpm>
 
@@ -49,6 +50,8 @@ using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( ADUOPlugin, UIPluginBase )
     EVT_MENU( ADUOPLUGIN_SHOW_ASPEN_NAME, ADUOPlugin::OnShowAspenName )
     EVT_MENU( ADUOPLUGIN_QUERY_DYNAMICS, ADUOPlugin::OnQueryDynamics )
+    EVT_TIMER( ADUOPLUGIN_TIMER_ID, ADUOPlugin::OnTimer )
+    EVT_MENU( ADUOPLUGIN_STOP_TIMER, ADUOPlugin::StopTimer )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( ADUOPlugin, UIPluginBase )
@@ -61,11 +64,17 @@ ADUOPlugin::ADUOPlugin() :
     mPluginName = wxString( "AspenDynamicsUO", wxConvUTF8 );
     mDescription = wxString( "Aspen Dynamics Unit Operation Plugin", wxConvUTF8 );
     GetVEModel()->SetPluginType( "ADUOPlugin" );
-
+    m_monValue = "NA";
+    m_monValueExists = false;
+    StartTimer( 1000 );
+    //m_timer=NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADUOPlugin::~ADUOPlugin()
 {
+    m_timer->Stop();
+    delete m_timer;
+    m_timer = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString ADUOPlugin::GetConductorName()
@@ -186,4 +195,106 @@ wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
                     _( "Used in conjunction with Aspen" ) );
     baseMenu->Enable( ADUOPLUGIN_ASPEN_MENU, true );
     return baseMenu;
+}
+///////////////////////////////////////////////////////////////////////////////
+void ADUOPlugin::DrawPlugin( wxDC* dc )
+{
+    //if hidden
+    if(nameFlag)
+    {
+        DrawIcon( dc );
+        DrawID( dc );
+        DrawName( dc );
+        if( m_monValueExists )
+        {
+            DrawValue( dc );
+        }
+    }
+
+    //if highlighted
+    if( highlightFlag )
+    {
+        if(nameFlag)
+        {
+            HighlightSelectedIcon( dc );
+        }
+        DrawPorts( true, dc );
+    }
+}
+void ADUOPlugin::DrawValue( wxDC* dc )
+{
+    int x = 0;
+    int y = 0;
+    int w, h;
+
+    wxCoord xoff = pos.x;
+    wxCoord yoff = pos.y;
+
+    for( int i = 0; i < n_pts; ++i )
+    {
+        x += poly[ i ].x;
+        y += poly[ i ].y;
+    }
+
+    x = x / n_pts;
+    y = y / n_pts;
+
+    dc->GetTextExtent( wxString( m_monValue.c_str(), wxConvUTF8), &w, &h );
+    dc->DrawText( wxString( m_monValue.c_str(), wxConvUTF8 ), int( x - w / 2 + xoff ), pos.y + int( y * 4.0 ) );
+}
+///////////////////////////////////////////////////////////////////////////////
+void ADUOPlugin::ReadValue( )
+{    
+    //This functions reads data through DynamicsDataBuffer
+    //is it the active network ie is it being drawn
+    if( m_canvas->GetActiveNetworkID() == m_network->GetNetworkID() )
+    {        
+        const CommandPtr adData =
+            DynamicsDataBuffer::instance()->GetCommand( "ADData" );
+        if( adData->GetCommandName() == "NULL" )
+        {
+            return;
+        }
+
+        //std::string compName = GetVEModel()->GetPluginName();
+        std::string tempData;
+        //DataValuePairPtr tempDVP = opcData->GetDataValuePair( compName );
+        DataValuePairPtr tempDVP = adData->GetDataValuePair( ConvertUnicode( mPluginName.c_str() ) );
+        //dynValue = "NA";
+        if( tempDVP )
+        {
+            tempDVP->GetData( tempData );
+            m_monValue = tempData;
+            m_monValueExists = true;
+        }
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void ADUOPlugin::OnTimer( wxTimerEvent& event )
+{
+    if( m_canvas != NULL && m_network != NULL )
+    {
+        //UIPLUGIN_CHECKID( event )
+        ReadValue();
+        m_canvas->Refresh( true );
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void ADUOPlugin::StartTimer( float msec )
+{
+    //UIPLUGIN_CHECKID( event )
+    //if( m_timer != NULL )
+    //{
+    //    m_timer->Stop();
+    //    delete m_timer;
+    //    m_timer = NULL;
+    //}
+    m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
+    m_timer->Start( msec );
+}
+///////////////////////////////////////////////////////////////////////////////
+void ADUOPlugin::StopTimer( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    m_timer->Stop();
 }

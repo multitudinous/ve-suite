@@ -23,6 +23,7 @@ public:
 
    bool unit_i_instantiated;
    bool CleanUp( );
+   Body::Executive_ptr GetExecutive(  );
 
 private:
    CString workingDir;

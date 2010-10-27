@@ -54,6 +54,7 @@
 
 #include <fstream>
 #include <cctype>
+#define DSS_VERSION "C:/SIMSCI/DSS44/GUI/"
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -126,7 +127,7 @@ void DynSimParser::ParseTreeFile( std::string treeFilename )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-int DynSimParser::OpenFile( std::string filename )
+/*int DynSimParser::OpenFile( std::string filename )
 {
     std::string tempFilename = filename;
     //find and replace \ with /
@@ -143,7 +144,7 @@ int DynSimParser::OpenFile( std::string filename )
 
     //make the call
     return system( command.c_str() );
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::InitializeParser( )
 {
@@ -751,7 +752,8 @@ std::string DynSimParser::CreateVESNetwork()
         flowSheetModel->SetPluginName( sheetIter->second.name );
         flowSheetModel->SetPluginType( "SimUOPlugin" );
         flowSheetModel->SetVendorName( "DYNSIMUNIT" );
-        flowSheetModel->SetIconFilename( "C:/SIMSCI/DSS44/GUI/Images/ClassIcons/" + sheetIter->second.cls + ".gif" );
+        std::string DSS_V (DSS_VERSION);
+        flowSheetModel->SetIconFilename( DSS_V + "/Images/ClassIcons/" + sheetIter->second.cls + ".gif" );
         //flowSheetModel->SetIconFilename( sheetIter->second.cls );
         flowSheetModel->SetIconRotation( 0 );
         flowSheetModel->SetIconScale( 1 );
@@ -968,9 +970,9 @@ std::string DynSimParser::CreateVESNetwork()
 ///////////////////////////////////////////////////////////////////////////////
 std::string DynSimParser::GetDynSimIconPath( std::string xmlName, std::string imageType )
 {
-    std::string dynsimInstallPath( "C:/SIMSCI" );
-    std::string dynsimXMLPath = dynsimInstallPath + std::string("/DSS44/GUI/IconPalette/DynsimEngine/" );
-    std::string dynsimIconPath = dynsimInstallPath + std::string("/DSS44/GUI/Images/ClassIcons/");
+    std::string dynsimInstallPath( DSS_VERSION );
+    std::string dynsimXMLPath = dynsimInstallPath + std::string("IconPalette/DynsimEngine/" );
+    std::string dynsimIconPath = dynsimInstallPath + std::string("Images/ClassIcons/");
     std::string xmlFilePath = dynsimXMLPath + xmlName + std::string( ".xml" );
     
     std::string gifName;
