@@ -341,8 +341,8 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 
     if( nw_str.compare("Error") == 0 || nw_str.compare("NULL") == 0 )
     {
-        wxString title( "Error" );
-        wxString desc( "Connection Issue." );
+        wxString title( _("Error") );
+        wxString desc( _("Connection Issue.") );
         wxMessageDialog( m_canvas, desc, title ).ShowModal();
         return;
     }
