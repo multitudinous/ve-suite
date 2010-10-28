@@ -148,7 +148,7 @@ void VectorFieldData::compute3DTextureSize( unsigned int dataCount, int& s, int&
         p = ceilPower2( (unsigned short)( pDim ) );
     else
         p = ceilPower2( (unsigned short)( pDim ) + 1 );
-    osg::notify( osg::DEBUG ) << "dataCount " << dataCount <<
+    osg::notify( osg::DEBUG_INFO ) << "dataCount " << dataCount <<
     " produces tex size (" << s << "," << t << "," << p <<
     "), total storage: " << s*t*p << std::endl;
 }
