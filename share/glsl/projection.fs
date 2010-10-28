@@ -35,10 +35,11 @@ void main()
         //gl_LightSource[ 0 ].specular.rgb * gl_Color.rgb * pow( RDotL, 15.0 );
 
     vec2 projectionUV = gl_TexCoord[ 4 ].st / gl_TexCoord[ 4 ].q;
-    vec4 color0 = vec4( gl_Color.rgb, alpha );
+    vec4 color0;
 
     if( !cameraPictureFrame )
     {
+        color0 = vec4( gl_Color.rgb, alpha );
         //If in frustum
         if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 &&
             projectionUV.t >= 0.0 && projectionUV.t <= 1.0 &&
@@ -51,7 +52,7 @@ void main()
     else
     {
         //If in frustum
-        color0.a = 1.0;
+        color0 = gl_Color;
         if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 &&
             projectionUV.t >= 0.0 && projectionUV.t <= 1.0 &&
             gl_TexCoord[ 4 ].q >= 0.01 )
@@ -63,7 +64,7 @@ void main()
             }
             else
             {
-                color0.rgb = vec3( 1.0, 0.0, 0.0 );
+                color0 = vec4( 1.0, 0.0, 0.0, 1.0 );
             }
         }
     }
