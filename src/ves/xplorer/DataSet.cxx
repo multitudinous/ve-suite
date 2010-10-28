@@ -106,7 +106,7 @@ namespace ves
 {
 namespace xplorer
 {
-
+////////////////////////////////////////////////////////////////////////////////
 DataSet::DataSet( ) 
     :
     m_tempModel( 0 ),
@@ -179,7 +179,7 @@ DataSet::DataSet( )
     m_dataObjectOps["Create BBox Actors"] = new ves::xplorer::util::CreateDataObjectBBoxActorsCallback();
     m_dataObjectOps["Compute Vector Mag and Scalars"] = new ves::xplorer::util::ComputeVectorMagnitudeAndScalarsCallback();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 DataSet::~DataSet()
 {
     this->lut->Delete();
@@ -286,18 +286,18 @@ DataSet::~DataSet()
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetRange( double * dataRange )
 {
     this->SetRange( dataRange[ 0 ], dataRange[ 1 ] );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetRange( double dataMin, double dataMax )
 {
     this->range[ 0 ] = dataMin;
     this->range[ 1 ] = dataMax;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::GetRange( double * dataRange )
 {
     this->GetRange( dataRange[ 0 ], dataRange[ 1 ] );
@@ -784,9 +784,9 @@ void DataSet::SetActiveScalar( const std::string& tempActiveScalar )
 
     if( scalar < 0 || this->numScalars <= scalar )
     {
-        std::cerr << "Error: SetActiveScalar: out-of-range scalar "
-        << scalar << ", will use first scalar " << this->scalarName[ 0 ]
-        << std::endl;
+        std::cerr << "|\tWarning: SetActiveScalar: out-of-range scalar "
+            << scalar << ", will use first scalar " << this->scalarName[ 0 ]
+            << std::endl;
         this->activeScalar = 0;
     }
     else
@@ -886,9 +886,9 @@ void DataSet::SetActiveScalar( int scalar )
 
     if( scalar < 0 || this->numScalars <= scalar )
     {
-        std::cerr << "Error: SetActiveScalar: out-of-range scalar "
-        << scalar << ", will use first scalar " << this->scalarName[ 0 ]
-        << std::endl;
+        std::cerr << "|\tWarning: SetActiveScalar: out-of-range scalar "
+            << scalar << ", will use first scalar " << this->scalarName[ 0 ]
+            << std::endl;
         this->activeScalar = 0;
     }
     else
@@ -999,9 +999,9 @@ void DataSet::SetActiveVector( int vector )
 
     if( vector < 0 || this->numVectors <= vector )
     {
-        std::cerr << "Error: SetActiveVector: out-of-range vector "
-        << vector << ", will use first vector " << this->vectorName[ 0 ]
-        << std::endl;
+        std::cerr << "|\tWarning: SetActiveVector: out-of-range vector "
+            << vector << ", will use first vector " << this->vectorName[ 0 ]
+            << std::endl;
         this->activeVector = 0;
     }
     else
@@ -1065,7 +1065,7 @@ void DataSet::SetActiveVector( const std::string& tempVectorName )
 
     if( vector < 0 || this->numVectors <= vector )
     {
-        std::cerr << "Error: SetActiveVector: out-of-range vector "
+        std::cerr << "|\tWarning: SetActiveVector: out-of-range vector "
         << vector << ", will use first vector " << this->vectorName[ 0 ]
         << std::endl;
         this->activeVector = 0;
@@ -1340,8 +1340,8 @@ const std::string DataSet::GetScalarName( int i )
     }
     else
     {
-        std::cerr << "ERROR: DataSet::GetScalarName cannot "
-        << "handle index " << i << std::endl;
+        std::cout << "|\tWarning: DataSet::GetScalarName cannot "
+            << "handle index " << i << std::endl;
         return m_nullScalarName;
     }
 }
@@ -1359,7 +1359,7 @@ const std::string DataSet::GetVectorName( int i )
     }
     else
     {
-        std::cerr << "ERROR: DataSet::GetVectorName cannot "
+        std::cerr << "|\tWarning: DataSet::GetVectorName cannot "
         << "handle index " << i << std::endl;
         return m_nullVectorName;
     }

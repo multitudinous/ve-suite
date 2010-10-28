@@ -141,7 +141,6 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
     double** tempRange = new double*[ 1 ];
     tempRange[ 0 ] = new double[ 2 ];
 
-    std::cout << m_activeVector << " " << m_activeScalar << std::endl;
     vtkDataObject* tempDataSet = 0;
 
     for( size_t i = 0; i < m_transientDataSet.size(); ++i )
@@ -159,7 +158,6 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             dataRange[ 1 ] = tempRange[ 0 ][ 1 ];
         }
     }
-    std::cout << tempRange[ 0 ][ 0 ] << " " << tempRange[ 0 ][ 1 ] << std::endl;
     delete [] tempRange[ 0 ];
     delete [] tempRange;
 
