@@ -520,6 +520,7 @@ tempEnv['CONFIGUREDIR'] = pj( RootDir, options_cache + "_cache_dir" )
 base_bldr = EnvironmentBuilder()
 ## Add options for environment creation
 base_bldr.addOptions( opts )
+
 ## Setup the cpu architecture
 if ARGUMENTS.has_key("ARCH"):
     base_bldr.setCpuArch( ARGUMENTS[ 'ARCH' ] )
@@ -527,6 +528,26 @@ elif tempArchWinEnv.has_key("ARCH"):
     base_bldr.setCpuArch( tempArchWinEnv[ 'ARCH' ] )
 else:
     base_bldr.setCpuArch()
+
+##Setup windows compiler flags
+opts.GetOption('default_opt_level').setInitial(tempArchWinEnv)
+opts.GetOption('default_debug_level').setInitial(tempArchWinEnv)
+opts.GetOption('default_opt_level').apply(tempArchWinEnv)
+opts.GetOption('default_debug_level').apply(tempArchWinEnv)
+
+if tempArchWinEnv['default_debug_level'] != EnvironmentBuilder.NONE:
+    base_bldr.enableDebug(EnvironmentBuilder.STANDARD)
+    base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
+else:
+    base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
+
+# setup compiler optimizations
+if GetPlatform() != 'win32':
+    base_bldr.enableOpt( EnvironmentBuilder.MAXIMUM, ["fast_math"] )
+else:
+    if tempArchWinEnv['default_opt_level'] != EnvironmentBuilder.NONE:
+        base_bldr.enableOpt( tempArchWinEnv['default_opt_level'], ["fast_math"] )
+
 ## Finally get the environment
 baseEnv = base_bldr.buildEnvironment(None,None,**tempEnv)
 if GetPlatform() == 'win32':
@@ -577,19 +598,6 @@ if not SConsAddons.Util.hasHelpFlag():
     ## see if the options file has the build dir
     if baseEnv['build_dir'] != '':
         buildDir = baseEnv['build_dir']
-
-    if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
-        base_bldr.enableDebug( EnvironmentBuilder.STANDARD )
-        base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
-    else:
-        base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
-
-    # setup compiler optimizations
-    if GetPlatform() != 'win32':
-        base_bldr.enableOpt( EnvironmentBuilder.MAXIMUM, ["fast_math"] )
-    else:
-        if baseEnv['default_opt_level'] != EnvironmentBuilder.NONE:
-            base_bldr.enableOpt( baseEnv['default_opt_level'], ["fast_math"] )
 
     # setup compiler warnings
     if GetPlatform() != 'win32':
