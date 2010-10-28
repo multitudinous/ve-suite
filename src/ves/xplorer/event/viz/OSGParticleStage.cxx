@@ -38,6 +38,7 @@
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>
 #include <osgDB/FileUtils>
+#include <osg/io_utils>
 
 #include <osgwTools/Shapes.h>
 
@@ -132,17 +133,20 @@ void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances )
 void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode )
 {
     ves::xplorer::util::ProcessScalarRangeCallback* scalarRangeCbk = 
-    new ves::xplorer::util::ProcessScalarRangeCallback();
+        new ves::xplorer::util::ProcessScalarRangeCallback();
     ves::xplorer::util::DataObjectHandler* dataObjectHandler = 
-    new ves::xplorer::util::DataObjectHandler();
+        new ves::xplorer::util::DataObjectHandler();
     dataObjectHandler->SetDatasetOperatorCallback( scalarRangeCbk );
     double dataRange[ 2 ] = { 10000000.0, -1000000.0 }; 
     double** tempRange = new double*[ 1 ];
     tempRange[ 0 ] = new double[ 2 ];
-    
+
+    std::cout << m_activeVector << " " << m_activeScalar << std::endl;
+    vtkDataObject* tempDataSet = 0;
+
     for( size_t i = 0; i < m_transientDataSet.size(); ++i )
     {
-        vtkDataObject* tempDataSet = m_transientDataSet.at( i )->GetDataSet();
+        tempDataSet = m_transientDataSet.at( i )->GetDataSet();
         dataObjectHandler->OperateOnAllDatasetsInObject( tempDataSet );
         scalarRangeCbk->GetScalarRange( m_activeScalar, tempRange[ 0 ] );
         if( tempRange[ 0 ][ 0 ] < dataRange[ 0 ] )
@@ -155,6 +159,7 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             dataRange[ 1 ] = tempRange[ 0 ][ 1 ];
         }
     }
+    std::cout << tempRange[ 0 ][ 0 ] << " " << tempRange[ 0 ][ 1 ] << std::endl;
     delete [] tempRange[ 0 ];
     delete [] tempRange;
 
@@ -175,7 +180,7 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
     //VTK does bounds xmin, xmax,....
     //OSG does bounds xmin, ymin, zmin, xmax, ymax,...
     osg::BoundingBox bb(m_bb[0],m_bb[2],m_bb[4],m_bb[1],m_bb[3],m_bb[5]);
-    
+
     size_t numStreamLines = m_streamlineList.size();
     for( size_t i = 0; i < numStreamLines; ++i )
     {                
@@ -225,10 +230,10 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             "vec4 \n"
             "simpleLighting( const in vec4 color, const in vec3 normal, const in float diffCont, const in float ambCont ) \n"
             "{ \n"
-            "    const vec4 amb = color * ambCont; \n"
+            "    vec4 amb = color * ambCont; \n"
             "    const vec3 eyeVec = vec3( 0.0, 0.0, 1.0 ); \n"
-            "    const float dotVal = max( dot( normal, eyeVec ), 0.0 ); \n"
-            "    const vec4 diff = color * dotVal * diffCont; \n"
+            "    float dotVal = max( dot( normal, eyeVec ), 0.0 ); \n"
+            "    vec4 diff = color * dotVal * diffCont; \n"
             "    return( amb + diff ); \n"
             "} \n" //25
             " \n"
@@ -634,7 +639,7 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
             osg::Vec2 ts( dataRange[ 0 ], dataRange[ 1 ] );
             osg::ref_ptr< osg::Uniform > scalarMinMaxUniform =
             new osg::Uniform( "scalarMinMax",
-                             osg::Vec2( (float)ts.x(), (float)ts.y() ) );
+                             osg::Vec2( float( ts.x() ), float( ts.y() ) ) );
             ss->addUniform( scalarMinMaxUniform.get() );
             
             // Set up the color spectrum.
@@ -663,7 +668,7 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
     m_transientDataSet = transData;
     m_activeVector = activeVector;
     m_activeScalar = activeScalar;
-    
+
     ves::xplorer::util::FindVertexCellsCallback* findVertexCellsCbk = 
         new ves::xplorer::util::FindVertexCellsCallback();
     ves::xplorer::util::DataObjectHandler* dataObjectHandler = 
@@ -723,6 +728,7 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
     m_bb[4] = 1000000;
     m_bb[5] = -1000000;
     
+    ves::xplorer::scenegraph::VTKParticleTextureCreator::Point tempPoint;
     for( size_t i = 0; i < maxNumPoints; ++i )
     {   
         //Iterate through all points
@@ -731,22 +737,21 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
         {
             std::vector< std::pair< vtkIdType, double* > >* activeCellGroups = 
                 &m_pointCollection.at( j );
-            ves::xplorer::scenegraph::VTKParticleTextureCreator::Point tempPoint;
             if( i < activeCellGroups->size() )
             {
                 vtkIdType cellid = activeCellGroups->at( i ).first;
                 double* pointid = activeCellGroups->at( i ).second;
-                //std::cout << cellid << " " << pointid[ 0 ] << " " << pointid[ 1 ] << " " << pointid[ 2 ] << std::endl;
                 tempPoint.x[ 0 ] = pointid[ 0 ];
                 tempPoint.x[ 1 ] = pointid[ 1 ];
                 tempPoint.x[ 2 ] = pointid[ 2 ];
                 tempPoint.vertId = cellid;
+                //We can delete these hear because i never repeats and
+                //is always moving forward
                 delete [] pointid;
                 activeCellGroups->at( i ).second = 0;
             }
             else
             {
-                //std::cout << i << " " << 0 << " " << 0 << " " << 0 << std::endl;
                 tempPoint.vertId = i;
                 tempPoint.x[ 0 ] = 0.;
                 tempPoint.x[ 1 ] = 0.;
@@ -789,9 +794,6 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
         //std::cout << std::endl;
     }
     
-    ///Clean up memory now that we have transferred it to the streamline list
-    m_pointCollection.clear();    
-
     /*for( size_t i = 0; i < m_pointCollection.size(); ++i )
     {
         std::vector< std::pair< vtkIdType, double* > >* activeCellGroups = 
@@ -802,17 +804,11 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
             delete [] activeCellGroups->at( j ).second;
         }
     }*/
+    ///Clean up memory now that we have transferred it to the streamline list
+    m_pointCollection.clear();    
 
-    // Essentially a top level Group, a single Geode child, and the
-    // Geode contains a single Geometry to draw a sinalg point (but
-    // uses a draw instanced PrimitiveSet).
-    //    osg::Group* grp = new osg::Group;
-    //    osg::Geode* geode = new osg::Geode;
     ves::xplorer::scenegraph::Geode* geode = new ves::xplorer::scenegraph::Geode();
-
-    //ProcessStreamLines( streamlinePD );
     
-    //Now needs to create streams line with the passed in polyData line data
     createStreamLines( geode );
     
     m_streamlineList.clear();

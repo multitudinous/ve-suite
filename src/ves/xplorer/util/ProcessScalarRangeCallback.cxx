@@ -46,12 +46,11 @@ ProcessScalarRangeCallback::ProcessScalarRangeCallback()
 ///////////////////////////////////////////////////////////////////
 ProcessScalarRangeCallback::~ProcessScalarRangeCallback()
 {
-    std::map<std::string, double* >::iterator iter;
-    for( iter == m_scalarRanges.begin();
+    for( std::map<std::string, double* >::const_iterator iter = m_scalarRanges.begin();
             iter != m_scalarRanges.end();
             ++iter )
     {
-        delete( *iter ).second;
+        delete [] iter->second;
     }
     m_scalarRanges.clear();
 }
@@ -60,12 +59,14 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
 {
     // store actual range...
     std::map<std::string, double* >::iterator scalarRangeInfo;
+    vtkDataArray* array = 0;
+    double tempRange[ 2 ] = { 0.0f, 0.0f };;
     if( dataset->GetCellData()->GetNumberOfArrays() > 0 )
     {
         int numArrays = dataset->GetCellData()->GetNumberOfArrays();
         for( int i = 0; i < numArrays; ++i )
         {
-            vtkDataArray* array = dataset->GetCellData()->GetArray( i );
+            array = dataset->GetCellData()->GetArray( i );
             //if it is a vector
             if( array->GetNumberOfComponents() != 1 )
             {
@@ -77,7 +78,6 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
             //unique scalars---This may be incorrect because
             //each dataset in the multiblock may have it's own scalar range but
             //it's not clear if that is the case...
-            double tempRange[ 2 ] = { 0.0f, 0.0f };
             array->GetRange( tempRange );
             if( abs( tempRange[ 0 ] ) < 1e-100 )
             {
@@ -116,7 +116,7 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
         int numArrays = dataset->GetPointData()->GetNumberOfArrays();
         for( int i = 0; i < numArrays; ++i )
         {
-            vtkDataArray* array = dataset->GetPointData()->GetArray( i );
+            array = dataset->GetPointData()->GetArray( i );
             //if it is a vector
             if( array->GetNumberOfComponents() != 1 )
             {
