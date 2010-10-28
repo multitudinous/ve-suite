@@ -92,7 +92,7 @@ void ParticleAnimation::Update()
     if( GetActiveDataSet() == NULL )
     {
         vprDEBUG( vesDBG, 0 )
-            << "ParticleAnimation has no data so setting updateFlag to false"
+            << "|\tParticleAnimation has no data so setting updateFlag to false"
             << std::endl << vprDEBUG_FLUSH;
         this->updateFlag = false;
         return;
@@ -100,7 +100,7 @@ void ParticleAnimation::Update()
     else
     {
         vprDEBUG( vesDBG, 1 )
-            << "ParticleAnimation: this->GetActiveDataSet() = "
+            << "|\tParticleAnimation: this->GetActiveDataSet() = "
             << GetActiveDataSet()->GetFileName() << std::endl 
             << vprDEBUG_FLUSH;
     }
@@ -185,8 +185,10 @@ float ParticleAnimation::GetSphereScaleFactor()
     // this->GetParticleScale() is obtained from gui, -100 < sphereScale < 100
     // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
     // convert range to -4 < x < 4, and compute the exponent...
-    vprDEBUG( vesDBG, 1 ) << " sphereScale = " << this->GetParticleScale()
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) 
+        << "|\t\tParticleAnimation::GetSphereScaleFactor sphereScale = " 
+        << GetParticleScale()
+        << std::endl << vprDEBUG_FLUSH;
 
     float scaleFactor = 0.0;
 
@@ -195,8 +197,10 @@ float ParticleAnimation::GetSphereScaleFactor()
         scaleFactor = exp( this->GetParticleScale() / 25.0 );
     }
 
-    vprDEBUG( vesDBG, 1 ) << " scaleFactor = " << scaleFactor
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) 
+        << "\t\tParticleAnimation::GetSphereScaleFactor scaleFactor = " 
+        << scaleFactor
+        << std::endl << vprDEBUG_FLUSH;
 
     return scaleFactor;
 }
