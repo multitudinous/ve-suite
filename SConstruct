@@ -621,6 +621,9 @@ if not SConsAddons.Util.hasHelpFlag():
         # Embed .manifest into .DLL and .EXE
         baseEnv['LINKCOM'] = [baseEnv['LINKCOM'], 'mt -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
         baseEnv['SHLINKCOM'] = [baseEnv['SHLINKCOM'], 'mt -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
+        # linker optimizations
+        # http://msdn.microsoft.com/en-us/library/fsk896zz.aspx
+        baseEnv.AppendUnique( LINKFLAGS = ['/OPT:REF','/OPT:ICF'] )
 
 
     baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
