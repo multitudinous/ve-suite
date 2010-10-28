@@ -406,9 +406,15 @@ private:
     int numPtDataArrays;
     int numScalars;
     int numVectors;
+    ///Scalar names
     std::vector< std::string > scalarName;
+    ///Null scalar name
+    std::string m_nullScalarName;
+    ///Vector names
     std::vector< std::string > vectorName;
-
+    ///Null vector name
+    std::string m_nullVectorName;
+    
     osg::ref_ptr< ves::xplorer::scenegraph::Geode > wireframeGeode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > m_visualBBox;
 

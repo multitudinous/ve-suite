@@ -1342,7 +1342,7 @@ const std::string DataSet::GetScalarName( int i )
     {
         std::cerr << "ERROR: DataSet::GetScalarName cannot "
         << "handle index " << i << std::endl;
-        return std::string();
+        return m_nullScalarName;
     }
 }
 ///////////////////////////////////////////////
@@ -1361,7 +1361,7 @@ const std::string DataSet::GetVectorName( int i )
     {
         std::cerr << "ERROR: DataSet::GetVectorName cannot "
         << "handle index " << i << std::endl;
-        return std::string();
+        return m_nullVectorName;
     }
 }
 //////////////////////////////////////////////
