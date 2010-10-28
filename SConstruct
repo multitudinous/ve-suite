@@ -588,7 +588,8 @@ if not SConsAddons.Util.hasHelpFlag():
     if GetPlatform() != 'win32':
         base_bldr.enableOpt( EnvironmentBuilder.MAXIMUM, ["fast_math"] )
     else:
-        base_bldr.enableOpt( EnvironmentBuilder.STANDARD, ["fast_math"] )
+        if baseEnv['default_opt_level'] != EnvironmentBuilder.NONE:
+            base_bldr.enableOpt( baseEnv['default_opt_level'], ["fast_math"] )
 
     # setup compiler warnings
     if GetPlatform() != 'win32':
@@ -624,6 +625,8 @@ if not SConsAddons.Util.hasHelpFlag():
         # linker optimizations
         # http://msdn.microsoft.com/en-us/library/fsk896zz.aspx
         baseEnv.AppendUnique( LINKFLAGS = ['/OPT:REF','/OPT:ICF'] )
+        #http://msdn.microsoft.com/en-us/library/k1ack8f1%28v=VS.90%29.aspx
+        baseEnv.AppendUnique( CXXFLAGS = ['/Oi'] )
 
 
     baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )
