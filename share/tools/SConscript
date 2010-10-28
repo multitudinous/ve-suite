@@ -21,6 +21,8 @@ if GetPlatform() == 'win32':
     #Should Powersim support be built
     if baseEnv[ 'MakePowersimSupport' ] != 'no':
         toolsSubdirs.append( "powersim" )
+    
+    toolsSubdirs.append( "mfc_test" )
 
 #Should db support be built
 #if mysqlpp_options.isAvailable():
