@@ -346,7 +346,15 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         
         if( !cptEnabled )
         {
-            DeviceHandler::instance()->UnselectObjects();
+            if( ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
+            {
+                ves::xplorer::NavigationAnimationEngine::instance()->
+                    IncrementAnimationSpeed( 0.5 );
+            }
+            else
+            {
+                DeviceHandler::instance()->UnselectObjects();
+            }
             return;
         }
     }
@@ -377,8 +385,17 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
 
         if( !cptEnabled )
         {
-            m_buttonPushed = true;
-            FreeRotateAboutWand();
+            if( ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
+            {
+                ves::xplorer::NavigationAnimationEngine::instance()->
+                    IncrementAnimationSpeed( -0.5 );
+                return;
+            }
+            else
+            {
+                m_buttonPushed = true;
+                FreeRotateAboutWand();
+            }
         }
     }
     else if( buttonData[ 1 ] == gadget::Digital::TOGGLE_OFF )

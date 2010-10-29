@@ -79,19 +79,10 @@ vprSingletonImp( NavigationAnimationEngine );
 ////////////////////////////////////////////////////////////////////////////////
 NavigationAnimationEngine::NavigationAnimationEngine()
     :
-    numQuatCams( 0 ),
-    numPointsInFlyThrough( 0 ),
-    activecam( false ),
-    pointCounter( 0 ),
-    cam_id( 0 ),
-    activeFlyThrough( -1 ),
-    lastCommandId( 0 ),
-    currentFrame( 0 ),
-    writeFrame( 0 ),
     t( 0.0f ),
     movementIntervalCalc( 0.01 ),
-    movementSpeed( 10.0f ),
-    frameTimer( new vpr::Timer() ),
+    m_movementSpeed( 10.0f ),
+    m_frameTimer( new vpr::Timer() ),
     mBeginAnim( false ),
     mSetCenterPoint( false ),
     mCenterPointDCS( 0 )
@@ -107,7 +98,7 @@ NavigationAnimationEngine::NavigationAnimationEngine()
 ////////////////////////////////////////////////////////////////////////////////
 NavigationAnimationEngine::~NavigationAnimationEngine()
 {
-    ;
+    delete m_frameTimer;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::SetDCS( ves::xplorer::scenegraph::DCS* worldDCS )
@@ -121,19 +112,32 @@ void NavigationAnimationEngine::ProcessCommand()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void NavigationAnimationEngine::SetAnimationSpeed( double travelSpeed )
+{
+    m_movementSpeed = travelSpeed;
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationAnimationEngine::IncrementAnimationSpeed( double increment )
+{
+    m_movementSpeed += increment;
+    //We can never have a negative speed
+    if( m_movementSpeed < 0.0 )
+    {
+        m_movementSpeed = 0.1;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::PreFrameUpdate()
 {
+    m_frameTimer->stopTiming();
     if( !mBeginAnim )
     {
+        m_deltaTime = m_frameTimer->getTiming();
+        m_frameTimer->reset();
+        m_frameTimer->startTiming();
         return;
     }
-
-    //optimize
-    movementIntervalCalc = 0.01;
-        //1 / ( vecDistance / ( movementSpeed * frameTimer->getTiming() ));
-
-    //change
-    GetQuatCamIncrementor();
+    m_deltaTime = m_frameTimer->getTiming();
 
     gmtl::Quatd tempResQuat;
     gmtl::Vec3d tempVec;
@@ -167,7 +171,15 @@ void NavigationAnimationEngine::PreFrameUpdate()
         t = 1.0f;
         mBeginAnim = false;
     }
-    
+    else
+    {
+        t += movementIntervalCalc;
+        if( t >= ( 1.0f - movementIntervalCalc ) )
+        {
+            t = 1.0f;
+            mBeginAnim = false;
+        }
+    }
     //interpolate the rotation and translation
     gmtl::lerp( tempVec, t, curVec, mEndVec );
     gmtl::slerp( tempResQuat, t, tempQuat, mEndQuat );
@@ -205,28 +217,15 @@ void NavigationAnimationEngine::PreFrameUpdate()
         ves::xplorer::DeviceHandler::instance()->
             SetCenterPoint( &tempCenter );
     }
+    
+    m_frameTimer->reset();
+    m_frameTimer->startTiming();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::UpdateCommand()
 {
     std::cout << "|\tNavigationAnimationEngine::UpdateCommand doing nothing "
               << std::endl;
-}
-////////////////////////////////////////////////////////////////////////////////
-double NavigationAnimationEngine::GetQuatCamIncrementor()
-{
-    ////////////////////////////////////////////////////////////////////////
-    //When in cluster mode this function is only called by the Master Node
-    ////////////////////////////////////////////////////////////////////////
-    t += movementIntervalCalc;
-    
-    if( t >= ( 1.0f - movementIntervalCalc ) )
-    {
-        t = 1.0f;
-        mBeginAnim = false;
-    }
-
-    return t;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::SetAnimationEndPoints(
@@ -240,6 +239,29 @@ void NavigationAnimationEngine::SetAnimationEndPoints(
     m_lastAngle = 0.0;
     mSetCenterPoint = setCenterPoint;
     mCenterPointDCS = centerPointDCS;
+    
+    //Set up the interval constant
+    gmtl::Vec3d curVec;
+    //osg vec to gmtl vec
+    double* temp = _worldDCS->GetVETranslationArray();
+    for( int i = 0; i < 3; ++i )
+    {
+        curVec[ i ] = temp[ i ];
+    }
+    gmtl::Vec3d deltaLeft = mEndVec - curVec;
+    float length = gmtl::length( deltaLeft );
+    //movementIntervalCalc =
+    //    1.0 / ( length / ( m_movementSpeed * m_deltaTime ) );
+
+    double timeConstant = length/m_movementSpeed;
+    double numSegments = timeConstant/m_deltaTime;
+    movementIntervalCalc = 1.0/numSegments;
+    //std::cout << numSegments << " " <<  movementIntervalCalc << std::endl;
+    if( (length == 0) || (movementIntervalCalc > 1.0) || (numSegments < 2.0) )
+    {
+        movementIntervalCalc = 0.01;
+    }
+    //std::cout << length << " " << m_movementSpeed << " " << m_deltaTime << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool NavigationAnimationEngine::IsActive()

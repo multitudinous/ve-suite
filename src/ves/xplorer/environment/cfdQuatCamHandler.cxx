@@ -38,6 +38,10 @@
 
 #include <ves/xplorer/util/fileIO.h>
 
+#include <ves/xplorer/environment/NavigationAnimationEngine.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/environment/cfdQuatCam.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
@@ -74,26 +78,23 @@ vprSingletonImp( cfdQuatCamHandler );
 ////////////////////////////////////////////////////////////////////////////////
 cfdQuatCamHandler::cfdQuatCamHandler()
     :
-    pointCounter( 0 ),
-    movementIntervalCalc( 0.01 ),
-    movementSpeed( 10.0f ),
-    lastCommandId( 0 ),
-    currentFrame( 0 ),
-    writeFrame( 0 ),
-    thisQuatCam( 0 ),
-    t( 0.0f ),
-    numQuatCams( 0 ),
-    numPointsInFlyThrough( 0 ),
     activecam( false ),
     _runFlyThrough( false ),
     writeReadComplete( false ),
+    onMasterNode( true ),
+    pointCounter( 0 ),
     cam_id( 0 ),
     activeFlyThrough( -1 ),
+    t( 0.0f ),
+    movementIntervalCalc( 0.01 ),
+    movementSpeed( 10.0f ),
+    numQuatCams( 0 ),
+    numPointsInFlyThrough( 0 ),
     quatCamDirName( "./" )
 {
     flyThroughList.clear();
     completionTest.push_back( 0 );
-    frameTimer = new vpr::Timer();
+    //frameTimer = new vpr::Timer();
 
     quatCamFileName = "stored_viewpts_flythroughs.vel";
 
@@ -467,13 +468,11 @@ void cfdQuatCamHandler::ProcessCommand()
         std::string newCommand = commandData->GetDataName();
         if( !newCommand.compare( "LOAD_NEW_VIEWPT" ) )
         {
-            writeFrame = currentFrame;
             TurnOffMovement();
             AddViewPtToFlyThrough( 0, QuatCams.size() );
             LoadData( _worldDCS.get() );
             WriteToFile( quatCamFileName );
             writeReadComplete = true;
-            lastCommandId = LOAD_NEW_VIEWPT;
             flag = true;
         }
         else if( !newCommand.compare( "MOVE_TO_SELECTED_LOCATION" ) )
@@ -485,30 +484,25 @@ void cfdQuatCamHandler::ProcessCommand()
         }
         else if( !newCommand.compare( "REMOVE_SELECTED_VIEWPT" ) )
         {
-            writeFrame = currentFrame;
             TurnOffMovement();
             cam_id = static_cast< unsigned int >( commandIds.at( 0 ) );
             RemoveViewPt();
             WriteToFile( quatCamFileName );
             writeReadComplete = true;
-            lastCommandId = REMOVE_SELECTED_VIEWPT;
             flag = true;
         }
         else if( !newCommand.compare( "ADD_NEW_POINT_TO_FLYTHROUGH" ) )
         {
-            writeFrame = currentFrame;
             TurnOffMovement();
             AddViewPtToFlyThrough(
                 static_cast< unsigned int >( commandIds.at( 0 ) ),
                 static_cast< unsigned int >( commandIds.at( 1 ) ) );
             WriteToFile( quatCamFileName );
             writeReadComplete = true;
-            lastCommandId = ADD_NEW_POINT_TO_FLYTHROUGH;
             flag = true;
         }
         else if( !newCommand.compare( "INSERT_NEW_POINT_IN_FLYTHROUGH" ) )
         {
-            writeFrame = currentFrame;
             TurnOffMovement();
             InsertViewPtInFlyThrough(
                 static_cast< unsigned int >( commandIds.at( 0 ) ),
@@ -516,40 +510,33 @@ void cfdQuatCamHandler::ProcessCommand()
                 static_cast< unsigned int >( commandIds.at( 2 ) ) );
             WriteToFile( quatCamFileName );
             writeReadComplete = true;
-            lastCommandId = INSERT_NEW_POINT_IN_FLYTHROUGH;
             flag = true;
         }
         else if( !newCommand.compare( "REMOVE_POINT_FROM_FLYTHROUGH" ) )
         {
-            writeFrame = currentFrame;
             TurnOffMovement();
             RemoveFlythroughPt(
                 static_cast< unsigned int >( commandIds.at( 0 ) ),
                 static_cast< unsigned int >( commandIds.at( 0 ) ) );
             WriteToFile( quatCamFileName );
             writeReadComplete = true;
-            lastCommandId = REMOVE_POINT_FROM_FLYTHROUGH;
             flag = true;
         }
         else if( !newCommand.compare( "DELETE_ENTIRE_FLYTHROUGH" ) )
         {
-            writeFrame = currentFrame;
             TurnOffMovement();
             DeleteEntireFlythrough(
                 static_cast< unsigned int >( commandIds.at( 0 ) ) );
             WriteToFile( quatCamFileName );
             writeReadComplete = true;
-            lastCommandId = DELETE_ENTIRE_FLYTHROUGH;
             flag = true;
         }
         else if( !newCommand.compare( "ADD_NEW_FLYTHROUGH" ) )
         {
-            writeFrame = currentFrame;
             TurnOffMovement();
             AddNewFlythrough();
             WriteToFile( quatCamFileName );
             writeReadComplete = true;
-            lastCommandId = ADD_NEW_FLYTHROUGH;
             flag = true;
         }
         else if( !newCommand.compare( "RUN_ACTIVE_FLYTHROUGH" ) )
@@ -568,6 +555,8 @@ void cfdQuatCamHandler::ProcessCommand()
         else if( !newCommand.compare( "CHANGE_MOVEMENT_SPEED" ) )
         {
             movementSpeed = commandIds.at( 0 );
+            ves::xplorer::NavigationAnimationEngine::instance()->
+                SetAnimationSpeed( movementSpeed );
             flag = true;
         }
 
@@ -602,7 +591,6 @@ void cfdQuatCamHandler::UpdateViewGUIPointData()
 void cfdQuatCamHandler::PreFrameUpdate()
 {
     //If a quat is active this will move the cam to the next location
-    currentFrame += 1;
     const ves::open::xml::CommandPtr tempCommand = 
         CommandManager::instance()->GetXMLCommand();
     if( tempCommand )
@@ -626,10 +614,10 @@ void cfdQuatCamHandler::PreFrameUpdate()
             ProcessCommand();
         }
     }
-    frameTimer->stopTiming();
+    //frameTimer->stopTiming();
     if( _runFlyThrough )
     {
-        if( !activecam )
+        if( !ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
         {
             activecam = true;
             if( pointCounter < static_cast< unsigned int >(
@@ -643,13 +631,13 @@ void cfdQuatCamHandler::PreFrameUpdate()
             }
             //pointCounter = ( pointCounter == ( ( int )flyThroughList.at(
                 //activeFlyThrough ).size() - 1 ) ) ? 0 : ++pointCounter;
+            cam_id = flyThroughList.at( activeFlyThrough ).at( pointCounter );
         }
-        cam_id = flyThroughList.at( activeFlyThrough ).at( pointCounter );
     }
 
     if( activecam )
     {
-        double vecDistance;
+        /*double vecDistance;
 
         if( t == 0.0f )
         {
@@ -672,11 +660,17 @@ void cfdQuatCamHandler::PreFrameUpdate()
         movementIntervalCalc =
             1 / ( vecDistance / ( movementSpeed * frameTimer->getTiming() ) );
 
-        Relocate( _worldDCS.get() );
+        Relocate( _worldDCS.get() );*/
+        cfdQuatCam* cam = QuatCams.at( cam_id );
+        ves::xplorer::NavigationAnimationEngine::instance()->
+            SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
+        ves::xplorer::NavigationAnimationEngine::instance()->
+            SetAnimationEndPoints( cam->GetTrans(), cam->GetQuat() );
+        activecam = false;
     }
 
-    frameTimer->reset();
-    frameTimer->startTiming();
+    //frameTimer->reset();
+    //frameTimer->startTiming();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::UpdateCommand()

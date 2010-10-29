@@ -181,18 +181,6 @@ public:
     ///\return
     bool IsActive();
 
-    ///
-    unsigned int numQuatCams;
-    ///
-    unsigned int numFlyThroughs;
-    ///
-    unsigned int* numPointsInFlyThrough;
-
-    ///
-    int cfdId;
-    ///
-    int cfdIso_value;
-
 protected:
     ///Update the gui with the new data
     void UpdateViewGUIPointData();
@@ -209,36 +197,26 @@ private:
     bool writeReadComplete;
     ///
     bool onMasterNode;
-
     ///
     unsigned int pointCounter;
-
-    ///
-    int run;
     ///
     int cam_id;
     ///
     int activeFlyThrough;
     ///
-    int lastCommandId;
-    ///
-    int currentFrame;
-    ///
-    int writeFrame;
-
-    ///
     double t;
     ///
     double rotvec[ 3 ];
     ///
-    double angle;
-    ///
     double movementIntervalCalc;
     ///
     double movementSpeed;
-
     ///
-    std::string _param;
+    unsigned int numQuatCams;
+    ///
+    unsigned int numFlyThroughs;
+    ///
+    unsigned int* numPointsInFlyThrough;
     ///
     std::string quatCamFileName;
     ///
@@ -250,12 +228,6 @@ private:
     std::vector< std::vector< int > > flyThroughList;
     ///
     std::vector< int > completionTest;
-
-    ///
-    vpr::Timer* frameTimer;
-
-    ///
-    cfdQuatCam* thisQuatCam;
 
     ///
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;

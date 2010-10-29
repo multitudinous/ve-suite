@@ -93,7 +93,6 @@ void cfdQuatCam::MoveCam( double t )
 void cfdQuatCam::RotSlerp( double t )
 {
     gmtl::slerp( CurPosQuat, t, LastPosQuat, NextPosQuat );
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCam::TransLerp( double t )
@@ -121,9 +120,14 @@ gmtl::Matrix44d cfdQuatCam::GetMatrix( void )
     return nextMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-gmtl::Vec3d cfdQuatCam::GetTrans( void )
+gmtl::Vec3d& cfdQuatCam::GetTrans()
 {
     return vjVecNextTrans;
+}
+////////////////////////////////////////////////////////////////////////////////
+gmtl::Quatd& cfdQuatCam::GetQuat()
+{
+    return NextPosQuat;
 }
 ////////////////////////////////////////////////////////////////////////////////
 gmtl::Vec3d cfdQuatCam::GetLastTrans( void )

@@ -111,8 +111,15 @@ public:
     void SetAnimationPoints( std::vector< std::pair< gmtl::Vec3d, 
         gmtl::Quatd > > animationPoints );
 
+    ///Do we have an active animation
     bool IsActive();
 
+    ///Set the speed of travel for movement. We default to 10 ft/s.
+    void SetAnimationSpeed( double travelSpeed );
+    
+    ///Increment the animation speed
+    void IncrementAnimationSpeed( double increment );
+    
 private:
     ///Update the gui with the new data
     void UpdateViewGUIPointData();
@@ -120,34 +127,13 @@ private:
     ///Map of event handlers for texture-based vis
     std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
     ///
-    void Relocate( ves::xplorer::scenegraph::DCS* worldDCS );
-    ///
-    double GetQuatCamIncrementor();
-
-    ///
-    unsigned int numQuatCams;
-    ///
-    unsigned int* numPointsInFlyThrough;
-    ///
-    bool activecam;
-    ///
-    unsigned int pointCounter;
-    ///
-    int cam_id;
-    ///
-    int activeFlyThrough;
-    ///
-    int lastCommandId;
-    ///
-    int currentFrame;
-    ///
-    int writeFrame;
-    ///
     double t;
     ///
     double movementIntervalCalc;
     ///
-    double movementSpeed;
+    double m_movementSpeed;
+    ///
+    double m_deltaTime;
     ///
     std::vector< cfdQuatCam* > QuatCams;
     ///
@@ -155,7 +141,7 @@ private:
     ///
     std::vector< int > completionTest;
     ///
-    vpr::Timer* frameTimer;
+    vpr::Timer* m_frameTimer;
     ///
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
     ///
