@@ -87,9 +87,6 @@ NavigationAnimationEngine::NavigationAnimationEngine()
     mSetCenterPoint( false ),
     mCenterPointDCS( 0 )
 {
-    flyThroughList.clear();
-    completionTest.push_back( 0 );
-
     mEventHandlers[ std::string( "QC_LOAD_STORED_POINTS" ) ] =
         new ves::xplorer::event::QuatCamLoadFileEventHandler();
     mEventHandlers[ std::string( "QC_CLEAR_QUAT_DATA" ) ] =

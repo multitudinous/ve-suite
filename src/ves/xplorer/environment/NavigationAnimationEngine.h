@@ -135,12 +135,6 @@ private:
     ///
     double m_deltaTime;
     ///
-    std::vector< cfdQuatCam* > QuatCams;
-    ///
-    std::vector< std::vector< int > > flyThroughList;
-    ///
-    std::vector< int > completionTest;
-    ///
     vpr::Timer* m_frameTimer;
     ///
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
