@@ -34,7 +34,7 @@ void main()
     //vec3 totalSpecular =
         //gl_LightSource[ 0 ].specular.rgb * gl_Color.rgb * pow( RDotL, 15.0 );
 
-    vec2 projectionUV = gl_TexCoord[ 15 ].st / gl_TexCoord[ 15 ].q;
+    vec2 projectionUV = gl_TexCoord[ 6 ].st / gl_TexCoord[ 6 ].q;
     vec4 color0;
 
     if( !cameraPictureFrame )
@@ -43,8 +43,8 @@ void main()
         //If in frustum
         if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 &&
             projectionUV.t >= 0.0 && projectionUV.t <= 1.0 &&
-            gl_TexCoord[ 15 ].q >= nearPlane &&
-            gl_TexCoord[ 15 ].q <= farPlane )
+            gl_TexCoord[ 6 ].q >= nearPlane &&
+            gl_TexCoord[ 6 ].q <= farPlane )
         {
             color0.a = 1.0;
         }
@@ -55,7 +55,7 @@ void main()
         color0 = gl_Color;
         if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 &&
             projectionUV.t >= 0.0 && projectionUV.t <= 1.0 &&
-            gl_TexCoord[ 15 ].q >= 0.01 )
+            gl_TexCoord[ 6 ].q >= 0.01 )
         {
             if( projectionUV.s >= 0.02 && projectionUV.s <= 0.98 &&
                 projectionUV.t >= 0.02 && projectionUV.t <= 0.98 )
