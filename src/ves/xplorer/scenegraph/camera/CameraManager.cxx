@@ -104,7 +104,7 @@ CameraManager::CameraManager()
 
     //Initialize m_texGenNode
     m_texGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
-    m_texGenNode->setTextureUnit( 4 );
+    m_texGenNode->setTextureUnit( 15 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraManager::CameraManager(

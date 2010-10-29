@@ -94,9 +94,9 @@ void ProjectionTechnique::DefinePasses()
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
         stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
         stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
-        stateset->setTextureMode( 4, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
-        stateset->setTextureMode( 4, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
-        stateset->setTextureMode( 4, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
+        stateset->setTextureMode( 15, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
+        stateset->setTextureMode( 15, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
+        stateset->setTextureMode( 15, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
         stateset->setAttribute(
             program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
