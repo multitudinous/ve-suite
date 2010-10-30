@@ -121,6 +121,7 @@ GraphicalPluginManager::GraphicalPluginManager()
 void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameContext,
                                PortableServer::POA* child_poa )
 {
+    std::cout << "| Initializing.............................. GraphicalPluginManager |" << std::endl;
     this->naming_context = inputNameContext;
     m_ChildPOA = child_poa;
     

@@ -210,7 +210,7 @@ void SteadyStateVizHandler::ClearVisObjects()
 void SteadyStateVizHandler::InitScene()
 {
     //This set of thread stuff needs to be in ssvizhandler and transvizhandler
-    std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
+    std::cout << "| Initializing............................................. Threads |" << std::endl;
     runIntraParallelThread = true;
     vjTh[ 0 ] = new vpr::Thread( boost::bind( &SteadyStateVizHandler::CreateActorThread, this ) );
 }

@@ -525,7 +525,6 @@ void App::initScene()
     _tbvHandler = ves::xplorer::TextureBasedVizHandler::instance();
     _tbvHandler->SetMasterNode( m_vjobsWrapper->IsMaster() );
 
-    std::cout << "|  2. Initializing.................................... GraphicalPluginManager |" << std::endl;
     GraphicalPluginManager::instance()->Initialize(
         m_vjobsWrapper->naming_context, m_vjobsWrapper->child_poa );
 
