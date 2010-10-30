@@ -332,7 +332,10 @@ void SteadyStateVizHandler::CreateActorThread()
     //This thread is purely for creation of geodes
     while( runIntraParallelThread )
     {
-        vpr::System::msleep( 100 );  // thenth-second delay
+        if( runIntraParallelThread )
+        {
+            vpr::System::msleep( 100 );  // thenth-second delay
+        }
 
         // Basically waiting for work here
         // This is a guard
