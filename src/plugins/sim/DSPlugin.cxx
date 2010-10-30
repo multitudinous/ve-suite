@@ -273,14 +273,14 @@ wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 void DSPlugin::OnCreateOPCList( wxCommandEvent& event )
 {
     //create dialog with list of available opc variables
-    OPCDlg * opcDlg = new OPCDlg( m_canvas );
+    OPCDlg opcDlg( m_canvas );
 
     //populate the dialog with available variables and selected
     //opcDlg->PopulateLists( m_opcList, m_selectedOpcList );
-    opcDlg->SetParentPlugin( this );
+    opcDlg.SetParentPlugin( this );
 
     //display the dialog
-    opcDlg->ShowModal();
+    opcDlg.ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnConnect( wxCommandEvent& event )
