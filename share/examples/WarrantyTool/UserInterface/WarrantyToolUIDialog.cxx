@@ -368,6 +368,7 @@ void WarrantyToolUIDialog::OnDataLoad( wxFileDirPickerEvent& event )
         m_variableChoice02->Append( m_columnStrings );
         m_variableChoice03->Append( m_columnStrings );
         m_displayTextChkList->Append( m_columnStrings );
+        m_displayTextChkList->Delete( m_displayTextChkList->FindString( _("part_number") ) );
 
         m_manualPartSelectionChoice->Append( m_partNumberStrings );
     }
