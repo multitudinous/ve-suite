@@ -121,7 +121,7 @@ MinervaManager::MinervaManager()
 {
     std::string xplorerDataDir = Usul::System::Environment::get ( "XPLORER_DATA_DIR" );
     std::string minervaDir = xplorerDataDir + std::string( "/minerva" );
-    std::cout << minervaDir << std::endl;
+    std::cout << "|\tMinerva data directory = " << minervaDir << std::endl;
     bool vesuiteHomeDefined = false;
     try
     {
