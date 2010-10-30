@@ -1092,10 +1092,25 @@ void WarrantyToolUIDialog::OnMouseSelection( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::OnSaveQuery( wxCommandEvent& event )
 {
+    wxFileDialog dialog( NULL, _T( "Save Current Query..." ),
+                        ::wxGetCwd(),
+                        _T( "db_query1" ),
+                        _T( "txt (*.txt)|*.txt" ),
+                        wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+                        );
+    
+    if( dialog.ShowModal() != wxID_OK )
+    {
+        return;
+    }
+    wxFileName vesFileName;
+    vesFileName = dialog.GetPath();
+    std::string filename = ConvertUnicode( vesFileName.GetFullPath().c_str() );
+
     ves::open::xml::DataValuePairSharedPtr 
         cameraGeometryOnOffDVP( new ves::open::xml::DataValuePair() );
     cameraGeometryOnOffDVP->
-        SetData( "SAVE", "temp_file.txt" );
+        SetData( "SAVE", filename );
     
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
     command->AddDataValuePair( cameraGeometryOnOffDVP );

@@ -117,7 +117,7 @@ private:
     ///Query 3 sets of data to create 3 highlighted group of parts
     void HighlightPartsInJoinedTabled( const std::string& queryString );
     ///Write out the current query to a file
-    void SaveCurrentQuery();
+    void SaveCurrentQuery( const std::string& filename );
 
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files

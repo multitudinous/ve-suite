@@ -376,7 +376,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         {
             std::string saveFile;
             dvp->GetData( saveFile );
-            SaveCurrentQuery();
+            SaveCurrentQuery( saveFile );
         }
     }
     else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
@@ -1912,7 +1912,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::SaveCurrentQuery()
+void WarrantyToolGP::SaveCurrentQuery( const std::string& filename )
 {
     if( !m_currentStatement )
     {
@@ -1941,7 +1941,7 @@ void WarrantyToolGP::SaveCurrentQuery()
         return;
     }
     
-    std::ofstream statementExport( "db_save.txt" );
+    std::ofstream statementExport( filename.c_str() );
     
     for( size_t i = 0; i < cols; ++i )
     {
