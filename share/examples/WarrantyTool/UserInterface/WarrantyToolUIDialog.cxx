@@ -1090,3 +1090,17 @@ void WarrantyToolUIDialog::OnMouseSelection( wxCommandEvent& event )
     mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUIDialog::OnSaveQuery( wxCommandEvent& event )
+{
+    ves::open::xml::DataValuePairSharedPtr 
+        cameraGeometryOnOffDVP( new ves::open::xml::DataValuePair() );
+    cameraGeometryOnOffDVP->
+        SetData( "SAVE", "temp_file.txt" );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+    command->AddDataValuePair( cameraGeometryOnOffDVP );
+    std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
+    command->SetCommandName( mCommandName );
+    mServiceList->SendCommandStringToXplorer( command );
+}
+////////////////////////////////////////////////////////////////////////////////

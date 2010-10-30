@@ -150,13 +150,13 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
     m_queryTextCommandCtrl->SetMinSize( wxSize( 200,-1 ) );
     
     queryTextCommandSizer->Add( m_queryTextCommandCtrl, 0, wxEXPAND, 5 );
-
+    
     bSizer5->Add( queryTextCommandSizer, 0, wxEXPAND|wxTOP, 5 );
     
     sbSizer2->Add( bSizer5, 1, wxEXPAND, 5 );
     
     bSizer1->Add( sbSizer2, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5 );
-
+    
     wxStaticBoxSizer* sbSizer101;
     sbSizer101 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Table Controls") ), wxHORIZONTAL );
     
@@ -255,10 +255,13 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
     
     sbSizer10->Add( m_mouseSelection, 0, wxRIGHT, 5 );
     
-    m_button2 = new wxButton( this, wxID_ANY, wxT("Clear"), wxDefaultPosition, wxSize( -1,20 ), 0 );
-    m_button2->SetMaxSize( wxSize( -1,20 ) );
+    m_clearButton = new wxButton( this, wxID_ANY, wxT("Clear"), wxDefaultPosition, wxSize( -1,20 ), 0 );
+    m_clearButton->SetMaxSize( wxSize( -1,20 ) );
     
-    sbSizer10->Add( m_button2, 0, wxRIGHT, 5 );
+    sbSizer10->Add( m_clearButton, 0, wxRIGHT, 5 );
+    
+    m_saveButton = new wxButton( this, wxID_ANY, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
+    sbSizer10->Add( m_saveButton, 0, 0, 5 );
     
     bSizer1->Add( sbSizer10, 0, wxALL|wxEXPAND, 5 );
     
@@ -308,7 +311,8 @@ MachineInfoDlg::MachineInfoDlg( wxWindow* parent, wxWindowID id, const wxString&
     m_displayTextChkList->Connect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( MachineInfoDlg::OnTextChkListToggle ), NULL, this );
     m_toggleUnselected->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnToggleUnselected ), NULL, this );
     m_mouseSelection->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnMouseSelection ), NULL, this );
-    m_button2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnClearData ), NULL, this );
+    m_clearButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnClearData ), NULL, this );
+    m_saveButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnSaveQuery ), NULL, this );
     m_dialogButtonsApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryApply ), NULL, this );
     m_dialogButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnDialogCancel ), NULL, this );
     m_dialogButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryOK ), NULL, this );
@@ -348,7 +352,8 @@ MachineInfoDlg::~MachineInfoDlg()
     m_displayTextChkList->Disconnect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( MachineInfoDlg::OnTextChkListToggle ), NULL, this );
     m_toggleUnselected->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnToggleUnselected ), NULL, this );
     m_mouseSelection->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnMouseSelection ), NULL, this );
-    m_button2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnClearData ), NULL, this );
+    m_clearButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnClearData ), NULL, this );
+    m_saveButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnSaveQuery ), NULL, this );
     m_dialogButtonsApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryApply ), NULL, this );
     m_dialogButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnDialogCancel ), NULL, this );
     m_dialogButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MachineInfoDlg::OnQueryOK ), NULL, this );

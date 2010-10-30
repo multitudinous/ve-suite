@@ -19,13 +19,14 @@
 #include <wx/statbox.h>
 #include <wx/choice.h>
 #include <wx/textctrl.h>
-#include <wx/checklst.h>
 #include <wx/checkbox.h>
+#include <wx/checklst.h>
 #include <wx/dialog.h>
+
+#include <ves/conductor/UIDialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
-#include <ves/conductor/UIDialog.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class MachineInfoDlg
@@ -66,7 +67,8 @@ class MachineInfoDlg : public ves::conductor::UIDialog
         wxCheckListBox* m_displayTextChkList;
         wxCheckBox* m_toggleUnselected;
         wxCheckBox* m_mouseSelection;
-        wxButton* m_button2;
+        wxButton* m_clearButton;
+        wxButton* m_saveButton;
         wxStdDialogButtonSizer* m_dialogButtons;
         wxButton* m_dialogButtonsOK;
         wxButton* m_dialogButtonsApply;
@@ -85,10 +87,11 @@ class MachineInfoDlg : public ves::conductor::UIDialog
         virtual void OnToggleUnselected( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnMouseSelection( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnClearData( wxCommandEvent& event ){ event.Skip(); }
+        virtual void OnSaveQuery( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnQueryApply( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnDialogCancel( wxCommandEvent& event ){ event.Skip(); }
         virtual void OnQueryOK( wxCommandEvent& event ){ event.Skip(); }
-    
+        
     
     public:
         MachineInfoDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Deere Analytics"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE );

@@ -40,6 +40,8 @@
 #include <ves/open/xml/CommandPtr.h>
 
 #include <Poco/Tuple.h>
+#include <Poco/Data/Statement.h>
+#include <Poco/Data/RecordSet.h>
 
 #include <map>
 #include <vector>
@@ -114,6 +116,8 @@ private:
     void QueryInnerJoinAndHighlightParts( const std::string& queryString );
     ///Query 3 sets of data to create 3 highlighted group of parts
     void HighlightPartsInJoinedTabled( const std::string& queryString );
+    ///Write out the current query to a file
+    void SaveCurrentQuery();
 
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
@@ -123,6 +127,7 @@ private:
     
     std::string m_lastPartNumber;
     ves::xplorer::scenegraph::CADEntity* cadEntity;
+    ///Adding parts
     bool mAddingParts;
     std::map< std::string, std::vector< std::pair< std::string, std::string > > > m_dataMap;
     osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
@@ -132,8 +137,11 @@ private:
 
     typedef Poco::Tuple< std::string, std::string, int, double, double, double, std::string > Part;
 	typedef std::vector<Part> Assembly;
+    ///All of the currently highlighted parts
     std::vector< std::string > m_assemblyPartNumbers;
-    // insert some rows
+    ///All of the currently highlighted joined parts
+    std::vector< std::string > m_joinedPartNumbers;
+    ///insert some rows
 	Assembly m_selectedAssembly;
     ///Command being processed
     ves::open::xml::CommandPtr m_currentCommand;
@@ -153,6 +161,9 @@ private:
     bool m_mouseSelection;
     ///Container for the two currently active table names
     std::pair< std::string, std::string > m_tableNames;
+    ///The current select statement
+    Poco::Data::Statement* m_currentStatement;
+    //Poco::Data::RecordSet m_currentStatement;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

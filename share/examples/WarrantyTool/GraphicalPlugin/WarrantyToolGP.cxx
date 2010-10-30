@@ -112,7 +112,8 @@ WarrantyToolGP::WarrantyToolGP()
     m_groupedTextTextures( 0 ),
     m_cadRootNode( 0 ),
     m_hasPromiseDate( false ),
-    m_mouseSelection( false )
+    m_mouseSelection( false ),
+    m_currentStatement( 0 )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
@@ -235,6 +236,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 opVisitor1( m_cadRootNode, false, true, 0.3f );
                 //mAddingParts = true;
                 m_assemblyPartNumbers.clear();
+                m_joinedPartNumbers.clear();
             }
             //Highlight part
             m_lastPartNumber = dvp->GetDataString();
@@ -245,6 +247,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         else if( dvpName == "SCROLL" )
         {
             m_assemblyPartNumbers.clear();
+            m_joinedPartNumbers.clear();
             //Highlight the respective node
             //Make a user specified part glow
             ves::xplorer::scenegraph::util::OpacityVisitor 
@@ -276,17 +279,30 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             
             //Clear the list of active part numbers
             m_assemblyPartNumbers.clear();
+            m_joinedPartNumbers.clear();
         }
         else if( dvpName == "TOGGLE_PARTS" )
         {
             std::vector< std::string > lowerCasePartNumbers;
-            for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
+            std::string partNum;
+            if( m_joinedPartNumbers.size() == 0)
             {
-                std::string partNum = m_assemblyPartNumbers.at( i );
-                boost::algorithm::to_lower( partNum );
-                lowerCasePartNumbers.push_back( partNum );
+                for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
+                {
+                    partNum = m_assemblyPartNumbers.at( i );
+                    boost::algorithm::to_lower( partNum );
+                    lowerCasePartNumbers.push_back( partNum );
+                }
             }
-            
+            else
+            {
+                for( size_t i = 0; i < m_joinedPartNumbers.size(); ++i )
+                {
+                    partNum = m_joinedPartNumbers.at( i );
+                    boost::algorithm::to_lower( partNum );
+                    lowerCasePartNumbers.push_back( partNum );
+                }
+            }
             unsigned int checkBox;
             dvp->GetData( checkBox );
             size_t numChildren = m_cadRootNode->getNumChildren();
@@ -355,6 +371,12 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             m_tableNames = 
                 std::make_pair< std::string, std::string >( 
                 stringArray.at( 0 ), stringArray.at( 1 ) );
+        }
+        else if( dvpName == "SAVE" )
+        {
+            std::string saveFile;
+            dvp->GetData( saveFile );
+            SaveCurrentQuery();
         }
     }
     else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
@@ -890,7 +912,8 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
 
     //Clear and reset the data containers for the user defined queries
-    m_assemblyPartNumbers.clear();    
+    m_assemblyPartNumbers.clear();
+    m_joinedPartNumbers.clear();
     {
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight2( m_cadRootNode, "", false, true );
@@ -1280,8 +1303,8 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             m_groupedTextTextures->AddTextTexture( partNumber, tempText );
             
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
-                                                                           m_cadRootNode, partNumber, true, true, 
-                                                                           osg::Vec3( 0.57255, 0.34118, 1.0 ) );
+                m_cadRootNode, partNumber, true, true, 
+                osg::Vec3( 0.57255, 0.34118, 1.0 ) );
         }
         
         if( !failedLoad && (m_assemblyPartNumbers.size() > 0) )
@@ -1291,7 +1314,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             m_textTrans->addChild( m_groupedTextTextures.get() );
             
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
-                                                                           m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );
+                m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );
         }
     }
     else
@@ -1608,6 +1631,11 @@ void WarrantyToolGP::QueryTableAndHighlightParts(
         
         more = rs.moveNext();
     }
+    if( m_currentStatement )
+    {
+        delete m_currentStatement;
+    }
+    m_currentStatement = new Statement( select );
     
     if( !failedLoad )
     {
@@ -1707,6 +1735,7 @@ void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& querySt
                 partNumber = rs[col].convert<std::string>();
                 //tempText->SetTitle( partNumber );
                 m_assemblyPartNumbers.push_back( partNumber );
+                m_joinedPartNumbers.push_back( partNumber );
             }
             /*else
             {
@@ -1726,6 +1755,11 @@ void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& querySt
         
         more = rs.moveNext();
     }
+    if( m_currentStatement )
+    {
+        delete m_currentStatement;
+    }
+    m_currentStatement = new Statement( select );
     
     if( !failedLoad )
     {
@@ -1860,6 +1894,11 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
         
         more = rs.moveNext();
     }
+    if( m_currentStatement )
+    {
+        delete m_currentStatement;
+    }
+    m_currentStatement = new Statement( select );
     
     if( !failedLoad )
     {
@@ -1871,5 +1910,62 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
         highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
         //osg::Vec3( 0.34118, 1.0, 0.57255 ) );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::SaveCurrentQuery()
+{
+    if( !m_currentStatement )
+    {
+        return;
+    }
+    // create a RecordSet 
+    Poco::Data::RecordSet rs(*m_currentStatement);
+    std::size_t cols = rs.columnCount();
+    size_t numQueries = rs.rowCount();
+    std::ostringstream outString;
+    outString << "Number of parts found " << numQueries;
+    mCommunicationHandler->SendConductorMessage( outString.str() );
+    if( numQueries == 0 )
+    {
+        mCommunicationHandler->SendConductorMessage( "No parts found." );
+        return;
+    }
+    // iterate over all rows and columns
+    bool more = false;
+    try
+    {
+        more = rs.moveFirst();
+    }
+    catch( ... )
+    {
+        return;
+    }
+    
+    std::ofstream statementExport( "db_save.txt" );
+    
+    for( size_t i = 0; i < cols; ++i )
+    {
+        statementExport << rs.columnName( i );
+        if( i != (cols-1) )
+        {
+            statementExport << ",";
+        }
+    }
+    statementExport << std::endl;
+    
+    while( more )
+    {        
+        for( std::size_t col = 0; col < cols; ++col )
+        {
+            statementExport << rs[col].convert<std::string>();
+            if( col != (cols-1) )
+            {
+                statementExport << ",";
+            }
+        }
+        more = rs.moveNext();
+        statementExport << std::endl;
+    }
+    statementExport.close();
 }
 ////////////////////////////////////////////////////////////////////////////////

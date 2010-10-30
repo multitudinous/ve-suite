@@ -130,6 +130,7 @@ protected:
     void OnToggleUnselected( wxCommandEvent& event );
     void OnMouseSelection( wxCommandEvent& event );
     void OnClearData( wxCommandEvent& event );
+	void OnSaveQuery( wxCommandEvent& event );
     void OnQueryApply( wxCommandEvent& event );
     void OnDialogCancel( wxCommandEvent& event );
     void OnQueryOK( wxCommandEvent& event );
