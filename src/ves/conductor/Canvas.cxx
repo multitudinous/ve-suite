@@ -164,6 +164,11 @@ Canvas::Canvas()
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::~Canvas()
 {
+    ;
+}
+///////////////////////////////////////////////////////////////////////////////
+void Canvas::CleanUpAllNetworks()
+{
     // Must first remove the plugin event handlers
     // as these cause problems on shutdown on windows for some reason.
     // Various shutdown processes were tried but the only way

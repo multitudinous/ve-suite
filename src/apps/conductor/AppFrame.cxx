@@ -659,6 +659,7 @@ void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
     m_shuttingDown = true;
     DynamicsDataBuffer::instance()->CleanUp();
     canvas->CleanUpNetworks();
+    canvas->CleanUpAllNetworks();
     serviceList->DisconnectFromCE();
 
     //Shutdown xplorer

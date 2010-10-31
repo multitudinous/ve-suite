@@ -110,8 +110,11 @@ public:
     void OnDelNetwork( wxUpdateUIEvent& event );
     ///Delete and remove the network event handlers
     void CleanUpNetworks();
+    ///Clean up all the networks memory
+    void CleanUpAllNetworks();
     ///Set the User scale
     void SetUserScale( double x, double y );
+    ///Set the main frame for the app
     void SetMainFrame(wxWindow *window);
 
 
