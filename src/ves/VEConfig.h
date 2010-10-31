@@ -36,7 +36,7 @@
 #define VE_PHYSICS 1
 
 #define VES_MAJOR_VERSION    2
-#define VES_MINOR_VERSION    1
+#define VES_MINOR_VERSION    3 
 #define VES_PATCH_VERSION    0
 
 #if defined(_MSC_VER)
