@@ -38,7 +38,7 @@
 
 const vpr::DebugCategory
 vesDBG( vpr::GUID( "A4419133-2E5D-45BB-8A78-3F18AC4C7018" ), "VES_DBG",
-        "VE_Suite DBG:" );
+        "VE-Suite DBG:" );
 
 // this could then be used by:
 // vprDEBUG(vesDBG, vprDBG_WARNING_LVL) << "My Warning Message" << vprDEBUG_FLUSH;

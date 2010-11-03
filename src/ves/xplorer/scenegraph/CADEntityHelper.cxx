@@ -558,12 +558,17 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     {
         util::MaterialPresent materialPresent( mCadNode.get() );
         bool hasTexture = materialPresent.FileHasMaterial();
+        osg::ref_ptr< osg::StateSet > stateset =
+            mCadNode->getOrCreateStateSet();
         if( hasTexture )
         {
-            osg::ref_ptr< osg::StateSet > stateset =
-                mCadNode->getOrCreateStateSet();
             stateset->addUniform(
                 new osg::Uniform( "textureZeroIsBound", true ) );
+        }
+        else
+        {
+            stateset->addUniform(
+                new osg::Uniform( "textureZeroIsBound", false ) );
         }
     }
     ///Test uuid metanode io and assignment
