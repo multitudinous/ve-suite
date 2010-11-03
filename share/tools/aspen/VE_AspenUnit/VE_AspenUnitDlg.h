@@ -3,6 +3,7 @@
 
 #pragma once
 #include "afxwin.h"
+#include <string>
 
 class AspenUnit_i;
 class CorbaUnitManager;
@@ -44,6 +45,7 @@ private:
     CString portNumber;
     afx_msg void OnBnClickedCancel();
     bool initialized;
+    std::string testing2;
 public:
     afx_msg void OnBnClickedOk();
     afx_msg void OnBnClickedButton2();

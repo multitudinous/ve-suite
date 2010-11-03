@@ -19,8 +19,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 DynParser::DynParser()
-:
-m_adVariables(NULL)
 {
     try
     {
@@ -35,7 +33,7 @@ m_adVariables(NULL)
         exit(1);
     }
     
-    ves::open::xml::XMLObjectFactory::Instance()->
+    /*ves::open::xml::XMLObjectFactory::Instance()->
     RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->
     RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
@@ -43,7 +41,7 @@ m_adVariables(NULL)
     RegisterObjectCreator( "Model",new ves::open::xml::model::ModelCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->
     RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
-    
+    */
     dyndoc = new AspenDynamicsInterface::AspenDynamicsInterface();
     workingDir = "";
     redundantID = 0;
@@ -52,7 +50,7 @@ m_adVariables(NULL)
 ///////////////////////////////////////////////////////////////////////////////
 DynParser::~DynParser()
 {
-    XMLPlatformUtils::Terminate();
+    //XMLPlatformUtils::Terminate();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,8 +60,8 @@ void DynParser::OpenFile(const char * file)
     std::string dynfExt(".dynf");
     //ParseFile( ( workingDir + fileName + dynfExt ).c_str());
     NewParseFile( ( workingDir + fileName + dynfExt ).c_str());
-    CString filename = file;
-    dyndoc->Open( ( workingDir + fileName + dynfExt ).c_str());
+    CString filename = ( workingDir + fileName + dynfExt ).c_str();
+    dyndoc->Open( filename );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2376,7 +2374,7 @@ void DynParser::FindNextEntry( std::ifstream &file )
 void DynParser::AddADVariable( const std::string& var )
 {
     std::vector<std::string>::const_iterator pos = 
-        find( m_adVariables.begin(), m_adVariables.end(), var );  
+        std::find( m_adVariables.begin(), m_adVariables.end(), var );  
 
     if( pos == m_adVariables.end() || m_adVariables.empty() )
     {
@@ -2399,7 +2397,7 @@ std::string DynParser::GetADValues( )
     {
         std::pair< std::string, std::string > nameNValue;
         std::string tempName =
-            m_adVariables[i].substr( 0, m_adVariables[i].find(".") - 1 );
+            m_adVariables[i].substr( 0, m_adVariables[i].find(".") );
         std::string tempVar =
             m_adVariables[i].substr( m_adVariables[i].find(".") - 1,
             m_adVariables[i].size() );
@@ -2448,12 +2446,21 @@ std::string DynParser::GetADValues( )
 ///////////////////////////////////////////////////////////////////////////////
 bool DynParser::IsADVarsEmpty()
 {
-    return m_adVariables.empty();
+    if( m_adVariables.size() == 0 )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    //return m_adVariables.empty();
 }
 ///////////////////////////////////////////////////////////////////////////////
 int DynParser::NumADVars()
 {
-    if( m_adVariables.empty() )
+    //if( m_adVariables.empty() )
+    if( m_adVariables.size() == 0 )
     {
         return 0;
     }

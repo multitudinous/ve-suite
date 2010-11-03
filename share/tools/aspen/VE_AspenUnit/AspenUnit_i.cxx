@@ -66,7 +66,7 @@ AspenUnit_i::AspenUnit_i( std::string name, CVE_AspenUnitDlg * dialog,
     bkp(NULL),
     mQuerying(false)
 {
-    ves::open::xml::XMLObjectFactory::Instance()->
+    /*ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator(
@@ -76,7 +76,7 @@ AspenUnit_i::AspenUnit_i( std::string name, CVE_AspenUnitDlg * dialog,
         "Model",new ves::open::xml::model::ModelCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
-
+*/
     AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
 
     mQueryCommandNames.insert( "getNetwork");
@@ -724,6 +724,7 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
             dyn->OpenFile( filename.c_str() );
             m_thread = new vpr::Thread( boost::bind( &AspenUnit_i::Monitor, this ) );
             //dyn->ParseFile((mWorkingDir + filename + ".dynf" ).c_str());
+            //Monitor(  );
             mFileName = filename;
             firsttime=false;
         }
@@ -1188,8 +1189,7 @@ void AspenUnit_i::SetParam( ves::open::xml::CommandPtr cmd )
             ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
             std::vector< std::string > temp_vector;
             pair->GetData( temp_vector );
-            dyn->SetValue( temp_vector[0].c_str(), temp_vector[1].c_str(),
-                temp_vector[2].c_str(), true );
+            dyn->SetValue( temp_vector[0], temp_vector[1], temp_vector[2], true );
         }
     }
 }
@@ -1217,7 +1217,7 @@ void AspenUnit_i::addVariable( ves::open::xml::CommandPtr cmd )
     ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
     std::string var;
     pair->GetData( var );
-    dyn->AddADVariable( var.c_str() );
+    dyn->AddADVariable( var );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1228,7 +1228,7 @@ void AspenUnit_i::Monitor(  )
     {
         int temp = dyn->NumADVars();
         bool tempBool = dyn->IsADVarsEmpty();
-        if( connected && !tempBool && dyn )
+        if( !tempBool && dyn && !mQuerying )
         {
             std::string netPak = dyn->GetADValues( );
             theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );

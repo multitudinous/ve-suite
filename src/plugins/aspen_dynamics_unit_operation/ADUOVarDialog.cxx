@@ -205,12 +205,7 @@ void ADUOVarDialog::SetServiceList(
 ////////////////////////////////////////////////////////////////////////////////
 void ADUOVarDialog::OnMonitorVariable( wxCommandEvent& )
 {
-   
-    WxGrid->AppendRows( 1 );
-    wxString mystring;
     m_monitorRow = WxGrid->GetSelectedRows()[0];
-    mystring << m_monitorRow;
-    WxGrid->SetCellValue( 0, 0, mystring );
 
     ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("addVariable");

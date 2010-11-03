@@ -8,10 +8,6 @@
 #include "AspenUnit_i.h"
 #include "CorbaUnitManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
 
 // CVE_AspenUnitDlg dialog
 CVE_AspenUnitDlg::CVE_AspenUnitDlg(CWnd* pParent /*=NULL*/)
@@ -197,7 +193,8 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
 
         commManager = new CorbaUnitManager(this);
         //commManager->SetComputerNameUnitNameAndPort( "localhost", "1239", "AspenUnit" );
-        commManager->SetComputerNameUnitNameAndPort( dir, name , port, "AspenUnit" );
+        commManager->SetComputerNameUnitNameAndPort( std::string( dir.GetString() ),
+            std::string( name.GetString() ) , std::string( port.GetString() ), "AspenUnit" );
         commManager->RunORB();
         unitObject = commManager->GetUnitObject();
         if ( !unitObject )

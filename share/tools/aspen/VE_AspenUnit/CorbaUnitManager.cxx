@@ -29,7 +29,7 @@ CorbaUnitManager::~CorbaUnitManager()
     XMLPlatformUtils::Terminate();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CorbaUnitManager::SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname )
+void CorbaUnitManager::SetComputerNameUnitNameAndPort( std::string dir, std::string name, std::string port, std::string uname )
 {
    computerName = name;
    computerPort = port;

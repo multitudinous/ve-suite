@@ -13,7 +13,7 @@ class CorbaUnitManager
 public:
     CorbaUnitManager(CVE_AspenUnitDlg *);
    ~CorbaUnitManager();
-   void SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname );
+   void SetComputerNameUnitNameAndPort( std::string dir, std::string name, std::string port, std::string uname );
    void SetRunORBFlag( bool run );
    void RunORB( void );
    void DestroyORB( void );
@@ -26,10 +26,10 @@ public:
    Body::Executive_ptr GetExecutive(  );
 
 private:
-   CString workingDir;
-   CString computerName;
-   CString computerPort;
-   CString unitName;
+   std::string workingDir;
+   std::string computerName;
+   std::string computerPort;
+   std::string unitName;
    AspenUnit_i* unit_i;
    CORBA::ORB_var orb;
    PortableServer::POA_var poa;
