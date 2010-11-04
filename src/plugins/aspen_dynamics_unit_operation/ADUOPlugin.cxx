@@ -272,9 +272,10 @@ void ADUOPlugin::ReadValue( )
 ///////////////////////////////////////////////////////////////////////////////
 void ADUOPlugin::OnTimer( wxTimerEvent& event )
 {
+    //UIPLUGIN_CHECKID( event )
     if( m_canvas != NULL && m_network != NULL )
     {
-        //UIPLUGIN_CHECKID( event )
+        UIPLUGIN_CHECKID( event )
         ReadValue();
         m_canvas->Refresh( true );
     }
@@ -289,7 +290,7 @@ void ADUOPlugin::StartTimer( float msec )
     //    delete m_timer;
     //    m_timer = NULL;
     //}
-    m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
+    m_timer = new wxTimer( this, ADUOPLUGIN_TIMER_ID );
     m_timer->Start( msec );
 }
 ///////////////////////////////////////////////////////////////////////////////

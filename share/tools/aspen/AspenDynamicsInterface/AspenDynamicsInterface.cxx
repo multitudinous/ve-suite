@@ -35,7 +35,7 @@ void AspenDynamicsInterface::Open(CString filename)
     if (simOpened)
           Close();
     
-    ADApplication = AspenDynamicsLibrary::IAspenModelerPtr( "AD Application 2100" );
+    ADApplication = AspenDynamicsLibrary::IAspenModelerPtr( "AD Application 2300" );
     
     VARIANT strVar;
     ::VariantInit(&strVar);
@@ -68,15 +68,16 @@ void AspenDynamicsInterface::Open(CString filename)
     simOpened = true;
     BSTR bstrDesc;
     
-    try
-    {
+    //try
+    //{
         //Initialize COM
-        CoInitialize(NULL);
-    }
-    catch(_com_error &e)
-    {
-        bstrDesc = e.Description();
-    }   
+
+    //    CoInitialize(NULL);
+    //}
+    //catch(_com_error &e)
+    //{
+    //    bstrDesc = e.Description();
+    //}   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -95,7 +96,7 @@ std::vector< std::vector< std::string > > AspenDynamicsInterface::GetVariableLis
     std::vector< std::vector < std::string > > blocks;
 
     // get document/simulation object      
-    COleVariant vDisp(ADApplication->GetSimulation());
+    COleVariant vDisp;//(ADApplication->GetSimulation());
 
     // get the flowsheet object
     vDisp = ADDocument->GetFlowsheet();
@@ -314,7 +315,7 @@ void AspenDynamicsInterface::SetVariableValue( CString itemPath,
     std::vector< std::vector < std::string > > blocks;
 
     // get document/simulation object      
-    COleVariant vDisp(ADApplication->GetSimulation());
+    COleVariant vDisp;//(ADApplication->GetSimulation());
 
     // get the flowsheet object
     vDisp = ADDocument->GetFlowsheet();

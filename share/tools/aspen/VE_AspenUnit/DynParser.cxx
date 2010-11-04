@@ -2399,18 +2399,20 @@ std::string DynParser::GetADValues( )
         std::string tempName =
             m_adVariables[i].substr( 0, m_adVariables[i].find(".") );
         std::string tempVar =
-            m_adVariables[i].substr( m_adVariables[i].find(".") - 1,
+            m_adVariables[i].substr( m_adVariables[i].find(".") + 1,
             m_adVariables[i].size() );
         
         std::vector< std::vector< std::string > > list =
             dyndoc->GetVariableList( tempName.c_str(), true );
         
-        for( int j = 0; j < list[i].size(); j++ )
+        for( int j = 0; j < list.size(); j++ )
         {
             std::string temp = list[j][0];
+            temp = temp.substr( temp.find(".") + 1,
+                temp.size() );
             if( temp.compare( tempVar ) == 0 )
             {
-                nameNValue.first = m_adVariables[i];
+                nameNValue.first = tempName;
                 nameNValue.second = list[j][2];
                 break;
             }

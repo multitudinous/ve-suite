@@ -266,6 +266,7 @@ void OpcUOPlugin::ReadValue( )
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::OnTimer( wxTimerEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     if( m_canvas != NULL && m_network != NULL )
     {
         //UIPLUGIN_CHECKID( event )

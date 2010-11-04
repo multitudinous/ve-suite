@@ -7,6 +7,7 @@
 #include "VE_AspenUnitDlg.h"
 #include "BKPParser.h"
 #include "DynParser.h"
+#include <vpr/Thread/Thread.h>
 
 class CorbaUnitManager
 {
@@ -20,6 +21,7 @@ public:
    AspenUnit_i* GetUnitObject( void );
    void CheckCORBAWork( void );
    BKPParser * CreateParser( void );
+   void CheckCORBAWorkThread(  );
 
    bool unit_i_instantiated;
    bool CleanUp( );
@@ -35,5 +37,6 @@ private:
    PortableServer::POA_var poa;
    CVE_AspenUnitDlg * parent;
    Body::Executive_var exec;
+    vpr::Thread* m_thread;
 };
 #endif
