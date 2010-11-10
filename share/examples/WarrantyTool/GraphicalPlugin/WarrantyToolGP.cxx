@@ -1327,9 +1327,9 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
                     m_cadRootNode, m_assemblyPartNumbers.at( i ), true, true, 
                     osg::Vec3( 0.57255, 0.34118, 1.0 ) );
             }
-            
+            m_groupedTextTextures->SetTextureUpdateAnimationOn( false );
             m_groupedTextTextures->MakeTextureActive( pickedPartNumbers );
-            //m_groupedTextTextures->UpdateListPositions();
+            m_groupedTextTextures->SetTextureUpdateAnimationOn( true );
             //std::cout << pickedPartNumbers << std::endl;
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
                 m_cadRootNode, pickedPartNumbers, true, true );
@@ -1417,7 +1417,9 @@ void WarrantyToolGP::PickTextTextures()
     {
         ves::xplorer::scenegraph::DCS* tempKey = 
             static_cast< ves::xplorer::scenegraph::DCS* >( tempParent );
+        m_groupedTextTextures->SetTextureUpdateAnimationOn( false );
         m_groupedTextTextures->MakeTextureActive( tempKey );
+        m_groupedTextTextures->SetTextureUpdateAnimationOn( true );
         const std::string partName = 
             m_groupedTextTextures->GetKeyForTexture( tempKey );
         ves::xplorer::scenegraph::DCS* tempModelNodes = 

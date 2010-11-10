@@ -118,7 +118,8 @@ public:
     bool AnimationComplete();
     ///Update position of all of the attached textures
     void UpdateTexturePosition();
-    
+    ///Set whether to animate the text dialog movement and update
+    void SetTextureUpdateAnimationOn( bool animateTextures );
 protected:
     ///Destructor
     virtual ~GroupedTextTextures();
