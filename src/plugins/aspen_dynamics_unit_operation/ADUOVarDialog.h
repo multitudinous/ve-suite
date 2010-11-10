@@ -55,13 +55,14 @@ namespace ves
 {
 namespace conductor
 {
+
 class ADUOVarDialog : public wxDialog
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		ADUOVarDialog(wxWindow *parent, wxWindowID id = 1,
+		ADUOVarDialog(wxWindow *parent, wxEvtHandler *tempParent, wxWindowID id = 1,
             const wxString &title = wxT("ADUOVarDialog"),
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
@@ -88,6 +89,7 @@ class ADUOVarDialog : public wxDialog
 		wxFlexGridSizer *WxFlexGridSizer;
         std::vector< int > rowsChanged;
         int m_monitorRow;
+        wxEvtHandler * m_parent;
 		
         std::string ConvertUnicode( const wxChar* data )
         {

@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "ADUOVarDialog.h"
+#include "ADUOPlugin.h"
 #include <plugins/ConductorPluginEnums.h>
 
 using namespace ves::conductor;
@@ -43,10 +44,11 @@ BEGIN_EVENT_TABLE( ADUOVarDialog, wxDialog )
     //EVT_GRID_SELECT_CELL( ADUOVarDialog::OnSelectCell )
 END_EVENT_TABLE()
 
-ADUOVarDialog::ADUOVarDialog(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
+ADUOVarDialog::ADUOVarDialog(wxWindow *parent, wxEvtHandler *tempParent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
     CreateGUIControls();
+    m_parent = tempParent;
 }
 
 ADUOVarDialog::~ADUOVarDialog()
@@ -203,7 +205,7 @@ void ADUOVarDialog::SetServiceList(
     m_serviceList = serviceList;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ADUOVarDialog::OnMonitorVariable( wxCommandEvent& )
+void ADUOVarDialog::OnMonitorVariable( wxCommandEvent& event )
 {
     m_monitorRow = WxGrid->GetSelectedRows()[0];
 
@@ -231,7 +233,7 @@ void ADUOVarDialog::OnMonitorVariable( wxCommandEvent& )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     std::string nw_str = m_serviceList->Query( status );
-    //DynamicsDataBuffer::instance()->Enable();
+    ::wxPostEvent( m_parent, event );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void ADUOVarDialog::OnCellChange(wxGridEvent& event)

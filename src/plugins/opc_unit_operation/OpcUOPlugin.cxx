@@ -50,11 +50,12 @@ using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( OpcUOPlugin, UIPluginBase )
     EVT_MENU( OPCUOPLUGIN_SHOW_VALUE, OpcUOPlugin::OnShowValue )
-    EVT_TIMER( OPCUOPLUGIN_TIMER_ID, OpcUOPlugin::OnTimer )
+    //EVT_TIMER( OPCUOPLUGIN_TIMER_ID, OpcUOPlugin::OnTimer )
     //EVT_MENU( OPCUOPLUGIN_START_TIMER, OpcUOPlugin::StartTimer )
-    EVT_MENU( OPCUOPLUGIN_STOP_TIMER, OpcUOPlugin::StopTimer )
+    //EVT_MENU( OPCUOPLUGIN_STOP_TIMER, OpcUOPlugin::StopTimer )
     //EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::OnShowAllVar )
     EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::QueryForAllVariables )
+    EVT_BUTTON( OPC_VAR_ID_MONITORBUTTON, OpcUOPlugin::OnMonitorVariable )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( OpcUOPlugin, UIPluginBase )
@@ -69,15 +70,16 @@ OpcUOPlugin::OpcUOPlugin() :
     GetVEModel()->SetPluginType( "OpcUOPlugin" );
     m_monValue = "NA";
     m_monValueExists = false;
-    StartTimer( 1000 );
+    m_monitoring = false;
+    //StartTimer( 1000 );
     //m_timer=NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 OpcUOPlugin::~OpcUOPlugin()
 {
-    m_timer->Stop();
-    delete m_timer;
-    m_timer = 0;
+    //m_timer->Stop();
+    //delete m_timer;
+    //m_timer = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString OpcUOPlugin::GetConductorName()
@@ -266,13 +268,13 @@ void OpcUOPlugin::ReadValue( )
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::OnTimer( wxTimerEvent& event )
 {
-    UIPLUGIN_CHECKID( event )
-    if( m_canvas != NULL && m_network != NULL )
-    {
+    //UIPLUGIN_CHECKID( event )
+    //if( m_canvas != NULL && m_network != NULL )
+    //{
         //UIPLUGIN_CHECKID( event )
-        ReadValue();
-        m_canvas->Refresh( true );
-    }
+    //    ReadValue();
+    //    m_canvas->Refresh( true );
+    //}
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::DrawPlugin( wxDC* dc )
@@ -283,9 +285,13 @@ void OpcUOPlugin::DrawPlugin( wxDC* dc )
         DrawIcon( dc );
         DrawID( dc );
         DrawName( dc );
-        if(m_monValueExists)
+        if( m_monitoring )
         {
-            DrawValue( dc );
+            ReadValue();
+            if( m_monValueExists )
+            {
+                DrawValue( dc );
+            }
         }
     }
 
@@ -309,15 +315,15 @@ void OpcUOPlugin::StartTimer( float msec )
     //    delete m_timer;
     //    m_timer = NULL;
     //}
-    m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
-    m_timer->Start(msec);
+    //m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
+    //m_timer->Start(msec);
     //dynValue = "NA";
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::StopTimer( wxCommandEvent& event )
 {
-    UIPLUGIN_CHECKID( event )
-    m_timer->Stop();
+    //UIPLUGIN_CHECKID( event )
+    //m_timer->Stop();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
@@ -358,7 +364,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
         boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
 
-    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent() );
+    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this );
     params->SetComponentName( mPluginName );
     params->SetServiceList( serviceList );
 
@@ -381,7 +387,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
 {
-    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent() );
+    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this );
     params->SetComponentName( mPluginName );
     //params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
     params->SetServiceList( serviceList );
@@ -398,4 +404,8 @@ void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
     //params->UpdateSizes();
     params->ShowModal();
     params->Destroy();
+}
+void OpcUOPlugin::OnMonitorVariable ( wxCommandEvent& event )
+{
+    m_monitoring = true;
 }

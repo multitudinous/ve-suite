@@ -52,14 +52,15 @@ private:
     void OnShowAspenName( wxCommandEvent& event );
     void OnQueryDynamics( wxCommandEvent& event );
     void OnTimer( wxTimerEvent& event );
-    void StartTimer( float msec  );
     void StopTimer( wxCommandEvent& event  );
     void DrawValue( wxDC* dc );
     void ReadValue( );
+    void OnMonitorVariable( wxCommandEvent& event );
     
     bool m_monValueExists;
+    bool m_monitoring;
     std::string m_monValue;
-    wxTimer * m_timer;
+    //wxTimer * m_timer;
 
 public:
     ///Defualt constructor
@@ -67,6 +68,7 @@ public:
     wxString GetConductorName();
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
     void DrawPlugin( wxDC* dc );
+    //void StartTimer( float msec  );
 
     wxMenu* mAspenMenu;
     DECLARE_EVENT_TABLE()

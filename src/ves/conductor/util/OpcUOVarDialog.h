@@ -63,7 +63,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS OpcUOVarDialog : public wxDialog
         DECLARE_EVENT_TABLE();
         
     public:
-        OpcUOVarDialog(wxWindow *parent, wxWindowID id = 1,
+        OpcUOVarDialog(wxWindow *parent, wxEvtHandler *tempParent, wxWindowID id = 1,
             const wxString &title = wxT( "OpcUOVarDialog" ),
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
@@ -98,6 +98,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS OpcUOVarDialog : public wxDialog
             return tempStr;
         }
         wxString prefix;
+        wxEvtHandler * m_parent;
     
     private:
         void OnClose( wxCloseEvent& event );

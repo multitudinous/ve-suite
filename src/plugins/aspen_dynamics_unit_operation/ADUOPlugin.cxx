@@ -50,8 +50,9 @@ using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( ADUOPlugin, UIPluginBase )
     EVT_MENU( ADUOPLUGIN_SHOW_ASPEN_NAME, ADUOPlugin::OnShowAspenName )
     EVT_MENU( ADUOPLUGIN_QUERY_DYNAMICS, ADUOPlugin::OnQueryDynamics )
-    EVT_TIMER( ADUOPLUGIN_TIMER_ID, ADUOPlugin::OnTimer )
-    EVT_MENU( ADUOPLUGIN_STOP_TIMER, ADUOPlugin::StopTimer )
+    EVT_BUTTON( AD_VAR_ID_MONITORBUTTON, ADUOPlugin::OnMonitorVariable )
+    //EVT_TIMER( ADUOPLUGIN_TIMER_ID, ADUOPlugin::OnTimer )
+    //EVT_MENU( ADUOPLUGIN_STOP_TIMER, ADUOPlugin::StopTimer )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( ADUOPlugin, UIPluginBase )
@@ -66,15 +67,16 @@ ADUOPlugin::ADUOPlugin() :
     GetVEModel()->SetPluginType( "ADUOPlugin" );
     m_monValue = "NA";
     m_monValueExists = false;
-    StartTimer( 1000 );
+    m_monitoring = false;
+    //StartTimer( 1000 );
     //m_timer=NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADUOPlugin::~ADUOPlugin()
 {
-    m_timer->Stop();
-    delete m_timer;
-    m_timer = 0;
+    //m_timer->Stop();
+    //delete m_timer;
+    //m_timer = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString ADUOPlugin::GetConductorName()
@@ -159,7 +161,7 @@ void ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
     ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
-    ADUOVarDialog* params = new ADUOVarDialog( GetPluginParent() );
+    ADUOVarDialog* params = new ADUOVarDialog( GetPluginParent(), this );
     params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
     params->SetServiceList( serviceList );
     int numdvps = cmd->GetNumberOfDataValuePairs();
@@ -205,9 +207,13 @@ void ADUOPlugin::DrawPlugin( wxDC* dc )
         DrawIcon( dc );
         DrawID( dc );
         DrawName( dc );
-        if( m_monValueExists )
+        if( m_monitoring )
         {
-            DrawValue( dc );
+            ReadValue();
+            if( m_monValueExists )
+            {
+                DrawValue( dc );
+            }
         }
     }
 
@@ -270,7 +276,7 @@ void ADUOPlugin::ReadValue( )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void ADUOPlugin::OnTimer( wxTimerEvent& event )
+/*void ADUOPlugin::OnTimer( wxTimerEvent& event )
 {
     //UIPLUGIN_CHECKID( event )
     if( m_canvas != NULL && m_network != NULL )
@@ -298,4 +304,8 @@ void ADUOPlugin::StopTimer( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     m_timer->Stop();
+}*/
+void ADUOPlugin::OnMonitorVariable( wxCommandEvent& event )
+{
+    m_monitoring = true;
 }

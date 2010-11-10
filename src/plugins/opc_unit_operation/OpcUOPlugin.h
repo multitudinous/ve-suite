@@ -56,10 +56,12 @@ private:
     void OnShowValue( wxCommandEvent& event );
     void OnShowAllVar( wxCommandEvent& event );
     void QueryForAllVariables( wxCommandEvent& event );
+    void OnMonitorVariable( wxCommandEvent& event );
 
     wxTimer * m_timer;
     std::string m_monValue;
     bool m_monValueExists;
+    bool m_monitoring;
 
 public:
     ///Defualt constructor

@@ -45,12 +45,13 @@ BEGIN_EVENT_TABLE( OpcUOVarDialog, wxDialog )
 END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////////////////////////////
-OpcUOVarDialog::OpcUOVarDialog(wxWindow *parent, wxWindowID id,
+OpcUOVarDialog::OpcUOVarDialog(wxWindow *parent, wxEvtHandler *tempParent, wxWindowID id,
                                const wxString &title, const wxPoint &position,
                                const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
     CreateGUIControls();
+    m_parent = tempParent;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -250,7 +251,7 @@ void OpcUOVarDialog::SetServiceList(
     mServiceList = serviceList;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void OpcUOVarDialog::OnMonitorVariable( wxCommandEvent& )
+void OpcUOVarDialog::OnMonitorVariable( wxCommandEvent& event )
 {
     if( WxGrid->GetSelectedRows().IsEmpty() )
     {
@@ -282,6 +283,7 @@ void OpcUOVarDialog::OnMonitorVariable( wxCommandEvent& )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     std::string nw_str = mServiceList->Query( status );
+    ::wxPostEvent( m_parent, event );
     //DynamicsDataBuffer::instance()->Enable();
     //parent->StartTimer( 1000 );
 }
