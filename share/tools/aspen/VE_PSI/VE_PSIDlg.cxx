@@ -1,60 +1,36 @@
-// VE_AspenUnitDlg.cpp : implementation file
-//
-
 #include "stdafx.h"
-#include "VE_AspenUnit.h"
-#include "VE_AspenUnitDlg.h"
+#include "VE_PSI.h"
+#include "VE_PSIDlg.h"
 
-#include "AspenUnit_i.h"
+#include "VEPSI_i.h"
 #include "CorbaUnitManager.h"
 
-
-// CVE_AspenUnitDlg dialog
-CVE_AspenUnitDlg::CVE_AspenUnitDlg(CWnd* pParent /*=NULL*/)
-    : CDialog(CVE_AspenUnitDlg::IDD, pParent)
+VE_PSIDlg::VE_PSIDlg(CWnd* pParent /*=NULL*/)
+    : CDialog(VE_PSIDlg::IDD, pParent)
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
-void CVE_AspenUnitDlg::DoDataExchange(CDataExchange* pDX)
+void VE_PSIDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialog::DoDataExchange(pDX);
 }
 
-BEGIN_MESSAGE_MAP(CVE_AspenUnitDlg, CDialog)
+///////////////////////////////////////////////////////////////////////////////
+BEGIN_MESSAGE_MAP(VE_PSIDlg, CDialog)
     ON_WM_PAINT()
     ON_WM_QUERYDRAGICON()
-    //}}AFX_MSG_MAP
-    ON_BN_CLICKED(IDOK, &CVE_AspenUnitDlg::OnBnClickedOk)
-    ON_BN_CLICKED(IDCANCEL, &CVE_AspenUnitDlg::OnBnClickedCancel)
-    ON_BN_CLICKED(IDC_BUTTON2, &CVE_AspenUnitDlg::OnBnClickedButton2)
+    ON_BN_CLICKED(IDOK, &VE_PSIDlg::OnBnClickedOk)
+    ON_BN_CLICKED(IDCANCEL, &VE_PSIDlg::OnBnClickedCancel)
+    ON_BN_CLICKED(IDC_BUTTON2, &VE_PSIDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
-
-// CVE_AspenUnitDlg message handlers
-
-BOOL CVE_AspenUnitDlg::OnInitDialog()
+///////////////////////////////////////////////////////////////////////////////
+BOOL VE_PSIDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
-
-    // Set the icon for this dialog.  The framework does this automatically
-    //  when the application's main window is not a dialog
-    SetIcon(m_hIcon, TRUE);            // Set big icon
-    SetIcon(m_hIcon, FALSE);        // Set small icon
-    
-    /*commManager = new CorbaUnitManager(this);
-    commManager->SetComputerNameUnitNameAndPort( "dell29", "1239", "AspenUnit" );
-    commManager->RunORB();
-    unitObject = commManager->GetUnitObject();
-    //if ( unitObject )
-    //{
-    //   AfxMessageBox( _T("Connected to VE-CE" ));
-    //}
-    // else
-    if ( !unitObject )
-    {
-        AfxMessageBox( _T("Unable to connect to VE-CE" ));
-    }*/
+    SetIcon(m_hIcon, TRUE);
+    SetIcon(m_hIcon, FALSE);
 
     CString path = AfxGetApp()->GetProfileString( _T("Aspen"), _T("Path"), _T("C:\\") );
     CString name = AfxGetApp()->GetProfileString( _T("Aspen"), _T("Name"), _T("localhost") );
@@ -67,35 +43,23 @@ BOOL CVE_AspenUnitDlg::OnInitDialog()
     Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
     Display->SetWindowTextA( path );
 
-
-    // TODO: Add extra initialization here    
     initialized = false;
-    //commManager = 0;
-    //unitObject = 0;
-    return TRUE;  // return TRUE  unless you set the focus to a control
+    return TRUE;
 }
 
-// If you add a minimize button to your dialog, you will need the code below
-//  to draw the icon.  For MFC applications using the document/view model,
-//  this is automatically done for you by the framework.
-
-void CVE_AspenUnitDlg::OnPaint()
+///////////////////////////////////////////////////////////////////////////////
+void VE_PSIDlg::OnPaint()
 {
     if (IsIconic())
     {
-        CPaintDC dc(this); // device context for painting
-
+        CPaintDC dc(this);
         SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
-
-        // Center icon in client rectangle
         int cxIcon = GetSystemMetrics(SM_CXICON);
         int cyIcon = GetSystemMetrics(SM_CYICON);
         CRect rect;
         GetClientRect(&rect);
         int x = (rect.Width() - cxIcon + 1) / 2;
         int y = (rect.Height() - cyIcon + 1) / 2;
-
-        // Draw the icon
         dc.DrawIcon(x, y, m_hIcon);
     }
     else
@@ -104,17 +68,16 @@ void CVE_AspenUnitDlg::OnPaint()
     }
 }
 
-// The system calls this function to obtain the cursor to display while the user drags
-//  the minimized window.
-HCURSOR CVE_AspenUnitDlg::OnQueryDragIcon()
+///////////////////////////////////////////////////////////////////////////////
+HCURSOR VE_PSIDlg::OnQueryDragIcon()
 {
     return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-BOOL CVE_AspenUnitDlg::OnIdle( LONG test )
+///////////////////////////////////////////////////////////////////////////////
+BOOL VE_PSIDlg::OnIdle( LONG test )
 {
-    Sleep( 10 );
+    //Sleep( 10 );
     //if(initialized)
     //{
     //    commManager->CheckCORBAWork();
@@ -122,7 +85,8 @@ BOOL CVE_AspenUnitDlg::OnIdle( LONG test )
     return FALSE;
 }
 
-LRESULT CVE_AspenUnitDlg::WindowProc(UINT message, 
+///////////////////////////////////////////////////////////////////////////////
+LRESULT VE_PSIDlg::WindowProc(UINT message, 
                 WPARAM wParam, LPARAM lParam)
 {
     DWORD QueueStatus;
@@ -145,7 +109,9 @@ LRESULT CVE_AspenUnitDlg::WindowProc(UINT message,
 
     return resValue;
 }
-void CVE_AspenUnitDlg::OnBnClickedCancel()
+
+///////////////////////////////////////////////////////////////////////////////
+void VE_PSIDlg::OnBnClickedCancel()
 {   
     if( initialized )
     {
@@ -165,21 +131,19 @@ void CVE_AspenUnitDlg::OnBnClickedCancel()
 
         if(commManager != NULL)
         {
-            //delete unitObject;
             commManager->DestroyORB();
             delete commManager;
             commManager = NULL;
         }
     }
-    // TODO: Add your control notification handler code here
     this->OnOK();
 }
 
-void CVE_AspenUnitDlg::OnBnClickedOk()
+///////////////////////////////////////////////////////////////////////////////
+void VE_PSIDlg::OnBnClickedOk()
 {
     if(!initialized)
     {
-        // TODO: Add your control notification handler code here
         CEdit *Display;
         Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
         CString name;
@@ -192,7 +156,6 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
         Display->GetWindowText(dir);
 
         commManager = new CorbaUnitManager(this);
-        //commManager->SetComputerNameUnitNameAndPort( "localhost", "1239", "AspenUnit" );
         commManager->SetComputerNameUnitNameAndPort( std::string( dir.GetString() ), 
             std::string( name.GetString() ) , std::string( port.GetString() ), "AspenUnit" );
         commManager->RunORB();
@@ -200,7 +163,6 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
         if ( !unitObject )
         {
             AfxMessageBox( _T("Unable to connect to VE-CE" ));
-            //delete unitObject;
             commManager->DestroyORB();
             delete commManager;
             commManager = NULL;
@@ -216,15 +178,14 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
     }
 }
 
-void CVE_AspenUnitDlg::OnBnClickedButton2()
+///////////////////////////////////////////////////////////////////////////////
+void VE_PSIDlg::OnBnClickedButton2()
 {
-    // TODO: Add your control notification handler code here
     BROWSEINFO bi = { 0 };
     bi.lpszTitle = _T("Pick a Directory");
     LPITEMIDLIST pidl = SHBrowseForFolder ( &bi );
     if ( pidl != 0 )
     {
-        // get the name of the folder
         TCHAR path[MAX_PATH];
         if ( SHGetPathFromIDList ( pidl, path ) )
         {
@@ -234,7 +195,6 @@ void CVE_AspenUnitDlg::OnBnClickedButton2()
             Display->SetWindowTextA( thePath + "\\" );
         }
 
-        // free memory used
         IMalloc * imalloc = 0;
         if ( SUCCEEDED( SHGetMalloc ( &imalloc )) )
         {
