@@ -7,7 +7,7 @@
 #include <ves/open/xml/cad/CADCreator.h>
 #include <ves/open/xml/shader/ShaderCreator.h>
 #include <ves/open/xml/model/ModelCreator.h>
-#include "VE_AspenUnit.h"
+#include "VE_PSI.h"
 
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <fstream>
@@ -20,7 +20,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 
-CorbaUnitManager::CorbaUnitManager(CVE_AspenUnitDlg * dialog)
+CorbaUnitManager::CorbaUnitManager(VE_PSIDlg * dialog)
     :
     parent( dialog ),
     unit_i( 0 ),
@@ -154,7 +154,7 @@ void CorbaUnitManager::RunORB()
         ACE_TRY_CHECK;
 
         //Create the Servant
-        unit_i = new AspenUnit_i(/*exec.in(),*/ UNITNAME, /*parser,*/ parent, this, std::string(workingDir) );
+        unit_i = new VEPSI_i(/*exec.in(),*/ UNITNAME, /*parser,*/ parent, this, std::string(workingDir) );
         unit_i_instantiated = true;
         //Activate it to obtain the object reference
 
@@ -208,7 +208,7 @@ void CorbaUnitManager::DestroyORB( void )
     CleanUp();
 }
 /////////////////////////////////////////////////////////////
-AspenUnit_i* CorbaUnitManager::GetUnitObject( void )
+VEPSI_i* CorbaUnitManager::GetUnitObject( void )
 {
    return unit_i;
 }
@@ -226,10 +226,9 @@ void CorbaUnitManager::CheckCORBAWork( void )
 }
 
 /////////////////////////////////////////////////////////////
-BKPParser * CorbaUnitManager::CreateParser( void )
-//void CorbaUnitManager::CreateParser( void )
+AspenPlus * CorbaUnitManager::CreateParser( void )
 {
-    return new BKPParser();
+    return new AspenPlus();
 }
 
 /////////////////////////////////////////////////////////////

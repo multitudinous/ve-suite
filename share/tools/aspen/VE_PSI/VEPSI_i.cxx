@@ -29,8 +29,8 @@
 // .\be\be_codegen.cpp:1063
 
 #include "stdafx.h"
-#include "AspenUnit_i.h"
-#include "VE_AspenUnit.h"
+#include "VEPSI_i.h"
+#include "VE_PSI.h"
 #include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Model.h>
@@ -52,7 +52,7 @@
 #include <boost/bind.hpp>
 
 // Implementation skeleton constructor
-AspenUnit_i::AspenUnit_i( std::string name, CVE_AspenUnitDlg * dialog, 
+VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog, 
                          CorbaUnitManager* parent, std::string dir )
     :
     AspenLog( 0 ),
@@ -109,7 +109,7 @@ AspenUnit_i::AspenUnit_i( std::string name, CVE_AspenUnitDlg * dialog,
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton destructor
-AspenUnit_i::~AspenUnit_i( void )
+VEPSI_i::~VEPSI_i( void )
 {
     if( bkpFlag )
     {
@@ -122,7 +122,7 @@ AspenUnit_i::~AspenUnit_i( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::ShowAspen()
+void VEPSI_i::ShowAspen()
 {
     if( bkpFlag )
     {
@@ -135,7 +135,7 @@ void AspenUnit_i::ShowAspen()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::HideAspen()
+void VEPSI_i::HideAspen()
 {
     if( bkpFlag )
     {
@@ -148,7 +148,7 @@ void AspenUnit_i::HideAspen()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::CloseAspen()
+void VEPSI_i::CloseAspen()
 {
     if( bkpFlag )
     {
@@ -161,7 +161,7 @@ void AspenUnit_i::CloseAspen()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::SaveAspen( std::string filename)
+void VEPSI_i::SaveAspen( std::string filename)
 {
     if( bkpFlag )
     {
@@ -175,7 +175,7 @@ void AspenUnit_i::SaveAspen( std::string filename)
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::StepSim()
+void VEPSI_i::StepSim()
 {
     if( bkpFlag )
     {
@@ -188,7 +188,7 @@ void AspenUnit_i::StepSim()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::ReinitializeAspen()
+void VEPSI_i::ReinitializeAspen()
 {
     try
     {
@@ -209,7 +209,7 @@ void AspenUnit_i::ReinitializeAspen()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::StartCalc (
+void VEPSI_i::StartCalc (
     
   )
   ACE_THROW_SPEC ((
@@ -232,7 +232,7 @@ void AspenUnit_i::StartCalc (
     return_state=0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::StopCalc (
+void VEPSI_i::StopCalc (
     
   )
   ACE_THROW_SPEC ((
@@ -247,7 +247,7 @@ void AspenUnit_i::StopCalc (
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::PauseCalc (
+void VEPSI_i::PauseCalc (
     
   )
   ACE_THROW_SPEC ((
@@ -261,7 +261,7 @@ void AspenUnit_i::PauseCalc (
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::Resume (
+void VEPSI_i::Resume (
     
   )
   ACE_THROW_SPEC ((
@@ -275,7 +275,7 @@ void AspenUnit_i::Resume (
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * AspenUnit_i::GetStatusMessage (
+char * VEPSI_i::GetStatusMessage (
     
   )
   ACE_THROW_SPEC ((
@@ -307,7 +307,7 @@ char * AspenUnit_i::GetStatusMessage (
     return CORBA::string_dup( status.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * AspenUnit_i::GetUserData (
+char * VEPSI_i::GetUserData (
     
   )
   ACE_THROW_SPEC ((
@@ -320,7 +320,7 @@ char * AspenUnit_i::GetUserData (
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::SetID (
+void VEPSI_i::SetID (
     ::CORBA::Long id
   )
   ACE_THROW_SPEC ((
@@ -333,7 +333,7 @@ void AspenUnit_i::SetID (
   std::cout << "This not implemented for the Aspen Unit" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::SetCurID (
+void VEPSI_i::SetCurID (
     ::CORBA::Long id
   )
   ACE_THROW_SPEC ((
@@ -344,7 +344,7 @@ void AspenUnit_i::SetCurID (
     cur_id_ = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-::Types::ArrayLong* AspenUnit_i::GetID (
+::Types::ArrayLong* VEPSI_i::GetID (
     
   )
   ACE_THROW_SPEC ((
@@ -355,7 +355,7 @@ void AspenUnit_i::SetCurID (
     return &ids_;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CORBA::Long AspenUnit_i::GetCurID (
+CORBA::Long VEPSI_i::GetCurID (
     
   )
   ACE_THROW_SPEC ((
@@ -366,7 +366,7 @@ CORBA::Long AspenUnit_i::GetCurID (
     return cur_id_;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::DeleteModuleInstance(CORBA::Long id) 
+void VEPSI_i::DeleteModuleInstance(CORBA::Long id) 
 ACE_THROW_SPEC ((
     ::CORBA::SystemException,
     ::Error::EUnknown
@@ -375,7 +375,7 @@ ACE_THROW_SPEC ((
     return; //do nothing;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::SetName (
+void VEPSI_i::SetName (
     const char * name
   )
   ACE_THROW_SPEC ((
@@ -387,7 +387,7 @@ void AspenUnit_i::SetName (
     UnitName_ = std::string(name);
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * AspenUnit_i::GetName (
+char * VEPSI_i::GetName (
     
   )
   ACE_THROW_SPEC ((
@@ -398,7 +398,7 @@ char * AspenUnit_i::GetName (
     return CORBA::string_dup(UnitName_.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * AspenUnit_i::Query ( const char * query_str
+char * VEPSI_i::Query ( const char * query_str
     
   )
   ACE_THROW_SPEC ((
@@ -650,7 +650,7 @@ char * AspenUnit_i::Query ( const char * query_str
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 {
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
@@ -667,7 +667,7 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         bkpFlag = true;
         dynFlag = false;
         filename.resize( filename.size() - 4 );
-        bkp = new BKPParser();
+        bkp = new AspenPlus();
         bkp->SetWorkingDir( mWorkingDir );
     }
     else if( extension.find( "dynf" ) != std::string::npos )
@@ -675,7 +675,7 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         bkpFlag = false;
         dynFlag = true;
         filename.resize( filename.size() - 5 );
-        dyn = new DynParser();
+        dyn = new AspenDynamics();
         dyn->SetWorkingDir( mWorkingDir );
     }
     
@@ -751,7 +751,7 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
             Display->SetWindowText( ( filename ).c_str());
             //go through dyn parsing procedure
             dyn->OpenFile( filename.c_str() );
-            m_thread = new vpr::Thread( boost::bind( &AspenUnit_i::Monitor, this ) );
+            m_thread = new vpr::Thread( boost::bind( &VEPSI_i::Monitor, this ) );
             //dyn->ParseFile((mWorkingDir + filename + ".dynf" ).c_str());
             //Monitor(  );
             mFileName = filename;
@@ -775,7 +775,7 @@ char* AspenUnit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 {
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
@@ -815,7 +815,7 @@ char* AspenUnit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
         bkpFlag = true;
         dynFlag = false;
         Display->SetWindowText(filename.c_str());
-        bkp = new BKPParser();
+        bkp = new AspenPlus();
         bkp->SetWorkingDir( mWorkingDir );
         bkp->OpenSim(filename.c_str());
     }
@@ -837,14 +837,14 @@ char* AspenUnit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
         bkpFlag = false;
         dynFlag = true;
         Display->SetWindowText(filename.c_str());
-        dyn = new DynParser();
+        dyn = new AspenDynamics();
         dyn->SetWorkingDir( mWorkingDir );
         dyn->OpenFile(filename.c_str());
     }
     return CORBA::string_dup("Simulation Opened.");
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 {
     AspenLog->SetSel(-1, -1);
     AspenLog->ReplaceSel("saving...\r\n");
@@ -857,7 +857,7 @@ char* AspenUnit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 }
 ////////////////////////////////////////////////////////////////////////////////
 //no reinitialize of block in dynamics
-void AspenUnit_i::ReinitializeBlock(ves::open::xml::CommandPtr cmd)
+void VEPSI_i::ReinitializeBlock(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname;
@@ -876,7 +876,7 @@ void AspenUnit_i::ReinitializeBlock(ves::open::xml::CommandPtr cmd)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname;
@@ -901,7 +901,7 @@ char* AspenUnit_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname;
@@ -928,7 +928,7 @@ char* AspenUnit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
     return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname,paramName;
@@ -949,7 +949,7 @@ char* AspenUnit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname;
@@ -972,7 +972,7 @@ char* AspenUnit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd
     return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname,paramName;
@@ -1000,7 +1000,7 @@ char* AspenUnit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cm
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd)
 {    
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname;
@@ -1028,7 +1028,7 @@ char* AspenUnit_i::handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd
     return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname;
@@ -1054,7 +1054,7 @@ char* AspenUnit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPt
     return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname,paramName;
@@ -1081,7 +1081,7 @@ char* AspenUnit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandP
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname;
@@ -1107,7 +1107,7 @@ char* AspenUnit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandP
     return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* AspenUnit_i::handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd)
+char* VEPSI_i::handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname,paramName;
@@ -1134,7 +1134,7 @@ char* AspenUnit_i::handleGetStreamOutputModuleProperties(ves::open::xml::Command
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::SetParams (CORBA::Long id,
+void VEPSI_i::SetParams (CORBA::Long id,
     const char * param)
   ACE_THROW_SPEC ((
     ::CORBA::SystemException,
@@ -1179,7 +1179,7 @@ void AspenUnit_i::SetParams (CORBA::Long id,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::SetParam( ves::open::xml::CommandPtr cmd )
+void VEPSI_i::SetParam( ves::open::xml::CommandPtr cmd )
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname,paramName, paramValue;
@@ -1223,7 +1223,7 @@ void AspenUnit_i::SetParam( ves::open::xml::CommandPtr cmd )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::SetLinkParam( ves::open::xml::CommandPtr cmd )
+void VEPSI_i::SetLinkParam( ves::open::xml::CommandPtr cmd )
 {
     size_t num = cmd->GetNumberOfDataValuePairs();
     std::string modname,paramName, paramValue;
@@ -1241,7 +1241,7 @@ void AspenUnit_i::SetLinkParam( ves::open::xml::CommandPtr cmd )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::addVariable( ves::open::xml::CommandPtr cmd )
+void VEPSI_i::addVariable( ves::open::xml::CommandPtr cmd )
 {
     ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
     std::string var;
@@ -1250,7 +1250,7 @@ void AspenUnit_i::addVariable( ves::open::xml::CommandPtr cmd )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void AspenUnit_i::Monitor(  )
+void VEPSI_i::Monitor(  )
 {
     HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
     while (true)

@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "DynParser.h"
+#include "AspenDynamics.h"
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/model/Point.h>
@@ -18,7 +18,7 @@
 #include "AspenIconData.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-DynParser::DynParser()
+AspenDynamics::AspenDynamics()
 {
     try
     {
@@ -32,40 +32,28 @@ DynParser::DynParser()
             << XERCES_STD_QUALIFIER endl;
         exit(1);
     }
-    
-    /*ves::open::xml::XMLObjectFactory::Instance()->
-    RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->
-    RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->
-    RegisterObjectCreator( "Model",new ves::open::xml::model::ModelCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->
-    RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
-    */
     dyndoc = new AspenDynamicsInterface::AspenDynamicsInterface();
     workingDir = "";
     redundantID = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-DynParser::~DynParser()
+AspenDynamics::~AspenDynamics()
 {
-    //XMLPlatformUtils::Terminate();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::OpenFile(const char * file)
+void AspenDynamics::OpenFile(const char * file)
 {
     std::string fileName(file);
     std::string dynfExt(".dynf");
-    //ParseFile( ( workingDir + fileName + dynfExt ).c_str());
     NewParseFile( ( workingDir + fileName + dynfExt ).c_str());
     CString filename = ( workingDir + fileName + dynfExt ).c_str();
     dyndoc->Open( filename );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::CloseFile( )
+void AspenDynamics::CloseFile( )
 {
     dyndoc->Close();
     dyndoc->Quit();
@@ -79,7 +67,6 @@ void DynParser::CloseFile( )
     tempXY.streamType =  NULL;
     tempXY.value.clear();
     streamCoordList.clear();
-    //streamIds.clear();
     inLinkToModel.clear();
     outLinkToModel.clear();
     linkPoints.clear();
@@ -90,31 +77,31 @@ void DynParser::CloseFile( )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::SaveFile()
+void AspenDynamics::SaveFile()
 {
     dyndoc->Save();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::SaveAs(const char * filename)
+void AspenDynamics::SaveAs(const char * filename)
 {
     dyndoc->SaveAs(filename);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::SetVisibility(bool show)
+void AspenDynamics::SetVisibility(bool show)
 {
     dyndoc->SetVisibility( show );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReinitDynamics()
+void AspenDynamics::ReinitDynamics()
 {
     dyndoc->ResetSimulation();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::NewParseFile(const char * dynFile)
+void AspenDynamics::NewParseFile(const char * dynFile)
 {
     std::ifstream inFile( dynFile );
     currentLevelName = "_main_sheet";
@@ -159,31 +146,15 @@ void DynParser::NewParseFile(const char * dynFile)
             }
         }
     }
-
-    //modify the locations to account for the 2 different coord systems
-    //NormalizeForWX();
-
-    //Global
-    ////ReadComponentList();
-    //ReadPropeties( inFile );
-    //ReadOptions( inFile );
-    //ReadOptimization( inFile );
-    //ReadEstimation( inFile );
-    //ReadHomotrophy( inFile );
-    //ReadOnlineLinks( inFile );
-    //ReadSnapshot( inFile );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ParseFile(const char * dynFile)
+void AspenDynamics::ParseFile(const char * dynFile)
 {    
     std::ifstream inFile( dynFile );
-    //std::ofstream output("output.txt");
-    //std::ofstream outFile("log.txt");
 
     std::string temp;
 
-    //Open icon headers create maps    
     std::map< std::pair< std::string, std::string >,
         std::vector< double > > plusLutMap;
     std::map< std::pair< std::string, std::string >,
@@ -325,26 +296,6 @@ void DynParser::ParseFile(const char * dynFile)
 
         getline(inFile, temp);
     }
-    //beforeNetwork = inFile.tellg();
-   
-    //Now we have passed the network data so record it
-    //std::streampos afterNetwork;
-
-    //afterNetwork = inFile.tellg();
-
-    //go back to the beginning of the network
-    //inFile.seekg( beforeNetwork );
-
-    // allocate memory:
-    //char* buffer = new char [afterNetwork - beforeNetwork];
-    // read data as a block:
-    //inFile.read( buffer, (afterNetwork - beforeNetwork) );
-    //std::string networkData( buffer );
-    //delete [] buffer;
-
-    //build network information
-    //CreateNetworkInformation( networkData );
-    
 
     //Loop for Hierarchy
     std::map< std::string,
@@ -364,10 +315,6 @@ void DynParser::ParseFile(const char * dynFile)
             //dataHeader = "PFSVData";
             dataHeader = "# of PFS Objects";
         }
-        //else
-        //{
-        //    dataHeader = sheetIter->first + " PFSVData"; 
-        //}
 
         //locate the PFSVData Entry
         while(temp.compare( 0, dataHeader.size(), dataHeader, 0, 
@@ -848,7 +795,7 @@ void DynParser::ParseFile(const char * dynFile)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::CreateNetworkLinks
+void AspenDynamics::CreateNetworkLinks
     ( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName )
 {
     // remove duplicate points
@@ -1152,7 +1099,7 @@ void DynParser::CreateNetworkLinks
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-std::string DynParser::CreateNetwork( void )
+std::string AspenDynamics::CreateNetwork( void )
 {
     // then create the appropriate models
     // then put them all together and for a network string
@@ -1331,7 +1278,7 @@ std::string DynParser::CreateNetwork( void )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
+void AspenDynamics::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                                std::string networkName)
 {
     ves::open::xml::model::SystemPtr
@@ -1439,21 +1386,23 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::SetWorkingDir( std::string dir )
+void AspenDynamics::SetWorkingDir( std::string dir )
 {
     workingDir = dir;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 //BLOCKS
-std::string DynParser::GetModuleParams( std::string modname, bool block )
+std::string AspenDynamics::GetModuleParams( std::string modname, bool block )
 {
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
     params->SetCommandName((modname+"InputParams").c_str());
 
+    //std::vector< std::vector < std::string > > variables =
+    //    dyndoc->GetVariableList( modname.c_str(), block );
     std::vector< std::vector < std::string > > variables =
-        dyndoc->GetVariableList( modname.c_str(), block );
+        dyndoc->GetVariable( modname.c_str(), "PosA", block );
 
     for(int i = 0; i < variables.size(); i++)
     //for(int i = 0; i < 2; i++)
@@ -1492,14 +1441,14 @@ std::string DynParser::GetModuleParams( std::string modname, bool block )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::SetValue( std::string modname, std::string paramname,
+void AspenDynamics::SetValue( std::string modname, std::string paramname,
                          std::string value, bool block )
 {
     dyndoc->SetVariableValue( modname.c_str(), paramname.c_str(),
         value.c_str(), block  );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadHeader( std::ifstream &file )
+void AspenDynamics::ReadHeader( std::ifstream &file )
 {
     //version
     std::string version;
@@ -1511,7 +1460,7 @@ void DynParser::ReadHeader( std::ifstream &file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/*void DynParser::ReadEncrypted( std::ifstream &file )
+/*void AspenDynamics::ReadEncrypted( std::ifstream &file )
 {
     std::vector< std::string > entry;
     std::string temp;
@@ -1543,7 +1492,7 @@ void DynParser::ReadHeader( std::ifstream &file )
 }*/
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::FindSystemData( std::ifstream &file )
+void AspenDynamics::FindSystemData( std::ifstream &file )
 {
     std::string temp;
     std::streampos temppos;
@@ -1558,7 +1507,7 @@ void DynParser::FindSystemData( std::ifstream &file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadSystemData( std::ifstream &file )
+void AspenDynamics::ReadSystemData( std::ifstream &file )
 {
     std::string entry;
     std::string temp;
@@ -1575,7 +1524,7 @@ void DynParser::ReadSystemData( std::ifstream &file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadFlowsheetComponents( std::ifstream &file )
+void AspenDynamics::ReadFlowsheetComponents( std::ifstream &file )
 {
     std::string temp;
     
@@ -1850,7 +1799,7 @@ void DynParser::ReadFlowsheetComponents( std::ifstream &file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadConstraints( std::ifstream &file )
+void AspenDynamics::ReadConstraints( std::ifstream &file )
 {
     std::string entry;
     std::string temp;
@@ -1862,7 +1811,7 @@ void DynParser::ReadConstraints( std::ifstream &file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadGraphicsInformation( std::ifstream &file )
+void AspenDynamics::ReadGraphicsInformation( std::ifstream &file )
 {
     std::map< std::pair< std::string, std::string >,
         std::vector< double > > plusLutMap;
@@ -2331,7 +2280,7 @@ void DynParser::ReadGraphicsInformation( std::ifstream &file )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool DynParser::PeekFlowsheet( std::ifstream &file )
+bool AspenDynamics::PeekFlowsheet( std::ifstream &file )
 {
     std::string temp;
     //while( temp.empty() )
@@ -2359,7 +2308,7 @@ bool DynParser::PeekFlowsheet( std::ifstream &file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::FindNextEntry( std::ifstream &file )
+void AspenDynamics::FindNextEntry( std::ifstream &file )
 {
     std::string temp;
     std::streampos temppos;
@@ -2371,7 +2320,7 @@ void DynParser::FindNextEntry( std::ifstream &file )
     file.seekg(temppos);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::AddADVariable( const std::string& var )
+void AspenDynamics::AddADVariable( const std::string& var )
 {
     std::vector<std::string>::const_iterator pos = 
         std::find( m_adVariables.begin(), m_adVariables.end(), var );  
@@ -2382,7 +2331,7 @@ void DynParser::AddADVariable( const std::string& var )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string DynParser::GetADValues( )
+std::string AspenDynamics::GetADValues( )
 {
     if( m_adVariables.empty() )
     {
@@ -2404,6 +2353,8 @@ std::string DynParser::GetADValues( )
         
         std::vector< std::vector< std::string > > list =
             dyndoc->GetVariableList( tempName.c_str(), true );
+        //std::vector< std::vector< std::string > > list =
+        //    dyndoc->GetVariable( tempName.c_str(), m_adVariables[i].c_str(), true );
         
         for( int j = 0; j < list.size(); j++ )
         {
@@ -2446,7 +2397,7 @@ std::string DynParser::GetADValues( )
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-bool DynParser::IsADVarsEmpty()
+bool AspenDynamics::IsADVarsEmpty()
 {
     if( m_adVariables.size() == 0 )
     {
@@ -2459,7 +2410,7 @@ bool DynParser::IsADVarsEmpty()
     //return m_adVariables.empty();
 }
 ///////////////////////////////////////////////////////////////////////////////
-int DynParser::NumADVars()
+int AspenDynamics::NumADVars()
 {
     //if( m_adVariables.empty() )
     if( m_adVariables.size() == 0 )

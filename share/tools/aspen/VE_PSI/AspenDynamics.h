@@ -1,5 +1,5 @@
-#ifndef DYNPARSER_H
-#define DYNPARSER_H
+#ifndef ASPENDYNAMICS_H
+#define ASPENDYNAMICS_H
 
 #include <fstream>
 #include <iostream>
@@ -11,7 +11,7 @@
 #include <ves/open/xml/model/System.h>
 #include <AspenDynamicsInterface.h>
 
-class DynParser
+class AspenDynamics
 {
 
 private:
@@ -70,8 +70,8 @@ private:
     void FindNextEntry( std::ifstream &file );
 
 public:
-    DynParser();
-    ~DynParser();
+    AspenDynamics();
+    ~AspenDynamics();
     void ParseFile( const char * file);
     std::string CreateNetwork( void );    
     void SetWorkingDir( std::string dir );

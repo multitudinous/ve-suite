@@ -1,11 +1,11 @@
 //
-//  BKPParser - parses Aspen bkp files to acquire information about Graphics
-//  Terry E. Jordan Jr.  - SAIC
+//  AspenPlus - parses Aspen bkp files to acquire information about Graphics
+//  Terry E. Jordan Jr.
 //  NETL/DOE
 //
 
-#ifndef BKPPARSER_H
-#define BKPPARSER_H
+#ifndef ASPENPLUS_H
+#define ASPENPLUS_H
 
 #include <string>
 #include <vector>
@@ -30,11 +30,10 @@ namespace model
 }
 }
 
-class BKPParser
+class AspenPlus
 {
 
 private:
-    //parses the bkp file
     void ParseFile(const char *);                                           
     std::vector<float> xCoords;
     std::vector<float> yCoords;    
@@ -91,9 +90,9 @@ public:
     CASI::CASIDocument * aspendoc;
 
     //constructor
-    BKPParser();  
+    AspenPlus();  
     //deconstrutor                                                     
-    ~BKPParser();                                                     
+    ~AspenPlus();                                                     
     void OpenSimAndParse(const char *);   
     //opens the given file                                          
     void OpenSim(const char *);
@@ -132,17 +131,17 @@ public:
     void SetWorkingDir( const std::string& dir );
 
     void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, const std::string& hierName );
-   void CreateNetworkInformation( std::string& networkData );
-   void ParseSubSystem(ves::open::xml::model::ModelPtr model, const std::string& networkName );
-   std::string CreateNetwork( void );
-   std::string GetInputModuleParamProperties( const std::string& modname, const std::string& paramName);
-   std::string GetInputModuleParams( const std::string& modname);
-   std::string GetOutputModuleParamProperties( const std::string& modname, const std::string& paramName);
-   std::string GetOutputModuleParams( const std::string& modname);
-   std::string GetStreamInputModuleParamProperties( const std::string& modname, const std::string& paramName);
-   std::string GetStreamInputModuleParams( const std::string& modname);
-   std::string GetStreamOutputModuleParamProperties( const std::string& modname, const std::string& paramName);
-   std::string GetStreamOutputModuleParams( const std::string& modname);
+    void CreateNetworkInformation( std::string& networkData );
+    void ParseSubSystem(ves::open::xml::model::ModelPtr model, const std::string& networkName );
+    std::string CreateNetwork( void );
+    std::string GetInputModuleParamProperties( const std::string& modname, const std::string& paramName);
+    std::string GetInputModuleParams( const std::string& modname);
+    std::string GetOutputModuleParamProperties( const std::string& modname, const std::string& paramName);
+    std::string GetOutputModuleParams( const std::string& modname);
+    std::string GetStreamInputModuleParamProperties( const std::string& modname, const std::string& paramName);
+    std::string GetStreamInputModuleParams( const std::string& modname);
+    std::string GetStreamOutputModuleParamProperties( const std::string& modname, const std::string& paramName);
+    std::string GetStreamOutputModuleParams( const std::string& modname);
 };
 
 #endif

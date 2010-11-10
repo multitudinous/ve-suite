@@ -30,26 +30,25 @@
 
 #ifndef MODULEI_H_
 #define MODULEI_H_
-#include "BKPParser.h"
-#include "DynParser.h"
+#include "AspenPlus.h"
+#include "AspenDynamics.h"
 #include <ves/open/moduleS.h>
 #include <ves/open/xml/CommandPtr.h>
-#include "VE_AspenUnit.h"
-#include "VE_AspenUnitDlg.h"
+#include "VE_PSI.h"
+#include "VE_PSIDlg.h"
 #include "CorbaUnitManager.h"
 #include <vpr/Thread/Thread.h>
-
 #include <set>
 
-class  AspenUnit_i : public virtual POA_Body::Unit
+class  VEPSI_i : public virtual POA_Body::Unit
 {
 public:
     // Constructor 
-    AspenUnit_i (std::string name, CVE_AspenUnitDlg * dialog,
+    VEPSI_i (std::string name, VE_PSIDlg * dialog,
         CorbaUnitManager * parent, std::string dir );
-    //AspenUnit_i() {};
+    //VEPSI_i() {};
     //Destructor 
-    virtual ~AspenUnit_i (void);
+    virtual ~VEPSI_i (void);
 
     std::string UnitName_;
     Types::ArrayLong ids_;
@@ -61,7 +60,7 @@ public:
 protected:
     //Body::Executive_var executive_;
     unsigned int return_state;
-    CVE_AspenUnitDlg * theDialog;
+    VE_PSIDlg * theDialog;
     CorbaUnitManager * theParent;
     CEdit * AspenLog;
     std::set< std::string > mQueryCommandNames;
@@ -71,8 +70,8 @@ protected:
     ACE_Thread_Mutex _mutex;
 
 public:
-    BKPParser* bkp;
-    DynParser* dyn;
+    AspenPlus* bkp;
+    AspenDynamics* dyn;
   
   void ShowAspen( );  
   void HideAspen( );  
@@ -180,7 +179,7 @@ public:
       ::Error::EUnknown
     ));
 
-  virtual void AspenUnit_i::DeleteModuleInstance(CORBA::Long id) 
+  virtual void VEPSI_i::DeleteModuleInstance(CORBA::Long id) 
     ACE_THROW_SPEC ((
     ::CORBA::SystemException,
     ::Error::EUnknown

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "BKPParser.h"
+#include "AspenPlus.h"
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -17,7 +17,7 @@
 #include "AspenIconData.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-BKPParser::BKPParser()
+AspenPlus::AspenPlus()
     :
     aspendoc( new CASI::CASIDocument() ),
     redundantID( 0 )
@@ -25,12 +25,12 @@ BKPParser::BKPParser()
     workingDir = "";
 }
 ///////////////////////////////////////////////////////////////////////////////
-BKPParser::~BKPParser()
+AspenPlus::~AspenPlus()
 {
     delete aspendoc;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::OpenSimAndParse(const char * file)
+void AspenPlus::OpenSimAndParse(const char * file)
 {
     std::string fileName(file);
     std::string bkpExt(".bkp");
@@ -40,7 +40,7 @@ void BKPParser::OpenSimAndParse(const char * file)
     aspendoc->open( ( workingDir + fileName + apwExt ).c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BKPParser::OpenSim(const char * file)
+void AspenPlus::OpenSim(const char * file)
 {
     std::string fileName(file);
     std::string apwExt(".apw");
@@ -48,7 +48,7 @@ void BKPParser::OpenSim(const char * file)
     aspendoc->open( ( workingDir + fileName + apwExt ).c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::closeFile()
+void AspenPlus::closeFile()
 {
     aspendoc->close();
     xCoords.clear();
@@ -70,37 +70,37 @@ void BKPParser::closeFile()
     streamPortIDS.clear();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::saveFile()
+void AspenPlus::saveFile()
 {
     aspendoc->save();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::saveAs(const char * filename)
+void AspenPlus::saveAs(const char * filename)
 {
     aspendoc->saveAs(filename);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::showAspen(bool show)
+void AspenPlus::showAspen(bool show)
 {
     aspendoc->showAspen(show);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::step()
+void AspenPlus::step()
 {
     aspendoc->step();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::ReinitAspen()
+void AspenPlus::ReinitAspen()
 {
     aspendoc->initializeSolver();
 }
 ///////////////////////////////////////////////////////////////////////////////
-int BKPParser::getNumComponents()
+int AspenPlus::getNumComponents()
 {
     return BlockInfoList.size(); //vectors are all same length
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::getBlockType( const std::string& blockName,
+std::string AspenPlus::getBlockType( const std::string& blockName,
                                     const std::string& flowsheetName )
 {
     if(flowsheetName == "NULL")
@@ -113,7 +113,7 @@ std::string BKPParser::getBlockType( const std::string& blockName,
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::getBlockID( const std::string& blockName,
+std::string AspenPlus::getBlockID( const std::string& blockName,
                                   const std::string& flowsheetName )
 {
     if(flowsheetName == "NULL")
@@ -126,47 +126,47 @@ std::string BKPParser::getBlockID( const std::string& blockName,
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-float BKPParser::getXCoord( int num )
+float AspenPlus::getXCoord( int num )
 {
     return xCoords[num];
 }
 ///////////////////////////////////////////////////////////////////////////////
-float BKPParser::getYCoord( int num )
+float AspenPlus::getYCoord( int num )
 {
     return yCoords[num];
 }
 ///////////////////////////////////////////////////////////////////////////////
-float BKPParser::getStreamXCoord( int streamIndex, int coordIndex )
+float AspenPlus::getStreamXCoord( int streamIndex, int coordIndex )
 {
     return streamCoordList[streamIndex].value[coordIndex].first;
 }
 ///////////////////////////////////////////////////////////////////////////////
-float BKPParser::getStreamYCoord( int streamIndex, int coordIndex )
+float AspenPlus::getStreamYCoord( int streamIndex, int coordIndex )
 {
     return streamCoordList[streamIndex].value[coordIndex].second;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::getStreamId( int streamIndex )
+std::string AspenPlus::getStreamId( int streamIndex )
 {
     return streamCoordList[streamIndex].streamId;
 }
 ///////////////////////////////////////////////////////////////////////////////
-int BKPParser::getStreamType( int streamIndex )
+int AspenPlus::getStreamType( int streamIndex )
 {
     return streamCoordList[streamIndex].streamType;
 }
 ///////////////////////////////////////////////////////////////////////////////
-int BKPParser::getNumStream()
+int AspenPlus::getNumStream()
 {
     return streamCoordList.size();
 }
 ///////////////////////////////////////////////////////////////////////////////
-int BKPParser::getStreamSize( int index )
+int AspenPlus::getStreamSize( int index )
 {
     return streamCoordList[index].value.size();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::ParseFile( const char * bkpFile )
+void AspenPlus::ParseFile( const char * bkpFile )
 {
     //Open file streams    
     std::ifstream inFile(bkpFile, std::ios::binary);
@@ -755,7 +755,7 @@ void BKPParser::ParseFile( const char * bkpFile )
     inFile.close();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::CreateNetworkInformation( std::string& networkData )
+void AspenPlus::CreateNetworkInformation( std::string& networkData )
 {
     // strip the new line characters
     StripCharacters( networkData, "\n" );
@@ -935,7 +935,7 @@ void BKPParser::CreateNetworkInformation( std::string& networkData )
     while( tagBegin < network.size() - 1 );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::CreateNetworkLinks
+void AspenPlus::CreateNetworkLinks
     ( ves::open::xml::model::NetworkPtr subNetwork, const std::string& hierName )
 {
     // remove duplicate points
@@ -1237,7 +1237,7 @@ void BKPParser::CreateNetworkLinks
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::CreateNetwork( void )
+std::string AspenPlus::CreateNetwork( void )
 {
     // then create the appropriate models
     // then put them all together and for a network string
@@ -1430,7 +1430,7 @@ std::string BKPParser::CreateNetwork( void )
     return fileName;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
+void AspenPlus::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                                const std::string& networkName)
 {
     ves::open::xml::model::SystemPtr
@@ -1594,7 +1594,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
     model->SetSubSystem(subSystem);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::StripCharacters( std::string& data, const std::string& character )
+void AspenPlus::StripCharacters( std::string& data, const std::string& character )
 {
     for ( size_t index = 0; index < data.length(); )
     {
@@ -1607,13 +1607,13 @@ void BKPParser::StripCharacters( std::string& data, const std::string& character
 }
 ///////////////////////////////////////////////////////////////////////////////
 //BLOCKS
-void BKPParser::ReinitBlock( const std::string& modname)
+void AspenPlus::ReinitBlock( const std::string& modname)
 {
     aspendoc->reinitializeBlock( modname.c_str() );
 }
 ///////////////////////////////////////////////////////////////////////////////
 //BLOCKS
-std::string BKPParser::GetInputModuleParams( const std::string& modname)
+std::string AspenPlus::GetInputModuleParams( const std::string& modname)
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName( CString( modname.c_str( ) ) );
@@ -1647,7 +1647,7 @@ std::string BKPParser::GetInputModuleParams( const std::string& modname)
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetInputModuleParamProperties( const std::string& modname,
+std::string AspenPlus::GetInputModuleParamProperties( const std::string& modname,
                                                      const std::string& paramName)
 {
     CASI::CASIObj cur_block =
@@ -1760,7 +1760,7 @@ std::string BKPParser::GetInputModuleParamProperties( const std::string& modname
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetOutputModuleParams( const std::string& modname)
+std::string AspenPlus::GetOutputModuleParams( const std::string& modname)
 {
     CASI::CASIObj cur_block =
         aspendoc->getBlockByName(CString(modname.c_str()));
@@ -1795,7 +1795,7 @@ std::string BKPParser::GetOutputModuleParams( const std::string& modname)
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetOutputModuleParamProperties(const std::string& modname,
+std::string AspenPlus::GetOutputModuleParamProperties(const std::string& modname,
                                                       const std::string& paramName)
 {
     CASI::CASIObj cur_block =
@@ -1905,7 +1905,7 @@ std::string BKPParser::GetOutputModuleParamProperties(const std::string& modname
 }
 ///////////////////////////////////////////////////////////////////////////////
 //Streams
-std::string BKPParser::GetStreamInputModuleParams( const std::string& modname)
+std::string AspenPlus::GetStreamInputModuleParams( const std::string& modname)
 {
     CASI::CASIObj cur_stream =
         aspendoc->getStreamByName(CString(modname.c_str()));
@@ -1939,7 +1939,7 @@ std::string BKPParser::GetStreamInputModuleParams( const std::string& modname)
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetStreamInputModuleParamProperties(
+std::string AspenPlus::GetStreamInputModuleParamProperties(
     const std::string& modname, const std::string& paramName )
 {
     CASI::CASIObj cur_stream =
@@ -2045,7 +2045,7 @@ std::string BKPParser::GetStreamInputModuleParamProperties(
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetStreamOutputModuleParams( const std::string& modname)
+std::string AspenPlus::GetStreamOutputModuleParams( const std::string& modname)
 {
     CASI::CASIObj cur_stream =
         aspendoc->getStreamByName( CString( modname.c_str( ) ) );
@@ -2078,7 +2078,7 @@ std::string BKPParser::GetStreamOutputModuleParams( const std::string& modname)
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::string BKPParser::GetStreamOutputModuleParamProperties(
+std::string AspenPlus::GetStreamOutputModuleParamProperties(
     const std::string& modname, const std::string& paramName )
 {
     CASI::CASIObj cur_stream =
@@ -2186,7 +2186,7 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void BKPParser::SetWorkingDir( const std::string& dir )
+void AspenPlus::SetWorkingDir( const std::string& dir )
 {
     workingDir = dir;
 }

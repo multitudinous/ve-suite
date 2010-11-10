@@ -5,30 +5,31 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR xerces_options tao_options RootDir vpr_options buildDir GetPlatform')
 
 srcs = Split("""
-   AspenUnit_i.cxx
-   BKPParser.cxx
-   DynParser.cxx
+   VEPSI_i.cxx
+   AspenPlus.cxx
+   AspenDynamics.cxx
    CorbaUnitManager.cxx
-   VE_AspenUnit.cxx
-   VE_AspenUnitDlg.cxx
+   VE_PSI.cxx
+   VE_PSIDlg.cxx
    AspenPlusLUT.cxx
    AspenDynamicsLUT.cxx
    AspenIconData.cxx
 """)
 
 headers = Split("""
-   AspenUnit_i.h
-   BKPParser.h
-   DynParser.h
+   VEPSI_i.h
+   AspenPlus.h
+   AspenDynamics.h
    CorbaUnitManager.h
-   VE_AspenUnit.h
-   VE_AspenUnitDlg.h
+   VE_PSI.h
+   VE_PSIDlg.h
    AspenPlusLUT.h
    AspenDynamicsLUT.h
    AspenIconData.h
 """)
 
 env = ves_pkg.getEnv().Clone()
+env['MSVS_USE_MFC_DIRS'] = 1
 #to get an mfc to work correctly it appears we need to remove
 #optimization from the compile line
 list = env.Dictionary( 'CCFLAGS' )
@@ -47,6 +48,7 @@ env.Clone(WINDOWS_INSERT_DEF = 1)
 env.Append( CPPDEFINES = ['WIN32'])
 env.Append( CPPDEFINES = ['_WINDOWS'])
 env.Append( CPPDEFINES = ['_AFXDLL'])
+#env.Append( CPPDEFINES = ['_MBCS'])
 
 #env.Append( CPPFLAGS = ['/Gy'])
 #env.Append( CPPFLAGS = ['/GS'])
@@ -76,11 +78,11 @@ env.Append(LINKFLAGS = ['/SUBSYSTEM:WINDOWS'])
 
 #env.Append( RCFLAGS = ['/L 0x409'])
 
-ves_res=env.RES('VE_AspenUnit.rc')
+ves_res=env.RES('VE_PSI.rc')
 for res in ves_res:
   srcs.append(res)
 
-#srcs.append('VE_AspenUnit_d.exe.embed.manifest.res')
+#srcs.append('VE_PSI_d.exe.embed.manifest.res')
   
 xerces_options.apply( env )
 tao_options.apply( env )
