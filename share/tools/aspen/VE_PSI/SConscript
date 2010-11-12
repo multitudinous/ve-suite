@@ -78,11 +78,10 @@ env.Append(LINKFLAGS = ['/SUBSYSTEM:WINDOWS'])
 
 #env.Append( RCFLAGS = ['/L 0x409'])
 
+env.Depends('VE_PSI.rc','res/VE_PSI.ico')
 ves_res=env.RES('VE_PSI.rc')
 for res in ves_res:
   srcs.append(res)
-
-#srcs.append('VE_PSI_d.exe.embed.manifest.res')
   
 xerces_options.apply( env )
 tao_options.apply( env )

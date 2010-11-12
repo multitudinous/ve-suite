@@ -115,7 +115,7 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "TODO: <Company name>"
+            VALUE "CompanyName", "VE-Suite"
             VALUE "FileDescription", "TODO: <File description>"
             VALUE "FileVersion", "1.2.0.1"
             VALUE "InternalName", "VE_PSI.exe"
