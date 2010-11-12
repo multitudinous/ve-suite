@@ -127,25 +127,6 @@ void DynSimParser::ParseTreeFile( std::string treeFilename )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-/*int DynSimParser::OpenFile( std::string filename )
-{
-    std::string tempFilename = filename;
-    //find and replace \ with /
-    size_t pos = tempFilename.find( "\\" );
-    while( pos != std::string::npos )
-    {
-        tempFilename.replace(pos, 1, "/");
-        pos = tempFilename.find( "\\" );
-    }
-
-    //create the command
-    std::string command =
-        "C:/SIMSCI/DSS44/GUI/Bin/runSIM4ME_Dynsim.bat \"C:\\Documents and Settings\\tjordan\\Desktop\\VES_DynSim\\amon\\Ammonia_Reactor.s4m\"";
-
-    //make the call
-    return system( command.c_str() );
-}*/
-///////////////////////////////////////////////////////////////////////////////
 void DynSimParser::InitializeParser( )
 {
     //initialize parser
@@ -962,9 +943,9 @@ std::string DynSimParser::CreateVESNetwork()
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
-    std::ofstream output("xmlpacket.txt");
-    output << fileName;
-    output.close();
+    //std::ofstream output("xmlpacket.txt");
+    //output << fileName;
+    //output.close();
     return fileName;
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -1250,12 +1231,12 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
     browser.AddRef();
     browser->ShowLeafs();
     long browserCount = browser->GetCount();
-
     std::vector< std::string > tempVars;
     for( long i = 1; i <= browserCount; i++ )
     {
         _bstr_t itemName = browser->Item( i );
         std::string temp = itemName;
+
         if( temp.find( modname ) != std::string::npos )
         {
             tempVars.push_back( temp );
@@ -1285,11 +1266,6 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
         clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
         errors->GetSafeArrayPtr());
 
-    //if( FAILED( hr ) )
-    //{
-    //    return;
-    //}
-
     CComSafeArray<VARIANT> * values;
     values = new CComSafeArray<VARIANT>();
     values->Create();
@@ -1307,12 +1283,12 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
         values->GetSafeArrayPtr(), errors->GetSafeArrayPtr(), &quality, &timestamp );
 
     std::vector< std::pair< std::string, std::string > > varsAndVals;
-
     for( int i = 1; i <= count; i++)
     {
         values->GetAt(i).ChangeType(VT_BSTR);
         std::pair< std::string, std::string > varAndVal;
         std::string temp = _bstr_t( itemIDs->GetAt(i) );
+
         //remove everything but the variable ie remove the unit name
         //everything before the "."
         varAndVal.first = temp.substr( temp.find(".") + 1, temp.size() - temp.find(".") + 1 );
@@ -1321,7 +1297,6 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
     }
 
     items->Remove( count, serverID->GetSafeArrayPtr(), errors->GetSafeArrayPtr());
-
     //append the flowsheet name
     ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
     varsAndValues->SetCommandName("AllOPCData");
@@ -1334,7 +1309,6 @@ std::string DynSimParser::GetAllOPCVariables( const std::string& modname )
         entry->SetData( varsAndVals[i].first, varsAndVals[i].second );
         varsAndValues->AddDataValuePair( entry );
     }
-
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
