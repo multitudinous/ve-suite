@@ -613,7 +613,7 @@ if not SConsAddons.Util.hasHelpFlag():
         #baseEnv.AppendUnique( CXXFLAGS = ['-fno-objc-call-cxx-cdtors'] )
         baseEnv.AppendUnique( LINKFLAGS = ['-Wl,-bind_at_load'] )
         #Needed for mac osx 10.6.2 and wxWidgets-2.9.0 w/ cocoa support
-        #baseEnv.AppendUnique( LINKFLAGS = ['-framework', 'CoreFoundation'] )
+        #baseEnv.AppendUnique( FRAMEWORKS = ['CoreFoundation'] )
         baseEnv['LDMODULESUFFIX'] = '.bundle'
         #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
 
