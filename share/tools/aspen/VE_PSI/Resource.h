@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by VE_AspenUnit.rc
+// Used by VE_PSI.rc
 //
 #define IDD_VE_ASPENUNIT_DIALOG         102
 #define IDR_MAINFRAME                   128

@@ -117,12 +117,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "TODO: <Company name>"
             VALUE "FileDescription", "TODO: <File description>"
-            VALUE "FileVersion", "1.0.0.1"
+            VALUE "FileVersion", "1.2.0.1"
             VALUE "InternalName", "VE_PSI.exe"
-            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "LegalCopyright", "SMDS.  All rights reserved."
             VALUE "OriginalFilename", "VE_PSI.exe"
-            VALUE "ProductName", "TODO: <Product name>"
-            VALUE "ProductVersion", "1.0.0.1"
+            VALUE "ProductName", "VE-PSI"
+            VALUE "ProductVersion", "1.2.0.1"
         END
     END
     BLOCK "VarFileInfo"
