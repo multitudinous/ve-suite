@@ -227,7 +227,7 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
     fs::path base_dir;
     const char* env_dir = std::getenv("CONDUCTOR_BASE_DIR");
 
-#if (defined(__linux__) || defined(__linux)) && defined(__x86_64__)
+#if (defined(__linux__) || defined(__linux) || defined(__APPLE__)) && defined(__x86_64__)
     const std::string bit_suffix("64");
 #else
     const std::string bit_suffix("");
