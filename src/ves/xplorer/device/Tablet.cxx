@@ -515,7 +515,7 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
     world_quat *= rot_quat;
 
     gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-    Device::EnsureCameraStaysAboveGround ( vjHeadMat, worldTrans, world_quat, subzeroFlag );
+    Device::EnsureCameraStaysAboveGround( vjHeadMat, worldTrans, world_quat, subzeroFlag );
 
     world->SetTranslationArray( worldTrans );
     world->SetQuat( world_quat );
