@@ -48,7 +48,7 @@ BEGIN
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
     "LANGUAGE 9, 1\r\n"
     "#pragma code_page(1252)\r\n"
-    "#include ""res\\VE_AspenUnit.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""res\\VE_PSI.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#include ""afxres.rc""     // Standard components\r\n"
     "#endif\r\n"
     "\0"
@@ -64,7 +64,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\VE_AspenUnit.ico"
+IDR_MAINFRAME           ICON                    "res\\VE_PSI.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -118,9 +118,9 @@ BEGIN
             VALUE "CompanyName", "TODO: <Company name>"
             VALUE "FileDescription", "TODO: <File description>"
             VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "VE_AspenUnit.exe"
+            VALUE "InternalName", "VE_PSI.exe"
             VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
-            VALUE "OriginalFilename", "VE_AspenUnit.exe"
+            VALUE "OriginalFilename", "VE_PSI.exe"
             VALUE "ProductName", "TODO: <Product name>"
             VALUE "ProductVersion", "1.0.0.1"
         END
@@ -168,7 +168,7 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE 9, 1
 #pragma code_page(1252)
-#include "res\VE_AspenUnit.rc2"  // non-Microsoft Visual C++ edited resources
+#include "res\VE_PSI.rc2"  // non-Microsoft Visual C++ edited resources
 #include "afxres.rc"     // Standard components
 #endif
 
