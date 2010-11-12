@@ -85,13 +85,6 @@ ViewLocPane::ViewLocPane( wxWindow* parent )
     _numStoredLocations = 0;
     _numStoredFlythroughs = 0;
     _vwptsInActiveFly = 0;
-    _locationName = 0;
-    _flythroughName = 0;
-    _activeFlyNames = 0;
-    _numView_LocsGlobal = 0;
-    _locNamesLocal = 0;
-    _activeFlyNamesLocal = 0;
-    _flythroughNamesLocal = 0;
     _numView_LocsGlobal = 0;
     _vwptsInActiveFlyLocal = 0;
     _removevwptSel = 0;
