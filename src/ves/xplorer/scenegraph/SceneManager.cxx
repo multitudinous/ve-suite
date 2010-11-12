@@ -143,7 +143,7 @@ SceneManager::~SceneManager()
 void SceneManager::InitScene()
 {
     std::cout << 
-        "|  1. Initializing.................................... SceneManager |" 
+        "|  Initializing....................................... SceneManager |" 
         << std::endl;
 
     m_vrjHead.init( "VJHead" );

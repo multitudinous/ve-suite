@@ -322,35 +322,30 @@ void EnvironmentHandler::GetDesktopSize( int &width, int &height )
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::InitScene()
 {
-    std::cout 
-        << "| ***************************************************************** |" << std::endl;
-    //
-    // Initiate cursors.
-    //
-    //std::cout << "| 8. Initializing................................. Virtual cursors |" << std::endl;
-    //cursor = new cfdCursor( arrow,
-    //                              ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS(),
-    //                              ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+    std::cout << 
+        "| ***************************************************************** |" 
+        << std::endl;
 
     //
     // Initiate quatcam
     //
-    std::cout 
-        << "| Initializing......................................... cfdQuatCams |" << std::endl;
-    ves::xplorer::cfdQuatCamHandler::instance()->SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
+    ves::xplorer::cfdQuatCamHandler::instance()->SetDCS( 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
     
     //
     // Initiate the Performer Stored Binary objects.
     //
-    std::cout 
-        << "| Initializing....................................... Stored Scenes |" << std::endl;
+    std::cout << 
+        "| Initializing....................................... Stored Scenes |" 
+        << std::endl;
     _teacher = new cfdTeacher( std::string( "STORED_FILES" ),
-                                     ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 
     if( (desktopWidth > 0) && (desktopHeight > 0) )
     {
-        std::cout 
-            << "| Initializing....................................  Desktop Display |" << std::endl;
+        std::cout << 
+            "| Initializing....................................  Desktop Display |" 
+            << std::endl;
         // Create the command and data value pairs
         // to adjust the desktop settings.
         ves::open::xml::DataValuePairPtr dvpDesktopWidth( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
