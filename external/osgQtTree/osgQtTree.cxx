@@ -7,8 +7,8 @@
 #include "treemodel.h"
 #include "osgTreeItem.h"
 
-#include <QTreeView>
-#include <QModelIndex>
+#include <QtGui/QTreeView>
+#include <QtCore/QModelIndex>
 
 
 #include <iostream>

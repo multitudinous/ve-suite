@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 
-#include <QtGui>
+#include <QtGui/QtGui>
 
 #include "treeitem.h"
 #include "treemodel.h"
