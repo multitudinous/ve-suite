@@ -41,8 +41,8 @@
 
 #pragma once
 
-#include <QList>
-#include <QVariant>
+#include <QtCore/QList>
+#include <QtCore/QVariant>
 
 class TreeItem
 {

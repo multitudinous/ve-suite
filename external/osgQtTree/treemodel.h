@@ -43,9 +43,9 @@
 
 #include <osgQtTree/Export.h>
 
-#include <QAbstractItemModel>
-#include <QModelIndex>
-#include <QVariant>
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QModelIndex>
+#include <QtCore/QVariant>
 
 class TreeItem;
 

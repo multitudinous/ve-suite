@@ -11,8 +11,8 @@
 #include "treemodel.h"
 #include "osgTreeItem.h"
 
-#include <QModelIndex>
-#include <QTreeView>
+#include <QtCore/QModelIndex>
+#include <QtGui/QTreeView>
 
 #include <osg/NodeVisitor>
 #include <osg/Group>
