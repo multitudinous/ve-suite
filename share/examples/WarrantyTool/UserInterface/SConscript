@@ -9,6 +9,9 @@ host_type = distutils.util.get_platform()
 Import( 'baseEnv ves_pkg buildDir RootDir vpr_options wxwidgets_options' )
 Import( 'tao_options xerces_options GetPlatform poco_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'WarrantyTool', 'UserInterface' ) )
+if not wxwidgets_options.isAvailable():
+    Return()
+
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 

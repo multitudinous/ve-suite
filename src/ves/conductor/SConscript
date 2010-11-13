@@ -12,6 +12,9 @@ if sca_util.GetPlatform() == 'linux':
 if baseEnv['MakeQtSupport'] == 'yes':
     SConscript( 'qt/SConscript' )
 
+if not wxwidgets_options.isAvailable():
+    Return()
+
 #srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor') )
 
 lib_env = ves_pkg.getEnv().Clone()

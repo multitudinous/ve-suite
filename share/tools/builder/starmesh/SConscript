@@ -2,6 +2,8 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir vtk_options boost_options wxwidgets_options')
+if not wxwidgets_options.isAvailable():
+    Return()
 
 sources = Split("""
    transient.cxx

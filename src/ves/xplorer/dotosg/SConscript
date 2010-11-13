@@ -7,7 +7,6 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 
 Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar osgworks_options ApplyBulletVars')
-Import('wxwidgets_options')
 
 sources = Split("""
    dotosgMetaNode.cxx

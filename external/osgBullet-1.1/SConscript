@@ -5,7 +5,6 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 
 Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar osgworks_options osgbulletBaseVar ApplyBulletVars')
-Import('wxwidgets_options')
 openDir = os.path.abspath( pj(RootDir, 'external', osgbulletBaseVar) )
 sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgbBullet' ) )
 headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgbBullet')  )

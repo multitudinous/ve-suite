@@ -272,9 +272,9 @@ wxwidgets_options = None
 
 if GetPlatform() == 'win32':
    wxwidgets_options = fp_option.FlagPollBasedOption("wxWidgets",
-         "wxWidgets", "2.8", True, True, compileTest=True)
+         "wxWidgets", "2.8", False, True, compileTest=True)
 else:
-   wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
+   wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", False, True)
 opts.AddOption( wxwidgets_options )
 
 #opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')

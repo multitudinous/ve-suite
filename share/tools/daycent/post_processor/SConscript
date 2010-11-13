@@ -7,7 +7,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform boost_options' )
-Import( 'xerces_options tao_options wxwidgets_options poco_options' )
+Import( 'xerces_options tao_options poco_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'tools', 'daycent', 'post_processor' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )

@@ -7,6 +7,8 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import('RootDir ves_pkg buildDir GetPlatform wxwidgets_options vpr_options tao_options  xerces_options')
+if not wxwidgets_options.isAvailable():
+    Return()
 
 srcDir = os.path.abspath( pj(RootDir, 'share', 'examples', 'InteractiveStove','Int_Stove_EconUIPlugin') )
 srcs = sca_util.getSourcesRecursive( srcDir )

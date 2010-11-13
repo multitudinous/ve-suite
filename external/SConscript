@@ -212,6 +212,9 @@ multiblock.addSources(sources2)
 multiblock.build()
 
 ###############################################################
+if not wxwidgets_options.isAvailable():
+    Return()
+
 ##Builds osgWxTree
 sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgWxTree' ) )
 headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgWxTree')  )

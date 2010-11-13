@@ -3,7 +3,6 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv buildDir RootDir vrjuggler_options tao_options xerces_options ves_pkg lokiBaseVar')
-Import('wxwidgets_options')
 
 env = ves_pkg.getEnv().Clone()
 

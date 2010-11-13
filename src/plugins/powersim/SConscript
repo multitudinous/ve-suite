@@ -8,6 +8,9 @@ host_type = distutils.util.get_platform()
 
 Import( 'baseEnv GetPlatform buildDir RootDir LIBDIR ves_pkg' )
 Import( 'wxwidgets_options', 'tao_options', 'vpr_options', 'xerces_options' )
+if not wxwidgets_options.isAvailable():
+    Return()
+
 openDir = os.path.abspath( pj( RootDir, 'src', 'plugins', 'powersim' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )

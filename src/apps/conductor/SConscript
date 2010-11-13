@@ -6,6 +6,8 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options PREFIX RootDir GetSVNVersion')
 Import('tao_options vpr_options osg_options vtk_options')
 Import('minerva_options')
+if not wxwidgets_options.isAvailable():
+    Return()
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'conductor') )
 srcs = sca_util.getSourcesRecursive( srcDir )

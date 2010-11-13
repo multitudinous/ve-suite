@@ -3,7 +3,6 @@ import sys
 import string
 pj = os.path.join
 Import("baseEnv buildDir RootDir vrjuggler_options tao_options xerces_options")
-Import("wxwidgets_options")
 
 env = baseEnv.Clone()
 
@@ -26,7 +25,6 @@ env.AppendUnique( BUILDERS = {'CxxTest':CxxTestBuilder},
 
 tao_options.apply(env)
 xerces_options.apply(env)
-wxwidgets_options.apply(env)
 # Provide a list of headers that have to be run through CxxTest to create
 # the source files.
 test_hdrs = Split("""
