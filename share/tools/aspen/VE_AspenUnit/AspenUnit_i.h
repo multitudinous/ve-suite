@@ -68,6 +68,7 @@ protected:
     std::string mWorkingDir;
     std::string mFileName;
     bool mQuerying;
+    ACE_Thread_Mutex _mutex;
 
 public:
     BKPParser* bkp;

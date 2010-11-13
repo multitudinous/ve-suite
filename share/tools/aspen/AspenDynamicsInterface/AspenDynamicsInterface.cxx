@@ -35,7 +35,7 @@ void AspenDynamicsInterface::Open(CString filename)
     if (simOpened)
           Close();
     
-    ADApplication = AspenDynamicsLibrary::IAspenModelerPtr( "AD Application 2100" );
+    ADApplication = AspenDynamicsLibrary::IAspenModelerPtr( "AD Application 2300" );
     
     VARIANT strVar;
     ::VariantInit(&strVar);
@@ -68,15 +68,16 @@ void AspenDynamicsInterface::Open(CString filename)
     simOpened = true;
     BSTR bstrDesc;
     
-    try
-    {
+    //try
+    //{
         //Initialize COM
-        CoInitialize(NULL);
-    }
-    catch(_com_error &e)
-    {
-        bstrDesc = e.Description();
-    }   
+
+    //    CoInitialize(NULL);
+    //}
+    //catch(_com_error &e)
+    //{
+    //    bstrDesc = e.Description();
+    //}   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -95,7 +96,7 @@ std::vector< std::vector< std::string > > AspenDynamicsInterface::GetVariableLis
     std::vector< std::vector < std::string > > blocks;
 
     // get document/simulation object      
-    COleVariant vDisp(ADApplication->GetSimulation());
+    COleVariant vDisp;//(ADApplication->GetSimulation());
 
     // get the flowsheet object
     vDisp = ADDocument->GetFlowsheet();
@@ -314,7 +315,7 @@ void AspenDynamicsInterface::SetVariableValue( CString itemPath,
     std::vector< std::vector < std::string > > blocks;
 
     // get document/simulation object      
-    COleVariant vDisp(ADApplication->GetSimulation());
+    COleVariant vDisp;//(ADApplication->GetSimulation());
 
     // get the flowsheet object
     vDisp = ADDocument->GetFlowsheet();
@@ -519,4 +520,221 @@ void AspenDynamicsInterface::ResetSimulation( )
     ADDocument->Reset( );
 }
 
+///////////////////////////////////////////////////////////////////////////////
+std::vector< std::vector< std::string > > AspenDynamicsInterface::GetVariable( CString itemPath, CString inputVar, bool block )
+{
+    //get the count of the blocks
+    std::stringstream tokenizer;
+    tokenizer << itemPath;
+    std::string temp;
+    std::vector< std::string > levels;
+    while( std::getline( tokenizer, temp, '.' ) )
+    {
+        levels.push_back( temp );
+    }
+
+    std::vector< std::vector < std::string > > blocks;
+
+    // get document/simulation object      
+    COleVariant vDisp;//(ADApplication->GetSimulation());
+
+    // get the flowsheet object
+    vDisp = ADDocument->GetFlowsheet();
+    IDispatch* pDispFlow = vDisp.pdispVal;
+
+    OLECHAR* szName;
+    DISPID dispid;
+
+    
+    //loop over subblocks
+    DISPPARAMS params = {NULL, NULL, 0, 0};
+    VARIANT result;
+    VARIANT index;
+    IDispatch* pDispBlocksColl;
+
+    int levelCount = levels.size();
+    for( int i = 0; i < levelCount; i++ )
+    {
+        CString itemName( levels[i].c_str() );
+        if( block )
+        {
+            // Get the dispatch ID for the Blocks property
+            szName = OLESTR("Blocks");
+        }
+        else
+        {
+            if( i == levelCount - 1 )
+            {
+                // Get the dispatch ID for the Streams property
+                szName = OLESTR("Streams");
+            }
+            else
+            {
+                szName = OLESTR("Blocks");
+            }
+        }
+        pDispFlow->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+
+        // Call Blocks to get collection of blocks
+        params.cArgs = 0;
+        params.rgvarg = NULL;
+        ::VariantInit(&result);
+        pDispFlow->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
+        pDispBlocksColl = result.pdispVal;
+
+        szName = OLESTR("Item");
+        pDispBlocksColl->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid );
+        ::VariantInit(&index);
+        index.vt = VT_BSTR;
+
+        // get next block in collection
+        index.bstrVal = itemName.AllocSysString();
+        params.cArgs = 1;
+        params.rgvarg = &index;
+        ::VariantInit(&result);
+        pDispBlocksColl->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
+        pDispFlow = result.pdispVal;  // get block dispatch
+    }
+
+    //get All Variables
+    szName = OLESTR("FindMatchingVariables");
+    pDispFlow->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);  
+    
+    DISPPARAMS dispparams;
+    memset(&dispparams, 0, 2);//sizeof dispparams);
+    dispparams.cArgs      = 2; //arraySize;
+    dispparams.rgvarg     = new VARIANT[dispparams.cArgs];
+    dispparams.cNamedArgs = 0;
+
+    //for( int i = 0; i < arraySize; i++)
+    //{
+        CComBSTR bstr = inputVar.AllocSysString();//L"~";//paramArray.GetAt(arraySize - 1 - i); // back reading
+        bstr.CopyTo(&dispparams.rgvarg[0].bstrVal);
+        dispparams.rgvarg[0].vt = VT_BSTR;
+        CComBSTR bstr2 = L"fixed";
+        bstr.CopyTo(&dispparams.rgvarg[1].bstrVal);
+        dispparams.rgvarg[1].vt = VT_BSTR;
+    //}
+
+    params.cArgs = 1;
+    //::VariantInit(&index);
+    index.vt = VT_BSTR;
+    // get next block in collection
+    index.bstrVal = L"nc";
+    params.rgvarg = &index;
+    ::VariantInit(&result);
+    pDispFlow->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &dispparams, &result, NULL, NULL);
+    IDispatch* pDispVariables = result.pdispVal;
+
+    szName = OLESTR("Count");
+    pDispVariables->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+    ::VariantInit(&result);
+    pDispVariables->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
+    int nVars = result.lVal;
+
+    DISPID dispidItem;
+    szName = OLESTR("Item");
+    pDispVariables->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispidItem);
+    ::VariantInit(&index);
+    index.vt = VT_I4;
+
+    std::vector< std::string > tempVarInfo;
+    for (int j = 0; j < nVars; j++)
+    {
+        // get variable list
+        index.lVal = j + 1;   // collection index is "one based"
+        params.cArgs = 1;
+        params.rgvarg = &index;
+        ::VariantInit(&result);
+        pDispVariables->Invoke(dispidItem, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
+        IDispatch* pDispVariable = result.pdispVal;  // get block dispatch
+
+        // get variable name
+        szName = OLESTR("Name");
+        pDispVariable->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+        params.cArgs = 0;
+        params.rgvarg = NULL;
+        ::VariantInit(&result);
+        pDispVariable->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
+        //listbox->InsertString(i, OLE2T(result.bstrVal));
+        CString temp = result.bstrVal;
+        char * ctemp = temp.GetBuffer();
+        if( temp.IsEmpty() )
+        {
+            tempVarInfo.push_back( "N/A" );
+        }
+        else
+        {
+            tempVarInfo.push_back( ctemp );
+        }
+
+        // get variable description
+        szName = OLESTR("Description");
+        pDispVariable->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+        params.cArgs = 0;
+        params.rgvarg = NULL;
+        ::VariantInit(&result);
+        pDispVariable->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
+        //listbox->InsertString(i, OLE2T(result.bstrVal));
+        temp = result.bstrVal;
+        ctemp = temp.GetBuffer();
+        if( temp.IsEmpty() )
+        {
+            tempVarInfo.push_back( "N/A" );
+        }
+        else
+        {
+            tempVarInfo.push_back( ctemp );
+        }
+
+        // get variable value
+        szName = OLESTR("Value");
+        pDispVariable->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+        params.cArgs = 0;
+        params.rgvarg = NULL;
+        ::VariantInit(&result);
+        pDispVariable->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
+        //listbox->InsertString(i, OLE2T(result.bstrVal));
+        if( result.vt == VT_BSTR )
+        {
+            temp = result.bstrVal;
+        }
+        else 
+        {
+            temp.Format(_T("%f"), result.dblVal);
+        }
+        ctemp = temp.GetBuffer();
+        if( temp.IsEmpty() )
+        {
+            tempVarInfo.push_back( "N/A" );
+        }
+        else
+        {
+            tempVarInfo.push_back( ctemp );
+        }
+
+        // get variable units
+        szName = OLESTR("Units");
+        pDispVariable->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+        params.cArgs = 0;
+        params.rgvarg = NULL;
+        ::VariantInit(&result);
+        pDispVariable->Invoke(dispid, IID_NULL, ::GetUserDefaultLCID(), DISPATCH_PROPERTYGET, &params, &result, NULL, NULL);
+        //listbox->InsertString(i, OLE2T(result.bstrVal));
+        temp = result.bstrVal;
+        ctemp = temp.GetBuffer();
+        if( temp.IsEmpty() || ctemp[0] == '?' )
+        {
+            tempVarInfo.push_back( "N/A" );
+        }
+        else
+        {
+            tempVarInfo.push_back( ctemp );
+        }
+
+        blocks.push_back( tempVarInfo );
+        tempVarInfo.clear();
+    }
+    return blocks;
+}
 } //namespace ASPENDYNAMICSINTERFACE

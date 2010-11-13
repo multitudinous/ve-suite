@@ -45,12 +45,15 @@ BOOL CVE_AspenUnitApp::InitInstance()
     // TODO: You should modify this string to be something appropriate
     // such as the name of your company or organization
 
-    if(!AfxOleInit())  // Your addition starts here.
-    {
-        AfxMessageBox(_T("Cannot initialize COM dll"));
-        return FALSE;
+    //if(!AfxOleInit())  // Your addition starts here.
+    //{
+    //    AfxMessageBox(_T("Cannot initialize COM dll"));
+    //    return FALSE;
         // End of your addition.
-    }
+    //}
+
+    HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
     AfxEnableControlContainer();
 
     SetRegistryKey(_T("VE-PSI"));

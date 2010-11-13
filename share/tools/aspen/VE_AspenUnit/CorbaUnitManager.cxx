@@ -13,6 +13,10 @@
 #include <fstream>
 #include <iostream>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <boost/bind.hpp>
+
 XERCES_CPP_NAMESPACE_USE
 
 
@@ -29,7 +33,7 @@ CorbaUnitManager::~CorbaUnitManager()
     XMLPlatformUtils::Terminate();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CorbaUnitManager::SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname )
+void CorbaUnitManager::SetComputerNameUnitNameAndPort( std::string dir, std::string name, std::string port, std::string uname )
 {
    computerName = name;
    computerPort = port;
@@ -41,7 +45,13 @@ void CorbaUnitManager::SetRunORBFlag( bool run )
 {
    //runORB = run;
 }
-/////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void CorbaUnitManager::CheckCORBAWorkThread( )
+{
+    m_thread = new vpr::Thread( boost::bind( &CorbaUnitManager::CheckCORBAWork,
+            this ) );
+}
+////////////////////////////////////////////////////////////////////////////////
 void CorbaUnitManager::RunORB()
 {
     try
@@ -64,7 +74,7 @@ void CorbaUnitManager::RunORB()
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
 
     //initialize OLE
-    CoInitialize(NULL);
+    //CoInitialize(NULL);
 
     int argc = 5;
     char** argv;
@@ -189,7 +199,10 @@ void CorbaUnitManager::DestroyORB( void )
         return;
     }
     
-    unit_i->CloseAspen();
+    m_thread->join();
+    delete m_thread;
+    
+    //unit_i->CloseAspen();
     //Sleep(5000);
     
     CleanUp();
@@ -202,13 +215,14 @@ AspenUnit_i* CorbaUnitManager::GetUnitObject( void )
 /////////////////////////////////////////////////////////////
 void CorbaUnitManager::CheckCORBAWork( void )
 {
-    if ( !CORBA::is_nil( orb ) )
+   /* if ( !CORBA::is_nil( orb ) )
    {
       if ( orb->work_pending() )
       {
          orb->perform_work();
       }
-   }
+   }*/
+    orb->run();
 }
 
 /////////////////////////////////////////////////////////////

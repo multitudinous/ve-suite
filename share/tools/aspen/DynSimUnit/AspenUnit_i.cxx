@@ -65,7 +65,7 @@ AspenUnit_i::AspenUnit_i( std::string name, CDynSimUnitDlg * dialog,
     dynsim ( NULL ),
     mQuerying(false)
 {
-    ves::open::xml::XMLObjectFactory::Instance()->
+    /*ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator(
@@ -75,7 +75,7 @@ AspenUnit_i::AspenUnit_i( std::string name, CDynSimUnitDlg * dialog,
         "Model",new ves::open::xml::model::ModelCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
-
+*/
     AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
 
     mQueryCommandNames.insert( "getNetwork");

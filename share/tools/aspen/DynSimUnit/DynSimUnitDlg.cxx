@@ -216,8 +216,7 @@ void CDynSimUnitDlg::OnBnClickedOk()
         {
             initialized = true;
             GetDlgItem(IDOK)->EnableWindow(FALSE);
-            SetTimer (REFRESH_OPC, 5000, NULL);
-
+            //SetTimer (REFRESH_OPC, 5000, NULL);
         }
         commManager->CheckCORBAWorkThread();
     }

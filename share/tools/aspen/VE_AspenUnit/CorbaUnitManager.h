@@ -7,33 +7,36 @@
 #include "VE_AspenUnitDlg.h"
 #include "BKPParser.h"
 #include "DynParser.h"
+#include <vpr/Thread/Thread.h>
 
 class CorbaUnitManager
 {
 public:
     CorbaUnitManager(CVE_AspenUnitDlg *);
    ~CorbaUnitManager();
-   void SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname );
+   void SetComputerNameUnitNameAndPort( std::string dir, std::string name, std::string port, std::string uname );
    void SetRunORBFlag( bool run );
    void RunORB( void );
    void DestroyORB( void );
    AspenUnit_i* GetUnitObject( void );
    void CheckCORBAWork( void );
    BKPParser * CreateParser( void );
+   void CheckCORBAWorkThread(  );
 
    bool unit_i_instantiated;
    bool CleanUp( );
    Body::Executive_ptr GetExecutive(  );
 
 private:
-   CString workingDir;
-   CString computerName;
-   CString computerPort;
-   CString unitName;
+   std::string workingDir;
+   std::string computerName;
+   std::string computerPort;
+   std::string unitName;
    AspenUnit_i* unit_i;
    CORBA::ORB_var orb;
    PortableServer::POA_var poa;
    CVE_AspenUnitDlg * parent;
    Body::Executive_var exec;
+    vpr::Thread* m_thread;
 };
 #endif
