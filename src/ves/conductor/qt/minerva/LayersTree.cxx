@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
+#ifdef MINERVA_GIS_SUPPORT
 #include <ves/conductor/qt/minerva/LayersTree.h>
 
 #include <Minerva/Qt/Widgets/LayersTree.h>
@@ -60,3 +60,4 @@ void LayersTree::buildTree ( Minerva::Core::Data::Feature * feature )
 {
   mLayersTree->buildTree ( feature );
 }
+#endif
