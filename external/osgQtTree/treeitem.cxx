@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 
-#include <QStringList>
+#include <QtCore/QStringList>
 
 #include "treeitem.h"
 

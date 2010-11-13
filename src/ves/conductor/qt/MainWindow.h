@@ -106,13 +106,13 @@ protected Q_SLOTS:
     /// Called when current tab is changed.
     /// Autoconnected slot
     void on_tabWidget_currentChanged( int index );
-
+#ifdef MINERVA_GIS_SUPPORT
 private Q_SLOTS:
 
-  void on_actionAdd_Planet_triggered ( bool );
-  void on_actionRemove_Planet_triggered ( bool );
-  void on_actionConfigure_Layers_triggered ( bool );
-
+	void on_actionAdd_Planet_triggered ( bool );
+	void on_actionRemove_Planet_triggered ( bool );
+	void on_actionConfigure_Layers_triggered ( bool );
+#endif
 private:
     Ui::MainWindow* ui;
     QFileDialog* mFileDialog;
