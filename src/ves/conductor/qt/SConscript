@@ -68,22 +68,9 @@ cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)
 cppHeaders1 = map(lambda s: pj(openDir, '%s' ) %(s), cppHeaders)
     
 headers = cppHeaders1
-#headers += sca_util.getHeadersRecursive( srcDir )
+#eaders += sca_util.getHeadersRecursive( srcDir )
 sources = cppSources1
-#sources += sca_util.getSourcesRecursive( srcDir )
-
-sources_list = glob.glob(pj(RootDir, 'src','ves','conductor','qt','*.cxx'))
-headers_list = glob.glob(pj(RootDir, 'src','ves','conductor','qt','*.h'))
-sources += map(lambda s: os.path.basename(s), sources_list)
-headers += map(lambda s: os.path.basename(s), headers_list)
-
-#No more recursive adding of sources directly from qt dir. Now add in explicit 
-#subdirs. This allows Minerva and other pieces to be optionally built in
-tsrcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor','qt','propertyBrowser') )
-propertyBrowser_srcs = sca_util.getSourcesRecursive( tsrcDir )
-propertyBrowser_header_srcs = sca_util.getHeadersRecursive( tsrcDir )
-sources += map(lambda s: pj('propertyBrowser', s), propertyBrowser_srcs)
-headers += map(lambda s: pj('propertyBrowser', s), propertyBrowser_header_srcs)
+sources += sca_util.getSourcesRecursive( srcDir )
 
 lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_xplorer',
