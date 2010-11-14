@@ -129,13 +129,23 @@ void cfdDisplaySettings::ProcessCommand()
             ChangeDisplayElements( true, elements.at( i ) );
             //Process the resolution
             // 2/3 the width
+#if 0
             xSize = static_cast< int >( configXValue * 0.667f );
+#else
+            xSize = static_cast< int >( configXValue );
+#endif
             elements.at( i )->setProperty( "size", 0, xSize );
             // 50 for the menu bar height
-#ifdef WIN32
+/*#ifdef WIN32
             ySize = static_cast< int >( configYValue - 195 );
 #else
             ySize = static_cast< int >( configYValue - 155 );
+#endif*/
+
+#ifdef WIN32
+            ySize = static_cast< int >( configYValue - 90 );
+#else
+            ySize = static_cast< int >( configYValue - 70 );
 #endif
             std::cout << "|\tWindow resize value: " << xSize << " " 
                 << ySize << std::endl;
