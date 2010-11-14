@@ -91,7 +91,8 @@ public:
     ///Called every frame
     void PreFrameUpdate( void );
     ///parse some command line input not sure what for
-    int getStringTokens( const char* buffer, char* delim, std::vector<std::string> &toks ); // YANG, a string parsing utility, it is a not thread safe call.
+    // YANG, a string parsing utility, it is a not thread safe call.
+    int getStringTokens( const char* buffer, std::string delim, std::vector<std::string> &toks ); 
     ///Initialize the cluster data
     void InitCluster( void );
     ///Get the clsuter data in preframe

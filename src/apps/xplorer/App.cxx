@@ -559,8 +559,8 @@ void App::preFrame()
 
     {
         //Check and see if the orb has any work to do
-        VPR_PROFILE_GUARD_HISTORY( "App::preFrame CheckORBWorkLoad", 20 );
-        m_vjobsWrapper->CheckORBWorkLoad();
+        //VPR_PROFILE_GUARD_HISTORY( "App::preFrame CheckORBWorkLoad", 20 );
+        //m_vjobsWrapper->CheckORBWorkLoad();
     }
 
     {

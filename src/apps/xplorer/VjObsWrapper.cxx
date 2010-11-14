@@ -98,6 +98,10 @@ void VjObsWrapper::GetUpdateClusterStateVariables( void )
 ////////////////////////////////////////////////////////////////////////////////
 VjObsWrapper::~VjObsWrapper( void )
 {
+    if( !m_orbPtr )
+    {
+        return;
+    }
     CosNaming::Name name( 1 );
 
     name.length( 1 );
@@ -155,6 +159,16 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
                          CORBA::ORB* orbPtr, PortableServer::POA* child_poa,
                          PortableServer::POA* poa, int argc, char* argv[] )
 {
+    if( !input )
+    {
+        isMaster = true;
+        _vjObs->SetClusterMode( false );
+        this->child_poa = child_poa;
+        this->poa = poa;
+        naming_context = input;
+        m_orbPtr = orbPtr;
+        return;
+    }
     //boost::ignore_unused_variable_warning( argc );
     //boost::ignore_unused_variable_warning( argv );
     m_orbPtr = orbPtr;
@@ -213,7 +227,7 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
             boost::algorithm::to_lower( tempHostname );
 
             std::cout << "Host name is " << tempHostname << std::endl;
-            getStringTokens( tempHostname.c_str(), ".", toks );
+            getStringTokens( tempHostname.c_str(), std::string( "." ), toks );
             //now toks[0] will be the short host name
             //the one without the domain name
             if( ( tempHostname == masterhost ) || ( toks[0] == masterhost ) )
@@ -329,21 +343,21 @@ long VjObsWrapper::GetSetFrameNumber( long x )
     return _vjObs->GetSetFrameNumber( x );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int VjObsWrapper::getStringTokens( const char* buffer, char* delim,
+int VjObsWrapper::getStringTokens( const char* buffer, std::string delim,
                                    std::vector<std::string> &toks )
 {
     char* token;
     int i = 0;
     std::string tempBuffer( buffer );
     char* temp = const_cast< char* >( tempBuffer.c_str() );
-    token = strtok( temp, delim );
+    token = strtok( temp, delim.c_str() );
 
     toks.clear();
     while( token )
     {
         i++;
         toks.push_back( std::string( token ) );
-        token = strtok( NULL, delim );
+        token = strtok( NULL, delim.c_str() );
     }
 
     return i;

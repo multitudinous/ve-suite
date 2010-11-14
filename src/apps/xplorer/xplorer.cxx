@@ -156,7 +156,7 @@ int main( int argc, char* argv[] )
         std::cout << xplorer_desc << std::endl;
         return 0;
     }
-    
+
     if( !vm.count("jconf") && !vm.count("vrjslave") )
     {
         std::cerr << std::endl << std::endl
@@ -173,64 +173,74 @@ int main( int argc, char* argv[] )
 
     try
     {
-        //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
-        //std::string Client_Strategy_Factory( "static Client_Strategy_Factory \"-ORBProfileLock null -ORBClientConnectionHandler RW\"" );
-        //std::string  Server_Strategy_Factory( "static Server_Strategy_Factory \"-ORBConcurrency thread-per-connection -ORBPOALock thread -ORBThreadPerConnectionTimeout 1\"" );
-        
-        //resource factory args, server strategy factory args, client args
-        //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), 0 );
-        
-        CORBA::ORB_var orb = CORBA::ORB_init( argc, argv, "VE_Suite_ORB" );
-
-        //Here is the part to contact the naming service and get the reference for the executive
-        CORBA::Object_var naming_context_object =
-            orb->resolve_initial_references( "NameService" );
-        //orb->perform_work();
-        //CORBA::String_var sior1( orb->object_to_string( naming_context_object.in() ) );
-        //std::cout << "|\tIOR of the server side : " << std::endl << sior1 << std::endl;
-        CosNaming::NamingContext_var naming_context = 
-            CosNaming::NamingContext::_narrow( naming_context_object.in() );
-        //orb->perform_work();
-        //Here is the code to set up the server
-        CORBA::Object_var poa_object = 
-            orb->resolve_initial_references( "RootPOA" ); // get the root poa
-        PortableServer::POA_var poa = 
-            PortableServer::POA::_narrow( poa_object.in() );
-        PortableServer::POAManager_var poa_manager = 
-            poa->the_POAManager();
-
-        // Create policy with BiDirPolicy::BOTH
-        CORBA::PolicyList policies( 1 );
-        policies.length( 1 );
-
-        CORBA::Any pol;
-        pol <<= BiDirPolicy::BOTH;
-        policies[ 0 ] =
-            orb->create_policy( BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE, pol );
-
-        // Create POA as child of RootPOA with the above policies.  This POA
-        // will receive request in the same connection in which it sent
-        // the request
-
-        PortableServer::POA_var child_poa = 
-            poa->create_POA( "childPOA", poa_manager.in(), policies );
-
-        // Creation of childPOA is over. Destroy the Policy objects.
-        for( CORBA::ULong i = 0; i < policies.length(); ++i )
+        VjObsWrapper* vjobsWrapper = 0;
+        bool corbaRun = false;
+        if( corbaRun )
         {
-            policies[i]->destroy();
-        }
-        poa_manager->activate();
+            //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
+            //std::string Client_Strategy_Factory( "static Client_Strategy_Factory \"-ORBProfileLock null -ORBClientConnectionHandler RW\"" );
+            //std::string  Server_Strategy_Factory( "static Server_Strategy_Factory \"-ORBConcurrency thread-per-connection -ORBPOALock thread -ORBThreadPerConnectionTimeout 1\"" );
+            
+            //resource factory args, server strategy factory args, client args
+            //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), 0 );
+            CORBA::ORB_var orb = CORBA::ORB_init( argc, argv, "VE_Suite_ORB" );
+            
+            //Here is the part to contact the naming service and get the reference for the executive
+            CORBA::Object_var naming_context_object =
+                orb->resolve_initial_references( "NameService" );
+            //orb->perform_work();
+            //CORBA::String_var sior1( orb->object_to_string( naming_context_object.in() ) );
+            //std::cout << "|\tIOR of the server side : " << std::endl << sior1 << std::endl;
+            CosNaming::NamingContext_var naming_context = 
+                CosNaming::NamingContext::_narrow( naming_context_object.in() );
+            //orb->perform_work();
+            //Here is the code to set up the server
+            // get the root poa
+            CORBA::Object_var poa_object = 
+                orb->resolve_initial_references( "RootPOA" ); 
+            PortableServer::POA_var poa = 
+                PortableServer::POA::_narrow( poa_object.in() );
+            PortableServer::POAManager_var poa_manager = 
+                poa->the_POAManager();
 
-        //Initialize Xplorer CORBA interfaces
-        VjObsWrapper* vjobsWrapper = new VjObsWrapper();
-        vjobsWrapper->init( naming_context.in(), orb.in(), 
-            child_poa.in(), NULL, argc, argv );
+            // Create policy with BiDirPolicy::BOTH
+            CORBA::PolicyList policies( 1 );
+            policies.length( 1 );
+
+            CORBA::Any pol;
+            pol <<= BiDirPolicy::BOTH;
+            policies[ 0 ] =
+                orb->create_policy( BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE, pol );
+
+            // Create POA as child of RootPOA with the above policies.  This POA
+            // will receive request in the same connection in which it sent
+            // the request
+
+            PortableServer::POA_var child_poa = 
+                poa->create_POA( "childPOA", poa_manager.in(), policies );
+
+            // Creation of childPOA is over. Destroy the Policy objects.
+            for( CORBA::ULong i = 0; i < policies.length(); ++i )
+            {
+                policies[i]->destroy();
+            }
+            poa_manager->activate();
+
+            //Initialize Xplorer CORBA interfaces
+            vjobsWrapper = new VjObsWrapper();
+            vjobsWrapper->init( naming_context.in(), orb.in(), 
+                               child_poa.in(), 0, argc, argv );
+        }
+        else
+        {
+            vjobsWrapper = new VjObsWrapper();
+            vjobsWrapper->init( 0, 0, 0, 0, argc, argv );
+        }
 
         kernel->init( vm );
 
         // If we have configuration files, load them.
-        if ( vm.count("jconf") > 0 )
+        if( vm.count("jconf") > 0 )
         {
             {
                 //const char* jccl_dir = std::getenv("JCCL_CFG_PATH");
@@ -253,38 +263,16 @@ int main( int argc, char* argv[] )
         else if( !vm.count("vrjslave") )
         {
             std::cerr << std::endl << std::endl
-            << "************************************************" << std::endl
-            << "*** The --jconf argument is not specified as ***" << std::endl
-            << "*** an option for ves_xplorer. Please update ***" << std::endl
-            << "*** the command line arguments to properly   ***" << std::endl
-            << "*** launch ves_xplorer.                      ***" << std::endl
-            << "************************************************" << std::endl
-            << std::endl << std::endl;
-            std::cout << xplorer_desc << std::endl;
+                << "************************************************" << std::endl
+                << "*** The --jconf argument is not specified as ***" << std::endl
+                << "*** an option for ves_xplorer. Please update ***" << std::endl
+                << "*** the command line arguments to properly   ***" << std::endl
+                << "*** launch ves_xplorer.                      ***" << std::endl
+                << "************************************************" << std::endl
+                << std::endl << std::endl << xplorer_desc << std::endl;
             return 0;
         }
-        
-        /*for( int i = 1; i < argc; ++i )    // Configure the kernel
-        {
-            if( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
-            {
-                //skip the resolutions
-                i = i + 2;
-            }
-            else if( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
-            {
-                //Skip the master computer name
-                i = i + 1;
-            }
-            else if( std::string( argv[ i ] ) == std::string( "-VESRTT" ) )
-            {
-                //Skip the rtt flag
-            }
-            else
-            {
-                kernel->loadConfigFile( argv[i] );
-            }
-        }*/
+
         AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper );
 
         kernel->waitForKernelStop();              // Block until kernel stops

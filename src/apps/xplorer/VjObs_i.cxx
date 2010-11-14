@@ -72,7 +72,7 @@ using namespace ves::xplorer::volume;
 
 using namespace ves::xplorer;
 using namespace ves::open::xml;
-
+////////////////////////////////////////////////////////////////////////////////
 VjObs_i::VjObs_i()
     :
     _models( 0 ),
@@ -185,7 +185,6 @@ void VjObs_i::InitCluster( void )
 
     this->mStates->clusterXMLCommands.clear();
 }
-////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 VjObs::Model* VjObs_i::GetModel( const char* modelID )
 {
@@ -334,16 +333,14 @@ VjObs::Model* VjObs_i::GetModel( const char* modelID )
 
     return tempModel._retn();
 }
-
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VjObs::Models* VjObs_i::GetModels()
 {
     this->CreateDatasetInfo();
     VjObs::Models* models_ = new VjObs::Models( *_models );
     return models_;
 }
-
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::CreateDatasetInfo( void )
 {
     CORBA::ULong numberOfModels = ModelHandler::instance()->GetNumberOfModels();
@@ -473,8 +470,7 @@ void VjObs_i::CreateDatasetInfo( void )
     vprDEBUG( vprDBG_ALL, 1 ) << "|\tleaving VjObs_i::CreateDatasetInfo()"
     << std::endl << vprDEBUG_FLUSH;
 }
-
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::CreateTeacherInfo( void )
 {
     CORBA::Short numTeacherArrays = EnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
@@ -494,8 +490,7 @@ void VjObs_i::CreateTeacherInfo( void )
         }
     }
 }
-
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VjObs::obj_pd* VjObs_i::getDouble1D( const char* input )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
@@ -517,7 +512,7 @@ VjObs::obj_pd* VjObs_i::getDouble1D( const char* input )
     }
     return array1dData._retn();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 VjObs::double2DArray* VjObs_i::getDouble2D( const char* input )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
@@ -546,14 +541,14 @@ VjObs::double2DArray* VjObs_i::getDouble2D( const char* input )
     }
     return arrayData._retn();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 VjObs::scalar_p* VjObs_i::get_teacher_name()
 {
     CreateTeacherInfo();
     VjObs::scalar_p_var teacher_name_ = new VjObs::scalar_p( teacher_name );
     return teacher_name_._retn();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 CORBA::Long VjObs_i::getIsoValue()
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
@@ -562,9 +557,7 @@ CORBA::Long VjObs_i::getIsoValue()
     //return _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
     return cfdQuatCamHandler::instance()->getNumLocs();
 }
-
-// These functions are called from the java side
-// Need to figure out a better notation so that this all makes sense
+////////////////////////////////////////////////////////////////////////////////
 short VjObs_i::get_teacher_num()
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
@@ -572,7 +565,7 @@ short VjObs_i::get_teacher_num()
     //     << vprDEBUG_FLUSH;
     return EnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::GetCfdStateVariables( void )
 {
     // Called in post frame to get next command out to all the cfdobjects
@@ -628,7 +621,7 @@ void VjObs_i::GetCfdStateVariables( void )
         this->mStates->clusterFrameNumber = 0;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::GetUpdateClusterStateVariables( void )
 {
     vprDEBUG( vesDBG, 3 ) << "|\tVjObs_i::GetUpdateClusterStateVariables Cluster Mode "
@@ -682,18 +675,18 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::SetClientInfoFlag( const short value )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     this->mGetClientInfo = value;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 VjObs::obj_pd* VjObs_i::GetClientInfoData()
 {
     return clientInfoObserverDataArray._retn();    //check this
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::PreFrameUpdate( void )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
@@ -721,7 +714,6 @@ void VjObs_i::PreFrameUpdate( void )
         }
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::SetCommandString( const char* value )
 {
@@ -831,4 +823,4 @@ long VjObs_i::GetSetFrameNumber( long x )
         return -1;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////

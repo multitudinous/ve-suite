@@ -122,7 +122,7 @@ void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameCont
                                PortableServer::POA* child_poa )
 {
     std::cout << "| Initializing.............................. GraphicalPluginManager |" << std::endl;
-    this->naming_context = inputNameContext;
+    naming_context = inputNameContext;
     m_ChildPOA = child_poa;
     
     try
@@ -196,8 +196,11 @@ GraphicalPluginManager::~GraphicalPluginManager()
         delete netSystemView;
     }
 
-    delete ui_i;
-    ui_i = 0;
+    if( ui_i )
+    {
+        delete ui_i;
+        ui_i = 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::UnloadPlugins()
@@ -242,7 +245,7 @@ void GraphicalPluginManager::UnbindORB()
 
     try
     {
-        this->naming_context->unbind( UIname );
+        naming_context->unbind( UIname );
     }
     catch ( CosNaming::NamingContext::InvalidName& ex )
     {
@@ -587,6 +590,11 @@ VE_i* GraphicalPluginManager::GetCORBAInterface()
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::ConnectToCE()
 {
+    if( !naming_context )
+    {
+        return;
+    }
+    
     try
     {
         std::cout << "|\tTrying to register " << m_UINAME << std::endl;
