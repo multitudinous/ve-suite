@@ -54,7 +54,10 @@
 #include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/PositionInterface.h>
 
-#include <gadget/Type/KeyboardMouse/EventPtr.h>
+//#include <gadget/Type/KeyboardMouse/EventPtr.h>
+
+#include <gadget/Event/KeyboardMouseEventInterface.h>
+#include <gadget/Event/EventPtr.h>
 
 namespace gadget
 {
@@ -391,6 +394,12 @@ private:
     
     typedef boost::signals2::signal< void (osg::NodePath&) > ObjectPickedSignal_type;
     ObjectPickedSignal_type mObjectPickedSignal;
+    
+    // The keyboardmouse device needed for juggler >= 3.0
+    gadget::KeyboardMouseEventInterface<gadget::event::all_events_tag, gadget::event::immediate_tag> mKeyboardMouseEventInterface;
+    
+    // All keyboardmouse events get delivered here
+    void onKeyboardMouseEvent(gadget::EventPtr event); 
 #endif // QT_ON
 
 };

@@ -198,10 +198,15 @@ KeyboardMouse::KeyboardMouse()
 
     m_keys()
 {
-    mKeyboardMouse.init( "VJKeyboard" );
+    // This no longer works as of Juggler 3.x
+    //mKeyboardMouse.init( "VJKeyboard" );
     mHead.init( "VJHead" );
 
 #ifdef QT_ON
+    // Connect to Juggler's new event handling interface
+    mKeyboardMouseEventInterface.init("VJKeyboard");
+    mKeyboardMouseEventInterface.addCallback(boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1)); 
+
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< InteractionSignal_type >( &mInteractionSignal ),
         "KeyboardMouseInteractionSignal",
@@ -1912,6 +1917,265 @@ bool KeyboardMouse::GetMousePickEvent()
     return m_mousePickEvent;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
+{
+    // !!!WARNING!!! All code in this function should be considered a temporary hack.
+    // Currently this function duplicates most of the code from ProcessEvents
+    // and maintains all its baggage.
+
+    // Temporary hack to make camera rotation work. Since we don't correctly look
+    // at modifier keys here, modifier keys won't work (correctly).
+    mKeyNone = true;
+
+    const gadget::EventType eventType = event->type();
+
+        //Get the current display from the input area
+        gadget::InputArea& inputArea = event->getSource();
+        vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
+
+        switch( eventType )
+        {
+        case gadget::KeyPressEvent:
+        {
+            std::cout << "Keypress event" << std::endl << std::flush;
+            const gadget::KeyEventPtr keyEvt =
+                boost::static_pointer_cast< gadget::KeyEvent >( event );
+#ifdef QT_ON
+            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyPress,
+                                keyEvt->getKey(), keyEvt->getKeyChar(), keyEvt->getKeyUnicode(), keyEvt->getModifierMask() );
+
+            mInteractionSignal( ie );
+#endif
+            //Protect against rapid key press events when key is held down
+            m_currKey = keyEvt->getKey();
+            if( !m_keys[ m_currKey ] )
+            {
+                m_keys.set( m_currKey );
+
+                //Set the current GLTransfromInfo from the event
+                if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
+                {
+                    return;
+                }
+
+                OnKeyPress();
+            }
+
+            break;
+        }
+        case gadget::KeyReleaseEvent:
+        {
+            std::cout << "Keyrelease event" << std::endl << std::flush;
+            
+            const gadget::KeyEventPtr keyEvt =
+                boost::static_pointer_cast< gadget::KeyEvent >( event );
+            m_currKey = keyEvt->getKey();
+            m_keys.reset( m_currKey );
+#ifdef QT_ON
+            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyRelease,
+                                keyEvt->getKey(), keyEvt->getKeyChar(), keyEvt->getKeyUnicode(), keyEvt->getModifierMask() );
+
+            mInteractionSignal( ie );
+#endif
+            //Set the current GLTransfromInfo from the event
+            if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
+            {
+                return;
+            }
+
+            OnKeyRelease();
+
+            break;
+        }
+        case gadget::MouseButtonPressEvent:
+        {
+            std::cout << "Mouse button press event" << std::endl << std::flush;
+            
+            const gadget::MouseEventPtr mouse_evt =
+                boost::static_pointer_cast< gadget::MouseEvent >( event );
+            m_currMouse = mouse_evt->getButton();
+            m_keys.set( m_currMouse );
+#ifdef QT_ON
+            eventmanager::InteractionEvent::buttonType button;
+            switch (m_currMouse)
+            {
+                case gadget::MBUTTON1:
+                {
+                    button = eventmanager::InteractionEvent::button_1;
+                    break;
+                }
+                case gadget::MBUTTON2:
+                {
+                    button = eventmanager::InteractionEvent::button_2;
+                    break;
+                }
+                case gadget::MBUTTON3:
+                {
+                    button = eventmanager::InteractionEvent::button_3;
+                    break;
+                }
+                case gadget::MBUTTON4:
+                {
+                    button = eventmanager::InteractionEvent::button_4;
+                    break;
+                }
+                case gadget::MBUTTON5:
+                {
+                    button = eventmanager::InteractionEvent::button_5;
+                    break;
+                }
+                default:
+                {
+                    button = eventmanager::InteractionEvent::button_1;
+                    break;
+                }
+            }
+            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonPress,
+                                0, 0, 0, mouse_evt->getState(), button,
+                                button, 0.0, 0.0,
+                                mouse_evt->getX(), mouse_evt->getY() );
+
+            // Signal returns true if this event should not be propagated on
+            if ( *mInteractionSignal( ie ) )
+            {
+                return;
+            }
+#endif
+            //Set the current GLTransfromInfo from the event
+            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+            {
+                return;
+            }
+
+            OnMousePress( inputArea );
+
+            break;
+        }
+        case gadget::MouseButtonReleaseEvent:
+        {
+            std::cout << "Mouse button release event" << std::endl << std::flush;
+            
+            const gadget::MouseEventPtr mouse_evt =
+                boost::static_pointer_cast< gadget::MouseEvent >( event );
+            m_currMouse = mouse_evt->getButton();
+            m_keys.reset( m_currMouse );
+#ifdef QT_ON
+            eventmanager::InteractionEvent::buttonType button;
+            switch (m_currMouse)
+            {
+                case gadget::MBUTTON1:
+                {
+                    button = eventmanager::InteractionEvent::button_1;
+                    break;
+                }
+                case gadget::MBUTTON2:
+                {
+                    button = eventmanager::InteractionEvent::button_2;
+                    break;
+                }
+                case gadget::MBUTTON3:
+                {
+                    button = eventmanager::InteractionEvent::button_3;
+                    break;
+                }
+                case gadget::MBUTTON4:
+                {
+                    button = eventmanager::InteractionEvent::button_4;
+                    break;
+                }
+                case gadget::MBUTTON5:
+                {
+                    button = eventmanager::InteractionEvent::button_5;
+                    break;
+                }
+                default:
+                {
+                    button = eventmanager::InteractionEvent::button_1;
+                    break;
+                }
+            }
+            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonRelease,
+                                0, 0, 0, mouse_evt->getState(), button,
+                                button, 0.0, 0.0,
+                                mouse_evt->getX(), mouse_evt->getY() );
+
+            if( *mInteractionSignal( ie ) )
+            {
+                return;
+            }
+        }
+        case gadget::MouseMoveEvent:
+        {
+            std::cout << "Mouse move event" << std::endl << std::flush;
+            
+            const gadget::MouseEventPtr mouse_evt =
+                boost::static_pointer_cast< gadget::MouseEvent >( event );
+
+            m_currX = mouse_evt->getX();
+            m_currY = mouse_evt->getY();
+
+            //Set the current GLTransfromInfo from the event
+            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+            {
+                return;
+            }
+
+            if( !m_keys[ m_currMouse ] )
+            {
+#ifdef QT_ON
+                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
+                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
+                                eventmanager::InteractionEvent::button_none, 0.0, 0.0,
+                                m_currX, m_currY );
+
+                if( *mInteractionSignal( ie ) )
+                {
+                    return;
+                }
+#endif
+                OnMouseMotionUp();
+            }
+            else
+            {
+#ifdef QT_ON
+                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
+                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
+                                eventmanager::InteractionEvent::button_1, 0.0, 0.0,
+                                m_currX, m_currY );
+
+                if( *mInteractionSignal( ie ) )
+                {
+                    return;
+                }
+#endif
+
+#if defined( VPR_OS_Windows )
+                double dx = mouse_evt->getScrollDeltaX();
+                double dy = mouse_evt->getScrollDeltaY();
+#else
+                double dx = m_currX - m_prevX;
+                double dy = m_currY - m_prevY;
+#endif
+                if( dx != 0.0 || dy != 0.0 )
+                {
+                    OnMouseMotionDown( dx, dy );
+                }
+            }
+
+#if !defined( VPR_OS_Windows )
+            m_prevX = m_currX;
+            m_prevY = m_currY;
+#endif
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        } //end switch( eventType )
+        
+#endif
+}
 
 /*
 ////////////////////////////////////////////////////////////////////////////////
