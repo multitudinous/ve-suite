@@ -61,8 +61,8 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     m_argc( argc ),
     m_argv( argv )
 {
-    bool enableRTT = false;
-    for( int i = 1;i < argc;++i )
+    bool enableRTT = true;
+    /*for( int i = 1;i < argc;++i )
     {
         if( std::string( argv[i] ) == std::string( "-VESRTT" ) )
         {
@@ -70,7 +70,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
             std::cout << "Enabling RTT"<< std::endl;
             break;
         }
-    }
+    }*/
 
     //Setup the juggler kernel now
     // block it on another thread
