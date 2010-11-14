@@ -50,6 +50,8 @@
 // --- C/C++ Includes --- //
 #include <iostream>
 
+#include <osgDB/FileUtils>
+
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,28 +124,17 @@ void AppWrapper::init()
 ////////////////////////////////////////////////////////////////////////////////
 void AppWrapper::SetupOSGFILEPATH()
 {
-    std::string osgFilePath;
-    vpr::System::getenv( "OSG_FILE_PATH", osgFilePath );
-    
+    osgDB::FilePathList& fileList = osgDB::getDataFilePathList();
+    /*for( size_t i = 0; i < fileList.size(); ++i )
+    {
+        std::cout << fileList.at( i ) << std::endl;
+    }*/
+
     std::string xplorerBaseDir;
     vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
-    std::string vesDir = xplorerBaseDir + "share" + "vesuite";
-    std::string glslDir = vesDir + "glsl";
-    
-#ifdef VPR_OS_Win32
-    std::string envSep( ";" );
-#else
-    std::string envSep( ":" );
-#endif
-    if( osgFilePath.empty() )
-    {
-        osgFilePath = vesDir + envSep + glslDir;
-    }
-    else
-    {
-        osgFilePath = osgFilePath + envSep + vesDir + envSep + glslDir;
-    }
-    
-    vpr::System::setenv( "OSG_FILE_PATH", osgFilePath );
+    std::string vesDir = xplorerBaseDir + "/share/vesuite";
+    std::string glslDir = vesDir + "/glsl";
+    fileList.push_back( vesDir );
+    fileList.push_back( glslDir );
 }
 ////////////////////////////////////////////////////////////////////////////////
