@@ -1,10 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=VE-Suite Launcher
-Categories=Graphics;Science;DataVisualization;Engineering;VESuite;
+Categories=Graphics;Science;DataVisualization;Engineering;X-VESuite;
 MimeType=application/x-vesuite;
-Exec=velauncher.py
-Icon=ve-suite.png
+Exec=velauncher.sh
+Icon=ve-suite
 Type=Application
 Terminal=true
 NoDisplay=false
