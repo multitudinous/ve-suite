@@ -1,10 +1,12 @@
-
+//Glow color from the scenegraph root
 uniform vec3 glowColor;
-
+//ves uniforms
 uniform float alpha;
 uniform float nearPlane;
 uniform float farPlane;
 uniform bool cameraPictureFrame;
+uniform bool textureZeroIsBound;
+uniform sampler2D tex0;
 
 //uniform float focalDistance;
 //uniform float focalRange;
@@ -15,9 +17,6 @@ uniform bool cameraPictureFrame;
 //varying vec3 normal;
 
 //varying vec4 eyePos;
-
-uniform bool textureZeroIsBound;
-uniform sampler2D tex0;
 
 void main()
 {

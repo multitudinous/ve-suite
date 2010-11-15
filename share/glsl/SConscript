@@ -3,12 +3,12 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg')
+Import('ves_pkg RootDir')
 
 glslBundle = ves_pkg.createFileBundle( pj('share','vesuite','glsl') )
-glslFile = sca_util.getFilesRecursiveByExt( '.', ['.glsl'] )
+glslFile = sca_util.getFilesRecursiveByExt( pj(RootDir,'share','glsl'), ['.glsl'] )
 glslBundle.addFiles( glslFile )
-glslFile = sca_util.getFilesRecursiveByExt( '.', ['.fs'] )
+glslFile = sca_util.getFilesRecursiveByExt( pj(RootDir,'share','glsl'), ['.fs'] )
 glslBundle.addFiles( glslFile )
-glslFile = sca_util.getFilesRecursiveByExt( '.', ['.vs'] )
+glslFile = sca_util.getFilesRecursiveByExt( pj(RootDir,'share','glsl'), ['.vs'] )
 glslBundle.addFiles( glslFile )
