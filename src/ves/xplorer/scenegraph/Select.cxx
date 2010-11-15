@@ -129,7 +129,7 @@ osg::Node* CreateCircleHighlight(
     position = pickedNode.getBound().center();
     osg::NodePath newNP = nodePath;
 
-    osg::Matrix matrix = osg::computeLocalToWorld( newNP );
+    osg::Matrixd matrix = osg::computeLocalToWorld( newNP );
     //Manipulate the center position and the radius so that the highlights
     //are properly positioned.
     {
