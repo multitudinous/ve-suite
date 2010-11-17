@@ -51,6 +51,8 @@ TextureBasedActivateEventHandler::TextureBasedActivateEventHandler()
 ///////////////////////////////////////////////////////////////////
 TextureBasedActivateEventHandler
 ::TextureBasedActivateEventHandler( const TextureBasedActivateEventHandler& ceh )
+    :
+    TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedActivateEventHandler::~TextureBasedActivateEventHandler()

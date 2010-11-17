@@ -51,6 +51,8 @@ TextureBasedPhongShadingEnableEventHandler::TextureBasedPhongShadingEnableEventH
 ///////////////////////////////////////////////////////////////////
 TextureBasedPhongShadingEnableEventHandler
 ::TextureBasedPhongShadingEnableEventHandler( const TextureBasedPhongShadingEnableEventHandler& ceh )
+    :
+    TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedPhongShadingEnableEventHandler::~TextureBasedPhongShadingEnableEventHandler()

@@ -49,6 +49,8 @@ TextureBasedSetActiveShaderManagerEventHandler::TextureBasedSetActiveShaderManag
 ///////////////////////////////////////////////////////////////////
 TextureBasedSetActiveShaderManagerEventHandler
 ::TextureBasedSetActiveShaderManagerEventHandler( const TextureBasedSetActiveShaderManagerEventHandler& ceh )
+    :
+    TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedSetActiveShaderManagerEventHandler::~TextureBasedSetActiveShaderManagerEventHandler()

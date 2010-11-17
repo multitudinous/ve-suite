@@ -51,6 +51,8 @@ TextureBasedPreIntegrateEnableEventHandler::TextureBasedPreIntegrateEnableEventH
 ///////////////////////////////////////////////////////////////////
 TextureBasedPreIntegrateEnableEventHandler
 ::TextureBasedPreIntegrateEnableEventHandler( const TextureBasedPreIntegrateEnableEventHandler& ceh )
+    :
+    TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedPreIntegrateEnableEventHandler::~TextureBasedPreIntegrateEnableEventHandler()

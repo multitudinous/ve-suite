@@ -51,6 +51,8 @@ TextureBasedIsosurfaceUpdateEventHandler::TextureBasedIsosurfaceUpdateEventHandl
 ///////////////////////////////////////////////////////////////////
 TextureBasedIsosurfaceUpdateEventHandler
 ::TextureBasedIsosurfaceUpdateEventHandler( const TextureBasedIsosurfaceUpdateEventHandler& ceh )
+    :
+    TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedIsosurfaceUpdateEventHandler::~TextureBasedIsosurfaceUpdateEventHandler()

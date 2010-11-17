@@ -51,6 +51,8 @@ TextureBasedBoundingBoxEventHandler::TextureBasedBoundingBoxEventHandler()
 ///////////////////////////////////////////////////////////////////
 TextureBasedBoundingBoxEventHandler
 ::TextureBasedBoundingBoxEventHandler( const TextureBasedBoundingBoxEventHandler& ceh )
+    :
+    TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedBoundingBoxEventHandler::~TextureBasedBoundingBoxEventHandler()

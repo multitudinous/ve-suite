@@ -51,6 +51,8 @@ TextureBasedSliceNumberUpdateEventHandler::TextureBasedSliceNumberUpdateEventHan
 ///////////////////////////////////////////////////////////////////
 TextureBasedSliceNumberUpdateEventHandler
 ::TextureBasedSliceNumberUpdateEventHandler( const TextureBasedSliceNumberUpdateEventHandler& ceh )
+    :
+    TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedSliceNumberUpdateEventHandler::~TextureBasedSliceNumberUpdateEventHandler()
