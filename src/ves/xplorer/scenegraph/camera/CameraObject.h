@@ -249,6 +249,9 @@ public:
     ///Method to call the frame after taking a screen cap
     void PostWriteImageFile();
     
+    ///Update the texture resolution for this camera
+    void SetTextureResolution( std::pair< unsigned int, unsigned int >& viewportDimensions );
+    
 protected:
     ///Destructor
     virtual ~CameraObject();

@@ -63,6 +63,7 @@
 #include <wx/bmpbuttn.h>
 #include <wx/tglbtn.h>
 #include <wx/msgdlg.h>
+#include <wx/choice.h>
 
 using namespace ves::conductor;
 
@@ -243,6 +244,31 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
     mDepthOfFieldData[ 2 ] = 6.0;
 
     mServiceList = service;
+
+    m_resolutionMap[ "640 x 480 (VGA)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 640, 480 );
+    m_resolutionMap[ "800 x 600 (SVGA)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 800, 600 );
+    m_resolutionMap[ "1024 x 768 (XGA)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1024, 768 );
+    m_resolutionMap[ "1280 x 720 (HD ready)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1280, 720 );
+    m_resolutionMap[ "1280 x 800 (WXGA)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1280, 800 );
+    m_resolutionMap[ "1280 x 1024 (SXGA)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1280, 1024 );
+    m_resolutionMap[ "1440 x 900 (WSXGA)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1440, 900 );
+    m_resolutionMap[ "1600 x 900 (HD+)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1600, 900 );
+    m_resolutionMap[ "1680 x 1050 (WSXGA+)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1680, 1050 );
+    m_resolutionMap[ "1600 x 1200 (UXGA)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1600, 1200 );
+    m_resolutionMap[ "1920 x 1080 (HD-1080)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1920, 1080 );
+    m_resolutionMap[ "1920 x 1200 (WUXGA)" ] = 
+        std::make_pair< unsigned int, unsigned int >( 1920, 1200 );
 
     BuildGUI();
 
@@ -679,7 +705,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     aspectRatioTextSpinSizer->Add( aspectRatioTextSizer, 0, 0, 5 );
 
-    wxBoxSizer* aspectRatioSpinSizer;
+    /*wxBoxSizer* aspectRatioSpinSizer;
     aspectRatioSpinSizer = new wxBoxSizer( wxVERTICAL );
 
     mAspectRatioSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
@@ -688,11 +714,11 @@ void CameraPlacementToolUIDialog::BuildGUI()
         0, 10, mProjectionData[ 1 ], 0.1 );
     aspectRatioSpinSizer->Add( mAspectRatioSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
-    aspectRatioTextSpinSizer->Add( aspectRatioSpinSizer, 0, 0, 5 );
+    aspectRatioTextSpinSizer->Add( aspectRatioSpinSizer, 0, 0, 5 );*/
 
     aspectRatioSizer->Add( aspectRatioTextSpinSizer, 0, 0, 5 );
 
-    wxBoxSizer* aspectRatioSliderSizer;
+    /*wxBoxSizer* aspectRatioSliderSizer;
     aspectRatioSliderSizer = new wxBoxSizer( wxVERTICAL );
 
     mAspectRatioSlider = new wxSlider(
@@ -701,10 +727,16 @@ void CameraPlacementToolUIDialog::BuildGUI()
     aspectRatioSliderSizer->Add(
         mAspectRatioSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
 
-    aspectRatioSizer->Add( aspectRatioSliderSizer, 1, wxALIGN_BOTTOM, 5 );
+    aspectRatioSizer->Add( aspectRatioSliderSizer, 1, wxALIGN_BOTTOM, 5 );*/
 
     projectionSettingsSizer->Add( aspectRatioSizer, 0, wxALL | wxEXPAND, 5 );
 
+    wxString choice1Choices[] = { wxT("640 x 480 (VGA)"), wxT("800 x 600 (SVGA)"), wxT("1024 x 768 (XGA)"), wxT("1280 x 720 (HD ready)"), wxT("1280 x 800 (WXGA)"), wxT("1280 x 1024 (SXGA)"), wxT("1440 x 900 (WSXGA)"), wxT("1600 x 900 (HD+)"), wxT("1680 x 1050 (WSXGA+)"), wxT("1600 x 1200 (UXGA)"), wxT("1920 x 1080 (HD-1080)"), wxT("1920 x 1200 (WUXGA)") };
+    int choice1NChoices = sizeof( choice1Choices ) / sizeof( wxString );
+    m_aspectRatioChoice = new wxChoice( cameraPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, choice1NChoices, choice1Choices, 0 );
+    m_aspectRatioChoice->SetSelection( 3 );
+    projectionSettingsSizer->Add( m_aspectRatioChoice, 0, wxALL, 5 );
+    
     wxBoxSizer* autoComputerFarPlaneSizer;
     autoComputerFarPlaneSizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -1007,6 +1039,11 @@ void CameraPlacementToolUIDialog::BuildGUI()
         Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
         wxCommandEventHandler( 
         CameraPlacementToolUIDialog::OnPictureModeEvent ), NULL, this );
+        
+    m_aspectRatioChoice->
+        Connect( wxEVT_COMMAND_CHOICE_SELECTED, 
+        wxCommandEventHandler( 
+        CameraPlacementToolUIDialog::OnAspectRatioChoice ), NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ClearInstructions()
@@ -1656,12 +1693,17 @@ void CameraPlacementToolUIDialog::OnAspectRatioText( wxCommandEvent& WXUNUSED( e
     UpdateAspectRatioControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnAspectRatioChoice( wxCommandEvent& WXUNUSED( event ) )
+{
+    UpdateAspectRatioControls();
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnAspectRatioSlider(
     wxCommandEvent& WXUNUSED( event ) )
 {
-    mProjectionData[ 1 ] =
-        static_cast< double >( mAspectRatioSlider->GetValue() ) / 10.0;
-    mAspectRatioSpinCtrl->SetValue( mProjectionData[ 1 ] );
+    //mProjectionData[ 1 ] =
+    //    static_cast< double >( mAspectRatioSlider->GetValue() ) / 10.0;
+    //mAspectRatioSpinCtrl->SetValue( mProjectionData[ 1 ] );
     
     ProjectionUpdate();
 }
@@ -1855,9 +1897,9 @@ void CameraPlacementToolUIDialog::UpdateFieldOfViewControls()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::UpdateAspectRatioControls()
 {
-    mProjectionData[ 1 ] = mAspectRatioSpinCtrl->GetValue();
-    mAspectRatioSlider->SetValue(
-        static_cast< int >( mProjectionData[ 1 ] ) * 10 );
+    //mProjectionData[ 1 ] = mAspectRatioSpinCtrl->GetValue();
+    //mAspectRatioSlider->SetValue(
+    //    static_cast< int >( mProjectionData[ 1 ] ) * 10 );
 
     ProjectionUpdate();
 }
@@ -1953,6 +1995,9 @@ void CameraPlacementToolUIDialog::UpdateMaxCircleOfConfusionControls()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ProjectionUpdate()
 {
+    std::pair< unsigned int, unsigned int > resolution = m_resolutionMap[ ConvertUnicode( m_aspectRatioChoice->GetStringSelection().c_str() ) ];
+    mProjectionData[ 1 ] = double(resolution.first)/double(resolution.second);
+    
     mCommandName = std::string( "PROJECTION_UPDATE" );
 
     ves::open::xml::DataValuePairSharedPtr projectionFieldOfViewDVP(
@@ -1985,6 +2030,16 @@ void CameraPlacementToolUIDialog::ProjectionUpdate()
     autoDVP->SetData( "autoComputeNearFarPlane", selection );
     mInstructions.push_back( autoDVP );
 
+    ves::open::xml::DataValuePairSharedPtr xDVP(
+        new ves::open::xml::DataValuePair() );
+    xDVP->SetData( "projectionXImageResolution", resolution.first );
+    mInstructions.push_back( xDVP );
+
+    ves::open::xml::DataValuePairSharedPtr yDVP(
+        new ves::open::xml::DataValuePair() );
+    yDVP->SetData( "projectionYImageResolution", resolution.second );
+    mInstructions.push_back( yDVP );
+    
     SendCommandsToXplorer();
     ClearInstructions();
 }

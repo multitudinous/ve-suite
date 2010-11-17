@@ -208,8 +208,8 @@ void CameraObject::InitializeCamera( osg::Camera& camera )
     //Don't set transparency to zero because of image save as .png
     //If we do post processing on this camera we can get rid of that requirement
     camera.setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
-    m_texWidth = 1024;
-    m_texHeight = 1024;
+    m_texWidth = 1280;
+    m_texHeight = 720;
     camera.setViewport( 0, 0, m_texWidth, m_texHeight );
     
     std::pair< int, int > textureRes = 
@@ -1056,6 +1056,15 @@ void CameraObject::PostWriteImageFile()
     {
         m_camera->setPostDrawCallback( 0 );
     }*/
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >& viewportDimensions )
+{
+    m_texWidth = viewportDimensions.first;
+    m_texHeight = viewportDimensions.second;
+    m_colorMap->setTextureSize( m_texWidth, m_texHeight );
+    m_colorImage->allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
+    //m_colorImage->scaleImage( m_texWidth, m_texHeight, 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } //end camera
