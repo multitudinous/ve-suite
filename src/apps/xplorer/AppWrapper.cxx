@@ -61,6 +61,8 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     m_argc( argc ),
     m_argv( argv )
 {
+    SetupOSGFILEPATH();
+
     bool enableRTT = false;
     for( int i = 1;i < argc;++i )
     {
@@ -116,5 +118,21 @@ void AppWrapper::init()
     delete m_vjObsWrapper;
     m_vjObsWrapper = NULL;
     m_jugglerIsRunning = false;*/
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppWrapper::SetupOSGFILEPATH()
+{
+    osgDB::FilePathList& fileList = osgDB::getDataFilePathList();
+    /*for( size_t i = 0; i < fileList.size(); ++i )
+    {
+        std::cout << fileList.at( i ) << std::endl;
+    }*/
+
+    std::string xplorerBaseDir;
+    vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
+    std::string vesDir = xplorerBaseDir + "/share/vesuite";
+    std::string glslDir = vesDir + "/glsl";
+    fileList.push_back( vesDir );
+    fileList.push_back( glslDir );
 }
 ////////////////////////////////////////////////////////////////////////////////

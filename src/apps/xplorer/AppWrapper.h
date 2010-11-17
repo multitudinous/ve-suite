@@ -73,6 +73,9 @@ public:
     void init();
 
 private:
+    ///Setup OSG_FILE_PATH based on the location of the ves libraries
+    void SetupOSGFILEPATH();
+
     ///The app that is running
     ves::xplorer::App* m_cfdApp;
 
