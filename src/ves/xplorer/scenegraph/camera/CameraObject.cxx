@@ -1063,7 +1063,7 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
     m_texWidth = viewportDimensions.first;
     m_texHeight = viewportDimensions.second;
     m_colorMap->setTextureSize( m_texWidth, m_texHeight );
-    m_colorMap->dirty();
+    //m_colorMap->dirty();
     //m_colorImage->allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
     m_colorImage->scaleImage( m_texWidth, m_texHeight, 1 );
     m_colorImage->dirty();
