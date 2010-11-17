@@ -1102,18 +1102,8 @@ void Gloves::UpdateRightHandGlove()
         ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
     hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
     mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
-
-    //gmtl::Matrix44d vrjRHandMat = gmtl::convertTo< double >( hand_pos_rot );
-    //osg::Vec3d pitch( 1, 0, 0 );
-    //osg::Vec3d roll( 0, 1, 0 );
-    //osg::Vec3d yaw( 0, 0, 1 );
     
-    //osg::Matrixd rotateMat;
-    //rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
-    //                     osg::DegreesToRadians( -90.0 ), pitch,
-    //                     osg::DegreesToRadians( 0.0 ), roll );
-    
-    double rotArray[ 3 ] = { 0.0, -90.0, 0.0 };
+    double rotArray[ 3 ] = { 180.0, 90.0, 0.0 };
     osg::Matrixd rotateMat = CreateQuat( rotArray );
     
     gmtl::Matrix44d naVRot;
@@ -1195,17 +1185,7 @@ void Gloves::UpdateLeftHandGlove()
     hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
     mLeftHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
     
-    //gmtl::Matrix44d vrjRHandMat = gmtl::convertTo< double >( hand_pos_rot );
-    //osg::Vec3d pitch( 1, 0, 0 );
-    //osg::Vec3d roll( 0, 1, 0 );
-    //osg::Vec3d yaw( 0, 0, 1 );
-    
-    //osg::Matrixd rotateMat;
-    //rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
-    //                     osg::DegreesToRadians( -90.0 ), pitch,
-    //                     osg::DegreesToRadians( 0.0 ), roll );
-    
-    double rotArray[ 3 ] = { 0.0, -90.0, 0.0 };
+    double rotArray[ 3 ] = { 180.0, 90.0, 0.0 };
     osg::Matrixd rotateMat = CreateQuat( rotArray );
 
     gmtl::Matrix44d naVRot;

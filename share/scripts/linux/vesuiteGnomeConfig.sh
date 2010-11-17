@@ -75,6 +75,7 @@ else
    export Mime_Directory=$HOME/.local/share/mime
    export Applications_Directory=$HOME/.local/share/applications
    export Icon_Directory=$HOME/.icons
+   mkdir -p $Icon_Directory
 fi
 
 ##Copy MimeType package & update Mime database
