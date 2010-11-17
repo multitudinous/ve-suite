@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=NV Framelock Off
+Categories=Graphics;Science;DataVisualization;Engineering;X-VESuite;
+MimeType=application/x-vesuite;
+Exec=framelock --off
+Icon=ve-suite
+Type=Application
+Terminal=true
+NoDisplay=false
