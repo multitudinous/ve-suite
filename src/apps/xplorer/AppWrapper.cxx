@@ -50,6 +50,8 @@
 // --- C/C++ Includes --- //
 #include <iostream>
 
+#include <osgDB/FileUtils>
+
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
