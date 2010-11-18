@@ -213,7 +213,7 @@ void CameraObject::InitializeCamera( osg::Camera& camera )
     camera.setViewport( 0, 0, m_texWidth, m_texHeight );
     
     std::pair< int, int > textureRes = 
-    std::make_pair< int, int >( m_texWidth, m_texHeight );
+        std::make_pair< int, int >( m_texWidth, m_texHeight );
     if( !m_colorMap.valid() )
     {
         m_colorMap = CreateViewportTexture(
@@ -240,7 +240,7 @@ void CameraObject::InitializeCamera( osg::Camera& camera )
                                    osg::Vec3d( 0.0, 1.0, 0.0 ),
                                    osg::Vec3d( 0.0, 0.0, 1.0 ) );
     camera.setViewMatrix( m_initialViewMatrix );
-    camera.setProjectionMatrixAsPerspective( 40.0, 1.0, 0.1, 5.0 );
+    camera.setProjectionMatrixAsPerspective( 40.0, 1.778, 0.1, 5.0 );
     
     //Add the subgraph to render
     camera.addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
@@ -1063,10 +1063,23 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
     m_texWidth = viewportDimensions.first;
     m_texHeight = viewportDimensions.second;
     m_colorMap->setTextureSize( m_texWidth, m_texHeight );
-    //m_colorMap->dirty();
+    //m_colorMap->getImage()->dirty();
+    //m_colorMap->dirtyTextureObject();
     //m_colorImage->allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
     m_colorImage->scaleImage( m_texWidth, m_texHeight, 1 );
     m_colorImage->dirty();
+    m_screenCapCamera->setViewport( 0, 0, m_texWidth, m_texHeight );
+    m_camera->setViewport( 0, 0, m_texWidth, m_texHeight );
+
+    //m_screenCapCamera->detach( osg::Camera::COLOR_BUFFER0 );
+    //m_camera->detach( osg::Camera::COLOR_BUFFER0 );
+
+    //m_screenCapCamera->
+    //    attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
+    //m_camera->attach( osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
+    //    0, 0, false, 0, 0 );
+    //m_screenCapCamera->attach( osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
+    //    0, 0, false, 0, 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } //end camera
