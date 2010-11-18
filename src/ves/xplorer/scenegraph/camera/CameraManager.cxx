@@ -574,5 +574,18 @@ void CameraManager::PostFrameUpdate()
         }
         m_isTakingScreenCap = false;
     }
+    else
+    {
+        CameraObject* cameraObject( NULL );
+        for( unsigned int i = 0; i < getNumChildren(); ++i )
+        {
+            cameraObject = ConvertNodeToCameraObject( getChild( i ) );
+            if( cameraObject )
+            {
+                cameraObject->PostTextureResoution();
+            }
+        }
+    }
+
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -126,7 +126,8 @@ CameraObject::CameraObject(
     //mDepthHelperQuadGeometry( NULL ),
     //mDepthHelperQuadVertices( NULL ),
     //m_light( NULL ),
-    m_imageCounter( 0 )
+    m_imageCounter( 0 ),
+    m_resolutionUpdate( false )
 {
     Initialize();
 }
@@ -1071,6 +1072,9 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
     m_screenCapCamera->setViewport( 0, 0, m_texWidth, m_texHeight );
     m_camera->setViewport( 0, 0, m_texWidth, m_texHeight );
 
+    m_resolutionUpdate = true;
+    removeChild( m_camera.get() );
+
     //m_screenCapCamera->detach( osg::Camera::COLOR_BUFFER0 );
     //m_camera->detach( osg::Camera::COLOR_BUFFER0 );
 
@@ -1080,6 +1084,15 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
     //    0, 0, false, 0, 0 );
     //m_screenCapCamera->attach( osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
     //    0, 0, false, 0, 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraObject::PostTextureResoution()
+{
+    if( m_resolutionUpdate )
+    {
+        addChild( m_camera.get() );
+        m_resolutionUpdate = false;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 } //end camera

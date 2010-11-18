@@ -376,6 +376,8 @@ private:
     std::string m_filename;
     ///capture image
     bool m_captureImage;
+    ///resolution update
+    bool m_resolutionUpdate;
 };
 } //end camera
 } //end scenegraph
