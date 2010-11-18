@@ -341,7 +341,7 @@ void CameraManager::SetActiveCameraObject(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::SetCameraViewQuadResolution( unsigned int const& scale )
 {
-    //if( SceneManager::instance()->IsDesktopMode() )
+    if( SceneManager::instance()->IsDesktopMode() )
     {
         m_rttQuadTransform->setScale( osg::Vec3( scale, scale, 1.0 ) );
     }
@@ -574,18 +574,5 @@ void CameraManager::PostFrameUpdate()
         }
         m_isTakingScreenCap = false;
     }
-    else
-    {
-        CameraObject* cameraObject( NULL );
-        for( unsigned int i = 0; i < getNumChildren(); ++i )
-        {
-            cameraObject = ConvertNodeToCameraObject( getChild( i ) );
-            if( cameraObject )
-            {
-                cameraObject->PostTextureResoution();
-            }
-        }
-    }
-
 }
 ////////////////////////////////////////////////////////////////////////////////

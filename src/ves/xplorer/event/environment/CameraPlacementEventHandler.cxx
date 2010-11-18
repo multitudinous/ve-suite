@@ -216,18 +216,7 @@ void CameraPlacementEventHandler::Execute(
                 "autoComputeNearFarPlane" )->GetData( selection );
 
             bool onOff = ( selection != 0 );
-            if( onOff )
-            {
-                cameraManager.GetActiveCameraObject()->
-                    GetCamera().setComputeNearFarMode(
-                    osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-            }
-            else
-            {
-                cameraManager.GetActiveCameraObject()->
-                    GetCamera().setComputeNearFarMode(
-                    osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-            }
+            cameraManager.GetActiveCameraObject()->ComputeNearFarPlanes( onOff );
         }
 
         //Right now we are saying you must have a DCS
@@ -474,16 +463,7 @@ void CameraPlacementEventHandler::Execute(
             "autoComputeNearFarPlane" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
-        if( onOff )
-        {
-            activeCameraObject->GetCamera().setComputeNearFarMode(
-                osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-        }
-        else
-        {
-            activeCameraObject->GetCamera().setComputeNearFarMode(
-                osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-        }
+        activeCameraObject->ComputeNearFarPlanes( onOff );
 
         activeCameraObject->Update();
 
@@ -639,16 +619,7 @@ void CameraPlacementEventHandler::Execute(
             "autoComputeNearFarPlane" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
-        if( onOff )
-        {
-            activeCameraObject->GetCamera().setComputeNearFarMode(
-                osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-        }
-        else
-        {
-            activeCameraObject->GetCamera().setComputeNearFarMode(
-                osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-        }
+        activeCameraObject->ComputeNearFarPlanes( onOff );
 
         //Setup the textture resolution
         unsigned int tempX = 0;

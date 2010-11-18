@@ -252,6 +252,8 @@ public:
     ///Update the texture resolution for this camera
     void SetTextureResolution( std::pair< unsigned int, unsigned int >& viewportDimensions );
     
+    ///
+    void PostTextureResoution();
 protected:
     ///Destructor
     virtual ~CameraObject();

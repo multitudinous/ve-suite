@@ -209,8 +209,6 @@ void CameraObject::InitializeCamera( osg::Camera& camera )
     //Don't set transparency to zero because of image save as .png
     //If we do post processing on this camera we can get rid of that requirement
     camera.setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
-    m_texWidth = 1280;
-    m_texHeight = 720;
     camera.setViewport( 0, 0, m_texWidth, m_texHeight );
     
     std::pair< int, int > textureRes = 
@@ -241,7 +239,8 @@ void CameraObject::InitializeCamera( osg::Camera& camera )
                                    osg::Vec3d( 0.0, 1.0, 0.0 ),
                                    osg::Vec3d( 0.0, 0.0, 1.0 ) );
     camera.setViewMatrix( m_initialViewMatrix );
-    camera.setProjectionMatrixAsPerspective( 40.0, 1.778, 0.1, 5.0 );
+    double aspectRatio = double(m_texWidth)/double(m_texHeight);
+    camera.setProjectionMatrixAsPerspective( 40.0, aspectRatio, 0.1, 5.0 );
     
     //Add the subgraph to render
     camera.addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
@@ -251,6 +250,9 @@ void CameraObject::InitializeCamera( osg::Camera& camera )
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::Initialize()
 {
+    m_texWidth = 1280;
+    m_texHeight = 720;
+
     //Create osg camera for rendering
     m_camera = new osg::Camera();
     InitializeCamera( *(m_camera.get()) );
@@ -969,6 +971,7 @@ void CameraObject::SetRenderQuadTexture( osg::Geode& geode )
 {
     geode.getStateSet()->setTextureAttributeAndModes(
         0, m_colorMap.get(), osg::StateAttribute::ON );
+    m_renderQuad = &geode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture2D* CameraObject::CreateViewportTexture(
@@ -1063,27 +1066,58 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
 {
     m_texWidth = viewportDimensions.first;
     m_texHeight = viewportDimensions.second;
-    m_colorMap->setTextureSize( m_texWidth, m_texHeight );
-    //m_colorMap->getImage()->dirty();
-    //m_colorMap->dirtyTextureObject();
-    //m_colorImage->allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
+    
+    m_screenCapCamera->detach( osg::Camera::COLOR_BUFFER0 );
+    m_camera->detach( osg::Camera::COLOR_BUFFER0 );
+
+    m_colorMap = 0;
+    std::pair< int, int > textureRes = 
+        std::make_pair< int, int >( m_texWidth, m_texHeight );
+    m_colorMap = CreateViewportTexture(
+           GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
+           osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+           textureRes );
+    //m_colorMap->setTextureSize( m_texWidth, m_texHeight );
+
     m_colorImage->scaleImage( m_texWidth, m_texHeight, 1 );
     m_colorImage->dirty();
-    m_screenCapCamera->setViewport( 0, 0, m_texWidth, m_texHeight );
-    m_camera->setViewport( 0, 0, m_texWidth, m_texHeight );
 
-    m_resolutionUpdate = true;
+    //Do this for easy image capture capability
+    m_screenCapCamera = new osg::Camera();
+    InitializeCamera( *(m_screenCapCamera.get()) );
+
+    osg::Matrixd tempView = m_camera->getViewMatrix();
+    osg::Matrixd tempProj = m_camera->getProjectionMatrix();
+
     removeChild( m_camera.get() );
+    m_camera = new osg::Camera();
+    InitializeCamera( *(m_camera.get()) );
+    addChild( m_camera.get() );
+    m_camera->setViewMatrix( tempView );
+    m_camera->setProjectionMatrix( tempProj );
 
-    //m_screenCapCamera->detach( osg::Camera::COLOR_BUFFER0 );
-    //m_camera->detach( osg::Camera::COLOR_BUFFER0 );
+    ComputeNearFarPlanes( true );
+    m_screenCapCamera->
+        attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
 
-    //m_screenCapCamera->
-    //    attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
+    //m_screenCapCamera->setViewport( 0, 0, m_texWidth, m_texHeight );
+    //m_camera->setViewport( 0, 0, m_texWidth, m_texHeight );
+    //m_resolutionUpdate = true;
+    //removeChild( m_camera.get() );
+
+    /*osg::Texture2D* tempTex = new osg::Texture2D(  *m_colorMap.get(),  osg::CopyOp::DEEP_COPY_ALL );
+    m_colorMap = tempTex;
+    m_screenCapCamera->
+        attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );*/
     //m_camera->attach( osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
     //    0, 0, false, 0, 0 );
+
+    m_renderQuad->getStateSet()->setTextureAttributeAndModes(
+        0, m_colorMap.get(), osg::StateAttribute::ON );
     //m_screenCapCamera->attach( osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
     //    0, 0, false, 0, 0 );
+
+    Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::PostTextureResoution()
