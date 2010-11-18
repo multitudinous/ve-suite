@@ -74,15 +74,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     
     // TODO: The Aspen-specific section needs to be uncommented and made 
     // functional.
-    
-//     using ves::open::xml::Command;
-//     using ves::open::xml::CommandPtr;
-//     using ves::open::xml::DataValuePair;
-//     using ves::open::xml::DataValuePairPtr;
-//     using ves::open::xml::OneDDoubleArray;
-//     using ves::open::xml::OneDDoubleArrayPtr;
-//     using ves::open::xml::User;
-//     using ves::open::xml::UserPtr;
+
     using namespace ves::open::xml;
     
     {
@@ -214,9 +206,12 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
            {
                 const std::string nw_str = XMLDataBufferEngine::instance()->
                                 SaveVESData( std::string( "returnString" ) );
-                //serviceList->SetNetwork( nw_str );
+                //serviceList->SetNetwork( nw_str ); <-- old conductor
+                //ves::xplorer::network::GraphicalPluginManager::instance()->
+                //              GetCORBAInterface()->SetNetworkString( nw_str );
+                // <-- CORBA version with Qt
                 ves::xplorer::network::GraphicalPluginManager::instance()->
-                              GetCORBAInterface()->SetNetworkString( nw_str ); 
+                        SetCurrentNetwork( nw_str );
                 std::vector< double > xplorerColor;
                 xplorerColor.push_back( 0.0 );
                 xplorerColor.push_back( 0.0 );
