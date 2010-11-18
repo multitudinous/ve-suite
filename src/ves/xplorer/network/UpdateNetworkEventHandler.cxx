@@ -96,7 +96,11 @@ void UpdateNetworkEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     CommandPtr cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
     if( cmd->GetDataValuePair( "Load Data" ) )
     {
-        GraphicalPluginManager::instance()->GetCORBAInterface()->GetNetworkFromCE();
+        // CORBA no longer runs in typical desktop mode, so we have to test
+        if( GraphicalPluginManager::instance()->GetCORBAInterface() )
+        {
+            GraphicalPluginManager::instance()->GetCORBAInterface()->GetNetworkFromCE();
+        }
         GraphicalPluginManager::instance()->LoadDataFromCE();
     }
 
