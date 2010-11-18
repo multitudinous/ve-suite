@@ -24,10 +24,10 @@
 # * Boston, MA 02111-1307, USA.
 # *
 # * -----------------------------------------------------------------
-# * Date modified: $Date: 2007-10-10 22:55:39 -0500 (Wed, 10 Oct 2007) $
-# * Version:       $Rev: 9350 $
-# * Author:        $Author: mccdo $
-# * Id:            $Id: velauncher.py 9350 2007-10-11 03:55:39Z mccdo $
+# * Date modified: $Date$
+# * Version:       $Rev$
+# * Author:        $Author$
+# * Id:            $Id$
 # * -----------------------------------------------------------------
 # *
 # *************** <auto-copyright.pl END do not edit this line> ***************/

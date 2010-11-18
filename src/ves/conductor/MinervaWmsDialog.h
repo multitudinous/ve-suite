@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2009-10-06 20:54:34 -0500 (Tue, 06 Oct 2009) $
- * Version:       $Rev: 13519 $
- * Author:        $Author: mccdo $
- * Id:            $Id: WarrantyToolUI.cxx 13519 2009-10-07 01:54:34Z mccdo $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
