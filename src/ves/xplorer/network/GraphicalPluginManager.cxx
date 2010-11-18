@@ -109,6 +109,7 @@ vprSingletonImpLifetime( ves::xplorer::network::GraphicalPluginManager, 0 );
 GraphicalPluginManager::GraphicalPluginManager()
     :
     mAvailableModules( 0 ),
+    mNetworkBuffer( std::string() ),
     ui_i( 0 ),
     naming_context( 0 ),
     _exec( 0 ),
@@ -267,7 +268,18 @@ void GraphicalPluginManager::UnbindORB()
 void GraphicalPluginManager::GetNetwork()
 {
     // Get buffer value from Body_UI implementation
-    std::string temp( ui_i->GetNetworkString() );
+    std::string temp;
+    if( ui_i )
+    {
+        // We're in distributed mode, so use CORBA
+        temp = ui_i->GetNetworkString();
+    }
+    else
+    {
+        // Not in distributed mode, so look at value of internal network buffer
+        temp = mNetworkBuffer;
+    }
+
     //std::ofstream output("xplorerNetwork.txt");
     //output<<temp<<std::endl;
     //output.close();
@@ -314,13 +326,19 @@ void GraphicalPluginManager::GetNetwork()
     netSystemView = new NetworkSystemView( veNetwork );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void GraphicalPluginManager::SetCurrentNetwork( const std::string& network )
+{
+    mNetworkBuffer = network;
+}
+////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::GetEverything()
 {
     if( CORBA::is_nil( this->_exec ) )
     {
         vprDEBUG( vesDBG, 3 ) << "ERROR : The Executive has not been intialized!"
             << std::endl << vprDEBUG_FLUSH;
-        return;
+        // Don't fail out for now -RPT
+        //return;
     }
 
     vprDEBUG( vesDBG, 0 ) << "|\t\tGetting Network From Executive" 
@@ -387,7 +405,9 @@ void GraphicalPluginManager::PreFrameUpdate()
     if( !ui_i )
     {
         ConnectToCE();
-        return;
+        // Temporarily commenting this out since it prevents further execution in
+        // new normal situation in which there is no CORBA -RPT
+        //return;
     }
 
     //process the current command form the gui
@@ -407,14 +427,17 @@ void GraphicalPluginManager::PreFrameUpdate()
     }
 
     ///Load the data from ce
-    const std::string tempNetworkCommand = ui_i->GetStatusString();
+    // Commenting this out since new normal is CORBA-less. Need to figure out
+    // how to deal with step #4 below since it relies on value of
+    // boolean updatePluginResults -RPT
+//    const std::string tempNetworkCommand = ui_i->GetStatusString();
     bool updatePluginResults = false;
-    if( tempNetworkCommand.compare( 0, 35, "VE-Suite Network Execution Complete" ) == 0 )
-    {
-        std::cout << "|\tLoading data into plugins" << std::endl;
-        //LoadDataFromCE();
-        updatePluginResults = true;
-    }
+//    if( tempNetworkCommand.compare( 0, 35, "VE-Suite Network Execution Complete" ) == 0 )
+//    {
+//        std::cout << "|\tLoading data into plugins" << std::endl;
+//        //LoadDataFromCE();
+//        updatePluginResults = true;
+//    }
 
     ///process the standard plugin stuff
     for( std::map< std::string, PluginBase* >::const_iterator 
@@ -474,10 +497,11 @@ void GraphicalPluginManager::LoadDataFromCE()
         std::cerr 
             << "|\tTried to load data from VE-CE but there is no connection." 
             << std::endl;
-        return;
+        // Don't fail out here for now -RPT
+        //return;
     }
 
-    if( ui_i->GetNetworkFlag() )
+    //if( ui_i->GetNetworkFlag() )
     {
 #ifdef MINERVA_GIS_SUPPORT
         ves::xplorer::minerva::MinervaManager::instance()->ClearModels();
@@ -759,17 +783,22 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             //Get results
             try
             {
-                const char* tempResult = _exec->Query( status.c_str() );
-                std::string resultData = tempResult;
-                newPlugin->SetModuleResults( resultData );
-                if( resultData.empty() || resultData == "NULL" )
+                // CE May not always exist anymore, so always test -RPT
+                if( _exec )
                 {
-                    parentResultsFailed = true;
-                }
-                if( tempResult )
-                {
-                    delete tempResult;
-                }
+                    const char* tempResult = _exec->Query( status.c_str() );
+                    std::string resultData = tempResult;
+
+                    newPlugin->SetModuleResults( resultData );
+                    if( resultData.empty() || resultData == "NULL" )
+                    {
+                        parentResultsFailed = true;
+                    }
+                    if( tempResult )
+                    {
+                        delete tempResult;
+                    }
+                 }
             }
             catch( CORBA::Exception& ex )
             {

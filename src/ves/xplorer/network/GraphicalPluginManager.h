@@ -173,6 +173,9 @@ public:
     ///Get the current network string being used by GraphicalPluginManager
     std::string GetCurrentNetwork();
 
+    ///Set the current network string
+    void SetCurrentNetwork( const std::string& network );
+
     ///Get the current network system view being used by GraphicalPluginManager
     NetworkSystemView* GetNetworkSystemView();
 
@@ -201,6 +204,10 @@ private:
 
     ///The raw xml network data from ce
     std::string veNetwork;
+
+    ///Network buffer used to store network string between call to
+    /// SetCurrentNetwork and call to GetNetwork
+    std::string mNetworkBuffer;
 
     ///_name_map : maps a module id to it's module name.
     std::map< std::string, std::string> _id_map;
