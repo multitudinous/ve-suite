@@ -1937,7 +1937,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         {
         case gadget::KeyPressEvent:
         {
-            std::cout << "Keypress event" << std::endl << std::flush;
+            //std::cout << "Keypress event" << std::endl << std::flush;
             const gadget::KeyEventPtr keyEvt =
                 boost::static_pointer_cast< gadget::KeyEvent >( event );
 #ifdef QT_ON
@@ -1965,7 +1965,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         }
         case gadget::KeyReleaseEvent:
         {
-            std::cout << "Keyrelease event" << std::endl << std::flush;
+            //std::cout << "Keyrelease event" << std::endl << std::flush;
             
             const gadget::KeyEventPtr keyEvt =
                 boost::static_pointer_cast< gadget::KeyEvent >( event );
@@ -1989,7 +1989,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         }
         case gadget::MouseButtonPressEvent:
         {
-            std::cout << "Mouse button press event" << std::endl << std::flush;
+            //std::cout << "Mouse button press event" << std::endl << std::flush;
             
             const gadget::MouseEventPtr mouse_evt =
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
@@ -2053,7 +2053,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         }
         case gadget::MouseButtonReleaseEvent:
         {
-            std::cout << "Mouse button release event" << std::endl << std::flush;
+            //std::cout << "Mouse button release event" << std::endl << std::flush;
             
             const gadget::MouseEventPtr mouse_evt =
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
@@ -2103,10 +2103,20 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             {
                 return;
             }
+#endif
+            //Set the current GLTransfromInfo from the event
+            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+            {
+                return;
+            }
+
+            OnMouseRelease( inputArea );
+
+            break;
         }
         case gadget::MouseMoveEvent:
         {
-            std::cout << "Mouse move event" << std::endl << std::flush;
+            //std::cout << "Mouse move event" << std::endl << std::flush;
             
             const gadget::MouseEventPtr mouse_evt =
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
@@ -2174,7 +2184,6 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         }
         } //end switch( eventType )
         
-#endif
 }
 
 /*
