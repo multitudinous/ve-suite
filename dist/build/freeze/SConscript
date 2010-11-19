@@ -34,7 +34,7 @@ launcherPyFiles = sca_util.getFilesRecursiveByExt( installerbaseDir, ['.py'] )
 launcherPyFiles = map(lambda s: pj(installerbaseDir, s), launcherPyFiles)
 launcherPyFiles.append( 'velauncher.spec' )
 
-basePyinstallerDir = pj(RootDir,'external','FreezePython','pyinstaller-1.4')
+basePyinstallerDir = pj(RootDir,'external','FreezePython','pyinstaller-trunk-1105')
 configure_py = pj(basePyinstallerDir, 'Configure.py')
 makespec_py = pj(basePyinstallerDir, 'Makespec.py')
 build_py = pj(basePyinstallerDir, 'Build.py')
@@ -49,7 +49,7 @@ else:
 
 make_cmd = "python " + makespec_py
 
-build_cmd = "python "
+build_cmd = "python " + build_py
 
 config_cmd = pj(basePyinstallerDir,'Configure.py')
 os.popen("python " + config_cmd)
@@ -60,14 +60,14 @@ if sca_util.GetPlatform() == "win32":
     makespecAction = '%s --onefile --out=%s --path=%s --icon=%s\\ves_icon.ico --upx ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir, installerImages)
     makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec")
     
-    freezeAction = '%s ${SOURCE.abspath} %s\\velauncher.spec' % (build_cmd, velauncherDistDir)
+    freezeAction = '%s ${SOURCE.abspath}' % (build_cmd)
     freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "")
 
     env.Append(BUILDERS = {'makespec': makespecBuilder, 'freeze' : freezeBuilder})
     env.makespec(target = makespecTarget ,source = makespecSrc)
     #Depends( makespecTarget, launcherPyFiles)    
     #Depends(pj('dist', 'velauncher.exe'), makespecTarget)
-    env.freeze(target = pj('dist', 'velauncher.exe'), source = build_py)
+    env.freeze(target = pj('dist', 'velauncher.exe'), source = makespecTarget)
 
     Depends(pj('dist', 'velauncher.exe'), launcherPyFiles)
     launcherBundle.addFiles( pj('dist', 'velauncher.exe'),"",False )
