@@ -86,7 +86,7 @@ protected:
     // Is connected to KeyboardMouse.ObjectPickedSignal so the scenegraph
     // tree selection is synchronized with object selection.
     void OnObjectPicked( osg::NodePath& nodePath );
-    
+
 protected Q_SLOTS:
     
     /// Called when the file operations icon on the main toolbar is clicked.
@@ -106,7 +106,24 @@ protected Q_SLOTS:
     /// Called when current tab is changed.
     /// Autoconnected slot
     void on_tabWidget_currentChanged( int index );
+
+    Q_SIGNALS:
+    /// Queued signal emitted when OnActiveModelChanged slot is called. This is
+    /// required for thread safety
+    void ActiveModelChanged( std::string modelID );
+
+    /// Queued signal emitted when OnObjectPicked slot is called. This is
+    /// required for thread safety
+    void ObjectPicked( osg::NodePath nodePath );
+
+protected Q_SLOTS:
+    /// Slot corresponding to ActiveModelChanged queued signal
+    void QueuedOnActiveModelChanged( std::string modelID );
+
+    /// Slot corresponding to ObjectPicked queued signal
+    void QueuedOnObjectPicked( osg::NodePath nodePath );
 #ifdef MINERVA_GIS_SUPPORT
+
 private Q_SLOTS:
 
 	void on_actionAdd_Planet_triggered ( bool );

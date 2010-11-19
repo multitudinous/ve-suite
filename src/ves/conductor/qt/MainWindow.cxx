@@ -66,6 +66,11 @@
 
 #include <iostream>
 
+// The Q_DECLARE_METATYPE maco allows us to use non-Qt types in queued connections
+// in Qt-signals
+Q_DECLARE_METATYPE(std::string)
+Q_DECLARE_METATYPE(osg::NodePath)
+
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -89,6 +94,19 @@ MainWindow::MainWindow(QWidget* parent) :
     // Create set of default dialogs that can be added as tabs
     mVisualizationTab = new ves::conductor::Visualization( 0 );
     mScenegraphTreeTab = new ves::conductor::TreeTab();
+
+    // Connect queued signals for all slots connected via EventManager to ensure
+    // that widgets can be altered during slot execution. All EventManager slots
+    // should emit one of the Qt signals listed below if they alter any widget in
+    // any way.
+    qRegisterMetaType<std::string>();
+    qRegisterMetaType<osg::NodePath>();
+    QObject::connect( this, SIGNAL( ActiveModelChanged( std::string ) ),
+                      this, SLOT( QueuedOnActiveModelChanged( std::string ) ),
+                      Qt::QueuedConnection );
+    QObject::connect( this, SIGNAL( ObjectPicked( osg::NodePath ) ),
+                      this, SLOT( QueuedOnObjectPicked( osg::NodePath ) ),
+                      Qt::QueuedConnection );
 
     // Connect to the ActiveModelChangedSignal so we can show the correct 
     // tabs when the model changes
@@ -297,28 +315,38 @@ void MainWindow::onFileCancelled()
 
 void MainWindow::OnActiveModelChanged( const std::string& modelID )
 {   
-    // We get rid of all existing tabs, then open only those appropriate 
+    // emit Qt-signal which is connected to QueuedOnActiveModelChanged.
+    // A queued connection is necessary because widgets are altered during
+    // this event.
+    ActiveModelChanged( modelID );
+}
+
+void MainWindow::QueuedOnActiveModelChanged( std::string modelID )
+{
+    // We get rid of all existing tabs, then open only those appropriate
     // to the active model.
 
     std::string LastKnownActive = mActiveTab;
-    
+
     RemoveAllTabs();
-    
+
     // Show visualization tab?
-    ves::xplorer::Model* model =  
+    ves::xplorer::Model* model =
         ves::xplorer::ModelHandler::instance()->GetActiveModel( );
-        
+
     if( model->GetNumberOfCfdDataSets() > 0 )
     {
         AddTab( mVisualizationTab, "Visualization" );
     }
-    
+
     // Show the scenegraph tree
     AddTab( mScenegraphTreeTab, "Scenegraph" );
-    
+
     // Reactivate the last-known active tab
     ActivateTab( LastKnownActive );
 }
+
+
 
 
 #ifdef MINERVA_GIS_SUPPORT
@@ -356,11 +384,19 @@ void MainWindow::on_actionConfigure_Layers_triggered ( bool )
 
 void MainWindow::OnObjectPicked( osg::NodePath& nodePath )
 {    
+    // emit Qt-signal which is connected to QueuedOnObjectPicked
+    // A queued connection is necessary because widgets are altered during
+    // this event.
+    ObjectPicked( nodePath );
+}
+
+void MainWindow::QueuedOnObjectPicked( osg::NodePath nodePath )
+{
     // This is a bit hackish. Instead of re-reading the scenegraph every time a new
-    // selection is made, we should be hooked up to signals for changes to the 
-    // scenegraph so we can re-read at the appropriate time. The only operation 
+    // selection is made, we should be hooked up to signals for changes to the
+    // scenegraph so we can re-read at the appropriate time. The only operation
     // that *should* be done here is OpenToAndSelect.
     mScenegraphTreeTab->PopulateWithRoot( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
-    
+
     mScenegraphTreeTab->OpenToAndSelect( nodePath );
 }
