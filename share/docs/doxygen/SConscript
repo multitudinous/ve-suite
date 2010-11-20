@@ -2,6 +2,7 @@
 import os, sys
 #from SCons.Util import WhereIs
 pj = os.path.join
+import doxygen
 
 Import('ves_pkg')
 env = ves_pkg.getEnv().Clone()
@@ -10,24 +11,11 @@ env = ves_pkg.getEnv().Clone()
 sys.stdout.write("Searching for doxygen...\n")
 doxygen_cmd = WhereIs('doxygen')
 
-if None == doxygen_cmd:
+#if doxygen.exists(env):
+if doxygen_cmd == None:
     sys.stdout.write("Could not find doxygen. Please make sure doxygen is in your PATH.\n")
     Return()
 else:
     sys.stdout.write("Found doxygen\n")
-    sys.stdout.write("Generating doxygen files....\n")
-
-#os.popen(doxygen_cmd)
-
-#doxyAction = doxygen_cmd
-
-#doxyBuilder = Builder(action = doxyAction, single_source = True,
-#                            suffix = ".html")
-
-#env.Append(BUILDERS = {'doxyResolve': doxyBuilder})
-
-#env.doxyResolve(target = pdfTargets, source = foedSrcs)
-
-#sys.stdout.write("Done generating documentation\n")
  
 env.Doxygen(pj('#', 'share','docs','doxygen','Doxyfile') )
