@@ -6,7 +6,7 @@ viewerlibs=osgViewer.lib osgManipulator.lib
 
 Name: OpenSceneGraph
 Description: OpenSceneGraph release pre-compiled for VES
-Provides: OpenSceneGraph OpenThreads
+Provides: openscenegraph openthreads
 Requires:
 Version: 2.8.1
 Libs: /libpath:"${libdir}" OpenThreads.lib osg.lib osgDB.lib osgFX.lib osgGA.lib osgParticle.lib osgSim.lib osgTerrain.lib osgText.lib osgUtil.lib opengl32.lib glu32.lib ${viewerlibs}

@@ -6,7 +6,7 @@ includedir=${prefix}/include
 Name: OpenSceneGraph Audio Library (osgAL)
 Description: osgAL debug pre-compiled for VES
 Provides: osgAL OpenAL libvorbis libogg
-Requires: OpenSceneGraph OpenThreads
+Requires: openscenegraph openthreads
 Version: 0.6.1
 Libs: /libpath:"${libdir}" osgAudio.lib openalpp.lib OpenAL32.lib alut.lib libvorbis.lib libvorbisfile.lib libogg.lib
 Cflags: /I"${includedir}" /I"${includedir}/AL"
