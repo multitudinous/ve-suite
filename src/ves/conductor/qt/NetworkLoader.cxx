@@ -53,6 +53,15 @@
 
 #include <ves/util/commands/Minerva.h>
 
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
+
+#ifdef WIN32
+#include <direct.h>
+#else
+#include <unistd.h>
+#endif
+
 namespace ves
 {
 namespace conductor
@@ -69,6 +78,33 @@ NetworkLoader::~NetworkLoader()
 
 void NetworkLoader::LoadVesFile( const std::string& fileName )
 {
+    ///First lets get the current working directory and see where we need to
+    ///change it to the new ves filename.
+    boost::filesystem::path dir_path( fileName, boost::filesystem::native );
+    try
+    {
+        if( !boost::filesystem::exists( dir_path ) )
+        {
+            return;
+        }
+    }
+    catch( ... )
+    {
+        return;
+    }
+    std::string newWorkingDir = dir_path.parent_path().string();
+    std::cout << "|\tThe new working directory is " 
+        << newWorkingDir << std::endl;
+
+#ifdef WIN32
+    _chdir( newWorkingDir.c_str() );
+#else
+    chdir( newWorkingDir.c_str() );
+#endif
+    //A new working directory also means that 
+    //the STORED scenes are no longer valid
+    //ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();
+    
     // TODO: This code needs a thorough cleanup since it is mostly ripped from
     // other files and pasted in here. 
     
