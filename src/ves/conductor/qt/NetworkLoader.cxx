@@ -97,6 +97,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         << newWorkingDir << std::endl;
 
 #ifdef WIN32
+    //http://msdn.microsoft.com/en-us/library/bf7fwze1(VS.80).aspx
     _chdir( newWorkingDir.c_str() );
 #else
     chdir( newWorkingDir.c_str() );
