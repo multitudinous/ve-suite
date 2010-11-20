@@ -9,7 +9,7 @@ env = ves_pkg.getEnv().Clone()
 
 #Tool Directory
 DOCBOOKBASE = pj(RootDir,'external','DocBook')
-DOCBOOK_XSL = pj(DOCBOOKBASE,'docbook-xsl-1.75.2')
+DOCBOOK_XSL = pj(DOCBOOKBASE,'docbook-xsl-ns-1.76.1')
 DOCBOOK_FO = pj(DOCBOOKBASE,'fop-1.0')
 HTML_XSL = pj(DOCBOOK_XSL,'html','docbook.xsl')
 CHUNK_HTML_XSL = pj(DOCBOOK_XSL,'html','chunk.xsl')
