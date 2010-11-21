@@ -66,15 +66,19 @@
 
 #include <iostream>
 
-// The Q_DECLARE_METATYPE maco allows us to use non-Qt types in queued connections
-// in Qt-signals
+///The Q_DECLARE_METATYPE maco allows us to use non-Qt types in 
+///queued connections in Qt-signals
 Q_DECLARE_METATYPE(std::string)
 Q_DECLARE_METATYPE(osg::NodePath)
-
+////////////////////////////////////////////////////////////////////////////////
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
+    ui( new Ui::MainWindow ),
+    mFileDialog( 0 ),
+    mFileOpsStack( 0 ),
+    mScenegraphTreeTab( 0 ),
     mActiveTab( "" ),
+    mVisualizationTab( 0 ),
     mLayersTree ( 0x0 )
 {
     ui->setupUi(this);
@@ -126,7 +130,7 @@ MainWindow::MainWindow(QWidget* parent) :
         ves::xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "KeyboardMouse.ObjectPickedSignal", &slotWrapper, mConnections );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -137,19 +141,22 @@ MainWindow::~MainWindow()
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 #endif
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::changeEvent(QEvent* e)
 {
     QMainWindow::changeEvent(e);
-    switch (e->type()) {
+    switch (e->type()) 
+    {
     case QEvent::LanguageChange:
+    {
         ui->retranslateUi(this);
         break;
+    }
     default:
         break;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int MainWindow::AddTab( QWidget* widget, const std::string& tabLabel )
 {
     int index = ui->tabWidget->addTab( widget, 
@@ -157,7 +164,7 @@ int MainWindow::AddTab( QWidget* widget, const std::string& tabLabel )
     mTabbedWidgets[ tabLabel ] = widget;
     return index;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::RemoveTab( QWidget* widget )
 {
     if( !widget )
@@ -179,7 +186,7 @@ void MainWindow::RemoveTab( QWidget* widget )
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::RemoveTab( const std::string& tabLabel )
 {
     std::map< std::string, QWidget* >::iterator marked = mTabbedWidgets.find( tabLabel );
@@ -188,19 +195,19 @@ void MainWindow::RemoveTab( const std::string& tabLabel )
         RemoveTab( marked->second );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::RemoveAllTabs()
 {
     ui->tabWidget->clear();
     mTabbedWidgets.clear();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::ActivateTab( QWidget* widget )
 {
     // Get the widget's index and call the (int) overloaded version
     ActivateTab( ui->tabWidget->indexOf( widget ) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::ActivateTab( const std::string& tabLabel )
 {
     std::map< std::string, QWidget* >::iterator iter = mTabbedWidgets.find( tabLabel );
@@ -210,7 +217,7 @@ void MainWindow::ActivateTab( const std::string& tabLabel )
         ActivateTab( iter->second );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 /// This version is the final destination of the other overloaded versions.
 /// All base functionality should happen here.
 void MainWindow::ActivateTab( int index )
@@ -220,7 +227,7 @@ void MainWindow::ActivateTab( int index )
         ui->tabWidget->setCurrentIndex( index );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_tabWidget_currentChanged( int index )
 {
     // Store off the name of this tab so this tab can be reactivated when 
@@ -231,7 +238,7 @@ void MainWindow::on_tabWidget_currentChanged( int index )
     // tab functionality for us, so the name is treated as primary.
     mActiveTab = ui->tabWidget->tabText( index ).toStdString();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionFile_triggered()
 {
     if( mFileOpsStack->isVisible() )
@@ -243,7 +250,7 @@ void MainWindow::on_actionFile_triggered()
         mFileOpsStack->Show();
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionOpen_triggered()
 {
     // Don't allow multiple file dialogs to be opened.
@@ -281,7 +288,7 @@ void MainWindow::on_actionOpen_triggered()
                       
     ActivateTab( AddTab( mFileDialog, "Open File" ) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileOpenSelected( QString fileName )
 {
     boost::filesystem::path file( fileName.toStdString() );
@@ -308,7 +315,7 @@ void MainWindow::onFileOpenSelected( QString fileName )
         mFileDialog = 0;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileCancelled()
 {
     RemoveTab( mFileDialog );
@@ -319,7 +326,7 @@ void MainWindow::onFileCancelled()
         mFileDialog = 0;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::OnActiveModelChanged( const std::string& modelID )
 {   
     // emit Qt-signal which is connected to QueuedOnActiveModelChanged.
@@ -327,9 +334,11 @@ void MainWindow::OnActiveModelChanged( const std::string& modelID )
     // this event.
     ActiveModelChanged( modelID );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::QueuedOnActiveModelChanged( std::string modelID )
 {
+    boost::ignore_unused_variable_warning( modelID );
+
     // We get rid of all existing tabs, then open only those appropriate
     // to the active model.
 
@@ -352,43 +361,42 @@ void MainWindow::QueuedOnActiveModelChanged( std::string modelID )
     // Reactivate the last-known active tab
     ActivateTab( LastKnownActive );
 }
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////
 #ifdef MINERVA_GIS_SUPPORT
 void MainWindow::on_actionAdd_Planet_triggered ( bool )
 {
-  ves::xplorer::minerva::MinervaManager::instance()->AddEarthToScene();
+    ves::xplorer::minerva::MinervaManager::instance()->AddEarthToScene();
 
-  if ( mLayersTree )
-  {
-    this->RemoveTab ( mLayersTree );
-    delete mLayersTree;
-  }
+    if ( mLayersTree )
+    {
+        this->RemoveTab ( mLayersTree );
+        delete mLayersTree;
+    }
 
-  mLayersTree = new ves::conductor::qt::minerva::LayersTree;
-  mLayersTree->buildTree ( ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody()->container() );
-  ui->tabWidget->setCurrentIndex( AddTab( mLayersTree, "Minerva Layers" ) );
+    mLayersTree = new ves::conductor::qt::minerva::LayersTree;
+    mLayersTree->buildTree ( ves::xplorer::minerva::MinervaManager::instance()->
+        GetTileEngineBody()->container() );
+    ui->tabWidget->setCurrentIndex( AddTab( mLayersTree, "Minerva Layers" ) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionRemove_Planet_triggered ( bool )
 {
-  ves::xplorer::minerva::MinervaManager::instance()->Clear();
+    ves::xplorer::minerva::MinervaManager::instance()->Clear();
 
-  if ( mLayersTree )
-  {
-    this->RemoveTab ( mLayersTree );
-    delete mLayersTree;
-    mLayersTree = 0x0;
-  }
+    if ( mLayersTree )
+    {
+        this->RemoveTab ( mLayersTree );
+        delete mLayersTree;
+        mLayersTree = 0x0;
+    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionConfigure_Layers_triggered ( bool )
 {
+    ;
 }
 #endif
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::OnObjectPicked( osg::NodePath& nodePath )
 {    
     // emit Qt-signal which is connected to QueuedOnObjectPicked
@@ -396,14 +404,16 @@ void MainWindow::OnObjectPicked( osg::NodePath& nodePath )
     // this event.
     ObjectPicked( nodePath );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::QueuedOnObjectPicked( osg::NodePath nodePath )
 {
     // This is a bit hackish. Instead of re-reading the scenegraph every time a new
     // selection is made, we should be hooked up to signals for changes to the
     // scenegraph so we can re-read at the appropriate time. The only operation
     // that *should* be done here is OpenToAndSelect.
-    mScenegraphTreeTab->PopulateWithRoot( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+    mScenegraphTreeTab->PopulateWithRoot( 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 
     mScenegraphTreeTab->OpenToAndSelect( nodePath );
 }
+////////////////////////////////////////////////////////////////////////////////
