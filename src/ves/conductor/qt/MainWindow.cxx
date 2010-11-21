@@ -234,7 +234,14 @@ void MainWindow::on_tabWidget_currentChanged( int index )
 
 void MainWindow::on_actionFile_triggered()
 {
-    mFileOpsStack->Show();
+    if( mFileOpsStack->isVisible() )
+    {
+        mFileOpsStack->hide();
+    }
+    else
+    {
+        mFileOpsStack->Show();
+    }
 }
 
 void MainWindow::on_actionOpen_triggered()
