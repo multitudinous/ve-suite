@@ -157,7 +157,7 @@ int main( int argc, char* argv[] )
         return 0;
     }
     ///Bool options evidently cannot be counted because they always return true
-    bool cluster_master = vm["vrjmaster"].as<bool>();
+    //bool cluster_master = vm["vrjmaster"].as<bool>();
     bool cluster_slave = vm["vrjslave"].as<bool>();
 
     if( !vm.count("jconf") && !cluster_slave )

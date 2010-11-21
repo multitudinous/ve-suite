@@ -63,6 +63,8 @@
 #include <gmtl/gmtl.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
+#include <boost/concept_check.hpp>
+
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Camera>
@@ -573,6 +575,8 @@ osg::Texture2D* SceneRenderToTexture::CreateViewportTexture(
 osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     unsigned int const& numViewports )
 {
+    boost::ignore_unused_variable_warning( numViewports );
+
     //Get the vertex coordinates for the quad
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
@@ -1019,8 +1023,8 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         fullScreenQuads.back()->getStateSet()->addUniform(
             new osg::Uniform ( "dimensions", osg::Vec2( w * 2, h * 2 ) ) );
         fullScreenQuads.back()->getStateSet()->setAttribute( ssaaProgram.get() );
-        float scoord = 1.0 / (float)( w * 2 );
-        float tcoord = 1.0 / (float)( h * 2 );
+        //float scoord = 1.0 / (float)( w * 2 );
+        //float tcoord = 1.0 / (float)( h * 2 );
         fullScreenQuads.back()->addDrawable( osg::createTexturedQuadGeometry(
             osg::Vec3( -1.0f, -1.0f, -1.0f ), osg::Vec3( 2.0f, 0.0f, 0.0f ),
             osg::Vec3( 0.0f, 2.0f, 0.0f ), 0.0f, 0.0f, 1.0f, 1.0f ) );
