@@ -96,6 +96,7 @@ mTextureTop( 1.0f ),
 mInitialized( false ),
 mImageDirty( true ),
 mTimer( 0 ),
+mImageMutex( 0 ),
 mDirty( true ),
 mTitlebar( 0 ),
 mQTitlebar( 0 )

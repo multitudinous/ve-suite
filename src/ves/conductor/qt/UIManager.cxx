@@ -66,32 +66,31 @@ vprSingletonImp( UIManager );
 
 ////////////////////////////////////////////////////////////////////////////////
 
-UIManager::UIManager( )
+UIManager::UIManager( ) :
+    mUIUpdateCallback( new UIUpdateCallback ),
+    mInitialized( false ),
+    mLeft( 0 ),
+    mRight( 640 ),
+    mBottom( 0 ),
+    mTop( 480 ),
+    mRectangleDirty( false ),
+    mToggleVisibility( false ),
+    mHide( false ),
+    mShow( false ),
+    mMinimize( false ),
+    mUnminimize( false ),
+    mOpacity( 1.0f ),
+    mDxPointer( 0 ),
+    mDyPointer( 0 ),
+    mDzPointer( 0 ),
+    mCurrentXPointer( 0 ),
+    mCurrentYPointer( 0 ),
+    mCurrentZPointer( 0 ),
+    mMinimizeXOffset( 10.0f ),
+    mMoveElement( 0 ),
+    mMinimizeElement( 0 ),
+    mUnminimizeElement( 0 )
 {
-    mInitialized = false;
-    mLeft = 0;
-    mRight = 640;
-    mBottom = 0;
-    mTop = 480;
-    mRectangleDirty = false;
-    mToggleVisibility = false;
-    mHide = false;
-    mShow = false;
-    mMinimize = false;
-    mUnminimize = false;
-    mUIUpdateCallback = new UIUpdateCallback;
-    mOpacity = 1.0f;
-    mDxPointer = 0;
-    mDyPointer = 0;
-    mDzPointer = 0;
-    mCurrentXPointer = 0;
-    mCurrentYPointer = 0;
-    mCurrentZPointer = 0;
-    mMinimizeXOffset = 10.0f;
-    mMoveElement = 0;
-    mMinimizeElement = 0;
-    mUnminimizeElement = 0;
-
     typedef boost::signals2::signal< bool (xplorer::eventmanager::InteractionEvent& ) > InteractionSignal_type;
     InteractionSignal_type::slot_type
     slotFunctor( boost::bind( &UIManager::SendInteractionEvent, this, _1 ) );

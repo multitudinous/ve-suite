@@ -62,6 +62,7 @@ TreeTab::TreeTab(QWidget *parent) :
 
 TreeTab::~TreeTab()
 {
+    delete mModel;
     delete ui;
 }
 
