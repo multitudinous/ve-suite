@@ -37,6 +37,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/concept_check.hpp>
 
 #include <iostream>
 
@@ -62,12 +63,11 @@ PropertySet::PropertySet()
     mID = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 PropertySet::PropertySet( const PropertySet& orig )
 {
+    boost::ignore_unused_variable_warning( orig );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 PropertySet::~PropertySet()
 {
     PropertyMap::iterator iterator = mPropertyMap.begin();
@@ -81,7 +81,6 @@ PropertySet::~PropertySet()
     mPropertyMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertySet::AddProperty( const std::string& propertyName,
                                boost::any value,
                                std::string uiLabel )
@@ -528,7 +527,8 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
             {
                 std::vector< int > vec;
                 Poco::DynamicAny value;
-                for( int rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
+                int rowCount = recordset.rowCount();
+                for( int rowIndex = 0; rowIndex < rowCount; ++rowIndex )
                 {
                     value = recordset.value( 0, rowIndex );
                     vec.push_back( value.convert< int >() );
@@ -539,7 +539,8 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
             {
                 std::vector< float > vec;
                 Poco::DynamicAny value;
-                for( int rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
+                int rowCount = recordset.rowCount();
+                for( int rowIndex = 0; rowIndex < rowCount; ++rowIndex )
                 {
                     value = recordset.value( 0, rowIndex );
                     vec.push_back( value.convert< float >() );
@@ -550,7 +551,8 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
             {
                 std::vector< double > vec;
                 Poco::DynamicAny value;
-                for( int rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
+                int rowCount = recordset.rowCount();
+                for( int rowIndex = 0; rowIndex < rowCount; ++rowIndex )
                 {
                     value = recordset.value( 0, rowIndex );
                     vec.push_back( value.convert< double >() );
@@ -561,7 +563,8 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
             {
                 std::vector< std::string > vec;
                 Poco::DynamicAny value;
-                for( int rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
+                int rowCount = recordset.rowCount();
+                for( int rowIndex = 0; rowIndex < rowCount; ++rowIndex )
                 {
                     value = recordset.value( 0, rowIndex );
                     vec.push_back( value.convert< std::string > () );
@@ -1077,6 +1080,10 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
                     {
                         std::vector<std::string> vec = boost::any_cast< std::vector<std::string> >( property->GetValue() );
                         currentValue = vec.at( index );
+                        break;
+                    }
+                    case UNKNOWN:
+                    {    
                         break;
                     }
                     }
