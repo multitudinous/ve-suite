@@ -30,52 +30,48 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef _DATASETPROPERTYSET_H
-#define	_DATASETPROPERTYSET_H
+#pragma once
 
-#include <ves/xplorer/data/PropertySet.h>
-
-#include <ves/VEConfig.h>
+#include <ves/conductor/qt/VisFeatureMakerBase.h>
 
 namespace ves
 {
-namespace xplorer
+namespace conductor
 {
-namespace data
-{
-class Property;
-/*!\file DatasetPropertySet.h
+/*!\file VectorFeatureMaker.h
  *
  */
 
-/*!\class ves::xplorer::data::DatasetPropertySet
+/*!\class ves::conductor::VectorFeatureMaker
  *
  */
 
-/*!\namespace ves::xplorer::data
+/*!\namespace ves::conductor
  *
  */
-class VE_DATA_EXPORTS DatasetPropertySet : public PropertySet
+class VectorFeatureMaker : public VisFeatureMakerBase
 {
 public:
     ///Constructor
-    DatasetPropertySet();
-    ///Copy Constructor
-    DatasetPropertySet( const DatasetPropertySet& orig );
+    VectorFeatureMaker();
+    ///Copy constructor
+    VectorFeatureMaker( const VectorFeatureMaker& orig );
     ///Destructor
-    virtual ~DatasetPropertySet();
+    virtual ~VectorFeatureMaker();
+    ///Update method to generate vis feature
+    virtual void Update( unsigned int recordID );
 
 protected:
+    ///Called by the update function
+    void AddPlane( ves::xplorer::data::PropertySet& set );
+    ///Called by AddPlane
+    void UpdateContourInformation( ves::xplorer::data::PropertySet& set );
 
-    
 private:
-    ///Create skeleton
-    void CreateSkeleton();
+    ///The countour setting data
+    std::vector<ves::open::xml::DataValuePairPtr> m_vectorInformation;
+
 };
 
-} // namespace data
-} // namespace xplorer
+} // namespace conductor
 } // namespace ves
-
-#endif	/* _DATASETPROPERTYSET_H */
-

@@ -68,6 +68,13 @@ void VisFeatureMakerBase::Update( unsigned int recordID )
     // be instantiated alone.
 }
 ////////////////////////////////////////////////////////////////////////////////
+void VisFeatureMakerBase::UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set )
+{
+    boost::ignore_unused_variable_warning( set );
+    // Does nothing, but don't want pure virtual f'n so that this class *can*
+    // be instantiated alone.
+}
+////////////////////////////////////////////////////////////////////////////////
 void VisFeatureMakerBase::UpdateBaseInformation( xplorer::data::PropertySet& set )
 {
     m_vistabBaseInformation.clear();
@@ -165,90 +172,6 @@ void VisFeatureMakerBase::SendUpdatedSettingsToXplorer( ves::open::xml::CommandP
     newCommand->SetCommandName( m_commandName );
 
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( newCommand );
-}
-////////////////////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
-{
-    m_advancedSettings.clear();
-
-    // With a bit of re-thinking here and some normalization of names, we may be
-    // able to convert much of the following code to something like:
-    //
-    // std::vector<std::string> propList = set.GetPropertyList();
-    // std::vector<std::sting>::iterator iter;
-    // for( iter = propList.begin(); iter != propList.end(); iter++ )
-    // {
-    //      ...1. Search for substring "Advanced_" in (*iter)
-    //      ...2. Extract remainder of name in (*iter)
-    //      ...3. Create a DVP, set its name to string from step 2, set
-    //              its value to cast value from set.GetPropertyValue( *iter ).
-    //              Casting operation could look at property type to determine
-    //              appropriate cast -- esp for enums, to use associated enumCurrentString
-    //      ...4. Add DVP to _advancedSettings
-    // }
-
-    if( set.PropertyExists( "Advanced_Opacity" ) )
-    {
-        ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair() );
-        contourOpacity->SetData( "Contour Opacity",
-                                 boost::any_cast<double>
-                                 ( set.GetPropertyValue( "Advanced_Opacity" ) ) );
-        m_advancedSettings.push_back( contourOpacity );
-    }
-
-    if( set.PropertyExists( "Advanced_WarpedContourScale" ) )
-    {
-        ves::open::xml::DataValuePairPtr warpedScale( new ves::open::xml::DataValuePair() );
-        warpedScale->SetData( "Warped Contour Scale",
-                              boost::any_cast<double>
-                              ( set.GetPropertyValue( "Advanced_WarpedContourScale" ) ) );
-        m_advancedSettings.push_back( warpedScale );
-    }
-
-    if( set.PropertyExists( "Advanced_ContourLOD" ) )
-    {
-        ves::open::xml::DataValuePairPtr LODSetting( new ves::open::xml::DataValuePair() );
-        LODSetting->SetData( "Contour LOD",
-                             boost::any_cast<double>
-                             ( set.GetPropertyValue( "Advanced_ContourLOD" ) ) );
-        m_advancedSettings.push_back( LODSetting );
-    }
-
-    if( set.PropertyExists( "Advanced_ContourType" ) )
-    {
-        ves::open::xml::DataValuePairPtr contourType( new ves::open::xml::DataValuePair() );
-        contourType->SetDataType( "STRING" );
-        contourType->SetDataName( std::string( "Type" ) );
-        std::string _planeType = boost::any_cast<std::string >
-                ( set.GetPropertyAttribute
-                ( "Advanced_ContourType", "enumCurrentString" ) );
-        contourType->SetDataString( _planeType );
-        m_advancedSettings.push_back( contourType );
-    }
-
-    if( set.PropertyExists( "Advanced_WarpOption" ) )
-    {
-        ves::open::xml::DataValuePairPtr warpOptionFlag( new ves::open::xml::DataValuePair() );
-        warpOptionFlag->SetDataName( "Warp Option" );
-        warpOptionFlag->SetDataType( "UNSIGNED INT" );
-        if( boost::any_cast<bool>( set.GetPropertyValue( "Advanced_WarpOption" ) ) )
-        {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 1 ) );
-        }
-        else
-        {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 0 ) );
-        }
-        m_advancedSettings.push_back( warpOptionFlag );
-    }
-
-    //    if( m_datasetSelection->IsEnabled() )
-    //    {
-    //        ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
-    //        surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
-    //        _advancedSettings.push_back( surfToolsDVP );
-    //    }
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor

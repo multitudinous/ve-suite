@@ -30,10 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/conductor/qt/ContourFeatureMaker.h>
+#include <ves/conductor/qt/VectorFeatureMaker.h>
 
 #include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/ContourPlanePropertySet.h>
+#include <ves/xplorer/data/VectorPlanePropertySet.h>
+
 #include <ves/xplorer/command/CommandManager.h>
 
 #include <ves/open/xml/DataValuePair.h>
@@ -46,36 +47,36 @@
 using namespace ves::conductor;
 using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
-ContourFeatureMaker::ContourFeatureMaker()
+VectorFeatureMaker::VectorFeatureMaker()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ContourFeatureMaker::ContourFeatureMaker( const ContourFeatureMaker& orig )
+VectorFeatureMaker::VectorFeatureMaker( const VectorFeatureMaker& orig )
     :
     VisFeatureMakerBase( orig )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ContourFeatureMaker::~ContourFeatureMaker()
+VectorFeatureMaker::~VectorFeatureMaker()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourFeatureMaker::Update( unsigned int recordID )
+void VectorFeatureMaker::Update( unsigned int recordID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::ContourPlanePropertySet contourSet;
-    contourSet.SetRecordID( recordID );
-    contourSet.LoadFromDatabase(  );
-    AddPlane( static_cast < xplorer::data::PropertySet& > ( contourSet ) );
+    xplorer::data::VectorPlanePropertySet vectorSet;
+    vectorSet.SetRecordID( recordID );
+    vectorSet.LoadFromDatabase();
+    AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )
+void VectorFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )
 {
-    m_contourInformation.clear();
+    m_vectorInformation.clear();
 
     // Plane direction
     ves::open::xml::DataValuePairPtr contourDirection( new ves::open::xml::DataValuePair() );
@@ -83,13 +84,13 @@ void ContourFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& 
     contourDirection->SetDataName( std::string( "Direction" ) );
     std::string value = boost::any_cast<std::string > ( set.GetPropertyAttribute( "Direction", "enumCurrentString" ) );
     contourDirection->SetDataString( value );
-    m_contourInformation.push_back( contourDirection );
+    m_vectorInformation.push_back( contourDirection );
 
     ves::open::xml::DataValuePairPtr selectvecorscalrDisp( new ves::open::xml::DataValuePair() );
     selectvecorscalrDisp->SetDataType( "STRING" );
     selectvecorscalrDisp->SetDataName( "Select Data Mapping" );
     selectvecorscalrDisp->SetDataString( boost::any_cast<std::string > ( set.GetPropertyAttribute( "DataMapping", "enumCurrentString" ) ));
-    m_contourInformation.push_back( selectvecorscalrDisp );
+    m_vectorInformation.push_back( selectvecorscalrDisp );
 
     // Mode: Single or Multiple
     ves::open::xml::DataValuePairPtr numberOfPlanes( new ves::open::xml::DataValuePair() );
@@ -106,12 +107,12 @@ void ContourFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& 
         numberOfPlanesOption = "Multiple";
     }
     numberOfPlanes->SetDataString( numberOfPlanesOption );
-    m_contourInformation.push_back( numberOfPlanes );
+    m_vectorInformation.push_back( numberOfPlanes );
 
     // Plane location
     ves::open::xml::DataValuePairPtr planePosition( new ves::open::xml::DataValuePair() );
     planePosition->SetData( "Position", boost::any_cast<double>( set.GetPropertyValue( "PlaneLocation" ) ) );
-    m_contourInformation.push_back( planePosition );
+    m_vectorInformation.push_back( planePosition );
 
     // Use Nearest or Cycle Precomputed
     std::string planeOption;
@@ -131,11 +132,11 @@ void ContourFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& 
         planeOptionDVP->SetDataName( std::string( "Plane Option" ) );
         planeOptionDVP->SetDataString( planeOption );
 
-        m_contourInformation.push_back( planeOptionDVP );
+        m_vectorInformation.push_back( planeOptionDVP );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
+void VectorFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 {
     UpdateContourInformation( set );
     UpdateAdvancedSettings( set );
@@ -144,14 +145,14 @@ void ContourFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 
     newCommand->SetCommandName( "UPDATE_SCALAR_SETTINGS" );
 
-    for( size_t i = 0; i < m_contourInformation.size(); ++i )
+    for( size_t i = 0; i < m_vectorInformation.size(); ++i )
     {
-        newCommand->AddDataValuePair( m_contourInformation.at( i ) );
+        newCommand->AddDataValuePair( m_vectorInformation.at( i ) );
     }
 
     //The advanced settings command
     ves::open::xml::CommandPtr advancedSettings( new ves::open::xml::Command() );
-    advancedSettings->SetCommandName( "ADVANCED_CONTOUR_SETTINGS" );
+    advancedSettings->SetCommandName( "ADVANCED_VECTOR_SETTINGS" );
     for( size_t i = 0; i < m_advancedSettings.size(); ++i )
     {
         advancedSettings->AddDataValuePair( m_advancedSettings.at( i ) );
@@ -174,89 +175,5 @@ void ContourFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
         msg.setIcon( QMessageBox::Information );
         msg.exec();
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void ContourFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
-{
-    m_advancedSettings.clear();
-    
-    // With a bit of re-thinking here and some normalization of names, we may be
-    // able to convert much of the following code to something like:
-    //
-    // std::vector<std::string> propList = set.GetPropertyList();
-    // std::vector<std::sting>::iterator iter;
-    // for( iter = propList.begin(); iter != propList.end(); iter++ )
-    // {
-    //      ...1. Search for substring "Advanced_" in (*iter)
-    //      ...2. Extract remainder of name in (*iter)
-    //      ...3. Create a DVP, set its name to string from step 2, set
-    //              its value to cast value from set.GetPropertyValue( *iter ).
-    //              Casting operation could look at property type to determine
-    //              appropriate cast -- esp for enums, to use associated enumCurrentString
-    //      ...4. Add DVP to _advancedSettings
-    // }
-    
-    if( set.PropertyExists( "Advanced_Opacity" ) )
-    {
-        ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair() );
-        contourOpacity->SetData( "Contour Opacity",
-                                boost::any_cast<double>
-                                ( set.GetPropertyValue( "Advanced_Opacity" ) ) );
-        m_advancedSettings.push_back( contourOpacity );
-    }
-    
-    if( set.PropertyExists( "Advanced_WarpedContourScale" ) )
-    {
-        ves::open::xml::DataValuePairPtr warpedScale( new ves::open::xml::DataValuePair() );
-        warpedScale->SetData( "Warped Contour Scale",
-                             boost::any_cast<double>
-                             ( set.GetPropertyValue( "Advanced_WarpedContourScale" ) ) );
-        m_advancedSettings.push_back( warpedScale );
-    }
-    
-    if( set.PropertyExists( "Advanced_ContourLOD" ) )
-    {
-        ves::open::xml::DataValuePairPtr LODSetting( new ves::open::xml::DataValuePair() );
-        LODSetting->SetData( "Contour LOD",
-                            boost::any_cast<double>
-                            ( set.GetPropertyValue( "Advanced_ContourLOD" ) ) );
-        m_advancedSettings.push_back( LODSetting );
-    }
-    
-    if( set.PropertyExists( "Advanced_ContourType" ) )
-    {
-        ves::open::xml::DataValuePairPtr contourType( new ves::open::xml::DataValuePair() );
-        contourType->SetDataType( "STRING" );
-        contourType->SetDataName( std::string( "Type" ) );
-        std::string _planeType = boost::any_cast<std::string >
-        ( set.GetPropertyAttribute
-         ( "Advanced_ContourType", "enumCurrentString" ) );
-        contourType->SetDataString( _planeType );
-        m_advancedSettings.push_back( contourType );
-    }
-    
-    if( set.PropertyExists( "Advanced_WarpOption" ) )
-    {
-        ves::open::xml::DataValuePairPtr warpOptionFlag( new ves::open::xml::DataValuePair() );
-        warpOptionFlag->SetDataName( "Warp Option" );
-        warpOptionFlag->SetDataType( "UNSIGNED INT" );
-        if( boost::any_cast<bool>( set.GetPropertyValue( "Advanced_WarpOption" ) ) )
-        {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 1 ) );
-        }
-        else
-        {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 0 ) );
-        }
-        m_advancedSettings.push_back( warpOptionFlag );
-    }
-    
-    //    if( m_datasetSelection->IsEnabled() )
-    //    {
-    //        ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
-    //        surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
-    //        _advancedSettings.push_back( surfToolsDVP );
-    //    }
-    
 }
 ////////////////////////////////////////////////////////////////////////////////

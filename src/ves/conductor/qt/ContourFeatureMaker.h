@@ -66,6 +66,8 @@ protected:
     void AddPlane( ves::xplorer::data::PropertySet& set );
     ///Called by AddPlane
     void UpdateContourInformation( ves::xplorer::data::PropertySet& set );
+    ///Setup the advanced properties
+    virtual void UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set );
 
 private:
     ///The countour setting data

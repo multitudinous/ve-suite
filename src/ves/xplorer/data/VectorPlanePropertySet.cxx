@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/data/ContourPlanePropertySet.h>
+#include <ves/xplorer/data/VectorPlanePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
 
@@ -42,24 +42,24 @@
 
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
-ContourPlanePropertySet::ContourPlanePropertySet()
+VectorPlanePropertySet::VectorPlanePropertySet()
 {
-    mTableName = "ContourPlane";
+    mTableName = "VectorPlane";
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ContourPlanePropertySet::ContourPlanePropertySet( const ContourPlanePropertySet& orig )
+VectorPlanePropertySet::VectorPlanePropertySet( const VectorPlanePropertySet& orig )
     :
     PropertySet( orig )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-ContourPlanePropertySet::~ContourPlanePropertySet()
+VectorPlanePropertySet::~VectorPlanePropertySet()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourPlanePropertySet::CreateSkeleton()
+void VectorPlanePropertySet::CreateSkeleton()
 {
     AddProperty( "DataSet", 0, "Data Set" );
     PSVectorOfStrings enumValues;
@@ -68,7 +68,7 @@ void ContourPlanePropertySet::CreateSkeleton()
     // Dummy value to ensure this gets set up as an enum
     enumValues.push_back( "Select Scalar Data" );
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &ContourPlanePropertySet::UpdateScalarDataOptions, this, _1 ) );
+    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateScalarDataOptions, this, _1 ) );
 
     AddProperty( "DataSet_ScalarRange", boost::any(), "Scalar Range" );
     SetPropertyAttribute( "DataSet_ScalarRange", "isUIGroupOnly", true );
@@ -80,15 +80,15 @@ void ContourPlanePropertySet::CreateSkeleton()
     AddProperty( "DataSet_ScalarRange_Max", 1.0, "Max" );
     mPropertyMap["DataSet_ScalarRange_Max"]->SetDisabled();
 
-    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &ContourPlanePropertySet::UpdateScalarDataRange, this, _1 ) );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &ContourPlanePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &ContourPlanePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateScalarDataRange, this, _1 ) );
+    mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VectorPlanePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VectorPlanePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
 
     AddProperty( "DataSet_VectorData", 0, "Vector Data" );
     enumValues.clear();
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &ContourPlanePropertySet::UpdateVectorDataOptions, this, _1 ) );
+    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateVectorDataOptions, this, _1 ) );
     
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
@@ -106,7 +106,6 @@ void ContourPlanePropertySet::CreateSkeleton()
     // scalar and vector data
     UpdateScalarDataOptions( 0 );
     UpdateVectorDataOptions( 0 );
-
 
     AddProperty( "Direction", 0, "Direction" );
     enumValues.clear();
@@ -136,7 +135,7 @@ void ContourPlanePropertySet::CreateSkeleton()
     Property* mode = mPropertyMap["Mode"];
     if( mode )
     {
-        mode->SignalValueChanged.connect( boost::bind( &ContourPlanePropertySet::UpdateModeOptions, this, _1 ) );
+        mode->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateModeOptions, this, _1 ) );
     }
 
     AddProperty( "Mode_UseNearestPrecomputedPlane", false, "Use Nearest Precomputed Plane" );
@@ -154,29 +153,22 @@ void ContourPlanePropertySet::CreateSkeleton()
     AddProperty( "Advanced", boost::any(), "Advanced" );
     SetPropertyAttribute( "Advanced", "isUIGroupOnly", true );
 
-    AddProperty( "Advanced_Opacity", 1.0, "Opacity" );
-    SetPropertyAttribute( "Advanced_Opacity", "minimumValue", 0.0 );
-    SetPropertyAttribute( "Advanced_Opacity", "maximumValue", 1.0 );
+    AddProperty( "Advanced_VectorThreshold", 1.0, "Vector Threshold" );
+    SetPropertyAttribute( "Advanced_VectorThreshold", "minimumValue", 0.0 );
+    SetPropertyAttribute( "Advanced_VectorThreshold", "maximumValue", 1.0 );
 
-    AddProperty( "Advanced_WarpedContourScale", 1.0, "Warped Contour Scale" );
-    SetPropertyAttribute( "Advanced_WarpedContourScale", "minimumValue", 0.0 );
-    SetPropertyAttribute( "Advanced_WarpedContourScale", "maximumValue", 1.0 );
+    AddProperty( "Advanced_VectorScale", 1.0, "Vector Scale" );
+    SetPropertyAttribute( "Advanced_VectorScale", "minimumValue", 0.0 );
+    SetPropertyAttribute( "Advanced_VectorScale", "maximumValue", 1.0 );
 
-    AddProperty( "Advanced_ContourLOD", 1.0, "Contour LOD" );
-    SetPropertyAttribute( "Advanced_ContourLOD", "minimumValue", 0.0 );
-    SetPropertyAttribute( "Advanced_ContourLOD", "maximumValue", 1.0 );
+    AddProperty( "Advanced_VectorRatio", 1.0, "Vector Ratio" );
+    SetPropertyAttribute( "Advanced_VectorRatio", "minimumValue", 0.0 );
+    SetPropertyAttribute( "Advanced_VectorRatio", "maximumValue", 1.0 );
 
-    AddProperty( "Advanced_ContourType", 0, "Contour Type" );
-    enumValues.clear();
-    enumValues.push_back( "Graduated" );
-    enumValues.push_back( "Banded" );
-    enumValues.push_back( "Lined" );
-    SetPropertyAttribute( "Advanced_ContourType", "enumValues", enumValues );
-
-    AddProperty( "Advanced_WarpOption", false, "Warp Option" );
+    AddProperty( "Advanced_ScaleByVectorMagnitude", false, "Scale By Vector Magnitude" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
+void VectorPlanePropertySet::UpdateScalarDataOptions( Property* property )
 {
     boost::ignore_unused_variable_warning( property );
 
@@ -193,7 +185,7 @@ void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
     UpdateScalarDataRange( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
+void VectorPlanePropertySet::UpdateScalarDataRange( Property* property )
 {
     boost::ignore_unused_variable_warning( property );
     
@@ -230,7 +222,7 @@ void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourPlanePropertySet::UpdateVectorDataOptions( Property* property )
+void VectorPlanePropertySet::UpdateVectorDataOptions( Property* property )
 {
     boost::ignore_unused_variable_warning( property );
 
@@ -246,7 +238,7 @@ void ContourPlanePropertySet::UpdateVectorDataOptions( Property* property )
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourPlanePropertySet::UpdateModeOptions( Property* property )
+void VectorPlanePropertySet::UpdateModeOptions( Property* property )
 {
     // Make sure the main value is an int as it should be
     if( property->IsInt() )
@@ -265,7 +257,7 @@ void ContourPlanePropertySet::UpdateModeOptions( Property* property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ContourPlanePropertySet::ValidateScalarMinMax( Property* property, boost::any value )
+bool VectorPlanePropertySet::ValidateScalarMinMax( Property* property, boost::any value )
 {
     Property* min = mPropertyMap["DataSet_ScalarRange_Min"];
     Property* max = mPropertyMap["DataSet_ScalarRange_Max"];

@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef _DATASETPROPERTYSET_H
-#define	_DATASETPROPERTYSET_H
+#ifndef _VECTORPLANEPROPERTYSET_H
+#define _VECTORPLANEPROPERTYSET_H
 
 #include <ves/xplorer/data/PropertySet.h>
 
@@ -44,32 +44,42 @@ namespace xplorer
 namespace data
 {
 class Property;
-/*!\file DatasetPropertySet.h
+/*!\file VectorPlanePropertySet.h
  *
  */
 
-/*!\class ves::xplorer::data::DatasetPropertySet
+/*!\class ves::xplorer::data::VectorPlanePropertySet
  *
  */
 
 /*!\namespace ves::xplorer::data
  *
  */
-class VE_DATA_EXPORTS DatasetPropertySet : public PropertySet
+class VE_DATA_EXPORTS VectorPlanePropertySet : public PropertySet
 {
 public:
     ///Constructor
-    DatasetPropertySet();
-    ///Copy Constructor
-    DatasetPropertySet( const DatasetPropertySet& orig );
+    VectorPlanePropertySet();
+    ///Copy Contructor
+    VectorPlanePropertySet( const VectorPlanePropertySet& orig );
     ///Destructor
-    virtual ~DatasetPropertySet();
+    virtual ~VectorPlanePropertySet();
 
-protected:
-
-    
 private:
-    ///Create skeleton
+    ///Update method
+    void UpdateModeOptions( Property* property );
+    ///Validate method
+    bool ValidateScalarMinMax( Property* property, boost::any value );
+    ///Update method
+    void UpdateScalarDataOptions( Property* property );
+    ///Update method
+    void UpdateScalarDataRange( Property* property );
+    ///Update method
+    void UpdateVectorDataOptions( Property* property );
+
+
+private:
+    ///Create the skeleton
     void CreateSkeleton();
 };
 
@@ -77,5 +87,4 @@ private:
 } // namespace xplorer
 } // namespace ves
 
-#endif	/* _DATASETPROPERTYSET_H */
-
+#endif	/* _VECTORPLANEPROPERTYSET_H */

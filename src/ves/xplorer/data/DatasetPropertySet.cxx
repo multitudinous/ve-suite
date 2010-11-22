@@ -35,21 +35,26 @@
 
 using namespace ves::xplorer::data;
 
-DatasetPropertySet::DatasetPropertySet( )
+////////////////////////////////////////////////////////////////////////////////
+DatasetPropertySet::DatasetPropertySet()
 {
     mTableName = "Dataset";
-    _createSkeleton( );
+    CreateSkeleton();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 DatasetPropertySet::DatasetPropertySet( const DatasetPropertySet& orig )
+    :
+    PropertySet( orig )
 {
+    ;
 }
-
-DatasetPropertySet::~DatasetPropertySet( )
+////////////////////////////////////////////////////////////////////////////////
+DatasetPropertySet::~DatasetPropertySet()
 {
+    ;
 }
-
-void DatasetPropertySet::_createSkeleton( )
+////////////////////////////////////////////////////////////////////////////////
+void DatasetPropertySet::CreateSkeleton()
 {
     AddProperty( "SurfaceWrap", false, "Surface Wrap" );
 
@@ -107,4 +112,4 @@ void DatasetPropertySet::_createSkeleton( )
     AddProperty( "PrecomputedSurfaceDir", std::string(""), "Precomputed Surface Dir" );
     SetPropertyAttribute( "PrecomputedSurfaceDir", "userVisible", false );
 }
-
+////////////////////////////////////////////////////////////////////////////////

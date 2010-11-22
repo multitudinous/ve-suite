@@ -74,6 +74,7 @@ class Property;
 /*!\namespace ves::xplorer::data
  *
  */
+
 class VE_DATA_EXPORTS PropertySet
 {
 public:

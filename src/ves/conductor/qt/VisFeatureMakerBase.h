@@ -67,7 +67,7 @@ public:
 
 protected:
     ///Called by the update function
-    void UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set );
+    virtual void UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set );
     ///Called by the update function
     void UpdateBaseInformation( ves::xplorer::data::PropertySet& set );
     ///Called by the update function
