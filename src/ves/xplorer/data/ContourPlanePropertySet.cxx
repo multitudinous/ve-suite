@@ -40,22 +40,26 @@
 #include <ves/xplorer/data/DatabaseManager.h>
 
 using namespace ves::xplorer::data;
-
-ContourPlanePropertySet::ContourPlanePropertySet( )
+////////////////////////////////////////////////////////////////////////////////
+ContourPlanePropertySet::ContourPlanePropertySet()
+    :
+    mTableName( "ContourPlane" )
 {
-    mTableName = "ContourPlane";
-    _createSkeleton( );
+    CreateSkeleton();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 ContourPlanePropertySet::ContourPlanePropertySet( const ContourPlanePropertySet& orig )
+    :
+    PropertySet( orig )
 {
 }
-
-ContourPlanePropertySet::~ContourPlanePropertySet( )
+////////////////////////////////////////////////////////////////////////////////
+ContourPlanePropertySet::~ContourPlanePropertySet()
 {
+    ;
 }
-
-void ContourPlanePropertySet::_createSkeleton( )
+////////////////////////////////////////////////////////////////////////////////
+void ContourPlanePropertySet::CreateSkeleton()
 {
     AddProperty( "DataSet", 0, "Data Set" );
     PSVectorOfStrings enumValues;
@@ -66,15 +70,15 @@ void ContourPlanePropertySet::_createSkeleton( )
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
     mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &ContourPlanePropertySet::UpdateScalarDataOptions, this, _1 ) );
 
-    AddProperty( "DataSet_ScalarRange", boost::any( ), "Scalar Range" );
+    AddProperty( "DataSet_ScalarRange", boost::any(), "Scalar Range" );
     SetPropertyAttribute( "DataSet_ScalarRange", "isUIGroupOnly", true );
     SetPropertyAttribute( "DataSet_ScalarRange", "setExpanded", true );
 
     AddProperty( "DataSet_ScalarRange_Min", 0.0, "Min" );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SetDisabled( );
+    mPropertyMap["DataSet_ScalarRange_Min"]->SetDisabled();
 
     AddProperty( "DataSet_ScalarRange_Max", 1.0, "Max" );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SetDisabled( );
+    mPropertyMap["DataSet_ScalarRange_Max"]->SetDisabled();
 
     mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &ContourPlanePropertySet::UpdateScalarDataRange, this, _1 ) );
     mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &ContourPlanePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
@@ -90,7 +94,7 @@ void ContourPlanePropertySet::_createSkeleton( )
     // the dataset enum. If we had tried to do this beforehand, none of the
     // connections between DataSet and its subproperties would have been in
     // place yet.
-    enumValues.clear( );
+    enumValues.clear();
     enumValues = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "Dataset", "Filename" );
     if( enumValues.empty() )
     {
@@ -105,7 +109,7 @@ void ContourPlanePropertySet::_createSkeleton( )
 
 
     AddProperty( "Direction", 0, "Direction" );
-    enumValues.clear( );
+    enumValues.clear();
     enumValues.push_back( "x" );
     enumValues.push_back( "y" );
     enumValues.push_back( "z" );
@@ -120,7 +124,7 @@ void ContourPlanePropertySet::_createSkeleton( )
     SetPropertyAttribute( "DataMapping", "enumValues", enumValues );
 
     AddProperty( "Mode", 0, "Mode" );
-    enumValues.clear( );
+    enumValues.clear();
     enumValues.push_back( "Specify a Single Plane" );
     enumValues.push_back( "Use All Precomputed Surfaces" );
     SetPropertyAttribute( "Mode", "enumValues", enumValues );
@@ -137,14 +141,14 @@ void ContourPlanePropertySet::_createSkeleton( )
     AddProperty( "Mode_CyclePrecomputedSurfaces", false, "Cycle Precomputed Surfaces" );
     // We disable this one by default since the selected Mode,
     // "Specify a Single Plane", does not support this option.
-    mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetDisabled( );
+    mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetDisabled();
 
 
     AddProperty( "PlaneLocation", 0.00, "Plane Location" );
     SetPropertyAttribute( "PlaneLocation", "minimumValue", 0.00 );
     SetPropertyAttribute( "PlaneLocation", "maximumValue", 100.00 );
 
-    AddProperty( "Advanced", boost::any( ), "Advanced" );
+    AddProperty( "Advanced", boost::any(), "Advanced" );
     SetPropertyAttribute( "Advanced", "isUIGroupOnly", true );
 
     AddProperty( "Advanced_Opacity", 1.0, "Opacity" );
@@ -160,7 +164,7 @@ void ContourPlanePropertySet::_createSkeleton( )
     SetPropertyAttribute( "Advanced_ContourLOD", "maximumValue", 1.0 );
 
     AddProperty( "Advanced_ContourType", 0, "Contour Type" );
-    enumValues.clear( );
+    enumValues.clear();
     enumValues.push_back( "Graduated" );
     enumValues.push_back( "Banded" );
     enumValues.push_back( "Lined" );
@@ -168,7 +172,7 @@ void ContourPlanePropertySet::_createSkeleton( )
 
     AddProperty( "Advanced_WarpOption", false, "Warp Option" );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
 {
     PSVectorOfStrings enumValues;
@@ -176,18 +180,18 @@ void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
     enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "ScalarNames" ) );
-    if( enumValues.empty( ) )
+    if( enumValues.empty() )
     {
         enumValues.push_back( "No datasets loaded" );
     }
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
     UpdateScalarDataRange( 0 );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
 {
-    mPropertyMap["DataSet_ScalarRange_Min"]->SetEnabled( );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SetEnabled( );
+    mPropertyMap["DataSet_ScalarRange_Min"]->SetEnabled();
+    mPropertyMap["DataSet_ScalarRange_Max"]->SetEnabled();
 
     // Load the current Dataset and get the list of min and max values for its scalars
     std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
@@ -201,7 +205,7 @@ void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
     // lists
     int index = boost::any_cast<int>( GetPropertyValue( "DataSet_ScalarData" ) );
 
-    if( ( !mins.empty( ) ) && ( !maxes.empty( ) ) )
+    if( ( !mins.empty() ) && ( !maxes.empty() ) )
     {
         double min = mins.at( index );
         double max = maxes.at( index );
@@ -218,7 +222,7 @@ void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
         SetPropertyValue( "DataSet_ScalarRange_Max", max );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::UpdateVectorDataOptions( Property* property )
 {
     PSVectorOfStrings enumValues;
@@ -226,32 +230,32 @@ void ContourPlanePropertySet::UpdateVectorDataOptions( Property* property )
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
     enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "VectorNames" ) );
-    if( enumValues.empty( ) )
+    if( enumValues.empty() )
     {
         enumValues.push_back( "No vectors available" );
     }
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::UpdateModeOptions( Property* property )
 {
     // Make sure the main value is an int as it should be
-    if( property->IsInt( ) )
+    if( property->IsInt() )
     {
-        int value = boost::any_cast<int>( property->GetValue( ) );
+        int value = boost::any_cast<int>( property->GetValue() );
         if( value == 0 ) // "Specify a Single Plane"
         {
-            mPropertyMap["Mode_UseNearestPrecomputedPlane"]->SetEnabled( );
-            mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetDisabled( );
+            mPropertyMap["Mode_UseNearestPrecomputedPlane"]->SetEnabled();
+            mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetDisabled();
         }
         else
         {
-            mPropertyMap["Mode_UseNearestPrecomputedPlane"]->SetDisabled( );
-            mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetEnabled( );
+            mPropertyMap["Mode_UseNearestPrecomputedPlane"]->SetDisabled();
+            mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetEnabled();
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool ContourPlanePropertySet::ValidateScalarMinMax( Property* property, boost::any value )
 {
     Property* min = mPropertyMap["DataSet_ScalarRange_Min"];
@@ -262,11 +266,11 @@ bool ContourPlanePropertySet::ValidateScalarMinMax( Property* property, boost::a
     if( property == min )
     {
         castMin = boost::any_cast<double>( value );
-        castMax = boost::any_cast<double>( max->GetValue( ) );
+        castMax = boost::any_cast<double>( max->GetValue() );
     }
     else
     {
-        castMin = boost::any_cast<double>( min->GetValue( ) );
+        castMin = boost::any_cast<double>( min->GetValue() );
         castMax = boost::any_cast<double>( value );
     }
 
@@ -279,5 +283,4 @@ bool ContourPlanePropertySet::ValidateScalarMinMax( Property* property, boost::a
         return false;
     }
 }
-
-
+////////////////////////////////////////////////////////////////////////////////

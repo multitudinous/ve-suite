@@ -60,12 +60,20 @@ namespace data
 
 // Forward declaration
 class Property;
+/*!\file ContourPlanePropertySet.h
+ *
+ */
 
-///
-/// @class PropertySet PropertySet is a base class for collections of properties
-/// containing methods to read and write values and attributes of
-/// properties, as well as to get information about changes to other properties
-/// that may occur when a property value or attribute is changed.
+/*!\class ves::xplorer::data::ContourPlanePropertySet
+ * PropertySet is a base class for collections of properties
+ * containing methods to read and write values and attributes of
+ * properties, as well as to get information about changes to other properties
+ * that may occur when a property value or attribute is changed.
+ */
+
+/*!\namespace ves::xplorer::data
+ *
+ */
 class VE_DATA_EXPORTS PropertySet
 {
 public:
@@ -74,7 +82,7 @@ public:
 
     ///
     /// Constructor
-    PropertySet( );
+    PropertySet();
 
     ///
     /// Copy constructor
@@ -82,7 +90,7 @@ public:
 
     ///
     /// Destructor
-    virtual ~PropertySet( );
+    virtual ~PropertySet();
 
     ///
     /// Add a new property named propertyName with main value value to this set
@@ -99,7 +107,7 @@ public:
     /// Returns a vector containing the identifying names of all properties
     /// contained in this set. Names are in the order in which they were added
     /// to the property set.
-    virtual const PSVectorOfStrings& GetPropertyList( );
+    virtual const PSVectorOfStrings& GetPropertyList();
 
     ///
     /// Returns a pointer to the property identified by propertyName
@@ -149,13 +157,13 @@ public:
     /// Returns a list containing names of properties that have undergone a
     /// state change of some sort due to the most recent operation on a
     /// property in this set.
-    virtual const PSVectorOfStrings& GetChanges( );
+    virtual const PSVectorOfStrings& GetChanges();
 
     ///
     /// Clears the internal list of all property changes that have occurred
     /// recently. The maximum size of the internal list is equal to the number
     /// of properties in the set.
-    virtual void ClearAccumulatedChanges( );
+    virtual void ClearAccumulatedChanges();
 
     ///
     /// Sets the name of the table this property set tries to read from
@@ -165,7 +173,7 @@ public:
     ///
     /// Returns the name of the table this property set reads from and writes
     /// to.
-    virtual const std::string& GetTableName( ) const;
+    virtual const std::string& GetTableName() const;
 
     ///
     /// Sets the record ID for this property. This should generally be used only

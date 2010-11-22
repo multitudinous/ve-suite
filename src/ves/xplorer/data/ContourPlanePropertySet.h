@@ -44,25 +44,43 @@ namespace xplorer
 namespace data
 {
 class Property;
+/*!\file ContourPlanePropertySet.h
+ *
+ */
 
+/*!\class ves::xplorer::data::ContourPlanePropertySet
+ *
+ */
 
+/*!\namespace ves::xplorer::data
+ *
+ */
 class VE_DATA_EXPORTS ContourPlanePropertySet : public PropertySet
 {
 public:
-    ContourPlanePropertySet( );
+    ///Constructor
+    ContourPlanePropertySet();
+    ///Copy Contructor
     ContourPlanePropertySet( const ContourPlanePropertySet& orig );
-    virtual ~ContourPlanePropertySet( );
+    ///Destructor
+    virtual ~ContourPlanePropertySet();
 
 private:
+    ///Update method
     void UpdateModeOptions( Property* property );
+    ///Validate method
     bool ValidateScalarMinMax( Property* property, boost::any value );
+    ///Update method
     void UpdateScalarDataOptions( Property* property );
+    ///Update method
     void UpdateScalarDataRange( Property* property );
+    ///Update method
     void UpdateVectorDataOptions( Property* property );
 
 
 private:
-    void _createSkeleton( );
+    ///Create the skeleton
+    void CreateSkeleton();
 };
 
 } // namespace data
