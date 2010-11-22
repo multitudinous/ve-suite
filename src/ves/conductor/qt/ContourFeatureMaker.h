@@ -36,24 +36,40 @@
 
 namespace ves
 {
-namespace conductor{
+namespace conductor
+{
+/*!\file ContourFeatureMaker.h
+ *
+ */
 
+/*!\class ves::conductor::ContourFeatureMaker
+ *
+ */
 
+/*!\namespace ves::conductor
+ *
+ */
 class ContourFeatureMaker : public VisFeatureMakerBase
 {
 public:
-    ContourFeatureMaker( );
+    ///Constructor
+    ContourFeatureMaker();
+    ///Copy constructor
     ContourFeatureMaker( const ContourFeatureMaker& orig );
-    virtual ~ContourFeatureMaker( );
-    virtual void update( unsigned int recordID );
+    ///Destructor
+    virtual ~ContourFeatureMaker();
+    ///Update method to generate vis feature
+    virtual void Update( unsigned int recordID );
 
 protected:
-    void _addPlane( ves::xplorer::data::PropertySet& set );
-    void _updateContourInformation( ves::xplorer::data::PropertySet& set );
+    ///Called by the update function
+    void AddPlane( ves::xplorer::data::PropertySet& set );
+    ///Called by AddPlane
+    void UpdateContourInformation( ves::xplorer::data::PropertySet& set );
 
 private:
-    
-    std::vector<ves::open::xml::DataValuePairPtr> _contourInformation;///<The countour setting data
+    ///The countour setting data
+    std::vector<ves::open::xml::DataValuePairPtr> m_contourInformation;
 
 };
 

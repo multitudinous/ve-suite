@@ -39,73 +39,79 @@
 
 #include <iostream>
 
+#include <boost/concept_check.hpp>
+
 namespace ves
 {
 namespace conductor
 {
-
-VisFeatureMakerBase::VisFeatureMakerBase( )
+////////////////////////////////////////////////////////////////////////////////
+VisFeatureMakerBase::VisFeatureMakerBase()
 {
+    ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 VisFeatureMakerBase::VisFeatureMakerBase( const VisFeatureMakerBase& orig )
 {
+    boost::ignore_unused_variable_warning( orig );
 }
-
-VisFeatureMakerBase::~VisFeatureMakerBase( )
+////////////////////////////////////////////////////////////////////////////////
+VisFeatureMakerBase::~VisFeatureMakerBase()
 {
+    ;
 }
-
-void VisFeatureMakerBase::update( unsigned int recordID )
+////////////////////////////////////////////////////////////////////////////////
+void VisFeatureMakerBase::Update( unsigned int recordID )
 {
-    ; // Does nothing, but don't want pure virtual f'n so that this class *can*
+    boost::ignore_unused_variable_warning( recordID );
+    // Does nothing, but don't want pure virtual f'n so that this class *can*
     // be instantiated alone.
 }
-
-void VisFeatureMakerBase::_updateBaseInformation( xplorer::data::PropertySet& set )
+////////////////////////////////////////////////////////////////////////////////
+void VisFeatureMakerBase::UpdateBaseInformation( xplorer::data::PropertySet& set )
 {
-    _vistabBaseInformation.clear( );
-    _commandName.clear( );
+    m_vistabBaseInformation.clear();
+    m_commandName.clear();
 
     ///This is the default. Other dialogs actions will set the command name to the specific value if they are launched
-    _commandName = "VISUALIZATION_SETTINGS";
+    m_commandName = "VISUALIZATION_SETTINGS";
 
-    ves::open::xml::DataValuePairPtr activeScalar( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr activeScalar( new ves::open::xml::DataValuePair() );
     activeScalar->SetDataType( "STRING" );
     activeScalar->SetDataName( std::string( "Active Scalar" ) );
     activeScalar->SetDataString( boost::any_cast<std::string >
                                  ( set.GetPropertyAttribute
                                  ( "DataSet_ScalarData", "enumCurrentString" )
                                  ) );
-    _vistabBaseInformation.push_back( activeScalar );
+    m_vistabBaseInformation.push_back( activeScalar );
 
-    ves::open::xml::DataValuePairPtr activeVector( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr activeVector( new ves::open::xml::DataValuePair() );
     activeVector->SetDataType( "STRING" );
     activeVector->SetDataName( std::string( "Active Vector" ) );
     activeVector->SetDataString( boost::any_cast<std::string >
                                  ( set.GetPropertyAttribute
                                  ( "DataSet_VectorData", "enumCurrentString" )
                                  ) );
-    _vistabBaseInformation.push_back( activeVector );
+    m_vistabBaseInformation.push_back( activeVector );
 
-    ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair() );
     activeDataset->SetDataType( "STRING" );
     activeDataset->SetDataName( std::string( "Active Dataset" ) );
     activeDataset->SetDataString( boost::any_cast<std::string >
                                   ( set.GetPropertyAttribute
                                   ( "DataSet", "enumCurrentString" )
                                   ) );
-    _vistabBaseInformation.push_back( activeDataset );
+    m_vistabBaseInformation.push_back( activeDataset );
 
-    ves::open::xml::DataValuePairPtr scalarMin( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr scalarMin( new ves::open::xml::DataValuePair() );
     double minimumValue = boost::any_cast<double>( set.GetPropertyValue( "DataSet_ScalarRange_Min" ) );
     scalarMin->SetData( "Scalar Min", minimumValue );
-    _vistabBaseInformation.push_back( scalarMin );
+    m_vistabBaseInformation.push_back( scalarMin );
 
-    ves::open::xml::DataValuePairPtr scalarMax( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr scalarMax( new ves::open::xml::DataValuePair() );
     double maximumValue = boost::any_cast<double>( set.GetPropertyValue( "DataSet_ScalarRange_Max" ) );
     scalarMax->SetData( "Scalar Max", maximumValue );
-    _vistabBaseInformation.push_back( scalarMax );
+    m_vistabBaseInformation.push_back( scalarMax );
 
     // Load instance of selected DataSet from database and get relevant properties
     // from it.
@@ -116,55 +122,54 @@ void VisFeatureMakerBase::_updateBaseInformation( xplorer::data::PropertySet& se
                        ) );
 
     //Bounding box display value
-    ves::open::xml::DataValuePairPtr bbox( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr bbox( new ves::open::xml::DataValuePair() );
     bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > (
                    boost::any_cast<bool>( dataset.GetPropertyValue( "BoundingBox" ) )
                    ) );
     //bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > ( 0 ) );
-    _vistabBaseInformation.push_back( bbox );
+    m_vistabBaseInformation.push_back( bbox );
 
     //Surface wrap display value
-    ves::open::xml::DataValuePairPtr wireMesh( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr wireMesh( new ves::open::xml::DataValuePair() );
     wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > (
                        boost::any_cast<bool>( dataset.GetPropertyValue( "SurfaceWrap" ) )
                        ) );
     //wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > ( 0 ) );
-    _vistabBaseInformation.push_back( wireMesh );
+    m_vistabBaseInformation.push_back( wireMesh );
 
     //set scalar bar state
-    ves::open::xml::DataValuePairPtr scalarBarDVP( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr scalarBarDVP( new ves::open::xml::DataValuePair() );
     scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > (
                            boost::any_cast<bool>( dataset.GetPropertyValue( "ScalarBar" ) )
                            ) );
     //scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > ( 0 ) );
-    _vistabBaseInformation.push_back( scalarBarDVP );
+    m_vistabBaseInformation.push_back( scalarBarDVP );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void VisFeatureMakerBase::SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand,
                                                         xplorer::data::PropertySet& set )
 {
-    _updateBaseInformation( set );
-    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command( ) );
+    UpdateBaseInformation( set );
+    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
 
-    for( size_t i = 0; i < _vistabBaseInformation.size( ); i++ )
+    for( size_t i = 0; i < m_vistabBaseInformation.size(); ++i )
     {
-        newCommand->AddDataValuePair( _vistabBaseInformation.at( i ) );
+        newCommand->AddDataValuePair( m_vistabBaseInformation.at( i ) );
     }
     if( subDialogCommand )
     {
-        ves::open::xml::DataValuePairPtr subDialogSettings( new ves::open::xml::DataValuePair( ) );
+        ves::open::xml::DataValuePairPtr subDialogSettings( new ves::open::xml::DataValuePair() );
         subDialogSettings->SetData( "Sub-Dialog Settings", subDialogCommand );
         newCommand->AddDataValuePair( subDialogSettings );
     }
-    newCommand->SetCommandName( _commandName );
+    newCommand->SetCommandName( m_commandName );
 
-    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( newCommand );
+    ves::xplorer::command::CommandManager::instance()->AddXMLCommand( newCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void VisFeatureMakerBase::_updateAdvancedSettings( xplorer::data::PropertySet& set )
+void VisFeatureMakerBase::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
 {
-    _advancedSettings.clear( );
+    m_advancedSettings.clear();
 
     // With a bit of re-thinking here and some normalization of names, we may be
     // able to convert much of the following code to something like:
@@ -184,46 +189,46 @@ void VisFeatureMakerBase::_updateAdvancedSettings( xplorer::data::PropertySet& s
 
     if( set.PropertyExists( "Advanced_Opacity" ) )
     {
-        ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair( ) );
+        ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair() );
         contourOpacity->SetData( "Contour Opacity",
                                  boost::any_cast<double>
                                  ( set.GetPropertyValue( "Advanced_Opacity" ) ) );
-        _advancedSettings.push_back( contourOpacity );
+        m_advancedSettings.push_back( contourOpacity );
     }
 
     if( set.PropertyExists( "Advanced_WarpedContourScale" ) )
     {
-        ves::open::xml::DataValuePairPtr warpedScale( new ves::open::xml::DataValuePair( ) );
+        ves::open::xml::DataValuePairPtr warpedScale( new ves::open::xml::DataValuePair() );
         warpedScale->SetData( "Warped Contour Scale",
                               boost::any_cast<double>
                               ( set.GetPropertyValue( "Advanced_WarpedContourScale" ) ) );
-        _advancedSettings.push_back( warpedScale );
+        m_advancedSettings.push_back( warpedScale );
     }
 
     if( set.PropertyExists( "Advanced_ContourLOD" ) )
     {
-        ves::open::xml::DataValuePairPtr LODSetting( new ves::open::xml::DataValuePair( ) );
+        ves::open::xml::DataValuePairPtr LODSetting( new ves::open::xml::DataValuePair() );
         LODSetting->SetData( "Contour LOD",
                              boost::any_cast<double>
                              ( set.GetPropertyValue( "Advanced_ContourLOD" ) ) );
-        _advancedSettings.push_back( LODSetting );
+        m_advancedSettings.push_back( LODSetting );
     }
 
     if( set.PropertyExists( "Advanced_ContourType" ) )
     {
-        ves::open::xml::DataValuePairPtr contourType( new ves::open::xml::DataValuePair( ) );
+        ves::open::xml::DataValuePairPtr contourType( new ves::open::xml::DataValuePair() );
         contourType->SetDataType( "STRING" );
         contourType->SetDataName( std::string( "Type" ) );
         std::string _planeType = boost::any_cast<std::string >
                 ( set.GetPropertyAttribute
                 ( "Advanced_ContourType", "enumCurrentString" ) );
         contourType->SetDataString( _planeType );
-        _advancedSettings.push_back( contourType );
+        m_advancedSettings.push_back( contourType );
     }
 
     if( set.PropertyExists( "Advanced_WarpOption" ) )
     {
-        ves::open::xml::DataValuePairPtr warpOptionFlag( new ves::open::xml::DataValuePair( ) );
+        ves::open::xml::DataValuePairPtr warpOptionFlag( new ves::open::xml::DataValuePair() );
         warpOptionFlag->SetDataName( "Warp Option" );
         warpOptionFlag->SetDataType( "UNSIGNED INT" );
         if( boost::any_cast<bool>( set.GetPropertyValue( "Advanced_WarpOption" ) ) )
@@ -234,7 +239,7 @@ void VisFeatureMakerBase::_updateAdvancedSettings( xplorer::data::PropertySet& s
         {
             warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 0 ) );
         }
-        _advancedSettings.push_back( warpOptionFlag );
+        m_advancedSettings.push_back( warpOptionFlag );
     }
 
     //    if( m_datasetSelection->IsEnabled() )
@@ -245,6 +250,6 @@ void VisFeatureMakerBase::_updateAdvancedSettings( xplorer::data::PropertySet& s
     //    }
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
 } // namespace ves

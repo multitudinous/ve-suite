@@ -45,121 +45,121 @@
 
 using namespace ves::conductor;
 using namespace ves;
-
-ContourFeatureMaker::ContourFeatureMaker( )
+////////////////////////////////////////////////////////////////////////////////
+ContourFeatureMaker::ContourFeatureMaker()
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 ContourFeatureMaker::ContourFeatureMaker( const ContourFeatureMaker& orig )
+    :
+    VisFeatureMakerBase( orig )
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-ContourFeatureMaker::~ContourFeatureMaker( )
+ContourFeatureMaker::~ContourFeatureMaker()
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void ContourFeatureMaker::update( unsigned int recordID )
+void ContourFeatureMaker::Update( unsigned int recordID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
     xplorer::data::ContourPlanePropertySet contourSet;
     contourSet.SetRecordID( recordID );
     contourSet.LoadFromDatabase(  );
-    _addPlane( static_cast < xplorer::data::PropertySet& > ( contourSet ) );
+    AddPlane( static_cast < xplorer::data::PropertySet& > ( contourSet ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void ContourFeatureMaker::_updateContourInformation( xplorer::data::PropertySet& set )
+void ContourFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )
 {
-    _contourInformation.clear( );
+    m_contourInformation.clear();
 
     // Plane direction
-    ves::open::xml::DataValuePairPtr contourDirection( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr contourDirection( new ves::open::xml::DataValuePair() );
     contourDirection->SetDataType( "STRING" );
     contourDirection->SetDataName( std::string( "Direction" ) );
     std::string value = boost::any_cast<std::string > ( set.GetPropertyAttribute( "Direction", "enumCurrentString" ) );
     contourDirection->SetDataString( value );
-    _contourInformation.push_back( contourDirection );
+    m_contourInformation.push_back( contourDirection );
 
     ves::open::xml::DataValuePairPtr selectvecorscalrDisp( new ves::open::xml::DataValuePair() );
     selectvecorscalrDisp->SetDataType( "STRING" );
     selectvecorscalrDisp->SetDataName( "Select Data Mapping" );
     selectvecorscalrDisp->SetDataString( boost::any_cast<std::string > ( set.GetPropertyAttribute( "DataMapping", "enumCurrentString" ) ));
-    _contourInformation.push_back( selectvecorscalrDisp );
+    m_contourInformation.push_back( selectvecorscalrDisp );
 
     // Mode: Single or Multiple
-    ves::open::xml::DataValuePairPtr numberOfPlanes( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr numberOfPlanes( new ves::open::xml::DataValuePair() );
     numberOfPlanes->SetDataType( "STRING" );
     numberOfPlanes->SetDataName( std::string( "Number of Planes" ) );
-    std::string _numberOfPlanesOption( "Single" );
+    std::string numberOfPlanesOption( "Single" );
     int mode = boost::any_cast<int>( set.GetPropertyValue( "Mode" ) );
     if( mode == 0 )
     {
-        _numberOfPlanesOption = "Single";
+        numberOfPlanesOption = "Single";
     }
     else if( mode == 1 )
     {
-        _numberOfPlanesOption = "Multiple";
+        numberOfPlanesOption = "Multiple";
     }
-    numberOfPlanes->SetDataString( _numberOfPlanesOption );
-    _contourInformation.push_back( numberOfPlanes );
+    numberOfPlanes->SetDataString( numberOfPlanesOption );
+    m_contourInformation.push_back( numberOfPlanes );
 
     // Plane location
-    ves::open::xml::DataValuePairPtr planePosition( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr planePosition( new ves::open::xml::DataValuePair() );
     planePosition->SetData( "Position", boost::any_cast<double>( set.GetPropertyValue( "PlaneLocation" ) ) );
-    _contourInformation.push_back( planePosition );
+    m_contourInformation.push_back( planePosition );
 
     // Use Nearest or Cycle Precomputed
-    std::string _planeOption( "" );
+    std::string planeOption;
     if( boost::any_cast<bool>( set.GetPropertyValue( "Mode_UseNearestPrecomputedPlane" ) ) )
     {
-        _planeOption = "Use Nearest Precomputed Plane";
+        planeOption = "Use Nearest Precomputed Plane";
     }
     else if( boost::any_cast<bool>( set.GetPropertyValue( "Mode_CyclePrecomputedSurfaces" ) ) )
     {
-        _planeOption = "Cycle Precomputed Surfaces";
+        planeOption = "Cycle Precomputed Surfaces";
     }
 
-    if( !_planeOption.empty( ) )
+    if( !planeOption.empty() )
     {
-        ves::open::xml::DataValuePairPtr planeOption( new ves::open::xml::DataValuePair( ) );
-        planeOption->SetDataType( "STRING" );
-        planeOption->SetDataName( std::string( "Plane Option" ) );
-        planeOption->SetDataString( _planeOption );
+        ves::open::xml::DataValuePairPtr planeOptionDVP( new ves::open::xml::DataValuePair() );
+        planeOptionDVP->SetDataType( "STRING" );
+        planeOptionDVP->SetDataName( std::string( "Plane Option" ) );
+        planeOptionDVP->SetDataString( planeOption );
 
-        _contourInformation.push_back( planeOption );
+        m_contourInformation.push_back( planeOptionDVP );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void ContourFeatureMaker::_addPlane( xplorer::data::PropertySet& set )
+void ContourFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 {
-    _updateContourInformation( set );
-    _updateAdvancedSettings( set );
+    UpdateContourInformation( set );
+    UpdateAdvancedSettings( set );
 
-    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command( ) );
+    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
 
     newCommand->SetCommandName( "UPDATE_SCALAR_SETTINGS" );
 
-    for ( size_t i = 0; i < _contourInformation.size( ); i++ )
+    for( size_t i = 0; i < m_contourInformation.size(); ++i )
     {
-        newCommand->AddDataValuePair( _contourInformation.at( i ) );
+        newCommand->AddDataValuePair( m_contourInformation.at( i ) );
     }
 
     //The advanced settings command
-    ves::open::xml::CommandPtr advancedSettings( new ves::open::xml::Command( ) );
+    ves::open::xml::CommandPtr advancedSettings( new ves::open::xml::Command() );
     advancedSettings->SetCommandName( "ADVANCED_CONTOUR_SETTINGS" );
-    for ( size_t i = 0; i < _advancedSettings.size( ); i++ )
+    for( size_t i = 0; i < m_advancedSettings.size(); ++i )
     {
-        advancedSettings->AddDataValuePair( _advancedSettings.at( i ) );
+        advancedSettings->AddDataValuePair( m_advancedSettings.at( i ) );
     }
     std::string typeName = "Advanced Scalar Settings";
 
     //dvp representing the advanced settings within the contours information
-    ves::open::xml::DataValuePairPtr advancedContourSettings( new ves::open::xml::DataValuePair( ) );
+    ves::open::xml::DataValuePairPtr advancedContourSettings( new ves::open::xml::DataValuePair() );
     advancedContourSettings->SetData( typeName, advancedSettings );
     newCommand->AddDataValuePair( advancedContourSettings );
 
@@ -172,6 +172,7 @@ void ContourFeatureMaker::_addPlane( xplorer::data::PropertySet& set )
         QMessageBox msg;
         msg.setText( "Invalid Parent" );
         msg.setIcon( QMessageBox::Information );
-        msg.exec( );
+        msg.exec();
     }
 }
+////////////////////////////////////////////////////////////////////////////////

@@ -58,7 +58,18 @@ namespace ves
 {
 namespace conductor
 {
+/*!\file VisFeatureManager.h
+ *
+ */
 
+/*!\class ves::conductor::VisFeatureManager
+ *
+ */
+
+/*!\namespace ves::conductor
+ *
+ */
+    
 class VE_CONDUCTOR_QTUI_EXPORTS VisFeatureManager : boost::noncopyable
 {
 public:
@@ -76,25 +87,24 @@ public:
      * the returned pointer will be a null pointer. The caller is expected to
      * manage the lifetime of the created object.
      **/
-    ves::xplorer::data::PropertySet* CreateNewFeature( std::string featureName );
+    ves::xplorer::data::PropertySet* CreateNewFeature( const std::string& featureName );
 
-    void UpdateFeature( std::string featureName, unsigned int ID );
+    void UpdateFeature( const std::string& featureName, unsigned int ID );
 
-    std::vector<std::string> GetIDsForFeature( std::string featureName );
+    std::vector<std::string> GetIDsForFeature( const std::string& featureName );
 
 private:
 
-    // Set this class up as a singleton
+    ///Set this class up as a singleton
     /// Constructor
-    VisFeatureManager( );
+    VisFeatureManager();
 
-    /// Destructor
-    virtual ~VisFeatureManager( );
+    ///Destructor
+    virtual ~VisFeatureManager();
 
-    /// Singleton declarations
+    ///Singleton declarations
     vprSingletonHeader( VisFeatureManager );
 
 };
-
 } // namespace conductor
 } // namespace ves

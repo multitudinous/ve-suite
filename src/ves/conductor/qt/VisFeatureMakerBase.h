@@ -42,24 +42,43 @@ namespace ves
 {
 namespace conductor
 {
+/*!\file VisFeatureMakerBase.h
+ *
+ */
 
+/*!\class ves::conductor::VisFeatureMakerBase
+ *
+ */
+
+/*!\namespace ves::conductor
+ *
+ */
 class VisFeatureMakerBase
 {
 public:
-    VisFeatureMakerBase( );
+    ///Constructor
+    VisFeatureMakerBase();
+    ///Copy constructor
     VisFeatureMakerBase( const VisFeatureMakerBase& orig );
-    virtual ~VisFeatureMakerBase( );
-
-    virtual void update( unsigned int recordID );
+    ///Destructor
+    virtual ~VisFeatureMakerBase();
+    ///Update function
+    virtual void Update( unsigned int recordID );
 
 protected:
-    void _updateAdvancedSettings( ves::xplorer::data::PropertySet& set );
-    void _updateBaseInformation( ves::xplorer::data::PropertySet& set );
+    ///Called by the update function
+    void UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set );
+    ///Called by the update function
+    void UpdateBaseInformation( ves::xplorer::data::PropertySet& set );
+    ///Called by the update function
     void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand, ves::xplorer::data::PropertySet& set );
 
-    std::string _commandName;///<The name of the command to send back
-    std::vector<ves::open::xml::DataValuePairPtr> _advancedSettings;///<The advanced settings.
-    std::vector<ves::open::xml::DataValuePairPtr> _vistabBaseInformation;///<The basic information from the vistab
+    ///The name of the command to send back
+    std::string m_commandName;
+    ///The advanced settings.
+    std::vector<ves::open::xml::DataValuePairPtr> m_advancedSettings;
+    ///The basic information from the vistab
+    std::vector<ves::open::xml::DataValuePairPtr> m_vistabBaseInformation;
     
 private:
 

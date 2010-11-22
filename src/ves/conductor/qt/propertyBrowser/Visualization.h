@@ -59,31 +59,30 @@ namespace conductor
 {
 class PropertyBrowser;
 
-
 class Visualization : public QDialog
 {
     Q_OBJECT
 public:
     Visualization( QWidget* parent = 0 );
-    ~Visualization( );
+    ~Visualization();
 
 protected:
     void changeEvent( QEvent* e );
-    void UpdateFeatureIDSelectorChoices( );
+    void UpdateFeatureIDSelectorChoices();
 
 protected Q_SLOTS:
     // For info on Automatic connection of signals and slots, see
     // http://doc.trolltech.com/4.6/designer-using-a-ui-file.html#automatic-connections
-    void on_WritePropertiesButton_clicked( ); // Automatic connection
-    void on_RefreshPropertiesButton_clicked( ); // Automatic connection
-    void on_NewFeatureButton_clicked( ); // Automatic connection
-    void on_DeleteFeatureButton_clicked( ); // Automatic connection
+    void on_WritePropertiesButton_clicked(); // Automatic connection
+    void on_RefreshPropertiesButton_clicked(); // Automatic connection
+    void on_NewFeatureButton_clicked(); // Automatic connection
+    void on_DeleteFeatureButton_clicked(); // Automatic connection
     void on_FeaturesList_currentTextChanged( const QString& currentText ); // Automatic connection
-    void on_FeatureIDSelector_currentIndexChanged ( const QString & text ); // Automatic connection
+    void on_FeatureIDSelector_currentIndexChanged ( const QString& text ); // Automatic connection
 
 
 private:
-    Ui::Visualization* ui;
+    Ui::Visualization* m_ui;
     PropertyBrowser* mFeatureBrowser;
 
     ves::xplorer::data::PropertySet* mTempSet;

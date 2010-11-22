@@ -45,16 +45,18 @@ namespace conductor
 #define _print( text ) std::cout << text << std::endl << std::flush
 
 vprSingletonImp( VisFeatureManager );
-
-VisFeatureManager::VisFeatureManager( )
+////////////////////////////////////////////////////////////////////////////////
+VisFeatureManager::VisFeatureManager()
 {
+    ;
 }
-
-VisFeatureManager::~VisFeatureManager( )
+////////////////////////////////////////////////////////////////////////////////
+VisFeatureManager::~VisFeatureManager()
 {
+    ;
 }
-
-ves::xplorer::data::PropertySet* VisFeatureManager::CreateNewFeature( std::string featureName )
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::data::PropertySet* VisFeatureManager::CreateNewFeature( const std::string& featureName )
 {
     using namespace ves::xplorer::data;
 
@@ -88,10 +90,10 @@ ves::xplorer::data::PropertySet* VisFeatureManager::CreateNewFeature( std::strin
 
     return set;
 }
-
-void VisFeatureManager::UpdateFeature( std::string featureName, unsigned int ID )
+////////////////////////////////////////////////////////////////////////////////
+void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned int ID )
 {
-    VisFeatureMakerBase* feature;
+    VisFeatureMakerBase* feature = 0;
 
     if( featureName == "Contours" )
     {
@@ -119,11 +121,11 @@ void VisFeatureManager::UpdateFeature( std::string featureName, unsigned int ID 
         _print( "Would be updating PolydataPropertySet..." );
     }
 
-    feature->update( ID );
+    feature->Update( ID );
     delete feature;
 }
-
-std::vector<std::string> VisFeatureManager::GetIDsForFeature( std::string featureName )
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> VisFeatureManager::GetIDsForFeature( const std::string& featureName )
 {
     std::vector<std::string> ids;
     using namespace ves::xplorer::data;
@@ -135,6 +137,6 @@ std::vector<std::string> VisFeatureManager::GetIDsForFeature( std::string featur
     delete set;
     return ids;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
 } // namespace ves

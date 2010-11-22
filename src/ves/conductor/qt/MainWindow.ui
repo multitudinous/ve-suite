@@ -74,7 +74,7 @@ QToolButton:hover
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -90,6 +90,8 @@ QToolButton:hover
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -101,11 +103,17 @@ QToolButton:hover
     <addaction name="actionFind"/>
    </widget>
    <widget class="QMenu" name="menu_Connection">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>&amp;Connection</string>
     </property>
    </widget>
    <widget class="QMenu" name="menuE_xecution">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>E&amp;xecution</string>
     </property>
@@ -191,8 +199,14 @@ QToolButton:hover
    </property>
   </action>
   <action name="actionZoomIn">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Zoom &amp;In</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionZoomOut">
@@ -235,6 +249,11 @@ QToolButton:hover
   <action name="actionConfigure_Layers">
    <property name="text">
     <string>Configure Layers...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
    </property>
   </action>
  </widget>

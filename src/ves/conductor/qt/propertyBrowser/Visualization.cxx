@@ -45,16 +45,19 @@
 
 #include <iostream>
 
+#include <boost/concept_check.hpp>
+
 namespace ves
 {
 namespace conductor
 {
-
-Visualization::Visualization( QWidget* parent ) :
-QDialog( parent ),
-ui( new Ui::Visualization )
+////////////////////////////////////////////////////////////////////////////////
+Visualization::Visualization( QWidget* parent ) 
+    :
+    QDialog( parent ),
+    m_ui( new Ui::Visualization )
 {
-    ui->setupUi( this );
+    m_ui->setupUi( this );
 
     mFeatureBrowser = new PropertyBrowser( this );
     mTempSet = 0;
@@ -62,55 +65,55 @@ ui( new Ui::Visualization )
     // Force FeatureIDSelector to update itself based on the database.
     UpdateFeatureIDSelectorChoices();
 }
-
-Visualization::~Visualization( )
+////////////////////////////////////////////////////////////////////////////////
+Visualization::~Visualization()
 {
-    delete ui;
+    delete m_ui;
     delete mFeatureBrowser;
     delete mTempSet;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Visualization::changeEvent( QEvent* e )
 {
     QDialog::changeEvent( e );
-    switch( e->type( ) )
+    switch( e->type() )
     {
     case QEvent::LanguageChange:
-        ui->retranslateUi( this );
+        m_ui->retranslateUi( this );
         break;
     default:
         break;
     }
 }
-
-void Visualization::on_WritePropertiesButton_clicked( )
+////////////////////////////////////////////////////////////////////////////////
+void Visualization::on_WritePropertiesButton_clicked()
 {
     if( mTempSet )
     {
-        mTempSet->WriteToDatabase( );
-        std::string featureName = ui->FeaturesList->currentItem( )->text( ).toStdString( );
-        VisFeatureManager::instance( )->UpdateFeature( featureName, mTempSet->GetRecordID( ) );
+        mTempSet->WriteToDatabase();
+        std::string featureName = m_ui->FeaturesList->currentItem()->text().toStdString();
+        VisFeatureManager::instance()->UpdateFeature( featureName, mTempSet->GetRecordID() );
     }
 }
-
-void Visualization::on_RefreshPropertiesButton_clicked( )
+////////////////////////////////////////////////////////////////////////////////
+void Visualization::on_RefreshPropertiesButton_clicked()
 {
     if( mTempSet )
     {
-        mTempSet->LoadFromDatabase( );
-        mFeatureBrowser->RefreshAll( );
+        mTempSet->LoadFromDatabase();
+        mFeatureBrowser->RefreshAll();
     }
 }
-
-void Visualization::on_NewFeatureButton_clicked( )
+////////////////////////////////////////////////////////////////////////////////
+void Visualization::on_NewFeatureButton_clicked()
 {
-    QString featureName = ui->FeaturesList->currentItem( )->text( );
-    mTempSet = VisFeatureManager::instance( )->
-            CreateNewFeature( featureName.toStdString( ) );
+    QString featureName = m_ui->FeaturesList->currentItem()->text();
+    mTempSet = VisFeatureManager::instance()->
+            CreateNewFeature( featureName.toStdString() );
 
     if( mTempSet )
     {
-        mTempSet->WriteToDatabase( );
+        mTempSet->WriteToDatabase();
     }
 
     mFeatureBrowser->ParsePropertySet( mTempSet );
@@ -118,60 +121,61 @@ void Visualization::on_NewFeatureButton_clicked( )
     // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
     // to take the Qt-ized data from a PropertyBrowser such as
     // mFeatureBrowser and display it in the GUI.
-    ui->vfpb->setPropertyBrowser( mFeatureBrowser );
-    ui->vfpb->RefreshContents( );
-    ui->vfpb->show( );
+    m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
+    m_ui->vfpb->RefreshContents();
+    m_ui->vfpb->show();
 
     // Re-read available feature IDs from database, and select the last one added,
     // which by definition corresponds to the "new" one
-    UpdateFeatureIDSelectorChoices( );
-    ui->FeatureIDSelector->setCurrentIndex( ui->FeatureIDSelector->count( ) - 1 );
+    UpdateFeatureIDSelectorChoices();
+    m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
 }
-
-void Visualization::on_DeleteFeatureButton_clicked( )
+////////////////////////////////////////////////////////////////////////////////
+void Visualization::on_DeleteFeatureButton_clicked()
 {
     if( mTempSet )
     {
-        mTempSet->DeleteFromDatabase( );
+        mTempSet->DeleteFromDatabase();
         mFeatureBrowser->ParsePropertySet( 0 );
         delete mTempSet;
         mTempSet = 0;
-        UpdateFeatureIDSelectorChoices( );
-        ui->FeatureIDSelector->setCurrentIndex( ui->FeatureIDSelector->count( ) - 1 );
+        UpdateFeatureIDSelectorChoices();
+        m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_FeaturesList_currentTextChanged( const QString& currentText )
 {
-    UpdateFeatureIDSelectorChoices( );
+    boost::ignore_unused_variable_warning( currentText );
+    UpdateFeatureIDSelectorChoices();
 }
-
-void Visualization::UpdateFeatureIDSelectorChoices( )
+////////////////////////////////////////////////////////////////////////////////
+void Visualization::UpdateFeatureIDSelectorChoices()
 {
     // Remove all entries from feature id selection combobox
-    ui->FeatureIDSelector->clear( );
+    m_ui->FeatureIDSelector->clear();
 
     // Get all available IDs for current feature type
-    QString featureName = ui->FeaturesList->currentItem( )->text( );
-    std::vector<std::string> ids = VisFeatureManager::instance( )->GetIDsForFeature( featureName.toStdString( ) );
+    QString featureName = m_ui->FeaturesList->currentItem()->text();
+    std::vector<std::string> ids = VisFeatureManager::instance()->GetIDsForFeature( featureName.toStdString() );
 
     // Convert IDs to format needed by QComboBox and add them as choices
     QStringList idList;
     QString qCurrentID;
-    for( size_t index = 0; index < ids.size( ); index++ )
+    for( size_t index = 0; index < ids.size(); index++ )
     {
         qCurrentID = qCurrentID.fromStdString( ids.at( index ) );
         idList.append( qCurrentID );
     }
 
-    ui->FeatureIDSelector->addItems( idList );
+    m_ui->FeatureIDSelector->addItems( idList );
 
-    ui->FeatureIDSelector->setCurrentIndex( ui->FeatureIDSelector->count( ) - 1 );
+    m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
 }
-
-void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString & text )
+////////////////////////////////////////////////////////////////////////////////
+void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& text )
 {
-    if( text.isEmpty( ) )
+    if( text.isEmpty() )
     {
         // If null selection was made, we want to remove any visible PropertySet
         mFeatureBrowser->ParsePropertySet( 0 );
@@ -182,28 +186,28 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString & te
     {
         delete mTempSet;
         mTempSet = 0;
-        QString featureName = ui->FeaturesList->currentItem( )->text( );
-        mTempSet = VisFeatureManager::instance( )->
-                CreateNewFeature( featureName.toStdString( ) );
+        QString featureName = m_ui->FeaturesList->currentItem()->text();
+        mTempSet = VisFeatureManager::instance()->
+                CreateNewFeature( featureName.toStdString() );
 
         if( mTempSet )
         {
-            mTempSet->SetRecordID( text.toInt( ) );
-            mTempSet->LoadFromDatabase( );
+            mTempSet->SetRecordID( text.toInt() );
+            mTempSet->LoadFromDatabase();
             mFeatureBrowser->ParsePropertySet( mTempSet );
 
             // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
             // to take the Qt-ized data from a PropertyBrowser such as
             // mFeatureBrowser and display it in the GUI.
-            ui->vfpb->setPropertyBrowser( mFeatureBrowser );
-            ui->vfpb->RefreshContents( );
-            ui->vfpb->show( );
-            mTempSet->LoadFromDatabase( );
-            mFeatureBrowser->RefreshAll( );
+            m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
+            m_ui->vfpb->RefreshContents();
+            m_ui->vfpb->show();
+            mTempSet->LoadFromDatabase();
+            mFeatureBrowser->RefreshAll();
         }
     }
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 }// namespace conductor
 }// namespace ves
