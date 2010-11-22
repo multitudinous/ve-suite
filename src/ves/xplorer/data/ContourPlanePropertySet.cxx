@@ -35,6 +35,7 @@
 #include <ves/xplorer/data/Property.h>
 
 #include <boost/bind.hpp>
+#include <boost/concept_check.hpp>
 
 #include <iostream>
 #include <ves/xplorer/data/DatabaseManager.h>
@@ -42,9 +43,8 @@
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 ContourPlanePropertySet::ContourPlanePropertySet()
-    :
-    mTableName( "ContourPlane" )
 {
+    mTableName = "ContourPlane";
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -175,6 +175,8 @@ void ContourPlanePropertySet::CreateSkeleton()
 ////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
 {
+    boost::ignore_unused_variable_warning( property );
+
     PSVectorOfStrings enumValues;
     std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
     DatasetPropertySet dataset;
@@ -190,6 +192,8 @@ void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
 ////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
 {
+    boost::ignore_unused_variable_warning( property );
+    
     mPropertyMap["DataSet_ScalarRange_Min"]->SetEnabled();
     mPropertyMap["DataSet_ScalarRange_Max"]->SetEnabled();
 
@@ -225,6 +229,8 @@ void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
 ////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::UpdateVectorDataOptions( Property* property )
 {
+    boost::ignore_unused_variable_warning( property );
+
     PSVectorOfStrings enumValues;
     std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
     DatasetPropertySet dataset;
