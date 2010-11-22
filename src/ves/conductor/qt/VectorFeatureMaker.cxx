@@ -143,7 +143,7 @@ void VectorFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
 
-    newCommand->SetCommandName( "UPDATE_SCALAR_SETTINGS" );
+    newCommand->SetCommandName( "UPDATE_VECTOR_SETTINGS" );
 
     for( size_t i = 0; i < m_vectorInformation.size(); ++i )
     {
@@ -152,12 +152,12 @@ void VectorFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 
     //The advanced settings command
     ves::open::xml::CommandPtr advancedSettings( new ves::open::xml::Command() );
-    advancedSettings->SetCommandName( "ADVANCED_VECTOR_SETTINGS" );
+    advancedSettings->SetCommandName( "ADVANCED_CONTOUR_SETTINGS" );
     for( size_t i = 0; i < m_advancedSettings.size(); ++i )
     {
         advancedSettings->AddDataValuePair( m_advancedSettings.at( i ) );
     }
-    std::string typeName = "Advanced Scalar Settings";
+    std::string typeName = "Advanced Vector Settings";
 
     //dvp representing the advanced settings within the contours information
     ves::open::xml::DataValuePairPtr advancedContourSettings( new ves::open::xml::DataValuePair() );
@@ -175,5 +175,84 @@ void VectorFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
         msg.setIcon( QMessageBox::Information );
         msg.exec();
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void VectorFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
+{
+    m_advancedSettings.clear();
+    
+    // With a bit of re-thinking here and some normalization of names, we may be
+    // able to convert much of the following code to something like:
+    //
+    // std::vector<std::string> propList = set.GetPropertyList();
+    // std::vector<std::sting>::iterator iter;
+    // for( iter = propList.begin(); iter != propList.end(); iter++ )
+    // {
+    //      ...1. Search for substring "Advanced_" in (*iter)
+    //      ...2. Extract remainder of name in (*iter)
+    //      ...3. Create a DVP, set its name to string from step 2, set
+    //              its value to cast value from set.GetPropertyValue( *iter ).
+    //              Casting operation could look at property type to determine
+    //              appropriate cast -- esp for enums, to use associated enumCurrentString
+    //      ...4. Add DVP to _advancedSettings
+    // }
+    
+    if( set.PropertyExists( "Advanced_VectorThreshold_Min" ) )
+    {
+        std::vector< double > tempData;
+        tempData.push_back( boost::any_cast<double>
+                           ( set.GetPropertyValue( "Advanced_VectorThreshold_Min" ) ) );
+        tempData.push_back( boost::any_cast<double>
+                           ( set.GetPropertyValue( "Advanced_VectorThreshold_Max" ) ) );
+                           
+        ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair() );
+        contourOpacity->SetData( "Vector Threshold", tempData );
+        m_advancedSettings.push_back( contourOpacity );
+    }
+    
+    if( set.PropertyExists( "Advanced_VectorScale" ) )
+    {
+        ves::open::xml::DataValuePairPtr warpedScale( new ves::open::xml::DataValuePair() );
+        warpedScale->SetData( "Vector Scale",
+                             boost::any_cast<double>
+                             ( set.GetPropertyValue( "Advanced_VectorScale" ) ) );
+        m_advancedSettings.push_back( warpedScale );
+    }
+    
+    if( set.PropertyExists( "Advanced_VectorRatio" ) )
+    {
+        ves::open::xml::DataValuePairPtr LODSetting( new ves::open::xml::DataValuePair() );
+        LODSetting->SetData( "Vector Ratio",
+                            boost::any_cast<double>
+                            ( set.GetPropertyValue( "Advanced_VectorRatio" ) ) );
+        m_advancedSettings.push_back( LODSetting );
+    }
+    
+
+    if( set.PropertyExists( "Advanced_ScaleByVectorMagnitude" ) )
+    {
+        ves::open::xml::DataValuePairPtr warpOptionFlag( new ves::open::xml::DataValuePair() );
+        warpOptionFlag->SetDataName( "Scale By Magnitude" );
+        warpOptionFlag->SetDataType( "UNSIGNED INT" );
+        if( boost::any_cast<bool>( set.GetPropertyValue( "Advanced_ScaleByVectorMagnitude" ) ) )
+        {
+            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 1 ) );
+        }
+        else
+        {
+            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 0 ) );
+        }
+        m_advancedSettings.push_back( warpOptionFlag );
+    }
+    
+    //"GPU Tools"
+    
+    //    if( m_datasetSelection->IsEnabled() )
+    //    {
+    //        ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
+    //        surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
+    //        _advancedSettings.push_back( surfToolsDVP );
+    //    }
+    
 }
 ////////////////////////////////////////////////////////////////////////////////

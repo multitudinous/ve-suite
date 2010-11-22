@@ -31,11 +31,15 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/VisFeatureManager.h>
-#include <ves/xplorer/data/ContourPlanePropertySet.h>
-#include <ves/conductor/qt/VisFeatureMakerBase.h>
-#include <ves/conductor/qt/ContourFeatureMaker.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
+#include <ves/conductor/qt/VisFeatureMakerBase.h>
+///Contours
+#include <ves/xplorer/data/ContourPlanePropertySet.h>
+#include <ves/conductor/qt/ContourFeatureMaker.h>
+///Vectors
+#include <ves/xplorer/data/VectorPlanePropertySet.h>
+#include <ves/conductor/qt/VectorFeatureMaker.h>
 
 namespace ves
 {
@@ -69,7 +73,8 @@ ves::xplorer::data::PropertySet* VisFeatureManager::CreateNewFeature( const std:
     }
     else if( featureName == "Vectors" )
     {
-        _print( "Would be creating new VectorPlanePropertySet..." );
+        _print( "Creating new VectorPlanePropertySet" );
+        set = new VectorPlanePropertySet();
     }
     else if( featureName == "Streamlines" )
     {
@@ -102,23 +107,24 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned 
     }
     else if( featureName == "Vectors" )
     {
-        _print( "Would be updating VectorPlanePropertySet..." );
+        _print( "Updating VectorFeatureMaker" );
+        feature = new VectorFeatureMaker();
     }
     else if( featureName == "Streamlines" )
     {
-        _print( "Would be updating StreamlinesPropertySet..." );
+        _print( "Would be updating StreamlinesFeatureMaker..." );
     }
     else if( featureName == "Isosurfaces" )
     {
-        _print( "Would be updating IsoSurfacesPropertySet..." );
+        _print( "Would be updating IsoSurfacesFeatureMaker..." );
     }
     else if( featureName == "Texture-based" )
     {
-        _print( "Would be updating TextureBasedPropertySet..." );
+        _print( "Would be updating TextureBasedFeatureMaker..." );
     }
     else if( featureName == "Polydata" )
     {
-        _print( "Would be updating PolydataPropertySet..." );
+        _print( "Would be updating PolydataFeatureMaker..." );
     }
 
     feature->Update( ID );

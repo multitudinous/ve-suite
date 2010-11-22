@@ -153,17 +153,21 @@ void VectorPlanePropertySet::CreateSkeleton()
     AddProperty( "Advanced", boost::any(), "Advanced" );
     SetPropertyAttribute( "Advanced", "isUIGroupOnly", true );
 
-    AddProperty( "Advanced_VectorThreshold", 1.0, "Vector Threshold" );
-    SetPropertyAttribute( "Advanced_VectorThreshold", "minimumValue", 0.0 );
-    SetPropertyAttribute( "Advanced_VectorThreshold", "maximumValue", 1.0 );
+    AddProperty( "Advanced_VectorThreshold", boost::any(), "Vector Threshold" );
+    SetPropertyAttribute( "Advanced_VectorThreshold", "isUIGroupOnly", true );
+    SetPropertyAttribute( "Advanced_VectorThreshold", "setExpanded", true );
+    AddProperty( "Advanced_VectorThreshold_Min",   1.0f, "Vector Threshold Min" );
+    AddProperty( "Advanced_VectorThreshold_Max", 100.0f, "Vector Threshold Max" );
+    //SetPropertyAttribute( "Advanced_VectorThreshold", "minimumValue", 0.0 );
+    //SetPropertyAttribute( "Advanced_VectorThreshold", "maximumValue", 1.0 );
 
-    AddProperty( "Advanced_VectorScale", 1.0, "Vector Scale" );
-    SetPropertyAttribute( "Advanced_VectorScale", "minimumValue", 0.0 );
-    SetPropertyAttribute( "Advanced_VectorScale", "maximumValue", 1.0 );
+    AddProperty( "Advanced_VectorScale", 200.0, "Vector Scale" );
+    SetPropertyAttribute( "Advanced_VectorScale", "minimumValue",   1.0 );
+    SetPropertyAttribute( "Advanced_VectorScale", "maximumValue", 400.0 );
 
     AddProperty( "Advanced_VectorRatio", 1.0, "Vector Ratio" );
-    SetPropertyAttribute( "Advanced_VectorRatio", "minimumValue", 0.0 );
-    SetPropertyAttribute( "Advanced_VectorRatio", "maximumValue", 1.0 );
+    SetPropertyAttribute( "Advanced_VectorRatio", "minimumValue",   1.0 );
+    SetPropertyAttribute( "Advanced_VectorRatio", "maximumValue", 200.0 );
 
     AddProperty( "Advanced_ScaleByVectorMagnitude", false, "Scale By Vector Magnitude" );
 }
