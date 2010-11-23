@@ -113,6 +113,7 @@ void VectorPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "y" );
     enumValues.push_back( "z" );
     enumValues.push_back( "By Wand" );
+    enumValues.push_back( "All" );
     enumValues.push_back( "By Surface" );
     SetPropertyAttribute( "Direction", "enumValues", enumValues );
 

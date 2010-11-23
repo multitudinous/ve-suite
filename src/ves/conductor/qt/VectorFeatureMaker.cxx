@@ -245,6 +245,15 @@ void VectorFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set
         m_advancedSettings.push_back( warpOptionFlag );
     }
     
+    if( set.PropertyExists( "UseGPUTools" ) )
+    {
+        unsigned int checkBox = 
+            boost::any_cast<bool>( set.GetPropertyValue( "UseGPUTools" ) );
+        ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
+        gpuToolsDVP->SetData( "GPU Tools", checkBox );
+        m_advancedSettings.push_back( gpuToolsDVP );
+    }
+    
     //"GPU Tools"
     
     //    if( m_datasetSelection->IsEnabled() )
