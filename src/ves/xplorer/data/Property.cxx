@@ -32,13 +32,15 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/Property.h>
 
+#include <boost/concept_check.hpp>
+
 namespace ves
 {
 namespace xplorer
 {
 namespace data
 {
-
+////////////////////////////////////////////////////////////////////////////////
 Property::Property( boost::any value, bool enabled )
 {
     mValue = value;
@@ -47,22 +49,16 @@ Property::Property( boost::any value, bool enabled )
     mHasMaximum = false;
     mIsEnum = false;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-Property::~Property( )
+Property::~Property()
 {
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-boost::any Property::GetValue( ) const
+boost::any Property::GetValue() const
 {
     return mValue;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::SetValue( boost::any value )
 {
     // Are changes enabled?
@@ -80,7 +76,7 @@ bool Property::SetValue( boost::any value )
     }
 
     // Does external validator allow this change?
-    if( !SignalRequestValidation.empty( ) )
+    if( !SignalRequestValidation.empty() )
     {
         if( !SignalRequestValidation( this, value ) )
         {
@@ -125,56 +121,50 @@ bool Property::SetValue( boost::any value )
     }
 
     // Tell the world the value has changed
-    if( !SignalValueChanged.empty( ) )
+    if( !SignalValueChanged.empty() )
     {
         SignalValueChanged( this );
     }
     return true;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 void Property::SetEnabled( Property* caller )
 {
+    boost::ignore_unused_variable_warning( caller );
     // Don't do anything if we're already enabled
     if( !mEnabled )
     {
         mEnabled = true;
 
         // Tell the world we're enabled
-        if( !SignalEnabled.empty( ) )
+        if( !SignalEnabled.empty() )
         {
             SignalEnabled( this );
         }
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 void Property::SetDisabled( Property* caller )
 {
+    boost::ignore_unused_variable_warning( caller );
     // Don't do anything if we're already disabled
     if( mEnabled )
     {
         mEnabled = false;
 
         // Tell the world we're disabled
-        if( !SignalDisabled.empty( ) )
+        if( !SignalDisabled.empty() )
         {
             SignalDisabled( this );
         }
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::GetEnabled( ) const
+bool Property::GetEnabled() const
 {
     return mEnabled;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 void Property::SetAttribute( const std::string& attributeName,
                              boost::any attributeValue )
 {
@@ -214,10 +204,10 @@ void Property::SetAttribute( const std::string& attributeName,
         mIsEnum = false;
 
         // Main value MUST be integer type to be considered enum
-        if( IsInt( ) )
+        if( IsInt() )
         {
             // If attributeValue is empty, we don't consider this a proper enum
-            if( !attributeValue.empty( ) )
+            if( !attributeValue.empty() )
             {
                 PSVectorOfStrings *enumValues =
                         boost::any_cast<PSVectorOfStrings > ( &attributeValue );
@@ -225,7 +215,7 @@ void Property::SetAttribute( const std::string& attributeName,
                 if( enumValues )
                 {
                     // Vector must contain at least one string to be proper enum
-                    if( enumValues->size( ) > 0 )
+                    if( enumValues->size() > 0 )
                     {
                         // Ladies and gentlemen, we have an enum!
                         mIsEnum = true;
@@ -233,7 +223,7 @@ void Property::SetAttribute( const std::string& attributeName,
                         // If mValue is outside range allowed by enumValues,
                         // set it to zero.
                         int mainValue = boost::any_cast<int>( mValue );
-                        int size = static_cast < int > ( enumValues->size( ) );
+                        int size = static_cast < int > ( enumValues->size() );
                         if( ( mainValue < 0 ) || ( mainValue >= size ) )
                         {
                             SetValue( 0 );
@@ -254,7 +244,7 @@ void Property::SetAttribute( const std::string& attributeName,
     } // attr = enumValues
 
     // Tell the world an attribute has changed
-    if( !SignalAttributeChanged.empty( ) )
+    if( !SignalAttributeChanged.empty() )
     {
         SignalAttributeChanged( this );
     }
@@ -267,174 +257,137 @@ boost::any Property::GetAttribute( const std::string& attributeName ) const
     // If the attribute doesn't exist, return empty value and get out
     if( !AttributeExists( attributeName ) )
     {
-        return boost::any( );
+        return boost::any();
     }
 
     AttributeMap::const_iterator iterator = mAttributeMap.find( attributeName );
     return (*iterator ).second;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-const Property::PSVectorOfStrings& Property::GetAttributeList( ) const
+const Property::PSVectorOfStrings& Property::GetAttributeList() const
 {
-    mAttributeList.clear( );
-    for( AttributeMap::const_iterator iterator = mAttributeMap.begin( );
-            iterator != mAttributeMap.end( );
+    mAttributeList.clear();
+    for( AttributeMap::const_iterator iterator = mAttributeMap.begin();
+            iterator != mAttributeMap.end();
             iterator++ )
     {
         mAttributeList.push_back( ( *iterator ).first );
     }
     return mAttributeList;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::AttributeExists( const std::string& attributeName ) const
 {
     bool result = false;
 
     AttributeMap::const_iterator iterator = mAttributeMap.find( attributeName );
-    if( iterator != mAttributeMap.end( ) )
+    if( iterator != mAttributeMap.end() )
     {
         result = true;
     }
     return result;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsBool( ) const
+bool Property::IsBool() const
 {
     return IsBool( mValue );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsInt( ) const
+bool Property::IsInt() const
 {
     return IsInt( mValue );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsFloat( ) const
+bool Property::IsFloat() const
 {
     return IsFloat( mValue );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsDouble( ) const
+bool Property::IsDouble() const
 {
     return IsDouble( mValue );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsString( ) const
+bool Property::IsString() const
 {
     return IsString( mValue );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsEnum( )
+bool Property::IsEnum()
 {
     return mIsEnum;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsIntVector( ) const
+bool Property::IsIntVector() const
 {
     return IsIntVector( mValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsFloatVector( ) const
+bool Property::IsFloatVector() const
 {
     return IsFloatVector( mValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsDoubleVector( ) const
+bool Property::IsDoubleVector() const
 {
     return IsDoubleVector( mValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsStringVector( ) const
+bool Property::IsStringVector() const
 {
     return IsStringVector( mValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool Property::IsVectorized( ) const
+bool Property::IsVectorized() const
 {
     return IsVectorized( mValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsBool( const boost::any& value ) const
 {
-    return value.type( ) == typeid ( bool );
+    return value.type() == typeid ( bool );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsInt( const boost::any& value ) const
 {
-    return value.type( ) == typeid ( int );
+    return value.type() == typeid ( int );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsFloat( const boost::any& value ) const
 {
-    return value.type( ) == typeid ( float );
+    return value.type() == typeid ( float );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsDouble( const boost::any& value ) const
 {
-    return value.type( ) == typeid ( double );
+    return value.type() == typeid ( double );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsString( const boost::any& value ) const
 {
     return boost::any_cast<std::string > ( &value );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsIntVector( const boost::any& value ) const
 {
     return boost::any_cast< std::vector< int > >( &value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsFloatVector( const boost::any& value ) const
 {
     return boost::any_cast< std::vector< float > >( &value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsDoubleVector( const boost::any& value ) const
 {
     return boost::any_cast< std::vector< double > >( &value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsStringVector( const boost::any& value ) const
 {
     return boost::any_cast< std::vector< std::string > >( &value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::IsVectorized( const boost::any& value ) const
 {
     if( ( IsIntVector( value ) ) ||
@@ -451,7 +404,6 @@ bool Property::IsVectorized( const boost::any& value ) const
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void Property::_cacheDoubleValue( double* store, boost::any value )
 {
     if( IsInt( value ) )
@@ -467,9 +419,7 @@ void Property::_cacheDoubleValue( double* store, boost::any value )
         *store = boost::any_cast<double>( value );
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 bool Property::_compareNumeric( boost::any left, char operation, double right )
 {
     double m_castLeft = 0;
@@ -483,7 +433,7 @@ bool Property::_compareNumeric( boost::any left, char operation, double right )
     {
         m_castLeft = static_cast < double > ( boost::any_cast<float>( left ) );
     }
-    else if( IsDouble( ) )
+    else if( IsDouble() )
     {
         m_castLeft = boost::any_cast<double>( left );
     }
@@ -510,14 +460,14 @@ bool Property::_compareNumeric( boost::any left, char operation, double right )
 
     return result;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool Property::_checkEnumValue( boost::any value )
 {
     boost::any enumVector = GetAttribute( "enumValues" );
     // If there's nothing in the enumValues attribute (which really should
     // never happen, but just in case...), skip the rest of this test and
     // **ALLOW THE VALUE TO BE SET**
-    if( !enumVector.empty( ) )
+    if( !enumVector.empty() )
     {
         // Attempt to cast enumVector as a PSVectorOfStrings
         PSVectorOfStrings *castEnumVector =
@@ -532,7 +482,7 @@ bool Property::_checkEnumValue( boost::any value )
         if( IsInt( value ) )
         {
             // Get the size of the vector
-            size_t max = castEnumVector->size( );
+            size_t max = castEnumVector->size();
             // Adjust max since maximum index is always one less than size
             max -= 1;
             // If value is outside of allowable index range, disallow set
@@ -549,8 +499,8 @@ bool Property::_checkEnumValue( boost::any value )
             boost::any enumValues = GetAttribute( "enumValues" );
             PSVectorOfStrings castEnumValues =
                     boost::any_cast< PSVectorOfStrings > ( enumValues );
-            PSVectorOfStrings::const_iterator iterator = castEnumValues.begin( );
-            PSVectorOfStrings::const_iterator end = castEnumValues.end( );
+            PSVectorOfStrings::const_iterator iterator = castEnumValues.begin();
+            PSVectorOfStrings::const_iterator end = castEnumValues.end();
             bool found = false;
             while( ( !found ) && ( iterator != end ) )
             {
@@ -568,7 +518,7 @@ bool Property::_checkEnumValue( boost::any value )
     }
     return true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Property::_doExtraEnumSetValueProcessing( boost::any value )
 {
     if( IsInt( value ) )
@@ -583,7 +533,7 @@ void Property::_doExtraEnumSetValueProcessing( boost::any value )
         boost::any enumValues = GetAttribute( "enumValues" );
         PSVectorOfStrings castEnumValues =
                 boost::any_cast< PSVectorOfStrings > ( enumValues );
-        int max = static_cast < int > ( castEnumValues.size( ) );
+        int max = static_cast < int > ( castEnumValues.size() );
         max -= 1;
         bool found = false;
         int count = -1;
@@ -606,7 +556,7 @@ void Property::_doExtraEnumSetValueProcessing( boost::any value )
     std::string enumString = castEnumValues[mainValue];
     SetAttribute( "enumCurrentString", enumString );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool Property::_valuesEqual( boost::any& one, boost::any& two )
 {
     bool result = false;
@@ -659,7 +609,7 @@ bool Property::_valuesEqual( boost::any& one, boost::any& two )
 
     return result;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 } // namespace data
 } // namespace xplorer
 } // namespace ves

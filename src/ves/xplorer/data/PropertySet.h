@@ -31,12 +31,14 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
+#include <ves/xplorer/data/PropertySetPtr.h>
 
 #include <map>
 #include <string>
 #include <vector>
 
 #include <boost/any.hpp>
+
 #include <Poco/Types.h>
 
 #include <ves/VEConfig.h>

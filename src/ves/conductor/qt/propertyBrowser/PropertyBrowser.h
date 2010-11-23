@@ -87,7 +87,7 @@ public:
     /// This will set up everything that an instance of GenericPropertyBrowser
     /// needs to create an interface and interact with the underlying
     /// PropertySet.
-    void ParsePropertySet( ves::xplorer::data::PropertySet* set );
+    void ParsePropertySet( ves::xplorer::data::PropertySetPtr set );
 
     ///
     /// Tells the browser to request a list of changes (values, enabled state,
@@ -159,12 +159,12 @@ private:
     //    QtProperty at position X in mItems.
     PropertyVector mProperties; // Holds all instances of Property
     ItemVector mItems; // Holds all instances of QtProperty (including subproperties)
-    xplorer::data::PropertySet::PSVectorOfStrings mPropertyNames; // Holds the names of all the properties
+    ves::xplorer::data::PropertySet::PSVectorOfStrings mPropertyNames; // Holds the names of all the properties
 
     ItemVector mTreedItems; // Holds only top-level instances of QtProperty
     // (ie. does not explictly hold sub-properties)
 
-    ves::xplorer::data::PropertySet* mSet; // Pointer to underlying PropertySet ( the real data )
+    ves::xplorer::data::PropertySetPtr mSet; // Pointer to underlying PropertySet ( the real data )
 
     QtDoublePropertyManager* mDoubleManager;
     QtStringPropertyManager* mStringManager;

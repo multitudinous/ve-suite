@@ -30,59 +30,39 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VISUALIZATION_H
-#define VISUALIZATION_H
+#ifndef VES_XPLORER_DATA_PROPERTYSET_PTR_H
+#define VES_XPLORER_DATA_PROPERTYSET_PTR_H
 
-#define QT_NO_KEYWORDS
+#include <ves/util/PointerTypes.h>
 
-#include <QtGui/QDialog>
+/**
+ * \file ves::xplorer::data::PropertySetPtr
+ *
+ * Include this file to get a forward declaration of the pointer.
+ * To get the full declaration of this pointer include the non-Ptr header file.
+ */
+ 
+/*!\class ves::xplorer::data::PropertySetPtr
+ *
+ */
 
-#include <ves/conductor/qt/ContourFeatureMaker.h>
-
-#include <ves/xplorer/data/PropertySetPtr.h>
-
-// Forward declarations
-namespace Ui
-{
-class Visualization;
-}
+/*!\namespace ves::xplorer::data
+ *
+ */
 
 namespace ves
 {
-namespace conductor
+namespace xplorer
 {
-class PropertyBrowser;
-
-class Visualization : public QDialog
+namespace data
 {
-    Q_OBJECT
-public:
-    Visualization( QWidget* parent = 0 );
-    ~Visualization();
-
-protected:
-    void changeEvent( QEvent* e );
-    void UpdateFeatureIDSelectorChoices();
-
-protected Q_SLOTS:
-    // For info on Automatic connection of signals and slots, see
-    // http://doc.trolltech.com/4.6/designer-using-a-ui-file.html#automatic-connections
-    void on_WritePropertiesButton_clicked(); // Automatic connection
-    void on_RefreshPropertiesButton_clicked(); // Automatic connection
-    void on_NewFeatureButton_clicked(); // Automatic connection
-    void on_DeleteFeatureButton_clicked(); // Automatic connection
-    void on_FeaturesList_currentTextChanged( const QString& currentText ); // Automatic connection
-    void on_FeatureIDSelector_currentIndexChanged ( const QString& text ); // Automatic connection
-
-
-private:
-    Ui::Visualization* m_ui;
-    PropertyBrowser* mFeatureBrowser;
-
-    ves::xplorer::data::PropertySetPtr mTempSet;
-};
-
-} // namespace conductor
-} // namespace ves
-
-#endif // VISUALIZATION_H
+class PropertySet;
+/// Typedef for a SmartPtr
+typedef ves::util::ClassPtrDef<PropertySet>::type  PropertySetPtr;
+typedef ves::util::SharedPtrDef<PropertySet>::type PropertySetSharedPtr;
+typedef ves::util::WeakPtrDef<PropertySet>::type   PropertySetWeakPtr;
+typedef ves::util::ScopedPtrDef<PropertySet>::type PropertySetScopedPtr;
+}
+}
+}
+#endif

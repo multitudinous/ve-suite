@@ -36,7 +36,7 @@
 
 using namespace ves::conductor;
 using namespace ves;
-
+////////////////////////////////////////////////////////////////////////////////
 PropertyBrowser::PropertyBrowser( QObject* parent ) : QObject( parent )
 {
     // Create a standard set of property managers
@@ -60,25 +60,24 @@ PropertyBrowser::PropertyBrowser( QObject* parent ) : QObject( parent )
              this, SLOT( StringValueChanged( QtProperty*, QString ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-PropertyBrowser::~PropertyBrowser( )
+PropertyBrowser::~PropertyBrowser()
 {
     // Delete items
-    size_t max = mItems.size( );
+    size_t max = mItems.size();
     for( size_t index = 0; index < max; index++ )
     {
         delete mItems[index];
     }
 
-    mItems.clear( );
-    mProperties.clear( );
-    mTreedItems.clear( );
-    mGroupManager->clear( );
-    mBooleanManager->clear( );
-    mEnumManager->clear( );
-    mIntManager->clear( );
-    mDoubleManager->clear( );
-    mStringManager->clear( );
+    mItems.clear();
+    mProperties.clear();
+    mTreedItems.clear();
+    mGroupManager->clear();
+    mBooleanManager->clear();
+    mEnumManager->clear();
+    mIntManager->clear();
+    mDoubleManager->clear();
+    mStringManager->clear();
 
     delete mGroupManager;
     delete mBooleanManager;
@@ -88,86 +87,78 @@ PropertyBrowser::~PropertyBrowser( )
     delete mStringManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-QtDoublePropertyManager* PropertyBrowser::GetDoubleManager( )
+QtDoublePropertyManager* PropertyBrowser::GetDoubleManager()
 {
     return mDoubleManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-QtStringPropertyManager* PropertyBrowser::GetStringManager( )
+QtStringPropertyManager* PropertyBrowser::GetStringManager()
 {
     return mStringManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-QtBoolPropertyManager* PropertyBrowser::GetBoolManager( )
+QtBoolPropertyManager* PropertyBrowser::GetBoolManager()
 {
     return mBooleanManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-QtEnumPropertyManager* PropertyBrowser::GetEnumManager( )
+QtEnumPropertyManager* PropertyBrowser::GetEnumManager()
 {
     return mEnumManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-QtGroupPropertyManager* PropertyBrowser::GetGroupManager( )
+QtGroupPropertyManager* PropertyBrowser::GetGroupManager()
 {
     return mGroupManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-QtIntPropertyManager* PropertyBrowser::GetIntManager( )
+QtIntPropertyManager* PropertyBrowser::GetIntManager()
 {
     return mIntManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-PropertyBrowser::ItemVector* PropertyBrowser::GetItems( )
+PropertyBrowser::ItemVector* PropertyBrowser::GetItems()
 {
     return &mTreedItems;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
+void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
 {
     using xplorer::data::PropertySet;
     using xplorer::data::Property;
 
     // Delete old items, etc. before adding new
-    size_t max = mItems.size( );
+    size_t max = mItems.size();
     for( size_t index = 0; index < max; index++ )
     {
         delete mItems[index];
     }
-    mItems.clear( );
-    mProperties.clear( );
-    mTreedItems.clear( );
-    mGroupManager->clear( );
-    mBooleanManager->clear( );
-    mEnumManager->clear( );
-    mIntManager->clear( );
-    mDoubleManager->clear( );
-    mStringManager->clear( );
+    mItems.clear();
+    mProperties.clear();
+    mTreedItems.clear();
+    mGroupManager->clear();
+    mBooleanManager->clear();
+    mEnumManager->clear();
+    mIntManager->clear();
+    mDoubleManager->clear();
+    mStringManager->clear();
 
     mSet = set;
 
     // If we were passed a null set our slate has been cleaned above and we 
     // stop here.
-    if( mSet == NULL )
+    if( !mSet )
     {
         return;
     }
     // Ask the set for a list of its properties
-    mPropertyNames = set->GetPropertyList( );
+    mPropertyNames = set->GetPropertyList();
 
     // Walk through properties list and store a pointer to each underlying property
     { // Bracket used to scope iterator and end
         PropertySet::PSVectorOfStrings::iterator iterator;
-        PropertySet::PSVectorOfStrings::iterator end = mPropertyNames.end( );
-        for( iterator = mPropertyNames.begin( ); iterator != end; iterator++ )
+        PropertySet::PSVectorOfStrings::iterator end = mPropertyNames.end();
+        for( iterator = mPropertyNames.begin(); iterator != end; iterator++ )
         {
             mProperties.push_back( set->GetProperty( ( *iterator ) ) );
         }
@@ -176,9 +167,9 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
     // Look at each property in turn and create an appropriate browser item
     // for it
     PropertyVector::iterator iterator;
-    PropertyVector::iterator end = mProperties.end( );
+    PropertyVector::iterator end = mProperties.end();
     Property* property;
-    for( iterator = mProperties.begin( ); iterator != end; iterator++ )
+    for( iterator = mProperties.begin(); iterator != end; iterator++ )
     {
         property = ( *iterator );
         QtProperty* item = NULL;
@@ -190,7 +181,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
         // Convert label to type needed by Qt functions
         QString label = QString::fromStdString( propertyLabel );
 
-        boost::any value = property->GetValue( );
+        boost::any value = property->GetValue();
 
         // Check whether this property should be visible to users
         bool show = true;
@@ -202,7 +193,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
         // Do type-specific item creation operations
         if( show )
         {
-            if( value.empty( ) )
+            if( value.empty() )
             {
                 // Empty value...is this property intended to be a group?
                 if( property->AttributeExists( "isUIGroupOnly" ) )
@@ -210,21 +201,21 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
                     item = mGroupManager->addProperty( label );
                 }
             }
-            else if( property->IsBool( ) )
+            else if( property->IsBool() )
             {
                 item = mBooleanManager->addProperty( label );
             }
                 // We must be careful to ask about Enum status *BEFORE* Int status,
                 // since enums *ARE* Ints. But not all Ints are Enums....
-            else if( property->IsEnum( ) )
+            else if( property->IsEnum() )
             {
                 item = mEnumManager->addProperty( label );
             }
-            else if( property->IsInt( ) )
+            else if( property->IsInt() )
             {
                 item = mIntManager->addProperty( label );
             }
-            else if( property->IsFloat( ) )
+            else if( property->IsFloat() )
             {
                 // Qt's property browser doesn't handle floats directly,
                 // so all floats must be cast to double. We cast back and forth
@@ -232,11 +223,11 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
                 // remains float.
                 item = mDoubleManager->addProperty( label );
             }
-            else if( property->IsDouble( ) )
+            else if( property->IsDouble() )
             {
                 item = mDoubleManager->addProperty( label );
             }
-            else if( property->IsString( ) )
+            else if( property->IsString() )
             {
                 item = mStringManager->addProperty( label );
             }
@@ -251,23 +242,21 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySet* set )
     }
 
     // Set up specified hierarchy of elements
-    _createHierarchy( );
+    _createHierarchy();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void PropertyBrowser::RefreshAll( )
+void PropertyBrowser::RefreshAll()
 {
-    int max = static_cast < int > ( mProperties.size( ) );
+    int max = static_cast < int > ( mProperties.size() );
     for( int index = 0; index < max; index++ )
     {
         _refreshItem( index );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertyBrowser::_refreshItem( int index )
 {
-    if( index >= static_cast < int > ( mItems.size( ) ) )
+    if( index >= static_cast < int > ( mItems.size() ) )
     {
         // We haven't set this item up yet!
         return;
@@ -277,7 +266,7 @@ void PropertyBrowser::_refreshItem( int index )
     Property* property = mProperties[index];
     QtProperty* item = mItems[index];
 
-    boost::any value = property->GetValue( );
+    boost::any value = property->GetValue();
 
     bool hasMin = false;
     bool hasMax = false;
@@ -286,7 +275,7 @@ void PropertyBrowser::_refreshItem( int index )
     _extractMinMaxValues( property, &min, &max, &hasMin, &hasMax );
 
     // Do type-specific extra operations such as setting min/max
-    if( property->IsEnum( ) )
+    if( property->IsEnum() )
     {
         // Update the list of valid choices
         QStringList qEnumNames;
@@ -294,14 +283,14 @@ void PropertyBrowser::_refreshItem( int index )
                 boost::any_cast< Property::PSVectorOfStrings > (
                 property->GetAttribute( std::string( "enumValues" ) ) );
         Property::PSVectorOfStrings::iterator iterator;
-        Property::PSVectorOfStrings::iterator end = enumNames.end( );
-        for( iterator = enumNames.begin( ); iterator != end; iterator++ )
+        Property::PSVectorOfStrings::iterator end = enumNames.end();
+        for( iterator = enumNames.begin(); iterator != end; iterator++ )
         {
             qEnumNames << QString::fromStdString( ( *iterator ) );
         }
         mEnumManager->setEnumNames( item, qEnumNames );
     }
-    else if( property->IsInt( ) )
+    else if( property->IsInt() )
     {
         if( hasMin )
         {
@@ -316,7 +305,7 @@ void PropertyBrowser::_refreshItem( int index )
         int step = static_cast < int > ( ( currentMax - currentMin ) / 100.0 );
         mIntManager->setSingleStep( item, step );
     }
-    else if( property->IsFloat( ) )
+    else if( property->IsFloat() )
     {
         if( hasMin )
         {
@@ -331,7 +320,7 @@ void PropertyBrowser::_refreshItem( int index )
         double step = ( currentMax - currentMin ) / 100.0;
         mDoubleManager->setSingleStep( item, step );
     }
-    else if( property->IsDouble( ) )
+    else if( property->IsDouble() )
     {
         if( hasMin )
         {
@@ -351,10 +340,9 @@ void PropertyBrowser::_refreshItem( int index )
     _setItemValue( item, property );
 
     // Update enabled state
-    item->setEnabled( property->GetEnabled( ) );
+    item->setEnabled( property->GetEnabled() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertyBrowser::_extractMinMaxValues( xplorer::data::Property* property,
                                             double* min, double* max,
                                             bool* hasMin, bool* hasMax )
@@ -395,12 +383,11 @@ void PropertyBrowser::_extractMinMaxValues( xplorer::data::Property* property,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void PropertyBrowser::_createHierarchy( )
+void PropertyBrowser::_createHierarchy()
 {
     xplorer::data::Property* property;
     int index;
-    int max = static_cast < int > ( mProperties.size( ) );
+    int max = static_cast < int > ( mProperties.size() );
     for( index = 0; index < max; index++ )
     {
         QtProperty* item = mItems[index];
@@ -417,15 +404,15 @@ void PropertyBrowser::_createHierarchy( )
         // name. Eg.: if name = "Axes_XLabel", then this item should
         // be a sub-item of the item named "Axes".
         QStringList nameList = name.split( "_" );
-        if( nameList.size( ) > 1 )
+        if( nameList.size() > 1 )
         {
             // Rebuild the parent item's name, which may itself be a sub-item
-            nameList.removeLast( );
+            nameList.removeLast();
             QString parentName = nameList.join( "_" );
 
             // Do we have an item with the supposed parent's name?
             int parentIndex = -1;
-            parentIndex = _getPropertyIndexByName( parentName.toStdString( ) );
+            parentIndex = _getPropertyIndexByName( parentName.toStdString() );
             if( parentIndex > -1 )
             {
                 // Got a hit; add this as sub-item
@@ -445,26 +432,22 @@ void PropertyBrowser::_createHierarchy( )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertyBrowser::BoolValueChanged( QtProperty* item, bool value )
 {
     _setPropertyValue( item, value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertyBrowser::IntValueChanged( QtProperty* item, int value )
 {
     _setPropertyValue( item, value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertyBrowser::StringValueChanged( QtProperty* item, const QString & value )
 {
-    std::string castValue = value.toStdString( );
+    std::string castValue = value.toStdString();
     _setPropertyValue( item, castValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
 {
     int index = _getItemIndex( item );
@@ -472,7 +455,7 @@ void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
     {
         xplorer::data::Property* property = mProperties[index];
         // Must cast to float if the underlying type is really a float
-        if( property->IsFloat( ) )
+        if( property->IsFloat() )
         {
             _setPropertyValue( item, static_cast < float > ( value ) );
         }
@@ -483,16 +466,15 @@ void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void PropertyBrowser::Refresh( )
+void PropertyBrowser::Refresh()
 {
     // Request list of changed properties from set
-    xplorer::data::PropertySet::PSVectorOfStrings changes = mSet->GetChanges( );
+    xplorer::data::PropertySet::PSVectorOfStrings changes = mSet->GetChanges();
     xplorer::data::PropertySet::PSVectorOfStrings::iterator iterator;
-    xplorer::data::PropertySet::PSVectorOfStrings::iterator end = changes.end( );
+    xplorer::data::PropertySet::PSVectorOfStrings::iterator end = changes.end();
 
     // Walk through list and update the UI items
-    for( iterator = changes.begin( ); iterator != end; iterator++ )
+    for( iterator = changes.begin(); iterator != end; iterator++ )
     {
         int index = _getPropertyIndexByName( ( *iterator ) );
         if( index > -1 )
@@ -502,14 +484,13 @@ void PropertyBrowser::Refresh( )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 int PropertyBrowser::_getPropertyIndex( xplorer::data::Property* property )
 {
     // Get the index of this property in mProperties. The corresponding Item will
     // have the same index in mItems.
     bool found = false;
     int index = -1;
-    int max = static_cast < int > ( mProperties.size( ) );
+    int max = static_cast < int > ( mProperties.size() );
     max--;
     while( ( !found ) && ( index < max ) )
     {
@@ -530,14 +511,13 @@ int PropertyBrowser::_getPropertyIndex( xplorer::data::Property* property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 int PropertyBrowser::_getPropertyIndexByName( std::string name )
 {
     // Get the index of this name in mPropertyNames. The corresponding Property will
     // have the same index in mProperties.
     bool found = false;
     int index = -1;
-    int max = static_cast < int > ( mPropertyNames.size( ) );
+    int max = static_cast < int > ( mPropertyNames.size() );
     max--;
     while( ( !found ) && ( index < max ) )
     {
@@ -557,14 +537,13 @@ int PropertyBrowser::_getPropertyIndexByName( std::string name )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 int PropertyBrowser::_getItemIndex( QtProperty* item )
 {
     // Get the index of this property in mItems. The corresponding Property will
     // have the same index in mProperties.
     bool found = false;
     int index = -1;
-    int max = static_cast < int > ( mItems.size( ) );
+    int max = static_cast < int > ( mItems.size() );
     max--;
     while( ( !found ) && ( index < max ) )
     {
@@ -584,37 +563,36 @@ int PropertyBrowser::_getItemIndex( QtProperty* item )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::Property* property )
 {
-    boost::any value = property->GetValue( );
+    boost::any value = property->GetValue();
 
-    if( property->IsBool( ) )
+    if( property->IsBool() )
     {
         bool castValue = boost::any_cast<bool>( value );
         mBooleanManager->setValue( item, castValue );
     }
-    else if( property->IsEnum( ) )
+    else if( property->IsEnum() )
     {
         int castValue = boost::any_cast<int>( value );
         mEnumManager->setValue( item, castValue );
     }
-    else if( property->IsInt( ) )
+    else if( property->IsInt() )
     {
         int castValue = boost::any_cast<int>( value );
         mIntManager->setValue( item, castValue );
     }
-    else if( property->IsFloat( ) )
+    else if( property->IsFloat() )
     {
         double castValue = static_cast < double > ( boost::any_cast<float>( value ) );
         mDoubleManager->setValue( item, castValue );
     }
-    else if( property->IsDouble( ) )
+    else if( property->IsDouble() )
     {
         double castValue = boost::any_cast<double>( value );
         mDoubleManager->setValue( item, castValue );
     }
-    else if( property->IsString( ) )
+    else if( property->IsString() )
     {
         std::string castValue = boost::any_cast<std::string > ( value );
         QString qCastValue = QString::fromStdString( castValue );
@@ -622,7 +600,6 @@ void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::Property* 
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertyBrowser::_setPropertyValue( QtProperty* item, boost::any value )
 {
     int index = _getItemIndex( item );
@@ -633,7 +610,7 @@ void PropertyBrowser::_setPropertyValue( QtProperty* item, boost::any value )
         {
             // Setvalue was accepted; check for changes to other properties that
             // may occur due to links between properties in the set
-            Refresh( );
+            Refresh();
         }
         else
         {

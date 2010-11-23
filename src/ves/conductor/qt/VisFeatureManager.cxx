@@ -60,21 +60,21 @@ VisFeatureManager::~VisFeatureManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::data::PropertySet* VisFeatureManager::CreateNewFeature( const std::string& featureName )
+ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const std::string& featureName )
 {
     using namespace ves::xplorer::data;
 
-    PropertySet* set = 0;
+    PropertySetPtr set;
 
     if( featureName == "Contours" )
     {
-        _print( "Creating new ContourPlanePropertySet" );
-        set = new ContourPlanePropertySet();
+        _print( "|\tCreating new ContourPlanePropertySet" );
+        set = PropertySetPtr( new ContourPlanePropertySet() );
     }
     else if( featureName == "Vectors" )
     {
-        _print( "Creating new VectorPlanePropertySet" );
-        set = new VectorPlanePropertySet();
+        _print( "|\tCreating new VectorPlanePropertySet" );
+        set = PropertySetPtr( new VectorPlanePropertySet() );
     }
     else if( featureName == "Streamlines" )
     {
@@ -102,12 +102,12 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned 
 
     if( featureName == "Contours" )
     {
-        _print( "Updating ContourFeatureMaker" );
+        _print( "|\tUpdating ContourFeatureMaker" );
         feature = new ContourFeatureMaker();
     }
     else if( featureName == "Vectors" )
     {
-        _print( "Updating VectorFeatureMaker" );
+        _print( "|\tUpdating VectorFeatureMaker" );
         feature = new VectorFeatureMaker();
     }
     else if( featureName == "Streamlines" )
@@ -135,12 +135,11 @@ std::vector<std::string> VisFeatureManager::GetIDsForFeature( const std::string&
 {
     std::vector<std::string> ids;
     using namespace ves::xplorer::data;
-    PropertySet* set = CreateNewFeature( featureName );
+    PropertySetPtr set = CreateNewFeature( featureName );
     if( set )
     {
         ids = DatabaseManager::instance()->GetStringVector( set->GetTableName(), "id" );
     }
-    delete set;
     return ids;
 }
 ////////////////////////////////////////////////////////////////////////////////

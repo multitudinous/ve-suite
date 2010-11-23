@@ -33,6 +33,8 @@
 #pragma once
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/data/PropertySetPtr.h>
+
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -87,7 +89,7 @@ public:
      * the returned pointer will be a null pointer. The caller is expected to
      * manage the lifetime of the created object.
      **/
-    ves::xplorer::data::PropertySet* CreateNewFeature( const std::string& featureName );
+    ves::xplorer::data::PropertySetPtr CreateNewFeature( const std::string& featureName );
 
     void UpdateFeature( const std::string& featureName, unsigned int ID );
 

@@ -60,7 +60,6 @@ Visualization::Visualization( QWidget* parent )
     m_ui->setupUi( this );
 
     mFeatureBrowser = new PropertyBrowser( this );
-    mTempSet = 0;
 
     // Force FeatureIDSelector to update itself based on the database.
     UpdateFeatureIDSelectorChoices();
@@ -70,7 +69,6 @@ Visualization::~Visualization()
 {
     delete m_ui;
     delete mFeatureBrowser;
-    delete mTempSet;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::changeEvent( QEvent* e )
@@ -136,9 +134,9 @@ void Visualization::on_DeleteFeatureButton_clicked()
     if( mTempSet )
     {
         mTempSet->DeleteFromDatabase();
-        mFeatureBrowser->ParsePropertySet( 0 );
-        delete mTempSet;
-        mTempSet = 0;
+        ves::xplorer::data::PropertySetPtr nullPtr;
+        mFeatureBrowser->ParsePropertySet( nullPtr );
+        mTempSet = nullPtr;
         UpdateFeatureIDSelectorChoices();
         m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
     }
@@ -175,17 +173,17 @@ void Visualization::UpdateFeatureIDSelectorChoices()
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& text )
 {
+    ves::xplorer::data::PropertySetPtr nullPtr;
+
     if( text.isEmpty() )
     {
         // If null selection was made, we want to remove any visible PropertySet
-        mFeatureBrowser->ParsePropertySet( 0 );
-        delete mTempSet;
-        mTempSet = 0;
+        mFeatureBrowser->ParsePropertySet( nullPtr );
+        mTempSet = nullPtr;
     }
     else
     {
-        delete mTempSet;
-        mTempSet = 0;
+        mTempSet = nullPtr;
         QString featureName = m_ui->FeaturesList->currentItem()->text();
         mTempSet = VisFeatureManager::instance()->
                 CreateNewFeature( featureName.toStdString() );
