@@ -104,8 +104,9 @@ void ContourPlanePropertySet::CreateSkeleton()
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
     // Now that DataSet has choices loaded, force an update on the available
     // scalar and vector data
-    UpdateScalarDataOptions( 0 );
-    UpdateVectorDataOptions( 0 );
+    PropertyPtr nullPtr;
+    UpdateScalarDataOptions( nullPtr );
+    UpdateVectorDataOptions( nullPtr );
 
 
     AddProperty( "Direction", 0, "Direction" );
@@ -133,7 +134,7 @@ void ContourPlanePropertySet::CreateSkeleton()
 
     // Connect SignalValueChanged of "Mode" to a function that enables and disables
     // its sub-properties as appropriate
-    Property* mode = mPropertyMap["Mode"];
+    PropertyPtr mode = mPropertyMap["Mode"];
     if( mode )
     {
         mode->SignalValueChanged.connect( boost::bind( &ContourPlanePropertySet::UpdateModeOptions, this, _1 ) );
@@ -176,7 +177,7 @@ void ContourPlanePropertySet::CreateSkeleton()
     AddProperty( "Advanced_WarpOption", false, "Warp Option" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
+void ContourPlanePropertySet::UpdateScalarDataOptions( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
 
@@ -190,10 +191,11 @@ void ContourPlanePropertySet::UpdateScalarDataOptions( Property* property )
         enumValues.push_back( "No datasets loaded" );
     }
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
-    UpdateScalarDataRange( 0 );
+    PropertyPtr nullPtr;
+    UpdateScalarDataRange( nullPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
+void ContourPlanePropertySet::UpdateScalarDataRange( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
     
@@ -230,7 +232,7 @@ void ContourPlanePropertySet::UpdateScalarDataRange( Property* property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourPlanePropertySet::UpdateVectorDataOptions( Property* property )
+void ContourPlanePropertySet::UpdateVectorDataOptions( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
 
@@ -246,7 +248,7 @@ void ContourPlanePropertySet::UpdateVectorDataOptions( Property* property )
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourPlanePropertySet::UpdateModeOptions( Property* property )
+void ContourPlanePropertySet::UpdateModeOptions( PropertyPtr property )
 {
     // Make sure the main value is an int as it should be
     if( property->IsInt() )
@@ -265,10 +267,10 @@ void ContourPlanePropertySet::UpdateModeOptions( Property* property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ContourPlanePropertySet::ValidateScalarMinMax( Property* property, boost::any value )
+bool ContourPlanePropertySet::ValidateScalarMinMax( PropertyPtr property, boost::any value )
 {
-    Property* min = mPropertyMap["DataSet_ScalarRange_Min"];
-    Property* max = mPropertyMap["DataSet_ScalarRange_Max"];
+    PropertyPtr min = mPropertyMap["DataSet_ScalarRange_Min"];
+    PropertyPtr max = mPropertyMap["DataSet_ScalarRange_Max"];
 
     double castMin, castMax;
 

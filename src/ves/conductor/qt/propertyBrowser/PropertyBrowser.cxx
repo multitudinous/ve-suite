@@ -35,6 +35,7 @@
 #include <iostream>
 
 using namespace ves::conductor;
+using namespace ves::xplorer::data;
 using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
 PropertyBrowser::PropertyBrowser( QObject* parent ) : QObject( parent )
@@ -168,7 +169,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
     // for it
     PropertyVector::iterator iterator;
     PropertyVector::iterator end = mProperties.end();
-    Property* property;
+    PropertyPtr property;
     for( iterator = mProperties.begin(); iterator != end; iterator++ )
     {
         property = ( *iterator );
@@ -263,7 +264,7 @@ void PropertyBrowser::_refreshItem( int index )
     }
 
     using xplorer::data::Property;
-    Property* property = mProperties[index];
+    PropertyPtr property = mProperties[index];
     QtProperty* item = mItems[index];
 
     boost::any value = property->GetValue();
@@ -343,7 +344,7 @@ void PropertyBrowser::_refreshItem( int index )
     item->setEnabled( property->GetEnabled() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PropertyBrowser::_extractMinMaxValues( xplorer::data::Property* property,
+void PropertyBrowser::_extractMinMaxValues( xplorer::data::PropertyPtr property,
                                             double* min, double* max,
                                             bool* hasMin, bool* hasMax )
 {
@@ -385,7 +386,7 @@ void PropertyBrowser::_extractMinMaxValues( xplorer::data::Property* property,
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::_createHierarchy()
 {
-    xplorer::data::Property* property;
+    xplorer::data::PropertyPtr property;
     int index;
     int max = static_cast < int > ( mProperties.size() );
     for( index = 0; index < max; index++ )
@@ -453,7 +454,7 @@ void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
     int index = _getItemIndex( item );
     if( index > 0 )
     {
-        xplorer::data::Property* property = mProperties[index];
+        xplorer::data::PropertyPtr property = mProperties[index];
         // Must cast to float if the underlying type is really a float
         if( property->IsFloat() )
         {
@@ -484,7 +485,7 @@ void PropertyBrowser::Refresh()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-int PropertyBrowser::_getPropertyIndex( xplorer::data::Property* property )
+int PropertyBrowser::_getPropertyIndex( xplorer::data::PropertyPtr property )
 {
     // Get the index of this property in mProperties. The corresponding Item will
     // have the same index in mItems.
@@ -563,7 +564,7 @@ int PropertyBrowser::_getItemIndex( QtProperty* item )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::Property* property )
+void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::PropertyPtr property )
 {
     boost::any value = property->GetValue();
 

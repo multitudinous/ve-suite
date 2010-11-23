@@ -39,6 +39,7 @@
 
 #include <boost/any.hpp>
 #include <boost/signal.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include <ves/VEConfig.h>
 
@@ -105,7 +106,7 @@ namespace data
 {
 
 
-class VE_DATA_EXPORTS Property : public boost::signals::trackable
+class VE_DATA_EXPORTS Property : public boost::signals::trackable, public boost::enable_shared_from_this< Property >
 {
 public:
 
@@ -174,12 +175,12 @@ public:
     /// of this object (caller).The parameter caller is ignored by these
     /// methods; it appears here only so that it can match the signature of all
     /// signals emitted by this class.
-    void SetEnabled( Property* caller = NULL );
+    void SetEnabled( PropertyPtr caller = PropertyPtr() );
 
     ///
     /// Disables access to SetValue
     /// See notes for SetEnabled
-    void SetDisabled( Property* caller = NULL );
+    void SetDisabled( PropertyPtr caller = PropertyPtr() );
 
     ///
     /// Returns whether this property is enabled. If the property is enabled,
@@ -191,17 +192,17 @@ public:
     /// Property emits this signal anytime something attempts to change its value.
     /// A validation slot can subscribe to this and return true to allow the
     /// change, or false to disallow it.
-    boost::signal< bool ( Property*, boost::any ) > SignalRequestValidation;
+    boost::signal< bool ( PropertyPtr, boost::any ) > SignalRequestValidation;
 
     ///
     /// Signals to which other objects can subscribe to get basic state updates
     /// about this property. A pointer to this instance is passed in the signal
     /// since many slots will be concerned with the identity of the caller in
     /// order to choose the appropriate action.
-    boost::signal< void ( Property* ) > SignalValueChanged;
-    boost::signal< void ( Property* ) > SignalAttributeChanged;
-    boost::signal< void ( Property* ) > SignalEnabled;
-    boost::signal< void ( Property* ) > SignalDisabled;
+    boost::signal< void ( PropertyPtr ) > SignalValueChanged;
+    boost::signal< void ( PropertyPtr ) > SignalAttributeChanged;
+    boost::signal< void ( PropertyPtr ) > SignalEnabled;
+    boost::signal< void ( PropertyPtr ) > SignalDisabled;
 
     ///
     /// Basic typechecking methods

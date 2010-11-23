@@ -104,8 +104,9 @@ void VectorPlanePropertySet::CreateSkeleton()
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
     // Now that DataSet has choices loaded, force an update on the available
     // scalar and vector data
-    UpdateScalarDataOptions( 0 );
-    UpdateVectorDataOptions( 0 );
+    PropertyPtr nullPtr;
+    UpdateScalarDataOptions( nullPtr );
+    UpdateVectorDataOptions( nullPtr );
 
     AddProperty( "Direction", 0, "Direction" );
     enumValues.clear();
@@ -133,7 +134,7 @@ void VectorPlanePropertySet::CreateSkeleton()
 
     // Connect SignalValueChanged of "Mode" to a function that enables and disables
     // its sub-properties as appropriate
-    Property* mode = mPropertyMap["Mode"];
+    PropertyPtr mode = mPropertyMap["Mode"];
     if( mode )
     {
         mode->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateModeOptions, this, _1 ) );
@@ -173,7 +174,7 @@ void VectorPlanePropertySet::CreateSkeleton()
     AddProperty( "Advanced_ScaleByVectorMagnitude", false, "Scale By Vector Magnitude" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorPlanePropertySet::UpdateScalarDataOptions( Property* property )
+void VectorPlanePropertySet::UpdateScalarDataOptions( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
 
@@ -187,10 +188,11 @@ void VectorPlanePropertySet::UpdateScalarDataOptions( Property* property )
         enumValues.push_back( "No datasets loaded" );
     }
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
-    UpdateScalarDataRange( 0 );
+    PropertyPtr nullPtr;
+    UpdateScalarDataRange( nullPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorPlanePropertySet::UpdateScalarDataRange( Property* property )
+void VectorPlanePropertySet::UpdateScalarDataRange( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
     
@@ -227,7 +229,7 @@ void VectorPlanePropertySet::UpdateScalarDataRange( Property* property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorPlanePropertySet::UpdateVectorDataOptions( Property* property )
+void VectorPlanePropertySet::UpdateVectorDataOptions( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
 
@@ -243,7 +245,7 @@ void VectorPlanePropertySet::UpdateVectorDataOptions( Property* property )
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorPlanePropertySet::UpdateModeOptions( Property* property )
+void VectorPlanePropertySet::UpdateModeOptions( PropertyPtr property )
 {
     // Make sure the main value is an int as it should be
     if( property->IsInt() )
@@ -262,10 +264,10 @@ void VectorPlanePropertySet::UpdateModeOptions( Property* property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool VectorPlanePropertySet::ValidateScalarMinMax( Property* property, boost::any value )
+bool VectorPlanePropertySet::ValidateScalarMinMax( PropertyPtr property, boost::any value )
 {
-    Property* min = mPropertyMap["DataSet_ScalarRange_Min"];
-    Property* max = mPropertyMap["DataSet_ScalarRange_Max"];
+    PropertyPtr min = mPropertyMap["DataSet_ScalarRange_Min"];
+    PropertyPtr max = mPropertyMap["DataSet_ScalarRange_Max"];
 
     double castMin, castMax;
 

@@ -70,14 +70,6 @@ PropertySet::PropertySet( const PropertySet& orig )
 ////////////////////////////////////////////////////////////////////////////////
 PropertySet::~PropertySet()
 {
-    PropertyMap::iterator iterator = mPropertyMap.begin();
-    PropertyMap::iterator end = mPropertyMap.end();
-    while( iterator != end )
-    {
-        delete (*iterator ).second;
-        iterator++;
-    }
-
     mPropertyMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +85,7 @@ void PropertySet::AddProperty( const std::string& propertyName,
     }
 
     // Create a new property and add it to the map
-    Property *property = new Property( value );
+    PropertyPtr property = PropertyPtr( new Property( value ) );
     property->SetAttribute( "nameInSet", propertyName );
     property->SetAttribute( "uiLabel", uiLabel );
     mPropertyMap[ propertyName ] = property;
@@ -125,17 +117,15 @@ const PropertySet::PSVectorOfStrings& PropertySet::GetPropertyList()
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-Property* PropertySet::GetProperty( const std::string& propertyName )
+PropertyPtr PropertySet::GetProperty( const std::string& propertyName )
 {
     PropertyMap::iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
     {
         return (*iterator ).second;
     }
-    else
-    {
-        return NULL;
-    }
+
+    return PropertyPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -184,7 +174,6 @@ boost::any PropertySet::GetPropertyAttribute( const std::string& propertyName,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool PropertySet::GetPropertyEnabled( const std::string& propertyName ) const
 {
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
@@ -198,7 +187,6 @@ bool PropertySet::GetPropertyEnabled( const std::string& propertyName ) const
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool PropertySet::SetPropertyValue( const std::string& propertyName,
                                     boost::any value )
 {
@@ -212,7 +200,6 @@ bool PropertySet::SetPropertyValue( const std::string& propertyName,
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertySet::SetPropertyAttribute( const std::string& propertyName,
                                         const std::string& attributeName,
                                         boost::any value )
@@ -224,7 +211,6 @@ void PropertySet::SetPropertyAttribute( const std::string& propertyName,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertySet::SetPropertyEnabled( const std::string& propertyName,
                                       bool enabled )
 {
@@ -242,7 +228,6 @@ void PropertySet::SetPropertyEnabled( const std::string& propertyName,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 const PropertySet::PSVectorOfStrings& PropertySet::GetChanges()
 {
     mAccumulatedChangesReturnable = mAccumulatedChanges;
@@ -250,7 +235,6 @@ const PropertySet::PSVectorOfStrings& PropertySet::GetChanges()
     return mAccumulatedChangesReturnable;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void PropertySet::ClearAccumulatedChanges()
 {
     mAccumulatedChanges.clear();
@@ -508,7 +492,7 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
 
     // Look through PropertySet for vectorized data types. These will not have been
     // stored in the main table and must be looked for elsewhere in the database.
-    Property* property;
+    PropertyPtr property;
     PropertyMap::const_iterator iterator = mPropertyMap.begin();
     while( iterator != mPropertyMap.end() )
     {
@@ -635,7 +619,7 @@ bool PropertySet::LoadByKey( Poco::Data::Session* session, const std::string& Ke
 
     return returnVal;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool PropertySet::LoadByKey( const std::string& DatabaseName, const std::string& KeyName, boost::any KeyValue )
 {
     bool returnValue = false;
@@ -659,7 +643,7 @@ bool PropertySet::LoadByKey( const std::string& DatabaseName, const std::string&
     }
     return returnValue;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool PropertySet::WriteToDatabase()
 {
     Poco::Data::Session session( ves::xplorer::data::DatabaseManager::
@@ -667,14 +651,13 @@ bool PropertySet::WriteToDatabase()
     bool retval = WriteToDatabase( &session );
     return retval;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool PropertySet::WriteToDatabase( const std::string& DatabaseName )
 {
     bool returnValue = WriteToDatabase( DatabaseName, mTableName );
     return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool PropertySet::WriteToDatabase( const std::string& DatabaseName,
                                    const std::string& TableName )
 {
@@ -703,21 +686,19 @@ bool PropertySet::WriteToDatabase( const std::string& DatabaseName,
     return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool PropertySet::WriteToDatabase( Poco::Data::Session* session )
 {
     bool returnValue = WriteToDatabase( session, mTableName );
     return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool PropertySet::WriteToDatabase( Poco::Data::Session* session,
                                    const std::string& TableName )
 {
     Poco::Data::Statement statement( ( *session ) );
     return WriteToDatabase( session, TableName, statement );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::string& TableName, Poco::Data::Statement& statement )
 {
     // We can write from the base class because table column names correspond
@@ -777,7 +758,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
             query.append( m_TableName );
             query.append( " (" );
 
-            Property* property;
+            PropertyPtr property;
             PropertyMap::const_iterator iterator = mPropertyMap.begin();
             while( iterator != mPropertyMap.end() )
             {
@@ -836,7 +817,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
             query.append( m_TableName );
             query.append( " SET " );
 
-            Property* property;
+            PropertyPtr property;
             PropertyMap::const_iterator iterator = mPropertyMap.begin();
             while( iterator != mPropertyMap.end() )
             {
@@ -880,7 +861,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
 
         // The data binding looks the same for either query type (INSERT or UPDATE)
         BindableAnyWrapper* bindable; // Bindable wrapper for property data
-        Property* property;
+        PropertyPtr property;
         std::vector<std::string>::iterator iterator = fieldNames.begin();
         while( iterator != fieldNames.end() )
         {
@@ -945,7 +926,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
     // will cause lists to take roughly .25 seconds *per item*. With a transaction,
     // 10,000 items can be inserted or updated in ~1 second.
     session->begin();
-    Property* property;
+    PropertyPtr property;
     PropertyMap::const_iterator iterator = mPropertyMap.begin();
     while( iterator != mPropertyMap.end() )
     {
@@ -1119,9 +1100,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
 
     return returnVal;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 bool PropertySet::_tableExists( Poco::Data::Session* session, const std::string& TableName )
 {
     bool tableExists = false;
@@ -1136,7 +1115,6 @@ bool PropertySet::_tableExists( Poco::Data::Session* session, const std::string&
     return tableExists;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 std::string PropertySet::_buildColumnHeaderString()
 {
     std::string result;
@@ -1146,7 +1124,7 @@ std::string PropertySet::_buildColumnHeaderString()
     // SELECT MAX(id) from table_name
     result.append( "id INTEGER PRIMARY KEY AUTOINCREMENT," );
 
-    Property *property;
+    PropertyPtr property;
     PropertyMap::const_iterator iterator = mPropertyMap.begin();
     while( iterator != mPropertyMap.end() )
     {
@@ -1227,7 +1205,6 @@ std::string PropertySet::_buildColumnHeaderString()
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool PropertySet::_containsIllegalCharacter( const std::string& value )
 {
     size_t position = value.find_first_not_of(
@@ -1242,8 +1219,7 @@ bool PropertySet::_containsIllegalCharacter( const std::string& value )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void PropertySet::_connectChanges( Property* property )
+void PropertySet::_connectChanges( PropertyPtr property )
 {
     property->SignalAttributeChanged.connect( boost::bind( &PropertySet::
                                                            ChangeAccumulator,
@@ -1262,12 +1238,11 @@ void PropertySet::_connectChanges( Property* property )
                                                        this, ::_1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void PropertySet::ChangeAccumulator( Property* property )
+void PropertySet::ChangeAccumulator( PropertyPtr property )
 {
     // Ask the property for its name
-    std::string nameInSet;
-    nameInSet = boost::any_cast< std::string > ( property->GetAttribute( "nameInSet" ) );
+    const std::string nameInSet = 
+        boost::any_cast< std::string > ( property->GetAttribute( "nameInSet" ) );
 
     // See if we already have changes recorded for this property
     bool found = false;
@@ -1289,7 +1264,7 @@ void PropertySet::ChangeAccumulator( Property* property )
         mAccumulatedChanges.push_back( nameInSet );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 unsigned int PropertySet::GetBoostAnyVectorSize( const boost::any& value )
 {
     unsigned int size = 0;
@@ -1314,7 +1289,6 @@ unsigned int PropertySet::GetBoostAnyVectorSize( const boost::any& value )
     return size;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 }
 }
 }

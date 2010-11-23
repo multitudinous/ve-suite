@@ -67,7 +67,7 @@ class PropertyBrowser : public QObject
     Q_OBJECT
 
 public:
-    typedef std::vector< ves::xplorer::data::Property* > PropertyVector;
+    typedef std::vector< ves::xplorer::data::PropertyPtr > PropertyVector;
     typedef std::vector< QtProperty* > ItemVector;
 
     ///
@@ -174,7 +174,7 @@ private:
     QtIntPropertyManager* mIntManager;
 
     // Helper functions to find things in the triad of synchronized vectors
-    int _getPropertyIndex( ves::xplorer::data::Property* property );
+    int _getPropertyIndex( ves::xplorer::data::PropertyPtr property );
     int _getItemIndex( QtProperty* item );
     int _getPropertyIndexByName( std::string name );
 
@@ -182,11 +182,11 @@ private:
     void _setPropertyValue( QtProperty* item, boost::any value );
 
     // Set the QtProperty to the value of the underlying Property
-    void _setItemValue( QtProperty* item, ves::xplorer::data::Property* property );
+    void _setItemValue( QtProperty* item, ves::xplorer::data::PropertyPtr property );
 
     // Helper function to do the dirty work of finding out if a Property has
     // min and max values
-    void _extractMinMaxValues( xplorer::data::Property* property, double* min,
+    void _extractMinMaxValues( xplorer::data::PropertyPtr property, double* min,
                                double* max, bool* hasMin, bool* hasMax );
 
     // Put QtProperty instances into a hierarchical relationship as requested

@@ -78,7 +78,8 @@ bool Property::SetValue( boost::any value )
     // Does external validator allow this change?
     if( !SignalRequestValidation.empty() )
     {
-        if( !SignalRequestValidation( this, value ) )
+        //PropertyPtr tempPtr = PropertyPtr( this );
+        if( !SignalRequestValidation( shared_from_this(), value ) )
         {
             return false;
         }
@@ -123,12 +124,13 @@ bool Property::SetValue( boost::any value )
     // Tell the world the value has changed
     if( !SignalValueChanged.empty() )
     {
-        SignalValueChanged( this );
+        //PropertyPtr tempPtr = PropertyPtr( this );
+        SignalValueChanged( shared_from_this() );
     }
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Property::SetEnabled( Property* caller )
+void Property::SetEnabled( PropertyPtr caller )
 {
     boost::ignore_unused_variable_warning( caller );
     // Don't do anything if we're already enabled
@@ -139,12 +141,13 @@ void Property::SetEnabled( Property* caller )
         // Tell the world we're enabled
         if( !SignalEnabled.empty() )
         {
-            SignalEnabled( this );
+            //PropertyPtr tempPtr = PropertyPtr( this );
+            SignalEnabled( shared_from_this() );
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Property::SetDisabled( Property* caller )
+void Property::SetDisabled( PropertyPtr caller )
 {
     boost::ignore_unused_variable_warning( caller );
     // Don't do anything if we're already disabled
@@ -155,7 +158,8 @@ void Property::SetDisabled( Property* caller )
         // Tell the world we're disabled
         if( !SignalDisabled.empty() )
         {
-            SignalDisabled( this );
+            //PropertyPtr tempPtr = PropertyPtr( this );
+            SignalDisabled( shared_from_this() );
         }
     }
 }
@@ -209,7 +213,7 @@ void Property::SetAttribute( const std::string& attributeName,
             // If attributeValue is empty, we don't consider this a proper enum
             if( !attributeValue.empty() )
             {
-                PSVectorOfStrings *enumValues =
+                PSVectorOfStrings* enumValues =
                         boost::any_cast<PSVectorOfStrings > ( &attributeValue );
                 // If cast was successful, continue...
                 if( enumValues )
@@ -246,7 +250,8 @@ void Property::SetAttribute( const std::string& attributeName,
     // Tell the world an attribute has changed
     if( !SignalAttributeChanged.empty() )
     {
-        SignalAttributeChanged( this );
+        //PropertyPtr tempPtr = PropertyPtr( this );
+        SignalAttributeChanged( shared_from_this() );
     }
 }
 

@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 #include <ves/xplorer/data/PropertySetPtr.h>
+#include <ves/xplorer/data/PropertyPtr.h>
 
 #include <map>
 #include <string>
@@ -59,14 +60,11 @@ namespace xplorer
 {
 namespace data
 {
-
-// Forward declaration
-class Property;
-/*!\file ContourPlanePropertySet.h
+/*!\file PropertySet.h
  *
  */
 
-/*!\class ves::xplorer::data::ContourPlanePropertySet
+/*!\class ves::xplorer::data::PropertySet
  * PropertySet is a base class for collections of properties
  * containing methods to read and write values and attributes of
  * properties, as well as to get information about changes to other properties
@@ -80,7 +78,7 @@ class Property;
 class VE_DATA_EXPORTS PropertySet
 {
 public:
-    typedef std::map< std::string, Property* > PropertyMap;
+    typedef std::map< std::string, PropertyPtr > PropertyMap;
     typedef std::vector<std::string> PSVectorOfStrings;
 
     ///
@@ -114,7 +112,7 @@ public:
 
     ///
     /// Returns a pointer to the property identified by propertyName
-    virtual Property* GetProperty( const std::string& propertyName );
+    virtual PropertyPtr GetProperty( const std::string& propertyName );
 
     ///
     /// Returns the boost::any main value of the property identified by
@@ -227,13 +225,13 @@ protected:
     /// that have undergone a change in value, attributes, or enabled state
     /// since the last call to GetChanges or the last call to
     /// ClearAccumulatedChanges
-    virtual void ChangeAccumulator( Property* property );
+    virtual void ChangeAccumulator( PropertyPtr property );
 
     unsigned int GetBoostAnyVectorSize( const boost::any& value );
 
     ///
     /// Internal function that connects default signals to the change accumulator
-    virtual void _connectChanges( Property* property );
+    virtual void _connectChanges( PropertyPtr property );
 
     ///
     /// Internal function that looks through the property set and builds an

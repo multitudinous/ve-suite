@@ -30,10 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef _VECTORPLANEPROPERTYSET_H
-#define _VECTORPLANEPROPERTYSET_H
+#ifndef VES_XPLORER_DATA_VECTORPLANEPROPERTYSET_H
+#define VES_XPLORER_DATA_VECTORPLANEPROPERTYSET_H
 
 #include <ves/xplorer/data/PropertySet.h>
+#include <ves/xplorer/data/PropertyPtr.h>
 
 #include <ves/VEConfig.h>
 
@@ -43,7 +44,6 @@ namespace xplorer
 {
 namespace data
 {
-class Property;
 /*!\file VectorPlanePropertySet.h
  *
  */
@@ -67,22 +67,20 @@ public:
 
 private:
     ///Update method
-    void UpdateModeOptions( Property* property );
+    void UpdateModeOptions( PropertyPtr property );
     ///Validate method
-    bool ValidateScalarMinMax( Property* property, boost::any value );
+    bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
     ///Update method
-    void UpdateScalarDataOptions( Property* property );
+    void UpdateScalarDataOptions( PropertyPtr property );
     ///Update method
-    void UpdateScalarDataRange( Property* property );
+    void UpdateScalarDataRange( PropertyPtr property );
     ///Update method
-    void UpdateVectorDataOptions( Property* property );
-
+    void UpdateVectorDataOptions( PropertyPtr property );
 
 private:
     ///Create the skeleton
     void CreateSkeleton();
 };
-
 } // namespace data
 } // namespace xplorer
 } // namespace ves
