@@ -94,6 +94,9 @@ QToolButton:hover
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>&amp;Edit</string>
     </property>
@@ -200,7 +203,7 @@ QToolButton:hover
   </action>
   <action name="actionZoomIn">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Zoom &amp;In</string>
@@ -252,6 +255,9 @@ QToolButton:hover
    </property>
   </action>
   <action name="actionQuit">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Quit</string>
    </property>

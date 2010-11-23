@@ -97,6 +97,9 @@ protected Q_SLOTS:
     /// Autoconnected slot
     void on_actionOpen_triggered(); 
     
+    /// Called when a user selects quit.
+    void on_actionQuit_triggered();
+    
     /// Called when a valid file selection is made via the file open dialog.
     void onFileOpenSelected( QString fileName );
     

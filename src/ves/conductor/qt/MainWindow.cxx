@@ -251,6 +251,11 @@ void MainWindow::on_actionFile_triggered()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionQuit_triggered()
+{
+    std::cout << " quit " << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionOpen_triggered()
 {
     // Don't allow multiple file dialogs to be opened.
