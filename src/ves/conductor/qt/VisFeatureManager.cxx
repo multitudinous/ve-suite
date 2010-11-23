@@ -98,17 +98,18 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
 ////////////////////////////////////////////////////////////////////////////////
 void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned int ID )
 {
-    VisFeatureMakerBase* feature = 0;
+    using namespace ves::conductor;
+    VisFeatureMakerBasePtr feature;
 
     if( featureName == "Contours" )
     {
         _print( "|\tUpdating ContourFeatureMaker" );
-        feature = new ContourFeatureMaker();
+        feature = VisFeatureMakerBasePtr( new ContourFeatureMaker() );
     }
     else if( featureName == "Vectors" )
     {
         _print( "|\tUpdating VectorFeatureMaker" );
-        feature = new VectorFeatureMaker();
+        feature = VisFeatureMakerBasePtr( new VectorFeatureMaker() );
     }
     else if( featureName == "Streamlines" )
     {
@@ -128,7 +129,6 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned 
     }
 
     feature->Update( ID );
-    delete feature;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> VisFeatureManager::GetIDsForFeature( const std::string& featureName )

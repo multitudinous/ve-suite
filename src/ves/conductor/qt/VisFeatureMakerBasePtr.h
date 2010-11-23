@@ -30,61 +30,36 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#pragma once
+#ifndef VES_CONDUCTOR_QT_VISFEATUREMAKERBASE_PTR_H
+#define VES_CONDUCTOR_QT_VISFEATUREMAKERBASE_PTR_H
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/open/xml/DataValuePairPtr.h>
-#include <ves/open/xml/CommandPtr.h>
+#include <ves/util/PointerTypes.h>
 
-#include <ves/conductor/qt/VisFeatureMakerBasePtr.h>
-
-#include <string>
-
-namespace ves
-{
-namespace conductor
-{
-/*!\file VisFeatureMakerBase.h
+/**
+ * \file ves::conductor::VisFeatureMakerBasePtr
  *
+ * Include this file to get a forward declaration of the pointer.
+ * To get the full declaration of this pointer include the non-Ptr header file.
  */
-
-/*!\class ves::conductor::VisFeatureMakerBase
+ 
+/*!\class ves::conductor::VisFeatureMakerBasePtr
  *
  */
 
 /*!\namespace ves::conductor
  *
  */
-class VisFeatureMakerBase
+
+namespace ves
 {
-public:
-    ///Constructor
-    VisFeatureMakerBase();
-    ///Copy constructor
-    VisFeatureMakerBase( const VisFeatureMakerBase& orig );
-    ///Destructor
-    virtual ~VisFeatureMakerBase();
-    ///Update function
-    virtual void Update( unsigned int recordID );
-
-protected:
-    ///Called by the update function
-    virtual void UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set );
-    ///Called by the update function
-    void UpdateBaseInformation( ves::xplorer::data::PropertySet& set );
-    ///Called by the update function
-    void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand, ves::xplorer::data::PropertySet& set );
-
-    ///The name of the command to send back
-    std::string m_commandName;
-    ///The advanced settings.
-    std::vector<ves::open::xml::DataValuePairPtr> m_advancedSettings;
-    ///The basic information from the vistab
-    std::vector<ves::open::xml::DataValuePairPtr> m_vistabBaseInformation;
-    
-private:
-
-};
-
-} // namespace conductor
-} // namespace ves
+namespace conductor
+{
+class VisFeatureMakerBase;
+/// Typedef for a SmartPtr
+typedef ves::util::ClassPtrDef<VisFeatureMakerBase>::type  VisFeatureMakerBasePtr;
+typedef ves::util::SharedPtrDef<VisFeatureMakerBase>::type VisFeatureMakerBaseSharedPtr;
+typedef ves::util::WeakPtrDef<VisFeatureMakerBase>::type   VisFeatureMakerBaseWeakPtr;
+typedef ves::util::ScopedPtrDef<VisFeatureMakerBase>::type VisFeatureMakerBaseScopedPtr;
+}
+}
+#endif
