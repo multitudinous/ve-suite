@@ -89,8 +89,10 @@ void Visualization::on_WritePropertiesButton_clicked()
     if( mTempSet )
     {
         mTempSet->WriteToDatabase();
-        std::string featureName = m_ui->FeaturesList->currentItem()->text().toStdString();
-        VisFeatureManager::instance()->UpdateFeature( featureName, mTempSet->GetRecordID() );
+        const std::string featureName = 
+            m_ui->FeaturesList->currentItem()->text().toStdString();
+        VisFeatureManager::instance()->
+            UpdateFeature( featureName, mTempSet->GetRecordID() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +162,7 @@ void Visualization::UpdateFeatureIDSelectorChoices()
     // Convert IDs to format needed by QComboBox and add them as choices
     QStringList idList;
     QString qCurrentID;
-    for( size_t index = 0; index < ids.size(); index++ )
+    for( size_t index = 0; index < ids.size(); ++index )
     {
         qCurrentID = qCurrentID.fromStdString( ids.at( index ) );
         idList.append( qCurrentID );
