@@ -105,6 +105,10 @@ else:
 if GetPlatform() == 'win32':
     lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
 
+#disable profiling by default
+if env['VPRProfile'] == 'no':
+   env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
+
 osg_options.apply( lib_env )
 vpr_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )

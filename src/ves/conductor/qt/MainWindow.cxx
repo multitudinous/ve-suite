@@ -34,12 +34,14 @@
 #define QT_NO_KEYWORDS
 
 #include "MainWindow.h"
+
 #include <ves/conductor/qt/ui_MainWindow.h>
+
 #include <QtGui/QPaintEvent>
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 #include <ves/conductor/qt/NetworkLoader.h>
-#include<ves/conductor/qt/CADFileLoader.h>
+#include <ves/conductor/qt/CADFileLoader.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -63,6 +65,10 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/convenience.hpp>
+
+#include <vrj/Kernel/Kernel.h>
+
+#include <vpr/Perf/ProfileManager.h>
 
 #include <iostream>
 
@@ -253,7 +259,9 @@ void MainWindow::on_actionFile_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionQuit_triggered()
 {
-    std::cout << " quit " << std::endl;
+    VPR_PROFILE_RESULTS();
+    // Stopping kernel
+    vrj::Kernel::instance()->stop();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionOpen_triggered()
