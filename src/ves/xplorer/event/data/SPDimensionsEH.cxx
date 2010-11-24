@@ -54,6 +54,8 @@ SeedPointDimensionsEventHandler::SeedPointDimensionsEventHandler()
 ///////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler
 ::SeedPointDimensionsEventHandler( const SeedPointDimensionsEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     _activeModel = ceh._activeModel;
 }
@@ -93,8 +95,8 @@ void SeedPointDimensionsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalB
 /////////////////////////////////////////////////////////////////////////////////////
 void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    if( !_activeModel )
-        throw;
+    //if( !_activeModel )
+    //    throw;
     try
     {
         CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
@@ -102,7 +104,8 @@ void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPt
         std::vector<long> allDimensions;
         DataValuePairPtr dimensions = command->GetDataValuePair( "Dimensions" );
         dimensions->GetData( allDimensions );
-        ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->SetDimensions( allDimensions[0],
+        ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
+            SetDimensions( allDimensions[0],
                 allDimensions[1],
                 allDimensions[2] );
     }

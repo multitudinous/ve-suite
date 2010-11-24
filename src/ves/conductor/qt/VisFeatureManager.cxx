@@ -40,6 +40,9 @@
 ///Vectors
 #include <ves/xplorer/data/VectorPlanePropertySet.h>
 #include <ves/conductor/qt/VectorFeatureMaker.h>
+///Streamlines
+#include <ves/xplorer/data/StreamlinePropertySet.h>
+#include <ves/conductor/qt/StreamlineFeatureMaker.h>
 
 namespace ves
 {
@@ -78,7 +81,8 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
     }
     else if( featureName == "Streamlines" )
     {
-        _print( "Would be creating new StreamlinesPropertySet..." );
+        _print( "|\tCreating new StreamlinesPropertySet..." );
+        set = PropertySetPtr( new StreamlinePropertySet() );
     }
     else if( featureName == "Isosurfaces" )
     {
@@ -113,7 +117,8 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned 
     }
     else if( featureName == "Streamlines" )
     {
-        _print( "Would be updating StreamlinesFeatureMaker..." );
+        _print( "|\tUpdating StreamlinesFeatureMaker" );
+        feature = VisFeatureMakerBasePtr( new StreamlineFeatureMaker() );
     }
     else if( featureName == "Isosurfaces" )
     {
