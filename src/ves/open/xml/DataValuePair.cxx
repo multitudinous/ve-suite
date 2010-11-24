@@ -53,7 +53,7 @@ XERCES_CPP_NAMESPACE_USE
 using namespace ves::open::xml;
 ////////////////////////////////////////////
 //Constructor                             //
-////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 DataValuePair::DataValuePair( const std::string type )
         : XMLObject()
 {
@@ -69,12 +69,12 @@ DataValuePair::DataValuePair( const std::string type )
     SetObjectType( "DataValuePair" );
 
 }
-///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 DataValuePair::~DataValuePair()
 {
     ;
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 DataValuePair::DataValuePair( const DataValuePair& input )
         : XMLObject( input )
 {
@@ -93,7 +93,7 @@ DataValuePair::DataValuePair( const DataValuePair& input )
         mVeXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy( input.mVeXMLObject );
     }
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 DataValuePair& DataValuePair::operator=( const DataValuePair& input )
 {
     if( this != &input )
@@ -114,12 +114,12 @@ DataValuePair& DataValuePair::operator=( const DataValuePair& input )
     }
     return *this;
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int DataValuePair::GetUIntData()
 {
     return mDataUInt;
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetDataValue( unsigned int data )
 {
     if( mDataType != std::string( "UNSIGNED INT" ) )
@@ -128,16 +128,21 @@ void DataValuePair::SetDataValue( unsigned int data )
         return;
     }
     mDataUInt = data;
-
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, unsigned int data )
 {
     mDataName = dataName;
     SetDataType( std::string( "UNSIGNED INT" ) );
     mDataUInt = data;
 }
-////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void DataValuePair::SetDataBool( const std::string& dataName, bool data )
+{
+    unsigned int tempData = static_cast<unsigned int>( data );
+    SetData( dataName, tempData );
+}
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetDataType( const std::string& type )
 {
     if (( type == std::string( "STRING" ) ) ||
@@ -159,7 +164,7 @@ void DataValuePair::SetDataType( const std::string& type )
         << "XMLOBJECT == an XMLObject" << std::endl;
     }
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetDataString( const std::string& data )
 {
     if( mDataType != std::string( "STRING" ) )
@@ -172,7 +177,7 @@ void DataValuePair::SetDataString( const std::string& data )
         mDataString = data;
     }
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetDataValue( const double& data )
 {
     if( mDataType != std::string( "FLOAT" ) )
@@ -198,7 +203,7 @@ void DataValuePair::SetData( const std::string& dataName, XMLObjectPtr vexmlObje
         std::cout << "Invalid type passed into DataValuePair::SetData(std::string dataName,XMLObjectPtr vexmlObject)" << std::endl;
     }
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::_updateVEElement( const std::string& input )
 {
     boost::ignore_unused_variable_warning( input );
@@ -231,7 +236,7 @@ void DataValuePair::_updateVEElement( const std::string& input )
         SetAttribute( "objectType", mVeXMLObject->GetObjectType(), genericElement );
     }
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetDataName( const std::string& name )
 {
     if( !name.empty() )
@@ -239,17 +244,17 @@ void DataValuePair::SetDataName( const std::string& name )
         mDataName = name;
     }
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 const std::string& DataValuePair::GetDataName()
 {
     return mDataName;
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 const std::string& DataValuePair::GetDataType()
 {
     return mDataType;
 }
-////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 const std::string DataValuePair::GetDataString()
 {
     if( mDataType == std::string( "STRING" ) )
@@ -258,7 +263,7 @@ const std::string DataValuePair::GetDataString()
     }
     return std::string();
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double DataValuePair::GetDataValue()
 {
     if( mDataType == std::string( "FLOAT" ) )
@@ -267,7 +272,7 @@ double DataValuePair::GetDataValue()
     }
     return 0;
 }
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 XMLObjectPtr DataValuePair::GetDataXMLObject()
 {
     if( mDataType == std::string( "XMLOBJECT" ) )
@@ -276,7 +281,7 @@ XMLObjectPtr DataValuePair::GetDataXMLObject()
     }
     return XMLObjectPtr();
 }
-//////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::_extractXMLObject( DOMElement* baseElement, const std::string& objectTypeName )
 {
     DOMElement* genericObject = GetSubElement( baseElement, objectTypeName, 0 );
@@ -299,7 +304,7 @@ void DataValuePair::_extractXMLObject( DOMElement* baseElement, const std::strin
     }
 
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetObjectFromXMLData( DOMNode* element )
 {
     DOMElement* currentElement = 0;
@@ -423,19 +428,19 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
     }
 
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /*void GetData( XMLObject& data )
 {
    data = *(XMLObjectFactory::Instance()->CreateXMLObjectCopy( mVeXMLObject) );
 }*/
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, const std::string& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "STRING" ) );
     mDataString = data;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, const std::vector< std::string >& data )
 {
     mDataName = dataName;
@@ -446,7 +451,7 @@ void DataValuePair::SetData( const std::string& dataName, const std::vector< std
     oneDString->SetArray( data );
     SetData( dataName, oneDString );
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, 
                              const std::vector< std::vector< 
                              std::string > >& data )
@@ -459,14 +464,14 @@ void DataValuePair::SetData( const std::string& dataName,
     twoDString->SetArray( data );
     SetData( dataName, twoDString );
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, double data )
 {
     mDataName = dataName;
     SetDataType( std::string( "FLOAT" ) );
     mDataValue = data;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, const std::vector< double >& data )
 {
     mDataName = dataName;
@@ -477,7 +482,7 @@ void DataValuePair::SetData( const std::string& dataName, const std::vector< dou
     oneDDouble->SetArray( data );
     SetData( dataName, oneDDouble );
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, const std::vector< std::vector< double > >& data )
 {
     mDataName = dataName;
@@ -488,7 +493,7 @@ void DataValuePair::SetData( const std::string& dataName, const std::vector< std
     twoDDouble->SetArray( data );
     SetData( dataName, twoDDouble );
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, const std::vector< std::vector< std::vector< double > > >& data )
 {
     mDataName = dataName;
@@ -499,14 +504,14 @@ void DataValuePair::SetData( const std::string& dataName, const std::vector< std
     threeDDouble->SetArray( data );
     SetData( dataName, threeDDouble );
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, long int data )
 {
     mDataName = dataName;
     SetDataType( std::string( "LONG" ) );
     mIntDataValue = data;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, const std::vector< long >& data )
 {
     mDataName = dataName;
@@ -517,7 +522,7 @@ void DataValuePair::SetData( const std::string& dataName, const std::vector< lon
     oneDInt->SetArray( data );
     SetData( dataName, oneDInt );
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, const std::vector< std::vector< long > >& data )
 {
     mDataName = dataName;
@@ -528,7 +533,7 @@ void DataValuePair::SetData( const std::string& dataName, const std::vector< std
     twoDInt->SetArray( data );
     SetData( dataName, twoDInt );
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, const std::vector< std::vector< std::vector< long > > >& data )
 {
     mDataName = dataName;
@@ -539,12 +544,12 @@ void DataValuePair::SetData( const std::string& dataName, const std::vector< std
     threeDInt->SetArray( data );
     SetData( dataName, threeDInt );
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::string& data )
 {
     data = mDataString;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< std::string >& data )
 {
     if( mVeXMLObject->GetObjectType() == "OneDStringArray" )
@@ -557,7 +562,7 @@ void DataValuePair::GetData( std::vector< std::string >& data )
         std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
     }
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< std::vector< std::string > >& data )
 {
     if( mVeXMLObject->GetObjectType() == "TwoDStringArray" )
@@ -571,12 +576,12 @@ void DataValuePair::GetData( std::vector< std::vector< std::string > >& data )
         std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( double& data )
 {
     data = mDataValue;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< double >& data )
 {
     if( mVeXMLObject->GetObjectType() == "OneDDoubleArray" )
@@ -589,7 +594,7 @@ void DataValuePair::GetData( std::vector< double >& data )
         std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< std::vector< double > > & data )
 {
     if( mVeXMLObject->GetObjectType() == "TwoDDoubleArray" )
@@ -602,7 +607,7 @@ void DataValuePair::GetData( std::vector< std::vector< double > > & data )
         std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< std::vector< std::vector< double > > > & data )
 {
     if( mVeXMLObject->GetObjectType() == "ThreeDDoubleArray" )
@@ -615,12 +620,12 @@ void DataValuePair::GetData( std::vector< std::vector< std::vector< double > > >
         std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( long int & data )
 {
     data = mIntDataValue;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< long >& data )
 {
     if( mVeXMLObject->GetObjectType() == "OneDIntArray" )
@@ -633,7 +638,7 @@ void DataValuePair::GetData( std::vector< long >& data )
         std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< std::vector< long > > & data )
 {
     if( mVeXMLObject->GetObjectType() == "TwoDIntArray" )
@@ -646,7 +651,7 @@ void DataValuePair::GetData( std::vector< std::vector< long > > & data )
         std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< std::vector< std::vector< long > > > & data )
 {
     if( mVeXMLObject->GetObjectType() == "ThreeDIntArray" )
@@ -659,9 +664,16 @@ void DataValuePair::GetData( std::vector< std::vector< std::vector< long > > > &
         std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
     }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::GetData( unsigned int& data )
 {
     data = mDataUInt;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void DataValuePair::GetData( bool& data )
+{
+    unsigned int tempData = 0;
+    GetData( tempData );
+    data = tempData;
+}
+////////////////////////////////////////////////////////////////////////////////

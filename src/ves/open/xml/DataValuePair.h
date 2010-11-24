@@ -63,16 +63,8 @@ public:
     //valid values are
     //STRING == a string value
     //FLOAT == a single float value
-    //FARRAY == a float array
-    //TRANSFORM == a Transform
-    //1DSTRING
-    //1DDOUBLE
-    //2DDOUBLE
-    //3DDOUBLE
     //LONG
-    //1DLONG
-    //2DLONG
-    //3DLONG
+    //XMLOBJECT
     //UNSIGNED INT
     ///Constructor
     ///\param type The type of value in this pair.
@@ -125,6 +117,43 @@ public:
     ///Get the xmlObject from the DataValuePair
     XMLObjectPtr GetDataXMLObject();
 
+    /*///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data A bool that will be cast to an unsigned int.
+    template<class T>
+    inline void SetData( const std::string& dataName, T data )
+    {
+        if( typeid( double ) == typeid( data ) )
+        {
+            mDataType = "FLOAT";
+            mDataName = dataName;
+            mDataValue = data;
+        }
+        else if( typeid( std::string ) == typeid( data ) )
+        {
+            mDataType = "UNSIGNED INT";
+            mDataName = dataName;
+            mDataString = data;
+        }
+        else if( typeid( unsigned int ) == typeid( data ) )
+        {
+            mDataType = "LONG"
+            mDataName = dataName;
+            mDataUInt = data;
+        }
+        else if( typeid( long int ) == typeid( data ) )
+        {
+            mDataType = "STRING";
+            mDataName = dataName;
+            mIntDataValue = data;
+        }
+    }*/
+    
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data A bool that will be cast to an unsigned int.
+    void SetDataBool( const std::string& dataName, bool data );
+    
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data XMLObject being passed in. Can be a broad range of data types
@@ -225,6 +254,11 @@ public:
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
     void GetData( unsigned int& data );
+    
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( bool& data );
+    
     ///XMLObject
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
@@ -255,19 +289,6 @@ public:
         return os;
     }
     
-    ///Helper function to make it more compact to create a DataValuePair
-    ///\param name String of the name of the DataValuePair
-    ///\param value The templated value that the user would like to add
-    ///\return A new DataValuePair
-    template<class T>
-    inline DataValuePairPtr MakeDVP( const std::string& name, T& value )
-    {
-        ves::open::xml::DataValuePairPtr 
-            dvp( new ves::open::xml::DataValuePair );
-        dvp->SetData( name, value );
-        return dvp;
-    }
-    
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
@@ -290,7 +311,18 @@ protected:
 
     XMLObjectPtr mVeXMLObject;///<Raw XMLObject.
 };
-
+///Helper function to make it more compact to create a DataValuePair
+///\param name String of the name of the DataValuePair
+///\param value The templated value that the user would like to add
+///\return A new DataValuePair
+template<class T>
+inline DataValuePairPtr MakeDVP( const std::string& name, T& value )
+{
+    ves::open::xml::DataValuePairPtr 
+        dvp( new ves::open::xml::DataValuePair() );
+    dvp->SetData( name, value );
+    return dvp;
+}
 }
 }
 }
