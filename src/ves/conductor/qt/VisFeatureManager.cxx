@@ -97,6 +97,8 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
         _print( "Would be creating new PolydataPropertySet..." );
     }
 
+    m_featureNameToTableName[ featureName ] = set->GetTableName();
+
     return set;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,11 +142,20 @@ std::vector<std::string> VisFeatureManager::GetIDsForFeature( const std::string&
 {
     std::vector<std::string> ids;
     using namespace ves::xplorer::data;
-    PropertySetPtr set = CreateNewFeature( featureName );
-    if( set )
+    //PropertySetPtr set = CreateNewFeature( featureName );
+    //if( set )
+    //{
+    std::map<std::string, std::string>::const_iterator iter = 
+        m_featureNameToTableName.find( featureName );
+    if( iter != m_featureNameToTableName.end() )
     {
-        ids = DatabaseManager::instance()->GetStringVector( set->GetTableName(), "id" );
+        ids = DatabaseManager::instance()->GetStringVector( iter->second, "id" );
     }
+    else
+    {
+        std::cout << "We do not have a " << featureName << " registered yet." << std::endl;
+    }
+    //}
     return ids;
 }
 ////////////////////////////////////////////////////////////////////////////////

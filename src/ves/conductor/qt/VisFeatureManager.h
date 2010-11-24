@@ -43,6 +43,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 // Forward declarations
 namespace ves
@@ -106,6 +107,9 @@ private:
 
     ///Singleton declarations
     vprSingletonHeader( VisFeatureManager );
+    
+    ///Map to hold a mapping between feature names and table names
+    std::map< std::string, std::string > m_featureNameToTableName;
 
 };
 } // namespace conductor
