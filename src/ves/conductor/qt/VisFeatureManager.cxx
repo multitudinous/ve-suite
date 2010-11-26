@@ -43,6 +43,9 @@
 ///Streamlines
 #include <ves/xplorer/data/StreamlinePropertySet.h>
 #include <ves/conductor/qt/StreamlineFeatureMaker.h>
+///Isosurfaces
+#include <ves/xplorer/data/IsosurfacePropertySet.h>
+#include <ves/conductor/qt/IsosurfaceFeatureMaker.h>
 
 namespace ves
 {
@@ -81,12 +84,13 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
     }
     else if( featureName == "Streamlines" )
     {
-        _print( "|\tCreating new StreamlinesPropertySet..." );
+        _print( "|\tCreating new StreamlinesPropertySet" );
         set = PropertySetPtr( new StreamlinePropertySet() );
     }
     else if( featureName == "Isosurfaces" )
     {
-        _print( "Would be creating new IsoSurfacesPropertySet..." );
+        _print( "|\tCreating new IsoSurfacesPropertySet" );
+        set = PropertySetPtr( new IsosurfacePropertySet() );
     }
     else if( featureName == "Texture-based" )
     {
@@ -119,12 +123,13 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned 
     }
     else if( featureName == "Streamlines" )
     {
-        _print( "|\tUpdating StreamlinesFeatureMaker" );
+        _print( "|\tUpdating StreamlineFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new StreamlineFeatureMaker() );
     }
     else if( featureName == "Isosurfaces" )
     {
-        _print( "Would be updating IsoSurfacesFeatureMaker..." );
+        _print( "|\tUpdating IsosurfaceFeatureMaker" );
+        feature = VisFeatureMakerBasePtr( new IsosurfaceFeatureMaker() );
     }
     else if( featureName == "Texture-based" )
     {
@@ -142,20 +147,17 @@ std::vector<std::string> VisFeatureManager::GetIDsForFeature( const std::string&
 {
     std::vector<std::string> ids;
     using namespace ves::xplorer::data;
-    //PropertySetPtr set = CreateNewFeature( featureName );
-    //if( set )
-    //{
+
     std::map<std::string, std::string>::const_iterator iter = 
         m_featureNameToTableName.find( featureName );
     if( iter != m_featureNameToTableName.end() )
     {
         ids = DatabaseManager::instance()->GetStringVector( iter->second, "id" );
+        return ids;
     }
-    else
-    {
-        std::cout << "We do not have a " << featureName << " registered yet." << std::endl;
-    }
-    //}
+
+    std::cout << "We do not have a " << featureName 
+        << " vis feature registered yet." << std::endl;
     return ids;
 }
 ////////////////////////////////////////////////////////////////////////////////
