@@ -46,6 +46,9 @@
 ///Isosurfaces
 #include <ves/xplorer/data/IsosurfacePropertySet.h>
 #include <ves/conductor/qt/IsosurfaceFeatureMaker.h>
+///Polydata
+#include <ves/xplorer/data/PolydataPropertySet.h>
+#include <ves/conductor/qt/PolydataFeatureMaker.h>
 
 namespace ves
 {
@@ -98,7 +101,8 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
     }
     else if( featureName == "Polydata" )
     {
-        _print( "Would be creating new PolydataPropertySet..." );
+        _print( "|\tCreating new PolydataPropertySet" );
+        set = PropertySetPtr( new PolydataPropertySet() );
     }
 
     m_featureNameToTableName[ featureName ] = set->GetTableName();
@@ -137,7 +141,8 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned 
     }
     else if( featureName == "Polydata" )
     {
-        _print( "Would be updating PolydataFeatureMaker..." );
+        _print( "|\tUpdating PolydataFeatureMaker" );
+        feature = VisFeatureMakerBasePtr( new PolydataFeatureMaker() );
     }
 
     feature->Update( ID );

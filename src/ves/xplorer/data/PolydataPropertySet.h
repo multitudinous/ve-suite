@@ -30,57 +30,65 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VISUALIZATION_H
-#define VISUALIZATION_H
+#ifndef VES_XPLORER_DATA_POLYDATAPROPERTYSET_H
+#define	VES_XPLORER_DATA_POLYDATAPROPERTYSET_H
 
-#define QT_NO_KEYWORDS
+#include <ves/xplorer/data/PropertySet.h>
+#include <ves/xplorer/data/PropertyPtr.h>
 
-#include <QtGui/QDialog>
-
-#include <ves/xplorer/data/PropertySetPtr.h>
-
-// Forward declarations
-namespace Ui
-{
-class Visualization;
-}
+#include <ves/VEConfig.h>
 
 namespace ves
 {
-namespace conductor
+namespace xplorer
 {
-class PropertyBrowser;
+namespace data
+{
+/*!\file PolydataPropertySet.h
+ *
+ */
 
-class Visualization : public QDialog
+/*!\class ves::xplorer::data::PolydataPropertySet
+ *
+ */
+
+/*!\namespace ves::xplorer::data
+ *
+ */
+class VE_DATA_EXPORTS PolydataPropertySet : public PropertySet
 {
-    Q_OBJECT
 public:
-    Visualization( QWidget* parent = 0 );
-    ~Visualization();
-
-protected:
-    void changeEvent( QEvent* e );
-    void UpdateFeatureIDSelectorChoices();
-
-protected Q_SLOTS:
-    // For info on Automatic connection of signals and slots, see
-    // http://doc.trolltech.com/4.6/designer-using-a-ui-file.html#automatic-connections
-    void on_WritePropertiesButton_clicked(); // Automatic connection
-    void on_RefreshPropertiesButton_clicked(); // Automatic connection
-    void on_NewFeatureButton_clicked(); // Automatic connection
-    void on_DeleteFeatureButton_clicked(); // Automatic connection
-    void on_FeaturesList_currentTextChanged( const QString& currentText ); // Automatic connection
-    void on_FeatureIDSelector_currentIndexChanged ( const QString& text ); // Automatic connection
-
+    ///Constructor
+    PolydataPropertySet();
+    ///Copy Contructor
+    PolydataPropertySet( const PolydataPropertySet& orig );
+    ///Destructor
+    virtual ~PolydataPropertySet();
 
 private:
-    Ui::Visualization* m_ui;
-    PropertyBrowser* mFeatureBrowser;
+    ///Update method
+    void UpdateModeOptions( PropertyPtr property );
+    ///Validate method
+    bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
+    ///Validate method
+    bool ValidateColorByScalarMinMax( PropertyPtr property, boost::any value );
+    ///Update method
+    void UpdateScalarDataOptions( PropertyPtr property );
+    ///Update method
+    void UpdateScalarDataRange( PropertyPtr property );
+    ///Update the color by scalar
+    void UpdateColorByScalarDataRange( PropertyPtr property );
+    ///Update method
+    void UpdateVectorDataOptions( PropertyPtr property );
 
-    ves::xplorer::data::PropertySetPtr mTempSet;
+private:
+    ///Create the skeleton
+    void CreateSkeleton();
 };
 
-} // namespace conductor
+} // namespace data
+} // namespace xplorer
 } // namespace ves
 
-#endif // VISUALIZATION_H
+#endif	/* VES_XPLORER_DATA_POLYDATAPROPERTYSET_H */
+

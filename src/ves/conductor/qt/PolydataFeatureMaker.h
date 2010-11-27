@@ -30,57 +30,50 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VISUALIZATION_H
-#define VISUALIZATION_H
+#pragma once
 
-#define QT_NO_KEYWORDS
-
-#include <QtGui/QDialog>
-
-#include <ves/xplorer/data/PropertySetPtr.h>
-
-// Forward declarations
-namespace Ui
-{
-class Visualization;
-}
+#include <ves/conductor/qt/VisFeatureMakerBase.h>
 
 namespace ves
 {
 namespace conductor
 {
-class PropertyBrowser;
+/*!\file PolydataFeatureMaker.h
+ *
+ */
 
-class Visualization : public QDialog
+/*!\class ves::conductor::PolydataFeatureMaker
+ *
+ */
+
+/*!\namespace ves::conductor
+ *
+ */
+class PolydataFeatureMaker : public VisFeatureMakerBase
 {
-    Q_OBJECT
 public:
-    Visualization( QWidget* parent = 0 );
-    ~Visualization();
+    ///Constructor
+    PolydataFeatureMaker();
+    ///Copy constructor
+    PolydataFeatureMaker( const PolydataFeatureMaker& orig );
+    ///Destructor
+    virtual ~PolydataFeatureMaker();
+    ///Update method to generate vis feature
+    virtual void Update( unsigned int recordID );
 
 protected:
-    void changeEvent( QEvent* e );
-    void UpdateFeatureIDSelectorChoices();
-
-protected Q_SLOTS:
-    // For info on Automatic connection of signals and slots, see
-    // http://doc.trolltech.com/4.6/designer-using-a-ui-file.html#automatic-connections
-    void on_WritePropertiesButton_clicked(); // Automatic connection
-    void on_RefreshPropertiesButton_clicked(); // Automatic connection
-    void on_NewFeatureButton_clicked(); // Automatic connection
-    void on_DeleteFeatureButton_clicked(); // Automatic connection
-    void on_FeaturesList_currentTextChanged( const QString& currentText ); // Automatic connection
-    void on_FeatureIDSelector_currentIndexChanged ( const QString& text ); // Automatic connection
-
+    ///Called by the update function
+    void AddPlane( ves::xplorer::data::PropertySet& set );
+    ///Called by AddPlane
+    void UpdateContourInformation( ves::xplorer::data::PropertySet& set );
+    ///Setup the advanced properties
+    virtual void UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set );
 
 private:
-    Ui::Visualization* m_ui;
-    PropertyBrowser* mFeatureBrowser;
+    ///The countour setting data
+    std::vector<ves::open::xml::DataValuePairPtr> m_contourInformation;
 
-    ves::xplorer::data::PropertySetPtr mTempSet;
 };
 
 } // namespace conductor
 } // namespace ves
-
-#endif // VISUALIZATION_H
