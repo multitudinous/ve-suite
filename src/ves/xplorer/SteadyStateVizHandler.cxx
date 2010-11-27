@@ -278,7 +278,9 @@ void SteadyStateVizHandler::PreFrameUpdate()
                 }
             }
             graphicsObjects.insert( std::make_pair( tempVisObject->GetObjectType(), temp ) );
-
+            graphics_objects_map::value_type p = std::make_pair( vpr::GUID(vpr::GUID::generateTag), temp );
+            m_graphicsObjectMap.insert( p );
+            
             // Resetting these variables is very important
             tempVisObject->SetUpdateFlag( false );
             tempVisObject->ClearGeodes();
@@ -303,27 +305,6 @@ void SteadyStateVizHandler::PreFrameUpdate()
             }            
         }
     }
-
-    /*
-    if( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
-    {
-        useLastSource = ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )== 0 ) ? false : true;
-    }
-    */
-    /*
-    else if( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )
-    {
-        std::multimap< int, cfdGraphicsObject* >::iterator pos;
-        for(pos=graphicsObjects.begin(); pos!=graphicsObjects.end(); ++pos )
-        {
-            if( pos->second->GetAnimation() )
-            {
-                pos->second->GetAnimation()->SetDuration( 
-                    commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-            }
-        }
-    }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::CreateActorThread()
