@@ -41,6 +41,7 @@
 
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
+#include <ves/xplorer/data/DatabaseManager.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -105,6 +106,13 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     //A new working directory also means that 
     //the STORED scenes are no longer valid
     //ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();
+
+    // A change in the working dir also requires that we connect to the db file
+    // in the new working dir and reset it.
+    std::string newDBPath = newWorkingDir;
+    newDBPath += "/ves.db";
+    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( newDBPath );
+    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
     
     // TODO: This code needs a thorough cleanup since it is mostly ripped from
     // other files and pasted in here. 
