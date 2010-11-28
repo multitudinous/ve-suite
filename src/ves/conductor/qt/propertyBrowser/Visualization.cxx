@@ -37,7 +37,6 @@
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
-#include <ves/xplorer/data/ContourPlanePropertySet.h>
 
 #include <ves/conductor/qt/VisFeatureManager.h>
 
@@ -116,7 +115,6 @@ void Visualization::on_NewFeatureButton_clicked()
     QString featureName = m_ui->FeaturesList->currentItem()->text();
     mTempSet = VisFeatureManager::instance()->
             CreateNewFeature( featureName.toStdString() );
-
     if( mTempSet )
     {
         mTempSet->WriteToDatabase();
@@ -161,7 +159,6 @@ void Visualization::UpdateFeatureIDSelectorChoices()
 
     // Remove all entries from feature id selection combobox
     m_ui->FeatureIDSelector->clear();
-
     mIgnoreIndexChange = tIgnore;
 
     // Get all available IDs for current feature type
@@ -223,7 +220,6 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& tex
             mFeatureBrowser->RefreshAll();
         }
     }
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 }// namespace conductor
