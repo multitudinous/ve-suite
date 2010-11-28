@@ -55,14 +55,15 @@ namespace conductor
 Visualization::Visualization( QWidget* parent ) 
     :
     QDialog( parent ),
-    m_ui( new Ui::Visualization )
+    m_ui( new Ui::Visualization ),
+    mIgnoreIndexChange(false)
 {
     m_ui->setupUi( this );
 
     mFeatureBrowser = new PropertyBrowser( this );
 
     // Force FeatureIDSelector to update itself based on the database.
-    UpdateFeatureIDSelectorChoices();
+    //UpdateFeatureIDSelectorChoices();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Visualization::~Visualization()
@@ -107,6 +108,11 @@ void Visualization::on_RefreshPropertiesButton_clicked()
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_NewFeatureButton_clicked()
 {
+    // We create a stub property set of the correct type and write it out to
+    // the database to ensure it is given a unique record id. The call to
+    // UpdateFeatureIDSelectorChoices will cause this new record to be
+    // discovered and loaded as the active property set.
+
     QString featureName = m_ui->FeaturesList->currentItem()->text();
     mTempSet = VisFeatureManager::instance()->
             CreateNewFeature( featureName.toStdString() );
@@ -116,19 +122,9 @@ void Visualization::on_NewFeatureButton_clicked()
         mTempSet->WriteToDatabase();
     }
 
-    mFeatureBrowser->ParsePropertySet( mTempSet );
-
-    // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
-    // to take the Qt-ized data from a PropertyBrowser such as
-    // mFeatureBrowser and display it in the GUI.
-    m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
-    m_ui->vfpb->RefreshContents();
-    m_ui->vfpb->show();
-
     // Re-read available feature IDs from database, and select the last one added,
     // which by definition corresponds to the "new" one
     UpdateFeatureIDSelectorChoices();
-    m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_DeleteFeatureButton_clicked()
@@ -152,8 +148,21 @@ void Visualization::on_FeaturesList_currentTextChanged( const QString& currentTe
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::UpdateFeatureIDSelectorChoices()
 {
+    // If there are already ids loaded, we set a temporary flag so that after
+    // the call to FeatureIDSelector->clear() we can tell
+    // on_FeatureIDSelector_currentIndexChanged to ignore the index change
+    // that is triggered by the call to addItems. We only want it to load a
+    // property set after we explicitly call setCurrentIndex.
+    bool tIgnore = false;
+    if( m_ui->FeatureIDSelector->count() > 0 )
+    {
+        tIgnore = true;
+    }
+
     // Remove all entries from feature id selection combobox
     m_ui->FeatureIDSelector->clear();
+
+    mIgnoreIndexChange = tIgnore;
 
     // Get all available IDs for current feature type
     QString featureName = m_ui->FeaturesList->currentItem()->text();
@@ -175,6 +184,11 @@ void Visualization::UpdateFeatureIDSelectorChoices()
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& text )
 {
+    if(mIgnoreIndexChange)
+    {
+        mIgnoreIndexChange = false;
+        return;
+    }
     ves::xplorer::data::PropertySetPtr nullPtr;
 
     if( text.isEmpty() )
@@ -202,7 +216,10 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& tex
             m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
             m_ui->vfpb->RefreshContents();
             m_ui->vfpb->show();
-            mTempSet->LoadFromDatabase();
+            // Not sure why this second call to LoadFromDatabase() was in here.
+            // Leaving it here but commented out in case it fixed some
+            // problem.
+            //mTempSet->LoadFromDatabase();
             mFeatureBrowser->RefreshAll();
         }
     }

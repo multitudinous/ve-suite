@@ -78,6 +78,7 @@ private:
     PropertyBrowser* mFeatureBrowser;
 
     ves::xplorer::data::PropertySetPtr mTempSet;
+    bool mIgnoreIndexChange;
 };
 
 } // namespace conductor
