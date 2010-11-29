@@ -506,7 +506,7 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
                     , Poco::Data::use( mID );
             statement.execute();
             Poco::Data::RecordSet recordset( statement );
-
+            //std::cout << fieldName << " " << mTableName << " " << iterator->first << std::endl;
             if( property->IsIntVector() )
             {
                 std::vector< int > vec;

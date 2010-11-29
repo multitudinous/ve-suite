@@ -106,7 +106,7 @@ void ContourPlanePropertySet::CreateSkeleton()
     // scalar and vector data
     PropertyPtr nullPtr;
     UpdateScalarDataOptions( nullPtr );
-    UpdateVectorDataOptions( nullPtr );
+    //UpdateVectorDataOptions( nullPtr );
 
 
     AddProperty( "Direction", 0, "Direction" );
@@ -183,16 +183,19 @@ void ContourPlanePropertySet::UpdateScalarDataOptions( PropertyPtr property )
 
     PSVectorOfStrings enumValues;
     std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    //std::cout << " UpdateScalarDataOptions " << selectedDataset << std::endl;
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
     enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "ScalarNames" ) );
     if( enumValues.empty() )
     {
-        enumValues.push_back( "No datasets loaded" );
+        enumValues.push_back( "No scalars loaded" );
     }
+    //std::cout << enumValues.size() << std::endl;
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
     PropertyPtr nullPtr;
     UpdateScalarDataRange( nullPtr );
+    UpdateVectorDataOptions( nullPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::UpdateScalarDataRange( PropertyPtr property )
@@ -238,13 +241,15 @@ void ContourPlanePropertySet::UpdateVectorDataOptions( PropertyPtr property )
 
     PSVectorOfStrings enumValues;
     std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    //std::cout << " UpdateVectorDataOptions " << selectedDataset << std::endl;
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
     enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "VectorNames" ) );
     if( enumValues.empty() )
     {
-        enumValues.push_back( "No vectors available" );
+        enumValues.push_back( "No vectors loaded" );
     }
+    //std::cout << enumValues.size() << std::endl;
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
 }
 ////////////////////////////////////////////////////////////////////////////////

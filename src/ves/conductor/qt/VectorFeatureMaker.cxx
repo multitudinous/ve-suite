@@ -141,6 +141,7 @@ void VectorFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     UpdateContourInformation( set );
     UpdateAdvancedSettings( set );
 
+    //std::cout << set.GetTableName() << " " << set.GetRecordID() << std::endl;
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
 
     newCommand->SetCommandName( "UPDATE_VECTOR_SETTINGS" );
