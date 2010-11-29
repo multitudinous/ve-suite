@@ -91,16 +91,34 @@ UIManager::UIManager( ) :
     mMinimizeElement( 0 ),
     mUnminimizeElement( 0 )
 {
+    using namespace ves::xplorer::eventmanager;
+
+    EventManager* evm = EventManager::instance( );
+
     typedef boost::signals2::signal< bool (xplorer::eventmanager::InteractionEvent& ) > InteractionSignal_type;
-    InteractionSignal_type::slot_type
-    slotFunctor( boost::bind( &UIManager::SendInteractionEvent, this, _1 ) );
-    xplorer::eventmanager::SlotWrapper< InteractionSignal_type > slotWrapper( slotFunctor );
-    xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "KeyboardMouseInteractionSignal", &slotWrapper, mConnections, xplorer::eventmanager::EventManager::highest_Priority );
+    InteractionSignal_type::slot_type slotFunctor( boost::bind( &UIManager::SendInteractionEvent, this, _1 ) );
+    SlotWrapper< InteractionSignal_type > slotWrapper( slotFunctor );
+    evm->ConnectSignal( "KeyboardMouseInteractionSignal", &slotWrapper, mConnections, EventManager::highest_Priority );
 
     typedef boost::signals2::signal< void ( ) > HideShowUISignal_type;
     HideShowUISignal_type::slot_type hsSlotFunctor( boost::bind( &UIManager::ToggleVisibility, this ) );
-    xplorer::eventmanager::SlotWrapper< HideShowUISignal_type > hsSlotWrapper( hsSlotFunctor );
-    xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "KeyboardMouse.HideShowUISignal", &hsSlotWrapper, mConnections, xplorer::eventmanager::EventManager::highest_Priority );
+    SlotWrapper< HideShowUISignal_type > hsSlotWrapper( hsSlotFunctor );
+    evm->ConnectSignal( "KeyboardMouse.HideShowUISignal", &hsSlotWrapper, mConnections, EventManager::highest_Priority );
+
+    typedef boost::signals2::signal< void ( int, int, int, int ) > MouseMoveSignal_type;
+    MouseMoveSignal_type::slot_type mmSlotFunctor( boost::bind( &UIManager::MouseMoveEvent, this, _1, _2, _3, _4) );
+    SlotWrapper< MouseMoveSignal_type > mmSlotWrapper( mmSlotFunctor );
+    evm->ConnectSignal( "KeyboardMouse.MouseMove", &mmSlotWrapper, mConnections, EventManager::highest_Priority );
+
+    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > ButtonPressSignal_type;
+    ButtonPressSignal_type::slot_type bpSlotFunctor( boost::bind( &UIManager::ButtonPressEvent, this, _1, _2, _3, _4) );
+    SlotWrapper< ButtonPressSignal_type > bpSlotWrapper( bpSlotFunctor );
+    evm->ConnectSignals( "KeyboardMouse.ButtonPress%", &bpSlotWrapper, mConnections, EventManager::button_SignalType, EventManager::highest_Priority );
+
+    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > ButtonReleaseSignal_type;
+    ButtonReleaseSignal_type::slot_type brSlotFunctor( boost::bind( &UIManager::ButtonReleaseEvent, this, _1, _2, _3, _4) );
+    SlotWrapper< ButtonReleaseSignal_type > brSlotWrapper( brSlotFunctor );
+    evm->ConnectSignals( "KeyboardMouse.ButtonRelease%", &brSlotWrapper, mConnections, EventManager::button_SignalType, EventManager::highest_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -414,11 +432,7 @@ bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEve
     // receive this event. When there are multiple Geodes, the passed event
     // should include a pointer to the Geode that had mouse/wand intersection
     // (for mouse events). We should be storing the focused element somewhere
-    // in this manager class for keyboard events. However, since the current
-    // implementation uses only one Geode and allows the mdi area in that geode
-    // to manage subwindows, we don't need the information about which element
-    // to send things to: there is really only one element. Even so, we iterate
-    // through "all" the elements below, just in case.
+    // in this manager class for keyboard events.
 
     ElementMap_type::iterator map_iterator;
     for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
@@ -780,6 +794,182 @@ void UIManager::ToggleElementVisibility( UIElement* element )
     {
         ShowElement( element );
     }
+}
+
+void UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
+{
+    if( !_okayToSendEvent() )
+    {
+        return;
+    }
+
+    // Store off coordinates and deltas
+    mDxPointer = x - mCurrentXPointer;
+    mDyPointer = y - mCurrentYPointer;
+    mCurrentXPointer = x;
+    mCurrentYPointer = y;
+
+    if( !Ortho2DTestPointerCoordinates( x, y ) )
+    {
+        return;
+    }
+
+    // TODO: his iterates over all elements. We should instead just find the match
+    // from Ortho2DTestPointerCoordinates and send to it.
+    ElementMap_type::iterator map_iterator;
+    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+            ++map_iterator )
+    {
+        UIElement* element = map_iterator->second;
+
+        bool visible = element->IsVisible( );
+        bool minimized = element->IsMinimized( );
+
+        // Only send events if element is visible and not minimzed
+        if( ( visible ) && ( !minimized ) )
+        {
+            // Translate mouse coordinates to window coordinates
+            // TODO: This may be done better by using the element's entire UIMatrix
+            // so that mouse events can be mapped to scaled (but not minimized) windows.
+            osg::Vec3 trans = element->GetUIMatrix( ).getTrans( );
+            x = x - trans.x( );
+            y = y - trans.y( );
+
+            // Flip y mouse coordinate to origin GUI expects
+            y = static_cast < double > ( mTop ) - y;
+            element->SendButtonPressEvent( button, x, y, state );
+        }
+        else
+        {
+            mUnminimize = true;
+        }
+    }
+}
+
+void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
+{
+    if( !_okayToSendEvent() )
+    {
+        return;
+    }
+
+    // Store off coordinates and deltas
+    mDxPointer = x - mCurrentXPointer;
+    mDyPointer = y - mCurrentYPointer;
+    mCurrentXPointer = x;
+    mCurrentYPointer = y;
+
+    // If we're ending an element move, do that and sink the event
+    if( mMoveElement )
+    {
+        mElementPositionsOrtho2D[ mMoveElement ] = _computeMouseBoundsForElement( mMoveElement );
+        mMoveElement = 0;
+        return;
+    }
+
+    if( !Ortho2DTestPointerCoordinates( x, y ) )
+    {
+        return;
+    }
+
+    // TODO: his iterates over all elements. We should instead just find the match
+    // from Ortho2DTestPointerCoordinates and send to it.
+    ElementMap_type::iterator map_iterator;
+    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+            ++map_iterator )
+    {
+        UIElement* element = map_iterator->second;
+
+        bool visible = element->IsVisible( );
+        bool minimized = element->IsMinimized( );
+
+        // Only send events if element is visible and not minimzed
+        if( ( visible ) && ( !minimized ) )
+        {
+            // Translate mouse coordinates to window coordinates
+            // TODO: This may be done better by using the element's entire UIMatrix
+            // so that mouse events can be mapped to scaled (but not minimized) windows.
+            osg::Vec3 trans = element->GetUIMatrix( ).getTrans( );
+            x = x - trans.x( );
+            y = y - trans.y( );
+
+            // Flip y mouse coordinate to origin GUI expects
+            y = static_cast < double > ( mTop ) - y;
+            element->SendButtonReleaseEvent( button, x, y, state );
+        }
+    }
+}
+
+void UIManager::MouseMoveEvent( int x, int y, int z, int state )
+{
+
+    if( !_okayToSendEvent() )
+    {
+        return;
+    }
+
+    // Store off coordinates and deltas
+    mDxPointer = x - mCurrentXPointer;
+    mDyPointer = y - mCurrentYPointer;
+    mCurrentXPointer = x;
+    mCurrentYPointer = y;
+
+    // If an element move operation is in progress, handle that and sink the event
+    if( mMoveElement )
+    {
+        mMoveElement->MoveCanvas( mDxPointer, mDyPointer );
+        return;
+    }
+
+    if( !Ortho2DTestPointerCoordinates( x, y ) )
+    {
+        return;
+    }
+
+    // TODO: his iterates over all elements. We should instead just find the match
+    // from Ortho2DTestPointerCoordinates and send to it.
+    ElementMap_type::iterator map_iterator;
+    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+            ++map_iterator )
+    {
+        UIElement* element = map_iterator->second;
+
+        bool visible = element->IsVisible( );
+        bool minimized = element->IsMinimized( );
+
+        // Only send events if element is visible and not minimzed
+        if( ( visible ) && ( !minimized ) )
+        {
+            // Translate mouse coordinates to window coordinates
+            // TODO: This may be done better by using the element's entire UIMatrix
+            // so that mouse events can be mapped to scaled (but not minimized) windows.
+            osg::Vec3 trans = element->GetUIMatrix( ).getTrans( );
+            x = x - trans.x( );
+            y = y - trans.y( );
+
+            // Flip y mouse coordinate to origin GUI expects
+            y = static_cast < double > ( mTop ) - y;
+            element->SendMouseMoveEvent( x, y, z, state );
+        }
+    }
+
+}
+
+bool UIManager::_okayToSendEvent()
+{
+    // Ignore events if we're not initialized
+    if( !mInitialized )
+    {
+        return false;
+    }
+
+    // Check visibility of UI branch before bothering with events
+    if( !mUIGroup->getValue( 0 ) )
+    {
+        return false;
+    }
+
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

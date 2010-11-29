@@ -41,6 +41,8 @@
 #include <osg/Switch>
 #include <osg/Geode>
 
+#include <gadget/Type/KeyboardMouse/Keys.h>
+
 namespace osg
 {
 class Vec4f;
@@ -112,6 +114,12 @@ public:
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
     virtual void SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event );
+
+    virtual void SendButtonPressEvent( gadget::Keys button, int x, int y, int state );
+    virtual void SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
+    virtual void SendMouseMoveEvent( int x, int y, int z, int state );
+    virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask );
+    virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask );
 ////////////////////////////////////////////////////////////////////////////////
 /// Tell this element to render to an image and return a pointer to the data.
 ///

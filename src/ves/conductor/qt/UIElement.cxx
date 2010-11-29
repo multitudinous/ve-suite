@@ -181,6 +181,31 @@ void UIElement::SendInteractionEvent( xplorer::eventmanager::InteractionEvent &e
 
 }
 
+void UIElement::SendButtonPressEvent( gadget::Keys button, int x, int y, int state )
+{
+
+}
+
+void UIElement::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
+{
+
+}
+
+void UIElement::SendMouseMoveEvent( int x, int y, int z, int state )
+{
+
+}
+
+void UIElement::SendKeyPressEvent( gadget::Keys key, int modifierMask )
+{
+
+}
+
+void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask )
+{
+
+}
+
 unsigned char* UIElement::RenderElementToImage( )
 {
     return 0;

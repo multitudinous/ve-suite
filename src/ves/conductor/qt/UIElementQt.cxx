@@ -40,6 +40,9 @@
 #include <ves/conductor/qt/ui_titlebar.h>
 //#include <ves/conductor/qt/MoveFrame.h>
 
+// --- Juggler includes --- //
+#include <gadget/Type/KeyboardMouse/Keys.h>
+
 // --- C++ includes --- //
 #include <cassert>
 #include <iostream>
@@ -70,6 +73,8 @@ bool qt_sendSpontaneousEvent( QObject* recv, QEvent* e )
 {
     return QCoreApplication::sendSpontaneousEvent( recv, e );
 }
+
+Q_DECLARE_METATYPE(gadget::Keys)
 
 namespace ves
 {
@@ -143,6 +148,23 @@ void UIElementQt::Initialize( )
         QObject::connect( this, SIGNAL( PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ),
                           this, SLOT( _sendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
 
+        qRegisterMetaType<gadget::Keys>();
+
+        QObject::connect( this, SIGNAL( PutButtonPressEvent( gadget::Keys, int, int, int ) ),
+                          this, SLOT( _buttonPressEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
+
+        QObject::connect( this, SIGNAL( PutButtonReleaseEvent( gadget::Keys, int, int, int ) ),
+                          this, SLOT( _buttonReleaseEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
+
+        QObject::connect( this, SIGNAL( PutMouseMoveEvent( int, int, int, int ) ),
+                          this, SLOT( _mouseMoveEvent( int, int, int, int ) ), Qt::QueuedConnection );
+
+        QObject::connect( this, SIGNAL( PutKeyPressEvent( gadget::Keys, int ) ),
+                          this, SLOT( _keyPressEvent( gadget::Keys, int ) ), Qt::QueuedConnection );
+
+        QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int ) ),
+                          this, SLOT( _keyReleaseEvent( gadget::Keys, int ) ), Qt::QueuedConnection );
+
         // Start up the timer that causes repaints at a set interval -- assuming
         // thread is given execution sometime during this interval.
         mTimer = new QTimer( this );
@@ -196,6 +218,31 @@ void UIElementQt::SendInteractionEvent( ves::xplorer::eventmanager::InteractionE
             new ves::xplorer::eventmanager::InteractionEvent( event );
 
     Q_EMIT PutSendEvent( m_event );
+}
+
+void UIElementQt::SendButtonPressEvent( gadget::Keys button, int x, int y, int state )
+{
+    Q_EMIT PutButtonPressEvent( button, x, y, state );
+}
+
+void UIElementQt::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
+{
+    Q_EMIT PutButtonReleaseEvent( button, x, y, state );
+}
+
+void UIElementQt::SendMouseMoveEvent( int x, int y, int z, int state )
+{
+    Q_EMIT PutMouseMoveEvent( x, y, z, state );
+}
+
+void UIElementQt::SendKeyPressEvent( gadget::Keys key, int modifierMask )
+{
+    Q_EMIT PutKeyPressEvent( key, modifierMask );
+}
+
+void UIElementQt::SendKeyReleaseEvent( gadget::Keys key, int modifierMask )
+{
+    Q_EMIT PutKeyReleaseEvent( key, modifierMask );
 }
 
 unsigned char* UIElementQt::RenderElementToImage( )
@@ -551,6 +598,139 @@ void UIElementQt::_sendEvent( ves::xplorer::eventmanager::InteractionEvent* even
     delete event;
 }
 
+void UIElementQt::_buttonPressEvent( gadget::Keys button, int x, int y, int state )
+{
+    _buttonEvent( 1, button, x, y, state );
+}
+
+void UIElementQt::_buttonReleaseEvent( gadget::Keys button, int x, int y, int state )
+{
+    _buttonEvent( 0, button, x, y, state );
+}
+
+void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int state )
+{
+    Qt::MouseButton qbutton = _extractButton( button );
+    Qt::MouseButtons buttons = _extractButtons( state );
+    Qt::KeyboardModifiers modifiers = _extractModifiers( state );
+
+    QPoint position( x, y );
+
+    QPoint globalPos = this->viewport( )->mapToGlobal( position );
+
+    if( type == 1 )
+    {
+        QMouseEvent e( QEvent::MouseButtonPress, position, globalPos, qbutton,
+                    buttons, modifiers );
+        qt_sendSpontaneousEvent( this->viewport( ), &e );
+    }
+    else
+    {
+        QMouseEvent e( QEvent::MouseButtonRelease, position, globalPos, qbutton,
+                    buttons, modifiers );
+        qt_sendSpontaneousEvent( this->viewport( ), &e );
+    }
+}
+
+void UIElementQt::_mouseMoveEvent( int x, int y, int z, int state )
+{
+    Qt::MouseButtons buttons = _extractButtons( state );
+    Qt::KeyboardModifiers modifiers = _extractModifiers( state );
+
+    QPoint position( x, y );
+
+    QPoint globalPos = this->viewport( )->mapToGlobal( position );
+
+    QMouseEvent e( QEvent::MouseMove, position, globalPos, Qt::NoButton,
+                    buttons, modifiers );
+
+    qt_sendSpontaneousEvent( this->viewport( ), &e );
+}
+
+void UIElementQt::_keyPressEvent( gadget::Keys key, int modifierMask )
+{
+
+}
+
+void UIElementQt::_keyReleaseEvent( gadget::Keys key, int modifierMask )
+{
+
+}
+
+Qt::MouseButton UIElementQt::_extractButton( gadget::Keys button )
+{
+    if( button & gadget::MBUTTON1 )
+    {
+        return Qt::LeftButton;
+    }
+    else if( button & gadget::MBUTTON2 )
+    {
+        return Qt::MidButton;
+    }
+    else if( button & gadget::MBUTTON3 )
+    {
+        return Qt::RightButton;
+    }
+    else
+    {
+        return Qt::NoButton;
+    }
+}
+
+Qt::MouseButtons UIElementQt::_extractButtons( int state )
+{
+    Qt::MouseButtons buttons;
+
+    if( state & gadget::BUTTON1_MASK )
+    {
+        buttons = buttons | Qt::LeftButton;
+    }
+
+    if( state & gadget::BUTTON2_MASK )
+    {
+        buttons = buttons | Qt::MidButton;
+    }
+
+    if( state & gadget::BUTTON3_MASK )
+    {
+        buttons = buttons | Qt::RightButton;
+    }
+
+    if( state == 0 )
+    {
+        buttons = Qt::NoButton;
+    }
+
+    return buttons;
+}
+
+Qt::KeyboardModifiers UIElementQt::_extractModifiers( int state )
+{
+    Qt::KeyboardModifiers modifiers;
+
+    if( state & gadget::SHIFT_MASK )
+    {
+        modifiers = Qt::KeyboardModifier(modifiers | Qt::SHIFT);
+    }
+
+    if( state & gadget::ALT_MASK )
+    {
+        modifiers = Qt::KeyboardModifier(modifiers | Qt::ALT);
+    }
+
+    if( state & gadget::CTRL_MASK )
+    {
+        modifiers = Qt::KeyboardModifier(modifiers | Qt::CTRL);
+    }
+
+    if( state & gadget::COMMAND_MASK )
+    {
+        modifiers = Qt::KeyboardModifier(modifiers | Qt::META);
+    }
+
+    return modifiers;
+}
+
 void UIElementQt::_setupKeyMap( )
 {
     mKeyMap[ gadget::KEY_NONE ] = 0;
@@ -706,11 +886,13 @@ void UIElementQt::_onMinimizeButtonClicked( )
 
 void UIElementQt::_onTitlebarPressed( )
 {
+    std::cout << "_onTitlebarPressed" << std::endl << std::flush;
     ves::conductor::UIManager::instance()->InitiateMoveElement( this );
 }
 
 void UIElementQt::_onOpacitySliderValueChanged( int opacity )
 {
+    std::cout << "_onOpacitySliderValueChanged" << std::endl << std::flush;
     ves::conductor::UIManager::instance()->SetOpacity( opacity/100.0f );
 }
 

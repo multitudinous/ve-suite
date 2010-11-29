@@ -79,6 +79,13 @@ public:
     virtual int GetElementHeight( );
     const virtual osg::Vec4f GetTextureCoordinates( );
     virtual void SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event );
+
+    virtual void SendButtonPressEvent( gadget::Keys button, int x, int y, int state );
+    virtual void SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
+    virtual void SendMouseMoveEvent( int x, int y, int z, int state );
+    virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask );
+    virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask );
+
     virtual unsigned char* RenderElementToImage( );
     virtual bool IsDirty( );
     virtual void Initialize( );
@@ -130,6 +137,10 @@ private:
     ///< slightly different state from mImageDirty
     std::map<int,int> mKeyMap; ///< Map to convert juggler keycodes to Qt keycodes
 
+    void _buttonEvent( int type, gadget::Keys button, int x, int y, int state );
+    Qt::MouseButton _extractButton( gadget::Keys button );
+    Qt::MouseButtons _extractButtons( int state );
+    Qt::KeyboardModifiers _extractModifiers( int state );
     void _setupKeyMap( );
 
     QWidget* mTitlebar;
@@ -138,6 +149,13 @@ private:
 protected Q_SLOTS:
     void _render( );
     void _sendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
+
+    void _buttonPressEvent( gadget::Keys button, int x, int y, int state );
+    void _buttonReleaseEvent( gadget::Keys button, int x, int y, int state );
+    void _mouseMoveEvent( int x, int y, int z, int state );
+    void _keyPressEvent( gadget::Keys key, int modifierMask );
+    void _keyReleaseEvent( gadget::Keys key, int modifierMask );
+
     void _onHideButtonClicked();
     void _onMinimizeButtonClicked();
     void _onTitlebarPressed();
@@ -146,6 +164,11 @@ protected Q_SLOTS:
     Q_SIGNALS:
     void RequestRender( );
     void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
+    void PutButtonPressEvent( gadget::Keys button, int x, int y, int state );
+    void PutButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
+    void PutMouseMoveEvent( int x, int y, int z, int state );
+    void PutKeyPressEvent( gadget::Keys key, int modifierMask );
+    void PutKeyReleaseEvent( gadget::Keys key, int modifierMask );
 
 
 };

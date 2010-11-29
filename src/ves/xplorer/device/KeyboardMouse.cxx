@@ -69,7 +69,7 @@
 
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-#ifdef QT_ON
+
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
 
@@ -77,7 +77,6 @@
 // #include <ves/open/xml/DataValuePair.h>
 // #include <ves/open/xml/Command.h>
 // #include <ves/xplorer/command/CommandManager.h>
-#endif // QT_ON
 
 
 
@@ -139,87 +138,38 @@ using namespace ves::xplorer::device;
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
     :
-    Device( KEYBOARD_MOUSE ),
-
-    mKeyNone( false ),
-    mKeyShift( false ),
-    mKeyAlt( false ),
-
-    m_mousePickEvent( false ),
-    m_processSelection( true ),
-
-    m_currKey( gadget::KEY_NONE ),
-    m_currMouse( gadget::KEY_NONE ),
-
-    m_windowWidth( 1 ),
-    m_windowHeight( 1 ),
-    m_pickCushion( 1 ),
-    m_xMotionPixels( 0 ),
-    m_yMotionPixels( 0 ),
-
-    m_currX( 0 ),
-    m_currY( 0 ),
-#if !defined( VPR_OS_Windows )
-    m_prevX( 0 ),
-    m_prevY( 0 ),
-#endif
-
-    mAspectRatio( 0.0 ),
-    mFoVZ( 0.0 ),
-
-    mLeftFrustum( 0.0 ),
-    mRightFrustum( 0.0 ),
-    mTopFrustum( 0.0 ),
-    mBottomFrustum( 0.0 ),
-    mNearFrustum( 0.0 ),
-    mFarFrustum( 0.0 ),
-
-    mMagnitude( 0.0 ),
-
-    mXMinScreen( 0.0 ),
-    mXMaxScreen( 0.0 ),
-    mYMinScreen( 0.0 ),
-    mYMaxScreen( 0.0 ),
-    mZValScreen( 0.0 ),
-
-    mPrevPhysicsRayPos( 0.0 ),
-
-    mDeltaRotation( 0.0, 0.0, 0.0, 1.0 ),
-    mDeltaTranslation( 0.0, 0.0, 0.0 ),
-
-    mLineSegmentIntersector(
-        new osgUtil::LineSegmentIntersector(
-            osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
-
-    m_currentGLTransformInfo( scenegraph::GLTransformInfoPtr() ),
-
-    mPickedBody( NULL ),
-    mPickConstraint( NULL ),
-
-    m_keys()
+    Device( KEYBOARD_MOUSE )
 {
-    // This no longer works as of Juggler 3.x
-    //mKeyboardMouse.init( "VJKeyboard" );
-    mHead.init( "VJHead" );
+    //mHead.init( "VJHead" );
 
-#ifdef QT_ON
     // Connect to Juggler's new event handling interface
+    mMouseDoubleClickEventInterface.setClickTime(0.2f);
+    mMouseDoubleClickEventInterface.init("VESLeftMouseButton");
+    mMouseDoubleClickEventInterface.addCallback(boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1));
+
     mKeyboardMouseEventInterface.init("VJKeyboard");
-    mKeyboardMouseEventInterface.addCallback(boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1)); 
+    mKeyboardMouseEventInterface.addCallback(boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1));
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< InteractionSignal_type >( &mInteractionSignal ),
-        "KeyboardMouseInteractionSignal",
-        eventmanager::EventManager::input_SignalType);
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< HideShowUISignal_type >( &mHideShowUISignal ),
-        "KeyboardMouse.HideShowUISignal");
-        
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &mObjectPickedSignal ),
-        "KeyboardMouse.ObjectPickedSignal" );
-#endif // QT_ON
+
+    // Register generalized event signal
+//    eventmanager::EventManager::instance()->RegisterSignal(
+//        new eventmanager::SignalWrapper< InteractionSignal_type >( &mInteractionSignal ),
+//        "KeyboardMouseInteractionSignal",
+//        eventmanager::EventManager::input_SignalType);
+
+    SetupButtonSignalMap();
+    SetupKeySignalMap();
+
+    eventmanager::EventManager* evm = eventmanager::EventManager::instance();
+    using eventmanager::SignalWrapper;
+
+    evm->RegisterSignal(
+            new SignalWrapper< MouseMoveSignal_type >( &mMouseMove ),
+            "KeyboardMouse.MouseMove", eventmanager::EventManager::mouse_SignalType );
+
+    RegisterButtonSignals();
+    RegisterKeySignals();
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -232,2099 +182,1663 @@ KeyboardMouse* KeyboardMouse::AsKeyboardMouse()
     return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetStartEndPoint(
-    osg::Vec3d& startPoint, osg::Vec3d& endPoint )
-{
-    ///In quad buffered stereo this call returns a VPW matrix from a centered
-    ///view rather than from one of the eye positions.
-    osg::Matrixd inverseVPW( m_currentGLTransformInfo->GetVPWMatrixOSG() );
-    inverseVPW.invert( inverseVPW );
-    startPoint = osg::Vec3d( m_currX, m_currY, 0.0 ) * inverseVPW;
-    endPoint = osg::Vec3d( m_currX, m_currY, 1.0 ) * inverseVPW;
-
-    //std::cout << m_currX << " " << m_currY << std::endl;
-    //std::cout << "startPoint: " << startPoint << std::endl;
-    //std::cout << "endPoint: " << endPoint << std::endl;
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
-{   
-    osg::Group* rootNode = m_sceneManager.GetRootNode();
-
-    if( mBeamGeode.valid() )
-    {
-        rootNode->removeChild( mBeamGeode.get() );
-    }
-
-    mBeamGeode = new osg::Geode();
-    mBeamGeode->setName( "Laser" );
-
-    osg::ref_ptr< osg::Geometry > line = new osg::Geometry();
-    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array();
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-
-    vertices->push_back( startPoint );
-    vertices->push_back( endPoint );
-    line->setVertexArray( vertices.get() );
-
-    colors->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
-    line->setColorArray( colors.get() );
-    line->setColorBinding( osg::Geometry::BIND_OVERALL );
-
-    osg::ref_ptr< osg::LineWidth > line_width = new osg::LineWidth();
-    line_width->setWidth( 2.0 );
-    stateset->setAttribute( line_width.get() );
-    line->setStateSet( stateset.get() );
-
-    line->addPrimitiveSet( new osg::DrawArrays(
-        osg::PrimitiveSet::LINES, 0, vertices->size() ) );
-
-    mBeamGeode->addDrawable( line.get() );
-
-    rootNode->addChild( mBeamGeode.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetScreenCornerValues(
-    std::map< std::string, double > values )
-{
-    mXMinScreen = values[ "xmin" ];
-    mXMaxScreen = values[ "xmax" ];
-    mYMinScreen = values[ "ymin" ];
-    mYMaxScreen = values[ "ymax" ];
-    mZValScreen = values[ "zval" ];
-}
-////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 {
-    //Get the event queue
-    gadget::KeyboardMouse::EventQueue evt_queue =
-        mKeyboardMouse->getEventQueue();
 
-    //Reset intersector every frame so that the list is erased if others are 
-    //using the list
-    mLineSegmentIntersector->reset();
-
-    //Return if no events occurred
-    if( evt_queue.empty() )
-    {
-        return;
-    }
-
-    //Get the modifier key values
-    mKeyNone = mKeyboardMouse->modifierOnly( gadget::KEY_NONE );
-    mKeyShift = mKeyboardMouse->modifierOnly( gadget::KEY_SHIFT );
-    mKeyAlt = mKeyboardMouse->modifierOnly( gadget::KEY_ALT );
-
-    //Iterate over the keyboard and mouse events
-    gadget::KeyboardMouse::EventQueue::const_iterator i;
-    for( i = evt_queue.begin(); i != evt_queue.end(); ++i )
-    {
-        const gadget::EventPtr event = *i;
-        const gadget::EventType eventType = event->type();
-
-        //Get the current display from the input area
-        gadget::InputArea& inputArea = event->getSource();
-        vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
-
-        switch( eventType )
-        {
-        case gadget::KeyPressEvent:
-        {
-            const gadget::KeyEventPtr keyEvt =
-                boost::static_pointer_cast< gadget::KeyEvent >( event );
-#ifdef QT_ON
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyPress,
-                                keyEvt->getKey(), keyEvt->getKeyChar(), keyEvt->getKeyUnicode(), keyEvt->getModifierMask() );
-
-            mInteractionSignal( ie );
-#endif
-            //Protect against rapid key press events when key is held down
-            m_currKey = keyEvt->getKey();
-            if( !m_keys[ m_currKey ] )
-            {
-                m_keys.set( m_currKey );
-
-                //Set the current GLTransfromInfo from the event
-                if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
-                {
-                    return;
-                }
-
-                OnKeyPress();
-            }
-
-            break;
-        }
-        case gadget::KeyReleaseEvent:
-        {
-            const gadget::KeyEventPtr keyEvt =
-                boost::static_pointer_cast< gadget::KeyEvent >( event );
-            m_currKey = keyEvt->getKey();
-            m_keys.reset( m_currKey );
-#ifdef QT_ON
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyRelease,
-                                keyEvt->getKey(), keyEvt->getKeyChar(), keyEvt->getKeyUnicode(), keyEvt->getModifierMask() );
-
-            mInteractionSignal( ie );
-#endif
-            //Set the current GLTransfromInfo from the event
-            if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
-            {
-                return;
-            }
-
-            OnKeyRelease();
-
-            break;
-        }
-        case gadget::MouseButtonPressEvent:
-        {
-            const gadget::MouseEventPtr mouse_evt =
-                boost::static_pointer_cast< gadget::MouseEvent >( event );
-            m_currMouse = mouse_evt->getButton();
-            m_keys.set( m_currMouse );
-#ifdef QT_ON
-            eventmanager::InteractionEvent::buttonType button;
-            switch (m_currMouse)
-            {
-                case gadget::MBUTTON1:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-                case gadget::MBUTTON2:
-                {
-                    button = eventmanager::InteractionEvent::button_2;
-                    break;
-                }
-                case gadget::MBUTTON3:
-                {
-                    button = eventmanager::InteractionEvent::button_3;
-                    break;
-                }
-                case gadget::MBUTTON4:
-                {
-                    button = eventmanager::InteractionEvent::button_4;
-                    break;
-                }
-                case gadget::MBUTTON5:
-                {
-                    button = eventmanager::InteractionEvent::button_5;
-                    break;
-                }
-                default:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-            }
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonPress,
-                                0, 0, 0, mouse_evt->getState(), button,
-                                button, 0.0, 0.0,
-                                mouse_evt->getX(), mouse_evt->getY() );
-
-            // Signal returns true if this event should not be propagated on
-            if ( *mInteractionSignal( ie ) )
-            {
-                return;
-            }
-#endif
-            //Set the current GLTransfromInfo from the event
-            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
-            {
-                return;
-            }
-
-            OnMousePress( inputArea );
-
-            break;
-        }
-        case gadget::MouseButtonReleaseEvent:
-        {
-            const gadget::MouseEventPtr mouse_evt =
-                boost::static_pointer_cast< gadget::MouseEvent >( event );
-            m_currMouse = mouse_evt->getButton();
-            m_keys.reset( m_currMouse );
-#ifdef QT_ON
-            eventmanager::InteractionEvent::buttonType button;
-            switch (m_currMouse)
-            {
-                case gadget::MBUTTON1:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-                case gadget::MBUTTON2:
-                {
-                    button = eventmanager::InteractionEvent::button_2;
-                    break;
-                }
-                case gadget::MBUTTON3:
-                {
-                    button = eventmanager::InteractionEvent::button_3;
-                    break;
-                }
-                case gadget::MBUTTON4:
-                {
-                    button = eventmanager::InteractionEvent::button_4;
-                    break;
-                }
-                case gadget::MBUTTON5:
-                {
-                    button = eventmanager::InteractionEvent::button_5;
-                    break;
-                }
-                default:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-            }
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonRelease,
-                                0, 0, 0, mouse_evt->getState(), button,
-                                button, 0.0, 0.0,
-                                mouse_evt->getX(), mouse_evt->getY() );
-
-            if( *mInteractionSignal( ie ) )
-            {
-                return;
-            }
-#endif
-            //Set the current GLTransfromInfo from the event
-            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
-            {
-                return;
-            }
-
-            OnMouseRelease( inputArea );
-
-            break;
-        }
-        case gadget::MouseMoveEvent:
-        {
-            const gadget::MouseEventPtr mouse_evt =
-                boost::static_pointer_cast< gadget::MouseEvent >( event );
-
-            m_currX = mouse_evt->getX();
-            m_currY = mouse_evt->getY();
-
-            //Set the current GLTransfromInfo from the event
-            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
-            {
-                return;
-            }
-
-            if( !m_keys[ m_currMouse ] )
-            {
-#ifdef QT_ON
-                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
-                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
-                                eventmanager::InteractionEvent::button_none, 0.0, 0.0,
-                                m_currX, m_currY );
-
-                if( *mInteractionSignal( ie ) )
-                {
-                    return;
-                }
-#endif
-                OnMouseMotionUp();
-            }
-            else
-            {
-#ifdef QT_ON
-                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
-                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
-                                eventmanager::InteractionEvent::button_1, 0.0, 0.0,
-                                m_currX, m_currY );
-
-                if( *mInteractionSignal( ie ) )
-                {
-                    return;
-                }
-#endif
-
-#if defined( VPR_OS_Windows )
-                double dx = mouse_evt->getScrollDeltaX();
-                double dy = mouse_evt->getScrollDeltaY();
-#else
-                double dx = m_currX - m_prevX;
-                double dy = m_currY - m_prevY;
-#endif
-                if( dx != 0.0 || dy != 0.0 )
-                {
-                    OnMouseMotionDown( dx, dy );
-                }
-            }
-
-#if !defined( VPR_OS_Windows )
-            m_prevX = m_currX;
-            m_prevY = m_currY;
-#endif
-            break;
-        }
-        default:
-        {
-            break;
-        }
-        } //end switch( eventType )
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessNavigation()
-{
-    gmtl::Matrix44d newTransform;
-    gmtl::Matrix44d currentTransform;
-
-    scenegraph::DCS* const activeDCS = DeviceHandler::instance()->GetActiveDCS();
-    //Get the node where are all the geometry is handled
-    osg::Group* const activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
-    //Get the node where all the nav matrix's are handled
-    scenegraph::DCS* const cameraDCS = m_sceneManager.GetActiveNavSwitchNode();
-
-    osg::ref_ptr< scenegraph::CoordinateSystemTransform > coordinateSystemTransform;
-    //Test if we are manipulating the camera dcs or a model dcs
-    if( activeDCS->GetName() != cameraDCS->GetName() )
-    {
-        //If local dcs, transform to camera space
-        coordinateSystemTransform = new scenegraph::CoordinateSystemTransform(
-            activeSwitchNode, activeDCS, true );
-
-        currentTransform = coordinateSystemTransform->GetTransformationMatrix();
-    }
-    else
-    {
-        //If manipulating camera, no transformations are needed
-        currentTransform = activeDCS->GetMat();
-    }
-
-    //Translate current transform origin back by the center point position
-    gmtl::Matrix44d negCenterPointMatrix =
-        gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
-    newTransform = negCenterPointMatrix * currentTransform;
-
-    //Apply the delta transform at this new position
-    gmtl::Matrix44d deltaTransform;
-    gmtl::setRot( deltaTransform, mDeltaRotation );
-    gmtl::setTrans( deltaTransform, mDeltaTranslation );
-    newTransform = deltaTransform * newTransform;
-
-    //Add back the center point position to the transform
-    gmtl::Matrix44d posCenterPointMatrix =
-        gmtl::makeTrans< gmtl::Matrix44d >( *mCenterPoint );
-    newTransform = posCenterPointMatrix * newTransform;
-
-    //Convert matrix back to local space after delta transform has been applied
-    if( activeDCS->GetName() != cameraDCS->GetName() )
-    {
-        //Remove local matrix from currentTransform
-        //We are multiplying by a new transformed local matrix
-        currentTransform =
-            coordinateSystemTransform->GetTransformationMatrix( false );
-
-        newTransform = gmtl::invert( currentTransform ) * newTransform;
-    }
-
-    //Set the activeDCS w/ new transform
-    activeDCS->SetMat( newTransform );
-
-    //Reset the delta transform
-    mDeltaRotation.set( 0.0, 0.0, 0.0, 1.0 );
-    mDeltaTranslation.set( 0.0, 0.0, 0.0 );
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
-{
-    m_windowWidth = w;
-    m_windowHeight = h;
-
-    mAspectRatio =
-        static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetFrustumValues(
-    double l, double r, double b, double t, double n, double f )
-{
-    mLeftFrustum = l;
-    mRightFrustum = r;
-    mBottomFrustum = b;
-    mTopFrustum = t;
-    mNearFrustum = n;
-    mFarFrustum = f;
-
-    double topAngle = atan( mTopFrustum / mNearFrustum );
-    double tempDiv = fabs( mBottomFrustum ) / mNearFrustum;
-    double bottomAngle = atan( tempDiv );
-
-    mFoVZ = topAngle + bottomAngle;
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::FrameAll()
-{
-    osg::Group* activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
-    scenegraph::DCS* activeNavSwitchNode = m_sceneManager.GetActiveNavSwitchNode();
-    osg::BoundingSphere bs = activeSwitchNode->computeBound();
-
-    //Meters to feet conversion
-    double m2ft = 3.2808399;
-
-    //Set the start point to be the head position in osg space
-    osg::Vec3d startPoint( 0.0, 0.0, 0.0 );
-    {
-        //Note: for osg we are in z up land
-        gmtl::Matrix44d vjHeadMat =
-            gmtl::convertTo< double >( mHead->getData() );
-        gmtl::Point3d jugglerHeadPoint =
-            gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
-
-        //We have to offset negative m_currX because the
-        //view and frustum are drawn for the left eye
-        startPoint.set(
-            jugglerHeadPoint.mData[ 0 ] - ( 0.0345 * m2ft ),
-           -jugglerHeadPoint.mData[ 2 ],
-            jugglerHeadPoint.mData[ 1 ] );
-    }
-
-    //Set the end point
-    osg::Vec3d endPoint( 0.0, 0.0, 0.0 );
-    {
-        //Be sure m_windowWidth and m_windowHeight are set before calling this function
-        double xScreenRatio =
-            ( mXMaxScreen - mXMinScreen ) / static_cast< double >( m_windowWidth );
-        double yScreenRatio =
-            ( mYMaxScreen - mYMinScreen ) / static_cast< double >( m_windowHeight );
-
-        //Get the center screen position in juggler world coordinates
-        osg::Vec3d vrjCenterScreenPosition( 
-            mXMinScreen + 0.5 * static_cast< double >( m_windowWidth ) * xScreenRatio,
-            mYMinScreen + 0.5 * static_cast< double >( m_windowHeight ) * yScreenRatio,
-            mZValScreen );
-
-        //Convert meters to feet
-        vrjCenterScreenPosition *= m2ft;
-
-        //Get the screen position in osg world coordinates
-        osg::Vec3d centerPosition(
-            vrjCenterScreenPosition.x(),
-           -vrjCenterScreenPosition.z(),
-            vrjCenterScreenPosition.y() );
-
-        //Calculate the distance we need to move along the center vector to fit
-        //the bounding sphere of all the geometry inside the viewing frustum
-        double theta = mFoVZ * 0.5;
-        if( mAspectRatio < 1.0 )
-        {
-            theta *= mAspectRatio;
-        }
-        double distance;
-        distance = ( bs.radius() / tan( theta ) );
-
-        //Now we can get our center frustum vector
-        osg::Vec3d vecNear = centerPosition - startPoint;
-        osg::Vec3d vecFar = -startPoint;
-        vecFar.y() = distance + vecFar.y();
-
-        double ratio = vecFar.y() / vecNear.y();
-        endPoint.set(
-            startPoint.x() + ( vecNear.x() * ratio ),
-            distance,
-            startPoint.z() + ( vecNear.z() * ratio ) );
-    }
-    
-    //Set the current switch node's matrix w/ the new "frame all" transform
-    activeNavSwitchNode->setPosition( endPoint - bs.center() );
-    activeNavSwitchNode->setAttitude( osg::Quat( 0.0, 0.0, 0.0, 1.0 ) );
-
-    //Get the new center of the bounding sphere in camera space
-    activeSwitchNode->computeBound();
-    osg::Vec3d center =
-        bs.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
-    mCenterPoint->set( center.x(), center.y(), center.z() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::FrameSelection()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SkyCam()
-{
-    //Unselect the previous selected DCS
-    DeviceHandler::instance()->UnselectObjects();
-
-    //gmtl::Matrix44d matrix;
-    //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
-    //m_sceneManager.GetActiveSwitchNode()->SetMat( matrix );
-
-    //Grab the current matrix
-    osg::ref_ptr< scenegraph::DCS > activeSwitchDCS = m_sceneManager.GetNavDCS();
-
-    //reset view
-    activeSwitchDCS->SetQuat( *mResetAxis );
-    activeSwitchDCS->SetTranslationArray( *mResetPosition );
-
-    osg::BoundingSphere bs = activeSwitchDCS->computeBound();
-
-    //Calculate the distance
-    double distance =  bs.radius();
-
-    //move the cad
-    double osgTransformedPosition[ 3 ];
-    osgTransformedPosition[ 0 ] = -bs.center( ).x( );
-    osgTransformedPosition[ 1 ] = -bs.center( ).y( ) + distance;
-    osgTransformedPosition[ 2 ] = -bs.center( ).z( );
-    activeSwitchDCS->SetTranslationArray( osgTransformedPosition );
-
-    //Get the new center of the bounding sphere
-    bs = activeSwitchDCS->computeBound();
-    //Set the center point of rotation to the new center of the bounding sphere
-    mCenterPoint->set( bs.center().x(), bs.center().y(), bs.center().z() );
-
-    //put it at 45 degrees
-    Rotate( gmtl::Math::deg2Rad( 45.0 ), gmtl::Vec3d( 1.0, 0.0, 0.0 ) );
-    ProcessNavigation();
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::OnKeyPress()
-{
-    switch( m_currKey )
-    {
-    case gadget::KEY_R:
-    {
-        ResetTransforms();
-
-        break;
-    }
-    case gadget::KEY_F:
-    {
-        FrameAll();
-
-        break;
-    }
-    case gadget::KEY_A:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.StrafeLeft( true );
-        }
-
-        break;
-    }
-    case gadget::KEY_S:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.StepBackward( true );
-        }
-
-        break;
-    }
-    case gadget::KEY_W:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.StepForward( true );
-        }
-
-        break;
-    }
-    case gadget::KEY_D:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.StrafeRight( true );
-        }
-
-        break;
-    }
-    case gadget::KEY_X:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            if( m_characterController.IsFlying() )
-            {
-                m_characterController.StepDown( true );
-            }
-        }
-
-        break;
-    }
-    case gadget::KEY_SPACE:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            if( m_characterController.IsFlying() )
-            {
-                m_characterController.StepUp( true );
-            }
-            else
-            {
-                //m_characterController.Jump();
-            }
-        }
-
-        break;
-    }
-    case gadget::KEY_K:
-    {
-        SkyCam();
-
-        break;
-    }
-
-    case gadget::KEY_UP:
-    {
-        Zoom45( 0.05 );
-        ProcessNavigation();
-
-        break;
-    }
-    case gadget::KEY_DOWN:
-    {
-        Zoom45( -0.05 );
-        ProcessNavigation();
-
-        break;
-    }
-    case gadget::KEY_LEFT:
-    {
-        Pan( 0.05, 0 );
-        ProcessNavigation();
-
-        break;
-    }
-    case gadget::KEY_RIGHT:
-    {
-        Pan( -0.05, 0 );
-        ProcessNavigation();
-
-        break;
-    }
-    default:
-    {
-        break;
-    }
-    } //end switch( m_currKey )
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::OnKeyRelease()
-{
-    switch( m_currKey )
-    {
-    case gadget::KEY_A:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.StrafeLeft( false );
-        }
-
-        break;
-    }
-    case gadget::KEY_S:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.StepBackward( false );
-        }
-
-        break;
-    }
-    case gadget::KEY_D:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.StrafeRight( false );
-        }
-
-        break;
-    }
-    case gadget::KEY_W:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.StepForward( false );
-        }
-
-        break;
-    }
-    case gadget::KEY_X:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            if( m_characterController.IsFlying() )
-            {
-                m_characterController.StepDown( false );
-            }
-            else
-            {
-                ;
-            }
-        }
-
-        break;
-    }
-    case gadget::KEY_SPACE:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            if( m_characterController.IsFlying() )
-            {
-                m_characterController.StepUp( false );
-            }
-            else
-            {
-                ;
-            }
-        }
-
-        break;
-    }
-#ifdef QT_ON
-    case gadget::KEY_F1:
-    {
-        mHideShowUISignal();
-    }
-#endif
-    default:
-    {
-        break;
-    }
-    } //end switch( m_currKey )
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::OnMousePress( gadget::InputArea& inputArea )
-{
-    //If we are manipulating something, release the dragger
-    if( m_manipulatorManager.IsEnabled() )
-    {
-        if( m_manipulatorManager.LeafDraggerIsActive() )
-        {
-            m_manipulatorManager.Handle(
-                scenegraph::manipulator::Event::RELEASE );
-        }
-    }
-
-    m_xMotionPixels = 0;
-    m_yMotionPixels = 0;
-
-    switch( m_currMouse )
-    {
-    //Left mouse button
-    case gadget::MBUTTON1:
-    {
-        //Rotate just the camera "3rd person view:
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.FirstPersonMode( false );
-        }
-
-        //No modifier key
-        if( mKeyNone )
-        {
-            if( m_manipulatorManager.IsEnabled() )
-            {
-                UpdateSelectionLine();
-                if( m_manipulatorManager.Handle(
-                        scenegraph::manipulator::Event::PUSH,
-                        mLineSegmentIntersector.get() ) )
-                {
-                    break;
-                }
-            }
-
-            if( m_characterController.IsEnabled() )
-            {
-                m_characterController.SetCameraRotationSLERP( false );
-            }
-        }
-        //Mod key shift
-        else if( mKeyShift )
-        {
-            if( !CreatePointConstraint() )
-            {
-                break;
-            }
-        }
-        else if( mKeyAlt )
-        {
-            ;
-        }
-
-        m_mousePickEvent = true;
-
-        break;
-    }
-    //Middle mouse button
-    case gadget::MBUTTON2:
-    {
-        m_mousePickEvent = true;
-
-        break;
-    }
-    //Right mouse button
-    case gadget::MBUTTON3:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.FirstPersonMode( true );
-            m_characterController.SetCameraRotationSLERP( false );
-            m_characterController.SetRotationFromCamera();
-        }
-
-        m_mousePickEvent = true;
-
-        break;
-    }
-    //Scroll wheel up
-    case gadget::MBUTTON4:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.Zoom( true );
-        }
-
-        break;
-    }
-    //Scroll wheel down
-    case gadget::MBUTTON5:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.Zoom( false );
-        }
-
-        break;
-    }
-    default:
-    {
-        ;
-    }
-    } //end switch( m_currKey )
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::OnMouseRelease( gadget::InputArea& inputArea )
-{
-    switch( m_currMouse )
-    {
-    //Left mouse button
-    case gadget::MBUTTON1:
-    {
-        //Do not require mod key depending on what the user did
-        ClearPointConstraint();
-
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.SetCameraRotationSLERP( true );
-        }
-
-        if( m_cameraManager.IsEnabled() && m_mousePickEvent )
-        {
-            UpdateSelectionLine();
-            //If we found a camera
-            if( m_cameraManager.Handle(
-                    scenegraph::camera::Event::RELEASE,
-                    *mLineSegmentIntersector.get() ) )
-            {
-                break;
-            }
-
-            scenegraph::highlight::HighlightManager& highlightManager =
-                m_sceneManager.GetHighlightManager();
-            if( !highlightManager.IsToggled() )
-            {
-                break;
-            }
-
-            osgUtil::LineSegmentIntersector::Intersections& intersections =
-                scenegraph::TestForIntersections(
-                *mLineSegmentIntersector.get(),
-                *m_sceneManager.GetModelRoot() );
-
-            //If we found a low level node
-            if( intersections.empty() )
-            {
-                break;
-            }
-
-            osg::NodePath nodePath = intersections.begin()->nodePath;
-            osg::Node* node = nodePath[ nodePath.size() - 1 ];
-
-            if( !node )
-            {
-                break;
-            }
-
-            highlightManager.CreateHighlightCircle( node, nodePath );
-
-            break;
-        }
-
-        if( m_manipulatorManager.IsEnabled() )
-        {
-            if( m_manipulatorManager.Handle(
-                    scenegraph::manipulator::Event::RELEASE ) )
-            {
-                break;
-            }
-        }
-
-        //No modifier key
-        if( mKeyNone )
-        {
-            ;
-        }
-        //Mod key shift
-        else if( mKeyShift )
-        {
-            ;
-        }
-        else if( mKeyAlt )
-        {
-            //OnMouseRelease();
-            scenegraph::DCS* infoDCS = DeviceHandler::instance()->GetSelectedDCS();
-            DeviceHandler::instance()->UnselectObjects();
-
-            std::map< std::string,
-                      ves::xplorer::plugin::PluginBase* >* tempPlugins =
-                ves::xplorer::network::GraphicalPluginManager::instance()->
-                    GetTheCurrentPlugins();
-
-            std::map< std::string, 
-                ves::xplorer::plugin::PluginBase* >::iterator pluginIter;
-
-            for( pluginIter = tempPlugins->begin(); 
-                pluginIter != tempPlugins->end(); ++pluginIter )
-            {
-                pluginIter->second->GetCFDModel()->
-                    RenderTextualDisplay( false );
-            }
-
-            if( !infoDCS )
-            {
-                break;
-            }
-            osg::Node::DescriptionList descriptorsList;
-            descriptorsList = infoDCS->getDescriptions();
-            std::string modelIdStr;
-            for( size_t i = 0; i < descriptorsList.size(); ++i )
-            {
-                //std::cout << descriptorsList.at( i ) << std::endl;
-                if( descriptorsList.at( i ) == "VE_XML_MODEL_ID" )
-                {
-                    modelIdStr = descriptorsList.at( i + 1 );
-                    break;
-                }
-            }
-
-            pluginIter = tempPlugins->find( modelIdStr );
-            if( pluginIter != tempPlugins->end() )
-            {
-                pluginIter->second->GetCFDModel()->RenderTextualDisplay( true );
-            }
-        }
-
-        break;
-    }
-    //Middle mouse button
-    case gadget::MBUTTON2:
-    {
-        if( m_cameraManager.IsEnabled() && m_mousePickEvent )
-        {
-            UpdateSelectionLine();
-            if( m_cameraManager.Handle(
-                    scenegraph::camera::Event::RELEASE,
-                    *mLineSegmentIntersector.get() ) )
-            {
-                break;
-            }
-        }
-        break;
-    }
-    //Right mouse button
-    case gadget::MBUTTON3:
-    {
-        if( m_cameraManager.IsEnabled() && m_mousePickEvent )
-        {
-            UpdateSelectionLine();
-            if( m_cameraManager.Handle(
-                    scenegraph::camera::Event::RELEASE,
-                    *mLineSegmentIntersector.get() ) )
-            {
-                break;
-            }
-        }
-        break;
-    }
-    default:
-    {
-        ;
-    }
-    } //end switch( m_currKey )
-
-    if( m_mousePickEvent )
-    {
-        UpdateSelectionLine();
-        if( m_processSelection )
-        {
-            ProcessSelection();
-        }
-        m_mousePickEvent = false;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::OnMouseMotionDown( double dx, double dy )
-{
-    if( m_mousePickEvent )
-    {
-        m_xMotionPixels += abs( static_cast< int >( dx ) );
-        m_yMotionPixels += abs( static_cast< int >( dy ) );
-    }
-
-    dx /= m_windowWidth;
-    dy /= m_windowHeight;
-
-    mMagnitude = sqrt( dx * dx + dy * dy );
-
-    switch( m_currMouse )
-    {
-    //Left mouse button
-    case gadget::MBUTTON1:
-    {
-        //No modifier key
-        if( mKeyNone )
-        {
-            if( m_manipulatorManager.IsEnabled() )
-            {
-                UpdateSelectionLine();
-                if( m_manipulatorManager.Handle(
-                        scenegraph::manipulator::Event::DRAG ) )
-                {
-                    break;
-                }
-            }
-
-            //Rotate just the camera "3rd person view:
-            if( m_characterController.IsEnabled() )
-            {
-                m_characterController.Rotate( dx, dy );
-            }
-            else
-            {
-                if( ( m_currX > 0.1 * m_windowWidth ) &&
-                    ( m_currX < 0.9 * m_windowWidth ) &&
-                    ( m_currY > 0.1 * m_windowHeight ) &&
-                    ( m_currY < 0.9 * m_windowHeight ) )
-                {
-                    double angle = mMagnitude * 7.0;
-                    Rotate( angle, gmtl::Vec3d( -dy, 0.0, dx ) );
-                }
-                else
-                {
-                    Twist( dx, dy );
-                }
-
-                ProcessNavigation();
-            }
-        }
-        //Mod key shift
-        else if( mKeyShift )
-        {
-            UpdatePointConstraint();
-        }
-
-        break;
-    }
-    //Middle mouse button
-    case gadget::MBUTTON2:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            ;
-        }
-        else
-        {
-            Pan( dx, dy );
-            ProcessNavigation();
-        }
-
-        break;
-    }
-    //Right mouse button
-    case gadget::MBUTTON3:
-    {
-        //Rotate the character and camera at the same time
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.Rotate( dx, dy );
-        }
-        else
-        {
-            Zoom( dy );
-            ProcessNavigation();
-        }
-
-        break;
-    }
-    default:
-    {
-        break;
-    }            
-    } //end switch( m_currKey )
-
-    //If delta mouse motion is less than m_pickCushion, do selection
-    if( m_mousePickEvent && ( ( m_xMotionPixels > m_pickCushion ) ||
-                              ( m_yMotionPixels > m_pickCushion ) ) )
-    {
-        m_mousePickEvent = false;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::OnMouseMotionUp()
-{
-    if( m_cameraManager.IsEnabled() )
-    {
-        UpdateSelectionLine();
-        if( m_cameraManager.Handle(
-                scenegraph::camera::Event::FOCUS,
-                *mLineSegmentIntersector.get() ) )
-        {
-            ;
-        }
-    }
-
-    if( m_manipulatorManager.IsEnabled() )
-    {
-        if( !m_manipulatorManager.LeafDraggerIsActive() )
-        {
-            UpdateSelectionLine();
-            if( m_manipulatorManager.Handle(
-                    scenegraph::manipulator::Event::FOCUS,
-                    mLineSegmentIntersector.get() ) )
-            {
-                ;
-            }
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ResetTransforms()
-{
-    DeviceHandler::instance()->ResetCenterPoint();
-
-    gmtl::Matrix44d matrix;
-    gmtl::identity( matrix );
-
-    osg::ref_ptr< scenegraph::DCS > worldDCS = m_sceneManager.GetNavDCS();
-    worldDCS->SetMat( matrix );
-    worldDCS->SetQuat( *mResetAxis );
-    worldDCS->SetTranslationArray( *mResetPosition );
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Twist( double dx, double dy )
-{
-    double tempX = 1.0 / m_windowWidth;
-    double tempY = 1.0 / m_windowHeight;
-    double currTheta = atan2( m_currX * tempX - 0.5, m_currY * tempY - 0.5 );
-    double prevTheta =
-        atan2( m_currX * tempX - dx - 0.5, m_currY * tempY - dy - 0.5 );
-    double angle = currTheta - prevTheta;
-
-    //Twist about the y-axis
-    Rotate( angle, gmtl::Vec3d( 0.0, 1.0, 0.0 ) );
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Zoom( double dy )
-{
-/*
-    gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
-
-    double viewlength = mCenterPoint->mData[ 1 ];
-    double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
-
-    gmtl::Point3d yTransform = *mCenterPoint;
-    yTransform.mData[ 1 ] += d;
-    yTransform = vpwMatrix * yTransform;
-
-    gmtl::Point3d position = vpwMatrix * *mCenterPoint;
-    position.mData[ 2 ] = yTransform.mData[ 2 ];
-    position = gmtl::invert( vpwMatrix ) * position;
-    mDeltaTranslation = position - *mCenterPoint;
-
-    //Test if center point has breached our specified threshold
-    if( position.mData[ 1 ] < *mCenterPointThreshold )
-    {
-        //Prevent center point from jumping when manipulating a selected object
-        scenegraph::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
-        if( selectedDCS )
-        {
-            mDeltaTranslation.set( 0.0, 0.0, 0.0 );
-
-            return;
-        }
-
-        position.mData[ 1 ] = *mCenterPointJump;
-    }
-
-    *mCenterPoint = position;
-*/
-
-    double viewlength = mCenterPoint->mData[ 1 ];
-    double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
-
-    mDeltaTranslation.mData[ 1 ] = d;
-    mCenterPoint->mData[ 1 ] += d;
-
-    //Test if center point has breached our specified threshold
-    if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
-    {
-        scenegraph::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
-        //Only jump center point for the worldDCS
-        if( !selectedDCS )
-        {
-            mCenterPoint->mData[ 1 ] = *mCenterPointJump;
-        }
-        //Prevent the center point from jumping
-        //if we are manipulating a selected object
-        else
-        {
-            mDeltaTranslation.mData[ 1 ] = 0.0;
-            mCenterPoint->mData[ 1 ] -= d;
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Zoom45( double dy )
-{
-    //needed for sky cam control
-    double viewlength = mCenterPoint->mData[ 1 ];
-    double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
-
-    mDeltaTranslation.mData[ 1 ] = d;
-    mDeltaTranslation.mData[ 2 ] = d;
-    mCenterPoint->mData[ 1 ] += d;
-    mCenterPoint->mData[ 2 ] += d;
-
-    //Test if center point has breached our specified threshold
-    if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
-    {
-        scenegraph::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
-        //Only jump center point for the worldDCS
-        if( !selectedDCS )
-        {
-            mCenterPoint->mData[ 1 ] = *mCenterPointJump;
-        }
-        //Prevent the center point from jumping
-        //if we are manipulating a selected object
-        else
-        {
-            mDeltaTranslation.mData[ 1 ] = 0.0;
-            mCenterPoint->mData[ 1 ] -= d;
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Pan( double dx, double dz )
-{
-    /*
-    gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
-
-    //std::cout << "mCenterPoint: " << *mCenterPoint << std::endl;
-    gmtl::Point3d position = vpwMatrix * *mCenterPoint;
-    //std::cout << "vpwMatrix * *mCenterPoint: " << position << std::endl;
-    position.mData[ 0 ] += dx * m_windowWidth;
-    position.mData[ 1 ] += dz * m_windowHeight;
-    position = gmtl::invert( vpwMatrix ) * position;
-    //std::cout << "gmtl::invert( vpwMatrix ) * position: " << position << std::endl;
-
-    mDeltaTranslation = position - *mCenterPoint;
-    *mCenterPoint = position;
-
-    //std::cout << std::endl;
-    */
-
-    double d = mCenterPoint->mData[ 1 ];
-    double theta = mFoVZ * 0.5 ;
-    double b = 2.0 * d * tan( theta );
-    double dwx = dx * b;
-    double dwz =  dz * b;
-
-    if( mAspectRatio > 1.0 )
-    {
-        dwx *= mAspectRatio;
-    }
-
-    mDeltaTranslation.mData[ 0 ] = dwx;
-    mDeltaTranslation.mData[ 2 ] = dwz;
-
-    mCenterPoint->mData[ 0 ] += dwx;
-    mCenterPoint->mData[ 2 ] += dwz;
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Rotate( double angle, gmtl::Vec3d axis )
-{
-    gmtl::normalize( axis );
-    gmtl::AxisAngled axisAngle( angle, axis );
-    mDeltaRotation = gmtl::makeRot< gmtl::Quatd >( axisAngle );
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::UpdateSelectionLine()
-{
-    //std::cout << "update selection line " << std::endl;
-    osg::Vec3d startPoint, endPoint;
-    SetStartEndPoint( startPoint, endPoint );
-    mLineSegmentIntersector->reset();
-    mLineSegmentIntersector->setStart( startPoint );
-    mLineSegmentIntersector->setEnd( endPoint );
-
-    //Used to debug the selection line
-    //If working correctly, the line should show up as 1 red pixel where picked
-    //DrawLine( startPoint, endPoint );
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessSelection()
-{
-    //Unselect the previous selected DCS
-    DeviceHandler::instance()->UnselectObjects();
-
-    //Test for intersections
-    osgUtil::LineSegmentIntersector::Intersections& intersections =
-        scenegraph::TestForIntersections(
-            *mLineSegmentIntersector.get(), *m_sceneManager.GetModelRoot() );
-    if( intersections.empty() )
-    {
-        vprDEBUG( vesDBG, 1 )
-            << "|\tKeyboardMouse::ProcessHit No object selected"
-            << std::endl << vprDEBUG_FLUSH;
-
-        return;
-    }
-
-    //Now find the new selected object
-    osg::NodePath nodePath = intersections.begin()->nodePath;
-    osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
-    if( !vesObject )
-    {
-        vprDEBUG( vesDBG, 1 )
-            << "|\tKeyboardMouse::ProcessHit Invalid object selected"
-            << std::endl << vprDEBUG_FLUSH;
-
-        return;
-    }
-
-    //Right now we are saying you must have a DCS
-    scenegraph::DCS* newSelectedDCS = static_cast< scenegraph::DCS* >( vesObject );
-    if( !newSelectedDCS )
-    {
-        return;
-    }
-
-    //Set the connection between the scene manipulator and the selected dcs
-    scenegraph::manipulator::TransformManipulator* sceneManipulator =
-        m_manipulatorManager.GetSceneManipulator();
-    sceneManipulator->Connect( newSelectedDCS );
-
-    //
-    osg::Vec3d center( 0.0, 0.0, 0.0 );
-    //If dcs is from a camera object, we want to rotate about local zero point
-    //We really need a selection callback for selectable objects -_-
-    if( newSelectedDCS->getName() != "CameraDCS" )
-    {
-        center= vesObject->getBound().center();
-
-        //Remove local node from nodePath
-        nodePath.pop_back();
-    }
-    else
-    {
-        ;
-    }
-    osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
-    center = center * localToWorldMatrix;
-    sceneManipulator->SetPosition( center );
-
-    //We need to transform center point into camera space
-    //In the future the center point will be in world coordinates
-    center = center * osg::Matrixd( m_sceneManager.GetNavDCS()->GetMat().mData );
-    //center = center * m_currentGLTransformInfo->GetViewMatrixOSG();
-    mCenterPoint->set( center.x(), center.y(), center.z() );
-
-    //Set the selected DCS
-    DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
-
-    //Need to do this for multi-pass techniques
-    if( m_sceneManager.IsRTTOn() )
-    {
-        newSelectedDCS->SetTechnique( "Glow" );
-    }
-    else
-    {
-        newSelectedDCS->SetTechnique( "Select" );
-    }
-
-    vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
-                          << vesObject->getName()
-                          << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
-                          << vesObject->getDescriptions().at( 1 )
-                          << std::endl << vprDEBUG_FLUSH;
-#ifdef QT_ON
-    vprDEBUG( vesDBG, 1 ) << "|\tObject is part of model "
-                          << newSelectedDCS->GetModelData()->GetID()
-                          << std::endl << vprDEBUG_FLUSH;
-                          
-    // Change the active model to the one corresponding to this piece of geometry
-    ves::xplorer::ModelHandler::instance()->SetActiveModel( newSelectedDCS->GetModelData()->GetID() );
-    
-    // Can't just pass in local variable nodePath because it is altered in call to 
-    // FindVESObject
-    osg::NodePath np = intersections.begin()->nodePath;
-    mObjectPickedSignal( np );
-#endif // QT_ON
-}
-////////////////////////////////////////////////////////////////////////////////
-gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()
-{
-#if __GADGET_version > 2001000
-    return mKeyboardMouse->getTypedInputDevice();
-#else
-    return mKeyboardMouse->getKeyboardMousePtr();
-#endif
-}
-////////////////////////////////////////////////////////////////////////////////
-vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
-    const gadget::InputArea* inputArea )
-{
-    const vrj::opengl::Window* window( NULL );
-#if defined( VPR_OS_Darwin )
-    const gadget::InputWindowCocoa* inputWindowCocoa =
-        dynamic_cast< const gadget::InputWindowCocoa* >( inputArea );
-    if( inputWindowCocoa )
-    {
-        return vrj::DisplayPtr();
-    }
-    //downcast
-    const vrj::opengl::WindowCocoa* windowCocoa =
-        static_cast< const vrj::opengl::WindowCocoa* >( inputArea );
-    //upcast
-    window = static_cast< const vrj::opengl::Window* >( windowCocoa );
-#elif defined( VPR_OS_Windows )
-    const gadget::InputWindowWin32* inputWindowWin32 =
-        dynamic_cast< const gadget::InputWindowWin32* >( inputArea );
-    if( inputWindowWin32 )
-    {
-        return vrj::DisplayPtr();
-    }
-    //downcast
-    const vrj::opengl::WindowWin32* windowWin32 =
-        static_cast< const vrj::opengl::WindowWin32* >( inputArea );
-    //upcast
-    window = dynamic_cast< const vrj::opengl::Window* >( windowWin32 );
-#elif defined( VPR_OS_Linux )
-    const gadget::InputWindowXWin* inputWindowXWin =
-        dynamic_cast< const gadget::InputWindowXWin* >( inputArea );
-    if( inputWindowXWin )
-    {
-        return vrj::DisplayPtr();
-    }
-    //downcast
-    const vrj::opengl::WindowXWin* windowXWin =
-        static_cast< const vrj::opengl::WindowXWin* >( inputArea );
-    //upcast
-    window = dynamic_cast< const vrj::opengl::Window* >( windowXWin );
-#endif
-
-    if( window )
-    {
-        return window->getDisplay();
-    }
-    else
-    {
-        //Error output, this should never happen
-        vprDEBUG( vesDBG, 2 ) 
-            << "VPR OS is not defined properly in KeyboardMouse::GetCurrentDisplay." 
-            << std::endl << vprDEBUG_FLUSH;
-        return vrj::DisplayPtr();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-bool KeyboardMouse::SetCurrentGLTransformInfo(
-    const vrj::DisplayPtr display, bool isKeyEvent )
-{
-    //If current display is invalid, return
-    if( display == vrj::DisplayPtr() )
-    {
-        return false;
-    }
-
-    scenegraph::manipulator::TransformManipulator* sceneManipulator =
-        m_manipulatorManager.GetSceneManipulator();
-    vrj::ViewportPtr viewport;
-    //Iterate over the viewports
-    for( unsigned int i = 0; i < display->getNumViewports(); ++i )
-    {
-        viewport = display->getViewport( i );
-        m_currentGLTransformInfo = m_sceneManager.GetGLTransformInfo( viewport );
-        if( m_currentGLTransformInfo == scenegraph::GLTransformInfoPtr() )
-        {
-            return false;
-        }
-
-        // ---------- This needs to be optimized ------------ //
-        // --- Does not need to be set for every viewport --- //
-        const int& windowWidth = m_currentGLTransformInfo->GetWindowWidth();
-        const int& windowHeight = m_currentGLTransformInfo->GetWindowHeight();
-        SetWindowValues( windowWidth, windowHeight );
-        // -------------------------------------------------- //
-
-        if( isKeyEvent )
-        {
-            return true;
-        }
-
-        //Get dimensions of viewport in pixels
-        const int& viewportOriginX = m_currentGLTransformInfo->GetViewportOriginX();
-        const int& viewportOriginY = m_currentGLTransformInfo->GetViewportOriginY();
-        const int& viewportWidth = m_currentGLTransformInfo->GetViewportWidth();
-        const int& viewportHeight = m_currentGLTransformInfo->GetViewportHeight();
-
-        //Check if mouse is inside viewport
-        if( ( m_currX >= viewportOriginX ) &&
-            ( m_currY >= viewportOriginY ) &&
-            ( m_currX <= viewportOriginX + viewportWidth ) &&
-            ( m_currY <= viewportOriginY + viewportHeight ) )
-        {
-            sceneManipulator->SetCurrentGLTransformInfo(
-                m_currentGLTransformInfo );
-
-            return true;
-        }
-    }
-
-    return false;
-}
-////////////////////////////////////////////////////////////////////////////////
-osgUtil::LineSegmentIntersector* KeyboardMouse::GetLineSegmentIntersector()
-{
-    return mLineSegmentIntersector.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-bool KeyboardMouse::CreatePointConstraint()
-{
-    //Add a point to point constraint for picking
-    if( m_physicsSimulator.GetIdle() )
-    {
-        return false;
-    }
-
-    osg::Vec3d startPoint, endPoint;
-    SetStartEndPoint( startPoint, endPoint );
-
-    btVector3 rayFromWorld, rayToWorld;
-    rayFromWorld.setValue( startPoint.x(), startPoint.y(), startPoint.z() );
-    rayToWorld.setValue( endPoint.x(), endPoint.y(), endPoint.z() );
-
-    btCollisionWorld::ClosestRayResultCallback rayCallback(
-        rayFromWorld, rayToWorld );
-    m_physicsSimulator.GetDynamicsWorld()->rayTest(
-        rayFromWorld, rayToWorld, rayCallback );
-    if( !rayCallback.hasHit() )
-    {
-        return false;
-    }
-
-    btRigidBody* body = btRigidBody::upcast( rayCallback.m_collisionObject );
-    if( !body )
-    {
-        return false;
-    }
-
-    //Other exclusions
-    if( !( body->isStaticObject() || body->isKinematicObject() ) )
-    {
-        mPickedBody = body;
-        mPickedBody->setActivationState( DISABLE_DEACTIVATION );
-
-        btVector3 pickPos = rayCallback.m_hitPointWorld;
-
-        btVector3 localPivot =
-            body->getCenterOfMassTransform().inverse() * pickPos;
-
-        btPoint2PointConstraint* p2p =
-            new btPoint2PointConstraint( *body, localPivot );
-        m_physicsSimulator.GetDynamicsWorld()->addConstraint( p2p );
-        mPickConstraint = p2p;
-
-        mPrevPhysicsRayPos = ( pickPos - rayFromWorld ).length();
-
-        //Very weak constraint for picking
-        p2p->m_setting.m_tau = 0.1;
-    }
-
-    return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::UpdatePointConstraint()
-{
-    if( !m_physicsSimulator.GetIdle() && mPickConstraint )
-    {
-        //Move the constraint pivot
-        btPoint2PointConstraint* p2p =
-            static_cast< btPoint2PointConstraint* >( mPickConstraint );
-        if( p2p )
-        {
-            osg::Vec3d startPoint, endPoint;
-            SetStartEndPoint( startPoint, endPoint );
-
-            btVector3 rayFromWorld, rayToWorld;
-            rayFromWorld.setValue(
-                startPoint.x(), startPoint.y(), startPoint.z() );
-            rayToWorld.setValue( endPoint.x(), endPoint.y(), endPoint.z() );
-
-            //Keep it at the same picking distance
-            btVector3 dir = rayToWorld - rayFromWorld;
-            dir.normalize();
-            dir *= mPrevPhysicsRayPos;
-
-            btVector3 newPos = rayFromWorld + dir;
-            p2p->setPivotB( newPos );
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ClearPointConstraint()
-{
-    //Do not require mod key depending on what the user did
-    if( mPickConstraint )
-    {
-        m_physicsSimulator.GetDynamicsWorld()->removeConstraint(
-            mPickConstraint );
-        delete mPickConstraint;
-        mPickConstraint = NULL;
-
-        mPickedBody->forceActivationState( ACTIVE_TAG );
-        mPickedBody->setDeactivationTime( 0.0 );
-        mPickedBody = NULL;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetProcessSelection( bool processSelection )
-{
-    m_processSelection = processSelection;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool KeyboardMouse::GetMousePickEvent()
-{
-    return m_mousePickEvent;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
 {
-    // !!!WARNING!!! All code in this function should be considered a temporary hack.
-    // Currently this function duplicates most of the code from ProcessEvents
-    // and maintains all its baggage.
-
-    // Temporary hack to make camera rotation work. Since we don't correctly look
-    // at modifier keys here, modifier keys won't work (correctly).
-    mKeyNone = true;
-
     const gadget::EventType eventType = event->type();
 
-        //Get the current display from the input area
-        gadget::InputArea& inputArea = event->getSource();
-        vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
-
-        switch( eventType )
-        {
-        case gadget::KeyPressEvent:
-        {
-            //std::cout << "Keypress event" << std::endl << std::flush;
-            const gadget::KeyEventPtr keyEvt =
-                boost::static_pointer_cast< gadget::KeyEvent >( event );
-#ifdef QT_ON
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyPress,
-                                keyEvt->getKey(), keyEvt->getKeyChar(), keyEvt->getKeyUnicode(), keyEvt->getModifierMask() );
-
-            mInteractionSignal( ie );
-#endif
-            //Protect against rapid key press events when key is held down
-            m_currKey = keyEvt->getKey();
-            if( !m_keys[ m_currKey ] )
-            {
-                m_keys.set( m_currKey );
-
-                //Set the current GLTransfromInfo from the event
-                if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
-                {
-                    return;
-                }
-
-                OnKeyPress();
-            }
-
-            break;
-        }
-        case gadget::KeyReleaseEvent:
-        {
-            //std::cout << "Keyrelease event" << std::endl << std::flush;
-            
-            const gadget::KeyEventPtr keyEvt =
-                boost::static_pointer_cast< gadget::KeyEvent >( event );
-            m_currKey = keyEvt->getKey();
-            m_keys.reset( m_currKey );
-#ifdef QT_ON
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::keyRelease,
-                                keyEvt->getKey(), keyEvt->getKeyChar(), keyEvt->getKeyUnicode(), keyEvt->getModifierMask() );
-
-            mInteractionSignal( ie );
-#endif
-            //Set the current GLTransfromInfo from the event
-            if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
-            {
-                return;
-            }
-
-            OnKeyRelease();
-
-            break;
-        }
-        case gadget::MouseButtonPressEvent:
-        {
-            //std::cout << "Mouse button press event" << std::endl << std::flush;
-            
-            const gadget::MouseEventPtr mouse_evt =
-                boost::static_pointer_cast< gadget::MouseEvent >( event );
-            m_currMouse = mouse_evt->getButton();
-            m_keys.set( m_currMouse );
-#ifdef QT_ON
-            eventmanager::InteractionEvent::buttonType button;
-            switch (m_currMouse)
-            {
-                case gadget::MBUTTON1:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-                case gadget::MBUTTON2:
-                {
-                    button = eventmanager::InteractionEvent::button_2;
-                    break;
-                }
-                case gadget::MBUTTON3:
-                {
-                    button = eventmanager::InteractionEvent::button_3;
-                    break;
-                }
-                case gadget::MBUTTON4:
-                {
-                    button = eventmanager::InteractionEvent::button_4;
-                    break;
-                }
-                case gadget::MBUTTON5:
-                {
-                    button = eventmanager::InteractionEvent::button_5;
-                    break;
-                }
-                default:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-            }
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonPress,
-                                0, 0, 0, mouse_evt->getState(), button,
-                                button, 0.0, 0.0,
-                                mouse_evt->getX(), mouse_evt->getY() );
-
-            // Signal returns true if this event should not be propagated on
-            if ( *mInteractionSignal( ie ) )
-            {
-                return;
-            }
-#endif
-            //Set the current GLTransfromInfo from the event
-            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
-            {
-                return;
-            }
-
-            OnMousePress( inputArea );
-
-            break;
-        }
-        case gadget::MouseButtonReleaseEvent:
-        {
-            //std::cout << "Mouse button release event" << std::endl << std::flush;
-            
-            const gadget::MouseEventPtr mouse_evt =
-                boost::static_pointer_cast< gadget::MouseEvent >( event );
-            m_currMouse = mouse_evt->getButton();
-            m_keys.reset( m_currMouse );
-#ifdef QT_ON
-            eventmanager::InteractionEvent::buttonType button;
-            switch (m_currMouse)
-            {
-                case gadget::MBUTTON1:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-                case gadget::MBUTTON2:
-                {
-                    button = eventmanager::InteractionEvent::button_2;
-                    break;
-                }
-                case gadget::MBUTTON3:
-                {
-                    button = eventmanager::InteractionEvent::button_3;
-                    break;
-                }
-                case gadget::MBUTTON4:
-                {
-                    button = eventmanager::InteractionEvent::button_4;
-                    break;
-                }
-                case gadget::MBUTTON5:
-                {
-                    button = eventmanager::InteractionEvent::button_5;
-                    break;
-                }
-                default:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-            }
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonRelease,
-                                0, 0, 0, mouse_evt->getState(), button,
-                                button, 0.0, 0.0,
-                                mouse_evt->getX(), mouse_evt->getY() );
-
-            if( *mInteractionSignal( ie ) )
-            {
-                return;
-            }
-#endif
-            //Set the current GLTransfromInfo from the event
-            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
-            {
-                return;
-            }
-
-            OnMouseRelease( inputArea );
-
-            break;
-        }
-        case gadget::MouseMoveEvent:
-        {
-            //std::cout << "Mouse move event" << std::endl << std::flush;
-            
-            const gadget::MouseEventPtr mouse_evt =
-                boost::static_pointer_cast< gadget::MouseEvent >( event );
-
-            m_currX = mouse_evt->getX();
-            m_currY = mouse_evt->getY();
-
-            //Set the current GLTransfromInfo from the event
-            if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
-            {
-                return;
-            }
-
-            if( !m_keys[ m_currMouse ] )
-            {
-#ifdef QT_ON
-                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
-                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
-                                eventmanager::InteractionEvent::button_none, 0.0, 0.0,
-                                m_currX, m_currY );
-
-                if( *mInteractionSignal( ie ) )
-                {
-                    return;
-                }
-#endif
-                OnMouseMotionUp();
-            }
-            else
-            {
-#ifdef QT_ON
-                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
-                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
-                                eventmanager::InteractionEvent::button_1, 0.0, 0.0,
-                                m_currX, m_currY );
-
-                if( *mInteractionSignal( ie ) )
-                {
-                    return;
-                }
-#endif
-
-#if defined( VPR_OS_Windows )
-                double dx = mouse_evt->getScrollDeltaX();
-                double dy = mouse_evt->getScrollDeltaY();
-#else
-                double dx = m_currX - m_prevX;
-                double dy = m_currY - m_prevY;
-#endif
-                if( dx != 0.0 || dy != 0.0 )
-                {
-                    OnMouseMotionDown( dx, dy );
-                }
-            }
-
-#if !defined( VPR_OS_Windows )
-            m_prevX = m_currX;
-            m_prevY = m_currY;
-#endif
-            break;
-        }
-        default:
-        {
-            break;
-        }
-        } //end switch( eventType )
-        
-}
-
-/*
-////////////////////////////////////////////////////////////////////////////////
-//This stuff is used for the old NURBS selection events
-//In the future, NURBS should be selectable in the scene like manipulators
-//A button in the toolbar could turn NURBS points on/off like manipulators
-
-void KeyboardMouse::ProcessNURBSSelectionEvents()
-{
-    osg::ref_ptr< osgUtil::IntersectorGroup > intersectorGroup =
-        new osgUtil::IntersectorGroup();
-    osg::ref_ptr< scenegraph::nurbs::PointLineSegmentIntersector > intersector =
-        new scenegraph::nurbs::PointLineSegmentIntersector(
-            mLineSegmentIntersector->getStart(),
-            mLineSegmentIntersector->getEnd() );
-    intersectorGroup->addIntersector( intersector.get() );
-
-    osgUtil::IntersectionVisitor controlMeshPointIntersectVisitor;
-
-    controlMeshPointIntersectVisitor.setIntersector( intersectorGroup.get() );
-
-    //Add the IntersectVisitor to the root Node so that all geometry will be
-    //checked and no transforms are done to the line segement
-    m_sceneManager.GetRootNode()->accept( controlMeshPointIntersectVisitor );
-
-    if( intersectorGroup->containsIntersections() )
+    switch( eventType )
     {
-         //std::cout<<"Found intersections "<<std::endl;
-         ///only want the first one
-         scenegraph::nurbs::PointLineSegmentIntersector::Intersections& intersections =
-             intersector->getIntersections();
-         scenegraph::nurbs::PointLineSegmentIntersector::Intersection closestControlPoint =
-             (*intersections.begin());
-         osg::ref_ptr<scenegraph::nurbs::NURBSControlMesh> ctMesh =
-            dynamic_cast< scenegraph::nurbs::NURBSControlMesh* >(
-                closestControlPoint.drawable.get() );
-         if( ctMesh.valid() )
-         {
-             osg::ref_ptr<scenegraph::nurbs::NURBS> nurbs = 
-                dynamic_cast<scenegraph::nurbs::NURBS*>( ctMesh->getParent( 0 ) );
-             if( nurbs.valid() )
-             {
-                 nurbs->SetSelectedControlPoint(
-                     closestControlPoint.primitiveIndex );
-             }
-         }
+    case gadget::KeyPressEvent:
+    {
+        vprDEBUG( vesDBG, 4 )
+            << "|\tKeyboardMouse::onKeyboardMouseEvent::KeyPressEvent"
+            << std::endl << vprDEBUG_FLUSH;
+
+        const gadget::KeyEventPtr keyEvt =
+            boost::static_pointer_cast< gadget::KeyEvent >( event );
+
+        // Emit the keypress signal associated with this particular key
+        KeyPressSignalMapType::iterator itr = mKeyPressSignalMap.find( keyEvt->getKey() );
+        if( itr != mKeyPressSignalMap.end() )
+        {
+            (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask() );
+        }
+        else
+        {
+            vprDEBUG( vesDBG, 2 )
+                << "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyPress event"
+                << std::endl << vprDEBUG_FLUSH;
+        }
+
+        break;
+    }
+    case gadget::KeyReleaseEvent:
+    {
+
+        vprDEBUG( vesDBG, 4 )
+            << "|\tKeyboardMouse::onKeyboardMouseEvent::KeyReleaseEvent"
+            << std::endl << vprDEBUG_FLUSH;
+
+        const gadget::KeyEventPtr keyEvt =
+            boost::static_pointer_cast< gadget::KeyEvent >( event );
+
+        // Emit the keypress signal associated with this particular key
+        KeyReleaseSignalMapType::iterator itr = mKeyReleaseSignalMap.find( keyEvt->getKey() );
+        if( itr != mKeyReleaseSignalMap.end() )
+        {
+            (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask() );
+        }
+        else
+        {
+            vprDEBUG( vesDBG, 2 )
+                << "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyRelease event"
+                << std::endl << vprDEBUG_FLUSH;
+        }
+
+        break;
+    }
+    case gadget::MouseButtonPressEvent:
+    {
+        const gadget::MouseEventPtr mouseEvt =
+            boost::static_pointer_cast< gadget::MouseEvent >( event );
+
+        vprDEBUG( vesDBG, 4 )
+            << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonPressEvent "
+            << mouseEvt->getButton() << ", " << mouseEvt->getX()
+            << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
+            << std::endl << vprDEBUG_FLUSH;
+
+        ButtonPressSignalMapType::iterator itr = mButtonPressSignalMap.find( mouseEvt->getButton() );
+        if( itr != mButtonPressSignalMap.end() )
+        {
+            (*(itr->second))( mouseEvt->getButton(), mouseEvt->getX(), mouseEvt->getY(), mouseEvt->getState() );
+        }
+
+        break;
+    }
+    case gadget::MouseButtonReleaseEvent:
+    {
+
+        vprDEBUG( vesDBG, 4 )
+            << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonReleaseEvent"
+            << std::endl << vprDEBUG_FLUSH;
+
+        const gadget::MouseEventPtr mouseEvt =
+            boost::static_pointer_cast< gadget::MouseEvent >( event );
+
+        ButtonReleaseSignalMapType::iterator itr = mButtonReleaseSignalMap.find( mouseEvt->getButton() );
+        if( itr != mButtonReleaseSignalMap.end() )
+        {
+            (*(itr->second))( mouseEvt->getButton(), mouseEvt->getX(), mouseEvt->getY(), mouseEvt->getState() );
+        }
+
+        break;
+    }
+    case gadget::MouseMoveEvent:
+    {
+        const gadget::MouseEventPtr mouseEvt =
+            boost::static_pointer_cast< gadget::MouseEvent >( event );
+
+        vprDEBUG( vesDBG, 5 )
+            << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseMoveEvent"
+            << mouseEvt->getX() << ", " << mouseEvt->getY()
+            << ", 0, " << mouseEvt->getState()
+            << std::endl << vprDEBUG_FLUSH;
+
+        // x, y, z, state (modifier mask OR'd with button mask)
+        mMouseMove( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
+
+        break;
+    }
     }
 }
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelOnKeyboardPress()
+
+void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
 {
-    return;
+    const gadget::MouseEventPtr mouseEvt =
+        boost::static_pointer_cast< gadget::MouseEvent >( event );
+
+    vprDEBUG( vesDBG, 2 )
+        << "|\tKeyboardMouse::onMouseDoubleClick"
+        << mouseEvt->getButton() << ", " << mouseEvt->getX()
+        << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
+        << std::endl << vprDEBUG_FLUSH;
 }
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelOnMousePress()
+
+void KeyboardMouse::SetupButtonSignalMap()
 {
-    UpdateSelectionLine();
+    mButtonPressSignalMap[ gadget::MBUTTON1 ] = &mButtonPress_1;
+    mButtonReleaseSignalMap[ gadget::MBUTTON1 ] = &mButtonRelease_1;
 
-    switch( m_currKey )
-    {
-        //Left mouse button
-        case gadget::MBUTTON1:
-        {
-            if( mKeyNone )
-            {
-                ProcessNURBSSelectionEvents();
-            }
+    mButtonPressSignalMap[ gadget::MBUTTON2 ] = &mButtonPress_2;
+    mButtonReleaseSignalMap[ gadget::MBUTTON2 ] = &mButtonRelease_2;
 
-            ProcessSelection();
+    mButtonPressSignalMap[ gadget::MBUTTON3 ] = &mButtonPress_3;
+    mButtonReleaseSignalMap[ gadget::MBUTTON3 ] = &mButtonRelease_3;
 
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            break;
-        }
-    }
+    mButtonPressSignalMap[ gadget::MBUTTON4 ] = &mButtonPress_4;
+    mButtonReleaseSignalMap[ gadget::MBUTTON4 ] = &mButtonRelease_4;
+
+    mButtonPressSignalMap[ gadget::MBUTTON5 ] = &mButtonPress_5;
+    mButtonReleaseSignalMap[ gadget::MBUTTON5 ] = &mButtonRelease_5;
+
+    mButtonPressSignalMap[ gadget::MBUTTON6 ] = &mButtonPress_6;
+    mButtonReleaseSignalMap[ gadget::MBUTTON6 ] = &mButtonRelease_6;
+
+    mButtonPressSignalMap[ gadget::MBUTTON7 ] = &mButtonPress_7;
+    mButtonReleaseSignalMap[ gadget::MBUTTON7 ] = &mButtonRelease_7;
 }
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelOnMouseRelease()
+
+void KeyboardMouse::RegisterButtonSignals()
 {
-    UpdateSelectionLine();
+    eventmanager::EventManager* evm = eventmanager::EventManager::instance();
+    using eventmanager::SignalWrapper;
 
-    switch( m_currKey )
-    {
-        //Left mouse button
-        case gadget::MBUTTON1:
-        {
-            if( mKeyNone )
-            {
-                scenegraph::SetStateOnNURBSNodeVisitor(
-                    m_sceneManager.GetActiveSwitchNode(), false,
-                    false, m_currMousePos, std::pair< double, double >( 0.0, 0.0 ) );
-            }
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonPressSignal_type >( &mButtonPress_1 ),
+            "KeyboardMouse.ButtonPress1", eventmanager::EventManager::button_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonReleaseSignal_type >( &mButtonRelease_1 ),
+            "KeyboardMouse.ButtonRelease1", eventmanager::EventManager::button_SignalType );
 
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            break;
-        }
-    }
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonPressSignal_type >( &mButtonPress_2 ),
+            "KeyboardMouse.ButtonPress2", eventmanager::EventManager::button_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonReleaseSignal_type >( &mButtonRelease_2 ),
+            "KeyboardMouse.ButtonRelease2", eventmanager::EventManager::button_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonPressSignal_type >( &mButtonPress_3 ),
+            "KeyboardMouse.ButtonPress3", eventmanager::EventManager::button_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonReleaseSignal_type >( &mButtonRelease_3 ),
+            "KeyboardMouse.ButtonRelease3", eventmanager::EventManager::button_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonPressSignal_type >( &mButtonPress_4 ),
+            "KeyboardMouse.ButtonPress4", eventmanager::EventManager::button_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonReleaseSignal_type >( &mButtonRelease_4 ),
+            "KeyboardMouse.ButtonRelease4", eventmanager::EventManager::button_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonPressSignal_type >( &mButtonPress_5 ),
+            "KeyboardMouse.ButtonPress5", eventmanager::EventManager::button_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonReleaseSignal_type >( &mButtonRelease_5 ),
+            "KeyboardMouse.ButtonRelease5", eventmanager::EventManager::button_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonPressSignal_type >( &mButtonPress_6 ),
+            "KeyboardMouse.ButtonPress6", eventmanager::EventManager::button_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonReleaseSignal_type >( &mButtonRelease_6 ),
+            "KeyboardMouse.ButtonRelease6", eventmanager::EventManager::button_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonPressSignal_type >( &mButtonPress_7 ),
+            "KeyboardMouse.ButtonPress7", eventmanager::EventManager::button_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< ButtonReleaseSignal_type >( &mButtonRelease_7 ),
+            "KeyboardMouse.ButtonRelease7", eventmanager::EventManager::button_SignalType );
 }
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelOnMouseMotion( std::pair< double, double > delta )
+
+void KeyboardMouse::SetupKeySignalMap()
 {
-    switch( m_currKey )
-    {
-        //Left mouse button
-        case gadget::MBUTTON1:
-        {
-            scenegraph::SetStateOnNURBSNodeVisitor(
-                m_sceneManager.GetActiveSwitchNode(),
-                true, true, m_currMousePos, delta );
+    mKeyPressSignalMap[gadget::KEY_NONE] = &mKeyPress_KEY_NONE;
+    mKeyReleaseSignalMap[gadget::KEY_NONE] = &mKeyRelease_KEY_NONE;
 
-            break;
-        }
-        //Middle mouse button
-        case gadget::MBUTTON2:
-        {
-            break;
-        }
-        //Right mouse button
-        case gadget::MBUTTON3:
-        {
-            break;
-        }
-    }
+    mKeyPressSignalMap[gadget::KEY_UP] = &mKeyPress_KEY_UP;
+    mKeyReleaseSignalMap[gadget::KEY_UP] = &mKeyRelease_KEY_UP;
+
+    mKeyPressSignalMap[gadget::KEY_DOWN] = &mKeyPress_KEY_DOWN;
+    mKeyReleaseSignalMap[gadget::KEY_DOWN] = &mKeyRelease_KEY_DOWN;
+
+    mKeyPressSignalMap[gadget::KEY_LEFT] = &mKeyPress_KEY_LEFT;
+    mKeyReleaseSignalMap[gadget::KEY_LEFT] = &mKeyRelease_KEY_LEFT;
+
+    mKeyPressSignalMap[gadget::KEY_RIGHT] = &mKeyPress_KEY_RIGHT;
+    mKeyReleaseSignalMap[gadget::KEY_RIGHT] = &mKeyRelease_KEY_RIGHT;
+
+    mKeyPressSignalMap[gadget::KEY_SHIFT] = &mKeyPress_KEY_SHIFT;
+    mKeyReleaseSignalMap[gadget::KEY_SHIFT] = &mKeyRelease_KEY_SHIFT;
+
+    mKeyPressSignalMap[gadget::KEY_CTRL] = &mKeyPress_KEY_CTRL;
+    mKeyReleaseSignalMap[gadget::KEY_CTRL] = &mKeyRelease_KEY_CTRL;
+
+    mKeyPressSignalMap[gadget::KEY_ALT] = &mKeyPress_KEY_ALT;
+    mKeyReleaseSignalMap[gadget::KEY_ALT] = &mKeyRelease_KEY_ALT;
+
+    mKeyPressSignalMap[gadget::KEY_COMMAND] = &mKeyPress_KEY_COMMAND;
+    mKeyReleaseSignalMap[gadget::KEY_COMMAND] = &mKeyRelease_KEY_COMMAND;
+
+    mKeyPressSignalMap[gadget::KEY_1] = &mKeyPress_KEY_1;
+    mKeyReleaseSignalMap[gadget::KEY_1] = &mKeyRelease_KEY_1;
+
+    mKeyPressSignalMap[gadget::KEY_2] = &mKeyPress_KEY_2;
+    mKeyReleaseSignalMap[gadget::KEY_2] = &mKeyRelease_KEY_2;
+
+    mKeyPressSignalMap[gadget::KEY_3] = &mKeyPress_KEY_3;
+    mKeyReleaseSignalMap[gadget::KEY_3] = &mKeyRelease_KEY_3;
+
+    mKeyPressSignalMap[gadget::KEY_4] = &mKeyPress_KEY_4;
+    mKeyReleaseSignalMap[gadget::KEY_4] = &mKeyRelease_KEY_4;
+
+    mKeyPressSignalMap[gadget::KEY_5] = &mKeyPress_KEY_5;
+    mKeyReleaseSignalMap[gadget::KEY_5] = &mKeyRelease_KEY_5;
+
+    mKeyPressSignalMap[gadget::KEY_6] = &mKeyPress_KEY_6;
+    mKeyReleaseSignalMap[gadget::KEY_6] = &mKeyRelease_KEY_6;
+
+    mKeyPressSignalMap[gadget::KEY_7] = &mKeyPress_KEY_7;
+    mKeyReleaseSignalMap[gadget::KEY_7] = &mKeyRelease_KEY_7;
+
+    mKeyPressSignalMap[gadget::KEY_8] = &mKeyPress_KEY_8;
+    mKeyReleaseSignalMap[gadget::KEY_8] = &mKeyRelease_KEY_8;
+
+    mKeyPressSignalMap[gadget::KEY_9] = &mKeyPress_KEY_9;
+    mKeyReleaseSignalMap[gadget::KEY_9] = &mKeyRelease_KEY_9;
+
+    mKeyPressSignalMap[gadget::KEY_0] = &mKeyPress_KEY_0;
+    mKeyReleaseSignalMap[gadget::KEY_0] = &mKeyRelease_KEY_0;
+
+    mKeyPressSignalMap[gadget::KEY_A] = &mKeyPress_KEY_A;
+    mKeyReleaseSignalMap[gadget::KEY_A] = &mKeyRelease_KEY_A;
+
+    mKeyPressSignalMap[gadget::KEY_B] = &mKeyPress_KEY_B;
+    mKeyReleaseSignalMap[gadget::KEY_B] = &mKeyRelease_KEY_B;
+
+    mKeyPressSignalMap[gadget::KEY_C] = &mKeyPress_KEY_C;
+    mKeyReleaseSignalMap[gadget::KEY_C] = &mKeyRelease_KEY_C;
+
+    mKeyPressSignalMap[gadget::KEY_D] = &mKeyPress_KEY_D;
+    mKeyReleaseSignalMap[gadget::KEY_D] = &mKeyRelease_KEY_D;
+
+    mKeyPressSignalMap[gadget::KEY_E] = &mKeyPress_KEY_E;
+    mKeyReleaseSignalMap[gadget::KEY_E] = &mKeyRelease_KEY_E;
+
+    mKeyPressSignalMap[gadget::KEY_F] = &mKeyPress_KEY_F;
+    mKeyReleaseSignalMap[gadget::KEY_F] = &mKeyRelease_KEY_F;
+
+    mKeyPressSignalMap[gadget::KEY_G] = &mKeyPress_KEY_G;
+    mKeyReleaseSignalMap[gadget::KEY_G] = &mKeyRelease_KEY_G;
+
+    mKeyPressSignalMap[gadget::KEY_H] = &mKeyPress_KEY_H;
+    mKeyReleaseSignalMap[gadget::KEY_H] = &mKeyRelease_KEY_H;
+
+    mKeyPressSignalMap[gadget::KEY_I] = &mKeyPress_KEY_I;
+    mKeyReleaseSignalMap[gadget::KEY_I] = &mKeyRelease_KEY_I;
+
+    mKeyPressSignalMap[gadget::KEY_J] = &mKeyPress_KEY_J;
+    mKeyReleaseSignalMap[gadget::KEY_J] = &mKeyRelease_KEY_J;
+
+    mKeyPressSignalMap[gadget::KEY_K] = &mKeyPress_KEY_K;
+    mKeyReleaseSignalMap[gadget::KEY_K] = &mKeyRelease_KEY_K;
+
+    mKeyPressSignalMap[gadget::KEY_L] = &mKeyPress_KEY_L;
+    mKeyReleaseSignalMap[gadget::KEY_L] = &mKeyRelease_KEY_L;
+
+    mKeyPressSignalMap[gadget::KEY_M] = &mKeyPress_KEY_M;
+    mKeyReleaseSignalMap[gadget::KEY_M] = &mKeyRelease_KEY_M;
+
+    mKeyPressSignalMap[gadget::KEY_N] = &mKeyPress_KEY_N;
+    mKeyReleaseSignalMap[gadget::KEY_N] = &mKeyRelease_KEY_N;
+
+    mKeyPressSignalMap[gadget::KEY_O] = &mKeyPress_KEY_O;
+    mKeyReleaseSignalMap[gadget::KEY_O] = &mKeyRelease_KEY_O;
+
+    mKeyPressSignalMap[gadget::KEY_P] = &mKeyPress_KEY_P;
+    mKeyReleaseSignalMap[gadget::KEY_P] = &mKeyRelease_KEY_P;
+
+    mKeyPressSignalMap[gadget::KEY_Q] = &mKeyPress_KEY_Q;
+    mKeyReleaseSignalMap[gadget::KEY_Q] = &mKeyRelease_KEY_Q;
+
+    mKeyPressSignalMap[gadget::KEY_R] = &mKeyPress_KEY_R;
+    mKeyReleaseSignalMap[gadget::KEY_R] = &mKeyRelease_KEY_R;
+
+    mKeyPressSignalMap[gadget::KEY_S] = &mKeyPress_KEY_S;
+    mKeyReleaseSignalMap[gadget::KEY_S] = &mKeyRelease_KEY_S;
+
+    mKeyPressSignalMap[gadget::KEY_T] = &mKeyPress_KEY_T;
+    mKeyReleaseSignalMap[gadget::KEY_T] = &mKeyRelease_KEY_T;
+
+    mKeyPressSignalMap[gadget::KEY_U] = &mKeyPress_KEY_U;
+    mKeyReleaseSignalMap[gadget::KEY_U] = &mKeyRelease_KEY_U;
+
+    mKeyPressSignalMap[gadget::KEY_V] = &mKeyPress_KEY_V;
+    mKeyReleaseSignalMap[gadget::KEY_V] = &mKeyRelease_KEY_V;
+
+    mKeyPressSignalMap[gadget::KEY_W] = &mKeyPress_KEY_W;
+    mKeyReleaseSignalMap[gadget::KEY_W] = &mKeyRelease_KEY_W;
+
+    mKeyPressSignalMap[gadget::KEY_X] = &mKeyPress_KEY_X;
+    mKeyReleaseSignalMap[gadget::KEY_X] = &mKeyRelease_KEY_X;
+
+    mKeyPressSignalMap[gadget::KEY_Y] = &mKeyPress_KEY_Y;
+    mKeyReleaseSignalMap[gadget::KEY_Y] = &mKeyRelease_KEY_Y;
+
+    mKeyPressSignalMap[gadget::KEY_Z] = &mKeyPress_KEY_Z;
+    mKeyReleaseSignalMap[gadget::KEY_Z] = &mKeyRelease_KEY_Z;
+
+    mKeyPressSignalMap[gadget::KEY_ESC] = &mKeyPress_KEY_ESC;
+    mKeyReleaseSignalMap[gadget::KEY_ESC] = &mKeyRelease_KEY_ESC;
+
+    mKeyPressSignalMap[gadget::KEY_TAB] = &mKeyPress_KEY_TAB;
+    mKeyReleaseSignalMap[gadget::KEY_TAB] = &mKeyRelease_KEY_TAB;
+
+    mKeyPressSignalMap[gadget::KEY_BACKTAB] = &mKeyPress_KEY_BACKTAB;
+    mKeyReleaseSignalMap[gadget::KEY_BACKTAB] = &mKeyRelease_KEY_BACKTAB;
+
+    mKeyPressSignalMap[gadget::KEY_BACKSPACE] = &mKeyPress_KEY_BACKSPACE;
+    mKeyReleaseSignalMap[gadget::KEY_BACKSPACE] = &mKeyRelease_KEY_BACKSPACE;
+
+    mKeyPressSignalMap[gadget::KEY_RETURN] = &mKeyPress_KEY_RETURN;
+    mKeyReleaseSignalMap[gadget::KEY_RETURN] = &mKeyRelease_KEY_RETURN;
+
+    mKeyPressSignalMap[gadget::KEY_ENTER] = &mKeyPress_KEY_ENTER;
+    mKeyReleaseSignalMap[gadget::KEY_ENTER] = &mKeyRelease_KEY_ENTER;
+
+    mKeyPressSignalMap[gadget::KEY_INSERT] = &mKeyPress_KEY_INSERT;
+    mKeyReleaseSignalMap[gadget::KEY_INSERT] = &mKeyRelease_KEY_INSERT;
+
+    mKeyPressSignalMap[gadget::KEY_DELETE] = &mKeyPress_KEY_DELETE;
+    mKeyReleaseSignalMap[gadget::KEY_DELETE] = &mKeyRelease_KEY_DELETE;
+
+    mKeyPressSignalMap[gadget::KEY_PAUSE] = &mKeyPress_KEY_PAUSE;
+    mKeyReleaseSignalMap[gadget::KEY_PAUSE] = &mKeyRelease_KEY_PAUSE;
+
+    mKeyPressSignalMap[gadget::KEY_PRINT] = &mKeyPress_KEY_PRINT;
+    mKeyReleaseSignalMap[gadget::KEY_PRINT] = &mKeyRelease_KEY_PRINT;
+
+    mKeyPressSignalMap[gadget::KEY_SYSREQ] = &mKeyPress_KEY_SYSREQ;
+    mKeyReleaseSignalMap[gadget::KEY_SYSREQ] = &mKeyRelease_KEY_SYSREQ;
+
+    mKeyPressSignalMap[gadget::KEY_HOME] = &mKeyPress_KEY_HOME;
+    mKeyReleaseSignalMap[gadget::KEY_HOME] = &mKeyRelease_KEY_HOME;
+
+    mKeyPressSignalMap[gadget::KEY_END] = &mKeyPress_KEY_END;
+    mKeyReleaseSignalMap[gadget::KEY_END] = &mKeyRelease_KEY_END;
+
+    mKeyPressSignalMap[gadget::KEY_PRIOR] = &mKeyPress_KEY_PRIOR;
+    mKeyReleaseSignalMap[gadget::KEY_PRIOR] = &mKeyRelease_KEY_PRIOR;
+
+    mKeyPressSignalMap[gadget::KEY_NEXT] = &mKeyPress_KEY_NEXT;
+    mKeyReleaseSignalMap[gadget::KEY_NEXT] = &mKeyRelease_KEY_NEXT;
+
+    mKeyPressSignalMap[gadget::KEY_CAPS_LOCK] = &mKeyPress_KEY_CAPS_LOCK;
+    mKeyReleaseSignalMap[gadget::KEY_CAPS_LOCK] = &mKeyRelease_KEY_CAPS_LOCK;
+
+    mKeyPressSignalMap[gadget::KEY_NUM_LOCK] = &mKeyPress_KEY_NUM_LOCK;
+    mKeyReleaseSignalMap[gadget::KEY_NUM_LOCK] = &mKeyRelease_KEY_NUM_LOCK;
+
+    mKeyPressSignalMap[gadget::KEY_SCROLL_LOCK] = &mKeyPress_KEY_SCROLL_LOCK;
+    mKeyReleaseSignalMap[gadget::KEY_SCROLL_LOCK] = &mKeyRelease_KEY_SCROLL_LOCK;
+
+    mKeyPressSignalMap[gadget::KEY_F1] = &mKeyPress_KEY_F1;
+    mKeyReleaseSignalMap[gadget::KEY_F1] = &mKeyRelease_KEY_F1;
+
+    mKeyPressSignalMap[gadget::KEY_F2] = &mKeyPress_KEY_F2;
+    mKeyReleaseSignalMap[gadget::KEY_F2] = &mKeyRelease_KEY_F2;
+
+    mKeyPressSignalMap[gadget::KEY_F3] = &mKeyPress_KEY_F3;
+    mKeyReleaseSignalMap[gadget::KEY_F3] = &mKeyRelease_KEY_F3;
+
+    mKeyPressSignalMap[gadget::KEY_F4] = &mKeyPress_KEY_F4;
+    mKeyReleaseSignalMap[gadget::KEY_F4] = &mKeyRelease_KEY_F4;
+
+    mKeyPressSignalMap[gadget::KEY_F5] = &mKeyPress_KEY_F5;
+    mKeyReleaseSignalMap[gadget::KEY_F5] = &mKeyRelease_KEY_F5;
+
+    mKeyPressSignalMap[gadget::KEY_F6] = &mKeyPress_KEY_F6;
+    mKeyReleaseSignalMap[gadget::KEY_F6] = &mKeyRelease_KEY_F6;
+
+    mKeyPressSignalMap[gadget::KEY_F7] = &mKeyPress_KEY_F7;
+    mKeyReleaseSignalMap[gadget::KEY_F7] = &mKeyRelease_KEY_F7;
+
+    mKeyPressSignalMap[gadget::KEY_F8] = &mKeyPress_KEY_F8;
+    mKeyReleaseSignalMap[gadget::KEY_F8] = &mKeyRelease_KEY_F8;
+
+    mKeyPressSignalMap[gadget::KEY_F9] = &mKeyPress_KEY_F9;
+    mKeyReleaseSignalMap[gadget::KEY_F9] = &mKeyRelease_KEY_F9;
+
+    mKeyPressSignalMap[gadget::KEY_F10] = &mKeyPress_KEY_F10;
+    mKeyReleaseSignalMap[gadget::KEY_F10] = &mKeyRelease_KEY_F10;
+
+    mKeyPressSignalMap[gadget::KEY_F11] = &mKeyPress_KEY_F11;
+    mKeyReleaseSignalMap[gadget::KEY_F11] = &mKeyRelease_KEY_F11;
+
+    mKeyPressSignalMap[gadget::KEY_F12] = &mKeyPress_KEY_F12;
+    mKeyReleaseSignalMap[gadget::KEY_F12] = &mKeyRelease_KEY_F12;
+
+    mKeyPressSignalMap[gadget::KEY_F13] = &mKeyPress_KEY_F13;
+    mKeyReleaseSignalMap[gadget::KEY_F13] = &mKeyRelease_KEY_F13;
+
+    mKeyPressSignalMap[gadget::KEY_F14] = &mKeyPress_KEY_F14;
+    mKeyReleaseSignalMap[gadget::KEY_F14] = &mKeyRelease_KEY_F14;
+
+    mKeyPressSignalMap[gadget::KEY_F15] = &mKeyPress_KEY_F15;
+    mKeyReleaseSignalMap[gadget::KEY_F15] = &mKeyRelease_KEY_F15;
+
+    mKeyPressSignalMap[gadget::KEY_F16] = &mKeyPress_KEY_F16;
+    mKeyReleaseSignalMap[gadget::KEY_F16] = &mKeyRelease_KEY_F16;
+
+    mKeyPressSignalMap[gadget::KEY_F17] = &mKeyPress_KEY_F17;
+    mKeyReleaseSignalMap[gadget::KEY_F17] = &mKeyRelease_KEY_F17;
+
+    mKeyPressSignalMap[gadget::KEY_F18] = &mKeyPress_KEY_F18;
+    mKeyReleaseSignalMap[gadget::KEY_F18] = &mKeyRelease_KEY_F18;
+
+    mKeyPressSignalMap[gadget::KEY_F19] = &mKeyPress_KEY_F19;
+    mKeyReleaseSignalMap[gadget::KEY_F19] = &mKeyRelease_KEY_F19;
+
+    mKeyPressSignalMap[gadget::KEY_F20] = &mKeyPress_KEY_F20;
+    mKeyReleaseSignalMap[gadget::KEY_F20] = &mKeyRelease_KEY_F20;
+
+    mKeyPressSignalMap[gadget::KEY_F21] = &mKeyPress_KEY_F21;
+    mKeyReleaseSignalMap[gadget::KEY_F21] = &mKeyRelease_KEY_F21;
+
+    mKeyPressSignalMap[gadget::KEY_F22] = &mKeyPress_KEY_F22;
+    mKeyReleaseSignalMap[gadget::KEY_F22] = &mKeyRelease_KEY_F22;
+
+    mKeyPressSignalMap[gadget::KEY_F23] = &mKeyPress_KEY_F23;
+    mKeyReleaseSignalMap[gadget::KEY_F23] = &mKeyRelease_KEY_F23;
+
+    mKeyPressSignalMap[gadget::KEY_F24] = &mKeyPress_KEY_F24;
+    mKeyReleaseSignalMap[gadget::KEY_F24] = &mKeyRelease_KEY_F24;
+
+    mKeyPressSignalMap[gadget::KEY_F25] = &mKeyPress_KEY_F25;
+    mKeyReleaseSignalMap[gadget::KEY_F25] = &mKeyRelease_KEY_F25;
+
+    mKeyPressSignalMap[gadget::KEY_F26] = &mKeyPress_KEY_F26;
+    mKeyReleaseSignalMap[gadget::KEY_F26] = &mKeyRelease_KEY_F26;
+
+    mKeyPressSignalMap[gadget::KEY_F27] = &mKeyPress_KEY_F27;
+    mKeyReleaseSignalMap[gadget::KEY_F27] = &mKeyRelease_KEY_F27;
+
+    mKeyPressSignalMap[gadget::KEY_F28] = &mKeyPress_KEY_F28;
+    mKeyReleaseSignalMap[gadget::KEY_F28] = &mKeyRelease_KEY_F28;
+
+    mKeyPressSignalMap[gadget::KEY_F29] = &mKeyPress_KEY_F29;
+    mKeyReleaseSignalMap[gadget::KEY_F29] = &mKeyRelease_KEY_F29;
+
+    mKeyPressSignalMap[gadget::KEY_F30] = &mKeyPress_KEY_F30;
+    mKeyReleaseSignalMap[gadget::KEY_F30] = &mKeyRelease_KEY_F30;
+
+    mKeyPressSignalMap[gadget::KEY_F31] = &mKeyPress_KEY_F31;
+    mKeyReleaseSignalMap[gadget::KEY_F31] = &mKeyRelease_KEY_F31;
+
+    mKeyPressSignalMap[gadget::KEY_F32] = &mKeyPress_KEY_F32;
+    mKeyReleaseSignalMap[gadget::KEY_F32] = &mKeyRelease_KEY_F32;
+
+    mKeyPressSignalMap[gadget::KEY_F33] = &mKeyPress_KEY_F33;
+    mKeyReleaseSignalMap[gadget::KEY_F33] = &mKeyRelease_KEY_F33;
+
+    mKeyPressSignalMap[gadget::KEY_F34] = &mKeyPress_KEY_F34;
+    mKeyReleaseSignalMap[gadget::KEY_F34] = &mKeyRelease_KEY_F34;
+
+    mKeyPressSignalMap[gadget::KEY_F35] = &mKeyPress_KEY_F35;
+    mKeyReleaseSignalMap[gadget::KEY_F35] = &mKeyRelease_KEY_F35;
+
+    mKeyPressSignalMap[gadget::KEY_SUPER_L] = &mKeyPress_KEY_SUPER_L;
+    mKeyReleaseSignalMap[gadget::KEY_SUPER_L] = &mKeyRelease_KEY_SUPER_L;
+
+    mKeyPressSignalMap[gadget::KEY_SUPER_R] = &mKeyPress_KEY_SUPER_R;
+    mKeyReleaseSignalMap[gadget::KEY_SUPER_R] = &mKeyRelease_KEY_SUPER_R;
+
+    mKeyPressSignalMap[gadget::KEY_MENU] = &mKeyPress_KEY_MENU;
+    mKeyReleaseSignalMap[gadget::KEY_MENU] = &mKeyRelease_KEY_MENU;
+
+    mKeyPressSignalMap[gadget::KEY_HYPER_L] = &mKeyPress_KEY_HYPER_L;
+    mKeyReleaseSignalMap[gadget::KEY_HYPER_L] = &mKeyRelease_KEY_HYPER_L;
+
+    mKeyPressSignalMap[gadget::KEY_HYPER_R] = &mKeyPress_KEY_HYPER_R;
+    mKeyReleaseSignalMap[gadget::KEY_HYPER_R] = &mKeyRelease_KEY_HYPER_R;
+
+    mKeyPressSignalMap[gadget::KEY_HELP] = &mKeyPress_KEY_HELP;
+    mKeyReleaseSignalMap[gadget::KEY_HELP] = &mKeyRelease_KEY_HELP;
+
+    mKeyPressSignalMap[gadget::KEY_SPACE] = &mKeyPress_KEY_SPACE;
+    mKeyReleaseSignalMap[gadget::KEY_SPACE] = &mKeyRelease_KEY_SPACE;
+
+    mKeyPressSignalMap[gadget::KEY_ANY] = &mKeyPress_KEY_ANY;
+    mKeyReleaseSignalMap[gadget::KEY_ANY] = &mKeyRelease_KEY_ANY;
+
+    mKeyPressSignalMap[gadget::KEY_EXCLAM] = &mKeyPress_KEY_EXCLAM;
+    mKeyReleaseSignalMap[gadget::KEY_EXCLAM] = &mKeyRelease_KEY_EXCLAM;
+
+    mKeyPressSignalMap[gadget::KEY_QUOTE_DBL] = &mKeyPress_KEY_QUOTE_DBL;
+    mKeyReleaseSignalMap[gadget::KEY_QUOTE_DBL] = &mKeyRelease_KEY_QUOTE_DBL;
+
+    mKeyPressSignalMap[gadget::KEY_NUMBER_SIGN] = &mKeyPress_KEY_NUMBER_SIGN;
+    mKeyReleaseSignalMap[gadget::KEY_NUMBER_SIGN] = &mKeyRelease_KEY_NUMBER_SIGN;
+
+    mKeyPressSignalMap[gadget::KEY_DOLLAR] = &mKeyPress_KEY_DOLLAR;
+    mKeyReleaseSignalMap[gadget::KEY_DOLLAR] = &mKeyRelease_KEY_DOLLAR;
+
+    mKeyPressSignalMap[gadget::KEY_PERCENT] = &mKeyPress_KEY_PERCENT;
+    mKeyReleaseSignalMap[gadget::KEY_PERCENT] = &mKeyRelease_KEY_PERCENT;
+
+    mKeyPressSignalMap[gadget::KEY_AMPERSAND] = &mKeyPress_KEY_AMPERSAND;
+    mKeyReleaseSignalMap[gadget::KEY_AMPERSAND] = &mKeyRelease_KEY_AMPERSAND;
+
+    mKeyPressSignalMap[gadget::KEY_APOSTROPHE] = &mKeyPress_KEY_APOSTROPHE;
+    mKeyReleaseSignalMap[gadget::KEY_APOSTROPHE] = &mKeyRelease_KEY_APOSTROPHE;
+
+    mKeyPressSignalMap[gadget::KEY_PAREN_LEFT] = &mKeyPress_KEY_PAREN_LEFT;
+    mKeyReleaseSignalMap[gadget::KEY_PAREN_LEFT] = &mKeyRelease_KEY_PAREN_LEFT;
+
+    mKeyPressSignalMap[gadget::KEY_PAREN_RIGHT] = &mKeyPress_KEY_PAREN_RIGHT;
+    mKeyReleaseSignalMap[gadget::KEY_PAREN_RIGHT] = &mKeyRelease_KEY_PAREN_RIGHT;
+
+    mKeyPressSignalMap[gadget::KEY_ASTERISK] = &mKeyPress_KEY_ASTERISK;
+    mKeyReleaseSignalMap[gadget::KEY_ASTERISK] = &mKeyRelease_KEY_ASTERISK;
+
+    mKeyPressSignalMap[gadget::KEY_PLUS] = &mKeyPress_KEY_PLUS;
+    mKeyReleaseSignalMap[gadget::KEY_PLUS] = &mKeyRelease_KEY_PLUS;
+
+    mKeyPressSignalMap[gadget::KEY_COMMA] = &mKeyPress_KEY_COMMA;
+    mKeyReleaseSignalMap[gadget::KEY_COMMA] = &mKeyRelease_KEY_COMMA;
+
+    mKeyPressSignalMap[gadget::KEY_MINUS] = &mKeyPress_KEY_MINUS;
+    mKeyReleaseSignalMap[gadget::KEY_MINUS] = &mKeyRelease_KEY_MINUS;
+
+    mKeyPressSignalMap[gadget::KEY_PERIOD] = &mKeyPress_KEY_PERIOD;
+    mKeyReleaseSignalMap[gadget::KEY_PERIOD] = &mKeyRelease_KEY_PERIOD;
+
+    mKeyPressSignalMap[gadget::KEY_SLASH] = &mKeyPress_KEY_SLASH;
+    mKeyReleaseSignalMap[gadget::KEY_SLASH] = &mKeyRelease_KEY_SLASH;
+
+    mKeyPressSignalMap[gadget::KEY_COLON] = &mKeyPress_KEY_COLON;
+    mKeyReleaseSignalMap[gadget::KEY_COLON] = &mKeyRelease_KEY_COLON;
+
+    mKeyPressSignalMap[gadget::KEY_SEMICOLON] = &mKeyPress_KEY_SEMICOLON;
+    mKeyReleaseSignalMap[gadget::KEY_SEMICOLON] = &mKeyRelease_KEY_SEMICOLON;
+
+    mKeyPressSignalMap[gadget::KEY_LESS] = &mKeyPress_KEY_LESS;
+    mKeyReleaseSignalMap[gadget::KEY_LESS] = &mKeyRelease_KEY_LESS;
+
+    mKeyPressSignalMap[gadget::KEY_EQUAL] = &mKeyPress_KEY_EQUAL;
+    mKeyReleaseSignalMap[gadget::KEY_EQUAL] = &mKeyRelease_KEY_EQUAL;
+
+    mKeyPressSignalMap[gadget::KEY_GREATER] = &mKeyPress_KEY_GREATER;
+    mKeyReleaseSignalMap[gadget::KEY_GREATER] = &mKeyRelease_KEY_GREATER;
+
+    mKeyPressSignalMap[gadget::KEY_QUESTION] = &mKeyPress_KEY_QUESTION;
+    mKeyReleaseSignalMap[gadget::KEY_QUESTION] = &mKeyRelease_KEY_QUESTION;
+
+    mKeyPressSignalMap[gadget::KEY_AT] = &mKeyPress_KEY_AT;
+    mKeyReleaseSignalMap[gadget::KEY_AT] = &mKeyRelease_KEY_AT;
+
+    mKeyPressSignalMap[gadget::KEY_BRACKET_LEFT] = &mKeyPress_KEY_BRACKET_LEFT;
+    mKeyReleaseSignalMap[gadget::KEY_BRACKET_LEFT] = &mKeyRelease_KEY_BRACKET_LEFT;
+
+    mKeyPressSignalMap[gadget::KEY_BACKSLASH] = &mKeyPress_KEY_BACKSLASH;
+    mKeyReleaseSignalMap[gadget::KEY_BACKSLASH] = &mKeyRelease_KEY_BACKSLASH;
+
+    mKeyPressSignalMap[gadget::KEY_BRACKET_RIGHT] = &mKeyPress_KEY_BRACKET_RIGHT;
+    mKeyReleaseSignalMap[gadget::KEY_BRACKET_RIGHT] = &mKeyRelease_KEY_BRACKET_RIGHT;
+
+    mKeyPressSignalMap[gadget::KEY_ASCII_CIRCUM] = &mKeyPress_KEY_ASCII_CIRCUM;
+    mKeyReleaseSignalMap[gadget::KEY_ASCII_CIRCUM] = &mKeyRelease_KEY_ASCII_CIRCUM;
+
+    mKeyPressSignalMap[gadget::KEY_UNDERSCORE] = &mKeyPress_KEY_UNDERSCORE;
+    mKeyReleaseSignalMap[gadget::KEY_UNDERSCORE] = &mKeyRelease_KEY_UNDERSCORE;
+
+    mKeyPressSignalMap[gadget::KEY_QUOTE_LEFT] = &mKeyPress_KEY_QUOTE_LEFT;
+    mKeyReleaseSignalMap[gadget::KEY_QUOTE_LEFT] = &mKeyRelease_KEY_QUOTE_LEFT;
+
+    mKeyPressSignalMap[gadget::KEY_BRACE_LEFT] = &mKeyPress_KEY_BRACE_LEFT;
+    mKeyReleaseSignalMap[gadget::KEY_BRACE_LEFT] = &mKeyRelease_KEY_BRACE_LEFT;
+
+    mKeyPressSignalMap[gadget::KEY_BAR] = &mKeyPress_KEY_BAR;
+    mKeyReleaseSignalMap[gadget::KEY_BAR] = &mKeyRelease_KEY_BAR;
+
+    mKeyPressSignalMap[gadget::KEY_BRACE_RIGHT] = &mKeyPress_KEY_BRACE_RIGHT;
+    mKeyReleaseSignalMap[gadget::KEY_BRACE_RIGHT] = &mKeyRelease_KEY_BRACE_RIGHT;
+
+    mKeyPressSignalMap[gadget::KEY_ASCII_TILDE] = &mKeyPress_KEY_ASCII_TILDE;
+    mKeyReleaseSignalMap[gadget::KEY_ASCII_TILDE] = &mKeyRelease_KEY_ASCII_TILDE;
+
+
+
 }
-////////////////////////////////////////////////////////////////////////////////
-*/
+
+void KeyboardMouse::RegisterKeySignals()
+{
+    eventmanager::EventManager* evm = eventmanager::EventManager::instance();
+    using eventmanager::SignalWrapper;
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_NONE ),
+            "KeyboardMouse.KeyPress_KEY_NONE", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_NONE ),
+            "KeyboardMouse.KeyRelease_KEY_NONE", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_UP ),
+            "KeyboardMouse.KeyPress_KEY_UP", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_UP ),
+            "KeyboardMouse.KeyRelease_KEY_UP", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_DOWN ),
+            "KeyboardMouse.KeyPress_KEY_DOWN", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_DOWN ),
+            "KeyboardMouse.KeyRelease_KEY_DOWN", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_LEFT ),
+            "KeyboardMouse.KeyPress_KEY_LEFT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_LEFT ),
+            "KeyboardMouse.KeyRelease_KEY_LEFT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_RIGHT ),
+            "KeyboardMouse.KeyPress_KEY_RIGHT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_RIGHT ),
+            "KeyboardMouse.KeyRelease_KEY_RIGHT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_SHIFT ),
+            "KeyboardMouse.KeyPress_KEY_SHIFT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_SHIFT ),
+            "KeyboardMouse.KeyRelease_KEY_SHIFT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_CTRL ),
+            "KeyboardMouse.KeyPress_KEY_CTRL", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_CTRL ),
+            "KeyboardMouse.KeyRelease_KEY_CTRL", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_ALT ),
+            "KeyboardMouse.KeyPress_KEY_ALT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_ALT ),
+            "KeyboardMouse.KeyRelease_KEY_ALT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_COMMAND ),
+            "KeyboardMouse.KeyPress_KEY_COMMAND", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_COMMAND ),
+            "KeyboardMouse.KeyRelease_KEY_COMMAND", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_1 ),
+            "KeyboardMouse.KeyPress_KEY_1", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_1 ),
+            "KeyboardMouse.KeyRelease_KEY_1", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_2 ),
+            "KeyboardMouse.KeyPress_KEY_2", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_2 ),
+            "KeyboardMouse.KeyRelease_KEY_2", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_3 ),
+            "KeyboardMouse.KeyPress_KEY_3", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_3 ),
+            "KeyboardMouse.KeyRelease_KEY_3", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_4 ),
+            "KeyboardMouse.KeyPress_KEY_4", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_4 ),
+            "KeyboardMouse.KeyRelease_KEY_4", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_5 ),
+            "KeyboardMouse.KeyPress_KEY_5", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_5 ),
+            "KeyboardMouse.KeyRelease_KEY_5", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_6 ),
+            "KeyboardMouse.KeyPress_KEY_6", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_6 ),
+            "KeyboardMouse.KeyRelease_KEY_6", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_7 ),
+            "KeyboardMouse.KeyPress_KEY_7", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_7 ),
+            "KeyboardMouse.KeyRelease_KEY_7", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_8 ),
+            "KeyboardMouse.KeyPress_KEY_8", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_8 ),
+            "KeyboardMouse.KeyRelease_KEY_8", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_9 ),
+            "KeyboardMouse.KeyPress_KEY_9", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_9 ),
+            "KeyboardMouse.KeyRelease_KEY_9", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_0 ),
+            "KeyboardMouse.KeyPress_KEY_0", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_0 ),
+            "KeyboardMouse.KeyRelease_KEY_0", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_A ),
+            "KeyboardMouse.KeyPress_KEY_A", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_A ),
+            "KeyboardMouse.KeyRelease_KEY_A", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_B ),
+            "KeyboardMouse.KeyPress_KEY_B", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_B ),
+            "KeyboardMouse.KeyRelease_KEY_B", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_C ),
+            "KeyboardMouse.KeyPress_KEY_C", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_C ),
+            "KeyboardMouse.KeyRelease_KEY_C", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_D ),
+            "KeyboardMouse.KeyPress_KEY_D", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_D ),
+            "KeyboardMouse.KeyRelease_KEY_D", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_E ),
+            "KeyboardMouse.KeyPress_KEY_E", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_E ),
+            "KeyboardMouse.KeyRelease_KEY_E", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F ),
+            "KeyboardMouse.KeyPress_KEY_F", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F ),
+            "KeyboardMouse.KeyRelease_KEY_F", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_G ),
+            "KeyboardMouse.KeyPress_KEY_G", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_G ),
+            "KeyboardMouse.KeyRelease_KEY_G", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_H ),
+            "KeyboardMouse.KeyPress_KEY_H", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_H ),
+            "KeyboardMouse.KeyRelease_KEY_H", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_I ),
+            "KeyboardMouse.KeyPress_KEY_I", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_I ),
+            "KeyboardMouse.KeyRelease_KEY_I", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_J ),
+            "KeyboardMouse.KeyPress_KEY_J", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_J ),
+            "KeyboardMouse.KeyRelease_KEY_J", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_K ),
+            "KeyboardMouse.KeyPress_KEY_K", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_K ),
+            "KeyboardMouse.KeyRelease_KEY_K", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_L ),
+            "KeyboardMouse.KeyPress_KEY_L", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_L ),
+            "KeyboardMouse.KeyRelease_KEY_L", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_M ),
+            "KeyboardMouse.KeyPress_KEY_M", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_M ),
+            "KeyboardMouse.KeyRelease_KEY_M", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_N ),
+            "KeyboardMouse.KeyPress_KEY_N", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_N ),
+            "KeyboardMouse.KeyRelease_KEY_N", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_O ),
+            "KeyboardMouse.KeyPress_KEY_O", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_O ),
+            "KeyboardMouse.KeyRelease_KEY_O", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_P ),
+            "KeyboardMouse.KeyPress_KEY_P", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_P ),
+            "KeyboardMouse.KeyRelease_KEY_P", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_Q ),
+            "KeyboardMouse.KeyPress_KEY_Q", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_Q ),
+            "KeyboardMouse.KeyRelease_KEY_Q", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_R ),
+            "KeyboardMouse.KeyPress_KEY_R", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_R ),
+            "KeyboardMouse.KeyRelease_KEY_R", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_S ),
+            "KeyboardMouse.KeyPress_KEY_S", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_S ),
+            "KeyboardMouse.KeyRelease_KEY_S", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_T ),
+            "KeyboardMouse.KeyPress_KEY_T", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_T ),
+            "KeyboardMouse.KeyRelease_KEY_T", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_U ),
+            "KeyboardMouse.KeyPress_KEY_U", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_U ),
+            "KeyboardMouse.KeyRelease_KEY_U", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_V ),
+            "KeyboardMouse.KeyPress_KEY_V", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_V ),
+            "KeyboardMouse.KeyRelease_KEY_V", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_W ),
+            "KeyboardMouse.KeyPress_KEY_W", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_W ),
+            "KeyboardMouse.KeyRelease_KEY_W", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_X ),
+            "KeyboardMouse.KeyPress_KEY_X", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_X ),
+            "KeyboardMouse.KeyRelease_KEY_X", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_Y ),
+            "KeyboardMouse.KeyPress_KEY_Y", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_Y ),
+            "KeyboardMouse.KeyRelease_KEY_Y", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_Z ),
+            "KeyboardMouse.KeyPress_KEY_Z", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_Z ),
+            "KeyboardMouse.KeyRelease_KEY_Z", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_ESC ),
+            "KeyboardMouse.KeyPress_KEY_ESC", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_ESC ),
+            "KeyboardMouse.KeyRelease_KEY_ESC", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_TAB ),
+            "KeyboardMouse.KeyPress_KEY_TAB", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_TAB ),
+            "KeyboardMouse.KeyRelease_KEY_TAB", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_BACKTAB ),
+            "KeyboardMouse.KeyPress_KEY_BACKTAB", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_BACKTAB ),
+            "KeyboardMouse.KeyRelease_KEY_BACKTAB", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_BACKSPACE ),
+            "KeyboardMouse.KeyPress_KEY_BACKSPACE", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_BACKSPACE ),
+            "KeyboardMouse.KeyRelease_KEY_BACKSPACE", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_RETURN ),
+            "KeyboardMouse.KeyPress_KEY_RETURN", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_RETURN ),
+            "KeyboardMouse.KeyRelease_KEY_RETURN", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_ENTER ),
+            "KeyboardMouse.KeyPress_KEY_ENTER", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_ENTER ),
+            "KeyboardMouse.KeyRelease_KEY_ENTER", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_INSERT ),
+            "KeyboardMouse.KeyPress_KEY_INSERT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_INSERT ),
+            "KeyboardMouse.KeyRelease_KEY_INSERT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_DELETE ),
+            "KeyboardMouse.KeyPress_KEY_DELETE", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_DELETE ),
+            "KeyboardMouse.KeyRelease_KEY_DELETE", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_PAUSE ),
+            "KeyboardMouse.KeyPress_KEY_PAUSE", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_PAUSE ),
+            "KeyboardMouse.KeyRelease_KEY_PAUSE", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_PRINT ),
+            "KeyboardMouse.KeyPress_KEY_PRINT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_PRINT ),
+            "KeyboardMouse.KeyRelease_KEY_PRINT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_SYSREQ ),
+            "KeyboardMouse.KeyPress_KEY_SYSREQ", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_SYSREQ ),
+            "KeyboardMouse.KeyRelease_KEY_SYSREQ", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_HOME ),
+            "KeyboardMouse.KeyPress_KEY_HOME", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_HOME ),
+            "KeyboardMouse.KeyRelease_KEY_HOME", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_END ),
+            "KeyboardMouse.KeyPress_KEY_END", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_END ),
+            "KeyboardMouse.KeyRelease_KEY_END", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_PRIOR ),
+            "KeyboardMouse.KeyPress_KEY_PRIOR", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_PRIOR ),
+            "KeyboardMouse.KeyRelease_KEY_PRIOR", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_NEXT ),
+            "KeyboardMouse.KeyPress_KEY_NEXT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_NEXT ),
+            "KeyboardMouse.KeyRelease_KEY_NEXT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_CAPS_LOCK ),
+            "KeyboardMouse.KeyPress_KEY_CAPS_LOCK", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_CAPS_LOCK ),
+            "KeyboardMouse.KeyRelease_KEY_CAPS_LOCK", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_NUM_LOCK ),
+            "KeyboardMouse.KeyPress_KEY_NUM_LOCK", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_NUM_LOCK ),
+            "KeyboardMouse.KeyRelease_KEY_NUM_LOCK", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_SCROLL_LOCK ),
+            "KeyboardMouse.KeyPress_KEY_SCROLL_LOCK", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_SCROLL_LOCK ),
+            "KeyboardMouse.KeyRelease_KEY_SCROLL_LOCK", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F1 ),
+            "KeyboardMouse.KeyPress_KEY_F1", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F1 ),
+            "KeyboardMouse.KeyRelease_KEY_F1", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F2 ),
+            "KeyboardMouse.KeyPress_KEY_F2", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F2 ),
+            "KeyboardMouse.KeyRelease_KEY_F2", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F3 ),
+            "KeyboardMouse.KeyPress_KEY_F3", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F3 ),
+            "KeyboardMouse.KeyRelease_KEY_F3", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F4 ),
+            "KeyboardMouse.KeyPress_KEY_F4", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F4 ),
+            "KeyboardMouse.KeyRelease_KEY_F4", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F5 ),
+            "KeyboardMouse.KeyPress_KEY_F5", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F5 ),
+            "KeyboardMouse.KeyRelease_KEY_F5", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F6 ),
+            "KeyboardMouse.KeyPress_KEY_F6", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F6 ),
+            "KeyboardMouse.KeyRelease_KEY_F6", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F7 ),
+            "KeyboardMouse.KeyPress_KEY_F7", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F7 ),
+            "KeyboardMouse.KeyRelease_KEY_F7", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F8 ),
+            "KeyboardMouse.KeyPress_KEY_F8", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F8 ),
+            "KeyboardMouse.KeyRelease_KEY_F8", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F9 ),
+            "KeyboardMouse.KeyPress_KEY_F9", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F9 ),
+            "KeyboardMouse.KeyRelease_KEY_F9", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F10 ),
+            "KeyboardMouse.KeyPress_KEY_F10", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F10 ),
+            "KeyboardMouse.KeyRelease_KEY_F10", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F11 ),
+            "KeyboardMouse.KeyPress_KEY_F11", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F11 ),
+            "KeyboardMouse.KeyRelease_KEY_F11", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F12 ),
+            "KeyboardMouse.KeyPress_KEY_F12", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F12 ),
+            "KeyboardMouse.KeyRelease_KEY_F12", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F13 ),
+            "KeyboardMouse.KeyPress_KEY_F13", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F13 ),
+            "KeyboardMouse.KeyRelease_KEY_F13", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F14 ),
+            "KeyboardMouse.KeyPress_KEY_F14", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F14 ),
+            "KeyboardMouse.KeyRelease_KEY_F14", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F15 ),
+            "KeyboardMouse.KeyPress_KEY_F15", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F15 ),
+            "KeyboardMouse.KeyRelease_KEY_F15", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F16 ),
+            "KeyboardMouse.KeyPress_KEY_F16", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F16 ),
+            "KeyboardMouse.KeyRelease_KEY_F16", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F17 ),
+            "KeyboardMouse.KeyPress_KEY_F17", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F17 ),
+            "KeyboardMouse.KeyRelease_KEY_F17", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F18 ),
+            "KeyboardMouse.KeyPress_KEY_F18", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F18 ),
+            "KeyboardMouse.KeyRelease_KEY_F18", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F19 ),
+            "KeyboardMouse.KeyPress_KEY_F19", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F19 ),
+            "KeyboardMouse.KeyRelease_KEY_F19", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F20 ),
+            "KeyboardMouse.KeyPress_KEY_F20", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F20 ),
+            "KeyboardMouse.KeyRelease_KEY_F20", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F21 ),
+            "KeyboardMouse.KeyPress_KEY_F21", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F21 ),
+            "KeyboardMouse.KeyRelease_KEY_F21", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F22 ),
+            "KeyboardMouse.KeyPress_KEY_F22", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F22 ),
+            "KeyboardMouse.KeyRelease_KEY_F22", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F23 ),
+            "KeyboardMouse.KeyPress_KEY_F23", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F23 ),
+            "KeyboardMouse.KeyRelease_KEY_F23", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F24 ),
+            "KeyboardMouse.KeyPress_KEY_F24", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F24 ),
+            "KeyboardMouse.KeyRelease_KEY_F24", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F25 ),
+            "KeyboardMouse.KeyPress_KEY_F25", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F25 ),
+            "KeyboardMouse.KeyRelease_KEY_F25", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F26 ),
+            "KeyboardMouse.KeyPress_KEY_F26", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F26 ),
+            "KeyboardMouse.KeyRelease_KEY_F26", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F27 ),
+            "KeyboardMouse.KeyPress_KEY_F27", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F27 ),
+            "KeyboardMouse.KeyRelease_KEY_F27", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F28 ),
+            "KeyboardMouse.KeyPress_KEY_F28", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F28 ),
+            "KeyboardMouse.KeyRelease_KEY_F28", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F29 ),
+            "KeyboardMouse.KeyPress_KEY_F29", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F29 ),
+            "KeyboardMouse.KeyRelease_KEY_F29", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F30 ),
+            "KeyboardMouse.KeyPress_KEY_F30", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F30 ),
+            "KeyboardMouse.KeyRelease_KEY_F30", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F31 ),
+            "KeyboardMouse.KeyPress_KEY_F31", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F31 ),
+            "KeyboardMouse.KeyRelease_KEY_F31", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F32 ),
+            "KeyboardMouse.KeyPress_KEY_F32", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F32 ),
+            "KeyboardMouse.KeyRelease_KEY_F32", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F33 ),
+            "KeyboardMouse.KeyPress_KEY_F33", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F33 ),
+            "KeyboardMouse.KeyRelease_KEY_F33", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F34 ),
+            "KeyboardMouse.KeyPress_KEY_F34", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F34 ),
+            "KeyboardMouse.KeyRelease_KEY_F34", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_F35 ),
+            "KeyboardMouse.KeyPress_KEY_F35", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_F35 ),
+            "KeyboardMouse.KeyRelease_KEY_F35", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_SUPER_L ),
+            "KeyboardMouse.KeyPress_KEY_SUPER_L", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_SUPER_L ),
+            "KeyboardMouse.KeyRelease_KEY_SUPER_L", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_SUPER_R ),
+            "KeyboardMouse.KeyPress_KEY_SUPER_R", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_SUPER_R ),
+            "KeyboardMouse.KeyRelease_KEY_SUPER_R", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_MENU ),
+            "KeyboardMouse.KeyPress_KEY_MENU", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_MENU ),
+            "KeyboardMouse.KeyRelease_KEY_MENU", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_HYPER_L ),
+            "KeyboardMouse.KeyPress_KEY_HYPER_L", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_HYPER_L ),
+            "KeyboardMouse.KeyRelease_KEY_HYPER_L", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_HYPER_R ),
+            "KeyboardMouse.KeyPress_KEY_HYPER_R", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_HYPER_R ),
+            "KeyboardMouse.KeyRelease_KEY_HYPER_R", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_HELP ),
+            "KeyboardMouse.KeyPress_KEY_HELP", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_HELP ),
+            "KeyboardMouse.KeyRelease_KEY_HELP", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_SPACE ),
+            "KeyboardMouse.KeyPress_KEY_SPACE", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_SPACE ),
+            "KeyboardMouse.KeyRelease_KEY_SPACE", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_ANY ),
+            "KeyboardMouse.KeyPress_KEY_ANY", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_ANY ),
+            "KeyboardMouse.KeyRelease_KEY_ANY", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_EXCLAM ),
+            "KeyboardMouse.KeyPress_KEY_EXCLAM", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_EXCLAM ),
+            "KeyboardMouse.KeyRelease_KEY_EXCLAM", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_QUOTE_DBL ),
+            "KeyboardMouse.KeyPress_KEY_QUOTE_DBL", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_QUOTE_DBL ),
+            "KeyboardMouse.KeyRelease_KEY_QUOTE_DBL", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_NUMBER_SIGN ),
+            "KeyboardMouse.KeyPress_KEY_NUMBER_SIGN", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_NUMBER_SIGN ),
+            "KeyboardMouse.KeyRelease_KEY_NUMBER_SIGN", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_DOLLAR ),
+            "KeyboardMouse.KeyPress_KEY_DOLLAR", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_DOLLAR ),
+            "KeyboardMouse.KeyRelease_KEY_DOLLAR", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_PERCENT ),
+            "KeyboardMouse.KeyPress_KEY_PERCENT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_PERCENT ),
+            "KeyboardMouse.KeyRelease_KEY_PERCENT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_AMPERSAND ),
+            "KeyboardMouse.KeyPress_KEY_AMPERSAND", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_AMPERSAND ),
+            "KeyboardMouse.KeyRelease_KEY_AMPERSAND", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_APOSTROPHE ),
+            "KeyboardMouse.KeyPress_KEY_APOSTROPHE", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_APOSTROPHE ),
+            "KeyboardMouse.KeyRelease_KEY_APOSTROPHE", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_PAREN_LEFT ),
+            "KeyboardMouse.KeyPress_KEY_PAREN_LEFT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_PAREN_LEFT ),
+            "KeyboardMouse.KeyRelease_KEY_PAREN_LEFT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_PAREN_RIGHT ),
+            "KeyboardMouse.KeyPress_KEY_PAREN_RIGHT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_PAREN_RIGHT ),
+            "KeyboardMouse.KeyRelease_KEY_PAREN_RIGHT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_ASTERISK ),
+            "KeyboardMouse.KeyPress_KEY_ASTERISK", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_ASTERISK ),
+            "KeyboardMouse.KeyRelease_KEY_ASTERISK", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_PLUS ),
+            "KeyboardMouse.KeyPress_KEY_PLUS", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_PLUS ),
+            "KeyboardMouse.KeyRelease_KEY_PLUS", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_COMMA ),
+            "KeyboardMouse.KeyPress_KEY_COMMA", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_COMMA ),
+            "KeyboardMouse.KeyRelease_KEY_COMMA", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_MINUS ),
+            "KeyboardMouse.KeyPress_KEY_MINUS", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_MINUS ),
+            "KeyboardMouse.KeyRelease_KEY_MINUS", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_PERIOD ),
+            "KeyboardMouse.KeyPress_KEY_PERIOD", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_PERIOD ),
+            "KeyboardMouse.KeyRelease_KEY_PERIOD", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_SLASH ),
+            "KeyboardMouse.KeyPress_KEY_SLASH", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_SLASH ),
+            "KeyboardMouse.KeyRelease_KEY_SLASH", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_COLON ),
+            "KeyboardMouse.KeyPress_KEY_COLON", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_COLON ),
+            "KeyboardMouse.KeyRelease_KEY_COLON", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_SEMICOLON ),
+            "KeyboardMouse.KeyPress_KEY_SEMICOLON", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_SEMICOLON ),
+            "KeyboardMouse.KeyRelease_KEY_SEMICOLON", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_LESS ),
+            "KeyboardMouse.KeyPress_KEY_LESS", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_LESS ),
+            "KeyboardMouse.KeyRelease_KEY_LESS", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_EQUAL ),
+            "KeyboardMouse.KeyPress_KEY_EQUAL", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_EQUAL ),
+            "KeyboardMouse.KeyRelease_KEY_EQUAL", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_GREATER ),
+            "KeyboardMouse.KeyPress_KEY_GREATER", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_GREATER ),
+            "KeyboardMouse.KeyRelease_KEY_GREATER", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_QUESTION ),
+            "KeyboardMouse.KeyPress_KEY_QUESTION", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_QUESTION ),
+            "KeyboardMouse.KeyRelease_KEY_QUESTION", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_AT ),
+            "KeyboardMouse.KeyPress_KEY_AT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_AT ),
+            "KeyboardMouse.KeyRelease_KEY_AT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_BRACKET_LEFT ),
+            "KeyboardMouse.KeyPress_KEY_BRACKET_LEFT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_BRACKET_LEFT ),
+            "KeyboardMouse.KeyRelease_KEY_BRACKET_LEFT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_BACKSLASH ),
+            "KeyboardMouse.KeyPress_KEY_BACKSLASH", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_BACKSLASH ),
+            "KeyboardMouse.KeyRelease_KEY_BACKSLASH", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_BRACKET_RIGHT ),
+            "KeyboardMouse.KeyPress_KEY_BRACKET_RIGHT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_BRACKET_RIGHT ),
+            "KeyboardMouse.KeyRelease_KEY_BRACKET_RIGHT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_ASCII_CIRCUM ),
+            "KeyboardMouse.KeyPress_KEY_ASCII_CIRCUM", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_ASCII_CIRCUM ),
+            "KeyboardMouse.KeyRelease_KEY_ASCII_CIRCUM", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_UNDERSCORE ),
+            "KeyboardMouse.KeyPress_KEY_UNDERSCORE", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_UNDERSCORE ),
+            "KeyboardMouse.KeyRelease_KEY_UNDERSCORE", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_QUOTE_LEFT ),
+            "KeyboardMouse.KeyPress_KEY_QUOTE_LEFT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_QUOTE_LEFT ),
+            "KeyboardMouse.KeyRelease_KEY_QUOTE_LEFT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_BRACE_LEFT ),
+            "KeyboardMouse.KeyPress_KEY_BRACE_LEFT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_BRACE_LEFT ),
+            "KeyboardMouse.KeyRelease_KEY_BRACE_LEFT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_BAR ),
+            "KeyboardMouse.KeyPress_KEY_BAR", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_BAR ),
+            "KeyboardMouse.KeyRelease_KEY_BAR", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_BRACE_RIGHT ),
+            "KeyboardMouse.KeyPress_KEY_BRACE_RIGHT", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_BRACE_RIGHT ),
+            "KeyboardMouse.KeyRelease_KEY_BRACE_RIGHT", eventmanager::EventManager::keyboard_SignalType );
+
+    evm->RegisterSignal(
+            new SignalWrapper< KeyPressSignal_type >( &mKeyPress_KEY_ASCII_TILDE ),
+            "KeyboardMouse.KeyPress_KEY_ASCII_TILDE", eventmanager::EventManager::keyboard_SignalType );
+    evm->RegisterSignal(
+            new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_ASCII_TILDE ),
+            "KeyboardMouse.KeyRelease_KEY_ASCII_TILDE", eventmanager::EventManager::keyboard_SignalType );
+}
+
+void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > values )
+{
+
+}
+
+void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
+{
+
+}
+
+void KeyboardMouse::SetFrustumValues(
+    double l, double r, double b, double t, double n, double f )
+{
+
+}
+
+void KeyboardMouse::FrameAll()
+{
+
+}
+
+void KeyboardMouse::SkyCam()
+{
+
+}
+
+void KeyboardMouse::FrameSelection()
+{
+
+}
+
+void KeyboardMouse::ResetTransforms()
+{
+
+}
+
+void KeyboardMouse::UpdateSelectionLine()
+{
+
+}
+
+gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()
+{
+    return mKeyboardMousePtr;
+}
+
+osgUtil::LineSegmentIntersector* KeyboardMouse::GetLineSegmentIntersector()
+{
+    return 0;
+}
+
+void KeyboardMouse::SetProcessSelection( bool processSelection )
+{
+
+}
+
+
+bool KeyboardMouse::GetMousePickEvent()
+{
+    return false;
+}

@@ -40,6 +40,7 @@
 
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
+#include <gadget/Type/KeyboardMouse/Keys.h>
 
 // --- Boost includes --- //
 #include <boost/noncopyable.hpp>
@@ -169,6 +170,19 @@ public:
 
     ///Propagates mouse and keyboard events to elements
     bool SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
+
+    /// Receives mouse move events connected via EventManager
+    /// state = modifier mask OR'd with button mask
+    void MouseMoveEvent( int x, int y, int z, int state );
+
+    /// Receives mouse buttonpress events connected via EventManager
+    /// state = modifier mask OR'd with button mask
+    void ButtonPressEvent( gadget::Keys button, int x, int y, int state );
+
+    /// Receives mouse buttonrelease events connected via EventManager
+    /// state = modifier mask OR'd with button mask
+    void ButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
+
 
     ///Sets the projection matrix when not in Ortho2D mode
     void SetProjectionMatrix( osg::Matrixd& matrix );
@@ -302,6 +316,8 @@ private:
 
     /// Helper function to send out events to elements
     void _sendEvent();
+
+    bool _okayToSendEvent();
 
     /// Helper function to hide elements
     void _hideAll();
