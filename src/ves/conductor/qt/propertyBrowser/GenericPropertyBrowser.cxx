@@ -57,7 +57,7 @@ void GenericPropertyBrowser::setPropertyBrowser( PropertyBrowser* browser )
 
     // Associate editor types with property types
     this->setFactoryForManager( browser->GetBoolManager(), mCheckBoxFactory );
-    this->setFactoryForManager( browser->GetIntManager(), mSliderFactory );
+    this->setFactoryForManager( browser->GetIntManager(), mSpinBoxFactory );
     this->setFactoryForManager( browser->GetDoubleManager(), mDoubleSpinBoxFactory );
     this->setFactoryForManager( browser->GetStringManager(), mLineEditFactory );
     this->setFactoryForManager( browser->GetEnumManager(), mComboBoxFactory );

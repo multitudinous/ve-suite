@@ -303,7 +303,8 @@ void PropertyBrowser::_refreshItem( int index )
         }
         int currentMin = mIntManager->minimum( item );
         int currentMax = mIntManager->maximum( item );
-        int step = static_cast < int > ( ( currentMax - currentMin ) / 100.0 );
+        //int step = static_cast < int > ( ( currentMax - currentMin ) / 100.0 );
+        int step = 1;
         mIntManager->setSingleStep( item, step );
     }
     else if( property->IsFloat() )
