@@ -146,20 +146,23 @@ void Visualization::on_FeaturesList_currentTextChanged( const QString& currentTe
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::UpdateFeatureIDSelectorChoices()
 {
-    // If there are already ids loaded, we set a temporary flag so that after
-    // the call to FeatureIDSelector->clear() we can tell
-    // on_FeatureIDSelector_currentIndexChanged to ignore the index change
-    // that is triggered by the call to addItems. We only want it to load a
-    // property set after we explicitly call setCurrentIndex.
-    bool tIgnore = false;
-    if( m_ui->FeatureIDSelector->count() > 0 )
-    {
-        tIgnore = true;
-    }
+    // The problem with this block is that it assumes the featureName has not
+    // changed -- and it may actually have changed. If the featureName has changed,
+    // we don't want to do any fancy ignoring of stuff.
+//    // If there are already ids loaded, we set a temporary flag so that after
+//    // the call to FeatureIDSelector->clear() we can tell
+//    // on_FeatureIDSelector_currentIndexChanged to ignore the index change
+//    // that is triggered by the call to addItems. We only want it to load a
+//    // property set after we explicitly call setCurrentIndex.
+//    bool tIgnore = false;
+//    if( m_ui->FeatureIDSelector->count() > 1 )
+//    {
+//        tIgnore = true;
+//    }
 
     // Remove all entries from feature id selection combobox
     m_ui->FeatureIDSelector->clear();
-    mIgnoreIndexChange = tIgnore;
+//    mIgnoreIndexChange = tIgnore;
 
     // Get all available IDs for current feature type
     QString featureName = m_ui->FeaturesList->currentItem()->text();
@@ -203,8 +206,6 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& tex
 
         if( mTempSet )
         {
-            mTempSet->SetRecordID( text.toInt() );
-            mTempSet->LoadFromDatabase();
             mFeatureBrowser->ParsePropertySet( mTempSet );
 
             // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
@@ -213,10 +214,12 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& tex
             m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
             m_ui->vfpb->RefreshContents();
             m_ui->vfpb->show();
-            // Not sure why this second call to LoadFromDatabase() was in here.
-            // Leaving it here but commented out in case it fixed some
-            // problem.
-            //mTempSet->LoadFromDatabase();
+            // No need to load before parsing, since values in browser are not
+            // set during parsing. They're only set by signals from the property
+            // set when things changed, which loading will do. But this doesn't
+            // work until after parsing is complete.
+            mTempSet->SetRecordID( text.toInt() );
+            mTempSet->LoadFromDatabase();
             mFeatureBrowser->RefreshAll();
         }
     }
