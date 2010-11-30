@@ -44,7 +44,7 @@
 int main (int argc, char* argv[])
 {
    int status;
-   vpr::Uint16 port(15432);     // Default listening port
+   vpr::Uint16 port(12345);     // Default listening port
 
    // If a command-line argument was given, use it as the port value instead
    // of the default.
@@ -55,7 +55,7 @@ int main (int argc, char* argv[])
 
    try
    {
-      // Create a datagram socket that will be bound to port.
+       // Create a datagram socket that will be bound to port.
       vpr::InetAddr local;
       local.setPort(port);
 
@@ -65,6 +65,18 @@ int main (int argc, char* argv[])
       sock.open();
       sock.bind();
 
+       //Now lets connet to the multicast group
+       // Create a socket that is sending to a remote host named in the first
+       // argument listening on the port named in the second argument.
+       vpr::InetAddr remote_addr;
+       remote_addr.setAddress("225.0.0.37", 12345);
+       //vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
+       //vpr::SocketOptions::Types option = vpr::SocketOptions::AddMember;
+       //vpr::SocketOptions::Data data;
+       //data.mcast_add_member = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
+       vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
+       sock.addMcastMember( data );
+      
       char recv_buf[40];
       char send_buf[] = "Hello there!";
 

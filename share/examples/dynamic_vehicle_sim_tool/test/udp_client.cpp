@@ -39,19 +39,25 @@
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
 
+///IP Port and ip address ranges for multicast
+///http://agenda.ictp.trieste.it/agenda_links/smr1335/sockets/node18.html
+///http://ntrg.cs.tcd.ie/undergrad/4ba2/multicast/antony/example.html
+
+//#define HELLO_PORT 12345
+//#define HELLO_GROUP "225.0.0.37"
 
 int main (int argc, char* argv[])
 {
-   if ( argc != 3 )
+   /*if ( argc != 3 )
    {
       std::cerr << "Usage: " << argv[0] << " <address> <port>" << std::endl;
       return EXIT_FAILURE;
-   }
+   }*/
 
    // Create a socket that is sending to a remote host named in the first
    // argument listening on the port named in the second argument.
    vpr::InetAddr remote_addr;
-   remote_addr.setAddress(argv[1], atoi(argv[2]));
+   remote_addr.setAddress("225.0.0.37", 12345);
    vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
 
    try
