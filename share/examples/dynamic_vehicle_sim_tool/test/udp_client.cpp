@@ -77,11 +77,11 @@ int main (int argc, char* argv[])
          sock.write(buffer, 40);
 
          // Read from the server.
-         const vpr::Uint32 bytes = sock.read(buffer, 40);
+         //const vpr::Uint32 bytes = sock.read(buffer, 40);
 
          // If the server reasponded, print the result.
-         std::cout << "Read " << bytes << " from server\n"
-                   << "    Got '" << buffer << "'" << std::endl;
+         //std::cout << "Read " << bytes << " from server\n"
+         //          << "    Got '" << buffer << "'" << std::endl;
       }
       catch (vpr::SocketException& ex)
       {

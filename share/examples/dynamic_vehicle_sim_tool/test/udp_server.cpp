@@ -96,7 +96,7 @@ int main (int argc, char* argv[])
                       << " bytes) from " << addr.getAddressString()
                       << std::endl;
 
-            sock.sendto(send_buf, sizeof(send_buf), addr);
+            //sock.sendto(send_buf, sizeof(send_buf), remote_addr);
          }
          catch (vpr::IOException& ex)
          {
