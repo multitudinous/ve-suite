@@ -37,6 +37,8 @@
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 
+#include <ves/xplorer/Debug.h>
+
 using boost::shared_ptr;
 using boost::weak_ptr;
 using boost::signals2::scoped_connection;
@@ -123,6 +125,10 @@ void EventManager::ConnectSignal( const std::string& sigName,
     std::map<std::string, SignalWrapperBase*>::const_iterator iter = mSignals.find( sigName );
     if( iter != mSignals.end( ) )
     {
+        vprDEBUG( vesDBG, 3 )
+            << "EventManager::ConnectSignal: Connecting " <<  slot << " to signal "
+            << sigName << " (" << iter->second->GetSignalAddress() << ")"
+            << std::endl << vprDEBUG_FLUSH;
         // Tell the SignalWrapper to connect its signal to this slot
         SignalWrapperBase* signalWrapper = iter->second;
         if( signalWrapper->ConnectSlot( slot, connections, priority ) )

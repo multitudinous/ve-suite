@@ -110,6 +110,11 @@ public:
         }
     }
 
+    virtual long unsigned int GetSignalAddress()
+    {
+        return reinterpret_cast<long unsigned int>(mSignal);
+    }
+
 
 private:
     T* mSignal;

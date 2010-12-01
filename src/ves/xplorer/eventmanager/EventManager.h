@@ -70,7 +70,7 @@ namespace eventmanager
  * based on the boost::signals2 library. Objects desiring to make a signal (event)
  * available to listeners should register the signal with EventManager
  * via EventManager::RegisterSignal. Listener objects desiring to receive a
- * particular events hould call EventManager::ConnectSignal or
+ * particular event should call EventManager::ConnectSignal or
  * EventManager::ConnectSignals, specifying the name of the signal to which they
  * would like to connect (or some other valid search criterion) and should
  * provide a slot of the appropriate type.

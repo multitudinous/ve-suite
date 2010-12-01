@@ -77,6 +77,11 @@ public:
         return mConnections;
     }
 
+    /// Returns a pointer cast as an int to the underlying signal. This is
+    /// intended for debugging purposes to allow the signal's address to be printed
+    /// out.
+    virtual long unsigned int GetSignalAddress() = 0;
+
 protected:
     std::list< boost::weak_ptr< boost::signals2::scoped_connection > > mConnections;
 
