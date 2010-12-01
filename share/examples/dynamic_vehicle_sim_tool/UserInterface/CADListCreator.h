@@ -64,7 +64,7 @@ public:
     ///Destructor
     virtual ~CADListCreator();
 
-class VE_GUIPLUGINS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback
+class TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback
     {
     public:
         ///Constructor
@@ -98,7 +98,8 @@ class VE_GUIPLUGINS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNo
     std::vector< ves::open::xml::cad::CADNodePtr >& GetNodeList();
 
 protected:
-    CADListCreator::TreeGraphPreCallback* m_treeCtrlCreator;///<The pre traverse callback that creates a wxTreeCtrl.
+    ///The pre traverse callback that creates a wxTreeCtrl.
+    CADListCreator::TreeGraphPreCallback* m_treeCtrlCreator;
 };
 }
 #endif//VES_CAD_LIST_CREATOR
