@@ -111,8 +111,6 @@ DynamicVehicleSimToolUIDialog::DynamicVehicleSimToolUIDialog(
     dvst::DynamicVehicleSimToolBase( parent, id ),
     mServiceList( service )
 {    
-    PopulateDialogs();
-
     CenterOnParent();
     //SetTitle( _("Deere Analytics") );
 }
@@ -120,6 +118,17 @@ DynamicVehicleSimToolUIDialog::DynamicVehicleSimToolUIDialog(
 DynamicVehicleSimToolUIDialog::~DynamicVehicleSimToolUIDialog()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool DynamicVehicleSimToolUIDialog::TransferDataToWindow()
+{
+    PopulateDialogs();
+    return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool DynamicVehicleSimToolUIDialog::TransferDataFromWindow()
+{
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnComputerNameEnter( wxCommandEvent& WXUNUSED( event ) )
@@ -202,7 +211,7 @@ void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WX
 	bSizer->Add( choice, 0, wxALIGN_CENTER, 5 );
 	
 	bSizer9->Add( bSizer, 0, 0, 5 );
-    
+    m_scrolledWindow1->Layout();
     m_geomChoiceList.push_back( choice );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -214,8 +223,10 @@ void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent&
     {
         ///Remove the last item;
         bSizer9->Remove( num - 1 );
+        m_geomChoiceList.back()->Destroy();
         m_geomChoiceList.pop_back();
     }
+    m_scrolledWindow1->Layout();
     UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -276,9 +287,13 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
         geomDVP->SetData( dvpName, ConvertUnicode( m_geomChoiceList.at( i )->GetStringSelection().c_str() ) );
         geomCommand->AddDataValuePair( geomDVP );
     }
-    tempModel->SetInput( geomCommand );
-    mServiceList->SendCommandStringToXplorer( geomCommand );
-}
+
+    if( m_geomChoiceList.size() > 0 )
+    {
+        tempModel->SetInput( geomCommand );
+        mServiceList->SendCommandStringToXplorer( geomCommand );
+    }
+ }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::PopulateDialogs()
 {

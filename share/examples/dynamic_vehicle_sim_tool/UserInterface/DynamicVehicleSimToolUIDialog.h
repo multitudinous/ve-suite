@@ -90,6 +90,9 @@ protected:
 	void OnConstrainedGeometrySelection( wxCommandEvent& event );
 	void OnApplyButton( wxCommandEvent& event );
 	void OnOKButton( wxCommandEvent& event );
+
+    virtual bool TransferDataToWindow();
+    virtual bool TransferDataFromWindow();
 };
 
 } //end warrantytool

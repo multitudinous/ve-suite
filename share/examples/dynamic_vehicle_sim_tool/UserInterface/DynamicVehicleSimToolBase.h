@@ -69,7 +69,7 @@ namespace dvst
             
         
         public:
-            DynamicVehicleSimToolBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Dynamic Vehicle Sim Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,600 ), long style = wxDEFAULT_DIALOG_STYLE );
+            DynamicVehicleSimToolBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Dynamic Vehicle Sim Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
             ~DynamicVehicleSimToolBase();
         
     };

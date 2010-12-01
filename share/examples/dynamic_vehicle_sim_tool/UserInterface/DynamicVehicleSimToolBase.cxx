@@ -143,8 +143,8 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     m_textCtrl2->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( DynamicVehicleSimToolBase::OnPortNumberEnter ), NULL, this );
     m_toggleBtn1->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnStartStopButton ), NULL, this );
     m_resetButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnResetSimulation ), NULL, this );
-    m_choice1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
-    m_choice11->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
+    //m_choice1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
+    //m_choice11->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
     m_button4->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnAddGeometryGroupButton ), NULL, this );
     m_button5->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRemoveGeometryGroupButton ), NULL, this );
     m_choice3->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnConstrainedGeometrySelection ), NULL, this );
@@ -159,8 +159,8 @@ DynamicVehicleSimToolBase::~DynamicVehicleSimToolBase()
     m_textCtrl2->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( DynamicVehicleSimToolBase::OnPortNumberEnter ), NULL, this );
     m_toggleBtn1->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnStartStopButton ), NULL, this );
     m_resetButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnResetSimulation ), NULL, this );
-    m_choice1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
-    m_choice11->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
+    //m_choice1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
+    //m_choice11->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
     m_button4->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnAddGeometryGroupButton ), NULL, this );
     m_button5->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRemoveGeometryGroupButton ), NULL, this );
     m_choice3->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnConstrainedGeometrySelection ), NULL, this );
