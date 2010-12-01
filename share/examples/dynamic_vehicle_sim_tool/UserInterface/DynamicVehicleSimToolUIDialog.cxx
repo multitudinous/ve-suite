@@ -36,15 +36,23 @@
 
 // --- My Includes --- //
 #include "DynamicVehicleSimToolUIDialog.h"
+#include "CADListCreator.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/spinctld.h>
+#include <ves/conductor/UIPluginBase.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/OneDStringArray.h>
+
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADPart.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+
+#include <ves/open/xml/model/Model.h>
 
 // --- wxWidgets Includes --- //
 #include <wx/statline.h>
@@ -133,7 +141,7 @@ void DynamicVehicleSimToolUIDialog::SendCommandsToXplorer()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolUIDialog::GetTextInput( wxCommandEvent& event )
+void DynamicVehicleSimToolUIDialog::GetTextInput( wxCommandEvent& WXUNUSED( event ) )
 {
 /*    ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
         new ves::open::xml::DataValuePair() );
@@ -1119,51 +1127,201 @@ void DynamicVehicleSimToolUIDialog::OnSaveQuery( wxCommandEvent& WXUNUSED( event
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnComputerNameEnter( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnComputerNameEnter
+    ves::open::xml::DataValuePairPtr computerNameText( new ves::open::xml::DataValuePair() );
+    computerNameText->SetData( "ComputerName", ConvertUnicode( m_textCtrl1->GetValue().c_str() ) );
+    ves::open::xml::DataValuePairPtr computerPortText( new ves::open::xml::DataValuePair() );
+    computerPortText->SetData( "ComputerPort", ConvertUnicode( m_textCtrl2->GetValue().c_str() ) );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+    command->AddDataValuePair( computerNameText );
+    command->AddDataValuePair( computerPortText );
+    const std::string commandName = "Computer Info Update";
+    command->SetCommandName( commandName );
+    mServiceList->SendCommandStringToXplorer( command );
+    UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolUIDialog::OnPortNumberEnter( wxCommandEvent& WXUNUSED( event ) )
+void DynamicVehicleSimToolUIDialog::OnPortNumberEnter( wxCommandEvent& event )
 {
-	// TODO: Implement OnPortNumberEnter
+    OnComputerNameEnter( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnStartStopButton( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnStartStopButton
+    bool state = m_toggleBtn1->GetValue();
+    std::string simState = "Stop";
+    if( state )
+    {
+        simState = "Start";
+    }
+    ves::open::xml::DataValuePairPtr simText( new ves::open::xml::DataValuePair() );
+    simText->SetData( "Simulator State", simState );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+    command->AddDataValuePair( simText );
+    const std::string commandName = "Simulator Update";
+    command->SetCommandName( commandName );
+    mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnResetSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnResetSimulation
+    ves::open::xml::DataValuePairPtr simText( new ves::open::xml::DataValuePair() );
+    simText->SetData( "Simulator State", "Reset" );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+    command->AddDataValuePair( simText );
+    const std::string commandName = "Simulator Update";
+    command->SetCommandName( commandName );
+    mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnGeometryDataMapping( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnGeometryDataMapping
+    UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnAddGeometryGroupButton
+    size_t newNum = m_geomChoiceList.size();
+	wxBoxSizer* bSizer;
+	bSizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* staticText = new wxStaticText( m_scrolledWindow1, wxID_ANY, wxString::Format("%d", newNum), wxDefaultPosition, wxDefaultSize, 0 );
+	staticText->Wrap( -1 );
+	bSizer->Add( staticText, 0, wxALIGN_CENTER, 5 );
+	
+    ves::open::xml::cad::CADNodePtr rootNode = mUIPluginBase->GetVEModel()->GetGeometry();
+    dynamicvehicletool::CADListCreator nodeListCreator( rootNode );
+    std::vector< ves::open::xml::cad::CADNodePtr > nodeList = 
+        nodeListCreator.GetNodeList();
+	wxArrayString m_choice11Choices;
+    for( size_t i = 0; i < nodeList.size(); ++i )
+    {
+        m_choice11Choices.Add( wxString( nodeList.at( i )->GetNodeName().c_str(), wxConvUTF8 ) );
+    }
+	wxChoice* choice = new wxChoice( m_scrolledWindow1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice11Choices, m_choice11Choices.GetCount() );
+	choice->SetSelection( 0 );
+	bSizer->Add( choice, 0, wxALIGN_CENTER, 5 );
+	
+	bSizer9->Add( bSizer, 0, 0, 5 );
+    
+    m_geomChoiceList.push_back( choice );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnRemoveGeometryGroupButton
+    wxSizerItemList& list = bSizer9->GetChildren();
+    size_t num = list.size();
+    if( num > 0 )
+    {
+        ///Remove the last item;
+        bSizer9->Remove( num - 1 );
+        m_geomChoiceList.pop_back();
+    }
+    UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnConstrainedGeometrySelection( wxCommandEvent& WXUNUSED( event ) )
 {
-	// TODO: Implement OnConstrainedGeometrySelection
+    ves::open::xml::DataValuePairPtr constrainedText( new ves::open::xml::DataValuePair() );
+    constrainedText->SetData( "Contrainted Geometry", ConvertUnicode( m_choice3->GetStringSelection().c_str() ) );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+    command->AddDataValuePair( constrainedText );
+    const std::string commandName = "Geometry Map Update";
+    command->SetCommandName( commandName );
+    mServiceList->SendCommandStringToXplorer( command );
+    UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolUIDialog::OnApplyButton( wxCommandEvent& WXUNUSED( event ) )
+void DynamicVehicleSimToolUIDialog::OnApplyButton( wxCommandEvent& event )
 {
-	// TODO: Implement OnApplyButton
+    OnComputerNameEnter( event );
+    OnConstrainedGeometrySelection( event );
+    UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolUIDialog::OnOKButton( wxCommandEvent& WXUNUSED( event ) )
+void DynamicVehicleSimToolUIDialog::OnOKButton( wxCommandEvent& event )
 {
-	// TODO: Implement OnOKButton
+    OnApplyButton( event );
+    //Do not do anything and close the dialog
+    Close();
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::UpdateModelData()
+{
+    ves::open::xml::model::ModelPtr tempModel = mUIPluginBase->GetVEModel();
+
+    ves::open::xml::CommandPtr toolCommand( new ves::open::xml::Command() );
+    toolCommand->SetCommandName( "Tool Info" );
+
+    ves::open::xml::DataValuePairPtr constrainedText( new ves::open::xml::DataValuePair() );
+    constrainedText->SetData( "Contrainted Geometry", ConvertUnicode( m_choice3->GetStringSelection().c_str() ) );
+    toolCommand->AddDataValuePair( constrainedText );
+    
+    ves::open::xml::DataValuePairPtr computerNameText( new ves::open::xml::DataValuePair() );
+    computerNameText->SetData( "ComputerName", ConvertUnicode( m_textCtrl1->GetValue().c_str() ) );
+    toolCommand->AddDataValuePair( computerNameText );
+
+    ves::open::xml::DataValuePairPtr computerPortText( new ves::open::xml::DataValuePair() );
+    computerPortText->SetData( "ComputerPort", ConvertUnicode( m_textCtrl2->GetValue().c_str() ) );
+    toolCommand->AddDataValuePair( computerPortText );
+    tempModel->SetInput( toolCommand );
+
+    ves::open::xml::CommandPtr geomCommand( new ves::open::xml::Command() );
+    geomCommand->SetCommandName( "Geometry Data Map" );
+    for( size_t i = 0; i < m_geomChoiceList.size(); ++i )
+    {
+        std::string dvpName = "Geometry_" + boost::lexical_cast<std::string>( i );
+
+        ves::open::xml::DataValuePairPtr geomDVP( new ves::open::xml::DataValuePair() );
+        geomDVP->SetData( dvpName, ConvertUnicode( m_geomChoiceList.at( i )->GetStringSelection().c_str() ) );
+        geomCommand->AddDataValuePair( geomDVP );
+    }
+    tempModel->SetInput( geomCommand );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::PopulateDialogs()
+{
+    ves::open::xml::model::ModelPtr tempModel = mUIPluginBase->GetVEModel();
+    
+    ves::open::xml::CommandPtr toolCommand = tempModel->GetInput( "Tool Info" );
+    std::string constrainedGeom;
+    toolCommand->GetDataValuePair( "Contrainted Geometry" )->GetData( constrainedGeom );
+    
+    ves::open::xml::cad::CADNodePtr rootNode = tempModel->GetGeometry();
+    dynamicvehicletool::CADListCreator nodeListCreator( rootNode );
+    std::vector< ves::open::xml::cad::CADNodePtr > nodeList = 
+        nodeListCreator.GetNodeList();
+	wxArrayString m_choice11Choices;
+    for( size_t i = 0; i < nodeList.size(); ++i )
+    {
+        m_choice11Choices.Add( wxString( nodeList.at( i )->GetNodeName().c_str(), wxConvUTF8 ) );
+    }
+	m_choice3->Append( m_choice11Choices );
+    m_choice3->SetSelection( 0 );
+    m_choice3->SetStringSelection( wxString( constrainedGeom.c_str(), wxConvUTF8 ) );
+    
+    std::string computerName;
+    toolCommand->GetDataValuePair( "ComputerName" )->GetData( computerName );
+    m_textCtrl1->ChangeValue( wxString( computerName.c_str(), wxConvUTF8 ) );
+
+    std::string computerPort;
+    toolCommand->GetDataValuePair( "ComputerPort" )->GetData( computerPort );
+    m_textCtrl2->ChangeValue( wxString( computerPort.c_str(), wxConvUTF8 ) );
+
+    toolCommand = tempModel->GetInput( "Geometry Data Map" );
+    size_t numDVPs = toolCommand->GetNumberOfDataValuePairs();
+    wxCommandEvent event;
+    std::string nodeName;
+    for( size_t i = 0; i < numDVPs; ++i )
+    {
+        OnAddGeometryGroupButton( event );
+        ves::open::xml::DataValuePairPtr geomDVP = 
+            toolCommand->GetDataValuePair( i );
+        geomDVP->GetData( nodeName );
+        m_geomChoiceList.at( i )->SetStringSelection( wxString( nodeName.c_str(), wxConvUTF8 ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

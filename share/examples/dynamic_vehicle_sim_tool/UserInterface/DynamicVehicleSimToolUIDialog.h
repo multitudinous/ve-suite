@@ -98,6 +98,10 @@ private:
 
     void OpenWarrantyFile( wxCommandEvent& event );
 
+    void UpdateModelData();
+    
+    void PopulateDialogs();
+    
     ves::conductor::util::CORBAServiceList* mServiceList;
     
     wxTextCtrl* mPartNumberEntry;
@@ -115,6 +119,8 @@ private:
     size_t m_tableCounter;
     ///List of tables created by the user
     std::vector< std::string > m_tableList;
+    ///List of geom cadnode names
+    std::vector< wxChoice* > m_geomChoiceList;
     
 protected:
 	// Handlers for DynamicVehicleSimTool events.

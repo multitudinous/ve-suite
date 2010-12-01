@@ -81,6 +81,15 @@ public:
 protected:
 
 private:
+    ///Thread for grabbing data from sim
+    void SimulatorCaptureThread();
+    ///
+    void UpdateSelectedGeometryPositions();
+    ///
+    void SetupGeometryDataMaps();
+    ///
+    void SimulatorControlUpdate();
+    
     ///Create the db for the tool to grab dat from
     void CreateDB();
     ///Create the list of textures

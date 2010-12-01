@@ -206,6 +206,8 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
     ves::open::xml::DataValuePairPtr dvp = 
         m_currentCommand->GetDataValuePair( 0 );
     //Before anything else remove the glow if there is glow
+    //vpr::Thread* thread = new vpr::Thread( boost::bind( &DynamicVehicleSimToolGP::SimulatorCaptureThread, this ) );
+
     if( commandName == "WARRANTY_TOOL_PART_TOOLS" )
     {
         m_cadRootNode = mModel->GetModelCADHandler()->
@@ -1968,5 +1970,25 @@ void DynamicVehicleSimToolGP::SaveCurrentQuery( const std::string& filename )
         statementExport << std::endl;
     }
     statementExport.close();
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::SimulatorCaptureThread()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::SetupGeometryDataMaps()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::SimulatorControlUpdate()
+{
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
