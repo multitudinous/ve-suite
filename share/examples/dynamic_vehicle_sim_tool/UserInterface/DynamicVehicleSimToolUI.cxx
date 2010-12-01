@@ -38,7 +38,7 @@
 // --- wxWidgets Includes --- //
 #include <wx/wx.h>
 
-using namespace warrantytool;
+using namespace dynamicvehicletool;
 
 IMPLEMENT_DYNAMIC_CLASS( DynamicVehicleSimToolUI, ves::conductor::UIPluginBase )
 

@@ -37,7 +37,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/conductor/UIPluginBase.h>
 
-namespace warrantytool
+namespace dynamicvehicletool
 {
 class DynamicVehicleSimToolUI : public ves::conductor::UIPluginBase
 {

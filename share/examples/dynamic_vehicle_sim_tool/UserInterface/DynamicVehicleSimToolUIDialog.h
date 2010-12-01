@@ -39,7 +39,7 @@
 
 #include <ves/conductor/util/DualSlider.h>
 
-#include "MachineInfoDlg.h"
+#include "DynamicVehicleSimToolBase.h"
 
 namespace ves
 {
@@ -65,9 +65,9 @@ class wxFixWidthImportCtrl;
 #include <vector>
 #include <string>
 
-namespace warrantytool
+namespace dynamicvehicletool
 {
-class DynamicVehicleSimToolUIDialog : public MachineInfoDlg
+class DynamicVehicleSimToolUIDialog : public dvst::DynamicVehicleSimToolBase
 {
 public:
     DynamicVehicleSimToolUIDialog();
@@ -117,23 +117,17 @@ private:
     std::vector< std::string > m_tableList;
     
 protected:
-    // Handlers for MachineInfoDlg events.
-    void OnDataLoad( wxFileDirPickerEvent& event );
-    void OnVariableAndLogicalChoice( wxCommandEvent& event );
-    void OnCreateInputText( wxCommandEvent& event );
-    void OnCreateTableFromQuery( wxCommandEvent& event );
-    void OnTextQueryEnter( wxCommandEvent& event );
-    void OnTableSelection( wxCommandEvent& event );
-    void OnPartSelection( wxCommandEvent& event );
-    void OnPartNumberEntry( wxCommandEvent& event );
-    void OnTextChkListToggle( wxCommandEvent& event );
-    void OnToggleUnselected( wxCommandEvent& event );
-    void OnMouseSelection( wxCommandEvent& event );
-    void OnClearData( wxCommandEvent& event );
-	void OnSaveQuery( wxCommandEvent& event );
-    void OnQueryApply( wxCommandEvent& event );
-    void OnDialogCancel( wxCommandEvent& event );
-    void OnQueryOK( wxCommandEvent& event );
+	// Handlers for DynamicVehicleSimTool events.
+	void OnComputerNameEnter( wxCommandEvent& event );
+	void OnPortNumberEnter( wxCommandEvent& event );
+	void OnStartStopButton( wxCommandEvent& event );
+	void OnResetSimulation( wxCommandEvent& event );
+	void OnGeometryDataMapping( wxCommandEvent& event );
+	void OnAddGeometryGroupButton( wxCommandEvent& event );
+	void OnRemoveGeometryGroupButton( wxCommandEvent& event );
+	void OnConstrainedGeometrySelection( wxCommandEvent& event );
+	void OnApplyButton( wxCommandEvent& event );
+	void OnOKButton( wxCommandEvent& event );
     
     const std::string GetTextFromChoice( wxChoice* variable,
                                         wxChoice* logicOperator,

@@ -83,13 +83,13 @@
 using namespace Poco::Data;
 
 
-using namespace warrantytool;
+using namespace dynamicvehicletool;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolUIDialog::DynamicVehicleSimToolUIDialog()
     :
-    MachineInfoDlg( 0 ),
+    dvst::DynamicVehicleSimToolBase( 0 ),
     mServiceList( 0 ),
     mPartNumberEntry( 0 ),
     m_tableCounter( 0 )
@@ -102,12 +102,12 @@ DynamicVehicleSimToolUIDialog::DynamicVehicleSimToolUIDialog(
     int id, 
     ves::conductor::util::CORBAServiceList* service )
     :
-    MachineInfoDlg( parent, id ),
+    dvst::DynamicVehicleSimToolBase( parent, id ),
     mServiceList( service ),
     mPartNumberEntry( 0 ),
     m_tableCounter( 0 )
 {    
-    m_variableChoice01->Disable();
+    /*m_variableChoice01->Disable();
     m_variableLogicOperator01->Disable();
     m_textInput01->Disable();
     m_logicOperator01->Disable();
@@ -117,10 +117,10 @@ DynamicVehicleSimToolUIDialog::DynamicVehicleSimToolUIDialog(
     m_logicOperator02->Disable();
     m_variableChoice03->Disable();
     m_variableLogicOperator03->Disable();
-    m_textInput03->Disable();
+    m_textInput03->Disable();*/
     
     CenterOnParent();
-    SetTitle( _("Deere Analytics") );
+    //SetTitle( _("Deere Analytics") );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolUIDialog::~DynamicVehicleSimToolUIDialog()
@@ -135,7 +135,7 @@ void DynamicVehicleSimToolUIDialog::SendCommandsToXplorer()
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::GetTextInput( wxCommandEvent& event )
 {
-    ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
+/*    ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
         new ves::open::xml::DataValuePair() );
 
     if( event.GetId() == GLOW_RESET )
@@ -154,9 +154,9 @@ void DynamicVehicleSimToolUIDialog::GetTextInput( wxCommandEvent& event )
     else if( event.GetId() == GLOW_ADD )
     {
         //If add is pushed then send the name to add
-        /*mPartNumberList.push_back( 
-            ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );
-        cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );*/
+        //mPartNumberList.push_back( 
+        //    ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );
+        //cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );
         mPartNumberList.push_back( 
             ConvertUnicode( mPartListCMB->GetValue().c_str() ) );
         cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( mPartListCMB->GetValue().c_str() ) );
@@ -185,7 +185,7 @@ void DynamicVehicleSimToolUIDialog::GetTextInput( wxCommandEvent& event )
     command->AddDataValuePair( displayText );
     std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
     command->SetCommandName( mCommandName );
-    mServiceList->SendCommandStringToXplorer( command );
+    mServiceList->SendCommandStringToXplorer( command );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OpenWarrantyFile( wxCommandEvent& WXUNUSED( event ) )
@@ -314,7 +314,7 @@ void DynamicVehicleSimToolUIDialog::StripCharacters( std::string& data, const st
     }
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolUIDialog::OnDataLoad( wxFileDirPickerEvent& event )
+/*void DynamicVehicleSimToolUIDialog::OnDataLoad( wxFileDirPickerEvent& event )
 {
     // TODO: Implement OnDataLoad
     wxString fileName = event.GetPath();
@@ -1115,5 +1115,55 @@ void DynamicVehicleSimToolUIDialog::OnSaveQuery( wxCommandEvent& WXUNUSED( event
     std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
     command->SetCommandName( mCommandName );
     mServiceList->SendCommandStringToXplorer( command );
+}*/
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnComputerNameEnter( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnComputerNameEnter
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnPortNumberEnter( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnPortNumberEnter
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnStartStopButton( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnStartStopButton
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnResetSimulation( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnResetSimulation
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnGeometryDataMapping( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnGeometryDataMapping
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnAddGeometryGroupButton
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnRemoveGeometryGroupButton
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnConstrainedGeometrySelection( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnConstrainedGeometrySelection
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnApplyButton( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnApplyButton
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnOKButton( wxCommandEvent& WXUNUSED( event ) )
+{
+	// TODO: Implement OnOKButton
 }
 ////////////////////////////////////////////////////////////////////////////////
