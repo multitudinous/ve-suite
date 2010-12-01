@@ -31,14 +31,10 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef WARRANTY_TOOL_UI_DIALOG_H
-#define WARRANTY_TOOL_UI_DIALOG_H
+#ifndef DYNAMIC_VEHICLE_SIM_UI_DIALOG_H
+#define DYNAMIC_VEHICLE_SIM_UI_DIALOG_H
 
 // --- VE-Suite Includes --- //
-#include <ves/conductor/UIDialog.h>
-
-#include <ves/conductor/util/DualSlider.h>
-
 #include "DynamicVehicleSimToolBase.h"
 
 namespace ves
@@ -48,18 +44,12 @@ namespace conductor
 namespace util
 {
 class CORBAServiceList;
-class wxSpinCtrlDbl;
 }
 }
 }
 
 // --- wxWidgets Includes --- //
-class wxRadioBox;
-class wxSlider;
-class wxSpinCtrl;
-class wxComboBox;
-class wxTextCtrl;
-class wxFixWidthImportCtrl;
+class wxChoice;
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -78,47 +68,13 @@ public:
 
     virtual ~DynamicVehicleSimToolUIDialog();
 
-    enum
-    {
-        GLOW_RESET,
-        GLOW_CLEAR,
-        GLOW_ADD,
-        OPEN_WARRANTY_FILE,
-        PART_SELECTION
-    };
-
 private:
-    void StripCharacters( std::string& data, const std::string& character );
-
-    void GetTextInput( wxCommandEvent& event );
-
-    void BuildGUI();
-
-    void SendCommandsToXplorer();
-
-    void OpenWarrantyFile( wxCommandEvent& event );
-
     void UpdateModelData();
     
     void PopulateDialogs();
     
     ves::conductor::util::CORBAServiceList* mServiceList;
-    
-    wxTextCtrl* mPartNumberEntry;
-    wxFixWidthImportCtrl* mTabDialog;
-    
-    std::vector< std::string > mPartNumberList;
-    ///PArt numbers loaded from the csv files
-    std::vector< std::string > mLoadedPartNumbers;
-    ///Description of part numbers loaded from csv files
-    std::vector< std::string > mPartNumberDescriptions;
-    wxComboBox* mPartListCMB;
-    wxArrayString m_partNumberStrings;
-    wxArrayString m_columnStrings;
-    ///The number of tables created by the user
-    size_t m_tableCounter;
-    ///List of tables created by the user
-    std::vector< std::string > m_tableList;
+
     ///List of geom cadnode names
     std::vector< wxChoice* > m_geomChoiceList;
     
@@ -134,24 +90,8 @@ protected:
 	void OnConstrainedGeometrySelection( wxCommandEvent& event );
 	void OnApplyButton( wxCommandEvent& event );
 	void OnOKButton( wxCommandEvent& event );
-    
-    const std::string GetTextFromChoice( wxChoice* variable,
-                                        wxChoice* logicOperator,
-                                        wxTextCtrl* textInput );
-    
-    const std::string GetTextFromLogicOperator( wxChoice* logicOperator );
-    
-    void SubmitQueryCommand();
-    
-    void UpdateQueryDisplay();
-    
-    void ParseDataBase( const std::string& csvFilename );
-
-    //void ParseDataFile( const std::string& csvFilename );
-
-    //DECLARE_EVENT_TABLE()
 };
 
 } //end warrantytool
 
-#endif //WARRANTY_TOOL_UI_DIALOG_H
+#endif //DYNAMIC_VEHICLE_SIM_UI_DIALOG_H
