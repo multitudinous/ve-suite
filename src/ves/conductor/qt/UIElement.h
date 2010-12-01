@@ -118,8 +118,8 @@ public:
     virtual void SendButtonPressEvent( gadget::Keys button, int x, int y, int state );
     virtual void SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
     virtual void SendMouseMoveEvent( int x, int y, int z, int state );
-    virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask );
-    virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask );
+    virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
+    virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
 ////////////////////////////////////////////////////////////////////////////////
 /// Tell this element to render to an image and return a pointer to the data.
 ///

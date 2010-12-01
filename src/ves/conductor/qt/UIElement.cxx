@@ -196,12 +196,12 @@ void UIElement::SendMouseMoveEvent( int x, int y, int z, int state )
 
 }
 
-void UIElement::SendKeyPressEvent( gadget::Keys key, int modifierMask )
+void UIElement::SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
 
 }
 
-void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask )
+void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
 
 }

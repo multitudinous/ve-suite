@@ -206,7 +206,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         KeyPressSignalMapType::iterator itr = mKeyPressSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyPressSignalMap.end() )
         {
-            (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask() );
+            (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask(),
+                              keyEvt->getKeyUnicode() );
         }
         else
         {
@@ -231,7 +232,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         KeyReleaseSignalMapType::iterator itr = mKeyReleaseSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyReleaseSignalMap.end() )
         {
-            (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask() );
+            (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask(),
+                              keyEvt->getKeyUnicode() );
         }
         else
         {

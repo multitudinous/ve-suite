@@ -183,6 +183,11 @@ public:
     /// state = modifier mask OR'd with button mask
     void ButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
 
+    /// Receives key press events connected via EventManager
+    void KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode );
+
+    /// Receives key release events connected via EventManager
+    void KeyReleaseEvent( gadget::Keys key, int modifiers, wchar_t unicode );
 
     ///Sets the projection matrix when not in Ortho2D mode
     void SetProjectionMatrix( osg::Matrixd& matrix );

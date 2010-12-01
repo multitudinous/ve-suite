@@ -256,14 +256,16 @@ private:
     void RegisterKeySignals();
 
     /// KeyPress signal type
-    /// First parameter is the key
-    /// Second parameter is the modifier mask, use enum gadget::ModiferMask to interpret.
-    typedef boost::signals2::signal< void ( gadget::Keys, int ) > KeyPressSignal_type;
+    /// First arg is the key that was pressed
+    /// Second arg is the gadget::ModiferMask (modifier mask)
+    /// Third arg is the unicode representation of the key
+    typedef boost::signals2::signal< void ( gadget::Keys, int, wchar_t ) > KeyPressSignal_type;
 
     /// KeyRelease signal type
-    /// First parameter is the key
-    /// Second parameter is the modifier mask, use enum gadget::ModiferMask to interpret.
-    typedef boost::signals2::signal< void ( gadget::Keys, int ) > KeyReleaseSignal_type;
+    /// First arg is the key that was pressed
+    /// Second arg is the gadget::ModiferMask (modifier mask)
+    /// Third arg is the unicode representation of the key
+    typedef boost::signals2::signal< void ( gadget::Keys, int, wchar_t ) > KeyReleaseSignal_type;
 
     /// Map to hold individual KeyPress signals
     typedef std::map< gadget::Keys, KeyPressSignal_type* > KeyPressSignalMapType;

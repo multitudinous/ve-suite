@@ -75,6 +75,7 @@ bool qt_sendSpontaneousEvent( QObject* recv, QEvent* e )
 }
 
 Q_DECLARE_METATYPE(gadget::Keys)
+Q_DECLARE_METATYPE(wchar_t)
 
 namespace ves
 {
@@ -149,6 +150,7 @@ void UIElementQt::Initialize( )
                           this, SLOT( _sendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
 
         qRegisterMetaType<gadget::Keys>();
+        qRegisterMetaType<wchar_t>();
 
         QObject::connect( this, SIGNAL( PutButtonPressEvent( gadget::Keys, int, int, int ) ),
                           this, SLOT( _buttonPressEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
@@ -159,11 +161,11 @@ void UIElementQt::Initialize( )
         QObject::connect( this, SIGNAL( PutMouseMoveEvent( int, int, int, int ) ),
                           this, SLOT( _mouseMoveEvent( int, int, int, int ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutKeyPressEvent( gadget::Keys, int ) ),
-                          this, SLOT( _keyPressEvent( gadget::Keys, int ) ), Qt::QueuedConnection );
+        QObject::connect( this, SIGNAL( PutKeyPressEvent( gadget::Keys, int, wchar_t ) ),
+                          this, SLOT( _keyPressEvent( gadget::Keys, int, wchar_t ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int ) ),
-                          this, SLOT( _keyReleaseEvent( gadget::Keys, int ) ), Qt::QueuedConnection );
+        QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int, wchar_t ) ),
+                          this, SLOT( _keyReleaseEvent( gadget::Keys, int, wchar_t ) ), Qt::QueuedConnection );
 
         // Start up the timer that causes repaints at a set interval -- assuming
         // thread is given execution sometime during this interval.
@@ -235,14 +237,14 @@ void UIElementQt::SendMouseMoveEvent( int x, int y, int z, int state )
     Q_EMIT PutMouseMoveEvent( x, y, z, state );
 }
 
-void UIElementQt::SendKeyPressEvent( gadget::Keys key, int modifierMask )
+void UIElementQt::SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
-    Q_EMIT PutKeyPressEvent( key, modifierMask );
+    Q_EMIT PutKeyPressEvent( key, modifierMask, unicode );
 }
 
-void UIElementQt::SendKeyReleaseEvent( gadget::Keys key, int modifierMask )
+void UIElementQt::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
-    Q_EMIT PutKeyReleaseEvent( key, modifierMask );
+    Q_EMIT PutKeyReleaseEvent( key, modifierMask, unicode );
 }
 
 unsigned char* UIElementQt::RenderElementToImage( )
@@ -610,6 +612,10 @@ void UIElementQt::_buttonReleaseEvent( gadget::Keys button, int x, int y, int st
 
 void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int state )
 {
+    QWidget *vw = this->childAt( x, y );
+
+    if( vw == NULL ) return;
+
     Qt::MouseButton qbutton = _extractButton( button );
     Qt::MouseButtons buttons = _extractButtons( state );
     Qt::KeyboardModifiers modifiers = _extractModifiers( state );
@@ -620,6 +626,10 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
 
     if( type == 1 )
     {
+        // Gadgeteer doesn't put buttons into the state except on move events, but
+        // Qt expects the button mask to contain all pressed buttons even on
+        // press events
+        buttons = buttons | qbutton;
         QMouseEvent e( QEvent::MouseButtonPress, position, globalPos, qbutton,
                     buttons, modifiers );
         qt_sendSpontaneousEvent( this->viewport( ), &e );
@@ -647,14 +657,26 @@ void UIElementQt::_mouseMoveEvent( int x, int y, int z, int state )
     qt_sendSpontaneousEvent( this->viewport( ), &e );
 }
 
-void UIElementQt::_keyPressEvent( gadget::Keys key, int modifierMask )
+void UIElementQt::_keyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
+    Qt::KeyboardModifiers modifiers = _extractModifiers( modifierMask );
 
+    // Need to fix this bit with unicode representation
+    wchar_t uniKey = unicode;
+    QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
+    QKeyEvent e( QEvent::KeyPress, mKeyMap[key], modifiers, qUniKey );
+    qt_sendSpontaneousEvent( this->viewport( ), &e );
 }
 
-void UIElementQt::_keyReleaseEvent( gadget::Keys key, int modifierMask )
+void UIElementQt::_keyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
+    Qt::KeyboardModifiers modifiers = _extractModifiers( modifierMask );
 
+    // Need to fix this bit with unicode representation
+    wchar_t uniKey = unicode;
+    QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
+    QKeyEvent e( QEvent::KeyRelease, mKeyMap[key], modifiers, qUniKey );
+    qt_sendSpontaneousEvent( this->viewport( ), &e );
 }
 
 Qt::MouseButton UIElementQt::_extractButton( gadget::Keys button )
@@ -886,13 +908,11 @@ void UIElementQt::_onMinimizeButtonClicked( )
 
 void UIElementQt::_onTitlebarPressed( )
 {
-    std::cout << "_onTitlebarPressed" << std::endl << std::flush;
     ves::conductor::UIManager::instance()->InitiateMoveElement( this );
 }
 
 void UIElementQt::_onOpacitySliderValueChanged( int opacity )
 {
-    std::cout << "_onOpacitySliderValueChanged" << std::endl << std::flush;
     ves::conductor::UIManager::instance()->SetOpacity( opacity/100.0f );
 }
 

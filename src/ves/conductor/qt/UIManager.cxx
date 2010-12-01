@@ -119,6 +119,16 @@ UIManager::UIManager( ) :
     ButtonReleaseSignal_type::slot_type brSlotFunctor( boost::bind( &UIManager::ButtonReleaseEvent, this, _1, _2, _3, _4) );
     SlotWrapper< ButtonReleaseSignal_type > brSlotWrapper( brSlotFunctor );
     evm->ConnectSignals( "KeyboardMouse.ButtonRelease%", &brSlotWrapper, mConnections, EventManager::button_SignalType, EventManager::highest_Priority );
+
+    typedef boost::signals2::signal< void ( gadget::Keys, int, wchar_t ) > KeySignal_type;
+    KeySignal_type::slot_type kpSlotFunctor( boost::bind( &UIManager::KeyPressEvent, this, _1, _2, _3) );
+    SlotWrapper< KeySignal_type > kpSlotWrapper( kpSlotFunctor );
+    evm->ConnectSignals( "KeyboardMouse.KeyPress%", &kpSlotWrapper, mConnections, EventManager::keyboard_SignalType, EventManager::highest_Priority );
+
+    KeySignal_type::slot_type krSlotFunctor( boost::bind( &UIManager::KeyReleaseEvent, this, _1, _2, _3) );
+    SlotWrapper< KeySignal_type > krSlotWrapper( krSlotFunctor );
+    evm->ConnectSignals( "KeyboardMouse.KeyRelease%", &krSlotWrapper, mConnections, EventManager::keyboard_SignalType, EventManager::highest_Priority );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -872,7 +882,7 @@ void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
         return;
     }
 
-    // TODO: his iterates over all elements. We should instead just find the match
+    // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
     ElementMap_type::iterator map_iterator;
     for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
@@ -926,7 +936,7 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
         return;
     }
 
-    // TODO: his iterates over all elements. We should instead just find the match
+    // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
     ElementMap_type::iterator map_iterator;
     for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
@@ -953,6 +963,58 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
         }
     }
 
+}
+
+void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode )
+{
+    if( ! _okayToSendEvent() )
+    {
+        return;
+    }
+
+    // TODO: this iterates over all elements. We should instead just find the match
+    // from Ortho2DTestPointerCoordinates and send to it.
+    ElementMap_type::iterator map_iterator;
+    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+            ++map_iterator )
+    {
+        UIElement* element = map_iterator->second;
+
+        bool visible = element->IsVisible( );
+        bool minimized = element->IsMinimized( );
+
+        // Only send events if element is visible and not minimzed
+        if( ( visible ) && ( !minimized ) )
+        {
+            element->SendKeyPressEvent( key, modifiers, unicode );
+        }
+    }
+}
+
+void UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, wchar_t unicode )
+{
+    if( ! _okayToSendEvent() )
+    {
+        return;
+    }
+
+    // TODO: this iterates over all elements. We should instead just find the match
+    // from Ortho2DTestPointerCoordinates and send to it.
+    ElementMap_type::iterator map_iterator;
+    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+            ++map_iterator )
+    {
+        UIElement* element = map_iterator->second;
+
+        bool visible = element->IsVisible( );
+        bool minimized = element->IsMinimized( );
+
+        // Only send events if element is visible and not minimzed
+        if( ( visible ) && ( !minimized ) )
+        {
+            element->SendKeyReleaseEvent( key, modifiers, unicode );
+        }
+    }
 }
 
 bool UIManager::_okayToSendEvent()
