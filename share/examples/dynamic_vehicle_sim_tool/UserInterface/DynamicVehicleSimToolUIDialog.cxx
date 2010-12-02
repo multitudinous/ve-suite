@@ -222,8 +222,9 @@ void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent&
     if( num > 0 )
     {
         ///Remove the last item;
+        list.back()->DeleteWindows();
         bSizer9->Remove( num - 1 );
-        m_geomChoiceList.back()->Destroy();
+        //m_geomChoiceList.back()->Destroy();
         m_geomChoiceList.pop_back();
     }
     m_scrolledWindow1->Layout();
@@ -288,11 +289,14 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
         geomCommand->AddDataValuePair( geomDVP );
     }
 
-    if( m_geomChoiceList.size() > 0 )
+    if( m_geomChoiceList.size() == 0 )
     {
-        tempModel->SetInput( geomCommand );
-        mServiceList->SendCommandStringToXplorer( geomCommand );
+        ves::open::xml::DataValuePairPtr geomDVP( new ves::open::xml::DataValuePair() );
+        geomDVP->SetData( "No Geometry Selected", "No Geom" );
+        geomCommand->AddDataValuePair( geomDVP );
     }
+    tempModel->SetInput( geomCommand );
+    mServiceList->SendCommandStringToXplorer( geomCommand );
  }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::PopulateDialogs()

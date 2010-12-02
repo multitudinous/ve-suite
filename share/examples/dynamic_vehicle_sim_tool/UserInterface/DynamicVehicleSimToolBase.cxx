@@ -137,7 +137,8 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     
     this->SetSizer( bSizer1 );
     this->Layout();
-    
+    bSizer1->Fit( this );
+
     // Connect Events
     m_textCtrl1->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( DynamicVehicleSimToolBase::OnComputerNameEnter ), NULL, this );
     m_textCtrl2->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( DynamicVehicleSimToolBase::OnPortNumberEnter ), NULL, this );
