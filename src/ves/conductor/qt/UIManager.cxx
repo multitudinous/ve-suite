@@ -78,7 +78,7 @@ UIManager::UIManager() :
     mShow( false ),
     mMinimize( false ),
     mUnminimize( false ),
-    mOpacity( 1.0f ),
+    mOpacity( 0.8f ),
     mDxPointer( 0 ),
     mDyPointer( 0 ),
     mDzPointer( 0 ),
