@@ -44,6 +44,12 @@ namespace ves
 namespace conductor
 {
 
+/*!\file OpcUOPlugin.h
+  OPC Unit Operations Plugin
+  */
+/*!\class ves::conductor::OpcUOPlugin
+ * This class is the OPC Unit Operations plugin.
+ */
 class OpcUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( OpcUOPlugin )

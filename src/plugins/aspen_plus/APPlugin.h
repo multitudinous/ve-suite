@@ -43,6 +43,13 @@ namespace ves
 {
 namespace conductor
 {
+
+/*!\file APPlugin.h
+  Aspen Plus Plugin
+  */
+/*!\class ves::conductor::APPlugin
+ * This class is the Aspen Plus Plugin.
+ */
 class APPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( APPlugin )

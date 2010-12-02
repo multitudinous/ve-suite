@@ -43,6 +43,12 @@
 #undef ADOpenDialog_STYLE
 #define ADOpenDialog_STYLE
 
+/*!\file ADOpenDialog.h
+  Aspen Dynamics File Open Dialog
+  */
+/*!\class ves::conductor::ADOpenDialog
+ * This class is the dialog for Aspen Dynamics files.
+ */
 class ADOpenDialog : public wxDialog
 {
 public:

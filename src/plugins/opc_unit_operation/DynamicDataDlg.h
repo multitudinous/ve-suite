@@ -40,6 +40,12 @@
 #include <wx/button.h>
 #include <ves/conductor/util/CORBAServiceList.h>
 
+/*!\file DynamicDataDlg.h
+  Dynamic Data Dialog
+  */
+/*!\class ves::conductor::DynamicDataDlg
+ * This class is the Dynamic Data Dialog.
+ */
 class DynamicDataDlg : public wxDialog
 {
 public:

@@ -40,6 +40,12 @@
 #include <wx/combobox.h>
 #include <wx/dir.h>
 
+/*!\file DSOpenDialog.h
+  DynSim File Open Dialog
+  */
+/*!\class ves::conductor::DSOpenDialog
+ * This class is the dialog for DynSim files.
+ */
 class DSOpenDialog : public wxDialog
 {
 public:

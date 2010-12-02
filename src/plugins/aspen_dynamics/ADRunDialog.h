@@ -42,6 +42,12 @@
 #include <wx/button.h>
 #include <wx/statbox.h>
 
+/*!\file ADRunDialog.h
+  Aspen Dynamics Run Dialog
+  */
+/*!\class ves::conductor::ADRunDialog
+ * This class is the dialog running Aspen Dynamics.
+ */
 class ADRunDialog : public wxDialog
 {
 public:

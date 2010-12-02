@@ -43,6 +43,13 @@ namespace ves
 {
 namespace conductor
 {
+
+/*!\file ADUOPlugin.h
+  Aspen Dynamics Unit Operations Plugin
+  */
+/*!\class ves::conductor::ADUOPlugin
+ * This class is the Aspen Dynamics Unit Operations plugin.
+ */
 class ADUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( ADUOPlugin )

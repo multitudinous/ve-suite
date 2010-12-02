@@ -40,6 +40,12 @@
 #include <wx/combobox.h>
 #include <wx/dir.h>
 
+/*!\file APOpenDialog.h
+  Aspen Plus File Open Dialog
+  */
+/*!\class ves::conductor::APOpenDialog
+ * This class is the dialog for Aspen Plus files.
+ */
 class APOpenDialog : public wxDialog
 {    
 public:

@@ -45,7 +45,6 @@ namespace ves
 namespace conductor
 {
 
-
 /*!\file DSPlugin.h
   DynSim Plugin
   */

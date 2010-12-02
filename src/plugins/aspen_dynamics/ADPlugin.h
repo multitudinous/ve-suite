@@ -44,6 +44,12 @@ namespace ves
 namespace conductor
 {
 
+/*!\file ADPlugin.h
+  Aspen Dynamics Run Dialog
+  */
+/*!\class ves::conductor::ADPlugin
+ * This class is the Aspen Dynamics plugin.
+ */
 class ADPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( ADPlugin )

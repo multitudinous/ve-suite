@@ -51,6 +51,12 @@ namespace ves
 namespace conductor
 {
 
+/*!\file ADUOVarDialog.h
+  Aspen Dynamics Unit Operations Variable Dialog
+  */
+/*!\class ves::conductor::ADUOVarDialog
+ * This class is for the Aspen Dynamics variables.
+ */
 class ADUOVarDialog : public wxDialog
 {
 public:

@@ -44,6 +44,12 @@ namespace ves
 namespace conductor
 {
 
+/*!\file APUOPlugin.h
+  Aspen Plus Unit Operations Plugin
+  */
+/*!\class ves::conductor::APUOPlugin
+ * This class is the Aspen Plus Unit Operations plugin.
+ */
 class APUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( APUOPlugin )
