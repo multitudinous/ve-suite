@@ -50,7 +50,7 @@
 //#include <osg/Texture2D>
 #include <osg/Projection>
 #include <osg/NodeCallback>
-//#include <osg/Material>
+#include <osg/BlendFunc>
 #include <osg/Depth>
 #include <osg/AnimationPath>
 #include <osg/io_utils>
@@ -65,8 +65,7 @@ using namespace ves::conductor;
 vprSingletonImp( UIManager );
 
 ////////////////////////////////////////////////////////////////////////////////
-
-UIManager::UIManager( ) :
+UIManager::UIManager() :
     mUIUpdateCallback( new UIUpdateCallback ),
     mInitialized( false ),
     mLeft( 0 ),
@@ -93,14 +92,14 @@ UIManager::UIManager( ) :
 {
     using namespace ves::xplorer::eventmanager;
 
-    EventManager* evm = EventManager::instance( );
+    EventManager* evm = EventManager::instance();
 
     typedef boost::signals2::signal< bool (xplorer::eventmanager::InteractionEvent& ) > InteractionSignal_type;
     InteractionSignal_type::slot_type slotFunctor( boost::bind( &UIManager::SendInteractionEvent, this, _1 ) );
     SlotWrapper< InteractionSignal_type > slotWrapper( slotFunctor );
     evm->ConnectSignal( "KeyboardMouseInteractionSignal", &slotWrapper, mConnections, EventManager::highest_Priority );
 
-    typedef boost::signals2::signal< void ( ) > HideShowUISignal_type;
+    typedef boost::signals2::signal< void () > HideShowUISignal_type;
     HideShowUISignal_type::slot_type hsSlotFunctor( boost::bind( &UIManager::ToggleVisibility, this ) );
     SlotWrapper< HideShowUISignal_type > hsSlotWrapper( hsSlotFunctor );
     evm->ConnectSignal( "KeyboardMouse.HideShowUISignal", &hsSlotWrapper, mConnections, EventManager::highest_Priority );
@@ -131,12 +130,11 @@ UIManager::UIManager( ) :
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-UIManager::~UIManager( )
+UIManager::~UIManager()
 {
-    if( mUIGroup.valid( ) )
+    if( mUIGroup.valid() )
     {
-        mUIGroup->removeUpdateCallback( mUIUpdateCallback.get( ) );
+        mUIGroup->removeUpdateCallback( mUIUpdateCallback.get() );
     }
 
     //std::cout << this->referenceCount() << std::endl;
@@ -144,33 +142,31 @@ UIManager::~UIManager( )
     // Note that these were not allocated inside this class, but the class
     // interface specifies that it takes ownership of these objects
     ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         //delete ( *map_iterator ).second;
     }
-    mElements.clear( );
+    mElements.clear();
     // All other memory allocated on the heap by this class should be attached
     // to an osg::ref_ptr and so should automatically manage its lifetime
     //std::cout << " UI manager destructor" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 osg::Geode* UIManager::AddElement( UIElement* element )
 {
     //Store the switch node so that it can be added to mUIGroup during the
     //next update traversal.
-    mNodesToAdd.push_back( element->GetVisibilitySwitch( ) );
+    mNodesToAdd.push_back( element->GetVisibilitySwitch() );
 
     mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
 
-    osg::Geode* geode = element->GetGeode( );
+    osg::Geode* geode = element->GetGeode();
     mElements[ geode ] = element;
 
     return geode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool UIManager::RemoveElement( osg::ref_ptr<osg::Geode> geode )
 {
     // Search through to find geode, then delete UIElement, geode, and
@@ -179,21 +175,19 @@ bool UIManager::RemoveElement( osg::ref_ptr<osg::Geode> geode )
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::RemoveAllElements( )
+void UIManager::RemoveAllElements()
 {
     ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         delete map_iterator->second;
     }
 
-    mElements.clear( );
+    mElements.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::Update( )
+void UIManager::Update()
 {
     // Ensure that initialization has already happened
     if( !mInitialized )
@@ -203,9 +197,9 @@ void UIManager::Update( )
     }
 
     // Insert any new elements added since last update into the scenegraph
-    if( mNodesToAdd.size( ) > 0 )
+    if( mNodesToAdd.size() > 0 )
     {
-        _insertNodesToAdd( );
+        _insertNodesToAdd();
     }
 
     // Update the UI's rectangle if it has been dirtied.
@@ -220,7 +214,7 @@ void UIManager::Update( )
     // Do hide/show operations
     if( mToggleVisibility )
     {
-        if( mUIGroup->asSwitch( )->getValue( 0 ) )
+        if( mUIGroup->asSwitch()->getValue( 0 ) )
         {
             mShow = false;
             mHide = true;
@@ -236,40 +230,39 @@ void UIManager::Update( )
 
     if( mShow )
     {
-        _showAll( );
+        _showAll();
     }
     else if( mHide )
     {
-        _hideAll( );
+        _hideAll();
     }
 
     if( mMinimize )
     {
-        _doMinimize( );
+        _doMinimize();
     }
 
     if( mUnminimize )
     {
-        _doUnminimize( );
+        _doUnminimize();
     }
 
     // Check visibility of UI branch before bothering with repaints
     if( mUIGroup->getValue( 0 ) )
     {
         //mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, mOpacity );
-        _repaintChildren( );
+        m_opacityUniform->set( mOpacity );
+        _repaintChildren();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::HideAllElements( )
+void UIManager::HideAllElements()
 {
     // May not be able to touch scenegraph directly at the moment;
     // Set hide flag to be discovered during update
     mHide = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void UIManager::ShowAllElements( bool showOnlyActive )
 {
     // May not be able to touch scenegraph directly at the moment;
@@ -277,15 +270,13 @@ void UIManager::ShowAllElements( bool showOnlyActive )
     mShow = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::ToggleVisibility( )
+void UIManager::ToggleVisibility()
 {
     // May not be able to touch scenegraph directly at the moment;
     // Set visibility flag to be discovered during update
     mToggleVisibility = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void UIManager::SetRectangle( int left, int right, int bottom, int top )
 {
     mRectangleDirty = true;
@@ -295,7 +286,6 @@ void UIManager::SetRectangle( int left, int right, int bottom, int top )
     mTop = top;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void UIManager::Initialize( osg::Group* parentNode )
 {
     //std::cout << "UIManager::Initialize" << std::endl;
@@ -305,25 +295,25 @@ void UIManager::Initialize( osg::Group* parentNode )
         return;
     }
 
-    mProjection = new osg::Projection( );
+    mProjection = new osg::Projection();
     mProjection->setMatrix( osg::Matrix::ortho2D( mLeft, mRight,
                                                   mBottom, mTop ) );
 
     osg::MatrixTransform* modelViewMatrix = new osg::MatrixTransform;
-    modelViewMatrix->setMatrix( osg::Matrix::identity( ) );
+    modelViewMatrix->setMatrix( osg::Matrix::identity() );
     modelViewMatrix->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
 
     mProjection->addChild( modelViewMatrix );
 
-    mUIGroup = new osg::Switch( );
+    mUIGroup = new osg::Switch();
     mUIGroup->setDataVariance( osg::Object::DYNAMIC );
-    mUIGroup->setUpdateCallback( mUIUpdateCallback.get( ) );
-    modelViewMatrix->addChild( mUIGroup.get( ) );
+    mUIGroup->setUpdateCallback( mUIUpdateCallback.get() );
+    modelViewMatrix->addChild( mUIGroup.get() );
 
-    parentNode->addChild( mProjection.get( ) );
+    parentNode->addChild( mProjection.get() );
 
     //Vertex shader not used yet
-    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader( );
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
     std::string vertexSource =
             "void main() \n"
             "{ \n"
@@ -336,16 +326,16 @@ void UIManager::Initialize( osg::Group* parentNode )
     vertexShader->setShaderSource( vertexSource );
     vertexShader->setName( "VS Quad Vertex Shader" );
 
-    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader( );
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     std::string fragmentSource =
             "uniform sampler2D baseMap; \n"
-
+            "uniform float opacityVal;\n"
             "uniform vec3 glowColor; \n"
 
             "void main() \n"
             "{ \n"
             "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
-
+            "baseColor.a = opacityVal;\n"
             "gl_FragData[ 0 ] = baseColor; \n"
             "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
             "} \n";
@@ -355,21 +345,21 @@ void UIManager::Initialize( osg::Group* parentNode )
     fragmentShader->setName( "VS Quad Fragment Shader" );
 
     //
-    osg::ref_ptr< osg::Program > program = new osg::Program( );
+    osg::ref_ptr< osg::Program > program = new osg::Program();
     //program->addShader( vertexShader.get() );
-    program->addShader( fragmentShader.get( ) );
+    program->addShader( fragmentShader.get() );
     program->setName( "VS Quad Program" );
 
     //Set depth test to always pass and don't write to the depth buffer
-    osg::ref_ptr< osg::Depth > depth = new osg::Depth( );
+    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
     //depth->setFunction( osg::Depth::ALWAYS );
     depth->setWriteMask( false );
 
     //Create stateset for adding texture
-    osg::ref_ptr< osg::StateSet > stateset = mUIGroup->getOrCreateStateSet( );
+    osg::ref_ptr< osg::StateSet > stateset = mUIGroup->getOrCreateStateSet();
     stateset->setRenderBinDetails( 99, "RenderBin" );
     stateset->setAttributeAndModes(
-                                    depth.get( ),
+                                    depth.get(),
                                     osg::StateAttribute::ON | osg::StateAttribute::PROTECTED |
                                     osg::StateAttribute::OVERRIDE );
     stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
@@ -378,15 +368,24 @@ void UIManager::Initialize( osg::Group* parentNode )
                        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED |
                        osg::StateAttribute::OVERRIDE );
     stateset->setAttributeAndModes(
-                                    program.get( ),
+                                    program.get(),
                                     osg::StateAttribute::ON | osg::StateAttribute::PROTECTED |
                                     osg::StateAttribute::OVERRIDE );
     stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
+    m_opacityUniform = new osg::Uniform( "opacityVal", mOpacity );
+    stateset->addUniform( m_opacityUniform.get() );
 
+    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
+    bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
+                    osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+    stateset->setMode( GL_BLEND, 
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setAttributeAndModes( bf.get(), 
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    
     mInitialized = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event )
 {
     // Ignore events if we're not initialized
@@ -445,13 +444,13 @@ bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEve
     // in this manager class for keyboard events.
 
     ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         UIElement* element = map_iterator->second;
 
-        bool visible = element->IsVisible( );
-        bool minimized = element->IsMinimized( );
+        bool visible = element->IsVisible();
+        bool minimized = element->IsMinimized();
 
         // Only send events if element is visible and not minimzed
         if( ( visible ) && ( !minimized ) )
@@ -459,9 +458,9 @@ bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEve
             // Translate mouse coordinates to window coordinates
             // TODO: This may be done better by using the element's entire UIMatrix
             // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix( ).getTrans( );
-            event.X = event.X - trans.x( );
-            event.Y = event.Y - trans.y( );
+            osg::Vec3 trans = element->GetUIMatrix().getTrans();
+            event.X = event.X - trans.x();
+            event.Y = event.Y - trans.y();
 
             // Flip y mouse coordinate to origin GUI expects
             event.Y = static_cast < double > ( mTop ) - event.Y;
@@ -476,88 +475,82 @@ bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEve
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_insertNodesToAdd( )
+void UIManager::_insertNodesToAdd()
 {
     std::vector< osg::ref_ptr<osg::Switch> >::iterator vec_iterator;
-    for( vec_iterator = mNodesToAdd.begin( );
-            vec_iterator != mNodesToAdd.end( );
+    for( vec_iterator = mNodesToAdd.begin();
+            vec_iterator != mNodesToAdd.end();
             ++vec_iterator )
     {
-        mUIGroup->addChild( ( *vec_iterator ).get( ) );
-        ( *vec_iterator ).release( );
+        mUIGroup->addChild( ( *vec_iterator ).get() );
+        ( *vec_iterator ).release();
     }
 
-    mNodesToAdd.clear( );
+    mNodesToAdd.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_repaintChildren( )
+void UIManager::_repaintChildren()
 {
     ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         // Check whether this element is currently switched as visible. If not,
         // no need to waste time rendering it.
         // FIXME: should only render *active*, visible element?
         UIElement* element = map_iterator->second;
-        if( element->IsVisible( ) )
+        if( element->IsVisible() )
         {
 
-            element->Update( );
-            unsigned char* image_Data = element->RenderElementToImage( );
+            element->Update();
+            unsigned char* image_Data = element->RenderElementToImage();
 
             // Only reset the image if element tells us it has changed since 
             // last time
-            if( element->IsDirty( ) )
+            if( element->IsDirty() )
             {
                 osg::StateSet* state = ( *map_iterator ).first
-                        ->getOrCreateStateSet( );
+                        ->getOrCreateStateSet();
                 osg::Image* image =
                         state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
-                        ->asTexture( )->getImage( 0 );
-                image->setImage( element->GetImageWidth( ),
-                                 element->GetImageHeight( ), 1, 4,
+                        ->asTexture()->getImage( 0 );
+                image->setImage( element->GetImageWidth(),
+                                 element->GetImageHeight(), 1, 4,
                                  GL_BGRA, GL_UNSIGNED_BYTE,
                                  image_Data, osg::Image::NO_DELETE );
-                image->dirty( );
+                image->dirty();
             }
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_sendEvent( )
+void UIManager::_sendEvent()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_hideAll( )
+void UIManager::_hideAll()
 {
-    mUIGroup->setAllChildrenOff( );
+    mUIGroup->setAllChildrenOff();
     mHide = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::_showAll( )
+void UIManager::_showAll()
 {
     //if( !showOnlyActive )
     {
         ElementMap_type::iterator map_iterator;
-        for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+        for( map_iterator = mElements.begin(); map_iterator != mElements.end();
                 ++map_iterator )
         {
             ShowElement( map_iterator->second );
         }
     }
 
-    mUIGroup->setAllChildrenOn( );
+    mUIGroup->setAllChildrenOn();
     mShow = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
 {
     if( matrix != mTempProj )
@@ -567,8 +560,7 @@ void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::UnembedAll( )
+void UIManager::UnembedAll()
 {
     //    if( !mInitialized )
     //    {
@@ -585,8 +577,7 @@ void UIManager::UnembedAll( )
     //    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIManager::EmbedAll( )
+void UIManager::EmbedAll()
 {
     //    if( !mInitialized )
     //    {
@@ -603,20 +594,19 @@ void UIManager::EmbedAll( )
     //    ShowAllElements();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
 {
     // Walk through every quad we own and see if the point lies on it
     osg::Vec4 quadPos;
-    std::map< UIElement*, osg::Vec4 >::iterator map_iterator = mElementPositionsOrtho2D.begin( );
-    while( map_iterator != mElementPositionsOrtho2D.end( ) )
+    std::map< UIElement*, osg::Vec4 >::iterator map_iterator = mElementPositionsOrtho2D.begin();
+    while( map_iterator != mElementPositionsOrtho2D.end() )
     {
         quadPos = map_iterator->second;
         /*std::cout << "Testing (" << x << ", " << y << ") against ("
                 << quadPos.x() << ", " << quadPos.y() << ", " << quadPos.z()
                 << ", " << quadPos.w() << ")\n";*/
-        if( ( x >= quadPos.x( ) ) && ( x <= quadPos.y( ) ) &&
-                ( y >= quadPos.z( ) ) && ( y <= quadPos.w( ) ) )
+        if( ( x >= quadPos.x() ) && ( x <= quadPos.y() ) &&
+                ( y >= quadPos.z() ) && ( y <= quadPos.w() ) )
         {
             return true;
         }
@@ -625,7 +615,7 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
 
     return false;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::SetOpacity( float opacity )
 {
     if( ( opacity >= 0.0f ) && ( opacity <= 1.0f ) )
@@ -633,16 +623,16 @@ void UIManager::SetOpacity( float opacity )
         mOpacity = opacity;
     }
 }
-
-void UIManager::MinimizeAllElements( )
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::MinimizeAllElements()
 {
     mMinimize = true;
 
     // Ensure that everything gets minimized
     mMinimizeElement = false;
 }
-
-void UIManager::_doMinimize( )
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::_doMinimize()
 {
     if( mMinimizeElement )
     {
@@ -652,14 +642,14 @@ void UIManager::_doMinimize( )
     else
     {
         ElementMap_type::iterator map_iterator;
-        for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+        for( map_iterator = mElements.begin(); map_iterator != mElements.end();
                 ++map_iterator )
         {
             // reset the minimizeOffset
             mMinimizeXOffset = 10.0f;
 
             // Don't try to minimize something that's already minimized
-            if( !map_iterator->second->IsMinimized( ) )
+            if( !map_iterator->second->IsMinimized() )
             {
                 _doMinMaxElement( map_iterator->second, true );
             }
@@ -668,7 +658,7 @@ void UIManager::_doMinimize( )
 
     mMinimize = false;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
 {
     // Padding between elements and padding between elements and edge of window
@@ -682,10 +672,10 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     float duration = 0.4f;
 
     // Animation based on two control points: c0 (current state) and c1 (end state)
-    osg::Matrixf currentMatrix = element->GetUIMatrix( );
+    osg::Matrixf currentMatrix = element->GetUIMatrix();
 
-    osg::AnimationPath::ControlPoint c0( currentMatrix.getTrans( ) );
-    c0.setScale( currentMatrix.getScale( ) );
+    osg::AnimationPath::ControlPoint c0( currentMatrix.getTrans() );
+    c0.setScale( currentMatrix.getScale() );
 
     osg::AnimationPath::ControlPoint c1;
 
@@ -701,7 +691,7 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
         c1.getMatrix( tempMatrix );
         element->PushUIMatrix( tempMatrix );
 
-        mMinimizeXOffset += downScale * ( element->GetElementWidth( ) ) + xPadding;
+        mMinimizeXOffset += downScale * ( element->GetElementWidth() ) + xPadding;
     }
     else // maximize
     {
@@ -712,9 +702,9 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
         mMinimizeXOffset -= downScale * ( element->GetElementWidth() ) + xPadding;
 
         element->SetMinimized( false );
-        element->PopUIMatrix( );
-        c1.setPosition( element->GetUIMatrix( ).getTrans( ) );
-        c1.setScale( element->GetUIMatrix( ).getScale( ) );
+        element->PopUIMatrix();
+        c1.setPosition( element->GetUIMatrix().getTrans() );
+        c1.setScale( element->GetUIMatrix().getScale() );
     }
 
     osg::ref_ptr< osg::AnimationPath > path = new osg::AnimationPath;
@@ -723,12 +713,12 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     path->insert( 0.0f, c0 );
     path->insert( duration, c1 );
 
-    element->SetAnimationPath( path.get( ) );
+    element->SetAnimationPath( path.get() );
 
     mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
 }
-
-void UIManager::_doUnminimize( )
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::_doUnminimize()
 {
     if( mUnminimizeElement )
     {
@@ -738,11 +728,11 @@ void UIManager::_doUnminimize( )
     else
     {
         ElementMap_type::iterator map_iterator;
-        for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+        for( map_iterator = mElements.begin(); map_iterator != mElements.end();
                 ++map_iterator )
         {
             // Only do operation if element is minimized
-            if( map_iterator->second->IsMinimized( ) )
+            if( map_iterator->second->IsMinimized() )
             {
                 _doMinMaxElement( map_iterator->second, false );
             }
@@ -751,10 +741,10 @@ void UIManager::_doUnminimize( )
 
     mUnminimize = false;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 osg::Vec4 UIManager::_computeMouseBoundsForElement( UIElement* element )
 {
-    osg::Matrixf fullTransform = element->GetElementMatrix( ) * element->GetUIMatrix( );
+    osg::Matrixf fullTransform = element->GetElementMatrix() * element->GetUIMatrix();
 
     // Compute transformed corner coordinates of a unit square with origin at
     // (0,0,0)
@@ -762,41 +752,41 @@ osg::Vec4 UIManager::_computeMouseBoundsForElement( UIElement* element )
     osg::Vec4 tr = osg::Vec4( 1.f, 1.f, 0.f, 1.f ) * fullTransform;
 
     // Return in the form (left, right, bottom, top)
-    return osg::Vec4( bl.x( ), tr.x( ), bl.y( ), tr.y( ) );
+    return osg::Vec4( bl.x(), tr.x(), bl.y(), tr.y() );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::InitiateMoveElement( UIElement* element )
 {
     mMoveElement = element;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::MinimizeElement( UIElement* element )
 {
     mMinimize = true;
     mMinimizeElement = element;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::UnminimizeElement( UIElement* element )
 {
     mUnminimize = true;
     mUnminimizeElement = element;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::HideElement( UIElement* element )
 {
     // Simple hide. May want to add animation later
     element->SetVisible( false );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::ShowElement( UIElement* element )
 {
     // Simple show. May want to add animation later
     element->SetVisible( true );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::ToggleElementVisibility( UIElement* element )
 {
-    if( element->IsVisible( ) )
+    if( element->IsVisible() )
     {
         HideElement( element );
     }
@@ -805,7 +795,7 @@ void UIManager::ToggleElementVisibility( UIElement* element )
         ShowElement( element );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
     if( !_okayToSendEvent() )
@@ -827,13 +817,13 @@ void UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
     // TODO: his iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
     ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         UIElement* element = map_iterator->second;
 
-        bool visible = element->IsVisible( );
-        bool minimized = element->IsMinimized( );
+        bool visible = element->IsVisible();
+        bool minimized = element->IsMinimized();
 
         // Only send events if element is visible and not minimzed
         if( ( visible ) && ( !minimized ) )
@@ -841,9 +831,9 @@ void UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
             // Translate mouse coordinates to window coordinates
             // TODO: This may be done better by using the element's entire UIMatrix
             // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix( ).getTrans( );
-            x = x - trans.x( );
-            y = y - trans.y( );
+            osg::Vec3 trans = element->GetUIMatrix().getTrans();
+            x = x - trans.x();
+            y = y - trans.y();
 
             // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
@@ -855,7 +845,7 @@ void UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
     if( !_okayToSendEvent() )
@@ -885,13 +875,13 @@ void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
     ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         UIElement* element = map_iterator->second;
 
-        bool visible = element->IsVisible( );
-        bool minimized = element->IsMinimized( );
+        bool visible = element->IsVisible();
+        bool minimized = element->IsMinimized();
 
         // Only send events if element is visible and not minimzed
         if( ( visible ) && ( !minimized ) )
@@ -899,9 +889,9 @@ void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
             // Translate mouse coordinates to window coordinates
             // TODO: This may be done better by using the element's entire UIMatrix
             // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix( ).getTrans( );
-            x = x - trans.x( );
-            y = y - trans.y( );
+            osg::Vec3 trans = element->GetUIMatrix().getTrans();
+            x = x - trans.x();
+            y = y - trans.y();
 
             // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
@@ -909,7 +899,7 @@ void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::MouseMoveEvent( int x, int y, int z, int state )
 {
 
@@ -939,13 +929,13 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
     ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         UIElement* element = map_iterator->second;
 
-        bool visible = element->IsVisible( );
-        bool minimized = element->IsMinimized( );
+        bool visible = element->IsVisible();
+        bool minimized = element->IsMinimized();
 
         // Only send events if element is visible and not minimzed
         if( ( visible ) && ( !minimized ) )
@@ -953,9 +943,9 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
             // Translate mouse coordinates to window coordinates
             // TODO: This may be done better by using the element's entire UIMatrix
             // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix( ).getTrans( );
-            x = x - trans.x( );
-            y = y - trans.y( );
+            osg::Vec3 trans = element->GetUIMatrix().getTrans();
+            x = x - trans.x();
+            y = y - trans.y();
 
             // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
@@ -964,7 +954,7 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
     }
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode )
 {
     if( ! _okayToSendEvent() )
@@ -975,13 +965,13 @@ void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode 
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
     ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         UIElement* element = map_iterator->second;
 
-        bool visible = element->IsVisible( );
-        bool minimized = element->IsMinimized( );
+        bool visible = element->IsVisible();
+        bool minimized = element->IsMinimized();
 
         // Only send events if element is visible and not minimzed
         if( ( visible ) && ( !minimized ) )
@@ -990,7 +980,7 @@ void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode 
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, wchar_t unicode )
 {
     if( ! _okayToSendEvent() )
@@ -1001,13 +991,13 @@ void UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, wchar_t unicod
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
     ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin( ); map_iterator != mElements.end( );
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
         UIElement* element = map_iterator->second;
 
-        bool visible = element->IsVisible( );
-        bool minimized = element->IsMinimized( );
+        bool visible = element->IsVisible();
+        bool minimized = element->IsMinimized();
 
         // Only send events if element is visible and not minimzed
         if( ( visible ) && ( !minimized ) )
@@ -1016,7 +1006,7 @@ void UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, wchar_t unicod
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool UIManager::_okayToSendEvent()
 {
     // Ignore events if we're not initialized
@@ -1033,5 +1023,4 @@ bool UIManager::_okayToSendEvent()
 
     return true;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
