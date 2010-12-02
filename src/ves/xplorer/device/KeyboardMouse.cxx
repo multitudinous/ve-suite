@@ -144,7 +144,7 @@ KeyboardMouse::KeyboardMouse()
 
     // Connect to Juggler's new event handling interface
     mMouseDoubleClickEventInterface.setClickTime(0.2f);
-    mMouseDoubleClickEventInterface.init("VESLeftMouseButton");
+    mMouseDoubleClickEventInterface.init("VJKeyboard");
     mMouseDoubleClickEventInterface.addCallback(boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1));
 
     mKeyboardMouseEventInterface.init("VJKeyboard");
