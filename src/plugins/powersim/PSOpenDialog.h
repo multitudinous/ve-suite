@@ -34,7 +34,6 @@
 #ifndef PS_OPEN_DIALOG_H
 #define PS_OPEN_DIALOG_H
 
-// --- wxWidgets Includes --- //
 #include <wx/dialog.h>
 
 class wxComboBox;
@@ -48,33 +47,29 @@ public:
     ///Destructor
     virtual ~PSOpenDialog();
 
-    ///
+    ///???
     void OnOK( wxCommandEvent& event );
 
-    ///
+    ///???
     void OnCancel( wxCommandEvent& event );
 
-    ///
+    ///???
     void SetPopulateFilenames();
 
-    ///
+    ///???
     wxString GetFilename();
 
-protected:
-
-private:
-    ///
+private:        
+    ///???
     void OnClose( wxCloseEvent& event );
-
-    ///
+    
+    ///???
     void CreateGUIControls();
-
-    ///
+    
+    ///???
     wxComboBox* m_comboBox;
-
-    ///
+    
     DECLARE_EVENT_TABLE();
-
 };
 
 #endif //PS_OPEN_DIALOG_H

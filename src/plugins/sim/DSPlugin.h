@@ -44,35 +44,67 @@ namespace ves
 {
 namespace conductor
 {
+
+
+/*!\file DSPlugin.h
+  DynSim Plugin
+  */
+/*!\class ves::conductor::DSPlugin
+ * This class is DynSim Plugin.
+ */
 class DSPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( DSPlugin )
 
 public:
-    ///Defualt constructor
+    ///Constructor
     DSPlugin();
+
+    ///Destructor
     virtual ~DSPlugin();
+
+    ///???
     wxString GetConductorName();
+    
+    ///???
     std::vector< std::string > GetAvailableVariables();
+    
+    ///???
     std::vector< std::string > GetSelectVariables();
+    
+    ///???
     void SetSelectVariables( std::vector< std::string> selectedVariables );
 
 protected:
-    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
-
-    void OnOpen( wxCommandEvent& event );
-    void OnCreateOPCList( wxCommandEvent& event );
-    void OnConnect( wxCommandEvent& event );
-    void OnAddVariable( wxCommandEvent& event );
-    void OnTimer( wxTimerEvent& event );
-    void QueryForAllVariables( wxCommandEvent& event );
     wxMenu* mDynSimMenu;
     std::vector< std::string > m_opcList;
     std::vector< std::string > m_selectedOpcList;
     wxTimer * m_timer;
+    
+    ///???
+    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+    
+    ///???
+    void OnOpen( wxCommandEvent& event );
+    
+    ///???
+    void OnCreateOPCList( wxCommandEvent& event );
+    
+    ///???
+    void OnConnect( wxCommandEvent& event );
+    
+    ///???
+    void OnAddVariable( wxCommandEvent& event );
+    
+    ///???
+    void OnTimer( wxTimerEvent& event );
+    
+    ///???
+    void QueryForAllVariables( wxCommandEvent& event );
 
     DECLARE_EVENT_TABLE()
 };
+
 }
 }
 

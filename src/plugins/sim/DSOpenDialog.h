@@ -40,36 +40,47 @@
 #include <wx/combobox.h>
 #include <wx/dir.h>
 
-#undef DSOpenDialog_STYLE
-#define DSOpenDialog_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
-
 class DSOpenDialog : public wxDialog
 {
-    private:
-        DECLARE_EVENT_TABLE();
-        
-    public:
-        DSOpenDialog(wxWindow *parent, wxWindowID id = 1,
-            const wxString &title = wxT("DynSim File"),
-            const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize,
-            long style = DSOpenDialog_STYLE);
-        
-        virtual ~DSOpenDialog();
-        void OKButtonClick(wxCommandEvent& event);
-        void CancelButtonClick(wxCommandEvent& event);
-        void SetPopulateFilenames( );
-        wxString GetFilename( );
+public:
 
-    private:
-        wxStaticText *Label;
-        wxButton *CancelButton;
-        wxButton *OKButton;
-        wxComboBox *ComboBox;
-        wxArrayString arrayStringFor_ComboBox;
+    ///Constructor
+    DSOpenDialog(wxWindow *parent, wxWindowID id = 1,
+        const wxString &title = wxT("DynSim File"),
+        const wxPoint& pos = wxDefaultPosition,
+        const wxSize& size = wxDefaultSize,
+        long style = wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT |
+        wxMINIMIZE_BOX | wxCLOSE_BOX);
+    
+    ///Destructor
+    virtual ~DSOpenDialog();
 
-        void OnClose(wxCloseEvent& event);
-        void CreateGUIControls();
+    ///???
+    void SetPopulateFilenames( );
+
+    ///???
+    wxString GetFilename( );
+
+private:
+    wxStaticText *Label;
+    wxButton *CancelButton;
+    wxButton *OKButton;
+    wxComboBox *ComboBox;
+    wxArrayString arrayStringFor_ComboBox;
+
+    ///???
+    void OnClose(wxCloseEvent& event);
+
+    ///???
+    void CreateGUIControls();
+
+    ///???
+    void OKButtonClick(wxCommandEvent& event);
+
+    ///???
+    void CancelButtonClick(wxCommandEvent& event);
+
+    DECLARE_EVENT_TABLE();
 };
 
 #endif

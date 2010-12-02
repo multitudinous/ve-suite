@@ -43,35 +43,61 @@ namespace ves
 {
 namespace conductor
 {
+
 class OpcUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( OpcUOPlugin )
-private:
-    void OnTimer( wxTimerEvent& event );
-    void DrawValue( wxDC* dc );
-    void ReadValue( );
-    //void StartTimer( wxCommandEvent& event  );
-    void StartTimer( float msec  );
-    void StopTimer( wxCommandEvent& event  );
-    void OnShowValue( wxCommandEvent& event );
-    void OnShowAllVar( wxCommandEvent& event );
-    void QueryForAllVariables( wxCommandEvent& event );
-    void OnMonitorVariable( wxCommandEvent& event );
 
+public:
+    ///Constructor
+    OpcUOPlugin();
+    
+    ///Destructor
+    virtual ~OpcUOPlugin();
+    
+    ///???
+    wxString GetConductorName();
+    
+    ///???
+    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+    
+    ///???
+    void DrawPlugin( wxDC* dc );
+
+private:
     wxTimer * m_timer;
     std::string m_monValue;
     bool m_monValueExists;
     bool m_monitoring;
-
-public:
-    ///Defualt constructor
-    OpcUOPlugin();
-    virtual ~OpcUOPlugin();
-    wxString GetConductorName();
-    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
-    void DrawPlugin( wxDC* dc );
-
     wxMenu* mOpcMenu;
+
+    ///???
+    void OnTimer( wxTimerEvent& event );
+    
+    ///???
+    void DrawValue( wxDC* dc );
+    
+    ///???
+    void ReadValue( );
+    
+    ///???
+    void StartTimer( float msec  );
+    
+    ///???
+    void StopTimer( wxCommandEvent& event  );
+    
+    ///???
+    void OnShowValue( wxCommandEvent& event );
+    
+    ///???
+    void OnShowAllVar( wxCommandEvent& event );
+    
+    ///???
+    void QueryForAllVariables( wxCommandEvent& event );
+    
+    ///???
+    void OnMonitorVariable( wxCommandEvent& event );
+
     DECLARE_EVENT_TABLE()
 };
 }

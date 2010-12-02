@@ -49,9 +49,6 @@
 #include <wx/treectrl.h>
 #include <wx/stattext.h>
 
-#undef APUOVarDialog_STYLE
-#define APUOVarDialog_STYLE wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
-
 namespace ves
 {
 namespace conductor
@@ -67,32 +64,29 @@ class APUOVarDialog : public wxDialog
 {
 public:
     ///Constructor
-    APUOVarDialog( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "ParamsDialog" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = APUOVarDialog_STYLE );
-	///Deconstructor
+    APUOVarDialog( wxWindow *parent, wxWindowID id = 1,
+        const wxString &title = wxT( "ParamsDialog" ),
+        const wxPoint& pos = wxDefaultPosition,
+        const wxSize& size = wxDefaultSize,
+        long style = wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP |
+        wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX );
+    
+    ///Destructor
     virtual ~APUOVarDialog();
-
-    ///
-    void WxButton1Click( wxCommandEvent& event );
     
-    ///
-    void ParamChoiceSelected( wxTreeEvent& event );
-    
-    ///
-    void SetButtonClick( wxCommandEvent& event );
-    
-    ///
+    ///???
     void AppendList( const char * );
     
-    ///
+    ///???
     void SetCompName( const char * );
     
-    ///
+    ///???
     void SetServiceList( ves::conductor::util::CORBAServiceList * );
     
-    ///
+    ///???
     void SetDialogType( const char * );
     
-    ///
+    ///???
     void SetIsBlock( bool );
 
 private:
@@ -157,19 +151,12 @@ private:
     wxStaticText *NodePathLabel;
     wxTextCtrl *NodePath;
     wxStaticText *ParameterLabel;
-
     bool IsBlock;
     wxTreeItemId m_rootId;
     std::map< std::string, wxTreeItemId > m_prevIds;
     wxTreeItemId m_prevSelection;
-	wxTreeItemId mParentId;
-    void CreateGUIControls();
-    std::string ConvertUnicode( const wxChar* data )
-    {
-        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-        return tempStr;
-    }
-
+    wxTreeItemId mParentId;
+    
     enum
     {
         ID_SETBUTTON = 1235,
@@ -232,8 +219,29 @@ private:
         ID_DUMMY_VALUE_
     };
 
+    ///???
+    void CreateGUIControls();
+
+    ///???
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >
+            ( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+
+    ///???
+    void WxButton1Click( wxCommandEvent& event );
+    
+    ///???
+    void ParamChoiceSelected( wxTreeEvent& event );
+    
+    ///???
+    void SetButtonClick( wxCommandEvent& event );
+
     DECLARE_EVENT_TABLE();
 };
 }
 }
+
 #endif

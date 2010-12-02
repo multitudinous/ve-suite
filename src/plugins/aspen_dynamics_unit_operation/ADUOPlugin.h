@@ -47,31 +47,50 @@ class ADUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( ADUOPlugin )
 
+public:
+    ///Constructor
+    ADUOPlugin();
+
+    ///Destructor
+    wxString GetConductorName();
+
+    ///???
+    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+
+    ///???
+    void DrawPlugin( wxDC* dc );
+
 private:
-    virtual ~ADUOPlugin();
-    void OnShowAspenName( wxCommandEvent& event );
-    void OnQueryDynamics( wxCommandEvent& event );
-    void OnTimer( wxTimerEvent& event );
-    void StopTimer( wxCommandEvent& event  );
-    void DrawValue( wxDC* dc );
-    void ReadValue( );
-    void OnMonitorVariable( wxCommandEvent& event );
-    
     bool m_monValueExists;
     bool m_monitoring;
     std::string m_monValue;
-    //wxTimer * m_timer;
-
-public:
-    ///Defualt constructor
-    ADUOPlugin();
-    wxString GetConductorName();
-    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
-    void DrawPlugin( wxDC* dc );
-    //void StartTimer( float msec  );
-
     wxMenu* mAspenMenu;
-    DECLARE_EVENT_TABLE()
+
+    ///???
+    virtual ~ADUOPlugin();
+
+    ///???
+    void OnShowAspenName( wxCommandEvent& event );
+
+    ///???
+    void OnQueryDynamics( wxCommandEvent& event );
+
+    ///???
+    void OnTimer( wxTimerEvent& event );
+
+    ///???
+    void StopTimer( wxCommandEvent& event  );
+
+    ///???
+    void DrawValue( wxDC* dc );
+
+    ///???
+    void ReadValue( );
+
+    ///???
+    void OnMonitorVariable( wxCommandEvent& event );
+
+    DECLARE_EVENT_TABLE();
 };
 }
 }
