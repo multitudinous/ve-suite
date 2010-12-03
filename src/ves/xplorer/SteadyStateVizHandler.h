@@ -66,7 +66,11 @@ class vtkPolyData;
 #include <queue>
 #include <map>
 
-#include <tr1/unordered_map>
+#if defined(__GNUC__) && __GNUC__ >= 4
+#  include <tr1/unordered_map>
+#elif defined(_MSC_VER) && _MSC_VER >= 1500
+#  include <unordered_map>
+#endif
 
 namespace ves
 {
