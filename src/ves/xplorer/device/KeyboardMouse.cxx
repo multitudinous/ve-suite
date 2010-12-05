@@ -143,7 +143,7 @@ KeyboardMouse::KeyboardMouse()
     //mHead.init( "VJHead" );
 
     // Connect to Juggler's new event handling interface
-    mMouseDoubleClickEventInterface.setClickTime(0.2f);
+    mMouseDoubleClickEventInterface.setClickTime(300.0f);
     mMouseDoubleClickEventInterface.init("VJKeyboard");
     mMouseDoubleClickEventInterface.addCallback(boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1));
 
@@ -291,7 +291,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             << mouseEvt->getX() << ", " << mouseEvt->getY()
             << ", 0, " << mouseEvt->getState()
             << std::endl << vprDEBUG_FLUSH;
-
+        //std::cout << "KeyboardMouse::onKBMEvent: MouseMove state: " 
+        //    << mouseEvt->getState() << std::endl << std::flush;
         // x, y, z, state (modifier mask OR'd with button mask)
         mMouseMove( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
 
