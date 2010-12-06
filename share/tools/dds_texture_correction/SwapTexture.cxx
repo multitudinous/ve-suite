@@ -87,26 +87,33 @@ void SwapTexture::apply( osg::Node& node )
 void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
 {
     osg::ref_ptr< osg::StateSet > tempStateSet = stateSet;
-    if( tempStateSet.valid() )
+    if( !tempStateSet.valid() )
     {
-        osg::StateSet::TextureAttributeList stateSetTal =
-            tempStateSet->getTextureAttributeList();
-        for( unsigned int i = 0; i < stateSetTal.size(); ++i )
+        return;
+    }
+
+    osg::StateSet::TextureAttributeList stateSetTal =
+        tempStateSet->getTextureAttributeList();
+    for( unsigned int i = 0; i < stateSetTal.size(); ++i )
+    {
+        osg::StateAttribute* sa = stateSet->getTextureAttribute(
+            i, osg::StateAttribute::TEXTURE );
+        //Only worry about 2D textures for now
+        osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
+        if( tex2D )
         {
-            osg::StateAttribute* sa = stateSet->getTextureAttribute(
-                i, osg::StateAttribute::TEXTURE );
-            //Only worry about 2D textures for now
-            osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
-            if( tex2D )
+            osg::ref_ptr< osg::Image > tgaImage = tex2D->getImage();
+            std::string fileName = tgaImage->getFileName();
+            boost::filesystem::path newFileName( fileName, boost::filesystem::native );
+            if( newFileName.extension() == ".tga" )
             {
-                osg::ref_ptr< osg::Image > tgaImage = tex2D->getImage();
-                std::string fileName = tgaImage->getFileName();
-                std::cout << "Texture file name = " << fileName << std::endl;
-                boost::filesystem::path newFileName( fileName, boost::filesystem::native );
+                std::cout << "Texture file name = " 
+                    << fileName << std::endl;
                 newFileName.replace_extension( "dds" );
-                std::cout << "New texture file name = " << newFileName.string() << std::endl;
+                std::cout << "New texture file name = " 
+                    << newFileName.string() << std::endl;
                 osg::ref_ptr< osg::Image > ddsImage = 
-                    osgDB::readImageFile( newFileName.string() );
+                osgDB::readImageFile( newFileName.string() );
                 tex2D->setImage( ddsImage );
             }
         }
