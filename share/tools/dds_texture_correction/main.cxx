@@ -48,7 +48,7 @@ int main( int argc, char* argv[] )
                                //Had to comment out this flag because of a bug in OSG
                                osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
                                osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
-                               osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
+                               //osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
                                osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
                                //This one can cause problems with opacity settings
                                osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
