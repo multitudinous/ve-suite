@@ -89,44 +89,28 @@ UIManager::UIManager() :
     mMoveElement( 0 ),
     mMinimizeElement( 0 ),
     mUnminimizeElement( 0 )
-{
-    using namespace ves::xplorer::eventmanager;
+{    
+    CONNECTSIGNALS_0( "%HideShowUI%", void (), &UIManager::ToggleVisibility, mConnections,
+                      any_SignalType, highest_Priority);
 
-    EventManager* evm = EventManager::instance();
+    CONNECTSIGNAL_4( "KeyboardMouse.MouseMove", void ( int, int, int, int ),
+                     &UIManager::MouseMoveEvent, mConnections, highest_Priority );
 
-    typedef boost::signals2::signal< bool (xplorer::eventmanager::InteractionEvent& ) > InteractionSignal_type;
-    InteractionSignal_type::slot_type slotFunctor( boost::bind( &UIManager::SendInteractionEvent, this, _1 ) );
-    SlotWrapper< InteractionSignal_type > slotWrapper( slotFunctor );
-    evm->ConnectSignal( "KeyboardMouseInteractionSignal", &slotWrapper, mConnections, EventManager::highest_Priority );
+    CONNECTSIGNALS_4( "%ButtonPress%",void ( gadget::Keys, int, int, int ),
+                      &UIManager::ButtonPressEvent, mConnections,
+                      button_SignalType, highest_Priority );
 
-    typedef boost::signals2::signal< void () > HideShowUISignal_type;
-    HideShowUISignal_type::slot_type hsSlotFunctor( boost::bind( &UIManager::ToggleVisibility, this ) );
-    SlotWrapper< HideShowUISignal_type > hsSlotWrapper( hsSlotFunctor );
-    evm->ConnectSignal( "KeyboardMouse.HideShowUISignal", &hsSlotWrapper, mConnections, EventManager::highest_Priority );
+    CONNECTSIGNALS_4( "%ButtonRelease%",void ( gadget::Keys, int, int, int ),
+                      &UIManager::ButtonReleaseEvent, mConnections,
+                      button_SignalType, highest_Priority );
 
-    typedef boost::signals2::signal< void ( int, int, int, int ) > MouseMoveSignal_type;
-    MouseMoveSignal_type::slot_type mmSlotFunctor( boost::bind( &UIManager::MouseMoveEvent, this, _1, _2, _3, _4) );
-    SlotWrapper< MouseMoveSignal_type > mmSlotWrapper( mmSlotFunctor );
-    evm->ConnectSignal( "KeyboardMouse.MouseMove", &mmSlotWrapper, mConnections, EventManager::highest_Priority );
+    CONNECTSIGNALS_3( "%KeyPress%", void ( gadget::Keys, int, wchar_t ),
+                      &UIManager::KeyPressEvent, mConnections,
+                      keyboard_SignalType, highest_Priority );
 
-    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > ButtonPressSignal_type;
-    ButtonPressSignal_type::slot_type bpSlotFunctor( boost::bind( &UIManager::ButtonPressEvent, this, _1, _2, _3, _4) );
-    SlotWrapper< ButtonPressSignal_type > bpSlotWrapper( bpSlotFunctor );
-    evm->ConnectSignals( "KeyboardMouse.ButtonPress%", &bpSlotWrapper, mConnections, EventManager::button_SignalType, EventManager::highest_Priority );
-
-    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > ButtonReleaseSignal_type;
-    ButtonReleaseSignal_type::slot_type brSlotFunctor( boost::bind( &UIManager::ButtonReleaseEvent, this, _1, _2, _3, _4) );
-    SlotWrapper< ButtonReleaseSignal_type > brSlotWrapper( brSlotFunctor );
-    evm->ConnectSignals( "KeyboardMouse.ButtonRelease%", &brSlotWrapper, mConnections, EventManager::button_SignalType, EventManager::highest_Priority );
-
-    typedef boost::signals2::signal< void ( gadget::Keys, int, wchar_t ) > KeySignal_type;
-    KeySignal_type::slot_type kpSlotFunctor( boost::bind( &UIManager::KeyPressEvent, this, _1, _2, _3) );
-    SlotWrapper< KeySignal_type > kpSlotWrapper( kpSlotFunctor );
-    evm->ConnectSignals( "KeyboardMouse.KeyPress%", &kpSlotWrapper, mConnections, EventManager::keyboard_SignalType, EventManager::highest_Priority );
-
-    KeySignal_type::slot_type krSlotFunctor( boost::bind( &UIManager::KeyReleaseEvent, this, _1, _2, _3) );
-    SlotWrapper< KeySignal_type > krSlotWrapper( krSlotFunctor );
-    evm->ConnectSignals( "KeyboardMouse.KeyRelease%", &krSlotWrapper, mConnections, EventManager::keyboard_SignalType, EventManager::highest_Priority );
+    CONNECTSIGNALS_3( "%KeyRelease%", void ( gadget::Keys, int, wchar_t ),
+                      &UIManager::KeyReleaseEvent, mConnections,
+                      keyboard_SignalType, highest_Priority );
 
 }
 ////////////////////////////////////////////////////////////////////////////////
