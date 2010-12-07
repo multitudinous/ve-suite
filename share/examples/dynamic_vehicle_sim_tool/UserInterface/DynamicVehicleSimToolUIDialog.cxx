@@ -193,7 +193,7 @@ void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WX
 	wxBoxSizer* bSizer;
 	bSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxStaticText* staticText = new wxStaticText( m_scrolledWindow1, wxID_ANY, wxString::Format("%d", newNum), wxDefaultPosition, wxDefaultSize, 0 );
+	wxStaticText* staticText = new wxStaticText( m_scrolledWindow1, wxID_ANY, wxString::Format( _("%d"), newNum), wxDefaultPosition, wxDefaultSize, 0 );
 	staticText->Wrap( -1 );
 	bSizer->Add( staticText, 0, wxALIGN_CENTER, 5 );
 	
