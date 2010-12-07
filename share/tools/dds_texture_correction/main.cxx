@@ -5,6 +5,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/concept_check.hpp>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <string>
 #include <vector>
 #include <list>
@@ -93,7 +95,10 @@ std::vector<std::string> GetFilesInDirectory( std::string dir, std::string exten
             {
                 try
                 {
-                    if( dir_itr->path().extension() == extension )
+                    std::string fileExt( dir_itr->path().extension() );
+                    boost::algorithm::to_lower( fileExt );
+
+                    if( fileExt == extension )
                     {
                         std::string pathAndFileName;
                         pathAndFileName.assign( dir_path.string() );
