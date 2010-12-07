@@ -148,13 +148,13 @@ private:
 
 protected Q_SLOTS:
     void _render( );
-    void _sendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
+    //void _sendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
 
     void _buttonPressEvent( gadget::Keys button, int x, int y, int state );
     void _buttonReleaseEvent( gadget::Keys button, int x, int y, int state );
     void _mouseMoveEvent( int x, int y, int z, int state );
-    void _keyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
-    void _keyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
+    void _keyPressEvent( gadget::Keys key, int modifierMask, QString unicode );
+    void _keyReleaseEvent( gadget::Keys key, int modifierMask, QString unicode );
 
     void _onHideButtonClicked();
     void _onMinimizeButtonClicked();
@@ -163,12 +163,12 @@ protected Q_SLOTS:
 
     Q_SIGNALS:
     void RequestRender( );
-    void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
+    //void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
     void PutButtonPressEvent( gadget::Keys button, int x, int y, int state );
     void PutButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
     void PutMouseMoveEvent( int x, int y, int z, int state );
-    void PutKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
-    void PutKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
+    void PutKeyPressEvent( gadget::Keys key, int modifierMask, QString unicode );
+    void PutKeyReleaseEvent( gadget::Keys key, int modifierMask, QString unicode );
 
 
 };
