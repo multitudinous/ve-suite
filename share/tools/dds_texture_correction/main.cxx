@@ -44,7 +44,7 @@ int main( int argc, char* argv[] )
         std::cout << "Processing " << iveFiles.at( i ) << std::endl;
         osg::ref_ptr< osg::Node > tgaFile = osgDB::readNodeFile( iveFiles.at( i ) );
         //Run the optimizer to improve performance
-        {
+        /*{
             osgUtil::Optimizer graphOpti;
             graphOpti.optimize( tgaFile.get(), 
                                //Had to comment out this flag because of a bug in OSG
@@ -62,20 +62,20 @@ int main( int argc, char* argv[] )
                                osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
                                osgUtil::Optimizer::MERGE_GEODES |
                                osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
-        }
+        }*/
         //Replace TGA textures with DDS textures
         {
             ves::xplorer::scenegraph::util::SwapTexture ddsTextureSwap( tgaFile.get() );
         }
         //write ive file back out
         // But without including the image files in the ive:
-        osg::ref_ptr< osgDB::ReaderWriter::Options > noImgOpt = new osgDB::ReaderWriter::Options();
-        noImgOpt->setOptionString( "noTexturesInIVEFile" );
+        //osg::ref_ptr< osgDB::ReaderWriter::Options > noImgOpt = new osgDB::ReaderWriter::Options();
+        //noImgOpt->setOptionString( "noTexturesInIVEFile" );
         //std::string olfFileName = iveFiles.at( i );
         //boost::filesystem::path oldFileName( iveFiles.at( i ), boost::filesystem::no_check );
         std::string oldFileName = osgDB::getNameLessExtension( iveFiles.at( i ) );
         oldFileName = oldFileName + "_dds.ive";
-        bool success = osgDB::writeNodeFile( *(tgaFile.get()), oldFileName, noImgOpt );
+        bool success = osgDB::writeNodeFile( *(tgaFile.get()), oldFileName );
         std::cout << "New file " << oldFileName << std::endl;
     }
     return 0;
