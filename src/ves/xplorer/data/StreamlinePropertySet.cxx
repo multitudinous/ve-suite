@@ -36,14 +36,26 @@
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <iostream>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
 
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 StreamlinePropertySet::StreamlinePropertySet()
 {
+    using eventmanager::SignalWrapper;
+
+    std::string name("StreamlinePropertySet");
+    name += boost::lexical_cast<std::string>( this );
+    name += ".UpdateSeedPointDimensions";
+
+    eventmanager::EventManager::instance()->RegisterSignal(
+            new SignalWrapper< UpdateDimsSignal_type >( &mUpdateDims ),
+            name, eventmanager::EventManager::unspecified_SignalType );
+
     mTableName = "Streamline";
     CreateSkeleton();
 }
@@ -122,10 +134,13 @@ void StreamlinePropertySet::CreateSkeleton()
     SetPropertyAttribute( "SeedPoints", "setExpanded", true );
     AddProperty( "SeedPoints_NumberOfPointsInX", 2, "Number of Points in X" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInX", "minimumValue",   0 );
+    mPropertyMap["SeedPoints_NumberOfPointsInX"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateNumberOfPoints, this, _1 ) );
     AddProperty( "SeedPoints_NumberOfPointsInY", 2, "Number of Points in Y" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInY", "minimumValue",   0 );
+    mPropertyMap["SeedPoints_NumberOfPointsInY"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateNumberOfPoints, this, _1 ) );
     AddProperty( "SeedPoints_NumberOfPointsInZ", 2, "Number of Points in Z" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInZ", "minimumValue",   0 );
+    mPropertyMap["SeedPoints_NumberOfPointsInZ"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateNumberOfPoints, this, _1 ) );
     AddProperty( "SeedPoints_Bounds", boost::any(), "Bounds");
     SetPropertyAttribute( "SeedPoints_Bounds", "isUIGroupOnly", true );
     SetPropertyAttribute( "SeedPoints_Bounds", "setExpanded", true );
@@ -323,4 +338,21 @@ bool StreamlinePropertySet::ValidateScalarMinMax( PropertyPtr property, boost::a
         return false;
     }
 }
+
+void StreamlinePropertySet::UpdateNumberOfPoints( PropertyPtr property )
+{
+    // Package up the new seed point dimensions and fire off an update signal.
+    // At the moment, xplorer::event::SeedPointDimensionsEventHandler listens
+    // for the update signal.
+    std::vector< long > dimensions;
+    int temp1 = boost::any_cast< int >( GetPropertyValue("SeedPoints_NumberOfPointsInX") );
+    int temp2 = boost::any_cast< int >( GetPropertyValue("SeedPoints_NumberOfPointsInY") );
+    int temp3 = boost::any_cast< int >( GetPropertyValue("SeedPoints_NumberOfPointsInZ") );
+    dimensions.push_back( temp1 );
+    dimensions.push_back( temp2 );
+    dimensions.push_back( temp3 );
+
+    mUpdateDims( dimensions );
+}
+
 ////////////////////////////////////////////////////////////////////////////////

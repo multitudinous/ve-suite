@@ -38,6 +38,8 @@
 
 #include <ves/VEConfig.h>
 
+#include <boost/signals2/signal.hpp>
+
 namespace ves
 {
 namespace xplorer
@@ -77,10 +79,18 @@ private:
     ///Update method
     void UpdateVectorDataOptions( PropertyPtr property );
 
+    /// Slot connected to value changes of properties SeedPoints_NumberOfPointsInX,
+    /// SeedPoints_NumberOfPointsInY, and SeedPoints_NumberOfPointsInZ
+    void UpdateNumberOfPoints( PropertyPtr property );
+
 
 private:
     ///Create the skeleton
     void CreateSkeleton();
+
+    /// Update signal containing new seed points dimensions
+    typedef boost::signals2::signal< void ( const std::vector< long >& ) > UpdateDimsSignal_type;
+    UpdateDimsSignal_type mUpdateDims;
 };
 
 } // namespace data
