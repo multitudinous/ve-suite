@@ -34,6 +34,7 @@
 #pragma once
 
 #include <ves/xplorer/eventmanager/SlotWrapperBase.h>
+#include <stdio.h>
 
 namespace ves
 {
@@ -72,6 +73,19 @@ public:
     mSlot( slot )
     {
         ;
+    }
+
+    SlotWrapper( const SlotWrapper& orig )
+    {
+        std::cout << "SlotWrapper copy ctor" << std::endl << std::flush;
+        mSlot = orig.mSlot;
+    }
+
+    SlotWrapper& operator= (const SlotWrapper& orig)
+    {
+        std::cout << "SlotWrapper assignment op" << std::endl << std::flush;
+        mSlot = orig.mSlot;
+        return *this;
     }
 
     virtual ~SlotWrapper( )

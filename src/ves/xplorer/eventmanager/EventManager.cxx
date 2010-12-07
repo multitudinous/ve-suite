@@ -62,6 +62,11 @@ EventManager::EventManager( )
     mSession = new Poco::Data::Session( "SQLite", ":memory:" );
     ( *mSession ) << "CREATE TABLE signals (id INTEGER PRIMARY KEY, name TEXT, type INTEGER)",
             Poco::Data::now;
+
+    // Create a table to store slots that have requested connection to a certain signal
+    // or signal pattern that hasn't been registered yet
+    ( *mSession ) << "CREATE TABLE slots (id INTEGER PRIMARY KEY, mapID INTEGER, pattern TEXT, type INTEGER, priority INTEGER)",
+            Poco::Data::now;
 }
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -113,16 +118,69 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
 
     // Store the signal in the signal map
     mSignals[sigName] = sig;
+
+    ConnectToPreviousSlots( sigName );
 }
+////////////////////////////////////////////////////////////////////////////////
+
+void EventManager::ConnectToPreviousSlots( const std::string& sigName )
+{
+    std::vector< int > ids;
+    std::vector< int > priorities;
+    GetSlotMatches( sigName, ids, priorities );
+
+    // Iterate through result set and attempt to connect to the matching slots
+    std::vector< int >::iterator idsIter = ids.begin( );
+    std::vector< int >::iterator prioritiesIter = priorities.begin();
+    while( idsIter != ids.end( ) )
+    {
+        SlotWrapperBase* slot = mExactSlotMap[ *idsIter ];
+        weak_ptr< ScopedConnectionList > wConnectionsPtr
+                = mExactSlotConnections[ *idsIter ];
+
+        if( shared_ptr< ScopedConnectionList > sConnectionsPtr = wConnectionsPtr.lock( ) )
+        {
+           _ConnectSignal( sigName, slot, *(sConnectionsPtr.get()), *prioritiesIter, false );
+        }
+        else
+        {
+            // If we were unable to lock the weak ptr, the underlying object
+            // must have been destroyed. Remove this entry from the database
+            // so we don't have to deal with it in future.
+            try
+            {
+                ( *mSession ) << "DELETE FROM slots WHERE mapID=:id",
+                        Poco::Data::use( *idsIter ),
+                        Poco::Data::now;
+            }
+            catch( Poco::Data::DataException& ex )
+            {
+                std::cout << ex.displayText( ) << std::endl;
+            }
+        }
+        ++idsIter;
+        ++prioritiesIter;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 void EventManager::ConnectSignal( const std::string& sigName,
                                   SlotWrapperBase* slot,
                                   ScopedConnectionList& connections,
-                                  Priority priority )
+                                  int priority )
+{
+    _ConnectSignal( sigName, slot, connections, priority, true );
+}
+////////////////////////////////////////////////////////////////////////////////
+void EventManager::_ConnectSignal( const std::string& sigName,
+                                  SlotWrapperBase* slot,
+                                  ScopedConnectionList& connections,
+                                  int priority,
+                                  bool store )
 {
     // Find the appropriate SignalWrapperBase
-    std::map<std::string, SignalWrapperBase*>::const_iterator iter = mSignals.find( sigName );
+    std::map< std::string, SignalWrapperBase* >::const_iterator iter = mSignals.find( sigName );
     if( iter != mSignals.end( ) )
     {
         vprDEBUG( vesDBG, 3 )
@@ -133,6 +191,9 @@ void EventManager::ConnectSignal( const std::string& sigName,
         SignalWrapperBase* signalWrapper = iter->second;
         if( signalWrapper->ConnectSlot( slot, connections, priority ) )
         {
+            vprDEBUG( vesDBG, 3 )
+                << "EventManager::ConnectSignal: Connection successful"
+                << std::endl << vprDEBUG_FLUSH;
             //Connection was successful; store the details
             StoreConnection( connections, signalWrapper );
 
@@ -154,6 +215,18 @@ void EventManager::ConnectSignal( const std::string& sigName,
                 }
             }
         }
+        else
+        {
+            vprDEBUG( vesDBG, 3 )
+                << "EventManager::ConnectSignal: Connection failed"
+                << std::endl << vprDEBUG_FLUSH;
+        }
+    }
+
+    // Copy this slot off for later async connections
+    if( store )
+    {
+        StoreSlot( sigName, slot, connections, EventManager::unspecified_SignalType, priority );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +235,7 @@ void EventManager::ConnectSignals( const std::string& stringToMatch,
                                    SlotWrapperBase* slot,
                                    ScopedConnectionList& connections,
                                    SignalType sigType,
-                                   Priority priority )
+                                   int priority )
 {
     std::vector< std::string > names;
     GetMatches( stringToMatch, sigType, names );
@@ -171,11 +244,42 @@ void EventManager::ConnectSignals( const std::string& stringToMatch,
     std::vector< std::string >::iterator namesIter = names.begin( );
     while( namesIter != names.end( ) )
     {
-        ConnectSignal( ( *namesIter ), slot, connections, priority );
+        // Connect to the signal, but don't store slot details for each connection
+        _ConnectSignal( ( *namesIter ), slot, connections, priority, false );
         namesIter++;
     }
+
+    // Store slot details for general pattern
+    StoreSlot( stringToMatch, slot, connections, sigType, priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
+
+void EventManager::StoreSlot( const std::string& sigName,
+                              SlotWrapperBase* slot,
+                              ScopedConnectionList& connections,
+                              int type,
+                              int priority )
+{
+    int id = mExactSlotMap.size();
+    mExactSlotMap[ id ] = slot;
+
+    mExactSlotConnections[ id ] = connections.GetWeakPtr();
+
+    // Add this slot to the lookup table
+    try
+    {
+        ( *mSession ) << "INSERT INTO slots (mapID, pattern, type, priority) VALUES (:id,:pattern,:type,:priority)",
+                Poco::Data::use( id ),
+                Poco::Data::use( sigName ),
+                Poco::Data::use( type ),
+                Poco::Data::use( priority ),
+                Poco::Data::now;
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText( ) << std::endl;
+    }
+}
 
 void EventManager::GetMatches( const std::string stringToMatch, SignalType sigType, std::vector< std::string >& names )
 {
@@ -198,6 +302,31 @@ void EventManager::GetMatches( const std::string stringToMatch, SignalType sigTy
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void EventManager::GetSlotMatches( const std::string& sigName, std::vector< int >& ids, std::vector< int >& priorities )
+{
+    // TODO: Needs slightly more subtle matching that includes signal type
+    try
+    {
+        Poco::Data::Statement statement( *mSession );
+        statement << "SELECT mapID FROM slots WHERE :pattern LIKE pattern",
+                Poco::Data::use( sigName ),
+                Poco::Data::into( ids );
+        statement.execute( );
+        int priority = 3;
+        for( size_t count = 0; count < ids.size(); ++count )
+        {
+            ( *mSession ) << "SELECT priority FROM slots WHERE mapID=:id",
+            Poco::Data::use( ids.at( count ) ),
+            Poco::Data::into( priority ),
+            Poco::Data::now;
+            priorities.push_back( priority );
+        }
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << ex.displayText( ) << std::endl;
+    }
+}
 
 void EventManager::StoreConnection( ScopedConnectionList& connections, SignalWrapperBase* sigWrapper )
 {
@@ -205,7 +334,7 @@ void EventManager::StoreConnection( ScopedConnectionList& connections, SignalWra
     boost::shared_ptr< boost::signals2::scoped_connection > connection = connections.GetLastConnection( );
     if( connection->connected( ) )
     {
-        weak_ptr< scoped_connection> weakConnection( connection );
+        weak_ptr< scoped_connection > weakConnection( connection );
         mConnections[ weakConnection ] = sigWrapper;
     }
 }

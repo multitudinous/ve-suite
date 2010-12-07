@@ -47,8 +47,88 @@
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/xplorer/eventmanager/ConnectionMonopoly.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
 
 #include <ves/VEConfig.h>
+
+// Macros to make connecting signals an easier process
+// To add more macros for making connections that require N arguments,
+// add a new CONNECT____N macro, adding the appropriate number of parameters
+// to the boost::bind call and then add both a CONNECTSIGNAL_N and a
+// CONNECTSIGNALS_N macro that use the CONNECT____N macro.
+
+
+// TODO: The code in CONNECTSIGNALPRE and CONNECTSIGNALPOST that create the functor
+// and wrapper on the heap needs to be looked at so we stop leaking memory here.
+// SlotWrapper needs to be re-worked to take a pointer to a functor, and then
+// SlotWrapper needs to manage the memory of the functor. EventManager then needs
+// to manage the memory of the SlotWrapperS. Anytime it removes a db entry due
+// to a stale ScopedConnectionsList object, it needs to destroy the associated
+// SlotWrapper. And delete upon destruction of EventManager of course. mExactSlotMap and
+// the other connections one need to be reworked so we don't get ID clashes.
+#define CONNECTSIGNALPRE( signature ) do{\
+        typedef boost::signals2::signal< signature > sig_type; \
+        sig_type::slot_type* slotFunctor = new sig_type::slot_type(
+
+#define CONNECTSIGNALPOST  ); \
+                ves::xplorer::eventmanager::SlotWrapper< sig_type >* slotWrapper = new ves::xplorer::eventmanager::SlotWrapper< sig_type >( *slotFunctor );
+
+#define CONNECTSIGNALCALL( name, connections, priority ) \
+        ves::xplorer::eventmanager::EventManager::instance()->ConnectSignal( name, slotWrapper, \
+            connections, ves::xplorer::eventmanager::EventManager::priority ); \
+        }while(0)
+
+#define CONNECTSIGNALSCALL( name, connections, type, priority ) \
+        ves::xplorer::eventmanager::EventManager::instance()->ConnectSignals( name, slotWrapper, \
+            connections, ves::xplorer::eventmanager::EventManager::type, ves::xplorer::eventmanager::EventManager::priority ); \
+        }while(0)
+
+#define CONNECT____0( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this ) CONNECTSIGNALPOST
+#define CONNECT____1( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1 ) CONNECTSIGNALPOST
+#define CONNECT____2( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1, _2 ) CONNECTSIGNALPOST
+#define CONNECT____3( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1, _2, _3 ) CONNECTSIGNALPOST
+#define CONNECT____4( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1, _2, _3, _4 ) CONNECTSIGNALPOST
+#define CONNECT____5( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1, _2, _3, _4, _5 ) CONNECTSIGNALPOST
+
+
+#define CONNECTSIGNAL_0( name, signature, slot, connections, priority ) \
+            CONNECT____0( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
+
+#define CONNECTSIGNAL_1( name, signature, slot, connections, priority ) \
+            CONNECT____1( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
+
+#define CONNECTSIGNAL_2( name, signature, slot, connections, priority ) \
+            CONNECT____2( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
+
+#define CONNECTSIGNAL_3( name, signature, slot, connections, priority ) \
+            CONNECT____3( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
+
+#define CONNECTSIGNAL_4( name, signature, slot, connections, priority ) \
+            CONNECT____4( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
+
+#define CONNECTSIGNAL_5( name, signature, slot, connections, priority ) \
+            CONNECT____5( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
+
+
+#define CONNECTSIGNALS_0( name, signature, slot, connections, type, priority ) \
+            CONNECT____0( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_1( name, signature, slot, connections, type, priority ) \
+            CONNECT____1( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_2( name, signature, slot, connections, type, priority ) \
+            CONNECT____2( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_3( name, signature, slot, connections, type, priority ) \
+            CONNECT____3( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_4( name, signature, slot, connections, type, priority ) \
+            CONNECT____4( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_5( name, signature, slot, connections, type, priority ) \
+            CONNECT____5( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+
 
 namespace Poco
 {
@@ -89,14 +169,14 @@ public:
      **/
     enum SignalType
     {
-        any_SignalType, ///< Intended only for use in calls to ConnectSignals for matching any of the other SignalTypeS
-        button_SignalType, ///< Mouse, wand, or other device button press/release/scroll/etc
-        computation_SignalType, ///< Beginning or end of computation
-        file_SignalType, ///< File loading, writing, etc.
-        input_SignalType, ///< General input event
-        keyboard_SignalType, ///< Key press or release
-        mouse_SignalType, ///< Mouse movement
-        unspecified_SignalType ///< Unspecified, or doesn't fit a defined category -- this is the default in calls to RegisterSignal
+        any_SignalType = 1, ///< Intended only for use in calls to ConnectSignals for matching any of the other SignalTypeS
+        button_SignalType = 2, ///< Mouse, wand, or other device button press/release/scroll/etc
+        computation_SignalType = 3, ///< Beginning or end of computation
+        file_SignalType = 4, ///< File loading, writing, etc.
+        input_SignalType = 5, ///< General input event
+        keyboard_SignalType = 6, ///< Key press or release
+        mouse_SignalType = 7, ///< Mouse movement
+        unspecified_SignalType = 0 ///< Unspecified, or doesn't fit a defined category -- this is the default in calls to RegisterSignal
     };
 
     /**
@@ -110,11 +190,11 @@ public:
      **/
     enum Priority
     {
-        highest_Priority, ///< Called first
-        high_Priority, ///< Called after highest_Priority
-        normal_Priority, ///< Called after high_Priority
-        low_Priority, ///< Called after normal_Priority
-        lowest_Priority ///< Called last
+        highest_Priority = 1, ///< Called first
+        high_Priority = 2, ///< Called after highest_Priority
+        normal_Priority = 3, ///< Called after high_Priority
+        low_Priority = 4, ///< Called after normal_Priority
+        lowest_Priority = 5 ///< Called last
     };
 
     /**
@@ -255,7 +335,7 @@ public:
     void ConnectSignal( const std::string& sigName,
                         SlotWrapperBase* slot,
                         ScopedConnectionList& connections,
-                        Priority priority = normal_Priority );
+                        int priority = normal_Priority );
 
     /**
      * Connects to <em>all</em> signals whose name contains stringToMatch, whose signal type
@@ -281,7 +361,7 @@ public:
                          SlotWrapperBase* slot,
                          ScopedConnectionList& connections,
                          SignalType sigType = any_SignalType,
-                         Priority priority = normal_Priority );
+                         int priority = normal_Priority );
 
 private:
     
@@ -308,6 +388,29 @@ private:
                           SignalWrapperBase* sigWrapper );
 
     ///
+    /// Connects a newly-registered signal to slots that have requested a
+    /// connection to it before it was registered.
+    void ConnectToPreviousSlots( const std::string& sigName );
+
+    ///
+    /// Looks in the slot table for slots attempting to connect to sigName (can be
+    /// a generalized search pattern) and returns a list of mapIds and associated
+    /// priorities from the table.
+    void GetSlotMatches( const std::string& sigName, std::vector< int >& ids, std::vector< int >& priorities );
+
+    void _ConnectSignal( const std::string& sigName,
+                         SlotWrapperBase* slot,
+                         ScopedConnectionList& connections,
+                         int priority,
+                         bool store );
+
+    void StoreSlot( const std::string& sigName,
+                    SlotWrapperBase* slot,
+                    ScopedConnectionList& connections,
+                    int type,
+                    int priority );
+
+    ///
     /// Holds the signal name and its corresponding SignalWrapper*.
     /// Used for connecting a slot to a signal when the exact signal name is known.
     std::map< std::string, SignalWrapperBase* > mSignals;
@@ -327,6 +430,9 @@ private:
     // Pointer to in-memory database session that holds details about signals
     // to allow for efficient searches
     Poco::Data::Session* mSession;
+
+    std::map< int, SlotWrapperBase* > mExactSlotMap;
+    std::map< int, boost::weak_ptr< ScopedConnectionList > > mExactSlotConnections;
 };
 
 

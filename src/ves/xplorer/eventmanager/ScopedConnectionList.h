@@ -124,7 +124,11 @@ public:
     /// Provided for convenience to directly get the last connection made
     boost::shared_ptr< boost::signals2::scoped_connection > GetLastConnection();
 
+    /// Returns a weak pointer to this object without the need to create a shared ptr first.
+    boost::weak_ptr< ScopedConnectionList > GetWeakPtr() const { return this_; }
+
 private:
+    boost::shared_ptr< ScopedConnectionList > this_;
     ConnectionList_type mConnections;
 
 };
