@@ -66,11 +66,14 @@ int main( int argc, char* argv[] )
             ves::xplorer::scenegraph::util::SwapTexture ddsTextureSwap( tgaFile.get() );
         }
         //write ive file back out
+        // But without including the image files in the ive:
+        osg::ref_ptr< osgDB::ReaderWriter::Options > noImgOpt = new osgDB::ReaderWriter::Options();
+        noImgOpt->setOptionString( "noTexturesInIVEFile" );
         //std::string olfFileName = iveFiles.at( i );
         //boost::filesystem::path oldFileName( iveFiles.at( i ), boost::filesystem::no_check );
         std::string oldFileName = osgDB::getNameLessExtension( iveFiles.at( i ) );
         oldFileName = oldFileName + "_dds.ive";
-        bool success = osgDB::writeNodeFile( *(tgaFile.get()), oldFileName );
+        bool success = osgDB::writeNodeFile( *(tgaFile.get()), oldFileName, noImgOpt );
         std::cout << "New file " << oldFileName << std::endl;
     }
     return 0;
