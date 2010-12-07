@@ -100,29 +100,32 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
         osg::StateAttribute* sa = stateSet->getTextureAttribute(
             i, osg::StateAttribute::TEXTURE );
         //Only worry about 2D textures for now
-        osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
-        if( tex2D )
+        if( sa )
         {
-            osg::ref_ptr< osg::Image > tgaImage = tex2D->getImage();
-            if( tgaImage.valid() )
+            osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
+            if( tex2D )
             {
-                std::string fileName = tgaImage->getFileName();
-                boost::filesystem::path newFileName( fileName, boost::filesystem::native );
-                if( newFileName.extension() == ".tga" )
+                osg::ref_ptr< osg::Image > tgaImage = tex2D->getImage();
+                if( tgaImage.valid() )
                 {
-                    std::cout << "Texture file name = " 
-                    << fileName << std::endl;
-                    newFileName.replace_extension( "dds" );
-                    std::cout << "New texture file name = " 
-                    << newFileName.string() << std::endl;
-                    osg::ref_ptr< osgDB::ReaderWriter::Options > opt = 
+                    std::string fileName = tgaImage->getFileName();
+                    boost::filesystem::path newFileName( fileName, boost::filesystem::native );
+                    if( newFileName.extension() == ".tga" )
+                    {
+                        std::cout << "Texture file name = " 
+                        << fileName << std::endl;
+                        newFileName.replace_extension( "dds" );
+                        std::cout << "New texture file name = " 
+                        << newFileName.string() << std::endl;
+                        osg::ref_ptr< osgDB::ReaderWriter::Options > opt = 
                         new osgDB::ReaderWriter::Options();
-                    opt->setOptionString( "dds_flip" );
-                    //osgDB::Registry::instance()->setOptions( opt );
-                    
-                    osg::ref_ptr< osg::Image > ddsImage = 
+                        opt->setOptionString( "dds_flip" );
+                        //osgDB::Registry::instance()->setOptions( opt );
+                        
+                        osg::ref_ptr< osg::Image > ddsImage = 
                         osgDB::readImageFile( newFileName.string(), opt );
-                    tex2D->setImage( ddsImage );
+                        tex2D->setImage( ddsImage.get() );
+                    }
                 }
             }
         }
