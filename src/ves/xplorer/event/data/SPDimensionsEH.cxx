@@ -37,6 +37,8 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
 #include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -50,6 +52,11 @@ using namespace ves::open::xml;
 SeedPointDimensionsEventHandler::SeedPointDimensionsEventHandler()
 {
     _activeModel = 0;
+
+    CONNECTSIGNALS_1( "%UpdateSeedPointDimensions",
+                      void ( const std::vector< long >& allDimensions ),
+                      &SeedPointDimensionsEventHandler::UpdateDimensions,
+                      mConnections, any_SignalType, normal_Priority );
 }
 ///////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler
@@ -104,14 +111,26 @@ void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPt
         std::vector<long> allDimensions;
         DataValuePairPtr dimensions = command->GetDataValuePair( "Dimensions" );
         dimensions->GetData( allDimensions );
-        ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
-            SetDimensions( allDimensions[0],
-                allDimensions[1],
-                allDimensions[2] );
+//        ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
+//            SetDimensions( allDimensions[0],
+//                allDimensions[1],
+//                allDimensions[2] );
+        UpdateDimensions( allDimensions );
     }
     catch ( ... )
     {
         std::cout << "Invalid Bounds!!" << std::endl;
         std::cout << "SeedPointDimensionsEventHandler::Execute()" << std::endl;
     }
+}
+
+void SeedPointDimensionsEventHandler::UpdateDimensions( const std::vector< long >& allDimensions )
+{
+    // Temporary debuggish message. Remove when satisfied correct behavior
+    // is occurring.
+    std::cout << "SeedPointDimensionsEventHandler::UpdateDimensions: Proof of realtime updates." << std::endl << std::flush;
+    ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
+        SetDimensions( allDimensions[0],
+            allDimensions[1],
+            allDimensions[2] );
 }

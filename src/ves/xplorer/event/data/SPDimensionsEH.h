@@ -37,6 +37,10 @@
 
 #include <ves/xplorer/ModelPtr.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
+#include <vector>
+
 namespace ves
 {
 namespace xplorer
@@ -70,8 +74,17 @@ public:
     ///Set the active cfdModel
     ///\param model The active cfdModel
     void SetGlobalBaseObject( ves::xplorer::GlobalBase* model );
+
 protected:
+    /// Does the actual update of seedpoint dimensions. Broken out so that signals
+    /// can be connected directly to it without going through entire EventHandler
+    /// interface
+    void UpdateDimensions( const std::vector< long >& allDimensions );
+
     ves::xplorer::Model* _activeModel;///<The active model;
+
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
 };
 
 }
