@@ -150,14 +150,6 @@ KeyboardMouse::KeyboardMouse()
     mKeyboardMouseEventInterface.init("VJKeyboard");
     mKeyboardMouseEventInterface.addCallback(boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1));
 
-
-
-    // Register generalized event signal
-//    eventmanager::EventManager::instance()->RegisterSignal(
-//        new eventmanager::SignalWrapper< InteractionSignal_type >( &mInteractionSignal ),
-//        "KeyboardMouseInteractionSignal",
-//        eventmanager::EventManager::input_SignalType);
-
     SetupButtonSignalMap();
     SetupKeySignalMap();
 
