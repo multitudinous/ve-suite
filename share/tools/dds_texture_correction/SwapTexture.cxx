@@ -113,18 +113,21 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
                     if( newFileName.extension() == ".tga" )
                     {
                         std::cout << "Texture file name = " 
-                        << fileName << std::endl;
+                            << fileName << std::endl;
                         newFileName.replace_extension( "dds" );
                         std::cout << "New texture file name = " 
-                        << newFileName.string() << std::endl;
+                            << newFileName.string() << std::endl;
                         osg::ref_ptr< osgDB::ReaderWriter::Options > opt = 
                         new osgDB::ReaderWriter::Options();
                         opt->setOptionString( "dds_flip" );
                         //osgDB::Registry::instance()->setOptions( opt );
                         
                         osg::ref_ptr< osg::Image > ddsImage = 
-                        osgDB::readImageFile( newFileName.string(), opt );
+                            osgDB::readImageFile( newFileName.string(), opt );
                         tex2D->setImage( ddsImage.get() );
+                        //Write it back out if we do not want to include the image 
+                        //file in the ive file
+                        //osgDB::writeImageFile( *(ddsImage.get), newFileName.string() );
                     }
                 }
             }

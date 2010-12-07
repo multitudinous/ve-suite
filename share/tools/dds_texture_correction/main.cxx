@@ -44,7 +44,7 @@ int main( int argc, char* argv[] )
         std::cout << "Processing " << iveFiles.at( i ) << std::endl;
         osg::ref_ptr< osg::Node > tgaFile = osgDB::readNodeFile( iveFiles.at( i ) );
         //Run the optimizer to improve performance
-        /*{
+        {
             osgUtil::Optimizer graphOpti;
             graphOpti.optimize( tgaFile.get(), 
                                //Had to comment out this flag because of a bug in OSG
@@ -62,7 +62,7 @@ int main( int argc, char* argv[] )
                                osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
                                osgUtil::Optimizer::MERGE_GEODES |
                                osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
-        }*/
+        }
         //Replace TGA textures with DDS textures
         {
             ves::xplorer::scenegraph::util::SwapTexture ddsTextureSwap( tgaFile.get() );
