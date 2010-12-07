@@ -36,13 +36,15 @@ int main( int argc, char* argv[] )
     //osg::ref_ptr< osgDB::ReaderWriter::Options > opt = new osgDB::ReaderWriter::Options();
     //opt->setOptionString( "dds_flip" );
     //osgDB::Registry::instance()->setOptions( opt );
+    osg::ref_ptr< osg::Node > tgaFile;
+    std::string oldFileName;
     
     std::vector< std::string > iveFiles = GetFilesInDirectory( ".", ".ive" );
     for( size_t i = 0; i < iveFiles.size(); ++i )
     {
         //Read file in with TGA textures
         std::cout << "Processing " << iveFiles.at( i ) << std::endl;
-        osg::ref_ptr< osg::Node > tgaFile = osgDB::readNodeFile( iveFiles.at( i ) );
+        tgaFile = osgDB::readNodeFile( iveFiles.at( i ) );
         //Run the optimizer to improve performance
         {
             osgUtil::Optimizer graphOpti;
@@ -73,7 +75,7 @@ int main( int argc, char* argv[] )
         //noImgOpt->setOptionString( "noTexturesInIVEFile" );
         //std::string olfFileName = iveFiles.at( i );
         //boost::filesystem::path oldFileName( iveFiles.at( i ), boost::filesystem::no_check );
-        std::string oldFileName = osgDB::getNameLessExtension( iveFiles.at( i ) );
+        oldFileName = osgDB::getNameLessExtension( iveFiles.at( i ) );
         oldFileName = oldFileName + "_dds.ive";
         bool success = osgDB::writeNodeFile( *(tgaFile.get()), oldFileName );
         std::cout << "New file " << oldFileName << std::endl;
@@ -85,6 +87,9 @@ std::vector<std::string> GetFilesInDirectory( std::string dir, std::string exten
 {
     boost::filesystem::path dir_path( dir.c_str(), boost::filesystem::no_check );
     std::list< std::string > filesInDir;
+    std::string fileExt;
+    std::string pathAndFileName;
+    
     try
     {
         if( boost::filesystem::is_directory( dir_path ) )
@@ -95,12 +100,11 @@ std::vector<std::string> GetFilesInDirectory( std::string dir, std::string exten
             {
                 try
                 {
-                    std::string fileExt( dir_itr->path().extension() );
+                    fileExt = dir_itr->path().extension();
                     boost::algorithm::to_lower( fileExt );
 
                     if( fileExt == extension )
                     {
-                        std::string pathAndFileName;
                         pathAndFileName.assign( dir_path.string() );
                         pathAndFileName.append( "/" );
                         pathAndFileName.append( dir_itr->leaf() );

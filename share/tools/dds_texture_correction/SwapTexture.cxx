@@ -93,6 +93,14 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
         return;
     }
 
+    osg::ref_ptr< osgDB::ReaderWriter::Options > opt = 
+        new osgDB::ReaderWriter::Options();
+    opt->setOptionString( "dds_flip" );
+    //osgDB::Registry::instance()->setOptions( opt );
+    osg::ref_ptr< osg::Image > tgaImage;
+    std::string fileName;
+    osg::ref_ptr< osg::Image > ddsImage;
+    
     osg::StateSet::TextureAttributeList stateSetTal =
         tempStateSet->getTextureAttributeList();
     for( unsigned int i = 0; i < stateSetTal.size(); ++i )
@@ -105,10 +113,10 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
             osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
             if( tex2D )
             {
-                osg::ref_ptr< osg::Image > tgaImage = tex2D->getImage();
+                tgaImage = tex2D->getImage();
                 if( tgaImage.valid() )
                 {
-                    std::string fileName = tgaImage->getFileName();
+                    fileName = tgaImage->getFileName();
                     boost::filesystem::path newFileName( fileName, boost::filesystem::native );
                     if( newFileName.extension() == ".tga" )
                     {
@@ -117,12 +125,8 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
                         newFileName.replace_extension( "dds" );
                         std::cout << "New texture file name = " 
                             << newFileName.string() << std::endl;
-                        osg::ref_ptr< osgDB::ReaderWriter::Options > opt = 
-                        new osgDB::ReaderWriter::Options();
-                        opt->setOptionString( "dds_flip" );
-                        //osgDB::Registry::instance()->setOptions( opt );
                         
-                        osg::ref_ptr< osg::Image > ddsImage = 
+                        ddsImage = 
                             osgDB::readImageFile( newFileName.string(), opt );
                         tex2D->setImage( ddsImage.get() );
                         //Write it back out if we do not want to include the image 
