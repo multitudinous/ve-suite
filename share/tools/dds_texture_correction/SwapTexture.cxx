@@ -40,6 +40,7 @@
 #include <osg/Texture2D>
 
 #include <osgDB/ReadFile>
+#include <osgDB/ReaderWriter>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -112,8 +113,12 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
                 newFileName.replace_extension( "dds" );
                 std::cout << "New texture file name = " 
                     << newFileName.string() << std::endl;
+                osg::ref_ptr< osgDB::ReaderWriter::Options > opt = new osgDB::ReaderWriter::Options();
+                opt->setOptionString( "dds_flip" );
+                //osgDB::Registry::instance()->setOptions( opt );
+                
                 osg::ref_ptr< osg::Image > ddsImage = 
-                osgDB::readImageFile( newFileName.string() );
+                osgDB::readImageFile( newFileName.string(), opt );
                 tex2D->setImage( ddsImage );
             }
         }

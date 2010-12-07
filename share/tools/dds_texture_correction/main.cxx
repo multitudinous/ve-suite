@@ -26,14 +26,14 @@
 
 std::vector<std::string> GetFilesInDirectory( std::string dir, std::string extension );
 
-
+////////////////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char* argv[] )
 {
     // At init time:
     // Set global dds options.
-    osg::ref_ptr< osgDB::ReaderWriter::Options > opt = new osgDB::ReaderWriter::Options();
-    opt->setOptionString( "dds_flip" );
-    osgDB::Registry::instance()->setOptions( opt );
+    //osg::ref_ptr< osgDB::ReaderWriter::Options > opt = new osgDB::ReaderWriter::Options();
+    //opt->setOptionString( "dds_flip" );
+    //osgDB::Registry::instance()->setOptions( opt );
     
     std::vector< std::string > iveFiles = GetFilesInDirectory( ".", ".ive" );
     for( size_t i = 0; i < iveFiles.size(); ++i )
