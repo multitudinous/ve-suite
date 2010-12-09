@@ -390,11 +390,11 @@ void UIElementQt::ResizeCanvas( int width, int height )
 
 void UIElementQt::_resizeCanvas( int width, int height )
 {
-    mWidget->resize( width, height - mTitlebar->height()  );
-    mTitlebar->resize( width, mTitlebar->height() );
-    UpdateSize();
-    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
-    this->resize( mWidth, mHeight );
+//    mWidget->resize( width, height - mTitlebar->height()  );
+//    mTitlebar->resize( width, mTitlebar->height() );
+//    UpdateSize();
+//    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
+//    this->resize( mWidth, mHeight );
 }
 
 void UIElementQt::UpdateSize( )

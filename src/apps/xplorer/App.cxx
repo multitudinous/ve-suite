@@ -1119,7 +1119,7 @@ void App::LoadUI()
     m_UIManager->SetRectangle( 0, res.first, 0, res.second );
 
     // Give the widget an initial size of 600 x window height.
-    mainUIWidget->resize( 600, res.second );
+    mainUIWidget->resize( 600, res.second - 26 );
     static_cast< ves::conductor::UIElementQt* >
                                            (element)->SetWidget( mainUIWidget );
     // Now that the widget is buried in a UIElementQt, resize the whole deal to
