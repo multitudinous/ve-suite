@@ -110,6 +110,8 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     void UpdateSize( );
 
+    virtual void ResizeCanvas( int width, int height );
+
 protected:
     void paintEvent( QPaintEvent* event );
 
@@ -149,6 +151,7 @@ private:
 protected Q_SLOTS:
     void _render( );
     //void _sendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
+    void _resizeCanvas( int width, int height );
 
     void _buttonPressEvent( gadget::Keys button, int x, int y, int state );
     void _buttonReleaseEvent( gadget::Keys button, int x, int y, int state );
@@ -163,6 +166,7 @@ protected Q_SLOTS:
 
     Q_SIGNALS:
     void RequestRender( );
+    void PutResizeCanvas( int width, int height );
     //void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
     void PutButtonPressEvent( gadget::Keys button, int x, int y, int state );
     void PutButtonReleaseEvent( gadget::Keys button, int x, int y, int state );

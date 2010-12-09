@@ -173,6 +173,9 @@ public:
     ///
     virtual void MoveCanvas( float dx, float dy, float dz = 0.0f );
 
+    /// Resize this element to width x height
+    virtual void ResizeCanvas( int width, int height );
+
     ///
     virtual void Update();
 

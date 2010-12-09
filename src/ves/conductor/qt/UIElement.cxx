@@ -269,6 +269,11 @@ void UIElement::MoveCanvas( float dx, float dy, float dz )
     mUIMatrixDirty = true;
 }
 
+void UIElement::ResizeCanvas( int width, int height )
+{
+
+}
+
 void UIElement::Update( )
 {
     if( mAnimationOn )

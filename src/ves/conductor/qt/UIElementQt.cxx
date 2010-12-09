@@ -149,6 +149,9 @@ void UIElementQt::Initialize( )
         //QObject::connect( this, SIGNAL( PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ),
         //                  this, SLOT( _sendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
 
+        QObject::connect( this, SIGNAL( PutResizeCanvas( int, int) ),
+                          this, SLOT( _resizeCanvas( int, int ) ), Qt::QueuedConnection );
+
         qRegisterMetaType<gadget::Keys>();
         //qRegisterMetaType<wchar_t>();
 
@@ -371,6 +374,21 @@ void UIElementQt::SetWidget( QWidget* widget )
     //    QApplication::sendEvent( mGraphicsScene, &ev );
 }
 
+void UIElementQt::ResizeCanvas( int width, int height )
+{
+    // Emit a queued signal just in case this is called from the "wrong" thread
+    PutResizeCanvas( width, height );
+}
+
+void UIElementQt::_resizeCanvas( int width, int height )
+{
+    mWidget->resize( width, height - mTitlebar->height()  );
+    mTitlebar->resize( width, mTitlebar->height() );
+    UpdateSize();
+    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
+    this->resize( mWidth, mHeight );
+}
+
 void UIElementQt::UpdateSize( )
 {
     _debug( "UpdateSize" );
@@ -392,12 +410,14 @@ void UIElementQt::UpdateSize( )
             if( mImage )
             {
                 delete mImage;
+                mImage = 0;
             }
         } // Leave critical section
 
         if( mImageFlipped )
         {
             delete mImageFlipped;
+            mImageFlipped = 0;
         }
     }
 
