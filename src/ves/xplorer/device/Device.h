@@ -186,6 +186,14 @@ public:
     ///Set the reset position for the world
     void SetResetWorldPosition( osg::Quat* quat, std::vector< double >* pos );
 
+	///Does not let the user go below the ground plane at 0,0,0
+    ///\param input Flag to insure translation does not go below zero plane
+    void SetSubZeroFlag( int input );
+
+	///Does not let user go to anything but the ground plane at 0,0,0
+	///\param input Flag to insure translation doesn't leave zero plane
+	void SetZEqualsZeroFlag( int input);
+
 protected:
     ///Process the selection of a piece of geometry
     virtual void ProcessSelection();
@@ -202,7 +210,13 @@ protected:
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
     ///Ensure that the camera stays above ground.
-    void EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, double* translation, const osg::Quat& world_quat, int subzeroFlag );
+    void EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, double* translation, const osg::Quat& world_quat, int m_subzeroFlag, int m_zEqualsZeroFlag = 0 );
+ 
+	///<Camera above the zero plane flag
+	int m_subzeroFlag; 
+	
+	///<Camera at the zero plane flag
+	int m_zEqualsZeroFlag; 
 
     ///Device is enabled
     bool m_enabled;

@@ -86,6 +86,7 @@ BEGIN_EVENT_TABLE( NavigationPane, wxDialog )
     EVT_BUTTON( NAVIGATIONPANE_RESET_NAV_POSITION, NavigationPane::OnResetNavPosition )
     EVT_CHECKBOX( NAVIGATIONPANE_HEAD_ROTATE_CHK,      NavigationPane::OnHeadCheck )
     EVT_CHECKBOX( NAVIGATIONPANE_SUB_ZERO_CHK,         NavigationPane::OnSubZeroCheck )
+	EVT_CHECKBOX( NAVIGATIONPANE_Z_EQUALS_ZERO_CHK,		NavigationPane::OnZEqualsZeroCheck )
     //EVT_LEFT_UP(NavigationPane::onMouse)
     //EVT_IDLE( NavigationPane::OnIdle )
     EVT_TIMER( NAVIGATIONPANE_UPDATE_TIMER_ID, NavigationPane::OnTimer )
@@ -153,8 +154,11 @@ NavigationPane::NavigationPane( wxWindow* parent )
     SendCommandsToXplorer();
     dataValueName = "ROTATE_ABOUT_HEAD";
     cIso_value = headRotationChk->GetValue();
-    dataValueName = "Z_ZERO_PLANE";
+    dataValueName = "Z_GREATER_THAN_ZERO";
     cIso_value = subZeroChk->GetValue();
+    SendCommandsToXplorer();
+	dataValueName = "Z_EQUALS_ZERO";
+    cIso_value = zEqualsZeroChk->GetValue();
     SendCommandsToXplorer();
 
     //Setup the update timer
@@ -475,7 +479,7 @@ void NavigationPane::BuildPane( void )
     miscGroup->Add( picSizer, 1, wxALIGN_RIGHT );
 
     wxBoxSizer* miscGroup2 = new wxBoxSizer( wxHORIZONTAL );
-    subZeroChk = new wxCheckBox( scrollWindow, NAVIGATIONPANE_SUB_ZERO_CHK, wxT( "Lower Limit ( z = 0 )" ) );
+    subZeroChk = new wxCheckBox( scrollWindow, NAVIGATIONPANE_SUB_ZERO_CHK, wxT( "Lower Limit ( z >= 0 )" ) );
 
     wxString key = wxString( "UserPreferences", wxConvUTF8 );
     bool zLock = false;
@@ -483,7 +487,11 @@ void NavigationPane::BuildPane( void )
     cfg->Read( key + _T( "/" ) + _T( "Navigation z=0 Lock" ), &zLock, false );
     subZeroChk->SetValue( zLock );
     miscGroup2->Add( subZeroChk, 0, wxALL | wxALIGN_LEFT, 5 );
-    ///Store start position
+    
+	zEqualsZeroChk = new wxCheckBox( scrollWindow, NAVIGATIONPANE_Z_EQUALS_ZERO_CHK, wxT( "Fixed Height View ( Z = 0 )" ) );
+	miscGroup2->Add( zEqualsZeroChk, 0, wxALL | wxALIGN_LEFT, 5 );
+	
+	///Store start position
     wxButton* startButton = new wxButton( scrollWindow, NAVIGATIONPANE_STORE_START_POSITION,
                                           wxT( "Store Start Position" ) );
     miscGroup2->Add( startButton, 1, wxALL | wxALIGN_LEFT, 5 );
@@ -594,8 +602,15 @@ void NavigationPane::OnHeadCheck( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::OnSubZeroCheck( wxCommandEvent& WXUNUSED( event ) )
 {
-    dataValueName = "Z_ZERO_PLANE";
+    dataValueName = "Z_GREATER_THAN_ZERO";
     cIso_value = subZeroChk->GetValue();
+    SendCommandsToXplorer();
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationPane::OnZEqualsZeroCheck( wxCommandEvent& WXUNUSED( event ) )
+{
+    dataValueName = "Z_EQUALS_ZERO";
+    cIso_value = zEqualsZeroChk->GetValue();
     SendCommandsToXplorer();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -649,7 +664,7 @@ void NavigationPane::UpdateNavigationData( void )
     rotationStepSize->SetValue( tempData );
     navPreferenceData->GetDataValuePair( "ROTATE_ABOUT_HEAD" )->GetData( tempData );
     headRotationChk->SetValue( tempData );
-    navPreferenceData->GetDataValuePair( "Z_ZERO_PLANE" )->GetData( tempData );
+    navPreferenceData->GetDataValuePair( "Z_GREATER_THAN_ZERO" )->GetData( tempData );
     subZeroChk->SetValue( tempData );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -697,12 +712,19 @@ void NavigationPane::SetPreferenceNavigationData( void )
     navPreferenceData->AddDataValuePair( dataValuePair );
     //////////////////////////////////////////////////////////////////
     dataValuePair = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
-    dataValueName = "Z_ZERO_PLANE";
+    dataValueName = "Z_GREATER_THAN_ZERO";
     cIso_value = subZeroChk->GetValue();
     dataValuePair->SetDataName( dataValueName );
     dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
     navPreferenceData->AddDataValuePair( dataValuePair );
     //////////////////////////////////////////////////////////////////
+	dataValuePair = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
+    dataValueName = "Z_EQUALS_ZERO";
+    cIso_value = zEqualsZeroChk->GetValue();
+    dataValuePair->SetDataName( dataValueName );
+    dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
+    navPreferenceData->AddDataValuePair( dataValuePair );
+	//////////////////////////////////////////////////////////////////
     if( quatStartPoint )
     {
         navPreferenceData->AddDataValuePair( quatStartPoint );

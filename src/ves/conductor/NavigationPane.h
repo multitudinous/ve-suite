@@ -114,6 +114,7 @@ public:
     void OnResetNavPosition( wxCommandEvent& event );
     void OnHeadCheck( wxCommandEvent& event );
     void OnSubZeroCheck( wxCommandEvent& event );
+	void OnZEqualsZeroCheck( wxCommandEvent& event );
     void SendCommandsToXplorer( void );
 
     // Build the navigation pane
@@ -158,6 +159,7 @@ protected:
     wxSlider*   rotationStepSize;
     wxCheckBox* headRotationChk;
     wxCheckBox* subZeroChk;
+	wxCheckBox* zEqualsZeroChk;
     wxButton*   resetNavPosition;
     wxTimer mTimer;
 

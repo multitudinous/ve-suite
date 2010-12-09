@@ -72,7 +72,6 @@ Tablet::Tablet( )
     head.init( "VJHead" );
 
     rotationFlag = 1;
-    subzeroFlag = 0;
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -132,9 +131,13 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
     {
         SetHeadRotationFlag( cfdIso_value );
     }
-    else if( !newCommand.compare( "Z_ZERO_PLANE" ) )
+    else if( !newCommand.compare( "Z_GREATER_THAN_ZERO" ) )
     {
-        SetSubZeroFlag( cfdIso_value );
+		Device::SetSubZeroFlag( cfdIso_value );
+    }
+	else if( !newCommand.compare( "Z_EQUALS_ZERO" ) )
+    {
+		Device::SetZEqualsZeroFlag( cfdIso_value );
     }
     else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
     {
@@ -515,7 +518,7 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
     world_quat *= rot_quat;
 
     gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-    Device::EnsureCameraStaysAboveGround( vjHeadMat, worldTrans, world_quat, subzeroFlag );
+    Device::EnsureCameraStaysAboveGround( vjHeadMat, worldTrans, world_quat, m_subzeroFlag, m_zEqualsZeroFlag );
 
     world->SetTranslationArray( worldTrans );
     world->SetQuat( world_quat );
@@ -538,10 +541,5 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
 void Tablet::SetHeadRotationFlag( int input )
 {
     rotationFlag = input;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Tablet::SetSubZeroFlag( int input )
-{
-    subzeroFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
