@@ -191,6 +191,11 @@ void UIElement::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int s
 
 }
 
+void UIElement::SendDoubleClickEvent( gadget::Keys button, int x, int y, int state )
+{
+
+}
+
 void UIElement::SendMouseMoveEvent( int x, int y, int z, int state )
 {
 

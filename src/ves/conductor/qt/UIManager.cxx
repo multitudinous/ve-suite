@@ -104,6 +104,10 @@ UIManager::UIManager() :
                       &UIManager::ButtonReleaseEvent, mConnections,
                       button_SignalType, highest_Priority );
 
+    CONNECTSIGNALS_5( "%DoubleClick%", void( gadget::Keys, int, int, int, int ),
+                      &UIManager::MouseDoubleClickEvent, mConnections,
+                      button_SignalType, highest_Priority );
+
     CONNECTSIGNALS_3( "%KeyPress%", void ( gadget::Keys, int, wchar_t ),
                       &UIManager::KeyPressEvent, mConnections,
                       keyboard_SignalType, highest_Priority );
@@ -936,8 +940,58 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
             element->SendMouseMoveEvent( x, y, z, state );
         }
     }
-
 }
+
+void UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
+{
+    if( !_okayToSendEvent() )
+    {
+        return;
+    }
+
+    // Store off coordinates and deltas
+    mDxPointer = x - mCurrentXPointer;
+    mDyPointer = y - mCurrentYPointer;
+    mCurrentXPointer = x;
+    mCurrentYPointer = y;
+
+    if( !Ortho2DTestPointerCoordinates( x, y ) )
+    {
+        return;
+    }
+
+    // TODO: his iterates over all elements. We should instead just find the match
+    // from Ortho2DTestPointerCoordinates and send to it.
+    ElementMap_type::iterator map_iterator;
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
+            ++map_iterator )
+    {
+        UIElement* element = map_iterator->second;
+
+        bool visible = element->IsVisible();
+        bool minimized = element->IsMinimized();
+
+        // Only send events if element is visible and not minimzed
+        if( ( visible ) && ( !minimized ) )
+        {
+            // Translate mouse coordinates to window coordinates
+            // TODO: This may be done better by using the element's entire UIMatrix
+            // so that mouse events can be mapped to scaled (but not minimized) windows.
+            osg::Vec3 trans = element->GetUIMatrix().getTrans();
+            x = x - trans.x();
+            y = y - trans.y();
+
+            // Flip y mouse coordinate to origin GUI expects
+            y = static_cast < double > ( mTop ) - y;
+            element->SendDoubleClickEvent( button, x, y, state );
+        }
+        else
+        {
+            mUnminimize = true;
+        }
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode )
 {

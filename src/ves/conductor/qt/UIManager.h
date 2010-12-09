@@ -175,6 +175,9 @@ public:
     /// state = modifier mask OR'd with button mask
     void MouseMoveEvent( int x, int y, int z, int state );
 
+    /// Receives mouse double clicks connected via EventManager
+    void MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state );
+
     /// Receives mouse buttonpress events connected via EventManager
     /// state = modifier mask OR'd with button mask
     void ButtonPressEvent( gadget::Keys button, int x, int y, int state );

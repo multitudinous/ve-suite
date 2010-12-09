@@ -82,6 +82,7 @@ public:
 
     virtual void SendButtonPressEvent( gadget::Keys button, int x, int y, int state );
     virtual void SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
+    virtual void SendDoubleClickEvent( gadget::Keys button, int x, int y, int state );
     virtual void SendMouseMoveEvent( int x, int y, int z, int state );
     virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
     virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
@@ -155,6 +156,7 @@ protected Q_SLOTS:
 
     void _buttonPressEvent( gadget::Keys button, int x, int y, int state );
     void _buttonReleaseEvent( gadget::Keys button, int x, int y, int state );
+    void _doubleClickEvent( gadget::Keys button, int x, int y, int state );
     void _mouseMoveEvent( int x, int y, int z, int state );
     void _keyPressEvent( gadget::Keys key, int modifierMask, QString unicode );
     void _keyReleaseEvent( gadget::Keys key, int modifierMask, QString unicode );
@@ -170,6 +172,7 @@ protected Q_SLOTS:
     //void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
     void PutButtonPressEvent( gadget::Keys button, int x, int y, int state );
     void PutButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
+    void PutDoubleClickEvent( gadget::Keys button, int x, int y, int state );
     void PutMouseMoveEvent( int x, int y, int z, int state );
     void PutKeyPressEvent( gadget::Keys key, int modifierMask, QString unicode );
     void PutKeyReleaseEvent( gadget::Keys key, int modifierMask, QString unicode );

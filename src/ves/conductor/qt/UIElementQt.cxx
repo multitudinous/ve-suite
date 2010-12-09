@@ -161,6 +161,9 @@ void UIElementQt::Initialize( )
         QObject::connect( this, SIGNAL( PutButtonReleaseEvent( gadget::Keys, int, int, int ) ),
                           this, SLOT( _buttonReleaseEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
 
+        QObject::connect( this, SIGNAL( PutDoubleClickEvent( gadget::Keys, int, int, int ) ),
+                          this, SLOT( _doubleClickEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
+
         QObject::connect( this, SIGNAL( PutMouseMoveEvent( int, int, int, int ) ),
                           this, SLOT( _mouseMoveEvent( int, int, int, int ) ), Qt::QueuedConnection );
 
@@ -233,6 +236,11 @@ void UIElementQt::SendButtonPressEvent( gadget::Keys button, int x, int y, int s
 void UIElementQt::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
     Q_EMIT PutButtonReleaseEvent( button, x, y, state );
+}
+
+void UIElementQt::SendDoubleClickEvent( gadget::Keys button, int x, int y, int state )
+{
+    Q_EMIT PutDoubleClickEvent( button, x, y, state );
 }
 
 void UIElementQt::SendMouseMoveEvent( int x, int y, int z, int state )
@@ -411,6 +419,7 @@ void UIElementQt::UpdateSize( )
             {
                 delete mImage;
                 mImage = 0;
+                mImageDirty = true;
             }
         } // Leave critical section
 
@@ -507,6 +516,30 @@ void UIElementQt::_buttonPressEvent( gadget::Keys button, int x, int y, int stat
 void UIElementQt::_buttonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
     _buttonEvent( 0, button, x, y, state );
+}
+
+void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int state )
+{
+    QWidget *vw = this->childAt( x, y );
+
+    if( vw == NULL ) return;
+
+    Qt::MouseButton qbutton = _extractButton( button );
+    Qt::MouseButtons buttons = _extractButtons( state );
+    Qt::KeyboardModifiers modifiers = _extractModifiers( state );
+
+    QPoint position( x, y );
+
+    QPoint globalPos = this->viewport( )->mapToGlobal( position );
+
+    // Gadgeteer doesn't put buttons into the state except on move events, but
+    // Qt expects the button mask to contain all pressed buttons even on
+    // press events
+    buttons = buttons | qbutton;
+    QMouseEvent e( QEvent::MouseButtonDblClick, position, globalPos, qbutton,
+                buttons, modifiers );
+    qt_sendSpontaneousEvent( this->viewport( ), &e );
+
 }
 
 void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int state )

@@ -160,6 +160,10 @@ KeyboardMouse::KeyboardMouse()
             new SignalWrapper< MouseMoveSignal_type >( &mMouseMove ),
             "KeyboardMouse.MouseMove", eventmanager::EventManager::mouse_SignalType );
 
+    evm->RegisterSignal(
+            new SignalWrapper< MouseDoubleClickSignal_type >( &mMouseDoubleClick ),
+            "KeyboardMouse.DoubleClick", eventmanager::EventManager::button_SignalType );
+
     RegisterButtonSignals();
     RegisterKeySignals();
 }
@@ -298,11 +302,15 @@ void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
     const gadget::MouseEventPtr mouseEvt =
         boost::static_pointer_cast< gadget::MouseEvent >( event );
 
-    vprDEBUG( vesDBG, 2 )
+    vprDEBUG( vesDBG, 4 )
         << "|\tKeyboardMouse::onMouseDoubleClick"
         << mouseEvt->getButton() << ", " << mouseEvt->getX()
         << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
         << std::endl << vprDEBUG_FLUSH;
+
+    mMouseDoubleClick( mouseEvt->getButton(), mouseEvt->getX(),
+                       mouseEvt->getY(), 0, mouseEvt->getState() );
+
 }
 
 void KeyboardMouse::SetupButtonSignalMap()
