@@ -421,13 +421,12 @@ void UIElementQt::UpdateSize( )
                 mImage = 0;
                 mImageDirty = true;
             }
+            if( mImageFlipped )
+            {
+                delete mImageFlipped;
+                mImageFlipped = 0;
+            }
         } // Leave critical section
-
-        if( mImageFlipped )
-        {
-            delete mImageFlipped;
-            mImageFlipped = 0;
-        }
     }
 
     mImageWidth = mWidth;
@@ -440,11 +439,11 @@ void UIElementQt::UpdateSize( )
         {
             mImage = new QImage( mImageWidth, mImageHeight, QImage::Format_ARGB32_Premultiplied );
         }
+        if( mImageFlipped == NULL )
+        {
+            mImageFlipped = new QImage( mImageWidth, mImageHeight, QImage::Format_ARGB32_Premultiplied );
+        }
     } // Leave critical section
-    if( mImageFlipped == NULL )
-    {
-        mImageFlipped = new QImage( mImageWidth, mImageHeight, QImage::Format_ARGB32_Premultiplied );
-    }
 }
 
 void UIElementQt::FreeOldWidgets( )
@@ -466,9 +465,8 @@ void UIElementQt::FreeOldWidgets( )
     { // Enter critical section
         QMutexLocker locker( mImageMutex );
         delete mImage;
+        delete mImageFlipped;
     } // Leave critical section
-
-    delete mImageFlipped;
 }
 
 void UIElementQt::_render( )
@@ -480,13 +478,11 @@ void UIElementQt::_render( )
         return;
     }
 
-
     { // Enter critical section
         QMutexLocker locker( mImageMutex );
 
         if( mImage )
         {
-
             // Clear mImage to empty transparency
             mImage->fill( 0 );
 
