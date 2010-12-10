@@ -151,6 +151,11 @@ osg::Geode* UIElement::GetGeode()
     return mGeode;
 }
 
+void UIElement::SetInitialImageWidthAndHeight( int width, int height )
+{
+    m_initialImageSize = std::make_pair< int, int >( width, height );
+}
+
 int UIElement::GetImageWidth( )
 {
     return 0;

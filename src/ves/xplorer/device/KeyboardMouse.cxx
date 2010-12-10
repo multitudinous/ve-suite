@@ -191,9 +191,9 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     {
     case gadget::KeyPressEvent:
     {
-        vprDEBUG( vesDBG, 4 )
+        /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::KeyPressEvent"
-            << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;*/
 
         const gadget::KeyEventPtr keyEvt =
             boost::static_pointer_cast< gadget::KeyEvent >( event );
@@ -217,9 +217,9 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     case gadget::KeyReleaseEvent:
     {
 
-        vprDEBUG( vesDBG, 4 )
+        /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::KeyReleaseEvent"
-            << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;*/
 
         const gadget::KeyEventPtr keyEvt =
             boost::static_pointer_cast< gadget::KeyEvent >( event );
@@ -245,11 +245,11 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
-        vprDEBUG( vesDBG, 4 )
+        /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonPressEvent "
             << mouseEvt->getButton() << ", " << mouseEvt->getX()
             << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
-            << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;*/
 
         ButtonPressSignalMapType::iterator itr = mButtonPressSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonPressSignalMap.end() )
@@ -262,9 +262,9 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     case gadget::MouseButtonReleaseEvent:
     {
 
-        vprDEBUG( vesDBG, 4 )
+        /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonReleaseEvent"
-            << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;*/
 
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
@@ -282,13 +282,11 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
-        vprDEBUG( vesDBG, 5 )
+        /*vprDEBUG( vesDBG, 2 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseMoveEvent"
             << mouseEvt->getX() << ", " << mouseEvt->getY()
             << ", 0, " << mouseEvt->getState()
-            << std::endl << vprDEBUG_FLUSH;
-        //std::cout << "KeyboardMouse::onKBMEvent: MouseMove state: " 
-        //    << mouseEvt->getState() << std::endl << std::flush;
+            << std::endl << vprDEBUG_FLUSH;*/
         // x, y, z, state (modifier mask OR'd with button mask)
         mMouseMove( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
 
@@ -302,11 +300,11 @@ void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
     const gadget::MouseEventPtr mouseEvt =
         boost::static_pointer_cast< gadget::MouseEvent >( event );
 
-    vprDEBUG( vesDBG, 4 )
+    /*vprDEBUG( vesDBG, 4 )
         << "|\tKeyboardMouse::onMouseDoubleClick"
         << mouseEvt->getButton() << ", " << mouseEvt->getX()
         << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
-        << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;*/
 
     mMouseDoubleClick( mouseEvt->getButton(), mouseEvt->getX(),
                        mouseEvt->getY(), 0, mouseEvt->getState() );

@@ -822,9 +822,10 @@ void UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
             osg::Vec3 trans = element->GetUIMatrix().getTrans();
             x = x - trans.x();
             y = y - trans.y();
-
+            //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
             // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
+            //std::cout << y << " " << mTop << std::endl;
             element->SendButtonPressEvent( button, x, y, state );
         }
         else

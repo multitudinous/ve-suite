@@ -1108,7 +1108,7 @@ void App::LoadUI()
         ves::conductor::UIManager::instance();
 
     // Wrap the widget in a UIElement
-    ves::conductor::UIElement* element = new ves::conductor::UIElementQt();
+    ves::conductor::UIElementQt* element = new ves::conductor::UIElementQt();
     QWidget* mainUIWidget = new MainWindow( 0 );
 
     // Make UIManager's projection take up the entire viewable area of
@@ -1117,27 +1117,22 @@ void App::LoadUI()
         EnvironmentHandler::instance()->GetDisplaySettings();
     std::pair<int, int> res = cDS->GetScreenResolution();
     m_UIManager->SetRectangle( 0, res.first, 0, res.second );
+    element->SetInitialImageWidthAndHeight( 600, res.second );
 
     // Give the widget an initial size of 600 x window height.
-    mainUIWidget->resize( 600, res.second - 26 );
-    static_cast< ves::conductor::UIElementQt* >
-                                           (element)->SetWidget( mainUIWidget );
+    //mainUIWidget->resize( 600, res.second );
+    element->SetWidget( mainUIWidget );
+    
     // Now that the widget is buried in a UIElementQt, resize the whole deal to
     // the correct size. This will ensure that the titlebar and other internal
     // decoration still fits in the window.
-    static_cast< ves::conductor::UIElementQt* >
-                                           (element)->ResizeCanvas( 600, res.second );
+    //element->ResizeCanvas( 600, res.second );
 
     m_UIManager->AddElement( element );
 
     m_uiInitialized = true;
 
     vprDEBUG( vesDBG, 2 ) << "|\tEnd App LoadUI" << std::endl << vprDEBUG_FLUSH;
-
-    // Begin running the Qt subsystem
-//    std::cout << "...Run Qt application" << std::endl;
-//    a.exec();
-//    std::cout << "...Ended Qt application" << std::endl;
 #endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////

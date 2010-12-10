@@ -36,6 +36,7 @@
 #include <ves/VEConfig.h>
 
 #include <vector>
+#include <utility>
 
 #include <osg/Matrixf>
 #include <osg/Switch>
@@ -73,8 +74,16 @@ namespace conductor
 class VE_CONDUCTOR_QTUI_EXPORTS UIElement
 {
 public:
+    ///Constructor
     UIElement();
-    ~UIElement();
+    ///Destructor
+    virtual ~UIElement();
+    
+    ///Set the initial image height and width to be used with this UIElement
+    ///\param width The width of the image
+    ///\param height The height of the image
+    void SetInitialImageWidthAndHeight( int width, int height );
+    
 ////////////////////////////////////////////////////////////////////////////////
 /// Returns the pixel width of the element's rendered image.
 ///
@@ -217,6 +226,9 @@ protected:
     bool mAnimationOn;
     osg::ref_ptr< osg::Switch > mVisibilitySwitch;
     osg::Geode* mGeode;
+    
+    ///The resolution of the initial image size
+    std::pair< int, int > m_initialImageSize;
 };
 
 } // namepsace conductor

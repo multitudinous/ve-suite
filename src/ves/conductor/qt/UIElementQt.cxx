@@ -119,7 +119,7 @@ mQTitlebar( 0 )
     mImageMutex = new QMutex( );
     _setupKeyMap( );
     
-    mQTitlebar = new Ui::titlebar;
+    mQTitlebar = new Ui::titlebar();
     mTitlebar = new QWidget( 0 );
     mQTitlebar->setupUi( mTitlebar );
 
@@ -317,7 +317,11 @@ void UIElementQt::SetWidget( QWidget* widget )
 
     mWidget = widget;
 
-    UpdateSize( );
+    //SetWidget is initializing all of the components for this UIElement
+    //therefore we will use the initial image size to determine all sizing
+    //for this UIElement.
+    mWidth = m_initialImageSize.first;
+    mHeight = m_initialImageSize.second;
 
     // Create a scene and a view to add this widget into
     mGraphicsScene = new QGraphicsScene( 0, 0, mWidth, mHeight );
@@ -332,7 +336,9 @@ void UIElementQt::SetWidget( QWidget* widget )
     mTitlebar->resize( mWidth, mTitlebar->height() );
     titlebar->show();
     mTitlebar->move( 0, 0 );
-
+    //Now resize the respective widget to account for the title bar
+    mWidget->resize( mWidth, mHeight - mTitlebar->height() );
+    
     // Add the widget to the scene.
     // NB: We don't have to explicitly create mGraphicsProxyWidget since
     // it is created and returned by call to QGraphicsScene::addWidget
@@ -365,9 +371,13 @@ void UIElementQt::SetWidget( QWidget* widget )
     // Forcibly resize view to contain mWidget
     this->resize( mWidth, mHeight );
 
+    //Now before we render but after all the widgets are configured
+    //lets initialize and update all of our textures
+    UpdateSize();
+
     // Render this widget immediately so that there will be an image to return
     // to the first call to RenderElementToImage()
-    _render( );
+    _render();
 
 #ifdef VES_QT_RENDER_DEBUG
     // Dump the image from the initial render pass into a file
@@ -454,18 +464,37 @@ void UIElementQt::FreeOldWidgets( )
     // different from ownership.
 
     //delete mWidget;
-    delete mGraphicsScene;
+    if( mGraphicsScene )
+    {
+        delete mGraphicsScene;
+        mGraphicsScene = 0;
+    }
+
     if( mGraphicsView )
     {
         delete mGraphicsView;
+        mGraphicsView = 0;
     }
 
-    delete mGraphicsProxyWidget;
+    if( mGraphicsProxyWidget )
+    {
+        delete mGraphicsProxyWidget;
+        mGraphicsProxyWidget = 0;
+    }
 
     { // Enter critical section
         QMutexLocker locker( mImageMutex );
-        delete mImage;
-        delete mImageFlipped;
+        if( mImage )
+        {
+            delete mImage;
+            mImage = 0;
+        }
+
+        if( mImageFlipped )
+        {
+            delete mImageFlipped;
+            mImageFlipped = 0;
+        }
     } // Leave critical section
 }
 
@@ -477,6 +506,11 @@ void UIElementQt::_render( )
     {
         return;
     }
+
+    /*std::cout << "UIElementQt::_render: Widget(" << mWidget->width() << ", " << mWidget->height()
+                << ") Titlebar(" << mTitlebar->width() << ", " << mTitlebar->height()
+                << ") Overall(" << mWidth << ", " << mHeight << ") Image("
+            << mImageWidth << ", " << mImageHeight << ")" << std::endl << std::flush;*/
 
     { // Enter critical section
         QMutexLocker locker( mImageMutex );
@@ -558,6 +592,8 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
         // Qt expects the button mask to contain all pressed buttons even on
         // press events
         buttons = buttons | qbutton;
+        //std::cout << "UIElementQt::_buttonEvent: buttons = " << buttons << std::endl << std::flush;
+
         QMouseEvent e( QEvent::MouseButtonPress, position, globalPos, qbutton,
                     buttons, modifiers );
         qt_sendSpontaneousEvent( this->viewport( ), &e );
@@ -573,6 +609,7 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
 void UIElementQt::_mouseMoveEvent( int x, int y, int z, int state )
 {
     Qt::MouseButtons buttons = _extractButtons( state );
+    //std::cout << "UIElementQt::_mouseMoveEvent: buttons = " << buttons << std::endl << std::flush;
     Qt::KeyboardModifiers modifiers = _extractModifiers( state );
 
     QPoint position( x, y );

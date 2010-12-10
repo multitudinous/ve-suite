@@ -113,56 +113,56 @@ public:
     ///Processes keyboard events
     virtual void ProcessEvents( ves::open::xml::CommandPtr command );
 
-                ///Sets the screen corner values
-                ///\param values A map of strings to doubles
-                void SetScreenCornerValues( std::map< std::string, double > values );
+    ///Sets the screen corner values
+    ///\param values A map of strings to doubles
+    void SetScreenCornerValues( std::map< std::string, double > values );
 
-                ///Set the window properties
-                ///\param w Set the width of the window
-                ///\param h Set the height of the window
-                void SetWindowValues( unsigned int w, unsigned int h );
+    ///Set the window properties
+    ///\param w Set the width of the window
+    ///\param h Set the height of the window
+    void SetWindowValues( unsigned int w, unsigned int h );
 
-                ///Set the frustrum values
-                ///\param l
-                ///\param r
-                ///\param t
-                ///\param b
-                ///\param n
-                ///\param f
-                void SetFrustumValues(
-                    double l, double r, double b, double t, double n, double f );
+    ///Set the frustrum values
+    ///\param l
+    ///\param r
+    ///\param t
+    ///\param b
+    ///\param n
+    ///\param f
+    void SetFrustumValues(
+        double l, double r, double b, double t, double n, double f );
 
-                ///Fit the world bounding volume into the viewing frustum
-                void FrameAll();
+    ///Fit the world bounding volume into the viewing frustum
+    void FrameAll();
 
-                ///Fit the world bounding volume into the viewing frustum
-                void SkyCam();
+    ///Fit the world bounding volume into the viewing frustum
+    void SkyCam();
 
-                ///Fit the selected objects bounding volume into the viewing frustum
-                void FrameSelection();
+    ///Fit the selected objects bounding volume into the viewing frustum
+    void FrameSelection();
 
-                ///Resets the scene to original position
-                void ResetTransforms();
+    ///Resets the scene to original position
+    void ResetTransforms();
 
-                ///Update the start and end points for the line
-                void UpdateSelectionLine();
+    ///Update the start and end points for the line
+    void UpdateSelectionLine();
 
-                ///Get raw vrjuggler keyboardmouse ptr
-                ///\return
-                gadget::KeyboardMousePtr GetKeyboardMouseVRJDevice();
+    ///Get raw vrjuggler keyboardmouse ptr
+    ///\return
+    gadget::KeyboardMousePtr GetKeyboardMouseVRJDevice();
 
-                ///Get the line segment intersector
-                ///\pre UpdateSelectionLine must be called first
-                ///\return Returns the osg class that manages the line interesection tests
-                osgUtil::LineSegmentIntersector* GetLineSegmentIntersector();
+    ///Get the line segment intersector
+    ///\pre UpdateSelectionLine must be called first
+    ///\return Returns the osg class that manages the line interesection tests
+    osgUtil::LineSegmentIntersector* GetLineSegmentIntersector();
 
-                ///Set wether the keyboardmouse device should select things
-                ///\param processSelection
-                void SetProcessSelection( bool processSelection );
+    ///Set wether the keyboardmouse device should select things
+    ///\param processSelection
+    void SetProcessSelection( bool processSelection );
 
-                ///
-                ///\return
-                bool GetMousePickEvent();
+    ///
+    ///\return
+    bool GetMousePickEvent();
 
 private:
 
