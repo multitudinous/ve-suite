@@ -37,8 +37,6 @@
 
 #include <jccl/RTRC/ConfigManager.h>
 
-#include <vpr/vprDefines.h>
-
 #include <string>
 
 using namespace ves::xplorer;
@@ -145,12 +143,10 @@ void cfdDisplaySettings::ProcessCommand()
             ySize = static_cast< int >( configYValue - 155 );
 #endif*/
 
-#ifdef WIN32
-            ySize = static_cast< int >( configYValue - 90 );
-#elif defined( VPR_OS_Darwin )
+#if 0
             ySize = static_cast< int >( configYValue - 85 );
 #else
-            ySize = static_cast< int >( configYValue - 70 );
+            ySize = static_cast< int >( configYValue );
 #endif
             std::cout << "|\tWindow resize value: " << xSize << " " 
                 << ySize << std::endl;

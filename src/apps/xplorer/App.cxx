@@ -1085,13 +1085,6 @@ void App::update()
 void App::LoadUI()
 {
     vprDEBUG( vesDBG, 2 ) << "|\tApp LoadUI" << std::endl << vprDEBUG_FLUSH;
-#ifdef QT_ON
-    // Uncomment following block if we return to running this method in a separate thread.
-//    while( !jccl::ConfigManager::instance()->isPendingStale() )
-//    {
-//        vpr::System::msleep( 200 );  // tenth-second delay
-//    }
-    
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware(true);
     QApplication::setAttribute(Qt::AA_MacPluginApplication);
@@ -1113,27 +1106,27 @@ void App::LoadUI()
 
     // Make UIManager's projection take up the entire viewable area of
     // the GL window
-    cfdDisplaySettings* cDS =
-        EnvironmentHandler::instance()->GetDisplaySettings();
-    std::pair<int, int> res = cDS->GetScreenResolution();
-    m_UIManager->SetRectangle( 0, res.first, 0, res.second );
-    element->SetInitialImageWidthAndHeight( 600, res.second );
-
-    // Give the widget an initial size of 600 x window height.
-    //mainUIWidget->resize( 600, res.second );
-    element->SetWidget( mainUIWidget );
+    // Now lets find out what we actually got back from the OS
+    vrj::DisplayManager* displayManager = vrj::DisplayManager::instance();
+    const std::vector< vrj::DisplayPtr >& displays = 
+        displayManager->getActiveDisplays();
+    int originX = 0; int originY = 0; int width = 0; int height = 0;
+    for( size_t i = 0; i < displays.size(); ++i )
+    {
+        vrj::DisplayPtr display = displays.at( i );
+        display->getOriginAndSize( originX, originY, width, height );
+    }
+    std::cout << "|\tWindow value: " << width << " " 
+        << height << std::endl;
     
-    // Now that the widget is buried in a UIElementQt, resize the whole deal to
-    // the correct size. This will ensure that the titlebar and other internal
-    // decoration still fits in the window.
-    //element->ResizeCanvas( 600, res.second );
-
+    m_UIManager->SetRectangle( 0, width, 0, height );
+    element->SetInitialImageWidthAndHeight( 600, height );
+    element->SetWidget( mainUIWidget );
     m_UIManager->AddElement( element );
 
     m_uiInitialized = true;
 
     vprDEBUG( vesDBG, 2 ) << "|\tEnd App LoadUI" << std::endl << vprDEBUG_FLUSH;
-#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::preRun()
@@ -1143,7 +1136,6 @@ void App::preRun()
 ////////////////////////////////////////////////////////////////////////////////
 void App::runLoop()
 {
-#ifdef QT_ON
     if( m_uiInitialized )
     {
         m_qtApp->processEvents();
@@ -1152,6 +1144,5 @@ void App::runLoop()
         // appears to work fine.
         //m_qtApp->sendPostedEvents();
     }
-#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
