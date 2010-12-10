@@ -106,8 +106,8 @@
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 #endif
 
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+#include <gadget/Event/KeyboardMouse/KeyEvent.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
 
 #include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
 
