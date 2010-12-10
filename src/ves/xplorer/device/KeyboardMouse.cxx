@@ -143,7 +143,7 @@ KeyboardMouse::KeyboardMouse()
     //mHead.init( "VJHead" );
 
     // Connect to Juggler's new event handling interface
-    mMouseDoubleClickEventInterface.setClickTime(300.0f);
+    mMouseDoubleClickEventInterface.setClickTime(300);
     mMouseDoubleClickEventInterface.init("VJKeyboard");
     mMouseDoubleClickEventInterface.addCallback(boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1));
 
