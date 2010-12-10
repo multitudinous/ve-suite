@@ -40,6 +40,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <boost/concept_check.hpp>
+
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
 using namespace ves::open::xml;
@@ -52,6 +54,8 @@ ExportDOTFileEventHandler::ExportDOTFileEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 ExportDOTFileEventHandler::ExportDOTFileEventHandler(
     const ExportDOTFileEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     ;
 }
@@ -74,7 +78,7 @@ ExportDOTFileEventHandler& ExportDOTFileEventHandler::operator=(
 ////////////////////////////////////////////////////////////////////////////////
 void ExportDOTFileEventHandler::SetGlobalBaseObject( GlobalBase* baseObject )
 {
-    ;
+    boost::ignore_unused_variable_warning( baseObject );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ExportDOTFileEventHandler::Execute(
@@ -97,6 +101,7 @@ void ExportDOTFileEventHandler::Execute(
         bool status = 
             osgDB::writeNodeFile( *(scenegraph::SceneManager::instance()->
                 GetRootNode()->getParent( 0 )), filename  );
+        boost::ignore_unused_variable_warning( status );
     }
     catch ( ... )
     {

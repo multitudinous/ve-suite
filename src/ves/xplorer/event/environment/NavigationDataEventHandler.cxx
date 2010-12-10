@@ -67,7 +67,8 @@ NavigationDataEventHandler::NavigationDataEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 NavigationDataEventHandler::NavigationDataEventHandler( const NavigationDataEventHandler& rhs )
-        : ves::xplorer::event::EventHandler()
+        : 
+        ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

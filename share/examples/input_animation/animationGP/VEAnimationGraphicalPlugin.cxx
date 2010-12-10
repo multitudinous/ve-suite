@@ -272,7 +272,7 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
         }
 
         //If we had keyboard input then try and highlight the cad
-        bool pickedParts = false;
+        //bool pickedParts = false;
         //if( m_mouseSelection )
         {
             FindPartNodeAndHighlightNode();
@@ -424,7 +424,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
     
     //Find the part numbers of the nodes we hit
     osg::Node* objectHit = 0;
-    osg::Node* tempParent = 0;
+    //osg::Node* tempParent = 0;
     for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
         intersections.begin(); itr != intersections.end(); ++itr )
     {

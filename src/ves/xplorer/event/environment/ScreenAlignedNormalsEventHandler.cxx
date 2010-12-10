@@ -49,6 +49,8 @@ ScreenAlignedNormalsEventHandler::ScreenAlignedNormalsEventHandler()
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ScreenAlignedNormalsEventHandler::ScreenAlignedNormalsEventHandler( const ScreenAlignedNormalsEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }

@@ -45,6 +45,7 @@
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/concept_check.hpp>
 
 // --- C/C++ Libraries --- //
 #include <string>
@@ -62,7 +63,7 @@ DeviceEventHandler::DeviceEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler( const DeviceEventHandler& rhs )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -75,7 +76,7 @@ DeviceEventHandler::~DeviceEventHandler()
 void DeviceEventHandler::SetGlobalBaseObject(
     ves::xplorer::GlobalBase* modelHandler )
 {
-    ;
+    boost::ignore_unused_variable_warning( modelHandler );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceEventHandler::Execute(

@@ -46,15 +46,10 @@
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/concept_check.hpp>
 
 // --- C/C++ Libraries --- //
 #include <string>
-
-#ifdef WIN32
-#include <direct.h>
-#else
-#include <unistd.h>
-#endif
 
 using namespace ves::xplorer::event;
 
@@ -69,7 +64,7 @@ CharacterEventHandler::CharacterEventHandler()
 CharacterEventHandler::CharacterEventHandler(
     const CharacterEventHandler& rhs )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -93,7 +88,7 @@ CharacterEventHandler& CharacterEventHandler::operator=(
 void CharacterEventHandler::SetGlobalBaseObject(
     ves::xplorer::GlobalBase* modelHandler )
 {
-    ;
+    boost::ignore_unused_variable_warning( modelHandler );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterEventHandler::Execute(

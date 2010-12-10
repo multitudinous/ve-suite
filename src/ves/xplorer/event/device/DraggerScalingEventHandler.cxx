@@ -52,6 +52,8 @@ DraggerScalingEventHandler::DraggerScalingEventHandler()
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DraggerScalingEventHandler::DraggerScalingEventHandler( const DraggerScalingEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }

@@ -49,15 +49,10 @@
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/concept_check.hpp>
 
 // --- C/C++ Includes --- //
 #include <string>
-
-#ifdef WIN32
-#include <direct.h>
-#else
-#include <unistd.h>
-#endif
 
 using namespace ves::xplorer::event;
 
@@ -72,7 +67,7 @@ ManipulatorEventHandler::ManipulatorEventHandler()
 ManipulatorEventHandler::ManipulatorEventHandler(
     const ManipulatorEventHandler& meh )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( meh )
 {
     ;
 }
@@ -85,7 +80,7 @@ ManipulatorEventHandler::~ManipulatorEventHandler()
 void ManipulatorEventHandler::SetGlobalBaseObject(
     ves::xplorer::GlobalBase* modelHandler )
 {
-    ;
+    boost::ignore_unused_variable_warning( modelHandler );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ManipulatorEventHandler::Execute(

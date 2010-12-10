@@ -61,6 +61,8 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
+#include <boost/concept_check.hpp>
+
 using namespace ves::xplorer::event;
 using namespace ves::xplorer::event::environment;
 
@@ -144,7 +146,7 @@ CameraPlacementEventHandler::~CameraPlacementEventHandler()
 CameraPlacementEventHandler::CameraPlacementEventHandler(
     const CameraPlacementEventHandler& ceh )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( ceh )
 {
     ;
 }
@@ -555,7 +557,7 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair(
             "depthHelperWindowOnOff" )->GetData( selection );
 
-        bool onOff = ( selection != 0 );
+        //bool onOff = ( selection != 0 );
         //mCameraEntity->DisplayDepthHelperQuad( onOff );
 
         break;
@@ -695,6 +697,6 @@ void CameraPlacementEventHandler::Execute(
 void CameraPlacementEventHandler::SetGlobalBaseObject(
     ves::xplorer::GlobalBase* modelHandler )
 {
-    ;
+    boost::ignore_unused_variable_warning( modelHandler );
 }
 ////////////////////////////////////////////////////////////////////////////////

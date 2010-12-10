@@ -40,6 +40,8 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/OneDDoubleArray.h>
 
+#include <boost/concept_check.hpp>
+
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
 using namespace ves::open::xml;
@@ -50,6 +52,8 @@ SetResetStartPositionEventHandler::SetResetStartPositionEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 SetResetStartPositionEventHandler
 ::SetResetStartPositionEventHandler( const SetResetStartPositionEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 SetResetStartPositionEventHandler::~SetResetStartPositionEventHandler()
@@ -67,7 +71,7 @@ SetResetStartPositionEventHandler::operator=( const SetResetStartPositionEventHa
 ////////////////////////////////////////////////////////////////////////////////
 void SetResetStartPositionEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {
-    ;
+    boost::ignore_unused_variable_warning( baseObject );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SetResetStartPositionEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
