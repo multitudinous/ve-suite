@@ -54,11 +54,10 @@ namespace eventmanager
 vprSingletonImp( EventManager );
 
 ////////////////////////////////////////////////////////////////////////////////
-
-EventManager::EventManager( )
+EventManager::EventManager()
 {
     // Open an in-memory database to allow efficient searches of existing signals
-    Poco::Data::SQLite::Connector::registerConnector( );
+    Poco::Data::SQLite::Connector::registerConnector();
     mSession = new Poco::Data::Session( "SQLite", ":memory:" );
     ( *mSession ) << "CREATE TABLE signals (id INTEGER PRIMARY KEY, name TEXT, type INTEGER)",
             Poco::Data::now;
@@ -69,13 +68,12 @@ EventManager::EventManager( )
             Poco::Data::now;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-EventManager::~EventManager( )
+EventManager::~EventManager()
 {
-    Poco::Data::SQLite::Connector::unregisterConnector( );
+    Poco::Data::SQLite::Connector::unregisterConnector();
 
-    std::map<std::string, SignalWrapperBase*>::const_iterator iter = mSignals.begin( );
-    std::map<std::string, SignalWrapperBase*>::const_iterator max = mSignals.end( );
+    std::map<std::string, SignalWrapperBase*>::const_iterator iter = mSignals.begin();
+    std::map<std::string, SignalWrapperBase*>::const_iterator max = mSignals.end();
 
     while( iter != max )
     {
@@ -84,7 +82,6 @@ EventManager::~EventManager( )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& sigName, SignalType sigType )
 {
     // Add this signal to the lookup table
@@ -113,7 +110,7 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
     }
     catch( Poco::Data::DataException& ex )
     {
-        std::cout << ex.displayText( ) << std::endl;
+        std::cout << ex.displayText() << std::endl;
     }
 
     // Store the signal in the signal map
@@ -122,7 +119,6 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
     ConnectToPreviousSlots( sigName );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void EventManager::ConnectToPreviousSlots( const std::string& sigName )
 {
     std::vector< int > ids;
@@ -130,15 +126,15 @@ void EventManager::ConnectToPreviousSlots( const std::string& sigName )
     GetSlotMatches( sigName, ids, priorities );
 
     // Iterate through result set and attempt to connect to the matching slots
-    std::vector< int >::iterator idsIter = ids.begin( );
+    std::vector< int >::iterator idsIter = ids.begin();
     std::vector< int >::iterator prioritiesIter = priorities.begin();
-    while( idsIter != ids.end( ) )
+    while( idsIter != ids.end() )
     {
         SlotWrapperBase* slot = mExactSlotMap[ *idsIter ];
         weak_ptr< ScopedConnectionList > wConnectionsPtr
                 = mExactSlotConnections[ *idsIter ];
 
-        if( shared_ptr< ScopedConnectionList > sConnectionsPtr = wConnectionsPtr.lock( ) )
+        if( shared_ptr< ScopedConnectionList > sConnectionsPtr = wConnectionsPtr.lock() )
         {
            _ConnectSignal( sigName, slot, *(sConnectionsPtr.get()), *prioritiesIter, false );
         }
@@ -155,16 +151,14 @@ void EventManager::ConnectToPreviousSlots( const std::string& sigName )
             }
             catch( Poco::Data::DataException& ex )
             {
-                std::cout << ex.displayText( ) << std::endl;
+                std::cout << ex.displayText() << std::endl;
             }
         }
         ++idsIter;
         ++prioritiesIter;
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-
 void EventManager::ConnectSignal( const std::string& sigName,
                                   SlotWrapperBase* slot,
                                   ScopedConnectionList& connections,
@@ -181,7 +175,7 @@ void EventManager::_ConnectSignal( const std::string& sigName,
 {
     // Find the appropriate SignalWrapperBase
     std::map< std::string, SignalWrapperBase* >::const_iterator iter = mSignals.find( sigName );
-    if( iter != mSignals.end( ) )
+    if( iter != mSignals.end() )
     {
         vprDEBUG( vesDBG, 3 )
             << "EventManager::ConnectSignal: Connecting " <<  slot << " to signal "
@@ -200,12 +194,12 @@ void EventManager::_ConnectSignal( const std::string& sigName,
             // Check whether there is currently a strong monopoly on this signal.
             // If so, immediately block the connection that was just made.
             StrongMonopolies_type::iterator mIter = mStrongMonopolies.find( signalWrapper );
-            if( mIter != mStrongMonopolies.end( ) )
+            if( mIter != mStrongMonopolies.end() )
             {
-                if( shared_ptr< ConnectionMonopoly > monopoly = mIter->second.lock( ) )
+                if( shared_ptr< ConnectionMonopoly > monopoly = mIter->second.lock() )
                 {
                     shared_ptr< shared_connection_block >
-                            blocker( new shared_connection_block( *( connections.GetLastConnection( ) ) ) );
+                            blocker( new shared_connection_block( *( connections.GetLastConnection() ) ) );
                     monopoly->AddBlocker( blocker );
                 }
                 else
@@ -230,7 +224,6 @@ void EventManager::_ConnectSignal( const std::string& sigName,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void EventManager::ConnectSignals( const std::string& stringToMatch,
                                    SlotWrapperBase* slot,
                                    ScopedConnectionList& connections,
@@ -241,8 +234,8 @@ void EventManager::ConnectSignals( const std::string& stringToMatch,
     GetMatches( stringToMatch, sigType, names );
 
     // Iterate through result set and attempt to connect to the matching signals
-    std::vector< std::string >::iterator namesIter = names.begin( );
-    while( namesIter != names.end( ) )
+    std::vector< std::string >::iterator namesIter = names.begin();
+    while( namesIter != names.end() )
     {
         // Connect to the signal, but don't store slot details for each connection
         _ConnectSignal( ( *namesIter ), slot, connections, priority, false );
@@ -253,7 +246,6 @@ void EventManager::ConnectSignals( const std::string& stringToMatch,
     StoreSlot( stringToMatch, slot, connections, sigType, priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 void EventManager::StoreSlot( const std::string& sigName,
                               SlotWrapperBase* slot,
                               ScopedConnectionList& connections,
@@ -277,10 +269,10 @@ void EventManager::StoreSlot( const std::string& sigName,
     }
     catch( Poco::Data::DataException& ex )
     {
-        std::cout << ex.displayText( ) << std::endl;
+        std::cout << ex.displayText() << std::endl;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void EventManager::GetMatches( const std::string stringToMatch, SignalType sigType, std::vector< std::string >& names )
 {
     try
@@ -294,11 +286,11 @@ void EventManager::GetMatches( const std::string stringToMatch, SignalType sigTy
                     Poco::Data::use( sigType );
         }
         statement, Poco::Data::into( names );
-        statement.execute( );
+        statement.execute();
     }
     catch( Poco::Data::DataException& ex )
     {
-        std::cout << ex.displayText( ) << std::endl;
+        std::cout << ex.displayText() << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -311,7 +303,7 @@ void EventManager::GetSlotMatches( const std::string& sigName, std::vector< int 
         statement << "SELECT mapID FROM slots WHERE :pattern LIKE pattern",
                 Poco::Data::use( sigName ),
                 Poco::Data::into( ids );
-        statement.execute( );
+        statement.execute();
         int priority = 3;
         for( size_t count = 0; count < ids.size(); ++count )
         {
@@ -324,22 +316,21 @@ void EventManager::GetSlotMatches( const std::string& sigName, std::vector< int 
     }
     catch( Poco::Data::DataException& ex )
     {
-        std::cout << ex.displayText( ) << std::endl;
+        std::cout << ex.displayText() << std::endl;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void EventManager::StoreConnection( ScopedConnectionList& connections, SignalWrapperBase* sigWrapper )
 {
     // Only store the connection if it represents an active connection
-    boost::shared_ptr< boost::signals2::scoped_connection > connection = connections.GetLastConnection( );
-    if( connection->connected( ) )
+    boost::shared_ptr< boost::signals2::scoped_connection > connection = connections.GetLastConnection();
+    if( connection->connected() )
     {
         weak_ptr< scoped_connection > weakConnection( connection );
         mConnections[ weakConnection ] = sigWrapper;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionWeak( shared_ptr< scoped_connection > connection )
 {
     shared_ptr< ConnectionMonopoly > monopoly( new ConnectionMonopoly );
@@ -347,18 +338,18 @@ shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionWeak( shared_
     // Determine which SignalWrapper this connection is associated with
     ConnectionMap_type::iterator iter = mConnections.find( connection );
 
-    if( iter != mConnections.end( ) )
+    if( iter != mConnections.end() )
     {
         SignalWrapperBase* signalWrapper = iter->second;
         // Get the list of all connections from the signal wrapper and set up blocks
         // on all connections besides the one passed in here
-        std::list< weak_ptr< scoped_connection > > connections = signalWrapper->GetConnections( );
+        std::list< weak_ptr< scoped_connection > > connections = signalWrapper->GetConnections();
 
-        std::list< weak_ptr< scoped_connection > >::iterator connectionsIter = connections.begin( );
-        while( connectionsIter != connections.end( ) )
+        std::list< weak_ptr< scoped_connection > >::iterator connectionsIter = connections.begin();
+        while( connectionsIter != connections.end() )
         {
             weak_ptr< scoped_connection > wCurrentConnection = ( *connectionsIter );
-            if( shared_ptr< scoped_connection > sCurrentConnection = wCurrentConnection.lock( ) )
+            if( shared_ptr< scoped_connection > sCurrentConnection = wCurrentConnection.lock() )
             {
                 if( sCurrentConnection != connection )
                 {
@@ -384,7 +375,6 @@ shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionWeak( shared_
     return monopoly;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionStrong( shared_ptr< scoped_connection > connection )
 {
     // Determine which SignalWrapper this connection is associated with
@@ -392,7 +382,7 @@ shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionStrong( share
 
     shared_ptr< ConnectionMonopoly > monopoly = MonopolizeConnectionWeak( connection );
 
-    if( iter != mConnections.end( ) )
+    if( iter != mConnections.end() )
     {
         SignalWrapperBase* signalWrapper = iter->second;
 
@@ -404,7 +394,7 @@ shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionStrong( share
 
     return monopoly;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 } // namespace eventmanager
 } // namespace xplorer
 } // namespace ves

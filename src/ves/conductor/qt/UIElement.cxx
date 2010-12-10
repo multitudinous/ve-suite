@@ -51,8 +51,8 @@ namespace ves
 {
 namespace conductor
 {
-    
-UIElement::UIElement( ):
+////////////////////////////////////////////////////////////////////////////////
+UIElement::UIElement():
     mIsMinimized( false ),
     mUIMatrixDirty( false ),
     mUITransform( 0 ),
@@ -63,12 +63,12 @@ UIElement::UIElement( ):
 {
 
 }
-
-UIElement::~UIElement( )
+////////////////////////////////////////////////////////////////////////////////
+UIElement::~UIElement()
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::PostConstructor()
 {
     //
@@ -121,16 +121,16 @@ void UIElement::PostConstructor()
 
     // Transform to make unit square appear with same dimensions as underlying
     // element dimensions
-    osg::ref_ptr<osg::MatrixTransform> elementTransform = new osg::MatrixTransform( );
-    elementTransform->setMatrix( osg::Matrix::scale( GetElementWidth( ),
-                                                     GetElementHeight( ),
+    osg::ref_ptr<osg::MatrixTransform> elementTransform = new osg::MatrixTransform();
+    elementTransform->setMatrix( osg::Matrix::scale( GetElementWidth(),
+                                                     GetElementHeight(),
                                                      1.0f ) );
     PushElementMatrix( elementTransform->getMatrix() );
     elementTransform->addChild( geode.get() );
     mElementTransform = elementTransform.get();
 
     //
-    osg::ref_ptr<osg::MatrixTransform> uiTransform = new osg::MatrixTransform( );
+    osg::ref_ptr<osg::MatrixTransform> uiTransform = new osg::MatrixTransform();
     uiTransform->setMatrix( osg::Matrix::identity() );
     PushUIMatrix( uiTransform->getMatrix() );
     uiTransform->addChild( elementTransform.get() );
@@ -140,157 +140,157 @@ void UIElement::PostConstructor()
     mVisibilitySwitch = new osg::Switch();
     mVisibilitySwitch->addChild( uiTransform.get() );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 osg::Switch* UIElement::GetVisibilitySwitch()
 {
     return mVisibilitySwitch.get();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 osg::Geode* UIElement::GetGeode()
 {
     return mGeode;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SetInitialImageWidthAndHeight( int width, int height )
 {
     m_initialImageSize = std::make_pair< int, int >( width, height );
 }
-
-int UIElement::GetImageWidth( )
+////////////////////////////////////////////////////////////////////////////////
+int UIElement::GetImageWidth()
 {
     return 0;
 }
-
-int UIElement::GetImageHeight( )
+////////////////////////////////////////////////////////////////////////////////
+int UIElement::GetImageHeight()
 {
     return 0;
 }
-
-int UIElement::GetElementWidth( )
+////////////////////////////////////////////////////////////////////////////////
+int UIElement::GetElementWidth()
 {
     return 0;
 }
-
-int UIElement::GetElementHeight( )
+////////////////////////////////////////////////////////////////////////////////
+int UIElement::GetElementHeight()
 {
     return 0;
 }
-
-const osg::Vec4f UIElement::GetTextureCoordinates( )
+////////////////////////////////////////////////////////////////////////////////
+const osg::Vec4f UIElement::GetTextureCoordinates()
 {
     return osg::Vec4f( 0.f, 1.f, 0.f, 1.f );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event )
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendDoubleClickEvent( gadget::Keys button, int x, int y, int state )
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendMouseMoveEvent( int x, int y, int z, int state )
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
 
 }
-
-unsigned char* UIElement::RenderElementToImage( )
+////////////////////////////////////////////////////////////////////////////////
+unsigned char* UIElement::RenderElementToImage()
 {
     return 0;
 }
-
-bool UIElement::IsDirty( )
+////////////////////////////////////////////////////////////////////////////////
+bool UIElement::IsDirty()
 {
     return false;
 }
-
-void UIElement::Initialize( )
+////////////////////////////////////////////////////////////////////////////////
+void UIElement::Initialize()
 {
     
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SetMinimized( bool state )
 {
     mIsMinimized = state;
 }
-
-bool UIElement::IsMinimized( )
+////////////////////////////////////////////////////////////////////////////////
+bool UIElement::IsMinimized()
 {
     return mIsMinimized;
 }
-
-osg::Matrixf UIElement::GetUIMatrix( )
+////////////////////////////////////////////////////////////////////////////////
+osg::Matrixf UIElement::GetUIMatrix()
 {
-    return mUIMatrices.at( mUIMatrices.size( ) - 1 );
+    return mUIMatrices.at( mUIMatrices.size() - 1 );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::PushUIMatrix( osg::Matrixf matrix )
 {
     mUIMatrices.push_back( matrix );
     mUIMatrixDirty = true;
 }
-
-osg::Matrixf UIElement::PopUIMatrix( )
+////////////////////////////////////////////////////////////////////////////////
+osg::Matrixf UIElement::PopUIMatrix()
 {
-    osg::Matrixf last = GetUIMatrix( );
-    mUIMatrices.pop_back( );
+    osg::Matrixf last = GetUIMatrix();
+    mUIMatrices.pop_back();
     mUIMatrixDirty = true;
     return last;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::PushElementMatrix( osg::Matrixf matrix )
 {
     mElementMatrix = matrix;
     mElementMatrixDirty = true;
 }
-
-osg::Matrixf UIElement::GetElementMatrix( )
+////////////////////////////////////////////////////////////////////////////////
+osg::Matrixf UIElement::GetElementMatrix()
 {
     return mElementMatrix;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::MoveCanvas( float dx, float dy, float dz )
 {
     osg::Matrixf trans;
     trans.setTrans( dx, dy, dz );
-    mUIMatrices[ mUIMatrices.size( ) - 1 ] = GetUIMatrix( ) * trans;
+    mUIMatrices[ mUIMatrices.size() - 1 ] = GetUIMatrix() * trans;
     mUIMatrixDirty = true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::ResizeCanvas( int width, int height )
 {
 
 }
-
-void UIElement::Update( )
+////////////////////////////////////////////////////////////////////////////////
+void UIElement::Update()
 {
     if( mAnimationOn )
     {
         // Check whether animation has ended and remove the callback if so
-        osg::AnimationPathCallback* cb = static_cast < osg::AnimationPathCallback* > ( mUITransform->getUpdateCallback( ) );
-        if( cb->getAnimationTime( ) >= cb->getAnimationPath( )->getLastTime( ) )
+        osg::AnimationPathCallback* cb = static_cast < osg::AnimationPathCallback* > ( mUITransform->getUpdateCallback() );
+        if( cb->getAnimationTime() >= cb->getAnimationPath()->getLastTime() )
         {
             mUITransform->setUpdateCallback( 0 );
             mAnimationOn = false;
@@ -299,7 +299,7 @@ void UIElement::Update( )
 
     if( mUIMatrixDirty )
     {
-        mUITransform->setMatrix( GetUIMatrix( ) );
+        mUITransform->setMatrix( GetUIMatrix() );
         mUIMatrixDirty = false;
     }
 
@@ -310,41 +310,41 @@ void UIElement::Update( )
     }
 }
 
-osg::MatrixTransform* UIElement::GetUITransform( )
+osg::MatrixTransform* UIElement::GetUITransform()
 {
     return mUITransform;
 }
 
-osg::MatrixTransform* UIElement::GetElementTransform( )
+osg::MatrixTransform* UIElement::GetElementTransform()
 {
     return mElementTransform;
 }
 
-bool UIElement::IsVisible( )
+bool UIElement::IsVisible()
 {
     return mVisibilitySwitch->getValue( 0 );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SetVisible( bool visible )
 {
     if( visible )
     {
-        mVisibilitySwitch->setAllChildrenOn( );
+        mVisibilitySwitch->setAllChildrenOn();
     }
     else
     {
-        mVisibilitySwitch->setAllChildrenOff( );
+        mVisibilitySwitch->setAllChildrenOff();
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SetAnimationPath( osg::AnimationPath* path )
 {
     mAnimationOn = true;
 
     osg::ref_ptr<osg::AnimationPathCallback> aniCallback = new osg::AnimationPathCallback( path );
-    mUITransform->setUpdateCallback( aniCallback.get( ) );
+    mUITransform->setUpdateCallback( aniCallback.get() );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //
 //    virtual osg::ref_ptr< osg::Geometry > GetCanvasGeometry()
 //    {
@@ -357,7 +357,7 @@ void UIElement::SetAnimationPath( osg::AnimationPath* path )
 //        mCanvasOriginY = y;
 //        mCanvasOriginZ = z;
 //
-//        _UpdateCanvasTransform( );
+//        _UpdateCanvasTransform();
 //    }
 //
 //    virtual void SetCanvasSize( float width, float height )
@@ -365,7 +365,7 @@ void UIElement::SetAnimationPath( osg::AnimationPath* path )
 //        mCanvasWidth = width;
 //        mCanvasHeight = height;
 //
-//        _UpdateCanvasTransform( );
+//        _UpdateCanvasTransform();
 //    }
 //
 //    virtual void SetCanvasWidth( float width )
@@ -384,7 +384,7 @@ void UIElement::SetAnimationPath( osg::AnimationPath* path )
 //        mCanvasOriginY += dy;
 //        mCanvasOriginZ += dz;
 //
-//        _UpdateCanvasTransform( );
+//        _UpdateCanvasTransform();
 //    }
 
 

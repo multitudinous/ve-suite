@@ -77,7 +77,7 @@ public:
     {
     }
 
-    virtual ~SignalWrapper( )
+    virtual ~SignalWrapper()
     {
     }
 
@@ -89,10 +89,10 @@ public:
         if ( castSlot )
         {
             boost::shared_ptr< boost::signals2::scoped_connection > connection( new boost::signals2::scoped_connection );
-            *( connection.get( ) ) = mSignal->connect( priority, castSlot->GetSlot( ) );
+            *( connection.get() ) = mSignal->connect( priority, castSlot->GetSlot() );
 
             // If the connection was successful, we store the details of it
-            if ( connection->connected( ) )
+            if ( connection->connected() )
             {
                 connections.AddConnection( connection );
                 boost::weak_ptr< boost::signals2::scoped_connection > weakConnection( connection );

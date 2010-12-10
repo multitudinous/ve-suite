@@ -81,7 +81,7 @@ namespace ves
 {
 namespace conductor
 {
-
+////////////////////////////////////////////////////////////////////////////////
 UIElementQt::UIElementQt( QWidget *parent ) :
 QGraphicsView( parent ),
 UIElement(),
@@ -126,7 +126,7 @@ mQTitlebar( 0 )
     Initialize( );
     PostConstructor();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 UIElementQt::~UIElementQt( )
 {
     _debug( "dtor" );
@@ -135,7 +135,7 @@ UIElementQt::~UIElementQt( )
     delete mImageMutex;
     delete mQTitlebar;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::Initialize( )
 {
     _debug( "Initialize" );
@@ -188,27 +188,27 @@ void UIElementQt::Initialize( )
     }
     _debug( "Initialize Ended" );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int UIElementQt::GetImageWidth( )
 {
     return mImageWidth;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int UIElementQt::GetImageHeight( )
 {
     return mImageHeight;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int UIElementQt::GetElementWidth( )
 {
     return mWidth;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int UIElementQt::GetElementHeight( )
 {
     return mHeight;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 const osg::Vec4f UIElementQt::GetTextureCoordinates( )
 {
     osg::Vec4f m_coordinates;
@@ -218,7 +218,7 @@ const osg::Vec4f UIElementQt::GetTextureCoordinates( )
                        mTextureTop, mTextureLeft );
     return m_coordinates;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent&
                                         event )
 {
@@ -227,41 +227,41 @@ void UIElementQt::SendInteractionEvent( ves::xplorer::eventmanager::InteractionE
 //
 //    Q_EMIT PutSendEvent( m_event );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
     Q_EMIT PutButtonPressEvent( button, x, y, state );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
     Q_EMIT PutButtonReleaseEvent( button, x, y, state );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendDoubleClickEvent( gadget::Keys button, int x, int y, int state )
 {
     Q_EMIT PutDoubleClickEvent( button, x, y, state );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendMouseMoveEvent( int x, int y, int z, int state )
 {
     Q_EMIT PutMouseMoveEvent( x, y, z, state );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
     wchar_t uniKey = unicode;
     QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
     Q_EMIT PutKeyPressEvent( key, modifierMask, qUniKey );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
 {
     wchar_t uniKey = unicode;
     QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
     Q_EMIT PutKeyReleaseEvent( key, modifierMask, qUniKey );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 unsigned char* UIElementQt::RenderElementToImage( )
 {
     //_debug( "RenderElementToImage" );
@@ -295,12 +295,12 @@ unsigned char* UIElementQt::RenderElementToImage( )
     }
     return mImageFlipped->bits( );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool UIElementQt::IsDirty( )
 {
     return mDirty;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SetWidget( QWidget* widget )
 {
     _debug( "SetWidget" );
@@ -391,13 +391,13 @@ void UIElementQt::SetWidget( QWidget* widget )
     //    QEvent ev( QEvent::WindowActivate );
     //    QApplication::sendEvent( mGraphicsScene, &ev );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::ResizeCanvas( int width, int height )
 {
     // Emit a queued signal just in case this is called from the "wrong" thread
     PutResizeCanvas( width, height );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_resizeCanvas( int width, int height )
 {
 //    mWidget->resize( width, height - mTitlebar->height()  );
@@ -406,7 +406,7 @@ void UIElementQt::_resizeCanvas( int width, int height )
 //    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
 //    this->resize( mWidth, mHeight );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::UpdateSize( )
 {
     _debug( "UpdateSize" );
@@ -455,7 +455,7 @@ void UIElementQt::UpdateSize( )
         }
     } // Leave critical section
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::FreeOldWidgets( )
 {
     _debug( "FreeOldWidgets" );
@@ -497,7 +497,7 @@ void UIElementQt::FreeOldWidgets( )
         }
     } // Leave critical section
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_render( )
 {
     _debug( "_render" );
@@ -530,24 +530,24 @@ void UIElementQt::_render( )
 
     mImageDirty = true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::paintEvent( QPaintEvent* event )
 {
     _debug( "paintEvent" );
     _render( );
     QGraphicsView::paintEvent( event );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonPressEvent( gadget::Keys button, int x, int y, int state )
 {
     _buttonEvent( 1, button, x, y, state );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
     _buttonEvent( 0, button, x, y, state );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int state )
 {
     QWidget *vw = this->childAt( x, y );
@@ -571,7 +571,7 @@ void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int stat
     qt_sendSpontaneousEvent( this->viewport( ), &e );
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int state )
 {
     QWidget *vw = this->childAt( x, y );
@@ -605,7 +605,7 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
         qt_sendSpontaneousEvent( this->viewport( ), &e );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_mouseMoveEvent( int x, int y, int z, int state )
 {
     Qt::MouseButtons buttons = _extractButtons( state );
@@ -621,21 +621,21 @@ void UIElementQt::_mouseMoveEvent( int x, int y, int z, int state )
 
     qt_sendSpontaneousEvent( this->viewport( ), &e );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_keyPressEvent( gadget::Keys key, int modifierMask, QString unicode )
 {
     Qt::KeyboardModifiers modifiers = _extractModifiers( modifierMask );
     QKeyEvent e( QEvent::KeyPress, mKeyMap[key], modifiers, unicode );
     qt_sendSpontaneousEvent( this->viewport( ), &e );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_keyReleaseEvent( gadget::Keys key, int modifierMask, QString unicode )
 {
     Qt::KeyboardModifiers modifiers = _extractModifiers( modifierMask );
     QKeyEvent e( QEvent::KeyRelease, mKeyMap[key], modifiers, unicode );
     qt_sendSpontaneousEvent( this->viewport( ), &e );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Qt::MouseButton UIElementQt::_extractButton( gadget::Keys button )
 {
     if( button & gadget::MBUTTON1 )
@@ -655,7 +655,7 @@ Qt::MouseButton UIElementQt::_extractButton( gadget::Keys button )
         return Qt::NoButton;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Qt::MouseButtons UIElementQt::_extractButtons( int state )
 {
     Qt::MouseButtons buttons;
@@ -682,7 +682,7 @@ Qt::MouseButtons UIElementQt::_extractButtons( int state )
 
     return buttons;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Qt::KeyboardModifiers UIElementQt::_extractModifiers( int state )
 {
     Qt::KeyboardModifiers modifiers;
@@ -709,7 +709,7 @@ Qt::KeyboardModifiers UIElementQt::_extractModifiers( int state )
 
     return modifiers;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_setupKeyMap( )
 {
     mKeyMap[ gadget::KEY_NONE ] = 0;
@@ -852,26 +852,26 @@ void UIElementQt::_setupKeyMap( )
     mKeyMap[ gadget::KEY_ASCII_TILDE ] = Qt::Key_AsciiTilde;
     mKeyMap[ gadget::KEY_UNKNOWN ] = Qt::Key_unknown;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_onHideButtonClicked( )
 {
     ves::conductor::UIManager::instance()->HideElement( this );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_onMinimizeButtonClicked( )
 {
     ves::conductor::UIManager::instance()->MinimizeElement( this );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_onTitlebarPressed( )
 {
     ves::conductor::UIManager::instance()->InitiateMoveElement( this );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_onOpacitySliderValueChanged( int opacity )
 {
     ves::conductor::UIManager::instance()->SetOpacity( opacity/100.0f );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
 } // namespace ves

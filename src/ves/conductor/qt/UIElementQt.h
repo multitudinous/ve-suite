@@ -70,14 +70,14 @@ class VE_CONDUCTOR_QTUI_EXPORTS UIElementQt : public QGraphicsView, public UIEle
 
 public:
     UIElementQt( QWidget* parent = 0 );
-    virtual ~UIElementQt( );
+    virtual ~UIElementQt();
 
     // Required overrides from UIElement; see base class for documentation
-    virtual int GetImageWidth( );
-    virtual int GetImageHeight( );
-    virtual int GetElementWidth( );
-    virtual int GetElementHeight( );
-    const virtual osg::Vec4f GetTextureCoordinates( );
+    virtual int GetImageWidth();
+    virtual int GetImageHeight();
+    virtual int GetElementWidth();
+    virtual int GetElementHeight();
+    const virtual osg::Vec4f GetTextureCoordinates();
     virtual void SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event );
 
     virtual void SendButtonPressEvent( gadget::Keys button, int x, int y, int state );
@@ -87,9 +87,9 @@ public:
     virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
     virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
 
-    virtual unsigned char* RenderElementToImage( );
-    virtual bool IsDirty( );
-    virtual void Initialize( );
+    virtual unsigned char* RenderElementToImage();
+    virtual bool IsDirty();
+    virtual void Initialize();
 
     // Functions unique to this derived class
 
@@ -109,7 +109,7 @@ public:
     /// has changed. Calling this function from inside a QWidget::resizeEvent is
     /// usually the recommended route.
     ////////////////////////////////////////////////////////////////////////////////
-    void UpdateSize( );
+    void UpdateSize();
 
     virtual void ResizeCanvas( int width, int height );
 
@@ -117,7 +117,7 @@ protected:
     void paintEvent( QPaintEvent* event );
 
 private:
-    void FreeOldWidgets( );
+    void FreeOldWidgets();
     QWidget* mWidget; ///< Widget associated with this element
     QImage* mImage; ///< Rendered image of element
     QImage* mImageFlipped; ///< Vertically flipped image of element
@@ -144,13 +144,13 @@ private:
     Qt::MouseButton _extractButton( gadget::Keys button );
     Qt::MouseButtons _extractButtons( int state );
     Qt::KeyboardModifiers _extractModifiers( int state );
-    void _setupKeyMap( );
+    void _setupKeyMap();
 
     QWidget* mTitlebar;
     Ui::titlebar* mQTitlebar;
 
 protected Q_SLOTS:
-    void _render( );
+    void _render();
     //void _sendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
     void _resizeCanvas( int width, int height );
 
@@ -167,7 +167,7 @@ protected Q_SLOTS:
     void _onOpacitySliderValueChanged( int opacity );
 
     Q_SIGNALS:
-    void RequestRender( );
+    void RequestRender();
     void PutResizeCanvas( int width, int height );
     //void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
     void PutButtonPressEvent( gadget::Keys button, int x, int y, int state );

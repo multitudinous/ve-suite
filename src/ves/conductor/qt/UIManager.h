@@ -127,7 +127,7 @@ public:
 
     // TODO document RemoveAllElements
     ///
-    void RemoveAllElements( );
+    void RemoveAllElements();
 
     /// Do all needed updates on the scenegraph.
     /// Any UIElements added to the manager since the last call to update will

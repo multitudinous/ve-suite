@@ -82,7 +82,7 @@ public:
                       double y = 0.0,
                       double z = 0.0 );
 
-    virtual ~InteractionEvent( );
+    virtual ~InteractionEvent();
 
     eventType EventType;
     int Key;

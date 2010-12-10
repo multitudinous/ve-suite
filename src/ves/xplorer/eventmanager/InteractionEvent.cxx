@@ -38,7 +38,7 @@ namespace xplorer
 {
 namespace eventmanager
 {
-
+////////////////////////////////////////////////////////////////////////////////
 InteractionEvent::InteractionEvent( eventType eType,
                                     int key,
                                     const char keyChar,
@@ -66,11 +66,12 @@ InteractionEvent::InteractionEvent( eventType eType,
 {
    ;
 }
-
-InteractionEvent::~InteractionEvent( )
+////////////////////////////////////////////////////////////////////////////////
+InteractionEvent::~InteractionEvent()
 {
+    ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 } // namespace eventmanager
 } // namespace xplorer
 } // namespace ves

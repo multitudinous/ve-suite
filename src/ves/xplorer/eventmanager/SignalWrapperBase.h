@@ -52,8 +52,8 @@ namespace eventmanager
 class SignalWrapperBase
 {
 public:
-    SignalWrapperBase( ){}
-    virtual ~SignalWrapperBase( ){}
+    SignalWrapperBase(){}
+    virtual ~SignalWrapperBase(){}
 
     /// Connects slot held in SlotWrapper to the signal owned by derived SignalWrapper<>
     /// instance.
