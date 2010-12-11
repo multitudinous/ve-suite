@@ -530,15 +530,9 @@ void App::initScene()
 
     //This may need to be fixed
     m_vjobsWrapper->GetCfdStateVariables();
-#ifdef QT_ON
+
     //Get or create UIManager
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
-
-    //UIManager needs to know how big in pixels its projection area is
-    //cfdDisplaySettings* cDS =
-        //EnvironmentHandler::instance()->GetDisplaySettings();
-    //std::pair<int, int> res = cDS->GetScreenResolution();
-    //m_UIManager->SetRectangle( 0, res.first, 0, res.second );
 
     //Hand current root node UIManager so it can create UI subgraph
     m_UIManager->Initialize( getScene() );
@@ -546,10 +540,6 @@ void App::initScene()
     //Start up the UI thread
     //std::cout << "Starting UI thread" << std::endl;
     //m_qtUIThread = new vpr::Thread( boost::bind( &App::LoadUI, this ) );
-#ifndef _DARWIN
-    preRun();
-#endif
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::preFrame()
@@ -569,6 +559,15 @@ void App::preFrame()
         EnvironmentHandler::instance()->PreFrameUpdate();
     }
 
+#ifndef _DARWIN
+    if( !m_uiInitialized )
+    {
+        if( jccl::ConfigManager::instance()->isPendingStale() )
+        {
+            preRun();
+        }
+    }
+#endif
     vprDEBUG( vesDBG, 3 ) << "|End App::preFrame" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
