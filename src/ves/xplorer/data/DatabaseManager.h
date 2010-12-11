@@ -121,6 +121,8 @@ public:
 
     void ResetAll();
     
+    void Shutdown();
+
 private:
     /// ctor
     DatabaseManager( );

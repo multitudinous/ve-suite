@@ -52,20 +52,30 @@ namespace data
 {
 
 vprSingletonImp( DatabaseManager );
+//vprSingletonImpLifetime( DatabaseManager, 0 );
 
-DatabaseManager::DatabaseManager( ) :
-mPool( 0 )
+DatabaseManager::DatabaseManager()
+    :
+    mPool( 0 )
 {
-
+    ;
 }
 
-DatabaseManager::~DatabaseManager( )
+DatabaseManager::~DatabaseManager()
+{
+    ;
+}
+
+void DatabaseManager::Shutdown()
 {
     if( mPool )
     {
+        //std::cout << "Number of idle Poco::Sessions " << mPool->idle() 
+        //    << " Number of dead Poco::Sessions " << mPool->dead() << std::endl;
+        //This must be deleted from the thread that it was created from
         delete mPool;
     }
-    Poco::Data::SQLite::Connector::unregisterConnector( );
+    Poco::Data::SQLite::Connector::unregisterConnector();
 }
 
 void DatabaseManager::SetDatabasePath( const std::string& path )
@@ -73,14 +83,14 @@ void DatabaseManager::SetDatabasePath( const std::string& path )
     if( mPool )
     {
         delete mPool;
-        Poco::Data::SQLite::Connector::unregisterConnector( );
+        Poco::Data::SQLite::Connector::unregisterConnector();
     }
 
-    Poco::Data::SQLite::Connector::registerConnector( );
-    mPool = new Poco::Data::SessionPool( "SQLite", path );
+    Poco::Data::SQLite::Connector::registerConnector();
+    mPool = new Poco::Data::SessionPool( "SQLite", path, 1, 32, 10 );
 }
 
-Poco::Data::SessionPool* DatabaseManager::GetPool( )
+Poco::Data::SessionPool* DatabaseManager::GetPool()
 {
     return mPool;
 }
@@ -95,7 +105,7 @@ std::vector< std::string > DatabaseManager::GetStringVector( const std::string& 
         return returnValue;
     }
 
-    Poco::Data::Session session( mPool->get( ) );
+    Poco::Data::Session session( mPool->get() );
     Poco::Data::Statement statement( session );
 
     // Build the following query: "SELECT [DISTINCT] columnName FROM tableName [WHERE searchCriteria]"
@@ -112,19 +122,19 @@ std::vector< std::string > DatabaseManager::GetStringVector( const std::string& 
 
     try
     {
-        statement.execute( );
+        statement.execute();
         Poco::Data::RecordSet recordset( statement );
-        if( recordset.rowCount( ) != 0 )
+        if( recordset.rowCount() != 0 )
         {
-            for( int rowIndex = 0; rowIndex < recordset.rowCount( ); rowIndex++ )
+            for( int rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
             {
-                returnValue.push_back( recordset.value( 0, rowIndex ).convert<std::string > ( ) );
+                returnValue.push_back( recordset.value( 0, rowIndex ).convert<std::string > () );
             }
         }
     }
     catch( Poco::Data::DataException &e )
     {
-        std::cout << e.displayText( ) << std::endl;
+        std::cout << e.displayText() << std::endl;
     }
 
     return returnValue;
@@ -133,7 +143,7 @@ std::vector< std::string > DatabaseManager::GetStringVector( const std::string& 
 bool DatabaseManager::TableExists( const std::string& tableName )
 {
     bool exists = false;
-    Poco::Data::Session session( mPool->get( ) );
+    Poco::Data::Session session( mPool->get() );
     try
     {
         session << "SELECT 1 FROM sqlite_master WHERE name='" << tableName << "'",
@@ -142,31 +152,31 @@ bool DatabaseManager::TableExists( const std::string& tableName )
     }
     catch( Poco::Data::DataException &e )
     {
-        std::cout << e.displayText( ) << std::endl;
+        std::cout << e.displayText() << std::endl;
         exists = false;
     }
     return exists;
 }
 
-void DatabaseManager::ResetAll( )
+void DatabaseManager::ResetAll()
 {
-    Poco::Data::Session session( mPool->get( ) );
+    Poco::Data::Session session( mPool->get() );
     Poco::Data::Statement statement( session );
     statement << "select name from sqlite_master where type = 'table'";
 
     try
     {
-        statement.execute( );
+        statement.execute();
         Poco::Data::RecordSet recordset( statement );
 
         // Walk through list of all tables and delete data in each
-        if( recordset.rowCount( ) != 0 )
+        if( recordset.rowCount() != 0 )
         {
             // Wrap operations into a single transaction for speed
             session.begin();
-            for( int rowIndex = 0; rowIndex < recordset.rowCount( ); rowIndex++ )
+            for( int rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
             {
-                std::string tableName = recordset.value( 0, rowIndex ).convert< std::string > ( );
+                std::string tableName = recordset.value( 0, rowIndex ).convert< std::string > ();
                 if( tableName != "sqlite_sequence" )
                 {
                     session << "DROP TABLE " << tableName, Poco::Data::now;
@@ -177,7 +187,7 @@ void DatabaseManager::ResetAll( )
     }
     catch( Poco::Data::DataException &e )
     {
-        std::cout << e.displayText( ) << std::endl;
+        std::cout << e.displayText() << std::endl;
     }
 }
 
