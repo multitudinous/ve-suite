@@ -116,27 +116,27 @@ mQTitlebar( 0 )
     QBrush brush( QColor( 0, 0, 0, 0 ) );
     brush.setStyle( Qt::SolidPattern );
     this->setBackgroundBrush( brush );
-    mImageMutex = new QMutex( );
-    _setupKeyMap( );
+    mImageMutex = new QMutex();
+    _setupKeyMap();
     
     mQTitlebar = new Ui::titlebar();
     mTitlebar = new QWidget( 0 );
     mQTitlebar->setupUi( mTitlebar );
 
-    Initialize( );
+    Initialize();
     PostConstructor();
 }
 ////////////////////////////////////////////////////////////////////////////////
-UIElementQt::~UIElementQt( )
+UIElementQt::~UIElementQt()
 {
     _debug( "dtor" );
-    FreeOldWidgets( );
+    FreeOldWidgets();
     delete mTimer;
     delete mImageMutex;
     delete mQTitlebar;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::Initialize( )
+void UIElementQt::Initialize()
 {
     _debug( "Initialize" );
     if( !mInitialized )
@@ -145,7 +145,7 @@ void UIElementQt::Initialize( )
         // thread and that call slots in this class must be
         // of mode Qt::QueuedConnection so that the slot will only be processed
         // when the thread that created this object has execution.
-        //QObject::connect( this, SIGNAL( RequestRender( ) ), this, SLOT( _render( ) ), Qt::QueuedConnection );
+        //QObject::connect( this, SIGNAL( RequestRender() ), this, SLOT( _render() ), Qt::QueuedConnection );
         //QObject::connect( this, SIGNAL( PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ),
         //                  this, SLOT( _sendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
 
@@ -167,49 +167,53 @@ void UIElementQt::Initialize( )
         QObject::connect( this, SIGNAL( PutMouseMoveEvent( int, int, int, int ) ),
                           this, SLOT( _mouseMoveEvent( int, int, int, int ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutKeyPressEvent( gadget::Keys, int, QString ) ),
-                          this, SLOT( _keyPressEvent( gadget::Keys, int, QString ) ), Qt::QueuedConnection );
+        QObject::connect( this, SIGNAL( PutKeyPressEvent( gadget::Keys, int, char ) ),
+                          this, SLOT( _keyPressEvent( gadget::Keys, int, char ) ), Qt::QueuedConnection );
+        //QObject::connect( this, SIGNAL( PutKeyPressEvent( gadget::Keys, int, QString ) ),
+        //                 this, SLOT( _keyPressEvent( gadget::Keys, int, QString ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int, QString ) ),
-                          this, SLOT( _keyReleaseEvent( gadget::Keys, int, QString ) ), Qt::QueuedConnection );
+        QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int, char ) ),
+                          this, SLOT( _keyReleaseEvent( gadget::Keys, int, char ) ), Qt::QueuedConnection );
+        //QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int, QString ) ),
+        //                 this, SLOT( _keyReleaseEvent( gadget::Keys, int, QString ) ), Qt::QueuedConnection );
 
         // Start up the timer that causes repaints at a set interval -- assuming
         // thread is given execution sometime during this interval.
         mTimer = new QTimer( this );
-        QObject::connect( mTimer, SIGNAL( timeout( ) ), this, SLOT( _render( ) ) );
+        QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( _render() ) );
         mTimer->start( 30 );
 
         QObject::connect( mQTitlebar->OpacitySlider, SIGNAL( valueChanged( int ) ), this, SLOT( _onOpacitySliderValueChanged( int ) ) );
-        QObject::connect( mQTitlebar->HideButton, SIGNAL( clicked( ) ), this, SLOT( _onHideButtonClicked() ) );
-        QObject::connect( mQTitlebar->MinimizeButton, SIGNAL( clicked( ) ), this, SLOT( _onMinimizeButtonClicked() ) );
-        QObject::connect( mQTitlebar->TitleFrame, SIGNAL( pressed( ) ), this, SLOT( _onTitlebarPressed() ) );
+        QObject::connect( mQTitlebar->HideButton, SIGNAL( clicked() ), this, SLOT( _onHideButtonClicked() ) );
+        QObject::connect( mQTitlebar->MinimizeButton, SIGNAL( clicked() ), this, SLOT( _onMinimizeButtonClicked() ) );
+        QObject::connect( mQTitlebar->TitleFrame, SIGNAL( pressed() ), this, SLOT( _onTitlebarPressed() ) );
 
         mInitialized = true;
     }
     _debug( "Initialize Ended" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int UIElementQt::GetImageWidth( )
+int UIElementQt::GetImageWidth()
 {
     return mImageWidth;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int UIElementQt::GetImageHeight( )
+int UIElementQt::GetImageHeight()
 {
     return mImageHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int UIElementQt::GetElementWidth( )
+int UIElementQt::GetElementWidth()
 {
     return mWidth;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int UIElementQt::GetElementHeight( )
+int UIElementQt::GetElementHeight()
 {
     return mHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Vec4f UIElementQt::GetTextureCoordinates( )
+const osg::Vec4f UIElementQt::GetTextureCoordinates()
 {
     osg::Vec4f m_coordinates;
 
@@ -248,21 +252,27 @@ void UIElementQt::SendMouseMoveEvent( int x, int y, int z, int state )
     Q_EMIT PutMouseMoveEvent( x, y, z, state );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
+void UIElementQt::SendKeyPressEvent( gadget::Keys key, int modifierMask, char unicode )
 {
-    wchar_t uniKey = unicode;
-    QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
-    Q_EMIT PutKeyPressEvent( key, modifierMask, qUniKey );
+    //Right now VR Juggler has the API to support wide body chars but it 
+    //is not wired up. When it is we can use this code to transfer wide body
+    //chars to Qt.
+    //wchar_t uniKey = unicode;
+    //QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
+    Q_EMIT PutKeyPressEvent( key, modifierMask, unicode );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
+void UIElementQt::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode )
 {
-    wchar_t uniKey = unicode;
-    QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
-    Q_EMIT PutKeyReleaseEvent( key, modifierMask, qUniKey );
+    //Right now VR Juggler has the API to support wide body chars but it 
+    //is not wired up. When it is we can use this code to transfer wide body
+    //chars to Qt.
+    //wchar_t uniKey = unicode;
+    //QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
+    Q_EMIT PutKeyReleaseEvent( key, modifierMask, unicode );
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char* UIElementQt::RenderElementToImage( )
+unsigned char* UIElementQt::RenderElementToImage()
 {
     //_debug( "RenderElementToImage" );
     // If there's no widget to render, return NULL
@@ -293,10 +303,10 @@ unsigned char* UIElementQt::RenderElementToImage( )
     {
         mDirty = false;
     }
-    return mImageFlipped->bits( );
+    return mImageFlipped->bits();
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool UIElementQt::IsDirty( )
+bool UIElementQt::IsDirty()
 {
     return mDirty;
 }
@@ -313,7 +323,7 @@ void UIElementQt::SetWidget( QWidget* widget )
 
     // Clean up any widgets this instance previously owned so we don't leak
     // memory
-    FreeOldWidgets( );
+    FreeOldWidgets();
 
     mWidget = widget;
 
@@ -343,7 +353,7 @@ void UIElementQt::SetWidget( QWidget* widget )
     // NB: We don't have to explicitly create mGraphicsProxyWidget since
     // it is created and returned by call to QGraphicsScene::addWidget
     mGraphicsProxyWidget = mGraphicsScene->addWidget( mWidget );
-    mGraphicsProxyWidget->show( );
+    mGraphicsProxyWidget->show();
 
     // Ensure that mWidget is in the top left-hand corner of mGraphicsScene.
     //mWidget->move( 0, 0 );
@@ -366,7 +376,7 @@ void UIElementQt::SetWidget( QWidget* widget )
     mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
 
     // Make the view and the scene coincident.
-    this->setSceneRect( mGraphicsScene->sceneRect( ) );
+    this->setSceneRect( mGraphicsScene->sceneRect() );
 
     // Forcibly resize view to contain mWidget
     this->resize( mWidth, mHeight );
@@ -407,14 +417,14 @@ void UIElementQt::_resizeCanvas( int width, int height )
 //    this->resize( mWidth, mHeight );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::UpdateSize( )
+void UIElementQt::UpdateSize()
 {
     _debug( "UpdateSize" );
     int old_Width = mWidth;
     int old_Height = mHeight;
 
-    mWidth = mWidget->width( );
-    mHeight = mWidget->height( ) + mTitlebar->height();
+    mWidth = mWidget->width();
+    mHeight = mWidget->height() + mTitlebar->height();
 
     mElementMatrix.makeScale( mWidth, mHeight, 1);
     mElementMatrixDirty = true;
@@ -456,7 +466,7 @@ void UIElementQt::UpdateSize( )
     } // Leave critical section
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::FreeOldWidgets( )
+void UIElementQt::FreeOldWidgets()
 {
     _debug( "FreeOldWidgets" );
     // ?? Should we manage deletion of the owned widget? What if
@@ -498,7 +508,7 @@ void UIElementQt::FreeOldWidgets( )
     } // Leave critical section
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::_render( )
+void UIElementQt::_render()
 {
     _debug( "_render" );
     // If there's no widget to render, return NULL
@@ -524,7 +534,7 @@ void UIElementQt::_render( )
             QPainter m_imagePainter( mImage );
             QRect m_Rectangle( 0, 0, mWidth, mHeight );
             this->render( &m_imagePainter, m_Rectangle, m_Rectangle );
-            m_imagePainter.end( );
+            m_imagePainter.end();
         }
     } // Leave critical section
 
@@ -534,7 +544,7 @@ void UIElementQt::_render( )
 void UIElementQt::paintEvent( QPaintEvent* event )
 {
     _debug( "paintEvent" );
-    _render( );
+    _render();
     QGraphicsView::paintEvent( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -560,7 +570,7 @@ void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int stat
 
     QPoint position( x, y );
 
-    QPoint globalPos = this->viewport( )->mapToGlobal( position );
+    QPoint globalPos = this->viewport()->mapToGlobal( position );
 
     // Gadgeteer doesn't put buttons into the state except on move events, but
     // Qt expects the button mask to contain all pressed buttons even on
@@ -568,7 +578,7 @@ void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int stat
     buttons = buttons | qbutton;
     QMouseEvent e( QEvent::MouseButtonDblClick, position, globalPos, qbutton,
                 buttons, modifiers );
-    qt_sendSpontaneousEvent( this->viewport( ), &e );
+    qt_sendSpontaneousEvent( this->viewport(), &e );
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -584,7 +594,7 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
 
     QPoint position( x, y );
 
-    QPoint globalPos = this->viewport( )->mapToGlobal( position );
+    QPoint globalPos = this->viewport()->mapToGlobal( position );
 
     if( type == 1 )
     {
@@ -592,48 +602,49 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
         // Qt expects the button mask to contain all pressed buttons even on
         // press events
         buttons = buttons | qbutton;
-        //std::cout << "UIElementQt::_buttonEvent: buttons = " << buttons << std::endl << std::flush;
 
         QMouseEvent e( QEvent::MouseButtonPress, position, globalPos, qbutton,
                     buttons, modifiers );
-        qt_sendSpontaneousEvent( this->viewport( ), &e );
+        qt_sendSpontaneousEvent( this->viewport(), &e );
     }
     else
     {
         QMouseEvent e( QEvent::MouseButtonRelease, position, globalPos, qbutton,
                     buttons, modifiers );
-        qt_sendSpontaneousEvent( this->viewport( ), &e );
+        qt_sendSpontaneousEvent( this->viewport(), &e );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_mouseMoveEvent( int x, int y, int z, int state )
 {
     Qt::MouseButtons buttons = _extractButtons( state );
-    //std::cout << "UIElementQt::_mouseMoveEvent: buttons = " << buttons << std::endl << std::flush;
     Qt::KeyboardModifiers modifiers = _extractModifiers( state );
 
     QPoint position( x, y );
 
-    QPoint globalPos = this->viewport( )->mapToGlobal( position );
+    QPoint globalPos = this->viewport()->mapToGlobal( position );
 
     QMouseEvent e( QEvent::MouseMove, position, globalPos, Qt::NoButton,
                     buttons, modifiers );
 
-    qt_sendSpontaneousEvent( this->viewport( ), &e );
+    qt_sendSpontaneousEvent( this->viewport(), &e );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::_keyPressEvent( gadget::Keys key, int modifierMask, QString unicode )
+void UIElementQt::_keyPressEvent( gadget::Keys key, int modifierMask, char unicode )
 {
+    //Right now VR Juggler has the API to support wide body chars but it 
+    //is not wired up. When it is we can use this code to transfer wide body
+    //chars to Qt.    
     Qt::KeyboardModifiers modifiers = _extractModifiers( modifierMask );
-    QKeyEvent e( QEvent::KeyPress, mKeyMap[key], modifiers, unicode );
-    qt_sendSpontaneousEvent( this->viewport( ), &e );
+    QKeyEvent e( QEvent::KeyPress, mKeyMap[key], modifiers, QChar( unicode ) );
+    qt_sendSpontaneousEvent( this->viewport(), &e );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::_keyReleaseEvent( gadget::Keys key, int modifierMask, QString unicode )
+void UIElementQt::_keyReleaseEvent( gadget::Keys key, int modifierMask, char unicode )
 {
     Qt::KeyboardModifiers modifiers = _extractModifiers( modifierMask );
-    QKeyEvent e( QEvent::KeyRelease, mKeyMap[key], modifiers, unicode );
-    qt_sendSpontaneousEvent( this->viewport( ), &e );
+    QKeyEvent e( QEvent::KeyRelease, mKeyMap[key], modifiers, QChar( unicode ) );
+    qt_sendSpontaneousEvent( this->viewport(), &e );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Qt::MouseButton UIElementQt::_extractButton( gadget::Keys button )
@@ -710,7 +721,7 @@ Qt::KeyboardModifiers UIElementQt::_extractModifiers( int state )
     return modifiers;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::_setupKeyMap( )
+void UIElementQt::_setupKeyMap()
 {
     mKeyMap[ gadget::KEY_NONE ] = 0;
     mKeyMap[ gadget::KEY_UP ] = Qt::Key_Up;
@@ -853,17 +864,17 @@ void UIElementQt::_setupKeyMap( )
     mKeyMap[ gadget::KEY_UNKNOWN ] = Qt::Key_unknown;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::_onHideButtonClicked( )
+void UIElementQt::_onHideButtonClicked()
 {
     ves::conductor::UIManager::instance()->HideElement( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::_onMinimizeButtonClicked( )
+void UIElementQt::_onMinimizeButtonClicked()
 {
     ves::conductor::UIManager::instance()->MinimizeElement( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::_onTitlebarPressed( )
+void UIElementQt::_onTitlebarPressed()
 {
     ves::conductor::UIManager::instance()->InitiateMoveElement( this );
 }

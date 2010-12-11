@@ -187,10 +187,10 @@ public:
     void ButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
 
     /// Receives key press events connected via EventManager
-    void KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode );
+    void KeyPressEvent( gadget::Keys key, int modifiers, char unicode );
 
     /// Receives key release events connected via EventManager
-    void KeyReleaseEvent( gadget::Keys key, int modifiers, wchar_t unicode );
+    void KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode );
 
     ///Sets the projection matrix when not in Ortho2D mode
     void SetProjectionMatrix( osg::Matrixd& matrix );

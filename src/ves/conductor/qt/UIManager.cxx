@@ -108,11 +108,11 @@ UIManager::UIManager() :
                       &UIManager::MouseDoubleClickEvent, mConnections,
                       button_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_3( "%KeyPress%", void ( gadget::Keys, int, wchar_t ),
+    CONNECTSIGNALS_3( "%KeyPress%", void ( gadget::Keys, int, char ),
                       &UIManager::KeyPressEvent, mConnections,
                       keyboard_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_3( "%KeyRelease%", void ( gadget::Keys, int, wchar_t ),
+    CONNECTSIGNALS_3( "%KeyRelease%", void ( gadget::Keys, int, char ),
                       &UIManager::KeyReleaseEvent, mConnections,
                       keyboard_SignalType, highest_Priority );
 
@@ -994,7 +994,7 @@ void UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode )
+void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
 {
     if( ! _okayToSendEvent() )
     {
@@ -1011,7 +1011,6 @@ void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode 
 
         bool visible = element->IsVisible();
         bool minimized = element->IsMinimized();
-
         // Only send events if element is visible and not minimzed
         if( ( visible ) && ( !minimized ) )
         {
@@ -1020,7 +1019,7 @@ void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, wchar_t unicode 
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, wchar_t unicode )
+void UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
 {
     if( ! _okayToSendEvent() )
     {

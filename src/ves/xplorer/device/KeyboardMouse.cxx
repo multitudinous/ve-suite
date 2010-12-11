@@ -203,7 +203,9 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         if( itr != mKeyPressSignalMap.end() )
         {
             (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask(),
-                              keyEvt->getKeyUnicode() );
+                              //For use when unicode works in VR Juggler
+                              //keyEvt->getKeyUnicode() );
+                              keyEvt->getKeyChar() );
         }
         else
         {
@@ -229,7 +231,9 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         if( itr != mKeyReleaseSignalMap.end() )
         {
             (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask(),
-                              keyEvt->getKeyUnicode() );
+                             //For use when unicode works in VR Juggler
+                             //keyEvt->getKeyUnicode() );
+                             keyEvt->getKeyChar() );
         }
         else
         {

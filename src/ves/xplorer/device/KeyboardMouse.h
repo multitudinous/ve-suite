@@ -259,13 +259,17 @@ private:
     /// First arg is the key that was pressed
     /// Second arg is the gadget::ModiferMask (modifier mask)
     /// Third arg is the unicode representation of the key
-    typedef boost::signals2::signal< void ( gadget::Keys, int, wchar_t ) > KeyPressSignal_type;
+    ///NOTE: As soon as VR Juggler supports wide body chars we can change the 
+    ///char argument back to a wchar_t
+    typedef boost::signals2::signal< void ( gadget::Keys, int, char ) > KeyPressSignal_type;
 
     /// KeyRelease signal type
     /// First arg is the key that was pressed
     /// Second arg is the gadget::ModiferMask (modifier mask)
     /// Third arg is the unicode representation of the key
-    typedef boost::signals2::signal< void ( gadget::Keys, int, wchar_t ) > KeyReleaseSignal_type;
+    ///NOTE: As soon as VR Juggler supports wide body chars we can change the 
+    ///char argument back to a wchar_t
+    typedef boost::signals2::signal< void ( gadget::Keys, int, char ) > KeyReleaseSignal_type;
 
     /// Map to hold individual KeyPress signals
     typedef std::map< gadget::Keys, KeyPressSignal_type* > KeyPressSignalMapType;

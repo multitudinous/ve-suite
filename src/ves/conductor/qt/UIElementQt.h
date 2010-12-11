@@ -84,8 +84,8 @@ public:
     virtual void SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
     virtual void SendDoubleClickEvent( gadget::Keys button, int x, int y, int state );
     virtual void SendMouseMoveEvent( int x, int y, int z, int state );
-    virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
-    virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode );
+    virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask, char unicode );
+    virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode );
 
     virtual unsigned char* RenderElementToImage();
     virtual bool IsDirty();
@@ -158,8 +158,8 @@ protected Q_SLOTS:
     void _buttonReleaseEvent( gadget::Keys button, int x, int y, int state );
     void _doubleClickEvent( gadget::Keys button, int x, int y, int state );
     void _mouseMoveEvent( int x, int y, int z, int state );
-    void _keyPressEvent( gadget::Keys key, int modifierMask, QString unicode );
-    void _keyReleaseEvent( gadget::Keys key, int modifierMask, QString unicode );
+    void _keyPressEvent( gadget::Keys key, int modifierMask, char unicode );
+    void _keyReleaseEvent( gadget::Keys key, int modifierMask, char unicode );
 
     void _onHideButtonClicked();
     void _onMinimizeButtonClicked();
@@ -174,8 +174,8 @@ protected Q_SLOTS:
     void PutButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
     void PutDoubleClickEvent( gadget::Keys button, int x, int y, int state );
     void PutMouseMoveEvent( int x, int y, int z, int state );
-    void PutKeyPressEvent( gadget::Keys key, int modifierMask, QString unicode );
-    void PutKeyReleaseEvent( gadget::Keys key, int modifierMask, QString unicode );
+    void PutKeyPressEvent( gadget::Keys key, int modifierMask, char unicode );
+    void PutKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode );
 
 
 };

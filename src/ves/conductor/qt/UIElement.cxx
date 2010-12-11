@@ -47,6 +47,8 @@
 // --- C++ Includes --- //
 #include <iostream>
 
+#include <boost/concept_check.hpp>
+
 namespace ves
 {
 namespace conductor
@@ -181,39 +183,61 @@ const osg::Vec4f UIElement::GetTextureCoordinates()
     return osg::Vec4f( 0.f, 1.f, 0.f, 1.f );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendInteractionEvent( xplorer::eventmanager::InteractionEvent &event )
+void UIElement::SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event )
 {
-
+    boost::ignore_unused_variable_warning( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
-
+    boost::ignore_unused_variable_warning( button );
+    boost::ignore_unused_variable_warning( x );
+    boost::ignore_unused_variable_warning( y );
+    boost::ignore_unused_variable_warning( state );
+    std::cerr << "UIElement::SendButtonPressEvent If you see this we have problems." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
-
+    boost::ignore_unused_variable_warning( button );
+    boost::ignore_unused_variable_warning( x );
+    boost::ignore_unused_variable_warning( y );
+    boost::ignore_unused_variable_warning( state );
+    std::cerr << "UIElement::SendButtonReleaseEvent If you see this we have problems." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendDoubleClickEvent( gadget::Keys button, int x, int y, int state )
 {
-
+    boost::ignore_unused_variable_warning( button );
+    boost::ignore_unused_variable_warning( x );
+    boost::ignore_unused_variable_warning( y );
+    boost::ignore_unused_variable_warning( state );
+    std::cerr << "UIElement::SendDoubleClickEvent If you see this we have problems." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendMouseMoveEvent( int x, int y, int z, int state )
 {
-
+    boost::ignore_unused_variable_warning( x );
+    boost::ignore_unused_variable_warning( y );
+    boost::ignore_unused_variable_warning( z );
+    boost::ignore_unused_variable_warning( state );
+    std::cerr << "UIElement::SendMouseMoveEvent If you see this we have problems." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendKeyPressEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
+void UIElement::SendKeyPressEvent( gadget::Keys key, int modifierMask, char unicode )
 {
-
+    boost::ignore_unused_variable_warning( key );
+    boost::ignore_unused_variable_warning( modifierMask );
+    boost::ignore_unused_variable_warning( unicode );
+    std::cerr << "UIElement::SendKeyPressEvent If you see this we have problems." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, wchar_t unicode )
+void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode )
 {
-
+    boost::ignore_unused_variable_warning( key );
+    boost::ignore_unused_variable_warning( modifierMask );
+    boost::ignore_unused_variable_warning( unicode );
+    std::cerr << "UIElement::SendKeyReleaseEvent If you see this we have problems." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char* UIElement::RenderElementToImage()
@@ -281,7 +305,9 @@ void UIElement::MoveCanvas( float dx, float dy, float dz )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::ResizeCanvas( int width, int height )
 {
-
+    boost::ignore_unused_variable_warning( width );
+    boost::ignore_unused_variable_warning( height );
+    std::cerr << "UIElement::ResizeCanvas If you see this we have problems." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::Update()
