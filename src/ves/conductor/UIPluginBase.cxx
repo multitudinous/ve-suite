@@ -118,6 +118,7 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( UIPLUGINBASE_GEOMETRY, UIPluginBase::OnGeometry )
     EVT_MENU( UIPLUGINBASE_NAVTO, UIPluginBase::OnNavigateTo )
     EVT_MENU( UIPLUGINBASE_NAVTO_SELECT, UIPluginBase::OnNavigateTo )
+    EVT_MENU( UIPLUGINBASE_OPTIMIZE_CAD, UIPluginBase::OnOptimizeCAD )
     EVT_MENU( UIPLUGINBASE_DATASET, UIPluginBase::OnDataSet )
     EVT_MENU( UIPLUGINBASE_MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
     EVT_MENU( UIPLUGINBASE_MODEL_RESULTS, UIPluginBase::OnResultsWindow ) /* EPRI TAG */
@@ -1561,6 +1562,26 @@ void UIPluginBase::OnNavigateTo( wxCommandEvent& event )
     boost::ignore_unused_variable_warning( connected );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::OnOptimizeCAD( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    //Set the active model so that we do not have to in every function
+    if( !SetActiveModel() )
+    {
+        return;
+    }
+    
+    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+    veCommand->SetCommandName( std::string( "Optimize CAD" ) );
+    ves::open::xml::DataValuePairPtr dataValuePair( 
+                                                   new ves::open::xml::DataValuePair() );
+    dataValuePair->SetData( "Optimize CAD", m_veModel->GetID() );
+    veCommand->AddDataValuePair( dataValuePair );
+
+    bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+    boost::ignore_unused_variable_warning( connected );
+}
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnGeometry( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
@@ -2401,6 +2422,9 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
 
     xplorer_menu->Append( UIPLUGINBASE_NAVTO, _( "Navigate To" ) );
     xplorer_menu->Enable( UIPLUGINBASE_NAVTO, true );
+
+    xplorer_menu->Append( UIPLUGINBASE_OPTIMIZE_CAD, _( "Optimize CAD" ) );
+    xplorer_menu->Enable( UIPLUGINBASE_OPTIMIZE_CAD, true );
 
     //Make a specific plusing active in xplorer
     xplorer_menu->Append( UIPLUGINBASE_SET_ACTIVE_MODEL, _( "Activate" ) );

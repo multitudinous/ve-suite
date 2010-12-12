@@ -69,7 +69,8 @@ namespace ves
 namespace xplorer
 {
 /*!\file ModelCADHandler.h
-Mananger for the CAD associated with a cfdModel
+Mananger for the CAD associated with a Model. Every Model has a single
+instance of this class.
 */
 /*!\class ves::xplorer::ModelCADHandler
 *
@@ -219,6 +220,9 @@ public:
     {
         ;
     }
+
+    ///Optimize all of the CAD associated with this model and plugin
+    void OptimizeAllCAD();
 
 protected:
     ///The clipping plane for geometry
