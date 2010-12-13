@@ -7,6 +7,8 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <boost/program_options.hpp>
+
 #include <string>
 #include <vector>
 #include <list>
@@ -26,11 +28,48 @@
 
 #include "SwapTexture.h"
 
+namespace po = boost::program_options;
+
 std::vector<std::string> GetFilesInDirectory( std::string dir, std::string extension );
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char* argv[] )
 {
+
+    po::options_description dds_desc("DDS Options");
+    
+    dds_desc.add_options()("write_dds_files", po::bool_switch(), 
+        "Write the DDS files out after they have been flipped. This overwrites the original files.");
+    
+    dds_desc.add_options()("write_single_file", po::value< std::string >(), 
+                               "Write single ive file and this is the file name.");
+    dds_desc.add_options()("help,h", "Produce help message");
+    
+    // Construct a parser and do the actual parsing.
+    po::command_line_parser parser(argc, argv);
+    po::parsed_options parsed = 
+        parser.options(dds_desc).allow_unregistered().run();
+    
+    // Finally store our options and use them.
+    po::variables_map vm;
+    po::store(parsed, vm);
+    po::notify(vm);
+    
+    if( vm.count("help") )
+    {
+        std::cout << dds_desc << std::endl;
+        return 0;
+    }
+    std::cout << vm.count("write_single_file") << std::endl;
+    std::string singleIVEFile;
+    bool singleFile = false;
+    osg::ref_ptr< osg::Group > singleGroup = new osg::Group();
+    if( vm.count("write_single_file") > 0 )
+    {
+        singleIVEFile = vm["write_single_file"].as< std::string >();
+        singleFile = true;
+    }
+
     // At init time:
     // Set global dds options.
     //osg::ref_ptr< osgDB::ReaderWriter::Options > opt = new osgDB::ReaderWriter::Options();
@@ -75,10 +114,43 @@ int main( int argc, char* argv[] )
         //noImgOpt->setOptionString( "noTexturesInIVEFile" );
         //std::string olfFileName = iveFiles.at( i );
         //boost::filesystem::path oldFileName( iveFiles.at( i ), boost::filesystem::no_check );
-        oldFileName = osgDB::getNameLessExtension( iveFiles.at( i ) );
-        oldFileName = oldFileName + "_dds.ive";
-        bool success = osgDB::writeNodeFile( *(tgaFile.get()), oldFileName );
-        std::cout << "New file " << oldFileName << std::endl;
+        if( !singleFile )
+        {
+            oldFileName = osgDB::getNameLessExtension( iveFiles.at( i ) );
+            oldFileName = oldFileName + "_dds.ive";
+            bool success = osgDB::writeNodeFile( *(tgaFile.get()), oldFileName );
+            std::cout << "New file " << oldFileName << std::endl;
+        }
+        else
+        {
+            singleGroup->addChild( tgaFile.get() );
+        }
+    }
+    
+    if( singleFile )
+    {
+        //Run the optimizer to improve performance
+        {
+            osgUtil::Optimizer graphOpti;
+            graphOpti.optimize( singleGroup.get(), 
+                               //Had to comment out this flag because of a bug in OSG
+                               osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
+                               osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
+                               //osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
+                               osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
+                               //This one can cause problems with opacity settings
+                               osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
+                               osgUtil::Optimizer::MERGE_GEOMETRY |
+                               osgUtil::Optimizer::CHECK_GEOMETRY |
+                               //This one causes problems when creating physics
+                               //meshes for osgBullet
+                               //osgUtil::Optimizer::SPATIALIZE_GROUPS |
+                               osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
+                               osgUtil::Optimizer::MERGE_GEODES |
+                               osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
+        }
+        bool success = osgDB::writeNodeFile( *(singleGroup.get()), singleIVEFile );
+        std::cout << "New file " << singleIVEFile << std::endl;
     }
     return 0;
 }
