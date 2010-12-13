@@ -13,7 +13,8 @@ sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
 env = ves_pkg.getEnv().Clone()
-#env.Append( LIBS = [ 'boost_program_options-mt'] )
+if GetPlatform() != 'win32':
+    env.Append( LIBS = [ 'boost_program_options-mt'] )
 #env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open' ),
 #                        pj( '#', buildDir, 'src', 'ves', 'open','xml' ) ] )
 #env.Append( CPPPATH = [ pj( RootDir, 'external', 'osgEphemeris', 'include' ) ] )
