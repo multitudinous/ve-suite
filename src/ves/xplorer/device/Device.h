@@ -204,7 +204,7 @@ protected:
     ///Ensure that the camera stays above ground.
     void EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, double* translation, const osg::Quat& world_quat, int subzeroFlag );
 
-    ///
+    ///Device is enabled
     bool m_enabled;
 
     ///enum

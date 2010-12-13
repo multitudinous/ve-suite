@@ -52,6 +52,7 @@ class wxButton;
 class wxComboBox;
 class wxBitmapButton;
 class wxToggleButton;
+class wxChoice;
 
 // --- STL Includes --- //
 #include <map>
@@ -145,6 +146,7 @@ private:
     void OnAspectRatioSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnAspectRatioText( wxCommandEvent& event );
     void OnAspectRatioSlider( wxCommandEvent& WXUNUSED( event ) );
+    void OnAspectRatioChoice( wxCommandEvent& event );
     void OnNearPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnNearPlaneText( wxCommandEvent& event );
     void OnNearPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
@@ -255,12 +257,15 @@ private:
     ves::conductor::util::wxSpinCtrlDbl* mMaxCircleOfConfusionSpinCtrl;
     wxSlider* mMaxCircleOfConfusionSlider;
 
+    wxChoice* m_aspectRatioChoice;
+    
     wxTimer m_timer;
 
     ves::conductor::util::CORBAServiceList* mServiceList;
     std::string mCommandName;
     std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
 
+    std::map< std::string, std::pair< unsigned int, unsigned int > > m_resolutionMap;
     DECLARE_EVENT_TABLE()
 };
 }

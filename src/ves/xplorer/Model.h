@@ -152,7 +152,8 @@ public:
     {;}
 
     void setModelNode( ves::xplorer::scenegraph::CADEntityHelper * );
-    void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
+    ///four type models right now (experiment, simulation, design, and geometry)
+    void setModelType( ModelTypeIndex );
     bool GetMirrorDataFlag( void );
     void SetMirrorDataFlag( bool );
     void SetMirrorNode( ves::xplorer::scenegraph::Group* );

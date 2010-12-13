@@ -77,24 +77,7 @@ class btRigidBody;
 // --- C/C++ Libraries --- //
 #include <vector>
 #include <string>
-/*
-template< typename DATA_TYPE_OUT, typename DATA_TYPE_IN, unsigned ROWS, unsigned COLS >
-gmtl::Matrix< DATA_TYPE_OUT, ROWS, COLS >
-convertTo( const gmtl::Matrix< DATA_TYPE_IN, ROWS, COLS >& in )
-{
-    using namespace boost::lambda;
 
-    gmtl::Matrix< DATA_TYPE_OUT, ROWS, COLS > out;
-
-    const DATA_TYPE_IN* in_data( in.mData );
-    DATA_TYPE_OUT* out_data( out.mData );
-
-    boost::mpl::for_each< boost::mpl::range_c< unsigned int, 0, ROWS * COLS> >
-    ( *( out_data + _1 ) = *( in_data + _1 ) );
-
-    return out;
-}
-*/
 namespace ves
 {
 namespace xplorer

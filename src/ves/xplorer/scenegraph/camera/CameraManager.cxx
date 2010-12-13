@@ -341,7 +341,7 @@ void CameraManager::SetActiveCameraObject(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::SetCameraViewQuadResolution( unsigned int const& scale )
 {
-    //if( SceneManager::instance()->IsDesktopMode() )
+    if( SceneManager::instance()->IsDesktopMode() )
     {
         m_rttQuadTransform->setScale( osg::Vec3( scale, scale, 1.0 ) );
     }

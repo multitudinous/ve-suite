@@ -51,6 +51,8 @@ TextureBasedTransientDurationUpdateEventHandler::TextureBasedTransientDurationUp
 ///////////////////////////////////////////////////////////////////
 TextureBasedTransientDurationUpdateEventHandler
 ::TextureBasedTransientDurationUpdateEventHandler( const TextureBasedTransientDurationUpdateEventHandler& ceh )
+    :
+    TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedTransientDurationUpdateEventHandler::~TextureBasedTransientDurationUpdateEventHandler()

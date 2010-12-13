@@ -249,6 +249,11 @@ public:
     ///Method to call the frame after taking a screen cap
     void PostWriteImageFile();
     
+    ///Update the texture resolution for this camera
+    void SetTextureResolution( std::pair< unsigned int, unsigned int >& viewportDimensions );
+    
+    ///
+    void PostTextureResoution();
 protected:
     ///Destructor
     virtual ~CameraObject();
@@ -373,6 +378,8 @@ private:
     std::string m_filename;
     ///capture image
     bool m_captureImage;
+    ///resolution update
+    bool m_resolutionUpdate;
 };
 } //end camera
 } //end scenegraph

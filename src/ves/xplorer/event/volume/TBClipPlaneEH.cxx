@@ -51,6 +51,8 @@ TextureBasedClipPlaneEventHandler::TextureBasedClipPlaneEventHandler()
 ///////////////////////////////////////////////////////////////////
 TextureBasedClipPlaneEventHandler
 ::TextureBasedClipPlaneEventHandler( const TextureBasedClipPlaneEventHandler& ceh )
+    :
+    TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedClipPlaneEventHandler::~TextureBasedClipPlaneEventHandler()

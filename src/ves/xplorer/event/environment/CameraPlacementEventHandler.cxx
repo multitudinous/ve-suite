@@ -218,18 +218,7 @@ void CameraPlacementEventHandler::Execute(
                 "autoComputeNearFarPlane" )->GetData( selection );
 
             bool onOff = ( selection != 0 );
-            if( onOff )
-            {
-                cameraManager.GetActiveCameraObject()->
-                    GetCamera().setComputeNearFarMode(
-                    osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-            }
-            else
-            {
-                cameraManager.GetActiveCameraObject()->
-                    GetCamera().setComputeNearFarMode(
-                    osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-            }
+            cameraManager.GetActiveCameraObject()->ComputeNearFarPlanes( onOff );
         }
 
         //Right now we are saying you must have a DCS
@@ -476,16 +465,7 @@ void CameraPlacementEventHandler::Execute(
             "autoComputeNearFarPlane" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
-        if( onOff )
-        {
-            activeCameraObject->GetCamera().setComputeNearFarMode(
-                osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-        }
-        else
-        {
-            activeCameraObject->GetCamera().setComputeNearFarMode(
-                osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-        }
+        activeCameraObject->ComputeNearFarPlanes( onOff );
 
         activeCameraObject->Update();
 
@@ -619,7 +599,8 @@ void CameraPlacementEventHandler::Execute(
         {
             return;
         }
-
+        
+        //Set the Project matrix
         double projectionData[ 4 ] = { 0, 0, 0, 0 };
         command->GetDataValuePair(
             "projectionFieldOfView" )->GetData( projectionData[ 0 ] );
@@ -634,22 +615,27 @@ void CameraPlacementEventHandler::Execute(
             projectionData[ 0 ], projectionData[ 1 ],
             projectionData[ 2 ], projectionData[ 3 ] );
 
+        //Set the near/far plane
         unsigned int selection = 0;
         command->GetDataValuePair(
             "autoComputeNearFarPlane" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
-        if( onOff )
-        {
-            activeCameraObject->GetCamera().setComputeNearFarMode(
-                osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-        }
-        else
-        {
-            activeCameraObject->GetCamera().setComputeNearFarMode(
-                osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-        }
+        activeCameraObject->ComputeNearFarPlanes( onOff );
 
+        //Setup the textture resolution
+        unsigned int tempX = 0;
+        unsigned int tempY = 0;
+
+        command->GetDataValuePair(
+            "projectionXImageResolution" )->GetData( tempX );
+        command->GetDataValuePair(
+            "projectionYImageResolution" )->GetData( tempY );
+        std::pair< unsigned int, unsigned int > resolution = 
+            std::make_pair< unsigned int, unsigned int >( tempX, tempY );
+        activeCameraObject->SetTextureResolution( resolution );
+
+        //Now update everything
         activeCameraObject->Update();
 
         break;
