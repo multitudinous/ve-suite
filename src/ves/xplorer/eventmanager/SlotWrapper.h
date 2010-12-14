@@ -69,7 +69,8 @@ public:
      * 
      * @see EventManager::ConnectSignal
      **/
-    SlotWrapper( const typename T::slot_type& slot ) :
+    //SlotWrapper( const typename T::slot_type& slot ) :
+    SlotWrapper( const typename T::slot_type* slot ) :
     mSlot( slot )
     {
         ;
@@ -77,28 +78,28 @@ public:
 
     SlotWrapper( const SlotWrapper& orig )
     {
-        std::cout << "SlotWrapper copy ctor" << std::endl << std::flush;
         mSlot = orig.mSlot;
     }
 
     SlotWrapper& operator= (const SlotWrapper& orig)
     {
-        std::cout << "SlotWrapper assignment op" << std::endl << std::flush;
         mSlot = orig.mSlot;
         return *this;
     }
 
     virtual ~SlotWrapper( )
     {
-
+        delete mSlot;
     }
 
+    //const typename T::slot_type& GetSlot( )
     const typename T::slot_type& GetSlot( )
     {
-        return mSlot;
+        return (*mSlot);
     }
 private:
-    const typename T::slot_type& mSlot;
+    //const typename T::slot_type& mSlot;
+    const typename T::slot_type* mSlot;
 
 };
 

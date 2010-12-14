@@ -57,21 +57,12 @@
 // to the boost::bind call and then add both a CONNECTSIGNAL_N and a
 // CONNECTSIGNALS_N macro that use the CONNECT____N macro.
 
-
-// TODO: The code in CONNECTSIGNALPRE and CONNECTSIGNALPOST that create the functor
-// and wrapper on the heap needs to be looked at so we stop leaking memory here.
-// SlotWrapper needs to be re-worked to take a pointer to a functor, and then
-// SlotWrapper needs to manage the memory of the functor. EventManager then needs
-// to manage the memory of the SlotWrapperS. Anytime it removes a db entry due
-// to a stale ScopedConnectionsList object, it needs to destroy the associated
-// SlotWrapper. And delete upon destruction of EventManager of course. mExactSlotMap and
-// the other connections one need to be reworked so we don't get ID clashes.
 #define CONNECTSIGNALPRE( signature ) do{\
         typedef boost::signals2::signal< signature > sig_type; \
         sig_type::slot_type* slotFunctor = new sig_type::slot_type(
 
 #define CONNECTSIGNALPOST  ); \
-                ves::xplorer::eventmanager::SlotWrapper< sig_type >* slotWrapper = new ves::xplorer::eventmanager::SlotWrapper< sig_type >( *slotFunctor );
+                ves::xplorer::eventmanager::SlotWrapper< sig_type >* slotWrapper = new ves::xplorer::eventmanager::SlotWrapper< sig_type >( slotFunctor );
 
 #define CONNECTSIGNALCALL( name, connections, priority ) \
         ves::xplorer::eventmanager::EventManager::instance()->ConnectSignal( name, slotWrapper, \
@@ -433,6 +424,8 @@ private:
 
     std::map< int, SlotWrapperBase* > mExactSlotMap;
     std::map< int, boost::weak_ptr< ScopedConnectionList > > mExactSlotConnections;
+
+    int mMonotonicID;
 };
 
 

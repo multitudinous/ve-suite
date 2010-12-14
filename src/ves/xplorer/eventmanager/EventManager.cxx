@@ -54,7 +54,8 @@ namespace eventmanager
 vprSingletonImp( EventManager );
 
 ////////////////////////////////////////////////////////////////////////////////
-EventManager::EventManager()
+EventManager::EventManager():
+    mMonotonicID(0)
 {
     // Open an in-memory database to allow efficient searches of existing signals
     Poco::Data::SQLite::Connector::registerConnector();
@@ -72,13 +73,28 @@ EventManager::~EventManager()
 {
     Poco::Data::SQLite::Connector::unregisterConnector();
 
-    std::map<std::string, SignalWrapperBase*>::const_iterator iter = mSignals.begin();
-    std::map<std::string, SignalWrapperBase*>::const_iterator max = mSignals.end();
-
-    while( iter != max )
+    // Delete all our signals
     {
-        delete ( iter->second );
-        iter++;
+        std::map<std::string, SignalWrapperBase*>::const_iterator iter = mSignals.begin();
+        std::map<std::string, SignalWrapperBase*>::const_iterator max = mSignals.end();
+
+        while( iter != max )
+        {
+            delete ( iter->second );
+            ++iter;
+        }
+    }
+
+    // Delete all our stored slots
+    {
+        std::map< int, SlotWrapperBase* >::const_iterator iter = mExactSlotMap.begin();
+        std::map< int, SlotWrapperBase* >::const_iterator max = mExactSlotMap.end();
+
+        while( iter != max )
+        {
+            delete ( iter->second );
+            ++iter;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +168,16 @@ void EventManager::ConnectToPreviousSlots( const std::string& sigName )
             catch( Poco::Data::DataException& ex )
             {
                 std::cout << ex.displayText() << std::endl;
+            }
+
+            // We can also remove this entry from mExactSlotMap and free up
+            // associated memory
+            std::map< int, SlotWrapperBase* >::iterator slotIter =
+                    mExactSlotMap.find( *idsIter );
+            if( slotIter != mExactSlotMap.end() )
+            {
+                delete( slotIter->second );
+                mExactSlotMap.erase( slotIter );
             }
         }
         ++idsIter;
@@ -252,16 +278,15 @@ void EventManager::StoreSlot( const std::string& sigName,
                               int type,
                               int priority )
 {
-    int id = mExactSlotMap.size();
-    mExactSlotMap[ id ] = slot;
+    mExactSlotMap[ mMonotonicID ] = slot;
 
-    mExactSlotConnections[ id ] = connections.GetWeakPtr();
+    mExactSlotConnections[ mMonotonicID ] = connections.GetWeakPtr();
 
     // Add this slot to the lookup table
     try
     {
         ( *mSession ) << "INSERT INTO slots (mapID, pattern, type, priority) VALUES (:id,:pattern,:type,:priority)",
-                Poco::Data::use( id ),
+                Poco::Data::use( mMonotonicID ),
                 Poco::Data::use( sigName ),
                 Poco::Data::use( type ),
                 Poco::Data::use( priority ),
@@ -271,6 +296,10 @@ void EventManager::StoreSlot( const std::string& sigName,
     {
         std::cout << ex.displayText() << std::endl;
     }
+
+    // Increment the ID so we never have name clashes when things get deleted
+    // from the middle.
+    ++mMonotonicID;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EventManager::GetMatches( const std::string stringToMatch, SignalType sigType, std::vector< std::string >& names )
