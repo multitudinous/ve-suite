@@ -88,8 +88,20 @@ UIManager::UIManager() :
     mMinimizeXOffset( 10.0f ),
     mMoveElement( 0 ),
     mMinimizeElement( 0 ),
-    mUnminimizeElement( 0 )
-{    
+    mUnminimizeElement( 0 ),
+    mMouseInsideUI( true ) // We start out true, since no Qt events will happen
+                           // if we start out false. And that means no UI would
+                           // ever appear.
+{
+    // Register signals
+    ves::xplorer::eventmanager::EventManager* evm = ves::xplorer::eventmanager::EventManager::instance();
+    using ves::xplorer::eventmanager::SignalWrapper;
+
+    evm->RegisterSignal(
+            new SignalWrapper< voidBoolSignalType >( &mUIEnterLeaveSignal ),
+            "UIManager.EnterLeaveUI" );
+
+    // Connect slots to external signals
     CONNECTSIGNALS_0( "%HideShowUI%", void (), &UIManager::ToggleVisibility, mConnections,
                       any_SignalType, highest_Priority);
 
@@ -910,7 +922,22 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
         return;
     }
 
-    if( !Ortho2DTestPointerCoordinates( x, y ) )
+    bool OrthoTest = Ortho2DTestPointerCoordinates( x, y );
+
+    // Send out Enter/Leave signal if that state has just changed
+    if( OrthoTest && !mMouseInsideUI )
+    {
+        mMouseInsideUI = true;
+        mUIEnterLeaveSignal( true );
+    }
+    else if( !OrthoTest && mMouseInsideUI )
+    {
+        mMouseInsideUI = false;
+        mUIEnterLeaveSignal( false );
+    }
+
+    // If we're actually not over a managed quad, do no more
+    if( !OrthoTest )
     {
         return;
     }

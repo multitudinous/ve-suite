@@ -123,6 +123,7 @@
 #ifdef QT_ON
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/eventmanager/EventMapper.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/conductor/qt/UIManager.h>
 
 //// --- Qt Includes --- //
@@ -165,7 +166,8 @@ App::App( int argc, char* argv[], bool enableRTT )
     mRTT( enableRTT ),
     mProfileCounter( 0 ),
     mLastFrame( 0 ),
-    mLastTime( 0 )
+    mLastTime( 0 ),
+    m_MouseInsideUI( true )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -1093,6 +1095,11 @@ void App::update()
 void App::LoadUI()
 {
     vprDEBUG( vesDBG, 2 ) << "|\tApp LoadUI" << std::endl << vprDEBUG_FLUSH;
+
+    //Request connection to UIManager.EnterLeaveUI signal
+    CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &App::UIEnterLeave,
+                     mConnections, highest_Priority );
+
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware(true);
     QApplication::setAttribute(Qt::AA_MacPluginApplication);
@@ -1137,6 +1144,11 @@ void App::LoadUI()
     vprDEBUG( vesDBG, 2 ) << "|\tEnd App LoadUI" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void App::UIEnterLeave( bool entered )
+{
+    m_MouseInsideUI = entered;
+}
+////////////////////////////////////////////////////////////////////////////////
 void App::preRun()
 {
     LoadUI();
@@ -1144,7 +1156,7 @@ void App::preRun()
 ////////////////////////////////////////////////////////////////////////////////
 void App::runLoop()
 {
-    if( m_uiInitialized )
+    if( m_uiInitialized && m_MouseInsideUI )
     {
         m_qtApp->processEvents();
         // Just using sendPostedEvents without processEvents does not push mouse

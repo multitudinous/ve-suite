@@ -39,6 +39,7 @@
 #include "SceneGLTransformInfoPtr.h"
 
 #include <ves/xplorer/TextureBasedVizHandlerPtr.h>
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 // ---  VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
@@ -282,6 +283,10 @@ private:
 #ifdef QT_ON
     bool m_uiInitialized;
     QApplication* m_qtApp;
+
+    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+    void UIEnterLeave( bool entered );
+    bool m_MouseInsideUI;
 #endif // QT_ON
 };
 } //end xplorer

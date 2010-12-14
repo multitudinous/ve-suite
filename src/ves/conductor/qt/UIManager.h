@@ -347,6 +347,12 @@ private:
 
     ///
     std::map< UIElement*, osg::Vec4 > mElementPositionsOrtho2D;
+
+    typedef boost::signals2::signal< void( bool ) > voidBoolSignalType;
+    /// Emits true when mouse enters and false when mouse leaves a UIElement
+    voidBoolSignalType mUIEnterLeaveSignal;
+
+    bool mMouseInsideUI;
 };
 
 } //end conductor
