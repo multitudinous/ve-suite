@@ -69,6 +69,13 @@ base_header_srcs = sca_util.getHeadersRecursive( srcDir )
 sources += map(lambda s: pj('plugin', s), base_plugin_srcs)
 headers += map(lambda s: pj('plugin', s), base_header_srcs)
 
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','behavior') )
+behavior_srcs = sca_util.getSourcesRecursive( srcDir )
+behavior_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('behavior', s), behavior_srcs)
+headers += map(lambda s: pj('behavior', s), behavior_header_srcs)
+
+
 lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBS = ['ves_open_xml',
                    'ves_xplorer_scenegraph',
