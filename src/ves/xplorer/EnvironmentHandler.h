@@ -44,6 +44,8 @@
 #include <ves/xplorer/event/EventHandlerPtr.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
 
+#include <ves/xplorer/behavior/FrameAll.h>
+
 // --- VTK Includes --- //
 class vtkPolyData;
 
@@ -151,6 +153,9 @@ public:
     ///\param _far
     void SetFrustumValues( float _left, float _right, float _bottom, float _top, float _near, float _far );
 
+    ///Get the frustum values
+    void GetFrustumValues( std::vector<float>& values );
+
     ///Get the window width
     unsigned int GetWindowWidth();
 
@@ -235,6 +240,8 @@ private:
     std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;///<The event handler for commands.
 
     osg::ref_ptr<osgEphemeris::EphemerisModel> m_ephemerisModel;///<The model containing ephemeris data
+
+    boost::shared_ptr< ves::xplorer::behavior::FrameAll > mFrameAll;
 };
 }
 }

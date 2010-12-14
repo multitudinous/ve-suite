@@ -119,7 +119,8 @@ EnvironmentHandler::EnvironmentHandler()
     _frustumNear( 0 ),
     _frustumFar( 0 ),
     m_lodScale( 0.01 ),
-    framerate( 0 )
+    framerate( 0 ),
+    mFrameAll( new ves::xplorer::behavior::FrameAll )
 {
     for( unsigned int i = 0; i < 3; i++ )
     {
@@ -379,6 +380,7 @@ void EnvironmentHandler::InitScene()
     keyboardMouse->SetWindowValues( screenDims.first, screenDims.second );
     keyboardMouse->SetScreenCornerValues(
         displaySettings->GetScreenCornerValues() );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device
@@ -436,6 +438,17 @@ void EnvironmentHandler::SetFrustumValues(
     _frustumTop = _top;
     _frustumNear = _near;
     _frustumFar = _far;
+}
+////////////////////////////////////////////////////////////////////////////////
+void EnvironmentHandler::GetFrustumValues( std::vector<float>& values )
+{
+    values.clear();
+    values.push_back( _frustumLeft );
+    values.push_back( _frustumRight );
+    values.push_back( _frustumBottom );
+    values.push_back( _frustumTop );
+    values.push_back( _frustumNear );
+    values.push_back( _frustumFar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int EnvironmentHandler::GetWindowWidth()
