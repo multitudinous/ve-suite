@@ -121,19 +121,18 @@ MainWindow::MainWindow(QWidget* parent) :
     // Connect to the ActiveModelChangedSignal so we can show the correct 
     // tabs when the model changes
     {
-        typedef boost::signals2::signal< void ( const std::string& ) > AMCSignal_type;
-        AMCSignal_type::slot_type slotFunctor( boost::bind( &MainWindow::OnActiveModelChanged, this, _1 ) );
-        ves::xplorer::eventmanager::SlotWrapper< AMCSignal_type > slotWrapper( slotFunctor );
-        ves::xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "ModelHandler.ActiveModelChangedSignal", &slotWrapper, mConnections );
+        CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
+                         void ( const std::string& ), &MainWindow::OnActiveModelChanged,
+                         mConnections, normal_Priority );
     }
     
     // Connect to ObjectPickedSignal so we can update the scenegraph tree view when
     // an object is picked
     {
-        typedef boost::signals2::signal< void ( osg::NodePath& ) > ObjectPickedSignal_type;
-        ObjectPickedSignal_type::slot_type slotFunctor( boost::bind( &MainWindow::OnObjectPicked, this, _1 ) );
-        ves::xplorer::eventmanager::SlotWrapper< ObjectPickedSignal_type > slotWrapper( slotFunctor );
-        ves::xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "KeyboardMouse.ObjectPickedSignal", &slotWrapper, mConnections );
+//        typedef boost::signals2::signal< void ( osg::NodePath& ) > ObjectPickedSignal_type;
+//        ObjectPickedSignal_type::slot_type slotFunctor( boost::bind( &MainWindow::OnObjectPicked, this, _1 ) );
+//        ves::xplorer::eventmanager::SlotWrapper< ObjectPickedSignal_type > slotWrapper( slotFunctor );
+//        ves::xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "KeyboardMouse.ObjectPickedSignal", &slotWrapper, mConnections );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
