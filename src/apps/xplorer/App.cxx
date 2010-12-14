@@ -122,6 +122,7 @@
 
 #ifdef QT_ON
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/eventmanager/EventMapper.h>
 #include <ves/conductor/qt/UIManager.h>
 
 //// --- Qt Includes --- //
@@ -747,6 +748,13 @@ void App::latePreFrame()
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame GraphicalPluginManager", 20 );
         GraphicalPluginManager::instance()->PreFrameUpdate();
     }
+    ///////////////////////
+#ifdef QT_ON
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame EventMapper", 20 );
+        ves::xplorer::eventmanager::EventMapper::instance()->LatePreFrameUpdate();
+    }
+#endif
     ///////////////////////
 #ifdef MINERVA_GIS_SUPPORT
     {
