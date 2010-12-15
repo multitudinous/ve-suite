@@ -357,10 +357,7 @@ void ModelCADHandler::UpdateOpacity( const std::string& nodeID, float opacity )
     }
     else
     {
-        if( isTransparent( tempNode->getStateSet() ) )
-        {
-            transparentDisable( tempNode.get() );
-        }
+        transparentDisable( tempNode.get() );
     }    
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -397,10 +394,7 @@ void ModelCADHandler::MakeCADRootOpaque()
         osg::Node* tempNode = iter->second->GetDCS();
         if( iter->second->GetTransparentFlag() )
         {
-            if( isTransparent( tempNode->getStateSet() ) )
-            {
-                transparentDisable( tempNode );
-            }            
+            transparentDisable( tempNode );
         }
     }
 }
