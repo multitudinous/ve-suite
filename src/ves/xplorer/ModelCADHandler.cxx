@@ -45,7 +45,7 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
-#include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
+#include <ves/xplorer/scenegraph/util/TransparencySupport.h>
 
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAttribute.h>
@@ -74,6 +74,8 @@ ModelCADHandler::ModelCADHandler( ves::xplorer::scenegraph::DCS* rootNode )
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::ModelCADHandler( const ModelCADHandler& rhs )
+    :
+    GlobalBase( rhs )
 {
     m_cloneList = rhs.m_cloneList;
     m_partList = rhs.m_partList;
@@ -324,30 +326,42 @@ void ModelCADHandler::SetActiveAttributeOnNode( const std::string& nodeID,
     }
 }
 ////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::UpdateOpacity( const std::string& nodeID, float opacity, bool storeState )
+void ModelCADHandler::UpdateOpacity( const std::string& nodeID, float opacity )
 {
     bool transparent = true;
     if( opacity == 1.f )
     {
         transparent = false;
     }
+    osg::ref_ptr< osg::Node > tempNode;
     if( AssemblyExists(nodeID) )
     {
-        ves::xplorer::scenegraph::util::OpacityVisitor
-        opacity_visitor( m_assemblyList[nodeID].get(), storeState, transparent, opacity );
+        tempNode = m_assemblyList[nodeID].get();
     }
     else if( PartExists( nodeID ) )
     {
-        ves::xplorer::scenegraph::util::OpacityVisitor
-        opacity_visitor( m_partList[nodeID]->GetDCS(), storeState, transparent, opacity );
+        tempNode = m_partList[nodeID]->GetDCS();
     }
     else
     {
         vprDEBUG( vesDBG, 1 ) << "|\t CADNode not found : " << nodeID 
             << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::UpdateOpacity()---"
-            << std::endl << vprDEBUG_FLUSH;        
+            << std::endl << vprDEBUG_FLUSH;
+        return;
     }
+    
+    if( transparent )
+    {
+        transparentEnable( tempNode.get(), opacity );
+    }
+    else
+    {
+        if( isTransparent( tempNode->getStateSet() ) )
+        {
+            transparentDisable( tempNode.get() );
+        }
+    }    
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::MakeCADRootTransparent()
@@ -361,10 +375,10 @@ void ModelCADHandler::MakeCADRootTransparent()
     for( std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator 
         iter = m_partList.begin(); iter != m_partList.end(); ++iter )
     {
+        osg::Node* tempNode = iter->second->GetDCS();
         if( iter->second->GetTransparentFlag() )
         {
-            ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( iter->second->GetDCS(), false, true, 0.3f );
+            transparentEnable( tempNode, 0.3f );
         }
     }
  }
@@ -380,10 +394,13 @@ void ModelCADHandler::MakeCADRootOpaque()
     for( std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator 
         iter = m_partList.begin(); iter != m_partList.end(); ++iter )
     {
+        osg::Node* tempNode = iter->second->GetDCS();
         if( iter->second->GetTransparentFlag() )
         {
-            ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( iter->second->GetDCS(), false, false, 1.0f );
+            if( isTransparent( tempNode->getStateSet() ) )
+            {
+                transparentDisable( tempNode );
+            }            
         }
     }
 }

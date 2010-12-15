@@ -169,7 +169,7 @@ public:
     ///\param opacity The value of the opacity.
     ///\param storeState Tell the opacity visitor wether or not to 
     ///store the original color and material state
-    void UpdateOpacity( const std::string& nodeID, float opacity, bool storeState );
+    void UpdateOpacity( const std::string& nodeID, float opacity );
 
     ///Get a specific part.
     ///\param partID The ID of the part to search form

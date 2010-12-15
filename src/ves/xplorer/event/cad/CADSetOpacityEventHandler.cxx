@@ -91,7 +91,7 @@ void CADSetOpacityEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         {
             double opacity = 1.0;
             opacityValue->GetData( opacity );
-            m_cadHandler->UpdateOpacity( id, opacity, false );
+            m_cadHandler->UpdateOpacity( id, opacity );
         }
         else if( transparentFlag )
         {
