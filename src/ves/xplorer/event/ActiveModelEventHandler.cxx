@@ -33,6 +33,8 @@
 #include <ves/xplorer/event/ActiveModelEventHandler.h>
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/Model.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -65,9 +67,19 @@ void ActiveModelEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXML
 {
     ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject ) );
     ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_MODEL" );
-    std::string newModel;
-    activeModelDVP->GetData( newModel );
-    ves::xplorer::ModelHandler::instance()->SetActiveModel( newModel );
+    if( activeModelDVP )
+    {
+        std::string newModel;
+        activeModelDVP->GetData( newModel );
+        ves::xplorer::ModelHandler::instance()->SetActiveModel( newModel );
+        return;
+    }
+
+    activeModelDVP = command->GetDataValuePair( "Optimize CAD" );
+    if( activeModelDVP )
+    {
+        ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->OptimizeAllCAD();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ActiveModelEventHandler& ActiveModelEventHandler::operator=( const ActiveModelEventHandler& rhs )

@@ -149,6 +149,8 @@ ModelHandler::ModelHandler( void )
         new ves::xplorer::event::CADToggleEventHandler();
     _eventHandlers[ std::string( "CHANGE_ACTIVE_MODEL" )] = 
         new ves::xplorer::event::ActiveModelEventHandler();
+    _eventHandlers[ std::string( "Optimize CAD" )] = 
+        new ves::xplorer::event::ActiveModelEventHandler();
     _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" )] = 
         new ves::xplorer::event::MaterialUpdateEventHandler();
     _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_MODE" )] = 
