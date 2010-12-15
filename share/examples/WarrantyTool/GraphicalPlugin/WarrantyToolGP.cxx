@@ -45,7 +45,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/OneDStringArray.h>
 
-#include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
+#include <ves/xplorer/scenegraph/util/TransparencySupport.h>
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
 #include <ves/xplorer/scenegraph/util/FindChildWithNameVisitor.h>
 #include <ves/xplorer/scenegraph/util/ToggleNodesVisitor.h>
@@ -134,28 +134,6 @@ void WarrantyToolGP::InitializeNode(
     
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
-    //Load model
-    /*cadEntity = new CADEntity( "Models/test2_head_osg26-share.ive",
-              mDCS.get(), false, false, NULL );
-    osg::Node::DescriptionList descriptorsList;
-    descriptorsList = cadEntity->GetDCS()->getDescriptions();
-    descriptorsList.push_back( "Part" );
-    cadEntity->GetDCS()->setDescriptions( descriptorsList );*/
-    //Make transparent
-    //ves::xplorer::scenegraph::util::MaterialInitializer 
-    //    material_initializer( cadEntity->GetDCS() );
-   /* ves::xplorer::scenegraph::util::OpacityVisitor 
-        opVisitor( cadEntity->GetDCS(), true, true, 1.0f );
-    ves::xplorer::scenegraph::util::OpacityVisitor 
-        opVisitor1( cadEntity->GetDCS(), false, true, 0.4f );
-    //Highlight part
-    ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-        highlight( cadEntity->GetDCS(), "AN220959", mDCS.get() );*/
-
-    //ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-    //    highlight2( cadEntity->GetDCS(), "AN220959", mDCS.get(), false );
-    //ves::xplorer::scenegraph::util::OpacityVisitor 
-    //    opVisitor2( cadEntity->GetDCS(), false, true, 1.0f );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PreFrameUpdate()
@@ -222,8 +200,8 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight2( m_cadRootNode, "", false, true );
             //Make everything opaque
-            ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor( m_cadRootNode, false, false, 1.0f );
+            transparentDisable( m_cadRootNode );
+
             mAddingParts = false;
         }
         else if( dvpName == "ADD" )
@@ -232,8 +210,8 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             //Make a user specified part glow
             //if( !mAddingParts )
             {
-                ves::xplorer::scenegraph::util::OpacityVisitor 
-                opVisitor1( m_cadRootNode, false, true, 0.3f );
+                transparentEnable( m_cadRootNode, 0.3f );
+
                 //mAddingParts = true;
                 m_assemblyPartNumbers.clear();
                 m_joinedPartNumbers.clear();
@@ -250,8 +228,8 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             m_joinedPartNumbers.clear();
             //Highlight the respective node
             //Make a user specified part glow
-            ves::xplorer::scenegraph::util::OpacityVisitor 
-                opVisitor1( m_cadRootNode, false, true, 0.3f );
+            transparentEnable( m_cadRootNode, 0.3f );
+
             mAddingParts = false;
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
                 highlight2( m_cadRootNode, "", false, true );
@@ -263,8 +241,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         }
         else if( dvpName == "CLEAR" )
         {
-            ves::xplorer::scenegraph::util::OpacityVisitor 
-                opVisitor1( m_cadRootNode, false, true, 0.3f );
+            transparentEnable( m_cadRootNode, 0.3f );
             
             bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
             boost::ignore_unused_variable_warning( removed );
@@ -554,8 +531,8 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     
     if( !mAddingParts )
     {
-        ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor1( mDCS.get(), false, true, 0.3f );
+        transparentEnable( mDCS.get(), 0.3f );
+
         mAddingParts = true;
     }
     
@@ -918,8 +895,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight2( m_cadRootNode, "", false, true );
         
-        ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor1( m_cadRootNode, false, true, 0.3f );
+        transparentEnable( m_cadRootNode, 0.3f );
     }
 
     RenderTextualDisplay( false );
@@ -1070,8 +1046,7 @@ void WarrantyToolGP::ParseDataBase( const std::string& csvFilename )
     
     if( !mAddingParts )
     {
-        ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor1( mDCS.get(), false, true, 0.3f );
+        transparentEnable( mDCS.get(), 0.3f );
         mAddingParts = true;
     }    
 }
