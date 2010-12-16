@@ -62,6 +62,13 @@
 
 #include <ves/xplorer/volume/cfdPBufferManager.h>
 
+#include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/eventmanager/EventMapper.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/conductor/qt/UIManager.h>
+#include <ves/conductor/qt/UIElementQt.h>
+#include <ves/conductor/qt/MainWindow.h>
+
 #ifdef MINERVA_GIS_SUPPORT
 # include <ves/xplorer/minerva/MinervaManager.h>
 #endif
@@ -120,12 +127,6 @@
 
 #include <jccl/RTRC/ConfigManager.h>
 
-#ifdef QT_ON
-#include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/eventmanager/EventMapper.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/conductor/qt/UIManager.h>
-
 //// --- Qt Includes --- //
 #include <QtGui/QApplication>
 #include <QtGui/QPushButton>
@@ -133,13 +134,8 @@
 #include <QtGui/QVBoxLayout>
 #include <QtCore/QDir>
 
-#include <ves/conductor/qt/UIElementQt.h>
-#include <ves/conductor/qt/MainWindow.h>
-
 //// --- Boost includes --- //
 #include <boost/bind.hpp>
-
-#endif // QT_ON
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -167,7 +163,8 @@ App::App( int argc, char* argv[], bool enableRTT )
     mProfileCounter( 0 ),
     mLastFrame( 0 ),
     mLastTime( 0 ),
-    m_MouseInsideUI( true )
+    m_MouseInsideUI( true ),
+    mLastQtLoopTime(0.0f)
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -234,13 +231,11 @@ App::App( int argc, char* argv[], bool enableRTT )
     m_sceneGLTransformInfo = SceneGLTransformInfoPtr( new SceneGLTransformInfo(
         ortho2DMatrix, identityMatrix, zUpMatrix ) );
 
-#ifdef QT_ON
     // Set the current database file and clear it out in case it contains data
     // from a previous session
     ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath("ves.db");
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
     m_uiInitialized = false;
-#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -1156,13 +1151,18 @@ void App::preRun()
 ////////////////////////////////////////////////////////////////////////////////
 void App::runLoop()
 {
-    if( m_uiInitialized && m_MouseInsideUI )
+    if( m_uiInitialized )
     {
-        m_qtApp->processEvents();
-        // Just using sendPostedEvents without processEvents does not push mouse
-        // and keyboard events through. Using processEvents alone without sendPostedEvents
-        // appears to work fine.
-        //m_qtApp->sendPostedEvents();
+        bool oneHertzUpdate = ( time_since_start - mLastQtLoopTime ) > 0.9999f;
+        if( m_MouseInsideUI || oneHertzUpdate )
+        {
+            mLastQtLoopTime = time_since_start;
+            m_qtApp->processEvents();
+            // Just using sendPostedEvents without processEvents does not push mouse
+            // and keyboard events through. Using processEvents alone without sendPostedEvents
+            // appears to work fine.
+            //m_qtApp->sendPostedEvents();
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

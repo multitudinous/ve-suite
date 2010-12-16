@@ -54,9 +54,7 @@
 #include <osg/Timer>
 #include <osg/LightModel>
 
-#ifdef QT_ON
 class QApplication;
-#endif
 
 namespace osg
 {
@@ -280,14 +278,14 @@ private:
     vrj::opengl::ContextData< bool > m_skipDraw;
     ///Thread to run the Qt ui
     //vpr::Thread* m_qtUIThread;
-#ifdef QT_ON
+
     bool m_uiInitialized;
     QApplication* m_qtApp;
 
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
     void UIEnterLeave( bool entered );
     bool m_MouseInsideUI;
-#endif // QT_ON
+    double mLastQtLoopTime;
 };
 } //end xplorer
 } //end ves
