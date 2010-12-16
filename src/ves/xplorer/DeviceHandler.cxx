@@ -55,6 +55,8 @@
 #include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
 #include <ves/xplorer/event/environment/NavigationDataEventHandler.h>
 
+#include <ves/xplorer/behavior/FrameAll.h>
+
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
@@ -76,7 +78,8 @@ DeviceHandler::DeviceHandler()
     mDeviceMode( "World Navigation" ),
     mActiveDCS( scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() ),
     mSelectedDCS( NULL ),
-    m_deviceBeingProcessed( NULL )
+    m_deviceBeingProcessed( NULL ),
+    mFrameAll( new ves::xplorer::behavior::FrameAll )
 {
     //Initialize the group that holds all of the devices
     m_deviceGroup = new osg::Group();

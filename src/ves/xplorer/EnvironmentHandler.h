@@ -44,8 +44,6 @@
 #include <ves/xplorer/event/EventHandlerPtr.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
 
-#include <ves/xplorer/behavior/FrameAll.h>
-
 // --- VTK Includes --- //
 class vtkPolyData;
 
@@ -240,8 +238,6 @@ private:
     std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;///<The event handler for commands.
 
     osg::ref_ptr<osgEphemeris::EphemerisModel> m_ephemerisModel;///<The model containing ephemeris data
-
-    boost::shared_ptr< ves::xplorer::behavior::FrameAll > mFrameAll;
 };
 }
 }

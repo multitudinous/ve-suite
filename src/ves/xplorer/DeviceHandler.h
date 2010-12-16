@@ -43,6 +43,8 @@
 
 #include <ves/xplorer/device/Device.h>
 
+#include <ves/xplorer/behavior/FrameAllPtr.h>
+
 // --- vrJuggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -206,6 +208,8 @@ private:
     
     ///The group node that holds all device graphical representations
     osg::ref_ptr< osg::Group > m_deviceGroup;
+
+    ves::xplorer::behavior::FrameAllSharedPtr mFrameAll;
 
 };
 } //end xplorer

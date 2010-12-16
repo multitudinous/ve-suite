@@ -119,8 +119,7 @@ EnvironmentHandler::EnvironmentHandler()
     _frustumNear( 0 ),
     _frustumFar( 0 ),
     m_lodScale( 0.01 ),
-    framerate( 0 ),
-    mFrameAll( new ves::xplorer::behavior::FrameAll )
+    framerate( 0 )
 {
     for( unsigned int i = 0; i < 3; i++ )
     {
