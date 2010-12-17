@@ -98,7 +98,7 @@ The current StateSet is modified as follows:
 \li BlendFunc is set to use the BlendColor alpha.
 \li The rendering hint is set to TRANSPARENT_BIN.
 */
-VE_SCENEGRAPH_EXPORTS template< class T >
+template< class T >
 bool transparentEnable( T* nodeOrDrawable, float alpha )
 {
     if( nodeOrDrawable == NULL )
@@ -144,7 +144,7 @@ to its StateSet.
 \param recursive If true, use the RestoreOpacityVisitor to recursively restore opacity. Default is false.
 \return false if \c node is NULL or \c node doesn't have a StateSet. Otherwise, returns true.
 */
-VE_SCENEGRAPH_EXPORTS template< class T >
+template< class T >
 bool transparentDisable( T* nodeOrDrawable, bool recursive=false )
 {
     if( nodeOrDrawable == NULL )
