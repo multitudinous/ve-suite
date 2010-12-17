@@ -95,7 +95,6 @@ Wand::Wand()
     translationStepSize( 0.75 ),
     rotationStepSize( 1.0 ),
     rotationFlag( 1 ),
-    subzeroFlag( 0 ),
     m_distance( 1000 ),
     m_buttonPushed( false ),
     m_cadSelectionMode( false )
@@ -221,9 +220,13 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     {
         SetHeadRotationFlag( cfdIso_value );
     }
-    else if( !newCommand.compare( "Z_ZERO_PLANE" ) )
+    else if( !newCommand.compare( "Z_GREATER_THAN_ZERO" ) )
     {
-        SetSubZeroFlag( cfdIso_value );
+		Device::SetSubZeroFlag( cfdIso_value );
+    }
+	else if( !newCommand.compare( "Z_EQUALS_ZERO" ) )
+    {
+		Device::SetZEqualsZeroFlag( cfdIso_value );
     }
     /*else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
     {
@@ -503,7 +506,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         world_quat *= m_rotIncrement;
 
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, world_quat, subzeroFlag );
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, world_quat, m_subzeroFlag, m_zEqualsZeroFlag );
 
         activeDCS->SetTranslationArray( m_worldTrans );
         activeDCS->SetQuat( world_quat );
@@ -520,7 +523,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         world_quat *= m_rotIncrement;
         
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, world_quat, subzeroFlag );
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, world_quat, m_subzeroFlag, m_zEqualsZeroFlag );
 
         activeDCS->SetTranslationArray( m_worldTrans );
         activeDCS->SetQuat( world_quat );
@@ -677,34 +680,11 @@ void Wand::ProcessHit()
         //Set the connection between the scene manipulator and the selected dcs
         scenegraph::manipulator::TransformManipulator* sceneManipulator =
             m_manipulatorManager.GetSceneManipulator();
-        //sceneManipulator->Disconnect();
-        //Check and see if the selected node has an attached physics mesh
-        bool hasAPhysicsMesh( false );
-        osg::ref_ptr< osgwTools::AbsoluteModelTransform > tempAMT = 
-        dynamic_cast< osgwTools::AbsoluteModelTransform* >( 
-                                                           newSelectedDCS->getParent( 0 ) );
-        if( tempAMT )
-        {
-            osgbBullet::RefRigidBody* tempRB = 
-            dynamic_cast< osgbBullet::RefRigidBody* >( tempAMT->getUserData() );
-            if( tempRB )
-            {
-                hasAPhysicsMesh = true;
-            }
-        }
-        
-        if( hasAPhysicsMesh )
-        {
-            sceneManipulator->Connect( tempAMT.get() );
-        }
-        else
-        {
-            sceneManipulator->Connect( newSelectedDCS );
-        }
+        sceneManipulator->Connect( newSelectedDCS );
         
         //Move the scene manipulator to the center point
         scenegraph::LocalToWorldNodePath nodePath(
-                                                  newSelectedDCS, m_sceneManager.GetModelRoot() );
+            newSelectedDCS, m_sceneManager.GetModelRoot() );
         scenegraph::LocalToWorldNodePath::NodeAndPathList npl =
         nodePath.GetLocalToWorldNodePath();
         scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
@@ -941,11 +921,6 @@ double* Wand::GetDirection()
         deltaTrans[ i ] = objLoc[ i ] - LastWandPosition[ i ];
     }
 }*/
-////////////////////////////////////////////////////////////////////////////////
-void Wand::SetSubZeroFlag( int input )
-{
-    subzeroFlag = input;
-}
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::FreeRotateAboutWand( const bool freeRotate )
 {

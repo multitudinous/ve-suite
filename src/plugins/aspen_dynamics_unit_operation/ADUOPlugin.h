@@ -43,33 +43,61 @@ namespace ves
 {
 namespace conductor
 {
+
+/*!\file ADUOPlugin.h
+  Aspen Dynamics Unit Operations Plugin
+  */
+/*!\class ves::conductor::ADUOPlugin
+ * This class is the Aspen Dynamics Unit Operations plugin.
+ */
 class ADUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( ADUOPlugin )
 
-private:
-    virtual ~ADUOPlugin();
-    void OnShowAspenName( wxCommandEvent& event );
-    void OnQueryDynamics( wxCommandEvent& event );
-    void OnTimer( wxTimerEvent& event );
-    void StartTimer( float msec  );
-    void StopTimer( wxCommandEvent& event  );
-    void DrawValue( wxDC* dc );
-    void ReadValue( );
-    
-    bool m_monValueExists;
-    std::string m_monValue;
-    wxTimer * m_timer;
-
 public:
-    ///Defualt constructor
+    ///Constructor
     ADUOPlugin();
+
+    ///Destructor
     wxString GetConductorName();
+
+    ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+
+    ///???
     void DrawPlugin( wxDC* dc );
 
+private:
+    bool m_monValueExists;
+    bool m_monitoring;
+    std::string m_monValue;
     wxMenu* mAspenMenu;
-    DECLARE_EVENT_TABLE()
+
+    ///???
+    virtual ~ADUOPlugin();
+
+    ///???
+    void OnShowAspenName( wxCommandEvent& event );
+
+    ///???
+    void OnQueryDynamics( wxCommandEvent& event );
+
+    ///???
+    void OnTimer( wxTimerEvent& event );
+
+    ///???
+    void StopTimer( wxCommandEvent& event  );
+
+    ///???
+    void DrawValue( wxDC* dc );
+
+    ///???
+    void ReadValue( );
+
+    ///???
+    void OnMonitorVariable( wxCommandEvent& event );
+
+    DECLARE_EVENT_TABLE();
 };
 }
 }

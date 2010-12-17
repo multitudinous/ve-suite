@@ -43,22 +43,45 @@ namespace ves
 {
 namespace conductor
 {
+
+/*!\file APUOPlugin.h
+  Aspen Plus Unit Operations Plugin
+  */
+/*!\class ves::conductor::APUOPlugin
+ * This class is the Aspen Plus Unit Operations plugin.
+ */
 class APUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( APUOPlugin )
 
 public:
-    ///Defualt constructor
+    ///Constructor
     APUOPlugin();
+    
+    ///Destructor
     virtual ~APUOPlugin();
-    void OnShowAspenName( wxCommandEvent& event );
-    void OnQueryInputs( wxCommandEvent& event );
-    void OnQueryOutputs( wxCommandEvent& event );
-    void OnReinitBlocks( wxCommandEvent& event );
-    wxString GetConductorName();
-    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
+    ///???
+    virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+    
+private:
     wxMenu* mAspenMenu;
+
+    ///???
+    void OnShowAspenName( wxCommandEvent& event );
+    
+    ///???
+    void OnQueryInputs( wxCommandEvent& event );
+    
+    ///???
+    void OnQueryOutputs( wxCommandEvent& event );
+    
+    ///???
+    void OnReinitBlocks( wxCommandEvent& event );
+    
+    ///???
+    wxString GetConductorName();
+    
     DECLARE_EVENT_TABLE()
 };
 }

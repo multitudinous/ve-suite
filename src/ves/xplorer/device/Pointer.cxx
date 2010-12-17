@@ -79,7 +79,6 @@ Pointer::Pointer()
     translationStepSize( 0.75f ),
     rotationStepSize( 1.0f ),
     rotationFlag( 1 ),
-    subzeroFlag( 0 ),
     distance( 1000 ),
     m_buttonPushed( false ),
     mDebugInfo( false )
@@ -656,11 +655,6 @@ void Pointer::UpdateDeltaWandPosition()
     {
         deltaTrans[ i ] = objLoc[ i ] - LastWandPosition[ i ];
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Pointer::SetSubZeroFlag( int input )
-{
-    subzeroFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Pointer::FreeRotateAboutWand( const bool freeRotate )

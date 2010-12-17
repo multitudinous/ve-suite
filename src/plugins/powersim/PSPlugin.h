@@ -46,6 +46,7 @@ namespace ves
 {
 namespace conductor
 {
+
 class PSPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( APPlugin )
@@ -53,30 +54,30 @@ class PSPlugin : public UIPluginBase
 public:
     ///Constructor
     PSPlugin();
-
-    ///
+    
+    ///Destructor
     virtual ~PSPlugin();
-
-    ///
+    
+    ///???
     virtual wxString GetConductorName();
 
-protected:
-    ///
+protected:        
+    ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
-private:
-    ///
+private:        
+    ///???
     bool IsSIPOpen();
-
-    ///
+    
+    ///???
     void OnOpen( wxCommandEvent& event );
-
-    ///
+    
+    ///???
     wxMenu* m_powersimMenu;
 
     DECLARE_EVENT_TABLE()
-
 };
+
 } //end conductor
 } //end ves
 

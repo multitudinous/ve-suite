@@ -58,11 +58,15 @@
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
 
+#include <osgUtil/Optimizer>
+
 namespace ves
 {
 namespace xplorer
 {
 ModelCADHandler::ModelCADHandler( ves::xplorer::scenegraph::DCS* rootNode )
+    :
+    GlobalBase()
 {
     m_assemblyList["rootNode"] = rootNode;
     //m_clipPlane = new osg::ClipPlane();
@@ -670,6 +674,30 @@ std::vector< std::string > ModelCADHandler::GetCADFilenames()
         filenames.push_back( iter->second->GetFilename() );
     }
     return filenames;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
+void ModelCADHandler::OptimizeAllCAD()
+{
+    osg::ref_ptr< osg::Node > rootNode = m_assemblyList["rootNode"];
+    {
+        osgUtil::Optimizer graphOpti;
+        graphOpti.optimize( rootNode.get(), 
+                           //Had to comment out this flag because of a bug in OSG
+                           //osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
+                           //osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
+                           osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
+                           osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
+                           //This one can cause problems with opacity settings
+                           osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
+                           osgUtil::Optimizer::MERGE_GEOMETRY |
+                           osgUtil::Optimizer::CHECK_GEOMETRY |
+                           //This one causes problems when creating physics
+                           //meshes for osgBullet
+                           //osgUtil::Optimizer::SPATIALIZE_GROUPS |
+                           osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
+                           osgUtil::Optimizer::MERGE_GEODES |
+                           osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
+    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 } // end xplorer

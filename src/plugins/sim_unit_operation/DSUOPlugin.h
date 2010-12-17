@@ -43,18 +43,34 @@ namespace ves
 {
 namespace conductor
 {
+
+/*!\file DSUOPlugin.h
+  DynSim Unit Operation Plugin
+  */
+/*!\class ves::conductor::DSUOPlugin
+ * This class represents a unit operation for DynSim.
+ */
 class DSUOPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( DSUOPlugin )
 
 public:
-    ///Defualt constructor
+    ///Constructor
     DSUOPlugin();
+    
+    ///Destructor
     virtual ~DSUOPlugin();
+
+    ///
     wxString GetConductorName();
+    
+    ///
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
+    ///
     wxMenu* mDynSimMenu;
+
+    ///
     DECLARE_EVENT_TABLE()
 };
 }

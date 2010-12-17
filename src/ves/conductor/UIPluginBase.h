@@ -175,7 +175,10 @@ public:
     ///Handle all events to toggle graphics for plugin off/on in cad mode
     ///\param event WX Event for menu event
     void TogglePlugin( wxCommandEvent& event );
+    ///On navigate to
     void OnNavigateTo( wxCommandEvent& event );
+    ///Optimize all of the CAD
+    void OnOptimizeCAD( wxCommandEvent& event );
 
     void MessageLog( const char* msg );
     

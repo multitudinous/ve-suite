@@ -95,10 +95,6 @@ public:
     ///\param input Indicates which rotation method is needed
     void SetHeadRotationFlag( int input );
 
-    ///Does not let the user go below the ground plane at 0,0,0
-    ///\param input Flag to insure translation does not go below zero plane
-    void SetSubZeroFlag( int zero );
-
 private:
     gadget::PositionInterface head; ///<VRJuggler's head positional interface
 
@@ -120,7 +116,6 @@ private:
     double rotationStepSize; ///<Size of rotation step
 
     int rotationFlag; ///<Rotation flag
-    int subzeroFlag; ///<Zero plane flag
 
 };
 } //end device

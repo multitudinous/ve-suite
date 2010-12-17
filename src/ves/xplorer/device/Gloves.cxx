@@ -78,7 +78,6 @@ Gloves::Gloves()
     translationStepSize( 0.75f ),
     rotationStepSize( 1.0f ),
     rotationFlag( 1 ),
-    subzeroFlag( 0 ),
     distance( 1000 ),
     m_buttonPushed( false ),
     mDebugInfo( false )
@@ -742,11 +741,6 @@ void Gloves::UpdateDeltaWandPosition()
     {
         deltaTrans[ i ] = objLoc[ i ] - LastWandPosition[ i ];
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Gloves::SetSubZeroFlag( int input )
-{
-    subzeroFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Gloves::FreeRotateAboutWand( const bool freeRotate )

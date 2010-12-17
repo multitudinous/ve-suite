@@ -43,34 +43,68 @@ namespace ves
 {
 namespace conductor
 {
+
+/*!\file ADPlugin.h
+  Aspen Dynamics Run Dialog
+  */
+/*!\class ves::conductor::ADPlugin
+ * This class is the Aspen Dynamics plugin.
+ */
 class ADPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( ADPlugin )
 
 public:
-    ///Defualt constructor
+
+    ///Constructor
     ADPlugin();
+
+    ///Destructor
     virtual ~ADPlugin();
+
+    ///???
     wxString GetConductorName();
+
+private:
+    wxMenu* mAspenMenu;
     bool mIsSheetOpen;
 
-protected:
+    ///???
     void OnOpen( wxCommandEvent& event );
+
+    ///???
     void ShowAspenSimulation( wxCommandEvent& event );
+
+    ///???
     void HideAspenSimulation( wxCommandEvent& event );
+
+    ///???
     void CloseAspenSimulation( void );
+
+    ///???
     void RunAspenNetwork( wxCommandEvent& event );
+
+    ///???
     void ReinitializeAspenSimulation( wxCommandEvent& event );
+
+    ///???
     void StepAspenNetwork( wxCommandEvent& event );
+
+    ///???
     void SaveSimulation( wxCommandEvent& event );
+
+    ///???
     void SaveAsSimulation( wxCommandEvent& event );
+
+    ///???
     void OnCloseAspenSimulation( wxCommandEvent& event );
+
+    ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
-    wxMenu* mAspenMenu;
-    
     DECLARE_EVENT_TABLE()
 };
+
 }
 }
 

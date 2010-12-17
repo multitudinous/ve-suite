@@ -281,7 +281,17 @@ void Device::SetResetWorldPosition(
     mResetPosition = pos;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, double* worldTranslation, const osg::Quat& world_quat, int subzeroFlag )
+void Device::SetSubZeroFlag( int input )
+{
+    m_subzeroFlag = input;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::SetZEqualsZeroFlag( int input )
+{
+    m_zEqualsZeroFlag = input;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, double* worldTranslation, const osg::Quat& world_quat, int m_subzeroFlag, int m_zEqualsZeroFlag )
 {
 #ifdef MINERVA_GIS_SUPPORT
     Minerva::Core::TileEngine::Body* tileEngineBody = 
@@ -318,13 +328,18 @@ void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, do
     }
     else
 #endif
-    //If the GIS rendering engine is on then we do not want to lock to z > 0
-    if( subzeroFlag )
+	//If the GIS rendering engine is on then we do not want to lock to z > 0
+    
+	if( m_subzeroFlag )
     {
         if( worldTranslation[ 2 ] > 0 )
         {
             worldTranslation[ 2 ] = 0;
         }
     }
+	if( m_zEqualsZeroFlag )
+	{
+            worldTranslation[ 2 ] = 0;
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -119,10 +119,6 @@ public:
     ///\param input Indicates which rotation method is needed
     void SetHeadRotationFlag( int input );
 
-    ///Does not let the user go below the ground plane at 0,0,0
-    ///\param input Flag to insure translation does not go below zero plane
-    void SetSubZeroFlag( int input );
-
     ///Identifies selection chosen by wand
     void SelectObject();
 
@@ -201,7 +197,6 @@ private:
     ///Constants for the plane normal to the wand in world space
     double m_planeConstants[ 4 ];
     int rotationFlag; ///<Rotation flag
-    int subzeroFlag; ///<Zero plane flag
 
     ves::open::xml::CommandPtr command; ///<Stores xml command
 

@@ -326,6 +326,12 @@ tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
 boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
         "Boost.Filesystem", "1.32.0", True, True, helpText=None, compileTest=True)
 
+boost_program_options = fp_option.FlagPollBasedOption("Boost Program Options Libraries",
+        "Boost.program_options", "1.32.0", True, True, helpText=None, compileTest=True)
+
+boost_signals_options = fp_option.FlagPollBasedOption("Boost Signals Libraries",
+        "Boost.Signals", "1.32.0", True, True, helpText=None, compileTest=True)
+
 gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
                                              "gmtl", "0.5", True, True,
                                              None,
@@ -383,6 +389,8 @@ if GetPlatform() != 'darwin':
 #opts.AddOption( bullet_options )
 opts.AddOption( tao_options )
 opts.AddOption( boost_options )
+opts.AddOption( boost_signals_options )
+opts.AddOption( boost_program_options )
 opts.AddOption( gmtl_options )
 opts.AddOption( vpr_options )
 opts.AddOption( gadgeteer_options )
@@ -398,7 +406,7 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'hdf5_options',
         'hdf4_options',
         'VE_SUITE_VERSION',
-        #'apr_options', 'apu_options',
+        'boost_signals_options', 'boost_program_options',
         #'bullet_options', 
         'bulletVersion',
         'tao_options',

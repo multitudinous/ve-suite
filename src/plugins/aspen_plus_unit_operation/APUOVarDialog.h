@@ -49,88 +49,44 @@
 #include <wx/treectrl.h>
 #include <wx/stattext.h>
 
-#undef APUOVarDialog_STYLE
-#define APUOVarDialog_STYLE wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
-
 namespace ves
 {
 namespace conductor
 {
+
+/*!\file APUOVarDialog.h
+  Aspen Plus Unit Operation Variable Dialog
+  */
+/*!\class ves::conductor::APUOVarDialog
+ * This class is the dialog for Aspen Plus variables.
+ */
 class APUOVarDialog : public wxDialog
 {
 public:
-    APUOVarDialog( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "ParamsDialog" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = APUOVarDialog_STYLE );
-	virtual ~APUOVarDialog();
-
-    enum
-    {
-        ID_SETBUTTON = 1235,
-        ID_WXMEMO3 = 1234,
-        ID_PROMPTMEMO = 1233,
-        ID_OPTIONSMEMO = 1232,
-        ID_CHILDRENLABEL = 1231,
-        ID_HASLABEL = 1230,
-        ID_HASCHILDRENEDIT = 1229,
-        ID_OABOX = 1228,
-        ID_PORTTYPEEDIT = 1216,
-        ID_PORTTYPELABEL = 1215,
-        ID_MULTIPORTLABEL = 1214,
-        ID_MULTIPORTEDIT = 1213,
-        ID_GENDEREDIT = 1212,
-        ID_GENDERLABEL = 1211,
-        ID_INOROUTLABEL = 1210,
-        ID_INOROUTEDIT = 1209,
-        ID_FCPBOX = 1208,
-        ID_TYPELABEL = 1116,
-        ID_WXEDIT16 = 1112,
-        ID_CSBOX = 1111,
-        ID_DVALUELABEL = 1107,
-        ID_LISTLABEL = 1106,
-        ID_MEASURELABEL = 1105,
-        ID_QUANTITYLABEL = 1104,
-        ID_PROMPT = 1103,
-        ID_DEFAULTVALUEEDIT = 1101,
-        ID_DEFAULTLABEL = 1100,
-        ID_LOWERLIMITEDIT = 1099,
-        ID_LOWERLIMITLABEL = 1098,
-        ID_UPPERLIMITLABEL = 1097,
-        ID_UPPERLIMITEDIT = 1096,
-        ID_ENTERABLEEDIT = 1095,
-        ID_ENTERABLELABEL = 1094,
-        ID_OUTPUTLABEL = 1093,
-        ID_OUTPUTEDIT = 1092,
-        ID_AVNBOX = 1046,
-        ID_RECORDLABEL = 1045,
-        ID_RECORDTYPEEDIT = 1044,
-        ID_MARBOX = 1042,
-        ID_OPTIONSLABEL = 1041,
-        ID_OPTIONLABEL = 1033,
-        ID_OPTIONLISTEDIT = 1032,
-        ID_BASISLABEL = 1027,
-        ID_BASISEDIT = 1026,
-        ID_UNITLABEL = 1024,
-        ID_UNITEDIT = 1023,
-        ID_PHYSICALLABEL = 1018,
-        ID_QUANTITY = 1017,
-        ID_VALUEEDIT = 1012,
-        ID_VALUELABEL = 1011,
-        ID_ = 1009,
-        ID_DIMENSIONLABEL = 1008,
-        ID_DIMENSIONEDIT = 1007,
-        ID_PARAMCHOICE = 1006,
-        ID_NODEPATHLABEL = 1004,
-        ID_NODEPATH = 1003,
-        ID_PARAMETERLABEL = 1001,
-        ID_DUMMY_VALUE_
-    };
-
-    void WxButton1Click( wxCommandEvent& event );
-    void ParamChoiceSelected( wxTreeEvent& event );
-    void SetButtonClick( wxCommandEvent& event );
+    ///Constructor
+    APUOVarDialog( wxWindow *parent, wxWindowID id = 1,
+        const wxString &title = wxT( "ParamsDialog" ),
+        const wxPoint& pos = wxDefaultPosition,
+        const wxSize& size = wxDefaultSize,
+        long style = wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP |
+        wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX );
+    
+    ///Destructor
+    virtual ~APUOVarDialog();
+    
+    ///???
     void AppendList( const char * );
+    
+    ///???
     void SetCompName( const char * );
+    
+    ///???
     void SetServiceList( ves::conductor::util::CORBAServiceList * );
+    
+    ///???
     void SetDialogType( const char * );
+    
+    ///???
     void SetIsBlock( bool );
 
 private:
@@ -195,24 +151,97 @@ private:
     wxStaticText *NodePathLabel;
     wxTextCtrl *NodePath;
     wxStaticText *ParameterLabel;
-
     bool IsBlock;
     wxTreeItemId m_rootId;
     std::map< std::string, wxTreeItemId > m_prevIds;
     wxTreeItemId m_prevSelection;
-	wxTreeItemId mParentId;
+    wxTreeItemId mParentId;
+    
+    enum
+    {
+        ID_SETBUTTON = 1235,
+        ID_WXMEMO3 = 1234,
+        ID_PROMPTMEMO = 1233,
+        ID_OPTIONSMEMO = 1232,
+        ID_CHILDRENLABEL = 1231,
+        ID_HASLABEL = 1230,
+        ID_HASCHILDRENEDIT = 1229,
+        ID_OABOX = 1228,
+        ID_PORTTYPEEDIT = 1216,
+        ID_PORTTYPELABEL = 1215,
+        ID_MULTIPORTLABEL = 1214,
+        ID_MULTIPORTEDIT = 1213,
+        ID_GENDEREDIT = 1212,
+        ID_GENDERLABEL = 1211,
+        ID_INOROUTLABEL = 1210,
+        ID_INOROUTEDIT = 1209,
+        ID_FCPBOX = 1208,
+        ID_TYPELABEL = 1116,
+        ID_WXEDIT16 = 1112,
+        ID_CSBOX = 1111,
+        ID_DVALUELABEL = 1107,
+        ID_LISTLABEL = 1106,
+        ID_MEASURELABEL = 1105,
+        ID_QUANTITYLABEL = 1104,
+        ID_PROMPT = 1103,
+        ID_DEFAULTVALUEEDIT = 1101,
+        ID_DEFAULTLABEL = 1100,
+        ID_LOWERLIMITEDIT = 1099,
+        ID_LOWERLIMITLABEL = 1098,
+        ID_UPPERLIMITLABEL = 1097,
+        ID_UPPERLIMITEDIT = 1096,
+        ID_ENTERABLEEDIT = 1095,
+        ID_ENTERABLELABEL = 1094,
+        ID_OUTPUTLABEL = 1093,
+        ID_OUTPUTEDIT = 1092,
+        ID_AVNBOX = 1046,
+        ID_RECORDLABEL = 1045,
+        ID_RECORDTYPEEDIT = 1044,
+        ID_MARBOX = 1042,
+        ID_OPTIONSLABEL = 1041,
+        ID_OPTIONLABEL = 1033,
+        ID_OPTIONLISTEDIT = 1032,
+        ID_BASISLABEL = 1027,
+        ID_BASISEDIT = 1026,
+        ID_UNITLABEL = 1024,
+        ID_UNITEDIT = 1023,
+        ID_PHYSICALLABEL = 1018,
+        ID_QUANTITY = 1017,
+        ID_VALUEEDIT = 1012,
+        ID_VALUELABEL = 1011,
+        ID_ = 1009,
+        ID_DIMENSIONLABEL = 1008,
+        ID_DIMENSIONEDIT = 1007,
+        ID_PARAMCHOICE = 1006,
+        ID_NODEPATHLABEL = 1004,
+        ID_NODEPATH = 1003,
+        ID_PARAMETERLABEL = 1001,
+        ID_DUMMY_VALUE_
+    };
 
-private:
-    //void OnClose( wxCloseEvent& event );
+    ///???
     void CreateGUIControls();
+
+    ///???
     std::string ConvertUnicode( const wxChar* data )
     {
-        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        std::string tempStr( static_cast< const char* >
+            ( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
+
+    ///???
+    void WxButton1Click( wxCommandEvent& event );
+    
+    ///???
+    void ParamChoiceSelected( wxTreeEvent& event );
+    
+    ///???
+    void SetButtonClick( wxCommandEvent& event );
 
     DECLARE_EVENT_TABLE();
 };
 }
 }
+
 #endif

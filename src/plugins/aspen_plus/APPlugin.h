@@ -43,33 +43,71 @@ namespace ves
 {
 namespace conductor
 {
+
+/*!\file APPlugin.h
+  Aspen Plus Plugin
+  */
+/*!\class ves::conductor::APPlugin
+ * This class is the Aspen Plus Plugin.
+ */
 class APPlugin : public UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( APPlugin )
 
 public:
-    ///Defualt constructor
+    ///Constructor
     APPlugin();
+
+    ///Destructor
     virtual ~APPlugin();
+
+    ///???
     wxString GetConductorName();
 
 protected:
+    wxMenu* mAspenMenu;
+
+    ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
+    ///???
     void OnOpen( wxCommandEvent& event );
+
+    ///???
     void ShowAspenSimulation( wxCommandEvent& event );
+
+    ///???
     void HideAspenSimulation( wxCommandEvent& event );
+
+    ///???
     void CloseAspenSimulation( void );
+
+    ///???
     void DisconnectAspenSimulation( void );
+
+    ///???
     void RunAspenNetwork( wxCommandEvent& event );
+
+    ///???
     void ReinitializeAspenSimulation( wxCommandEvent& event );
+
+    ///???
     void StepAspenNetwork( wxCommandEvent& event );
+
+    ///???
     void SaveSimulation( wxCommandEvent& event );
+
+    ///???
     void SaveAsSimulation( wxCommandEvent& event );
+
+    ///???
     void OnCloseAspenSimulation( wxCommandEvent& event );
+
+    ///???
     void OnDisconnectAspenSimulation( wxCommandEvent& event );
+
+    ///???
     bool IsBKPOpen();
-    wxMenu* mAspenMenu;
 
     DECLARE_EVENT_TABLE()
 };
