@@ -165,7 +165,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
 
             if( foundDataSet )
             {
-                std::cout << "Skipping load of dataset: " 
+                std::cout << "|\tSkipping load of dataset: " 
                     << tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() 
                     << std::endl;
                 continue;
@@ -386,13 +386,13 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
 {
     if( precomputedSurfaceDir.empty() )// == NULL )
     {
-        vprDEBUG( vesDBG, 1 ) << "precomputedSurfaceDir == NULL"
-        << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tLoadSurfaceFiles precomputedSurfaceDir == NULL"
+            << std::endl << vprDEBUG_FLUSH;
         return;
     }
 
-    vprDEBUG( vesDBG, 1 ) << "Loading surface files from "
-    << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tLoading surface files from "
+        << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
 
     boost::filesystem::path dir_path( precomputedSurfaceDir, boost::filesystem::no_check );
 
@@ -420,7 +420,7 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
                         pathAndFileName.append( "/" );
                         pathAndFileName.append( dir_itr->leaf().c_str() );
                         vprDEBUG( vesDBG, 0 ) << "|\tsurface file = " << pathAndFileName
-                        << std::endl << vprDEBUG_FLUSH;
+                            << std::endl << vprDEBUG_FLUSH;
 
                         _activeModel->CreateCfdDataSet();
                         ///This code needs updated BADLY

@@ -84,7 +84,7 @@ cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
     }
     else
     {
-        std::cerr << "in cfdCuttingPlane type WAS NOT 0, 1, or 2!" << std::endl;
+        std::cerr << "|\tin cfdCuttingPlane type WAS NOT 0, 1, or 2!" << std::endl;
         exit( 1 );
     }
 

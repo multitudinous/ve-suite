@@ -182,7 +182,9 @@ void PhongLoader::SyncShaderAndStateSet()
         "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
         "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
 
-        "    gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
+        "    gl_FragData[ 0 ]=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
+        "    //To handle the glow\n"
+        "    gl_FragData[ 1 ] = vec4( 0, 0, 0, 1 );\n"
         " }\n"
 
     );

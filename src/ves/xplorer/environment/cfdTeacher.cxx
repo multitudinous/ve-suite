@@ -37,7 +37,6 @@
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/Group.h>
 
-//#include <ves/xplorer/event/viz/cfdScalarBarActor.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Debug.h>
 
@@ -53,7 +52,7 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/gmtl.h>
 
-#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
 using namespace ves::xplorer;
@@ -81,13 +80,16 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, osg::Group* worldDCS )
     dcs->SetName( "Teacher Node" );
     mModelRoot->addChild( dcs.get() );
     //Get ive, osg, and pfb filenames
-    pfbFileNames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
+    pfbFileNames = 
+        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
-    tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
+    tempFilenames = 
+        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
     tempFilenames.clear();
-    tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
+    tempFilenames = 
+        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
 
@@ -96,7 +98,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, osg::Group* worldDCS )
         << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdTeacher::~cfdTeacher( )
+cfdTeacher::~cfdTeacher()
 {
     if( m_currentScene )
     {
@@ -123,7 +125,7 @@ ves::xplorer::scenegraph::CADEntityHelper* cfdTeacher::GetCurrentLoadedScene( in
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* cfdTeacher::GetDCS()
 {
-    return this->dcs.get();
+    return dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 int cfdTeacher::getNumberOfFiles()
@@ -203,7 +205,7 @@ void cfdTeacher::LoadScene( unsigned int whichChild )
     vprDEBUG( vesDBG, 2 ) << "LOAD_PFB_FILE: addChild" << std::endl
         << vprDEBUG_FLUSH;
 
-    this->GetDCS()->addChild( GetCurrentLoadedScene( whichChild )->GetNode() );
+    GetDCS()->addChild( GetCurrentLoadedScene( whichChild )->GetNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::ClearStoredScenes()
@@ -248,26 +250,29 @@ void cfdTeacher::writePFBFile( osg::Node* graph, std::string fileName )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::Reset()
 {
-    vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \"" << this->directory
-    << "\"" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \"" 
+        << directory << "\"" << std::endl << vprDEBUG_FLUSH;
     //Remove the other application's stored scenes
     ClearStoredScenes();
     //Delete the old active scene if we have one
     if( m_currentScene )
     {
-        this->dcs->removeChild( m_currentScene->GetNode() );
+        dcs->removeChild( m_currentScene->GetNode() );
         delete m_currentScene;
         m_currentScene = 0;
     }
     //Get ive, osg, and pfb filenames for the new application
     pfbFileNames.clear();
-    pfbFileNames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
+    pfbFileNames = 
+        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
-    tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
+    tempFilenames = 
+        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
     tempFilenames.clear();
-    tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
+    tempFilenames = 
+        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
 
