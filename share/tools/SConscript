@@ -5,6 +5,7 @@ toolsSubdirs = Split("""
     builder
     vea
     daycent
+    dds_texture_correction
 """)
 # not needed anymore since we have screen capture working in xplorer
 #desktop_wallpaper
