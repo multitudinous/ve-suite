@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
-#include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
+#include <ves/xplorer/scenegraph/util/TransparencySupport.h>
 
 #include <iostream>
 //#include <algorithm>
@@ -40,7 +40,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 
 using namespace ves::xplorer::scenegraph;
-using namespace ves::xplorer::scenegraph::util;
+//using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow, bool ignoreCase, osg::Vec3 glowColor )
@@ -87,12 +87,15 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
             //I think we need to check and see if the stateset has any parents
             if( geode_stateset->getNumParents() > 1 )
             {
-                //deep copy the stateset and then add it back to the geode
-                std::cout << "StateSet is shared." << std::endl;
+                //std::cout << drawable_stateset->getNumParents() << std::endl;
+                //std::cout << "StateSet is shared." << std::endl;
+                osg::ref_ptr< osg::StateSet > temp_stateset = 
+                    new osg::StateSet( *(geode_stateset.get()), osg::CopyOp::DEEP_COPY_ALL );
+                node.setStateSet( temp_stateset.get() );
             }
+            
             //Now highlight the node
-            ves::xplorer::scenegraph::util::OpacityVisitor 
-                opVisitor( &node, false, false, 1.0f, true );
+            transparentDisable( &node );
 
             //Add shader code to have code highlighted
             //osg::Vec4 enableGlow( 1.0, 0.0, 0.0, 1.0 );

@@ -46,8 +46,6 @@
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
 
-#include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
-
 #include <ves/xplorer/util/cfdGrid2Surface.h>
 
 #include <ves/open/xml/Command.h>

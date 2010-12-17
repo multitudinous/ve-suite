@@ -306,7 +306,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
             << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
 
-        m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity(), true );
+        m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity() );
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
@@ -357,7 +357,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 << std::endl << vprDEBUG_FLUSH;
             vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
                 << newPart->GetOpacity() << std::endl << vprDEBUG_FLUSH;
-            m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity(), true );
+            m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity() );
             
             //m_activeModel->RenderTextualDisplay( true );
 
