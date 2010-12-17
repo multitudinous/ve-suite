@@ -680,34 +680,11 @@ void Wand::ProcessHit()
         //Set the connection between the scene manipulator and the selected dcs
         scenegraph::manipulator::TransformManipulator* sceneManipulator =
             m_manipulatorManager.GetSceneManipulator();
-        //sceneManipulator->Disconnect();
-        //Check and see if the selected node has an attached physics mesh
-        bool hasAPhysicsMesh( false );
-        osg::ref_ptr< osgwTools::AbsoluteModelTransform > tempAMT = 
-        dynamic_cast< osgwTools::AbsoluteModelTransform* >( 
-                                                           newSelectedDCS->getParent( 0 ) );
-        if( tempAMT )
-        {
-            osgbBullet::RefRigidBody* tempRB = 
-            dynamic_cast< osgbBullet::RefRigidBody* >( tempAMT->getUserData() );
-            if( tempRB )
-            {
-                hasAPhysicsMesh = true;
-            }
-        }
-        
-        if( hasAPhysicsMesh )
-        {
-            sceneManipulator->Connect( tempAMT.get() );
-        }
-        else
-        {
-            sceneManipulator->Connect( newSelectedDCS );
-        }
+        sceneManipulator->Connect( newSelectedDCS );
         
         //Move the scene manipulator to the center point
         scenegraph::LocalToWorldNodePath nodePath(
-                                                  newSelectedDCS, m_sceneManager.GetModelRoot() );
+            newSelectedDCS, m_sceneManager.GetModelRoot() );
         scenegraph::LocalToWorldNodePath::NodeAndPathList npl =
         nodePath.GetLocalToWorldNodePath();
         scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );

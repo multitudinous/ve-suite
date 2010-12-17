@@ -1607,7 +1607,7 @@ void KeyboardMouse::ProcessSelection()
     }
 
     //Right now we are saying you must have a DCS
-    scenegraph::DCS* newSelectedDCS = static_cast< scenegraph::DCS* >( vesObject );
+    scenegraph::DCS* newSelectedDCS = dynamic_cast< scenegraph::DCS* >( vesObject );
     if( !newSelectedDCS )
     {
         return;
