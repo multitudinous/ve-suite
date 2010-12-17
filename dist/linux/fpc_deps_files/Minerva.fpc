@@ -6,7 +6,7 @@ includedir=${prefix}/include/cadkit
 Name: Minerva
 Description: Minerva GIS
 Provides: Minerva
-Requires:
+Requires: openscenegraph openthreads
 Version: 1.0
 Libs: -L${libdir} -lMinervaCore -lMinervaCommon -lUsul -lMinervaOsgTools -lXmlTree -lMinervaDocument -lSerializeXML -lMinervaGeoNames -lMinervaGeoRSS -lMinervaNetwork -lMinervaKml
 Cflags: -I${includedir} -I/opt/local/include

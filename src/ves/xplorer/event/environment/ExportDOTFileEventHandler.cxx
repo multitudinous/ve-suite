@@ -34,7 +34,8 @@
 // --- VES Includes --- //
 #include <ves/xplorer/event/environment/ExportDOTFileEventHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/CreateGraphDOTVisitor.h>
+//#include <ves/xplorer/scenegraph/CreateGraphDOTVisitor.h>
+#include <osgDB/WriteFile>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -88,10 +89,14 @@ void ExportDOTFileEventHandler::Execute(
         command->GetDataValuePair( "Filename" )->GetData( filename );
         //Store the active geometry and viz objects as a pfb
         //(but not the sun, menu, laser, or text)
-        scenegraph::CreateGraphDOTVisitor dotCreator(
+        
+        /*scenegraph::CreateGraphDOTVisitor dotCreator(
             scenegraph::SceneManager::instance()->
                 GetRootNode()->getParent( 0 ), //SceneView Cam
-            filename );
+            filename );*/
+        bool status = 
+            osgDB::writeNodeFile( *(scenegraph::SceneManager::instance()->
+                GetRootNode()->getParent( 0 )), filename  );
     }
     catch ( ... )
     {

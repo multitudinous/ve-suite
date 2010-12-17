@@ -140,7 +140,7 @@ int main( int argc, char* argv[] )
     //pos_desc.add("jconf", -1);
     
     // Construct a parser and do the actual parsing.
-    po::command_line_parser parser(argc, argv);
+    po::command_line_parser parser(argc, argv );
     //po::parsed_options parsed = 
     //    parser.options(xplorer_desc).positional(pos_desc).allow_unregistered().run();
     po::parsed_options parsed = 
@@ -156,8 +156,12 @@ int main( int argc, char* argv[] )
         std::cout << xplorer_desc << std::endl;
         return 0;
     }
-    
-    if( !vm.count("jconf") && !vm.count("vrjslave") )
+
+    ///Bool options evidently cannot be counted because they always return true
+    bool cluster_master = vm["vrjmaster"].as<bool>();
+    bool cluster_slave = vm["vrjslave"].as<bool>();
+
+    if( !vm.count("jconf") && !cluster_slave )
     {
         std::cerr << std::endl << std::endl
             << "************************************************" << std::endl
@@ -250,7 +254,7 @@ int main( int argc, char* argv[] )
                 kernel->loadConfigFile(*i);
             }
         }
-        else if( !vm.count("vrjslave") )
+        else if( !cluster_slave )
         {
             std::cerr << std::endl << std::endl
             << "************************************************" << std::endl
