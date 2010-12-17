@@ -38,6 +38,8 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/DataValuePairPtr.h>
 
+#include <boost/concept_check.hpp>
+
 XERCES_CPP_NAMESPACE_USE
 using namespace ves::open::xml::shader;
 using namespace ves::open::xml;
@@ -306,6 +308,7 @@ void TextureImage::SetTextureImageType( const std::string& textureType )
 //////////////////////////////////////////////////////
 void TextureImage::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     SetSubElement<ves::open::xml::XMLObjectPtr>( "textureDescriptionData", mTextureDescription );
 }
 //////////////////////////////////////////////////////////

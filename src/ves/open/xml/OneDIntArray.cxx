@@ -34,6 +34,9 @@
 #include <iostream>
 
 #include <ves/open/xml/OneDIntArray.h>
+
+#include <boost/concept_check.hpp>
+
 XERCES_CPP_NAMESPACE_USE
 using namespace ves::open::xml;
 ////////////////////////////////////////////////////
@@ -112,6 +115,7 @@ std::vector< long > OneDIntArray::GetArray( void )
 ////////////////////////////////////
 void OneDIntArray::_updateVEElement( const std::string& input )
 {
+    boost::ignore_unused_variable_warning( input );
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
     //this will be based on the size of the long array
