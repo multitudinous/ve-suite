@@ -81,7 +81,7 @@ protected:
  Therefore, apps should call transparentDisable(), rather than invoking this
  visitor directly.
  */
-class RestoreOpacityVisitor : public osg::NodeVisitor
+class VE_SCENEGRAPH_EXPORTS RestoreOpacityVisitor : public osg::NodeVisitor
 {
 public:
     RestoreOpacityVisitor();
