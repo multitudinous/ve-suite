@@ -63,12 +63,12 @@ ContourFeatureMaker::~ContourFeatureMaker()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ContourFeatureMaker::Update( unsigned int recordID )
+void ContourFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
     xplorer::data::ContourPlanePropertySet contourSet;
-    contourSet.SetRecordID( recordID );
+    contourSet.SetUUID( recordUUID );
     contourSet.LoadFromDatabase(  );
     AddPlane( static_cast < xplorer::data::PropertySet& > ( contourSet ) );
 }

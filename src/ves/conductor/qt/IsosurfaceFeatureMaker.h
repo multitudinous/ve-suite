@@ -59,7 +59,7 @@ public:
     ///Destructor
     virtual ~IsosurfaceFeatureMaker();
     ///Update method to generate vis feature
-    virtual void Update( unsigned int recordID );
+    virtual void Update( const::std::string& recordUUID );
 
 protected:
     ///Called by the update function

@@ -64,12 +64,12 @@ VectorFeatureMaker::~VectorFeatureMaker()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorFeatureMaker::Update( unsigned int recordID )
+void VectorFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
     xplorer::data::VectorPlanePropertySet vectorSet;
-    vectorSet.SetRecordID( recordID );
+    vectorSet.SetUUID( recordUUID );
     vectorSet.LoadFromDatabase();
     AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
 }

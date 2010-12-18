@@ -134,7 +134,7 @@ std::vector< std::string > DatabaseManager::GetStringVector( const std::string& 
     }
     catch( Poco::Data::DataException &e )
     {
-        std::cout << e.displayText() << std::endl;
+        std::cout << "DatabaseManager::GetStringVector: " << e.displayText() << std::endl;
     }
 
     return returnValue;

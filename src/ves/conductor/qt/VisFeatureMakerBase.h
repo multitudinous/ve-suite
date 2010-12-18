@@ -65,7 +65,7 @@ public:
     ///Destructor
     virtual ~VisFeatureMakerBase();
     ///Update function
-    virtual void Update( unsigned int recordID );
+    virtual void Update( const std::string& recordUUID );
 
 protected:
     ///Called by the update function

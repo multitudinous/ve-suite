@@ -92,7 +92,7 @@ public:
      **/
     ves::xplorer::data::PropertySetPtr CreateNewFeature( const std::string& featureName );
 
-    void UpdateFeature( const std::string& featureName, unsigned int ID );
+    void UpdateFeature( const std::string& featureName, const std::string& UUID );
 
     std::vector<std::string> GetIDsForFeature( const std::string& featureName );
 

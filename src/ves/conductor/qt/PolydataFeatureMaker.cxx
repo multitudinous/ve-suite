@@ -63,12 +63,12 @@ PolydataFeatureMaker::~PolydataFeatureMaker()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PolydataFeatureMaker::Update( unsigned int recordID )
+void PolydataFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
     xplorer::data::PolydataPropertySet polydataSet;
-    polydataSet.SetRecordID( recordID );
+    polydataSet.SetUUID( recordUUID );
     polydataSet.LoadFromDatabase();
     AddPlane( static_cast < xplorer::data::PropertySet& > ( polydataSet ) );
 }

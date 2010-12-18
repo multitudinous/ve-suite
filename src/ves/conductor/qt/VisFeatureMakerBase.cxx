@@ -61,9 +61,9 @@ VisFeatureMakerBase::~VisFeatureMakerBase()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::Update( unsigned int recordID )
+void VisFeatureMakerBase::Update( const::std::string& recordUUID )
 {
-    boost::ignore_unused_variable_warning( recordID );
+    boost::ignore_unused_variable_warning( recordUUID );
     // Does nothing, but don't want pure virtual f'n so that this class *can*
     // be instantiated alone.
 }

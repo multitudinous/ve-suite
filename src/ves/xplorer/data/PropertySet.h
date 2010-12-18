@@ -39,6 +39,7 @@
 #include <vector>
 
 #include <boost/any.hpp>
+#include <boost/uuid/uuid.hpp>
 
 #include <Poco/Types.h>
 
@@ -184,17 +185,25 @@ public:
 
     ///
     /// Returns the record ID of this property set. The record ID is how this
-    /// property set is distingushed from others of a similar type in the
+    /// property set is distinguished from others of a similar type in the
     /// database.
     virtual unsigned int GetRecordID() const;
+
+    virtual void SetUUID( const std::string& uuid );
+    virtual void SetUUID( boost::uuids::uuid& uuid );
+    virtual const boost::uuids::uuid& GetUUID() const;
+    virtual std::string GetUUIDAsString() const;
 
     virtual bool LoadFromDatabase();
     virtual bool LoadFromDatabase( Poco::Data::Session* session );
     virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName );
-    virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName, Poco::UInt32 ID );
+    //virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName, Poco::UInt32 ID );
+    virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName, const std::string& UUID );
+
     virtual bool LoadFromDatabase( const std::string& DatabaseName );
     virtual bool LoadFromDatabase( const std::string& DatabaseName, const std::string& TableName );
-    virtual bool LoadFromDatabase( const std::string& DatabaseName, const std::string& TableName, unsigned int ID );
+    //virtual bool LoadFromDatabase( const std::string& DatabaseName, const std::string& TableName, unsigned int ID );
+    virtual bool LoadFromDatabase( const std::string& DatabaseName, const std::string& TableName, const std::string& UUID );
 
     virtual bool LoadByKey( const std::string& KeyName, boost::any KeyValue );
     virtual bool LoadByKey( Poco::Data::Session* session, const std::string& KeyName, boost::any KeyValue );
@@ -258,6 +267,8 @@ protected:
     std::string mTableName;
     Poco::UInt32 mID;
 
+    boost::uuids::uuid mUUID;
+    std::string mUUIDString;
 
 private:
     // Empty string to use when need to return an empty string by reference

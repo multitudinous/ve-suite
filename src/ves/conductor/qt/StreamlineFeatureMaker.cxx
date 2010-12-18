@@ -64,12 +64,12 @@ StreamlineFeatureMaker::~StreamlineFeatureMaker()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamlineFeatureMaker::Update( unsigned int recordID )
+void StreamlineFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
     xplorer::data::StreamlinePropertySet streamlineSet;
-    streamlineSet.SetRecordID( recordID );
+    streamlineSet.SetUUID( recordUUID );
     streamlineSet.LoadFromDatabase();
     AddPlane( static_cast < xplorer::data::PropertySet& > ( streamlineSet ) );
 }

@@ -92,7 +92,7 @@ void Visualization::on_WritePropertiesButton_clicked()
         const std::string featureName = 
             m_ui->FeaturesList->currentItem()->text().toStdString();
         VisFeatureManager::instance()->
-            UpdateFeature( featureName, mTempSet->GetRecordID() );
+            UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -218,7 +218,8 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& tex
             // set during parsing. They're only set by signals from the property
             // set when things changed, which loading will do. But this doesn't
             // work until after parsing is complete.
-            mTempSet->SetRecordID( text.toInt() );
+            //mTempSet->SetRecordID( text.toInt() );
+            mTempSet->SetUUID( text.toStdString() );
             mTempSet->LoadFromDatabase();
             mFeatureBrowser->RefreshAll();
         }

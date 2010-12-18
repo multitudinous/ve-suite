@@ -110,7 +110,7 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
     return set;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned int ID )
+void VisFeatureManager::UpdateFeature( const std::string& featureName, const std::string& UUID )
 {
     using namespace ves::conductor;
     VisFeatureMakerBasePtr feature;
@@ -145,7 +145,7 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, unsigned 
         feature = VisFeatureMakerBasePtr( new PolydataFeatureMaker() );
     }
 
-    feature->Update( ID );
+    feature->Update( UUID );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> VisFeatureManager::GetIDsForFeature( const std::string& featureName )
@@ -157,7 +157,7 @@ std::vector<std::string> VisFeatureManager::GetIDsForFeature( const std::string&
         m_featureNameToTableName.find( featureName );
     if( iter != m_featureNameToTableName.end() )
     {
-        ids = DatabaseManager::instance()->GetStringVector( iter->second, "id" );
+        ids = DatabaseManager::instance()->GetStringVector( iter->second, "uuid" );
         return ids;
     }
 

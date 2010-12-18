@@ -38,6 +38,8 @@
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 #include <iostream>
 
@@ -56,11 +58,16 @@ namespace xplorer
 namespace data
 {
 
-PropertySet::PropertySet()
+PropertySet::PropertySet():
+    mUUID( boost::uuids::random_generator()() )
 {
     mPropertyMap.clear();
     mAccumulatedChanges.clear();
     mID = 0;
+
+    std::stringstream ss;
+    ss << mUUID;
+    mUUIDString = ss.str();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PropertySet::PropertySet( const PropertySet& orig )
@@ -296,7 +303,7 @@ bool PropertySet::DeleteFromDatabase( const std::string& DatabaseName, const std
     }
     catch( Poco::Data::DataException& ex )
     {
-        std::cout << ex.displayText() << std::endl;
+        std::cout << "PropertySet::DeleteFromDatabase: " << ex.displayText() << std::endl;
     }
     catch( ... )
     {
@@ -330,7 +337,7 @@ bool PropertySet::DeleteFromDatabase( Poco::Data::Session* session, const std::s
     }
     catch( Poco::Data::DataException& ex )
     {
-        std::cout << ex.displayText() << std::endl;
+        std::cout << "PropertySet::DeleteFromDatabase: " << ex.displayText() << std::endl;
     }
     catch( ... )
     {
@@ -352,20 +359,20 @@ bool PropertySet::LoadFromDatabase()
 
 bool PropertySet::LoadFromDatabase( const std::string& DatabaseName )
 {
-    return LoadFromDatabase( DatabaseName, mTableName, mID );
+    return LoadFromDatabase( DatabaseName, mTableName, /*mID*/ mUUIDString );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( const std::string& DatabaseName,
                                     const std::string& TableName )
 {
-    return LoadFromDatabase( DatabaseName, TableName, mID );
+    return LoadFromDatabase( DatabaseName, TableName, /*mID*/ mUUIDString );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( const std::string& DatabaseName,
                                     const std::string& TableName,
-                                    unsigned int ID )
+                                    const std::string& UUID )
 {
     bool returnValue = false;
 
@@ -375,14 +382,14 @@ bool PropertySet::LoadFromDatabase( const std::string& DatabaseName,
         Poco::Data::SQLite::Connector::registerConnector();
         Poco::Data::Session session( "SQLite", DatabaseName );
 
-        returnValue = LoadFromDatabase( &session, TableName, ID );
+        returnValue = LoadFromDatabase( &session, TableName, UUID );
 
         // Close db connection
         Poco::Data::SQLite::Connector::unregisterConnector();
     }
     catch( Poco::Data::DataException& ex )
     {
-        std::cout << ex.displayText() << std::endl;
+        std::cout << "PropertySet::LoadFromDatabase: " << ex.displayText() << std::endl;
     }
     catch( ... )
     {
@@ -395,20 +402,20 @@ bool PropertySet::LoadFromDatabase( const std::string& DatabaseName,
 
 bool PropertySet::LoadFromDatabase( Poco::Data::Session* session )
 {
-    return LoadFromDatabase( session, mTableName, mID );
+    return LoadFromDatabase( session, mTableName, /*mID*/ mUUIDString );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
                                     const std::string& TableName )
 {
-    return LoadFromDatabase( session, TableName, mID );
+    return LoadFromDatabase( session, TableName, /*mID*/ mUUIDString );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
 bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
                                     const std::string& TableName,
-                                    Poco::UInt32 ID )
+                                    const std::string& UUID )
 {
     if( !session )
     {
@@ -423,9 +430,10 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
     }
 
     // Get the entire record we need with one query
-    mID = ID;
+    //mID = ID;
+    mUUIDString = UUID;
     Poco::Data::Statement statement( ( *session ) );
-    statement << "SELECT * FROM " << TableName << " WHERE id=:0", Poco::Data::use( mID );
+    statement << "SELECT * FROM " << TableName << " WHERE uuid=:0", Poco::Data::use( /*mID*/ mUUIDString );
     statement.execute();
 
     Poco::Data::RecordSet recordset( statement );
@@ -503,7 +511,8 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
             Poco::Data::Statement statement( ( *session ) );
             statement << "SELECT " << fieldName << " FROM " << mTableName
                     << "_" << iterator->first << " WHERE PropertySetParentID=:0"
-                    , Poco::Data::use( mID );
+                    //, Poco::Data::use( mID );
+                    , Poco::Data::use( mUUIDString );
             statement.execute();
             Poco::Data::RecordSet recordset( statement );
             //std::cout << fieldName << " " << mTableName << " " << iterator->first << std::endl;
@@ -593,10 +602,10 @@ bool PropertySet::LoadByKey( Poco::Data::Session* session, const std::string& Ke
     // It's the caller's problem if this isn't the record they wanted, since
     // they are implicitly requesting a unique result to a possibly
     // multi-result query.
-    statement << "SELECT id FROM " << mTableName << " WHERE " << KeyName << "=:KeyValue LIMIT 1";
+    statement << "SELECT uuid FROM " << mTableName << " WHERE " << KeyName << "=:KeyValue LIMIT 1";
     BindableAnyWrapper bindable;
     bindable.BindValue( &statement, KeyValue );
-    Poco::UInt32 result = 0;
+    std::string result;
     statement, Poco::Data::into( result );
     try
     {
@@ -611,10 +620,10 @@ bool PropertySet::LoadByKey( Poco::Data::Session* session, const std::string& Ke
         std::cout << "PropertySet::LoadByKey: Unknown error accessing database." << std::endl;
     }
 
-    if( result != 0 )
+    if( !result.empty() )
     {
-        mID = result;
-        returnVal = LoadFromDatabase( session, mTableName, mID );
+        SetUUID( result );
+        returnVal = LoadFromDatabase( session, mTableName, mUUIDString );
     }
 
     return returnVal;
@@ -635,7 +644,7 @@ bool PropertySet::LoadByKey( const std::string& DatabaseName, const std::string&
     }
     catch( Poco::Data::DataException &e )
     {
-        std::cout << e.displayText() << std::endl;
+        std::cout <<  "PropertySet::LoadByKey: " << e.displayText() << std::endl;
     }
     catch( ... )
     {
@@ -676,7 +685,7 @@ bool PropertySet::WriteToDatabase( const std::string& DatabaseName,
     }
     catch( Poco::Data::DataException &e )
     {
-        std::cout << e.displayText() << std::endl;
+        std::cout << "PropertySet::WriteToDatabase: " << e.displayText() << std::endl;
     }
     catch( ... )
     {
@@ -734,11 +743,16 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
 
         // Determine whether a record already exists for this PropertySet.
         // This query will return a non-zero, positive id iff the record exists
-        int idTest = 0;
+        //int idTest = 0;
+        std::string idTest;
 
-        ( *session ) << "SELECT id FROM " << m_TableName << " WHERE id=:id",
+//        ( *session ) << "SELECT id FROM " << m_TableName << " WHERE id=:id",
+//                Poco::Data::into( idTest ),
+//                Poco::Data::use( mID ),
+//                Poco::Data::now;
+        ( *session ) << "SELECT uuid FROM " << m_TableName << " WHERE uuid=:uuid",
                 Poco::Data::into( idTest ),
-                Poco::Data::use( mID ),
+                Poco::Data::use( mUUIDString ),
                 Poco::Data::now;
 
         // Since the data binding part will be the same for INSERT and UPDATE
@@ -750,13 +764,14 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
         // Will hold the list of fields in the order added to query.
         std::vector< std::string > fieldNames;
 
-        if( idTest == 0 ) //  Record does not exist; perform an INSERT
+//        if( idTest == 0 ) //  Record does not exist; perform an INSERT
+        if( idTest.empty() )
         {
             // Build a query that looks like this:
             // "INSERT INTO tablename (field1name_1,fieldname_2,...) VALUES (:1,:2,...)"
             query = "INSERT INTO ";
             query.append( m_TableName );
-            query.append( " (" );
+            query.append( " (uuid," );
 
             PropertyPtr property;
             PropertyMap::const_iterator iterator = mPropertyMap.begin();
@@ -791,6 +806,11 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
             }
 
             query.append( ") VALUES (" );
+            // Put in uuid explicitly since it appears only in INSERT and not
+            // in UPDATE queries
+            query.append( "\"");
+            query.append( mUUIDString );
+            query.append( "\",");
 
             // Put in the binding labels (:0,:1,...) for Poco::Data
             size_t max = fieldNames.size();
@@ -851,8 +871,12 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
                 query.erase( --query.end() );
             }
 
-            query.append( " WHERE id=" );
-            query.append( boost::lexical_cast<std::string > ( mID ) );
+//            query.append( " WHERE id=" );
+//            query.append( boost::lexical_cast<std::string > ( mID ) );
+            query.append( " WHERE uuid=\"" );
+            query.append( mUUIDString );
+            query.append("\"");
+            //std::cout << query << std::endl << std::flush;
         }
 
         // Turn the query into a statement that can accept bound values
@@ -889,6 +913,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
         // If we've made it here, we successfully wrote to database
         returnVal = true;
 
+        //TODO: this block may be able to go away once uuid works
         // If we just did an INSERT we need to get the id of the
         // record we just INSERTed and store it as mID.
         if( statement.toString().substr( 0, 6 ) == "INSERT" )
@@ -900,7 +925,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
     }
     catch( Poco::Data::DataException &e )
     {
-        std::cout << e.displayText() << std::endl;
+        std::cout << "PropertySet::WriteToDatabase: " << e.displayText() << std::endl;
     }
     catch( ... )
     {
@@ -986,8 +1011,11 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
                 // Check for existing table; if table doesn't exist, create it.
                 if( !_tableExists( session, newTableName ) )
                 {
+//                    ( *session ) << "CREATE TABLE " << newTableName <<
+//                            " (id INTEGER PRIMARY KEY,PropertySetParentID INTEGER,"
+//                            << fieldName << " " << columnType << ")", Poco::Data::now;
                     ( *session ) << "CREATE TABLE " << newTableName <<
-                            " (id INTEGER PRIMARY KEY,PropertySetParentID INTEGER,"
+                            " (id INTEGER PRIMARY KEY,PropertySetParentID TEXT,"
                             << fieldName << " " << columnType << ")", Poco::Data::now;
                 }
 
@@ -1008,7 +1036,10 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
                 listQuery += newTableName;
                 listQuery += " WHERE ";
                 listQuery += "PropertySetParentID=";
-                listQuery += boost::lexical_cast<std::string > ( mID );
+                //listQuery += boost::lexical_cast<std::string > ( mID );
+                listQuery += "\"";
+                listQuery += mUUIDString;
+                listQuery += "\"";
 
                 ( *session ) << listQuery, Poco::Data::now;
                 listQuery.clear();
@@ -1027,7 +1058,10 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
                     listQuery += ",PropertySetParentID) VALUES (:";
                     listQuery += boost::lexical_cast<std::string > ( index );
                     listQuery += ",";
-                    listQuery += boost::lexical_cast<std::string > ( mID );
+                    //listQuery += boost::lexical_cast<std::string > ( mID );
+                    listQuery += "\"";
+                    listQuery += mUUIDString;
+                    listQuery += "\"";
                     listQuery += ")";
 
                     // Turn into a prepared statement that can accept bindings
@@ -1122,7 +1156,7 @@ std::string PropertySet::_buildColumnHeaderString()
     // Forcing the primary key to autoincrement ensures that we can always
     // find the most recently inserted entry simply by issuing
     // SELECT MAX(id) from table_name
-    result.append( "id INTEGER PRIMARY KEY AUTOINCREMENT," );
+    result.append( "id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT," );
 
     PropertyPtr property;
     PropertyMap::const_iterator iterator = mPropertyMap.begin();
@@ -1289,6 +1323,33 @@ unsigned int PropertySet::GetBoostAnyVectorSize( const boost::any& value )
     return size;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void PropertySet::SetUUID( const std::string& uuid )
+{
+    mUUIDString = uuid;
+    boost::uuids::string_generator gen;
+    mUUID = gen( uuid );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PropertySet::SetUUID( boost::uuids::uuid& uuid )
+{
+    mUUID = uuid;
+
+    std::stringstream ss;
+    ss << mUUID;
+    mUUIDString = ss.str();
+}
+////////////////////////////////////////////////////////////////////////////////
+const boost::uuids::uuid& PropertySet::GetUUID() const
+{
+    return mUUID;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string PropertySet::GetUUIDAsString() const
+{
+    return mUUIDString;
+}
+////////////////////////////////////////////////////////////////////////////////
+
 }
 }
 }
