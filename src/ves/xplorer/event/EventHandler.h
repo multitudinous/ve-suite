@@ -40,6 +40,7 @@
 
 #include <ves/open/xml/XMLObjectPtr.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 namespace ves
 {
@@ -79,8 +80,10 @@ public:
     ///\param baseObject The GlobalBase object to apply the command to.
     virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject = 0 ) = 0;
 protected:
-    ///<the variable of the global base object to operate on
+    ///The variable of the global base object to operate on
     ves::xplorer::GlobalBase* _baseObject;
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 
 }
