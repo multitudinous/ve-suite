@@ -50,13 +50,15 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler::SeedPointDimensionsEventHandler()
+    :
+    EventHandler()
 {
     _activeModel = 0;
 
     CONNECTSIGNALS_1( "%UpdateSeedPointDimensions",
                       void ( const std::vector< long >& allDimensions ),
                       &SeedPointDimensionsEventHandler::UpdateDimensions,
-                      mConnections, any_SignalType, normal_Priority );
+                      m_connections, any_SignalType, normal_Priority );
 }
 ///////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler
@@ -69,7 +71,7 @@ SeedPointDimensionsEventHandler
 /////////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler::~SeedPointDimensionsEventHandler()
 {}
-///////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler&
 SeedPointDimensionsEventHandler::operator=( const SeedPointDimensionsEventHandler& rhs )
 {
@@ -79,7 +81,7 @@ SeedPointDimensionsEventHandler::operator=( const SeedPointDimensionsEventHandle
     }
     return *this;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void SeedPointDimensionsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
     try
@@ -99,7 +101,7 @@ void SeedPointDimensionsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalB
         std::cout << "Invalid object passed to SeedPointDimensionsEventHandler!" << std::endl;
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     //if( !_activeModel )
@@ -111,10 +113,6 @@ void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPt
         std::vector<long> allDimensions;
         DataValuePairPtr dimensions = command->GetDataValuePair( "Dimensions" );
         dimensions->GetData( allDimensions );
-//        ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
-//            SetDimensions( allDimensions[0],
-//                allDimensions[1],
-//                allDimensions[2] );
         UpdateDimensions( allDimensions );
     }
     catch ( ... )
@@ -123,14 +121,15 @@ void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPt
         std::cout << "SeedPointDimensionsEventHandler::Execute()" << std::endl;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void SeedPointDimensionsEventHandler::UpdateDimensions( const std::vector< long >& allDimensions )
 {
     // Temporary debuggish message. Remove when satisfied correct behavior
     // is occurring.
-    std::cout << "SeedPointDimensionsEventHandler::UpdateDimensions: Proof of realtime updates." << std::endl << std::flush;
+    //std::cout << "SeedPointDimensionsEventHandler::UpdateDimensions: Proof of realtime updates." << std::endl << std::flush;
     ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
         SetDimensions( allDimensions[0],
             allDimensions[1],
             allDimensions[2] );
 }
+////////////////////////////////////////////////////////////////////////////////

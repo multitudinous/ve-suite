@@ -33,29 +33,62 @@
 #include <ves/xplorer/data/StreamlinePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
+#include <ves/xplorer/data/DatabaseManager.h>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <iostream>
-#include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
 
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 StreamlinePropertySet::StreamlinePropertySet()
 {
     using eventmanager::SignalWrapper;
-
-    std::string name("StreamlinePropertySet");
-    name += boost::lexical_cast<std::string>( this );
-    name += ".UpdateSeedPointDimensions";
-
-    eventmanager::EventManager::instance()->RegisterSignal(
+    ///Signal for handling seed point number changes
+    {
+        std::string name("StreamlinePropertySet");
+        name += boost::lexical_cast<std::string>( this );
+        name += ".UpdateSeedPointDimensions";
+        
+        eventmanager::EventManager::instance()->RegisterSignal(
             new SignalWrapper< UpdateDimsSignal_type >( &mUpdateDims ),
             name, eventmanager::EventManager::unspecified_SignalType );
+    }
+    ///Signal for turning on seed points
+    {
+        std::string name("StreamlinePropertySet");
+        name += boost::lexical_cast<std::string>( this );
+        name += ".ActivateSeedPoints";
 
+        eventmanager::EventManager::instance()->RegisterSignal(
+            new SignalWrapper< ActivateSeedPointsSignal_type >( &m_activateSeedPoints ),
+            name, eventmanager::EventManager::unspecified_SignalType );
+    }
+    ///Signal to change the bounds of seed points
+    {
+        std::string name("StreamlinePropertySet");
+        name += boost::lexical_cast<std::string>( this );
+        name += ".UpdateSeedPointBounds";
+        
+        eventmanager::EventManager::instance()->RegisterSignal(
+           new SignalWrapper< UpdateSeedPointBoundsSignal_type >( &m_updateSeedPointBounds ),
+           name, eventmanager::EventManager::unspecified_SignalType );
+    }
+    ///Signal to change the active dataset
+    {
+        std::string name("StreamlinePropertySet");
+        name += boost::lexical_cast<std::string>( this );
+        name += ".ActiveDataSet";
+        
+        eventmanager::EventManager::instance()->RegisterSignal(
+           new SignalWrapper< UpdateActiveDataSetSignal_type >( &m_activeDataSet ),
+           name, eventmanager::EventManager::unspecified_SignalType );
+    }
+    
     mTableName = "Streamline";
     CreateSkeleton();
 }
@@ -132,6 +165,8 @@ void StreamlinePropertySet::CreateSkeleton()
     AddProperty( "SeedPoints", boost::any(), "Seed Points");
     SetPropertyAttribute( "SeedPoints", "isUIGroupOnly", true );
     SetPropertyAttribute( "SeedPoints", "setExpanded", true );
+    AddProperty( "SeedPoints_DisplaySeedPoints", false, "Display Seed Points" );
+    mPropertyMap["SeedPoints_DisplaySeedPoints"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateSeedPointDisplay, this, _1 ) );
     AddProperty( "SeedPoints_NumberOfPointsInX", 2, "Number of Points in X" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInX", "minimumValue",   0 );
     mPropertyMap["SeedPoints_NumberOfPointsInX"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateNumberOfPoints, this, _1 ) );
@@ -162,7 +197,6 @@ void StreamlinePropertySet::CreateSkeleton()
     AddProperty( "SeedPoints_Bounds_ZMax", 1.0, "Z Maximum" );
     SetPropertyAttribute( "SeedPoints_Bounds_ZMax", "minimumValue",   0.0 );
     SetPropertyAttribute( "SeedPoints_Bounds_ZMax", "maximumValue", 1.0 );
-    AddProperty( "SeedPoints_DisplaySeedPoints", true, "Display Seed Points" );
 
     ///General streamline properties
     AddProperty( "UseGPUTools", false, "Use GPU Tools" );
@@ -226,10 +260,10 @@ void StreamlinePropertySet::UpdateScalarDataOptions( PropertyPtr property )
     boost::ignore_unused_variable_warning( property );
 
     PSVectorOfStrings enumValues;
-    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    std::string selectedDataset = boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
-    enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "ScalarNames" ) );
+    enumValues = boost::any_cast< std::vector< std::string > >( dataset.GetPropertyValue( "ScalarNames" ) );
     if( enumValues.empty() )
     {
         enumValues.push_back( "No datasets loaded" );
@@ -247,7 +281,7 @@ void StreamlinePropertySet::UpdateScalarDataRange( PropertyPtr property )
     mPropertyMap["DataSet_ScalarRange_Max"]->SetEnabled();
 
     // Load the current Dataset and get the list of min and max values for its scalars
-    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    std::string selectedDataset = boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
     std::vector<double> mins = boost::any_cast< std::vector<double> >( dataset.GetPropertyValue( "ScalarMins" ) );
@@ -281,7 +315,7 @@ void StreamlinePropertySet::UpdateVectorDataOptions( PropertyPtr property )
     boost::ignore_unused_variable_warning( property );
 
     PSVectorOfStrings enumValues;
-    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    std::string selectedDataset = boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
     enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "VectorNames" ) );
@@ -338,9 +372,11 @@ bool StreamlinePropertySet::ValidateScalarMinMax( PropertyPtr property, boost::a
         return false;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void StreamlinePropertySet::UpdateNumberOfPoints( PropertyPtr property )
 {
+    boost::ignore_unused_variable_warning( property );
+
     // Package up the new seed point dimensions and fire off an update signal.
     // At the moment, xplorer::event::SeedPointDimensionsEventHandler listens
     // for the update signal.
@@ -354,5 +390,28 @@ void StreamlinePropertySet::UpdateNumberOfPoints( PropertyPtr property )
 
     mUpdateDims( dimensions );
 }
+////////////////////////////////////////////////////////////////////////////////
+void StreamlinePropertySet::UpdateSeedPointDisplay( PropertyPtr property )
+{
+    const std::string dataSetName = 
+        boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    m_activeDataSet( dataSetName );
 
+    bool showDataSet = boost::any_cast< bool >( property->GetValue() );
+
+    //Update the seed point bounds before turning the box off or on
+    if( showDataSet )
+    {
+        std::vector<double> seedPointBounds;
+        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_XMin" ) ) );
+        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_XMax" ) ) );
+        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_YMin" ) ) );
+        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_YMax" ) ) );
+        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMin" ) ) );
+        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMax" ) ) );
+        m_updateSeedPointBounds( seedPointBounds );    
+    }
+
+    m_activateSeedPoints( dataSetName, showDataSet );
+}
 ////////////////////////////////////////////////////////////////////////////////

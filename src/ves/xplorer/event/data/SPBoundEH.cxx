@@ -41,7 +41,10 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-#include <vtkDataSet.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
+
+//#include <vtkDataSet.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
@@ -49,12 +52,21 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 SeedPointBoundsEventHandler::SeedPointBoundsEventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     _activeModel = 0;
+
+    CONNECTSIGNALS_1( "%UpdateSeedPointBounds",
+                     void ( const std::vector< double >& bounds ),
+                     &SeedPointBoundsEventHandler::UpdateAllBounds,
+                     m_connections, any_SignalType, normal_Priority );
 }
 ///////////////////////////////////////////////////////////////////
 SeedPointBoundsEventHandler
 ::SeedPointBoundsEventHandler( const SeedPointBoundsEventHandler& ceh )
+    :
+    ves::xplorer::event::EventHandler( ceh )
 {
     _activeModel = ceh._activeModel;
 }
@@ -91,7 +103,7 @@ void SeedPointBoundsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
         std::cout << "Invalid object passed to SeedPointBoundsEventHandler!" << std::endl;
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     if( !_activeModel )
@@ -109,23 +121,7 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
             std::vector<double> allBoundaryData;
             DataValuePairPtr bounds = command->GetDataValuePair( "Bounds" );
             bounds->GetData( allBoundaryData );
-            double databounds[6] = {0, 0, 0, 0, 0, 0};
-            //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
-            _activeModel->GetActiveDataSet()->GetBounds( databounds );
-            double newValue[6] = {0, 0, 0, 0, 0, 0};
-            newValue[0] = databounds[0] + allBoundaryData.at( 0 ) * ( databounds[1] - databounds[0] );
-            newValue[1] = databounds[0] + allBoundaryData.at( 1 ) * ( databounds[1] - databounds[0] );
-            newValue[2] = databounds[2] + allBoundaryData.at( 2 ) * ( databounds[3] - databounds[2] );
-            newValue[3] = databounds[2] + allBoundaryData.at( 3 ) * ( databounds[3] - databounds[2] );
-            newValue[4] = databounds[4] + allBoundaryData.at( 4 ) * ( databounds[5] - databounds[4] );
-            newValue[5] = databounds[4] + allBoundaryData.at( 5 ) * ( databounds[5] - databounds[4] );
-
-            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->SetBounds( newValue[0],
-                    newValue[1],
-                    newValue[2],
-                    newValue[3],
-                    newValue[4],
-                    newValue[5] );
+            UpdateAllBounds( allBoundaryData );
         }
         else
         {
@@ -189,3 +185,35 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
         std::cout << "SeedPointBoundsEventHandler::Execute()" << std::endl;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void SeedPointBoundsEventHandler::UpdateAllBounds( const std::vector< double >& bounds )
+{
+    if( !_activeModel )
+    {
+        _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        if( !_activeModel )
+        {
+            return;
+        }
+    }
+
+    double databounds[6] = {0, 0, 0, 0, 0, 0};
+    //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
+    _activeModel->GetActiveDataSet()->GetBounds( databounds );
+    double newValue[6] = {0, 0, 0, 0, 0, 0};
+    newValue[0] = databounds[0] + bounds.at( 0 ) * ( databounds[1] - databounds[0] );
+    newValue[1] = databounds[0] + bounds.at( 1 ) * ( databounds[1] - databounds[0] );
+    newValue[2] = databounds[2] + bounds.at( 2 ) * ( databounds[3] - databounds[2] );
+    newValue[3] = databounds[2] + bounds.at( 3 ) * ( databounds[3] - databounds[2] );
+    newValue[4] = databounds[4] + bounds.at( 4 ) * ( databounds[5] - databounds[4] );
+    newValue[5] = databounds[4] + bounds.at( 5 ) * ( databounds[5] - databounds[4] );
+    
+    ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
+        SetBounds( newValue[0],
+                    newValue[1],
+                    newValue[2],
+                    newValue[3],
+                    newValue[4],
+                    newValue[5] );
+}
+////////////////////////////////////////////////////////////////////////////////

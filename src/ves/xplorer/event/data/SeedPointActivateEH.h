@@ -74,7 +74,10 @@ public:
     virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject );
 
 protected:
-    ves::xplorer::Model* _activeModel;///<The active cfdModel
+    ///Activate the seed points
+    void ActivateSeedPoints( const std::string& dataSetName, const bool seedPointDisplay );
+    ///The active cfdModel
+    ves::xplorer::Model* _activeModel;
 };
 
 }

@@ -82,15 +82,26 @@ private:
     /// Slot connected to value changes of properties SeedPoints_NumberOfPointsInX,
     /// SeedPoints_NumberOfPointsInY, and SeedPoints_NumberOfPointsInZ
     void UpdateNumberOfPoints( PropertyPtr property );
-
+    ///Slot connected to the value change of  display seed points
+    ///\param property The bool value for the seed point display flag
+    void UpdateSeedPointDisplay( PropertyPtr property );
 
 private:
     ///Create the skeleton
     void CreateSkeleton();
 
-    /// Update signal containing new seed points dimensions
+    ///Update signal containing new seed points dimensions
     typedef boost::signals2::signal< void ( const std::vector< long >& ) > UpdateDimsSignal_type;
     UpdateDimsSignal_type mUpdateDims;
+    ///Update signal to control turning off and on seed points
+    typedef boost::signals2::signal< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;
+    ActivateSeedPointsSignal_type m_activateSeedPoints;
+    ///Update signal to control the bounding box for seed points
+    typedef boost::signals2::signal< void ( const std::vector< double >& ) > UpdateSeedPointBoundsSignal_type;
+    UpdateSeedPointBoundsSignal_type m_updateSeedPointBounds;
+    ///Update signal to control changing the active dataset
+    typedef boost::signals2::signal< void ( const std::string& ) > UpdateActiveDataSetSignal_type;
+    UpdateActiveDataSetSignal_type m_activeDataSet;
 };
 
 } // namespace data

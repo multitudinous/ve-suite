@@ -42,7 +42,6 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 
 #include <ves/xplorer/event/EventHandlerPtr.h>
-#include <ves/xplorer/event/data/SeedPoints.h>
 
 // --- VTK Includes --- //
 class vtkPolyData;
@@ -56,11 +55,6 @@ class vtkPolyData;
 
 #include <osgEphemeris/EphemerisModel.h>
 
-namespace osgEphemeris
-{
-class EphemerisModel;
-}
-
 // --- C/C++ Includes --- //
 #include <map>
 #include <vector>
@@ -73,6 +67,7 @@ namespace xplorer
 class cfdTeacher;
 class cfdQuatCamHandler;
 class cfdDisplaySettings;
+class SeedPoints;
 
 namespace scenegraph
 {

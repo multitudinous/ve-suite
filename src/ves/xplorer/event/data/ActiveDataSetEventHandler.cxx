@@ -30,11 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/event/ActiveModelEventHandler.h>
+#include <ves/xplorer/event/data/ActiveDataSetEventHandler.h>
 
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -48,21 +47,21 @@
 
 #include <boost/concept_check.hpp>
 
-using namespace ves::xplorer::event;
+using namespace ves::xplorer::event::data;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
-ActiveModelEventHandler::ActiveModelEventHandler()
+ActiveDataSetEventHandler::ActiveDataSetEventHandler()
     : 
     ves::xplorer::event::EventHandler()
 {
-    CONNECTSIGNALS_1( "%ActiveModel",
+    CONNECTSIGNALS_1( "%ActiveDataSet",
                      void ( const std::string& activModelID ),
-                     &ActiveModelEventHandler::SetActiveModel,
+                     &ActiveDataSetEventHandler::SetActiveDataSet,
                      m_connections, any_SignalType, normal_Priority );    
 }
 ////////////////////////////////////////////////////////////////////////////////
-ActiveModelEventHandler::ActiveModelEventHandler( const ActiveModelEventHandler& rhs )
+ActiveDataSetEventHandler::ActiveDataSetEventHandler( const ActiveDataSetEventHandler& rhs )
     : 
     ves::xplorer::event::EventHandler( rhs )
 {
@@ -71,38 +70,32 @@ ActiveModelEventHandler::ActiveModelEventHandler( const ActiveModelEventHandler&
 ////////////////////////////////////
 ///Destructor                     //
 ////////////////////////////////////////////////////////////////////////////////
-ActiveModelEventHandler::~ActiveModelEventHandler()
+ActiveDataSetEventHandler::~ActiveDataSetEventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveModelEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void ActiveDataSetEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
     boost::ignore_unused_variable_warning( modelHandler );
 }
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveModelEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
+void ActiveDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject ) );
-    ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_MODEL" );
+    ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_DATASET" );
     if( activeModelDVP )
     {
         std::string newModel;
         activeModelDVP->GetData( newModel );
-        SetActiveModel( newModel );
+        SetActiveDataSet( newModel );
         return;
-    }
-
-    activeModelDVP = command->GetDataValuePair( "Optimize CAD" );
-    if( activeModelDVP )
-    {
-        ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->OptimizeAllCAD();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-ActiveModelEventHandler& ActiveModelEventHandler::operator=( const ActiveModelEventHandler& rhs )
+ActiveDataSetEventHandler& ActiveDataSetEventHandler::operator=( const ActiveDataSetEventHandler& rhs )
 {
     if( this != &rhs )
     {
@@ -111,8 +104,9 @@ ActiveModelEventHandler& ActiveModelEventHandler::operator=( const ActiveModelEv
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveModelEventHandler::SetActiveModel( const std::string& activModelID )
+void ActiveDataSetEventHandler::SetActiveDataSet( const std::string& activModelID )
 {
-    ves::xplorer::ModelHandler::instance()->SetActiveModel( activModelID );
+    ves::xplorer::Model* model = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    model->SetActiveDataSet( model->GetCfdDataSet( model->GetIndexOfDataSet( activModelID ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

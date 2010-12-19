@@ -73,7 +73,13 @@ public:
     ///\param model The active cfdModel
     void SetGlobalBaseObject( ves::xplorer::GlobalBase* model );
 protected:
-    ves::xplorer::Model* _activeModel;///<The active model;
+    ///The active model
+    ves::xplorer::Model* _activeModel;
+    
+    ///Update the bounds of the SeedPoint bounding box
+    ///\param bounds The bounds of the bounding box
+    void UpdateAllBounds( const std::vector< double >& bounds );
+
 };
 
 }

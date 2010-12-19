@@ -55,6 +55,7 @@
 #include <ves/xplorer/event/data/SeedPointActivateEH.h>
 #include <ves/xplorer/event/data/SPBoundEH.h>
 #include <ves/xplorer/event/data/SPDimensionsEH.h>
+#include <ves/xplorer/event/data/SeedPoints.h>
 #include <ves/xplorer/event/device/ChangeCursorEventHandler.h>
 #include <ves/xplorer/event/environment/StoredSceneEH.h>
 #include <ves/xplorer/event/environment/ChangeWorkingDirectoryEventHandler.h>

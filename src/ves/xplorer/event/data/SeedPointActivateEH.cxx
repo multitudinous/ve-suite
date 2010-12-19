@@ -37,7 +37,11 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
+
 #include <ves/xplorer/event/data/SeedPoints.h>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -50,18 +54,30 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler::SeedPointActivateEventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     _activeModel = 0;
+
+    ///Connect up to the signal emitted from StreamlinePropertySet
+    CONNECTSIGNALS_2( "%ActivateSeedPoints",
+        void ( const std::string& dataSetName, const bool seedPointDisplay ),
+        &SeedPointActivateEventHandler::ActivateSeedPoints,
+        m_connections, any_SignalType, normal_Priority );
 }
 ///////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler
 ::SeedPointActivateEventHandler( const SeedPointActivateEventHandler& ceh )
+    :
+    ves::xplorer::event::EventHandler( ceh )
 {
     _activeModel = ceh._activeModel;
 }
 /////////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler::~SeedPointActivateEventHandler()
-{}
+{
+    ;
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler&
 SeedPointActivateEventHandler::operator=( const SeedPointActivateEventHandler& rhs )
@@ -93,38 +109,20 @@ void SeedPointActivateEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
         std::cout << "Invalid object passed to TextureBasedEventHandler!" << std::endl;
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void SeedPointActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     try
     {
         if( _activeModel )
         {
-            //make the CAD transparent
-            _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
             ///what happens if texture is somehow added first? Is that possible?
             CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
             DataValuePairPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
             DataValuePairPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
             std::string datasetname;
             activeDataset->GetData( datasetname );
-            //check to see if the seed points exist
-            if( !ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->containsNode( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() ) )
-            {
-                ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
-            }
-
-            //this seems to be a bad sequence of calls but we need to set the
-            //active dataset otherwise this set of calls goes in every seed pointEH
-            //as well as all the commands have to lug this extra info.
-            _activeModel->SetActiveDataSet( _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( datasetname ) ) );
-            ves::xplorer::scenegraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
-            ves::xplorer::scenegraph::DCS* seedPointDCS = ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS();
-
-            seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
-            seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
-            seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
-            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->Toggle(( seedPointsFlag->GetUIntData() == 1 ) ? true : false );
+            ActivateSeedPoints( datasetname, (( seedPointsFlag->GetUIntData() == 1 ) ? true : false) );
         }
     }
     catch ( ... )
@@ -134,3 +132,38 @@ void SeedPointActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
     }
 
 }
+////////////////////////////////////////////////////////////////////////////////
+void SeedPointActivateEventHandler::ActivateSeedPoints( const std::string& dataSetName, const bool seedPointDisplay )
+{
+    if( !_activeModel )
+    {
+        _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        if( !_activeModel )
+        {
+            return;
+        }
+    }
+
+    //make the CAD transparent
+    _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
+
+    //check to see if the seed points exist
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->containsNode( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() ) )
+    {
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
+            addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
+    }
+    
+    //this seems to be a bad sequence of calls but we need to set the
+    //active dataset otherwise this set of calls goes in every seed pointEH
+    //as well as all the commands have to lug this extra info.
+    _activeModel->SetActiveDataSet( _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) ) );
+    ves::xplorer::scenegraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
+    ves::xplorer::scenegraph::DCS* seedPointDCS = ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS();
+    
+    seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
+    seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
+    seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
+    ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->Toggle( seedPointDisplay );
+}
+////////////////////////////////////////////////////////////////////////////////

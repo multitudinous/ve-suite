@@ -78,6 +78,7 @@
 #include <ves/xplorer/event/data/DataTransformEH.h>
 #include <ves/xplorer/event/data/ScalarBarEventHandler.h>
 #include <ves/xplorer/event/data/WireframeEventHandler.h>
+#include <ves/xplorer/event/data/ActiveDataSetEventHandler.h>
 
 #include <ves/xplorer/event/environment/SoundActivateEH.h>
 #include <ves/xplorer/event/environment/SoundAddNewEH.h>
@@ -149,6 +150,8 @@ ModelHandler::ModelHandler( void )
         new ves::xplorer::event::CADToggleEventHandler();
     _eventHandlers[ std::string( "CHANGE_ACTIVE_MODEL" )] = 
         new ves::xplorer::event::ActiveModelEventHandler();
+    _eventHandlers[ std::string( "CHANGE_ACTIVE_DATASET" )] = 
+        new ves::xplorer::event::data::ActiveDataSetEventHandler();
     _eventHandlers[ std::string( "Optimize CAD" )] = 
         new ves::xplorer::event::ActiveModelEventHandler();
     _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" )] = 

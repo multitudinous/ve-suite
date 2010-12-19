@@ -37,8 +37,6 @@
 
 #include <ves/xplorer/ModelPtr.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
-
 #include <vector>
 
 namespace ves
@@ -82,9 +80,6 @@ protected:
     void UpdateDimensions( const std::vector< long >& allDimensions );
 
     ves::xplorer::Model* _activeModel;///<The active model;
-
-    /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
 };
 
 }

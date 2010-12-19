@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef ACTIVE_MODEL_EVENT_HANDLER_H
-#define ACTIVE_MODEL_EVENT_HANDLER_H
+#ifndef ACTIVE_DATASET_EVENT_HANDLER_H
+#define ACTIVE_DATASET_EVENT_HANDLER_H
 
 #include <ves/xplorer/event/EventHandler.h>
 
@@ -42,23 +42,25 @@ namespace xplorer
 {
 namespace event
 {
-/*!\file ActiveModelEventHandler.h
-  ActiveModelEventHandler API
+namespace data
+{
+/*!\file ActiveDataSetEventHandler.h
+  ActiveDataSetEventHandler API
   */
-/*!\class ActiveModelEventHandler
- * Class for handling the active model change.
+/*!\class ActiveDataSetEventHandler
+ * Class for handling the active dataset change.
  */
-class VE_XPLORER_EXPORTS ActiveModelEventHandler : public EventHandler
+class VE_XPLORER_EXPORTS ActiveDataSetEventHandler : public EventHandler
 {
 public:
     ///Constructor
-    ActiveModelEventHandler();
+    ActiveDataSetEventHandler();
 
     ///Copy Constructor
-    ActiveModelEventHandler( const ActiveModelEventHandler& ceh );
+    ActiveDataSetEventHandler( const ActiveDataSetEventHandler& ceh );
 
     ///Destructor
-    virtual ~ActiveModelEventHandler();
+    virtual ~ActiveDataSetEventHandler();
 
     ///Set the cfdModel.
     ///\param model The ModelHandler to execute the Command on.
@@ -69,16 +71,16 @@ public:
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
     ///Equal operator
-    ActiveModelEventHandler& operator=( const ActiveModelEventHandler& rhs );
+    ActiveDataSetEventHandler& operator=( const ActiveDataSetEventHandler& rhs );
 
 protected:
     ///Set the active model
     ///\param activeModelID The ID of the model that you want active
-    void SetActiveModel( const std::string& activModelID );
+    void SetActiveDataSet( const std::string& activModelID );
 };
 
 }
 }
 }
-
-#endif// ACTIVE_MODEL_EVENT_HANDLER_H
+}
+#endif// ACTIVE_DATASET_EVENT_HANDLER_H

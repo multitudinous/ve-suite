@@ -174,7 +174,10 @@ void SeedPoints::_initializePoints()
         "void main(void) \n"
         "{ \n"
         "\n"
-        "gl_FragColor = (step(.25,distance(gl_TexCoord[0].xy,vec2(.5,.5)))==1.0)?vec4(0,0,0,0):pointColor;\n"
+        "   gl_FragData[ 0 ] = (step(.25,distance(gl_TexCoord[0].xy,vec2(.5,.5)))==1.0)?vec4(0,0,0,0):pointColor;\n"
+        "\n"
+        "   //To handle the glow\n"
+        "   gl_FragData[ 1 ] = vec4( 0, 0, 0, 1 );\n"
         "}\n";
     osg::ref_ptr<osg::Program> program = new osg::Program;
     _stateSet->setAttribute( program.get() );
