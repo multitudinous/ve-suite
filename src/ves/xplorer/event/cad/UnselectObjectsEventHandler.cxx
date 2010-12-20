@@ -61,7 +61,7 @@ UnselectObjectsEventHandler::UnselectObjectsEventHandler()
 UnselectObjectsEventHandler::UnselectObjectsEventHandler(
     const UnselectObjectsEventHandler& rhs )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

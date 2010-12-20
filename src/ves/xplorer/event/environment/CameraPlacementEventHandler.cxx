@@ -144,7 +144,7 @@ CameraPlacementEventHandler::~CameraPlacementEventHandler()
 CameraPlacementEventHandler::CameraPlacementEventHandler(
     const CameraPlacementEventHandler& ceh )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( ceh )
 {
     ;
 }

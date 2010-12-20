@@ -72,7 +72,7 @@ ManipulatorEventHandler::ManipulatorEventHandler()
 ManipulatorEventHandler::ManipulatorEventHandler(
     const ManipulatorEventHandler& meh )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( meh )
 {
     ;
 }
