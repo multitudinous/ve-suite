@@ -277,6 +277,7 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
     computerPortText->SetData( "ComputerPort", ConvertUnicode( m_textCtrl2->GetValue().c_str() ) );
     toolCommand->AddDataValuePair( computerPortText );
     tempModel->SetInput( toolCommand );
+    mServiceList->SendCommandStringToXplorer( toolCommand );
 
     ves::open::xml::CommandPtr geomCommand( new ves::open::xml::Command() );
     geomCommand->SetCommandName( "Geometry Data Map" );
