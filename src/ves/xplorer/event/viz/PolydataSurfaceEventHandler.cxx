@@ -62,7 +62,7 @@ PolydataSurfaceEventHandler::PolydataSurfaceEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 PolydataSurfaceEventHandler::PolydataSurfaceEventHandler( const PolydataSurfaceEventHandler& rhs )
         :
-        ves::xplorer::event::EventHandler()
+        ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
