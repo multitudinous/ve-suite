@@ -7,14 +7,14 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform boost_options osg_options' )
-Import( 'xerces_options tao_options wxwidgets_options poco_options' )
+Import( 'boost_program_options xerces_options tao_options wxwidgets_options poco_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'tools', 'dds_texture_correction' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
 env = ves_pkg.getEnv().Clone()
-if GetPlatform() != 'win32':
-    env.Append( LIBS = [ 'boost_program_options-mt'] )
+#if GetPlatform() != 'win32':
+#    env.Append( LIBS = [ 'boost_program_options-mt'] )
 #env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open' ),
 #                        pj( '#', buildDir, 'src', 'ves', 'open','xml' ) ] )
 #env.Append( CPPPATH = [ pj( RootDir, 'external', 'osgEphemeris', 'include' ) ] )
@@ -24,7 +24,7 @@ if GetPlatform() != 'win32':
 #tao_options.apply( env )
 boost_options.apply( env )
 osg_options.apply( env )
-#poco_options.apply( env )
+boost_program_options.apply( env )
 
 prog = ves_pkg.createProgram( 'ves_dds_texture_converter' + env[ "PROGSUFFIX" ], env, 'bin' )
 prog.addSources( sources )
