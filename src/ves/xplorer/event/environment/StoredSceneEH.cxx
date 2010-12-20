@@ -49,6 +49,8 @@ StoredSceneEventHandler::StoredSceneEventHandler()
 ///////////////////////////////////////////////////////////////////
 StoredSceneEventHandler
 ::StoredSceneEventHandler( const StoredSceneEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 StoredSceneEventHandler::~StoredSceneEventHandler()

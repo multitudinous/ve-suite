@@ -52,6 +52,8 @@ EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler( const EphemerisHeightMapEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }

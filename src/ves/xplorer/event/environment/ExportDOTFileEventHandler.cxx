@@ -52,6 +52,8 @@ ExportDOTFileEventHandler::ExportDOTFileEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 ExportDOTFileEventHandler::ExportDOTFileEventHandler(
     const ExportDOTFileEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     ;
 }

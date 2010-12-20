@@ -50,6 +50,8 @@ SetResetStartPositionEventHandler::SetResetStartPositionEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 SetResetStartPositionEventHandler
 ::SetResetStartPositionEventHandler( const SetResetStartPositionEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 SetResetStartPositionEventHandler::~SetResetStartPositionEventHandler()

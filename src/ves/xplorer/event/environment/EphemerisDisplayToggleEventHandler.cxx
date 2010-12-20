@@ -51,6 +51,8 @@ EphemerisDisplayToggleEventHandler::EphemerisDisplayToggleEventHandler()
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EphemerisDisplayToggleEventHandler::EphemerisDisplayToggleEventHandler( const EphemerisDisplayToggleEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }

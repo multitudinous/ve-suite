@@ -48,6 +48,8 @@ QuatCamLoadFileEventHandler::QuatCamLoadFileEventHandler()
 ///////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler
 ::QuatCamLoadFileEventHandler( const QuatCamLoadFileEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler::~QuatCamLoadFileEventHandler()

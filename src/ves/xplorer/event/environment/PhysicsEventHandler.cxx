@@ -69,7 +69,7 @@ PhysicsEventHandler::PhysicsEventHandler()
 PhysicsEventHandler::PhysicsEventHandler(
     const PhysicsEventHandler& rhs )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

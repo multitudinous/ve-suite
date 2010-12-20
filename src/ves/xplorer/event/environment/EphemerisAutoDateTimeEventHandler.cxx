@@ -50,6 +50,8 @@ EphemerisAutoDateTimeEventHandler::EphemerisAutoDateTimeEventHandler()
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EphemerisAutoDateTimeEventHandler::EphemerisAutoDateTimeEventHandler( const EphemerisAutoDateTimeEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }

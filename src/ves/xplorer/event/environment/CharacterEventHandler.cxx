@@ -69,7 +69,7 @@ CharacterEventHandler::CharacterEventHandler()
 CharacterEventHandler::CharacterEventHandler(
     const CharacterEventHandler& rhs )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

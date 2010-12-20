@@ -50,6 +50,8 @@ EphemerisDataEventHandler::EphemerisDataEventHandler()
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 EphemerisDataEventHandler::EphemerisDataEventHandler( const EphemerisDataEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }

@@ -64,7 +64,7 @@ ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler()
 {}
 ////////////////////////////////////////////////////////////
 ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler( const ChangeBackgroundColorEventHandler& rhs )
-        : ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler( rhs )
 {}
 ////////////////////////////////////
 ///Destructor                     //

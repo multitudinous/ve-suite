@@ -48,6 +48,8 @@ QuatCamClearDataEventHandler::QuatCamClearDataEventHandler()
 ///////////////////////////////////////////////////////////////////
 QuatCamClearDataEventHandler
 ::QuatCamClearDataEventHandler( const QuatCamClearDataEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 QuatCamClearDataEventHandler::~QuatCamClearDataEventHandler()

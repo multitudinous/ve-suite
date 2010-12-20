@@ -67,7 +67,7 @@ ViewEventHandler::ViewEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 ViewEventHandler::ViewEventHandler( const ViewEventHandler& rhs )
         :
-        ves::xplorer::event::EventHandler()
+        ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
