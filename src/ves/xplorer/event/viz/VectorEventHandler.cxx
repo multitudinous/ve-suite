@@ -61,7 +61,7 @@ VectorEventHandler::VectorEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 VectorEventHandler::VectorEventHandler( const VectorEventHandler& rhs )
         :
-        ves::xplorer::event::EventHandler()
+        ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
