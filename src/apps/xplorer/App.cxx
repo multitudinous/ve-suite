@@ -768,6 +768,17 @@ void App::latePreFrame()
     }
     ///////////////////////
 
+
+#if !defined( _DARWIN )
+    ///Because we do our event processing here for Qt we get automagical sync
+    ///between the draw thread and the UI thread. This call essentially tells
+    ///Qt to process all of its events at this moment. If this is changed in
+    ///the future where this call is being run in a different thread then
+    ///we may need to take more care in handling the sync issues between our
+    ///UI and the render thread.
+    runLoop();
+#endif 
+    
     ///////////////////////
     //profile the update call
     {
@@ -775,10 +786,6 @@ void App::latePreFrame()
         update();
     }
     ///////////////////////
-
-#if defined( QT_ON ) && !defined( _DARWIN )
-    runLoop();
-#endif //QT_ON
 
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
