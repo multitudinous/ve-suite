@@ -43,6 +43,8 @@
 
 #include <ves/xplorer/event/EventHandlerPtr.h>
 
+#include <ves/xplorer/event/data/SeedPoints.h>
+
 // --- VTK Includes --- //
 class vtkPolyData;
 
