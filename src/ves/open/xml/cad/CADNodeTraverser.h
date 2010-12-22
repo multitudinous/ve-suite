@@ -40,6 +40,9 @@
 /*!\class ves::open::xml::cad::CADNodeTraverser
  * Base class for traversing ves::open::xml::cad::CADNode.
  */
+/*!\namespace ves::open::xml::cad
+ * Contains nodes for creating/managing a CAD hierarchy.
+ */
 
 
 #include <ves/VEConfig.h>

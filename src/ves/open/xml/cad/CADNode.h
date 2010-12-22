@@ -46,12 +46,12 @@
 /*!\file CADNode.h
   CADNode API
   */
-/*!\class VE_XML::VE_CAD::CADNode
+/*!\class ves::open::xml::cad::CADNode
  * This class is the base class for representing
  * the hierarchy of a CAD structure.
  */
 
-/*!\namespace VE_CAD
+/*!\namespace ves::open::xml::cad
  * Contains nodes for creating/managing a CAD hierarchy.
  */
 
