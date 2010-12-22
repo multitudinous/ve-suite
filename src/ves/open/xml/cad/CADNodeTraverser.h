@@ -37,13 +37,15 @@
 /*!\file CADNodeTraverser.h
   CADNodeTraverser API
   */
-/*!\class VE_XML::VE_CAD::CADNodeTraverser
- * Base class for traversingVE_XML::VE_CAD::CADNode.
+/*!\class ves::open::xml::cad::CADNodeTraverser
+ * Base class for traversing ves::open::xml::cad::CADNode.
  */
 
 
 #include <ves/VEConfig.h>
+
 #include <ves/open/xml/cad/CADNodePtr.h>
+#include <ves/open/xml/cad/CADAssemblyPtr.h>
 
 
 namespace ves
@@ -87,7 +89,7 @@ public:
         ///\param cadNodeTraverser The CADNodeTraverser that is doing the traversing.
         ///\param node The CADNode that is currently being encountered.
         ///\param currentParent The CADNode that is the parent of the node being encountered.
-        virtual void Apply( CADNodeTraverser* cadNodeTraverser, CADNodePtr node, void* currentParent = 0 ) = 0;
+        virtual void Apply( CADNodeTraverser* cadNodeTraverser, CADNodePtr node, CADAssemblyPtr currentParent ) = 0;
     protected:
     };
     ///TraversalStatus The status of the traverser.
@@ -133,7 +135,7 @@ protected:
     ///Recurse the nodes internally.
     ///\param currentNode The node currently being traversed.
     ///\param currentParent The CADNode that is the parent of the node being encountered.
-    virtual void _traverseNode( CADNodePtr currentNode, void* currentParent = 0 );
+    virtual void _traverseNode( CADNodePtr currentNode, CADAssemblyPtr currentParent = CADAssemblyPtr() );
 
     TraversalStatus _ts;///<The status of the traverser.
     CADNodePtr _root;///<The root node to traverse.
