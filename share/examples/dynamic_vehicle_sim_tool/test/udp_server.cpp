@@ -91,6 +91,14 @@ int main (int argc, char* argv[])
             const vpr::Uint32 bytes = sock.recvfrom(recv_buf, sizeof(recv_buf),
                                                     addr);
 
+            for( size_t i = 0; i < 40; ++i )
+            {
+                if( recv_buf[ i ] == '\0' )
+                {
+                    continue;
+                }
+                std::cout << recv_buf[ i ] << std::endl;
+            }
             // If we read anything, print it and send a response.
             std::cout << "Read '" << recv_buf << "' (" << bytes
                       << " bytes) from " << addr.getAddressString()
