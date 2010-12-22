@@ -84,12 +84,39 @@ class TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback
         ///\param cadNodeTraverser The CADListCreator that is doing the traversing.
         ///\param node The CADNode that is currently being encountered.
         ///\param currentParent The CADNode that is the parent of the node being encountered.
-        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNodePtr node, void* currentParent = 0 );
+        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNodePtr node, ves::open::xml::cad::CADAssemblyPtr currentParent );
+        
+        std::vector< ves::open::xml::cad::CADNodePtr > m_nodeList;
+        std::vector< std::string > m_nodeListNames;
+    protected:
+    };
+
+    class TreeGraphPostCallback: public CADNodeTraverser::CADNodeTraverseCallback
+    {
+    public:
+        ///Constructor
+        TreeGraphPostCallback()
+        {
+            ;
+        }
+        
+        ///Destructor
+        virtual ~TreeGraphPostCallback()
+        {
+            ;
+        }
+        
+        ///This is the function to override to do something to a node
+        ///before (pre) or after (post) encountering a CADNode in the graph.
+        ///\param cadNodeTraverser The CADListCreator that is doing the traversing.
+        ///\param node The CADNode that is currently being encountered.
+        ///\param currentParent The CADNode that is the parent of the node being encountered.
+        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNodePtr node, ves::open::xml::cad::CADAssemblyPtr currentParent );
         
         std::vector< ves::open::xml::cad::CADNodePtr > m_nodeList;
     protected:
     };
-
+    
     ///Search the tree for a CADNode.
     ///\param name The name to search for.
     ves::open::xml::cad::CADNodePtr GetCADNode( std::string name );
@@ -97,9 +124,15 @@ class TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback
     ///Get the node list
     std::vector< ves::open::xml::cad::CADNodePtr >& GetNodeList();
 
+    ///Get the node list
+    std::vector< std::string >& GetNodeNameList();
+
+    std::vector< ves::open::xml::cad::CADNodePtr > m_parentStack;
 protected:
     ///The pre traverse callback that creates a wxTreeCtrl.
     CADListCreator::TreeGraphPreCallback* m_treeCtrlCreator;
+    ///The post traverse callback that creates a wxTreeCtrl.
+    CADListCreator::TreeGraphPostCallback* m_treePostCtrlCreator;
 };
 }
 #endif//VES_CAD_LIST_CREATOR

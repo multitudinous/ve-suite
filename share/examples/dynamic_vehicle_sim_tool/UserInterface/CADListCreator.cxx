@@ -46,8 +46,9 @@ CADListCreator::CADListCreator( CADNodePtr root )
 {
     SetRootNode( root );
     m_treeCtrlCreator = new TreeGraphPreCallback();
-
+    m_treePostCtrlCreator = new TreeGraphPostCallback();
     SetPreNodeTraverseCallback( m_treeCtrlCreator );
+    SetPostNodeTraverseCallback( m_treePostCtrlCreator );
     Traverse();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,12 +77,46 @@ std::vector< CADNodePtr >& CADListCreator::GetNodeList()
     return m_treeCtrlCreator->m_nodeList;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADListCreator::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder, CADNodePtr node, void* currentParent )
+std::vector< std::string >& CADListCreator::GetNodeNameList()
+{
+    return m_treeCtrlCreator->m_nodeListNames;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADListCreator::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder, CADNodePtr node, CADAssemblyPtr currentParent )
+{
+    CADListCreator* treeGraph = dynamic_cast<CADListCreator*>( treeBuilder );
+    if( !treeGraph )
+        return;
+    
+    ///
+    if( currentParent )
+    {
+        treeGraph->m_parentStack.push_back( currentParent );
+    }
+    
+    m_nodeList.push_back( node );
+    
+    ///
+    std::string nodeName;
+    for( size_t i = 0; i < treeGraph->m_parentStack.size(); ++i )
+    {
+        nodeName += treeGraph->m_parentStack.at( i )->GetNodeName();
+        nodeName += "/";
+    }
+    nodeName += node->GetNodeName();
+    
+    m_nodeListNames.push_back( nodeName );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADListCreator::TreeGraphPostCallback::Apply( CADNodeTraverser* treeBuilder, CADNodePtr node, CADAssemblyPtr currentParent )
 {
     CADListCreator* treeGraph = dynamic_cast<CADListCreator*>( treeBuilder );
     if( !treeGraph )
         return;
 
-    m_nodeList.push_back( node );
+    if( currentParent )
+    {
+        treeGraph->m_parentStack.pop_back();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

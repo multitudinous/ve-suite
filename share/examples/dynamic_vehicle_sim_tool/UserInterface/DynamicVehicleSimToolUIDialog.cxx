@@ -201,10 +201,18 @@ void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WX
     dynamicvehicletool::CADListCreator nodeListCreator( rootNode );
     std::vector< ves::open::xml::cad::CADNodePtr > nodeList = 
         nodeListCreator.GetNodeList();
+    std::vector< std::string > nodeListNames = 
+        nodeListCreator.GetNodeNameList();
 	wxArrayString m_choice11Choices;
-    for( size_t i = 0; i < nodeList.size(); ++i )
+    if( nodeListNames.size() != nodeList.size() )
     {
-        m_choice11Choices.Add( wxString( nodeList.at( i )->GetNodeName().c_str(), wxConvUTF8 ) );
+        std::cout << " something is wrong with name generation." << std::endl;
+    }
+
+    for( size_t i = 0; i < nodeListNames.size(); ++i )
+    {
+        //m_choice11Choices.Add( wxString( nodeList.at( i )->GetNodeName().c_str(), wxConvUTF8 ) );
+        m_choice11Choices.Add( wxString( nodeListNames.at( i ).c_str(), wxConvUTF8 ) );
     }
 	wxChoice* choice = new wxChoice( m_scrolledWindow1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice11Choices, m_choice11Choices.GetCount() );
 	choice->SetSelection( 0 );
@@ -279,6 +287,11 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
     tempModel->SetInput( toolCommand );
     mServiceList->SendCommandStringToXplorer( toolCommand );
 
+    ves::open::xml::cad::CADNodePtr rootNode = mUIPluginBase->GetVEModel()->GetGeometry();
+    dynamicvehicletool::CADListCreator nodeListCreator( rootNode );
+    std::vector< ves::open::xml::cad::CADNodePtr > nodeList = 
+        nodeListCreator.GetNodeList();
+    
     ves::open::xml::CommandPtr geomCommand( new ves::open::xml::Command() );
     geomCommand->SetCommandName( "Geometry Data Map" );
     for( size_t i = 0; i < m_geomChoiceList.size(); ++i )
@@ -286,7 +299,7 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
         std::string dvpName = "Geometry_" + boost::lexical_cast<std::string>( i );
 
         ves::open::xml::DataValuePairPtr geomDVP( new ves::open::xml::DataValuePair() );
-        geomDVP->SetData( dvpName, ConvertUnicode( m_geomChoiceList.at( i )->GetStringSelection().c_str() ) );
+        geomDVP->SetData( dvpName, nodeList.at( i )->GetID() );//ConvertUnicode( m_geomChoiceList.at( i )->GetStringSelection().c_str() ) );
         geomCommand->AddDataValuePair( geomDVP );
     }
 
