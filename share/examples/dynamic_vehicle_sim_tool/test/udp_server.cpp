@@ -40,6 +40,9 @@
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string.hpp>
+
 
 int main (int argc, char* argv[])
 {
@@ -76,8 +79,11 @@ int main (int argc, char* argv[])
        //data.mcast_add_member = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
        vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
        sock.addMcastMember( data );
-      
-      char recv_buf[40];
+       typedef std::vector< std::string > split_vector_type;
+
+      char recv_buf[2048];
+       memset(recv_buf, '\0', sizeof(recv_buf));
+
       char send_buf[] = "Hello there!";
 
       // Loop forever reading messages from clients.
@@ -90,20 +96,42 @@ int main (int argc, char* argv[])
             // Read a message from a client.
             const vpr::Uint32 bytes = sock.recvfrom(recv_buf, sizeof(recv_buf),
                                                     addr);
-
-            for( size_t i = 0; i < 40; ++i )
+            std::string tempbuff;
+            for( size_t i = 0; i < 2048; ++i )
             {
                 if( recv_buf[ i ] == '\0' )
                 {
+                    tempbuff.push_back( ' ' );
                     continue;
                 }
                 std::cout << recv_buf[ i ] << std::endl;
+                tempbuff.push_back( recv_buf[ i ] );
             }
+            
+            boost::algorithm::trim( tempbuff );
+            
             // If we read anything, print it and send a response.
-            std::cout << "Read '" << recv_buf << "' (" << bytes
+            std::cout << "Read '" << tempbuff << "' (" << bytes
                       << " bytes) from " << addr.getAddressString()
                       << std::endl;
 
+             split_vector_type splitVec;
+             boost::split( splitVec, tempbuff, boost::is_any_of(" "), boost::token_compress_on );
+             double tempDouble = 0;
+             for( size_t i = 0; i < splitVec.size(); ++i )
+             {
+                 std::cout << "<" << splitVec.at( i ) << "> ";
+                 /*try
+                 {
+                     tempDouble = boost::lexical_cast<double>( splitVec.at( i ) );
+                     positionData.push_back( tempDouble );
+                 }
+                 catch( boost::bad_lexical_cast& ex )
+                 {
+                     std::cout << "cannot cast data " << ex.what() << std::endl;
+                 }*/
+             }
+             std::cout << std::flush;
             //sock.sendto(send_buf, sizeof(send_buf), remote_addr);
          }
          catch (vpr::IOException& ex)

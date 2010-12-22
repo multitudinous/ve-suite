@@ -71,12 +71,12 @@ int main (int argc, char* argv[])
 
          char buffer[40];
          memset(buffer, '\0', sizeof(buffer));
-         strcpy(buffer, "Hi,\0I'm\0a\0client");
+         //strcpy(buffer, "Hi,\0I'm\0a\0client");
 
          buffer[ 0 ] = 'H';buffer[ 1 ] = 'i';buffer[ 2 ] = ',';buffer[ 3 ] = '\0';
           buffer[ 4 ] = 'I';buffer[ 5 ] = '\'';buffer[ 6 ] = 'm';buffer[ 7 ] = ' ';buffer[ 8 ] = '\0';
-          buffer[ 9 ] = 'a';buffer[ 10 ] = '\0';buffer[ 11 ] = 'c';buffer[ 12 ] = 'l';buffer[ 13 ] = 'i';
-          buffer[ 14 ] = 'e';buffer[ 15 ] = 'n';buffer[ 16 ] = 't';buffer[ 17 ] = '\0';
+          buffer[ 9 ] = 'a';buffer[ 10 ] = '\0';buffer[ 11 ] = ' ';buffer[ 12 ] = 'c';buffer[ 13 ] = 'l';buffer[ 14 ] = 'i';
+          buffer[ 15 ] = 'e';buffer[ 16 ] = 'n';buffer[ 17 ] = 't';buffer[ 18 ] = '\0';
          // Write to the server.
          sock.write(buffer, 40);
 
