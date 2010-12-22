@@ -33,6 +33,8 @@
 
 #pragma once
 
+#define QT_NO_KEYWORDS
+
 #include <QtGui/QWidget>
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QModelIndex>
@@ -68,6 +70,12 @@ public:
 
 protected:
     void changeEvent(QEvent *e);
+
+protected Q_SLOTS:
+    /// Called when user changes selection in tree.
+    /// This function looks up the scenegraph to find a valid DCS and then
+    /// selects the corresponding geometry in the scene.
+    void on_mTreeView_clicked( const QModelIndex& index );
 
 private:
     Ui::TreeTab *ui;

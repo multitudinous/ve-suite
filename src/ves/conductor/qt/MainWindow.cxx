@@ -303,6 +303,16 @@ void MainWindow::on_actionOpen_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileOpenSelected( QString fileName )
 {
+    // Close out the fileDialog tab and kill the file dialog
+    RemoveTab( mFileDialog );
+
+    if ( mFileDialog != 0 )
+    {
+        mFileDialog->close();
+        mFileDialog = 0;
+    }
+
+    // Now deal with loading the selected file
     boost::filesystem::path file( fileName.toStdString() );
     std::string extension( boost::filesystem::extension( file ) );
     
@@ -317,14 +327,6 @@ void MainWindow::onFileOpenSelected( QString fileName )
         // Assume it's a cad file for now
         ves::conductor::CADFileLoader loader;
         loader.LoadCADFile( file.string() );
-    }
-    
-    RemoveTab( mFileDialog );
-    
-    if ( mFileDialog != 0 )
-    {
-        mFileDialog->close();
-        mFileDialog = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -369,6 +371,9 @@ void MainWindow::QueuedOnActiveModelChanged( std::string modelID )
 
     // Show the scenegraph tree
     AddTab( mScenegraphTreeTab, "Scenegraph" );
+    // Populate the CADTree
+    mScenegraphTreeTab->PopulateWithRoot(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 
     // Reactivate the last-known active tab
     ActivateTab( LastKnownActive );

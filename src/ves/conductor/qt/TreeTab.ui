@@ -13,12 +13,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
-   <property name="spacing">
-    <number>3</number>
-   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="margin">
-    <number>1</number>
+    <number>0</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
@@ -45,10 +42,28 @@
     </layout>
    </item>
    <item>
-    <widget class="QTreeView" name="mTreeView"/>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QTreeView" name="mTreeView">
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+     </widget>
+     <widget class="ves::conductor::GenericPropertyBrowser" name="cadPropertyBrowser" native="true"/>
+    </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ves::conductor::GenericPropertyBrowser</class>
+   <extends>QWidget</extends>
+   <header>ves/conductor/qt/propertyBrowser/GenericPropertyBrowser.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

@@ -30,12 +30,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
+#define QT_NO_KEYWORDS
 #include <ves/conductor/qt/ui_TreeTab.h>
 
 #include <ves/conductor/qt/TreeTab.h>
 #include <osgQtTree/osgQtTree.h>
 #include <osgQtTree/treemodel.h>
+#include <osgQtTree/osgTreeItem.h>
+
+#include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/scenegraph/DCS.h>
+
+#include <iostream>
 
 namespace ves
 {
@@ -106,6 +112,53 @@ void TreeTab::PopulateWithRoot( osg::Node* root )
 QModelIndex TreeTab::OpenToAndSelect( osg::NodePath& nodepath )
 {
     return osgQtTree::openToAndSelect( ui->mTreeView, mModel, nodepath );
+}
+
+void TreeTab::on_mTreeView_clicked( const QModelIndex& index )
+{
+    //Unselect the previously-selected DCS
+    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+
+    // Get the node associated with this QModelIndex
+    osgQtTree::osgTreeItem* item = static_cast< osgQtTree::osgTreeItem* >( index.internalPointer() );
+    osg::Node* node = item->GetNode();
+
+    // Walk up the graph until we find a valid DCS
+    bool found = false;
+    while( !found )
+    {
+        osg::Node::DescriptionList descList = node->getDescriptions();
+        for( size_t i = 0; i < descList.size(); ++i )
+        {
+            if( descList.at( i ) == "VE_XML_ID" )
+            {
+                found = true;
+            }
+        }
+        if( !found )
+        {
+            if( node->getNumParents() != 0 )
+            {
+                node = node->getParent( 0 );
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    if( !found )
+    {
+        return;
+    }
+
+
+    ves::xplorer::scenegraph::DCS* newSelectedDCS = static_cast< ves::xplorer::scenegraph::DCS* >( node );
+
+    //Set the selected DCS
+    ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
+    newSelectedDCS->SetTechnique( "Glow" );
 }
 
 } // namespace conductor
