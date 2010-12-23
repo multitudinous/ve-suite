@@ -75,7 +75,7 @@ int main (int argc, char* argv[])
         // Create a socket that is sending to a remote host named in the first
         // argument listening on the port named in the second argument.
         vpr::InetAddr remote_addr;
-        remote_addr.setAddress("225.0.0.37", port);
+        remote_addr.setAddress("225.0.0.37", 12345);
         //vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
         //vpr::SocketOptions::Types option = vpr::SocketOptions::AddMember;
         //vpr::SocketOptions::Data data;
@@ -96,8 +96,13 @@ int main (int argc, char* argv[])
          try
          {
             // Read a message from a client.
-            const vpr::Uint32 bytes = sock.recvfrom(recv_buf, sizeof(recv_buf),
-                                                    addr);
+            vpr::Uint32 bytes = 10;
+            //while( bytes > 0 )
+            {
+              bytes = sock.recvfrom(recv_buf, sizeof(recv_buf),
+                                addr);
+            }
+
             std::string tempbuff;
             for( size_t i = 0; i < 2048; ++i )
             {

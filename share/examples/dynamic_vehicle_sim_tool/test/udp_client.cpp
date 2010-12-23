@@ -34,10 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
+#include <string>
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
+
+#include <boost/lexical_cast.hpp>
 
 ///IP Port and ip address ranges for multicast
 ///http://agenda.ictp.trieste.it/agenda_links/smr1335/sockets/node18.html
@@ -68,7 +71,7 @@ int main (int argc, char* argv[])
       {
          // We only send to one host, so call connect().
          sock.connect();
-
+          std::string buffer2;
          char buffer[40];
          memset(buffer, '\0', sizeof(buffer));
          //strcpy(buffer, "Hi,\0I'm\0a\0client");
@@ -77,8 +80,16 @@ int main (int argc, char* argv[])
           buffer[ 4 ] = 'I';buffer[ 5 ] = '\'';buffer[ 6 ] = 'm';buffer[ 7 ] = ' ';buffer[ 8 ] = '\0';
           buffer[ 9 ] = 'a';buffer[ 10 ] = '\0';buffer[ 11 ] = ' ';buffer[ 12 ] = 'c';buffer[ 13 ] = 'l';buffer[ 14 ] = 'i';
           buffer[ 15 ] = 'e';buffer[ 16 ] = 'n';buffer[ 17 ] = 't';buffer[ 18 ] = '\0';
-         // Write to the server.
-         sock.write(buffer, 40);
+          int counter = 0;
+          while( true )
+          {
+              // Write to the server.
+              sock.write(buffer, 40);
+              //vpr::System::msleep( 10 );  // thenth-second delay
+              buffer2 = boost::lexical_cast<std::string>( counter );
+              sock.write(buffer2.c_str(), buffer2.size());
+              counter += 1;
+          }
 
          // Read from the server.
          //const vpr::Uint32 bytes = sock.read(buffer, 40);
