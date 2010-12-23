@@ -248,6 +248,17 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
     
     try
     {
+        GetComputerData( computerName, computerPort );
+        try
+        {
+            port = boost::lexical_cast<unsigned int>( computerPort );
+        }
+        catch( boost::bad_lexical_cast& ex )
+        {
+            std::cout << "cannot cast port data. defaulting to port " << port << std::endl;
+        }
+        
+
         // Create a datagram socket that will be bound to port.
         vpr::InetAddr local;
         local.setPort(port);
@@ -258,7 +269,6 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
         sock.open();
         sock.bind();
         
-        GetComputerData( computerName, computerPort );
         //Now lets connet to the multicast group
         // Create a socket that is sending to a remote host named in the first
         // argument listening on the port named in the second argument.
