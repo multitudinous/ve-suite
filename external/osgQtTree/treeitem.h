@@ -43,8 +43,9 @@
 
 #include <QtCore/QList>
 #include <QtCore/QVariant>
+#include "Export.h"
 
-class TreeItem
+class OSGQTTREE_EXPORT TreeItem
 {
 public:
     TreeItem(const QList<QVariant> &data, TreeItem *parent = 0);
