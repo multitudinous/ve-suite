@@ -50,7 +50,7 @@
 int main (int argc, char* argv[])
 {
    int status;
-   vpr::Uint16 port(12345);     // Default listening port
+   vpr::Uint16 port(6339);     // Default listening port
 
    // If a command-line argument was given, use it as the port value instead
    // of the default.
@@ -75,7 +75,7 @@ int main (int argc, char* argv[])
         // Create a socket that is sending to a remote host named in the first
         // argument listening on the port named in the second argument.
         vpr::InetAddr remote_addr;
-        remote_addr.setAddress("225.0.0.37", 12345);
+        remote_addr.setAddress("225.0.0.37", port);
         //vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
         //vpr::SocketOptions::Types option = vpr::SocketOptions::AddMember;
         //vpr::SocketOptions::Data data;
@@ -95,6 +95,8 @@ int main (int argc, char* argv[])
 
          try
          {
+             std::vector<char> d2(40);
+
             // Read a message from a client.
             vpr::Uint32 bytes = 10;
             //while( bytes > 0 )
@@ -142,6 +144,10 @@ int main (int argc, char* argv[])
              }
              std::cout << std::flush << std::endl;
 
+            /*for( size_t i = 0; i < d2.size(); ++i )
+            {
+                std::cout << d2.at( i ) << std::endl;
+            }*/
          }
          catch (vpr::IOException& ex)
          {

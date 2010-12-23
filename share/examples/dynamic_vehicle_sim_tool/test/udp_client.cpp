@@ -60,7 +60,7 @@ int main (int argc, char* argv[])
    // Create a socket that is sending to a remote host named in the first
    // argument listening on the port named in the second argument.
    vpr::InetAddr remote_addr;
-   remote_addr.setAddress("225.0.0.37", 12345);
+   remote_addr.setAddress("225.0.0.37", 6339);
    vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
 
    try
