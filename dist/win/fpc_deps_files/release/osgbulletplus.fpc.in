@@ -1,0 +1,15 @@
+prefix=${fp_file_cwd}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: osgBulletPlus
+Description: osgBulletPlus release pre-compiled for VES
+Provides: osgBulletPlus osgbulletplus
+Requires: openscenegraph openthreads osgWorks osgBullet bullet
+Version: 1.0.0
+Libs: /libpath:"${libdir}" osgbBulletPlus.lib
+Cflags: /I"${includedir}"
+Arch: noarch
+
+

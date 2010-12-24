@@ -1,14 +1,14 @@
-prefix=${fp_file_cwd}\..\..\Bullet_Pre-Compile_2.64
+prefix=${fp_file_cwd}/../..
 exec_prefix=${prefix}
-libdir=${exec_prefix}\out\release8\libs
-includedir=${prefix}\src
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/bullet
 
-Name: Bullet-2.60_MSVC_8_SP1
+Name: Bullet
 Description: Bullet Physics release Pre-Compiled for VES
-Provides: bullet 
+Provides: bullet Bullet
 Requires:
-Version: 2.60 
+Version: 2.77
 Cflags: /I"${includedir}"
-Libs: /libpath:"${libdir}" libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib libbulletmultithreaded.lib
+Libs: /libpath:"${libdir}" BulletCollision.lib BulletDynamics.lib LinearMath.lib BulletMultiThreaded.lib
 Arch: noarch
 
