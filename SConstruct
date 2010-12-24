@@ -250,14 +250,14 @@ hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','df','jpeg'])
 opts.AddOption(hdf4_options)
 
 osg_options = None
-if GetPlatform() == 'win32':
-   osg_options = fp_option.FlagPollBasedOption("OSG",
-                                               "OpenSceneGraph", "1.2", True, True, compileTest=True)
-else:
-   osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
-                        ['osgText', 'osgText',
-                         'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
-                         'osgSim', 'osgFX','osgViewer'])
+#if GetPlatform() == 'win32':
+osg_options = fp_option.FlagPollBasedOption("OpenSceneGraph",
+                                               "openscenegraph", "1.2", True, True, compileTest=True)
+#else:
+#   osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
+#                        ['osgText', 'osgText',
+#                         'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
+#                         'osgSim', 'osgFX','osgViewer'])
 opts.AddOption( osg_options )
 if GetPlatform() == 'win32':
    xerces_options = fp_option.FlagPollBasedOption("xerces",
@@ -313,15 +313,18 @@ if GetPlatform() == 'win32':
 #apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
 #                                             "apr-util-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apu.h")
 
-#bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
-#                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
-#                                               headerToCheck="btBulletCollisionCommon.h")
+bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
+                                               "bullet", "2.77", True, True, helpText=None, compileTest=True,
+                                               headerToCheck="btBulletCollisionCommon.h")
 
 #need to do a flagpoll check to see if TAO pc or fpc files are available
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
                                                "1.5", True, True, helpText=None, compileTest=True,
                                                headerToCheck="ace/ACE.h")
+
+boost_header_options = fp_option.FlagPollBasedOption("Boost Headers",
+        "Boost", "1.32.0", True, True, helpText=None, compileTest=True)
 
 boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
         "Boost.Filesystem", "1.32.0", True, True, helpText=None, compileTest=True)
@@ -375,6 +378,22 @@ else:
 #Setup minerva library
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
 									  compileTest = False, headerToCheck = "Minerva/Common/Data/Object.h" )
+
+osgbullet_options = fp_option.FlagPollBasedOption("osgBullet",
+                                                  "osgbullet", "1.0", True, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="osgbBullet/PhysicsState.h")
+
+osgbulletplus_options = fp_option.FlagPollBasedOption("osgBulletPlus",
+                                                  "osgbulletplus", "1.0", True, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="osgbBulletPlus/DataLoader.h")
+
+bdfx_options = fp_option.FlagPollBasedOption("backdropFX",
+                                                  "backdropfx", "0.1.0", True, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="backdropFX/Effect.h")
+
 #Setup qt on linux
 if GetPlatform() != 'darwin':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
@@ -386,20 +405,23 @@ if GetPlatform() != 'darwin':
 						  
 #opts.AddOption( apr_options )
 #opts.AddOption( apu_options )
-#opts.AddOption( bullet_options )
+opts.AddOption( bullet_options )
 opts.AddOption( tao_options )
+opts.AddOption( boost_header_options )
 opts.AddOption( boost_options )
 opts.AddOption( boost_signals_options )
 opts.AddOption( boost_program_options )
 opts.AddOption( gmtl_options )
 opts.AddOption( vpr_options )
 opts.AddOption( gadgeteer_options )
-# Test VR Juggler after all the rest of its dependencies
 opts.AddOption( vrjuggler_options )
 opts.AddOption( osgal_options )
 opts.AddOption( poco_options )
 opts.AddOption( minerva_options )
 opts.AddOption( osgworks_options )
+opts.AddOption( osgbullet_options )
+opts.AddOption( osgbulletplus_options )
+opts.AddOption( bdfx_options )
 
 Export( 'opts', 'vtk_options', 'osg_options', 
         'xerces_options','wxwidgets_options',
@@ -407,14 +429,16 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'hdf4_options',
         'VE_SUITE_VERSION',
         'boost_signals_options', 'boost_program_options',
-        #'bullet_options', 
+        'bullet_options', 'boost_header_options', 
         'bulletVersion',
         'tao_options',
         'vrjuggler_options', 'boost_options',
         'gmtl_options', 'vpr_options',
         'gadgeteer_options', 'osgal_options',
         'poco_options', 'osgworks_options',
-	'minerva_options' )
+	    'minerva_options',
+        'osgbullet_options', 'osgbulletplus_options',
+        'bdfx_options' )
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
