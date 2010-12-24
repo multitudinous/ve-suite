@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppVer "1.1.1"
-#define MyAppName "osgWorks Pre-Compile"
-#define MyAppVerName "osgWorks"
+#define MyAppVer "1.1.0"
+#define MyAppName "osgBulletPlus Pre-Compile"
+#define MyAppVerName "osgBulletPlus"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 
@@ -51,13 +51,13 @@ UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-;Data for binary download
-Source: {#OSGWORKSINSTLOCATION}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#OSGWORKSINSTLOCATION}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#OSGWORKSINSTLOCATION}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#OSGWORKSINSTLOCATION}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSGBULLETPLUSSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSGBULLETPLUSSRCHOME}\lib\*lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSGBULLETPLUSSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSGBULLETPLUSSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
+; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgworks.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgworks.fpc; Languages: ; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgbulletplus.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgbulletplus.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

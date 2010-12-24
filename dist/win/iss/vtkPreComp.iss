@@ -9,7 +9,7 @@
 #define MyAppURL "www.vesuite.org"
 
 [Setup]
-AppName={#MyAppName}
+AppName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -40,6 +40,12 @@ TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
 UsePreviousAppDir=false
+VersionInfoVersion=1.0.0
+VersionInfoCompany=SMDS
+VersionInfoProductVersion=1.0.0
+AppVersion=1.0.0
+UninstallDisplayIcon={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
+UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
@@ -53,4 +59,4 @@ Source: {#VTKSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recurs
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\VTK.fpc.in; DestDir: {app}\lib\flagpoll; DestName: VTK.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages: 
+Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

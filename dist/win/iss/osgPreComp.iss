@@ -62,7 +62,7 @@ Source: {#OSGSRCHOME}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\li
 Source: {#OSGSRCHOME}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#MyAppVer}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_mpg.dll
 
 ; License
-Source: {#OSGSRCHOME}\LICENSE.txt; DestDir: {app}\share; Flags: ignoreversion
+Source: {#OSGSRCHOME}\..\LICENSE.txt; DestDir: {app}\share; Flags: ignoreversion
 ;simage
 ; Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 
