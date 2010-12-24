@@ -1,0 +1,13 @@
+prefix=${fp_file_cwd}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/cadkit
+
+Name: Minerva
+Description: Minerva GIS
+Provides: Minerva
+Requires: openscenegraph openthreads Boost.Filesystem 
+Version: 1.2.0
+Libs: /libpath:"${libdir}" MinervaCore.lib Usul.lib MinervaCommon.lib MinervaNetwork.lib SerializeXML.lib  XmlTree.lib  MinervaOsgTools.lib  MinervaQtWidgets.lib dbghelp.lib
+Cflags: /I"${includedir}"
+Arch: noarch
