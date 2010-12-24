@@ -85,10 +85,10 @@ PhysicsRigidBody::PhysicsRigidBody(
     mMass( 1.0 ),
     mFriction( 0.5 ),
     mRestitution( 0.5 ),
-    mOSGToBullet( node ),
-    mRB( NULL ),
     mDebugBoundaries( false ),
+    mRB( NULL ),
     m_physicsMaterial( NULL ),
+    mOSGToBullet( node ),
     m_ghostController( new GhostController() ),
     m_physicsSimulator( *physicsSimulator ),
     m_dynamicsWorld( *(m_physicsSimulator.GetDynamicsWorld()) )
@@ -320,7 +320,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
             //converter.setSimplifyPercent( simplifyPercent );
         }
         //converter.setAxis( axis );
-        converter.convert("");
+        converter.convert();
         //std::string pname = mOSGToBullet->getName() + ".dae";
         //converter.convert( pname );
         mRB = converter.getRigidBody();

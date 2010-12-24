@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/bullet
+
+Name: Bullet
+Description: Bullet Physics release Pre-Compiled for VES
+Provides: bullet Bullet
+Requires:
+Version: 2.77
+Cflags: -I${includedir}
+Libs: -L${libdir} -lBulletCollision -lBulletDynamics -lLinearMath -lBulletMultiThreaded
+Arch: noarch
+

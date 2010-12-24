@@ -1,0 +1,15 @@
+prefix=${fp_file_cwd}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: osgEphemeris
+Description: osgEphemeris release pre-compiled for VES
+Provides: osgEphemeris osgephemeris
+Requires: openscenegraph openthreads
+Version: 1.0.0
+Libs: /libpath:"${libdir}" osgEphemeris.lib
+Cflags: /I"${includedir}"
+Arch: noarch
+
+

@@ -6,7 +6,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar osgworks_options ApplyBulletVars')
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform bulletBaseVar osgworks_options')
 
 sources = Split("""
    dotosgMetaNode.cxx
@@ -14,9 +14,6 @@ sources = Split("""
 
 lib_env = ves_pkg.getEnv().Clone()
 
-#lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
-#lib_env.Append( CPPDEFINES  = ['OSGBBULLET_LIBRARY'] )
-#lib_env.Append( CPPDEFINES  = ['OSG_LIBRARY_STATIC' ] )
 lib_env.Append( LIBS = ['ves_xplorer_scenegraph'] )
 lib_env.Append( LIBPATH = [pj('#', buildDir,'src','ves','xplorer','scenegraph')] )
 

@@ -161,22 +161,21 @@ def ApplyBulletVars(env, bulletOnly = False ):
     "apply bullet library info"
 
     # Bullet defines
-    env.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
-    env.AppendUnique(LIBS = ['bullet'])
-    env.AppendUnique(LIBPATH = [ pj('#', buildDir, 'external', bulletBaseVar)])
+    #env.AppendUnique(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
+    #env.AppendUnique(LIBS = ['bullet'])
+    #env.AppendUnique(LIBPATH = [ pj('#', buildDir, 'external', bulletBaseVar)])
 
     if env[ 'ARCH' ] == 'x64':
         env.AppendUnique( CPPDEFINES = ['USE_ADDR64=1'] )
 
     if bulletOnly:
         return 0
-    #env.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
-    #              'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
-    env.AppendUnique(CPPPATH = [pj(RootDir,'external', osgbulletBaseVar,'include')])
-    env.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBulletPlus','include')])
-    env.AppendUnique(LIBS = ['osgBulletPlus','osgBullet'])
-    env.AppendUnique(LIBPATH = [pj('#', buildDir, 'external', 'osgBulletPlus'),
-                          pj('#', buildDir, 'external', osgbulletBaseVar)])
+
+    #env.AppendUnique(CPPPATH = [pj(RootDir,'external', osgbulletBaseVar,'include')])
+    #env.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBulletPlus','include')])
+    #env.AppendUnique(LIBS = ['osgBulletPlus','osgBullet'])
+    #env.AppendUnique(LIBPATH = [pj('#', buildDir, 'external', 'osgBulletPlus'),
+    #                      pj('#', buildDir, 'external', osgbulletBaseVar)])
 
 Export('ApplyBulletVars','osgbulletBaseVar')
 
@@ -728,17 +727,16 @@ if not SConsAddons.Util.hasHelpFlag():
     minervaDataSubdirs = pj( buildDir, 'external', 'gdal_data')
     #osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
     osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
-    osgBulletSubdirs = pj( buildDir, 'external', osgbulletBaseVar)
-    osgBulletPlusSubdirs = pj( buildDir, 'external', 'osgBulletPlus')
-    bullet = pj( buildDir, 'external', bulletBaseVar)
+    #osgBulletSubdirs = pj( buildDir, 'external', osgbulletBaseVar)
+    #osgBulletPlusSubdirs = pj( buildDir, 'external', 'osgBulletPlus')
+    #bullet = pj( buildDir, 'external', bulletBaseVar)
     test = pj( buildDir, 'test', 'osg')
     issBuilder = pj(buildDir,'dist','win','iss')
     qtTestBuilder = pj(buildDir,'test','qt','BasicQtOffscreenRender')
     qtpropertybrowserSubdirs = pj( buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource' )
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, lokiSubdirs, osgBulletPlusSubdirs,
-               osgBulletSubdirs, bullet, minervaDataSubdirs]
+               shareSubdirs, lokiSubdirs, minervaDataSubdirs]
 
     if baseEnv[ 'MakeQtSupport' ] == 'yes':
         ves_dirs.append( qtpropertybrowserSubdirs )
