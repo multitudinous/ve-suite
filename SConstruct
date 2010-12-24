@@ -377,7 +377,7 @@ else:
 
 #Setup minerva library
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
-									  compileTest = False, headerToCheck = "Minerva/Common/Data/Object.h" )
+									  compileTest = True, headerToCheck = "Minerva/Version.h" )
 
 osgbullet_options = fp_option.FlagPollBasedOption("osgBullet",
                                                   "osgbullet", "1.0", True, True,
