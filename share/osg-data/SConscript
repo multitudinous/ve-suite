@@ -13,6 +13,6 @@ fileBundle.addFiles( iveFile )
 
 vesBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 pngFile = sca_util.getFilesRecursiveByExt( pj( RootDir, 'share', 'osg-data' ), [ '.png' ] )
-handFile = pj( RootDir,'share','osg-data','hand-r-v3.osg')
+handFile = pj('hand-r-v3.osg')
 vesBundle.addFiles( pngFile )
 vesBundle.addFiles( handFile )
