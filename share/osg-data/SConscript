@@ -6,9 +6,13 @@ pj = os.path.join
 Import( 'ves_pkg buildDir RootDir GetPlatform' )
 
 fileBundle = ves_pkg.createFileBundle( pj( 'share','vesuite','osg-data' ) )
-
 osgFile = sca_util.getFilesRecursiveByExt( pj( RootDir, 'share', 'osg-data' ), [ '.osg' ] )
 iveFile = sca_util.getFilesRecursiveByExt( pj( RootDir, 'share', 'osg-data' ), [ '.ive' ] )
-
 fileBundle.addFiles( osgFile )
 fileBundle.addFiles( iveFile )
+
+vesBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
+pngFile = sca_util.getFilesRecursiveByExt( pj( RootDir, 'share', 'osg-data' ), [ '.png' ] )
+handFile = pj( RootDir,'share','osg-data','hand-r-v3.osg')
+vesBundle.addFiles( pngFile )
+vesBundle.addFiles( handFile )
