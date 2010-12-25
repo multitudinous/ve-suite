@@ -25,7 +25,7 @@ lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
 
 #lib_env.Append(LIBS = ['bullet'])
 #lib_env.Append(LIBPATH = [pj('#',buildDir,'external',bulletBaseVar)])
-#lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
+lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 ApplyBulletVars(lib_env)
 
 gmtl_options.apply( lib_env )
