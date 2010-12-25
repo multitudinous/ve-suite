@@ -56,7 +56,7 @@ Name: eng; MessagesFile: compiler:Default.isl
 Source: {#OSGEPHEMERISSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGEPHEMERISSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGEPHEMERISSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGEPHEMERISSRCHOME}\..\doc\*.jpg; DestDir: {app}\share\osgEphemeris; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSGEPHEMERISSRCHOME}\..\doc\*.jpg; DestDir: {app}\share\osgEphemeris; Flags: ignoreversion recursesubdirs; 
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgephemeris.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgephemeris.fpc; Languages: ; Flags: ignoreversion
 

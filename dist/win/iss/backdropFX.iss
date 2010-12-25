@@ -55,6 +55,7 @@ Source: {#BACKDROPFXSRCHOME}\include\*; DestDir: {app}\include; Flags: ignorever
 Source: {#BACKDROPFXSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#BACKDROPFXSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#BACKDROPFXSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#BACKDROPFXSRCHOME}\..\data\*; DestDir: {app}\share\backdropFX; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\backdropfx.fpc.in; DestDir: {app}\lib\flagpoll; DestName: backdropfx.fpc; Languages: ; Flags: ignoreversion
