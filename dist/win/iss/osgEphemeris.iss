@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppVer "1.1.0"
-#define MyAppName "osgBulletPlus Pre-Compile"
-#define MyAppVerName "osgBulletPlus"
+#define MyAppVer "24"
+#define MyAppName "osgEphemeris Pre-Compile"
+#define MyAppVerName "osgEphemeris"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 
@@ -51,14 +51,14 @@ UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#OSGBULLETPLUSSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGBULLETPLUSSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGBULLETPLUSSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGBULLETPLUSSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGBULLETPLUSSRCHOME}\..\data\*hand*; DestDir: {app}\share\osgBulletPlus; Flags: ignoreversion recursesubdirs createallsubdirs
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+;Data for binary download
+;Source: {#OSGEPHEMERISSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#OSGEPHEMERISSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#OSGEPHEMERISSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#OSGEPHEMERISSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSGEPHEMERISSRCHOME}\..\doc\*.jpg; DestDir: {app}\share\osgEphemeris; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgbulletplus.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgbulletplus.fpc; Languages: ; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgephemeris.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgephemeris.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

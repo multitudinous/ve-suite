@@ -85,3 +85,5 @@
 #define OSGBULLETPLUSSRCHOME "C:\dev\skewmatrix-redmine-svn\skewmatrix\osgBulletPlus\trunk\install-win32"
 ; backdropFX deps
 #define BACKDROPFXSRCHOME "C:\dev\skewmatrix-redmine-svn\skewmatrix\backdropFX\trunk\install-win32"
+; osgEphemeris
+#define OSGEPHEMERISSRCHOME "C:\dev\skewmatrix-redmine-svn\skewmatrix\external\osgEphemeris\install-win32"

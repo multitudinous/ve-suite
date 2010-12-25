@@ -54,6 +54,8 @@ Name: eng; MessagesFile: compiler:Default.isl
 Source: {#OSGBULLETSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSGBULLETSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSGBULLETSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSGBULLETSRCHOME}\..\data\*.vs; DestDir: {app}\share\osgBullet; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#OSGBULLETSRCHOME}\..\data\*.fs; DestDir: {app}\share\osgBullet; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Source: {#OSGBULLETSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;FPC file integration

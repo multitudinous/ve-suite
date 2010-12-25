@@ -6,7 +6,7 @@ includedir=${prefix}/include
 Name: backdropFX
 Description: backdropFX release pre-compiled for VES
 Provides: backdropFX bdfx backdropfx
-Requires: openscenegraph openthreads osgWorks osgBullet osgBulletPlus bullet boost
+Requires: openscenegraph openthreads osgWorks osgBullet osgBulletPlus bullet boost osgephemeris
 Version: 0.1.0
 Libs: /libpath:"${libdir}" backdropFX.lib
 Cflags: /I"${includedir}"
