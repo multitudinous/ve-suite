@@ -114,6 +114,30 @@ protected Q_SLOTS:
     /// Autoconnected slot
     //void on_actionDebugPhysics_triggered();
 
+    /// Called when the physics icon is pressed on the toolbar
+    /// Autoconnected slot
+    void on_actionManipulatorStack_triggered(); 
+    
+    /// Enables physics engine
+    /// Autoconnected slot
+    void on_actionScaleManipulator_triggered(); 
+    
+    ///Start the physics engine
+    /// Autoconnected slot
+    void on_actionTranslateManipulator_triggered(); 
+    
+    ///Pause he physics engine
+    /// Autoconnected slot
+    void on_actionRotateManipulator_triggered(); 
+    
+    ///Reset the physics engine
+    /// Autoconnected slot
+    void on_actionComboManipulator_triggered(); 
+
+    ///Reset the physics engine
+    /// Autoconnected slot
+    void on_actionEnableManipulator_triggered(); 
+    
     /// Called when the file operations icon on the main toolbar is clicked.
     /// Autoconnected slot
     void on_actionFile_triggered(); 
@@ -167,6 +191,8 @@ private:
     IconStack* mFileOpsStack;
     ///Physics menu stack
     IconStack* m_physicsMenuStack;
+    ///Physics menu stack
+    IconStack* m_manipulatorMenuStack;
     ///Tree tab
     ves::conductor::TreeTab* mScenegraphTreeTab;
     ///The map of tabs

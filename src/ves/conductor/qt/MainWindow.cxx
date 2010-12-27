@@ -57,6 +57,9 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
+#include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
+#include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+
 #ifdef MINERVA_GIS_SUPPORT
 # include <ves/xplorer/minerva/MinervaManager.h>
 # include <ves/conductor/qt/minerva/LayersTree.h>
@@ -105,7 +108,7 @@ MainWindow::MainWindow(QWidget* parent) :
     mFileOpsStack->AddAction( ui->actionOpen);
     mFileOpsStack->AddAction( ui->actionSave );
 
-    ///The file menu stack
+    ///The physics menu stack
     ui->mainToolBar->addAction( ui->actionPhysicsStack );
     
     m_physicsMenuStack = new IconStack( ui->mainToolBar->
@@ -114,7 +117,18 @@ MainWindow::MainWindow(QWidget* parent) :
     m_physicsMenuStack->AddAction( ui->actionPausePhysics);
     m_physicsMenuStack->AddAction( ui->actionResetPhysics );
     m_physicsMenuStack->AddAction( ui->actionStepPhysics );
-        
+
+    ///The manipulator menu stack
+    ui->mainToolBar->addAction( ui->actionManipulatorStack );
+    
+    m_manipulatorMenuStack = new IconStack( ui->mainToolBar->
+        widgetForAction( ui->actionManipulatorStack ), this );
+    m_manipulatorMenuStack->AddAction( ui->actionEnableManipulator);
+    m_manipulatorMenuStack->AddAction( ui->actionScaleManipulator);
+    m_manipulatorMenuStack->AddAction( ui->actionTranslateManipulator );
+    m_manipulatorMenuStack->AddAction( ui->actionRotateManipulator );
+    m_manipulatorMenuStack->AddAction( ui->actionComboManipulator );
+    
     // Make sure there is no statusbar on this widget.
     setStatusBar(0);
     
@@ -139,7 +153,8 @@ MainWindow::MainWindow(QWidget* parent) :
     // tabs when the model changes
     {
         CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
-                         void ( const std::string& ), &MainWindow::OnActiveModelChanged,
+                         void ( const std::string& ), 
+                         &MainWindow::OnActiveModelChanged,
                          mConnections, normal_Priority );
     }
     
@@ -232,7 +247,8 @@ void MainWindow::ActivateTab( QWidget* widget )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::ActivateTab( const std::string& tabLabel )
 {
-    std::map< std::string, QWidget* >::iterator iter = mTabbedWidgets.find( tabLabel );
+    std::map< std::string, QWidget* >::iterator iter = 
+        mTabbedWidgets.find( tabLabel );
     if( iter != mTabbedWidgets.end() )
     {
         // Get the associated widget and call the (QWidget*) overloaded version
@@ -489,4 +505,84 @@ void MainWindow::on_actionResetPhysics_triggered()
 {
     //scenegraph::PhysicsSimulator::instance()->SetDebuggingOn( toggle );
 }*/
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionManipulatorStack_triggered()
+{
+    if( m_manipulatorMenuStack->isVisible() )
+    {
+        m_manipulatorMenuStack->hide();
+    }
+    else
+    {
+        m_manipulatorMenuStack->Show();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionScaleManipulator_triggered()
+{
+    scenegraph::manipulator::ManipulatorManager& manipulatorManager =
+    scenegraph::SceneManager::instance()->GetManipulatorManager();
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+    manipulatorManager.GetSceneManipulator();
+    sceneManipulator->SetEnabledModes(
+        scenegraph::manipulator::TransformationType::SCALE_COMPOUND );
+    sceneManipulator->DefaultForm();
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionTranslateManipulator_triggered()
+{
+    scenegraph::manipulator::ManipulatorManager& manipulatorManager =
+    scenegraph::SceneManager::instance()->GetManipulatorManager();
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+    manipulatorManager.GetSceneManipulator();
+    sceneManipulator->SetEnabledModes(
+        scenegraph::manipulator::TransformationType::TRANSLATE_COMPOUND );
+    sceneManipulator->DefaultForm();
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionRotateManipulator_triggered()
+{
+    scenegraph::manipulator::ManipulatorManager& manipulatorManager =
+    scenegraph::SceneManager::instance()->GetManipulatorManager();
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+    manipulatorManager.GetSceneManipulator();
+    sceneManipulator->SetEnabledModes(
+        scenegraph::manipulator::TransformationType::ROTATE_COMPOUND );
+    sceneManipulator->DefaultForm();
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionComboManipulator_triggered()
+{
+    scenegraph::manipulator::ManipulatorManager& manipulatorManager =
+    scenegraph::SceneManager::instance()->GetManipulatorManager();
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+    manipulatorManager.GetSceneManipulator();
+    sceneManipulator->SetEnabledModes(
+        scenegraph::manipulator::TransformationType::ALL );
+    sceneManipulator->ComboForm();
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionEnableManipulator_triggered()
+{
+    scenegraph::manipulator::ManipulatorManager& manipulatorManager =
+    scenegraph::SceneManager::instance()->GetManipulatorManager();
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+    manipulatorManager.GetSceneManipulator();
+    /*if( data == "ENABLE" )
+    {
+        manipulatorManager.Enable();
+        sceneManipulator->Enable();
+        
+        if( ves::xplorer::DeviceHandler::instance()->GetSelectedDCS() )
+        {
+            sceneManipulator->Show();
+        }
+    }
+    else if( data == "DISABLE" )
+    {
+        manipulatorManager.Enable( false );
+        sceneManipulator->Enable( false );
+        sceneManipulator->Hide();
+    }*/
+}
 ////////////////////////////////////////////////////////////////////////////////

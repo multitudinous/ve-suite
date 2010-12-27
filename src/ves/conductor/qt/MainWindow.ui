@@ -316,6 +316,78 @@ QToolButton:hover
     <bool>true</bool>
    </property>
   </action>
+  <action name="actionManipulatorStack">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>Manipulator</string>
+   </property>
+   <property name="toolTip">
+    <string>Manipulator</string>
+   </property>
+  </action>
+  <action name="actionScaleManipulator">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/ManipulatorScaleButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorScaleButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>ScaleManipulator</string>
+   </property>
+   <property name="toolTip">
+    <string>Scale</string>
+   </property>
+  </action>
+  <action name="actionTranslateManipulator">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/ManipulatorTranslateButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorTranslateButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>TranslateManipulator</string>
+   </property>
+   <property name="toolTip">
+    <string>Translate</string>
+   </property>
+  </action>
+  <action name="actionRotateManipulator">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/ManipulatorRotateButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorRotateButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>RotateManipulator</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate</string>
+   </property>
+  </action>
+  <action name="actionComboManipulator">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/ManipulatorComboButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorComboButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>ComboManipulator</string>
+   </property>
+   <property name="toolTip">
+    <string>Combo</string>
+   </property>
+  </action>
+  <action name="actionEnableManipulator">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>EnableManipulator</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
