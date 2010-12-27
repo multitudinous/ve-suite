@@ -51,6 +51,9 @@
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 
+///Disable bullet profiling
+#define BT_NO_PROFILE 1
+
 #include <LinearMath/btQuickprof.h>
 
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
