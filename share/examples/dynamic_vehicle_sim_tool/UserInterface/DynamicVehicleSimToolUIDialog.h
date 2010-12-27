@@ -37,6 +37,8 @@
 // --- VE-Suite Includes --- //
 #include "DynamicVehicleSimToolBase.h"
 
+#include <ves/open/xml/cad/CADNodePtr.h>
+
 namespace ves
 {
 namespace conductor
@@ -77,6 +79,8 @@ private:
 
     ///List of geom cadnode names
     std::vector< wxChoice* > m_geomChoiceList;
+    ///Node list
+    std::vector< ves::open::xml::cad::CADNodePtr > m_nodeList;
     
 protected:
 	// Handlers for DynamicVehicleSimTool events.

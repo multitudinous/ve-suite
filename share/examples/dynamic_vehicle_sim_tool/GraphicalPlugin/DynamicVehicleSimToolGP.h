@@ -46,6 +46,8 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
 
+#include <gmtl/Matrix.h>
+
 namespace ves
 {
 namespace xplorer
@@ -116,6 +118,14 @@ private:
     
     ///Control wether the thread continues to run
     bool m_runSampleThread;
+    ///Matrix stack containing position data for the geometry
+    std::vector< gmtl::Matrix44d > m_positionStack;
+    ///vector of names
+    std::vector< std::pair< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > > > m_animationedNodes;
+    ///cm to feet conversion
+    double cm2ft;
+    ///The constrained geom pointer
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_constrainedGeom;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( DynamicVehicleSimToolGP )

@@ -62,6 +62,7 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
 
@@ -108,7 +109,8 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
     m_simState( "Pause" ),
     m_computerName( "" ),
     m_computerPort( "" ),
-    m_runSampleThread( false )
+    m_runSampleThread( false ),
+    cm2ft( 0.032808399 )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "DynamicVehicleSimToolUI";
@@ -137,6 +139,30 @@ void DynamicVehicleSimToolGP::InitializeNode(
 void DynamicVehicleSimToolGP::PreFrameUpdate()
 {
     UpdateSelectedGeometryPositions();
+        
+    if( m_positionStack.size() < m_animationedNodes.size() )
+    {
+        std::cout << "we have a problem with the position stack size." << std::endl;
+    }
+    
+    for( size_t i = 0; i < m_animationedNodes.size(); ++i )
+    {
+        std::string cadID = m_animationedNodes.at( i ).first;
+        osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode = m_animationedNodes.at( i ).second;
+        tempNode->SetMat( m_positionStack.at( i  ) );
+    }
+    
+    //size_t constrainedGeom = 0;
+    if( m_positionStack.size() > 0 && m_constrainedGeom.valid() )
+    {
+        osg::ref_ptr< DCS > navDCS = mSceneManager->GetNavDCS();
+        //We assume that the navDCS is not being manipulated by the user
+        //If we need to take into account the nav by a user we will need
+        //to multiply in the constrained geom position update
+        navDCS->SetMat( m_constrainedGeom->GetMat() );
+    }
+    
+    m_positionStack.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
@@ -173,6 +199,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
     
     if( commandName == "Geometry Data Map" )
     {
+        m_animationedNodes.clear();
         size_t numDVPs = m_currentCommand->GetNumberOfDataValuePairs();
         std::string nodeName;
         bool noGeom = false;
@@ -181,6 +208,9 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             ves::open::xml::DataValuePairPtr geomDVP = 
                 m_currentCommand->GetDataValuePair( i );
             geomDVP->GetData( nodeName );
+            osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode = 
+                mModelHandler->GetActiveModel()->GetModelCADHandler()->GetPart( nodeName )->GetDCS();
+            m_animationedNodes.push_back( std::make_pair< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( nodeName, tempNode.get() ) );
             std::cout << nodeName << std::endl;
             if( nodeName == "No Geometry Selected" )
             {
@@ -198,6 +228,9 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             m_currentCommand->GetDataValuePair( "Contrainted Geometry" );
         std::string constrainedGeom;
         dvp->GetData( constrainedGeom );
+        m_constrainedGeom = 
+            mModelHandler->GetActiveModel()->GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
+
         std::cout << constrainedGeom << std::endl;
         return;
     }
@@ -428,10 +461,11 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
         yVec.set( positionData.at( 6 ), positionData.at( 7 ), positionData.at( 8 ) );
         gmtl::cross( zVec, xVec, yVec );
         
-        transMat.set( xVec[ 0 ], xVec[ 1 ], xVec[ 2 ], 0.,
-                      yVec[ 0 ], yVec[ 1 ], yVec[ 2 ], 0.,
-                      zVec[ 0 ], zVec[ 1 ], zVec[ 2 ], 0.,
-                             0.,        0.,        0., 1. );
+        transMat.set( xVec[ 0 ], xVec[ 1 ], xVec[ 2 ], posData[ 0 ]*cm2ft,
+                      yVec[ 0 ], yVec[ 1 ], yVec[ 2 ], posData[ 1 ]*cm2ft,
+                      zVec[ 0 ], zVec[ 1 ], zVec[ 2 ], posData[ 2 ]*cm2ft,
+                             0.,        0.,        0.,           1. );
+        m_positionStack.push_back( transMat );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
