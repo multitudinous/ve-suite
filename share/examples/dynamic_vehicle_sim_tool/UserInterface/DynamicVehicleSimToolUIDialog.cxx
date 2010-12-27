@@ -180,6 +180,16 @@ void DynamicVehicleSimToolUIDialog::OnResetSimulation( wxCommandEvent& WXUNUSED(
     const std::string commandName = "Simulator Update";
     command->SetCommandName( commandName );
     mServiceList->SendCommandStringToXplorer( command );
+
+    //Reset it back to start
+    bool state = m_toggleBtn1->GetValue();
+    std::string simState = "Stop";
+    if( state )
+    {
+        simState = "Start";
+    }    
+    simText->SetData( "Simulator State", simState );
+    mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnGeometryDataMapping( wxCommandEvent& WXUNUSED( event ) )

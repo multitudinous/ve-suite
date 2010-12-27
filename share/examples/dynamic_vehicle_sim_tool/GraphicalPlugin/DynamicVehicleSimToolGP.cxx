@@ -107,7 +107,8 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
     m_sampleThread( 0 ),
     m_simState( "Pause" ),
     m_computerName( "" ),
-    m_computerPort( "" )
+    m_computerPort( "" ),
+    m_runSampleThread( false )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "DynamicVehicleSimToolUI";
@@ -135,7 +136,7 @@ void DynamicVehicleSimToolGP::InitializeNode(
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::PreFrameUpdate()
 {
-    ;
+    UpdateSelectedGeometryPositions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
@@ -283,67 +284,82 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
         
         const vpr::Uint32 bufferSize = 1200;
         char* recv_buf = new char[bufferSize];
-        //char send_buf[] = "Hello there!";
+        memset(recv_buf, '\0', bufferSize );//sizeof(recv_buf));
+
         typedef std::vector< std::string > split_vector_type;
         std::vector< double > positionData;
+        std::string bufferData;
+        vpr::InetAddr addr;
+        split_vector_type splitVec;
+
         // Loop forever reading messages from clients.
-        while ( true )
+        while( m_runSampleThread )
         {
-            vpr::InetAddr addr;
-            
-            try
+            GetSimState( simState );
+
+            while( simState == "Start" )
             {
-                // Read a message from a client.
-                const vpr::Uint32 bytes = sock.recvfrom(recv_buf, sizeof(*recv_buf),
-                                                        addr);
-                
-                // If we read anything, print it and send a response.
-                std::cout << "Read '" << recv_buf << "' (" << bytes
-                    << " bytes) from " << addr.getAddressString()
-                    << std::endl;
-                
-                if( bytes == bufferSize )
+                try
                 {
-                    std::string bufferData( recv_buf );
-                    /*typedef boost::tokenizer< boost::escaped_list_separator<char> > Tok;
-                    boost::escaped_list_separator<char> sep( "", "\n", "");
-                    Tok tok( bufferData, sep );
-                    std::string tempTok;
-                    double tempDouble = 0;
-                    size_t columnCount1 = 0;
-                    std::vector< std::string > columnNames;
-                    Tok::iterator firstDouble;
-                    for(Tok::iterator tok_iter = tok.begin(); tok_iter != tok.end(); ++tok_iter)
+                    // Read a message from a client.
+                    const vpr::Uint32 bytes = sock.recvfrom(recv_buf, bufferSize,
+                                                            addr);
+                    
+                    // If we read anything, print it and send a response.
+                    //std::cout << "Read '" << recv_buf << "' (" << bytes
+                    //    << " bytes) from " << addr.getAddressString()
+                    //    << std::endl;
+                    bufferData.resize( 0 );
+                    for( size_t i = 0; i < bytes; ++i )//bufferSize; ++i )
                     {
-                        tempTok = *tok_iter;
-                        if( tempTok.empty() )
+                        if( recv_buf[ i ] == '\0' )
                         {
+                            bufferData.push_back( ' ' );
                             continue;
                         }
-                        std::cout << "<" << tempTok << "> ";
-                        
-                        try
-                        {
-                            tempDouble = boost::lexical_cast<double>( tempTok );
-                            //firstDouble = tok_iter;
-                            //break;
-                            //std::cout << tempDouble << " "; 
-                        }
-                        catch( boost::bad_lexical_cast& ex )
-                        {
-                            std::cout << "cannot cast data" << std::endl;
-                            //columnNames.push_back( tempTok );
-                            //columnCount1 +=1;
-                        }
+                        //std::cout << recv_buf[ i ] << std::endl;
+                        bufferData.push_back( recv_buf[ i ] );
                     }
-                    //std::cout << "Column Count " << columnCount1 << std::endl;*/
                     
-                    split_vector_type splitVec;
+                    boost::algorithm::trim( bufferData );
+                    /*typedef boost::tokenizer< boost::escaped_list_separator<char> > Tok;
+                     boost::escaped_list_separator<char> sep( "", "\n", "");
+                     Tok tok( bufferData, sep );
+                     std::string tempTok;
+                     double tempDouble = 0;
+                     size_t columnCount1 = 0;
+                     std::vector< std::string > columnNames;
+                     Tok::iterator firstDouble;
+                     for(Tok::iterator tok_iter = tok.begin(); tok_iter != tok.end(); ++tok_iter)
+                     {
+                     tempTok = *tok_iter;
+                     if( tempTok.empty() )
+                     {
+                     continue;
+                     }
+                     std::cout << "<" << tempTok << "> ";
+                     
+                     try
+                     {
+                     tempDouble = boost::lexical_cast<double>( tempTok );
+                     //firstDouble = tok_iter;
+                     //break;
+                     //std::cout << tempDouble << " "; 
+                     }
+                     catch( boost::bad_lexical_cast& ex )
+                     {
+                     std::cout << "cannot cast data" << std::endl;
+                     //columnNames.push_back( tempTok );
+                     //columnCount1 +=1;
+                     }
+                     }
+                     //std::cout << "Column Count " << columnCount1 << std::endl;*/
+                    
                     boost::split( splitVec, bufferData, boost::is_any_of(" "), boost::token_compress_on );
                     double tempDouble = 0;
                     for( size_t i = 0; i < splitVec.size(); ++i )
                     {
-                        std::cout << "<" << splitVec.at( i ) << "> ";
+                        //std::cout << "<" << splitVec.at( i ) << "> ";
                         try
                         {
                             tempDouble = boost::lexical_cast<double>( splitVec.at( i ) );
@@ -356,13 +372,14 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
                     }
                     SetPositionData( positionData );
                     positionData.resize( 0 );
+                    splitVec.resize( 0 );
                 }
-            }
-            catch (vpr::IOException& ex)
-            {
-                std::cerr << "Caught an I/O exception while communicating "
-                << "with client at " << addr.getAddressString()
-                << ":\n" << ex.what() << std::endl;
+                catch (vpr::IOException& ex)
+                {
+                    std::cerr << "Caught an I/O exception while communicating "
+                    << "with client at " << addr.getAddressString()
+                    << ":\n" << ex.what() << std::endl;
+                }
             }
         }
         
@@ -390,7 +407,19 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
     gmtl::Vec3d xVec, yVec, zVec;
     gmtl::Matrix44d transMat;
     std::vector< double > positionData;
-    unsigned int numObjects = 0;
+    GetPositionData( positionData );
+    unsigned int numObjects = positionData.size() / 9;
+
+    std::string simState;
+    GetSimState( simState );
+    if( simState == "Reset" )
+    {
+        for( size_t i = 0; i < positionData.size(); ++i )
+        {
+            positionData.at( i ) = 0.0;
+        }
+    }
+
     for( size_t i = 0; i < numObjects; ++i )
     {
         GetPositionData( positionData );

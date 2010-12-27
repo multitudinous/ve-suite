@@ -113,6 +113,9 @@ private:
     std::string m_computerPort;
     ///
     ves::open::xml::CommandPtr m_currentCommand;
+    
+    ///Control wether the thread continues to run
+    bool m_runSampleThread;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( DynamicVehicleSimToolGP )
