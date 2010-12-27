@@ -262,6 +262,60 @@ QToolButton:hover
     <string>Quit</string>
    </property>
   </action>
+  <action name="actionStepPhysics">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/StepButton.xpm</normaloff>:/xpm/ToolBar/StepButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>Step</string>
+   </property>
+   <property name="toolTip">
+    <string>Step</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionPlayPhysics">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/PlayButton.xpm</normaloff>:/xpm/ToolBar/PlayButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>Play</string>
+   </property>
+  </action>
+  <action name="actionResetPhysics">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/ResetButton.xpm</normaloff>:/xpm/ToolBar/ResetButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </action>
+  <action name="actionPausePhysics">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/PauseButton.xpm</normaloff>:/xpm/ToolBar/PauseButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionPhysicsStack">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/PhysicsButton.xpm</normaloff>:/xpm/ToolBar/PhysicsButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>PhysicsStack</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

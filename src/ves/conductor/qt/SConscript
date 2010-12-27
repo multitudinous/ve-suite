@@ -4,9 +4,10 @@ import SConsAddons.Util as sca_util
 import glob
 pj = os.path.join
 
-Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform xerces_options tao_options')
+Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
 Import('minerva_options')
-Import('tao_options')
+Import('tao_options xerces_options')
+Import('bullet_options osgbullet_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
@@ -115,6 +116,8 @@ vrjuggler_options.apply( lib_env )
 poco_options.apply( lib_env )
 xerces_options.apply(lib_env)
 tao_options.apply(lib_env)
+bullet_options.apply(lib_env)
+osgbullet_options.apply(lib_env)
 
 if minerva_options.isAvailable():
 	lib_env.AppendUnique( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )

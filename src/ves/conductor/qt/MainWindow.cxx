@@ -55,6 +55,8 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+
 #ifdef MINERVA_GIS_SUPPORT
 # include <ves/xplorer/minerva/MinervaManager.h>
 # include <ves/conductor/qt/minerva/LayersTree.h>
@@ -72,6 +74,8 @@
 
 #include <iostream>
 
+using namespace ves::xplorer;
+
 ///The Q_DECLARE_METATYPE maco allows us to use non-Qt types in 
 ///queued connections in Qt-signals
 Q_DECLARE_METATYPE(std::string)
@@ -82,22 +86,35 @@ MainWindow::MainWindow(QWidget* parent) :
     ui( new Ui::MainWindow ),
     mFileDialog( 0 ),
     mFileOpsStack( 0 ),
+    m_physicsMenuStack( 0 ),
     mScenegraphTreeTab( 0 ),
     mActiveTab( "" ),
     mVisualizationTab( 0 ),
     mLayersTree ( 0x0 )
 {
     ui->setupUi(this);
-    
-    ui->mainToolBar->addAction(ui->actionFile);
-    
+        
     //ui->menuBar->close();
     
-    mFileOpsStack = new IconStack( ui->mainToolBar->widgetForAction( ui->actionFile ), this );
+    ///The file menu stack
+    ui->mainToolBar->addAction( ui->actionFile );
+
+    mFileOpsStack = new IconStack( ui->mainToolBar->
+        widgetForAction( ui->actionFile ), this );
     mFileOpsStack->AddAction( ui->actionNew );
     mFileOpsStack->AddAction( ui->actionOpen);
     mFileOpsStack->AddAction( ui->actionSave );
 
+    ///The file menu stack
+    ui->mainToolBar->addAction( ui->actionPhysicsStack );
+    
+    m_physicsMenuStack = new IconStack( ui->mainToolBar->
+        widgetForAction( ui->actionPhysicsStack ), this );
+    m_physicsMenuStack->AddAction( ui->actionPlayPhysics);
+    m_physicsMenuStack->AddAction( ui->actionPausePhysics);
+    m_physicsMenuStack->AddAction( ui->actionResetPhysics );
+    m_physicsMenuStack->AddAction( ui->actionStepPhysics );
+        
     // Make sure there is no statusbar on this widget.
     setStatusBar(0);
     
@@ -253,6 +270,18 @@ void MainWindow::on_actionFile_triggered()
     else
     {
         mFileOpsStack->Show();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionPhysicsStack_triggered()
+{
+    if( m_physicsMenuStack->isVisible() )
+    {
+        m_physicsMenuStack->hide();
+    }
+    else
+    {
+        m_physicsMenuStack->Show();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -433,4 +462,31 @@ void MainWindow::QueuedOnObjectPicked( osg::NodePath nodePath )
 
     mScenegraphTreeTab->OpenToAndSelect( nodePath );
 }
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionStepPhysics_triggered()
+{
+    scenegraph::PhysicsSimulator::instance()->SetIdle( true );
+    scenegraph::PhysicsSimulator::instance()->StepSimulation();
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionPlayPhysics_triggered()
+{
+    scenegraph::PhysicsSimulator::instance()->SetIdle( false );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionPausePhysics_triggered()
+{
+    scenegraph::PhysicsSimulator::instance()->SetIdle( true );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionResetPhysics_triggered()
+{
+    scenegraph::PhysicsSimulator::instance()->SetIdle( true );
+    scenegraph::PhysicsSimulator::instance()->ResetScene();
+}
+////////////////////////////////////////////////////////////////////////////////
+/*void MainWindow::on_actionDebugPhysics_triggered()
+{
+    //scenegraph::PhysicsSimulator::instance()->SetDebuggingOn( toggle );
+}*/
 ////////////////////////////////////////////////////////////////////////////////

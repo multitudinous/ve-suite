@@ -49,11 +49,12 @@ namespace Ui
     class MainWindow;
 } // Ui
 
-class VE_CONDUCTOR_QTUI_EXPORTS MainWindow : public QMainWindow {
+class VE_CONDUCTOR_QTUI_EXPORTS MainWindow : public QMainWindow 
+{
     Q_OBJECT
 public:
     MainWindow(QWidget* parent = 0);
-    ~MainWindow();
+    virtual ~MainWindow();
     
     /// Adds @c widget to tabs and gives tab the label @c tabLabel.
     int AddTab( QWidget* widget, const std::string& tabLabel );
@@ -89,6 +90,30 @@ protected:
 
 protected Q_SLOTS:
     
+    /// Called when the physics icon is pressed on the toolbar
+    /// Autoconnected slot
+    void on_actionPhysicsStack_triggered(); 
+    
+    /// Enables physics engine
+    /// Autoconnected slot
+    void on_actionStepPhysics_triggered(); 
+    
+    ///Start the physics engine
+    /// Autoconnected slot
+    void on_actionPlayPhysics_triggered(); 
+    
+    ///Pause he physics engine
+    /// Autoconnected slot
+    void on_actionPausePhysics_triggered(); 
+    
+    ///Reset the physics engine
+    /// Autoconnected slot
+    void on_actionResetPhysics_triggered(); 
+    
+    ///Debug physics
+    /// Autoconnected slot
+    //void on_actionDebugPhysics_triggered();
+
     /// Called when the file operations icon on the main toolbar is clicked.
     /// Autoconnected slot
     void on_actionFile_triggered(); 
@@ -134,11 +159,19 @@ private Q_SLOTS:
 	void on_actionConfigure_Layers_triggered ( bool );
 #endif
 private:
+    ///Qt window widget
     Ui::MainWindow* ui;
+    ///Q file dialog
     QFileDialog* mFileDialog;
+    ///File menu stack
     IconStack* mFileOpsStack;
+    ///Physics menu stack
+    IconStack* m_physicsMenuStack;
+    ///Tree tab
     ves::conductor::TreeTab* mScenegraphTreeTab;
+    ///The map of tabs
     std::map< std::string, QWidget* > mTabbedWidgets;
+    ///Active tab key
     std::string mActiveTab;
     
     /// Maintains the list of signals this object is connected to
