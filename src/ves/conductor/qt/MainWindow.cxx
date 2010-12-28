@@ -53,6 +53,8 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
@@ -128,6 +130,12 @@ MainWindow::MainWindow(QWidget* parent) :
     m_manipulatorMenuStack->AddAction( ui->actionTranslateManipulator );
     m_manipulatorMenuStack->AddAction( ui->actionRotateManipulator );
     m_manipulatorMenuStack->AddAction( ui->actionComboManipulator );
+    //ui->actionManipulatorStack
+    
+    ui->actionScaleManipulator->setEnabled( false );
+    ui->actionTranslateManipulator->setEnabled( false );
+    ui->actionRotateManipulator->setEnabled( false );
+    ui->actionComboManipulator->setEnabled( false );    
     
     // Make sure there is no statusbar on this widget.
     setStatusBar(0);
@@ -501,7 +509,7 @@ void MainWindow::on_actionResetPhysics_triggered()
     scenegraph::PhysicsSimulator::instance()->ResetScene();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void MainWindow::on_actionDebugPhysics_triggered()
+/*void MainWindow::on_actionDebugPhysics_triggered( bool trigger )
 {
     //scenegraph::PhysicsSimulator::instance()->SetDebuggingOn( toggle );
 }*/
@@ -562,27 +570,31 @@ void MainWindow::on_actionComboManipulator_triggered()
     sceneManipulator->ComboForm();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::on_actionEnableManipulator_triggered()
+void MainWindow::on_actionEnableManipulator_triggered( bool triggered )
 {
     scenegraph::manipulator::ManipulatorManager& manipulatorManager =
     scenegraph::SceneManager::instance()->GetManipulatorManager();
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
     manipulatorManager.GetSceneManipulator();
-    /*if( data == "ENABLE" )
+
+    manipulatorManager.Enable( triggered );
+    sceneManipulator->Enable( triggered );
+
+    if( triggered )
     {
-        manipulatorManager.Enable();
-        sceneManipulator->Enable();
-        
         if( ves::xplorer::DeviceHandler::instance()->GetSelectedDCS() )
         {
             sceneManipulator->Show();
         }
     }
-    else if( data == "DISABLE" )
+    else
     {
-        manipulatorManager.Enable( false );
-        sceneManipulator->Enable( false );
         sceneManipulator->Hide();
-    }*/
+    }
+    
+    ui->actionScaleManipulator->setEnabled( triggered );
+    ui->actionTranslateManipulator->setEnabled( triggered );
+    ui->actionRotateManipulator->setEnabled( triggered );
+    ui->actionComboManipulator->setEnabled( triggered );    
 }
 ////////////////////////////////////////////////////////////////////////////////

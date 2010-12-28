@@ -136,7 +136,7 @@ protected Q_SLOTS:
 
     ///Reset the physics engine
     /// Autoconnected slot
-    void on_actionEnableManipulator_triggered(); 
+    void on_actionEnableManipulator_triggered( bool triggered ); 
     
     /// Called when the file operations icon on the main toolbar is clicked.
     /// Autoconnected slot

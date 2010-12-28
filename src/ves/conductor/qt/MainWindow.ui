@@ -377,6 +377,9 @@ QToolButton:hover
    </property>
   </action>
   <action name="actionEnableManipulator">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="propertyBrowser/icons.qrc">
      <normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</iconset>
