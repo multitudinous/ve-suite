@@ -202,21 +202,22 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         m_animationedNodes.clear();
         size_t numDVPs = m_currentCommand->GetNumberOfDataValuePairs();
         std::string nodeName;
-        bool noGeom = false;
+        //bool noGeom = false;
         for( size_t i = 0; i < numDVPs; ++i )
         {
             ves::open::xml::DataValuePairPtr geomDVP = 
                 m_currentCommand->GetDataValuePair( i );
             geomDVP->GetData( nodeName );
-            osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode = 
-                mModelHandler->GetActiveModel()->GetModelCADHandler()->GetPart( nodeName )->GetDCS();
-            m_animationedNodes.push_back( std::make_pair< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( nodeName, tempNode.get() ) );
             std::cout << nodeName << std::endl;
-            if( nodeName == "No Geometry Selected" )
+            if( nodeName == "No Geom" )
             {
-                noGeom = true;
+                //noGeom = true;
                 break;
             }
+            osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode = 
+                mModelHandler->GetActiveModel()->GetModelCADHandler()->
+                GetPart( nodeName )->GetDCS();
+            m_animationedNodes.push_back( std::make_pair< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( nodeName, tempNode.get() ) );
         }
         
         return;
@@ -228,8 +229,12 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             m_currentCommand->GetDataValuePair( "Contrainted Geometry" );
         std::string constrainedGeom;
         dvp->GetData( constrainedGeom );
-        m_constrainedGeom = 
-            mModelHandler->GetActiveModel()->GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
+        if( !constrainedGeom.empty() )
+        {
+            m_constrainedGeom = 
+                mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
+        }
 
         std::cout << constrainedGeom << std::endl;
         return;
