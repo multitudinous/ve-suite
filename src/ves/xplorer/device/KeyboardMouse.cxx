@@ -304,7 +304,7 @@ void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
     const gadget::MouseEventPtr mouseEvt =
         boost::static_pointer_cast< gadget::MouseEvent >( event );
 
-    /*vprDEBUG( vesDBG, 4 )
+    /*vprDEBUG( vesDBG, 2 )
         << "|\tKeyboardMouse::onMouseDoubleClick"
         << mouseEvt->getButton() << ", " << mouseEvt->getX()
         << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
