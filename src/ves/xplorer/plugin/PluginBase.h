@@ -94,7 +94,7 @@ namespace plugin
  * PluginBase API
  */
 
-/*!\class ::PluginBase
+/*!\class ves::xplorer::plugin::PluginBase
  *
  */
 class VE_GRAPHICALPLUGINS_EXPORTS PluginBase
