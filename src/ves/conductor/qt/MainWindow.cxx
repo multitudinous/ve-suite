@@ -526,6 +526,18 @@ void MainWindow::on_actionManipulatorStack_triggered()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionManipulatorStack_hovered()
+{
+    if( m_manipulatorMenuStack->isVisible() )
+    {
+        m_manipulatorMenuStack->hide();
+    }
+    else
+    {
+        m_manipulatorMenuStack->Show();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionScaleManipulator_triggered()
 {
     scenegraph::manipulator::ManipulatorManager& manipulatorManager =

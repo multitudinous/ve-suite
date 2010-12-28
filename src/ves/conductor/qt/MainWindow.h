@@ -114,10 +114,14 @@ protected Q_SLOTS:
     /// Autoconnected slot
     //void on_actionDebugPhysics_triggered();
 
-    /// Called when the physics icon is pressed on the toolbar
+    /// Called when the manipulators icon is pressed on the toolbar
     /// Autoconnected slot
     void on_actionManipulatorStack_triggered(); 
     
+    /// Called when the manipulators icon is pressed on the toolbar
+    /// Autoconnected slot
+    void on_actionManipulatorStack_hovered();
+
     /// Enables physics engine
     /// Autoconnected slot
     void on_actionScaleManipulator_triggered(); 
