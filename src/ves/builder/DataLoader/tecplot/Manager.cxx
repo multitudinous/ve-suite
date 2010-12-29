@@ -43,7 +43,7 @@ using tecplot::toolbox::Exception;
 namespace tecplot { namespace sdk { namespace integration { 
 
 /************************************************************************/
-/* Manager takes ownership of appEventMonitor and will destoy it on Manager::stop()
+/* Manager takes ownership of appEventMonitor and will destoy it on Manager::stop()*/
 /************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////
 Manager& Manager::instance()
@@ -57,6 +57,11 @@ Manager::Manager() :
 {
     m_appEventMonitor.reset(NULL);
 }
+////////////////////////////////////////////////////////////////////////////////
+/*Manager::Manager( Manager const& rhs )
+:
+ManagerAbstract( rhs )
+{;}*/
 ////////////////////////////////////////////////////////////////////////////////
 Manager::~Manager(void)
 {

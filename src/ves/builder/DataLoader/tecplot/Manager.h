@@ -42,8 +42,8 @@ class Manager : public ManagerAbstract
 private:
     Manager();
     virtual ~Manager();
-    Manager( Manager const& ){;}
-    Manager& operator=( Manager const& ){;}
+    //Manager( Manager const& rhs );
+    //Manager& operator=( Manager const& ){;}
 
 public:
     ///Singleton accessor method
