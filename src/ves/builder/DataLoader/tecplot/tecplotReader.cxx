@@ -352,20 +352,21 @@ void tecplotReader::ProcessAnyVectorData( int numNodalPointsInZone, vtkFloatArra
     std::string vecName;
 
     // Look for parameters that are part of a vector quantity...
+    int tecplotVar = 0;
     for( int i = 0; i < this->numVars; i++ )
     {
         std::string s( this->m_varName[ i ] );
-
         // if the beginning of the variable name looks like a vector component, then...
-        if( s.substr( 0, 2 ) == "X " )
+        tecplotVar = i + 1;
+        if( s.substr( 0, 2 ) == "X " && (tecplotVar != xIndex) )
         {
             this->ReadVectorNameAndUpdateIndex( 0, i, s, vecName, vectorIndex );
         }
-        else if( s.substr( 0, 2 ) == "Y " )
+        else if( s.substr( 0, 2 ) == "Y " && (tecplotVar != yIndex) )
         {
             this->ReadVectorNameAndUpdateIndex( 1, i, s, vecName, vectorIndex );
         }
-        else if( s.substr( 0, 2 ) == "Z " )
+        else if( s.substr( 0, 2 ) == "Z " && (tecplotVar != zIndex) )
         {
             this->ReadVectorNameAndUpdateIndex( 2, i, s, vecName, vectorIndex );
         }
@@ -518,16 +519,19 @@ void tecplotReader::ComputeDimension()
 #endif // PRINT_HEADERS
 
         // If this variable name corresponds to coordinate data, then record the 1-based index...
+        //if( i == 0 ) 
         if( strcmp( this->m_varName[ i ], "X" ) == 0 )
         {
             this->xIndex = i+1;
             this->dimension++;
         }
+        //else if( i == 1 ) 
         else if( strcmp( this->m_varName[ i ], "Y" ) == 0 )
         {
             this->yIndex = i+1;
             this->dimension++;
         }
+        //else if( i == 2 )
         else if( strcmp( this->m_varName[ i ], "Z" ) == 0 )
         {
             this->zIndex = i+1;
@@ -565,6 +569,7 @@ void tecplotReader::SeeIfDataSharedAcrossZones()
     // Appear to get same result regardless of zone, so just look at first zone
     EntIndex_t currentZone = 1; // zone numbers are 1-based
     {
+        int tecplotVar = 0;
         for( int i = 0; i < this->numVars; i++ )
         {
             EntIndex_t dataShareCount = TecUtilDataValueGetShareCount( currentZone, i+1 );
@@ -572,10 +577,12 @@ void tecplotReader::SeeIfDataSharedAcrossZones()
             std::cout << "for var " << i+1 << ", dataShareCount is " << dataShareCount << std::endl;
 #endif // PRINT_HEADERS
 
+            tecplotVar = 1 + i;
             // If variable name corresponds to one of the coordinate labels...
-            if( strcmp( this->m_varName[ i ], "X" ) == 0 ||
+            /*if( strcmp( this->m_varName[ i ], "X" ) == 0 ||
                 strcmp( this->m_varName[ i ], "Y" ) == 0 ||
-                strcmp( this->m_varName[ i ], "Z" ) == 0 )
+                strcmp( this->m_varName[ i ], "Z" ) == 0 )*/
+            if( (tecplotVar == xIndex) || (tecplotVar == yIndex) || (tecplotVar == zIndex) )
             {
                 if( dataShareCount == this->numZones )
                 {
@@ -614,11 +621,14 @@ void tecplotReader::InitializeVtkData( const EntIndex_t currentZone )
     }
 
     int paramCounter = 0;
+    int tecplotVar = 0;
     for( int i = 0; i < numVars; ++i )
     {
-        if( (strcmp( this->m_varName[ i ], "X" ) != 0) &&
+        /*if( (strcmp( this->m_varName[ i ], "X" ) != 0) &&
             (strcmp( this->m_varName[ i ], "Y" ) != 0) &&
-            (strcmp( this->m_varName[ i ], "Z" ) != 0) )
+            (strcmp( this->m_varName[ i ], "Z" ) != 0) )*/
+        tecplotVar = i + 1;
+        if( (tecplotVar != xIndex) && (tecplotVar != yIndex) && (tecplotVar != zIndex) )
         {
             parameterData[ paramCounter ]->SetName( m_varName[ i ] );
             paramCounter++;
@@ -1196,14 +1206,17 @@ void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const in
 
 void tecplotReader::ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone, const int numNodalPointsInZone )
 {
+    int tecplotVar = 0;
     for( int i = 0; i < this->numVars; i++ )
     {
         EntIndex_t dataShareCount = TecUtilDataValueGetShareCount( currentZone, i+1 );
         //cout << "for var " << i+1 << ", dataShareCount is " << dataShareCount << std::endl;
-
-        if( strcmp( this->m_varName[ i ], "X" ) == 0 ||
+        
+        tecplotVar = i + 1;
+        /*if( strcmp( this->m_varName[ i ], "X" ) == 0 ||
             strcmp( this->m_varName[ i ], "Y" ) == 0 ||
-            strcmp( this->m_varName[ i ], "Z" ) == 0 )
+            strcmp( this->m_varName[ i ], "Z" ) == 0 )*/
+        if( (tecplotVar == xIndex) || (tecplotVar == yIndex) || (tecplotVar == zIndex) )
         {
             // nodal coordinates already processed
         }
