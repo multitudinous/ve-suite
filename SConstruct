@@ -33,9 +33,7 @@ import SConsAddons.Util as sca_util
 import SConsAddons.Options as asc_opt
 import SConsAddons.Options.Options 
 import SConsAddons.Options.VTK
-import SConsAddons.Options.OSG
 import SConsAddons.Options.VRJuggler.VRJ
-import SConsAddons.Options.Boost
 import SConsAddons.Options.Xerces
 import SConsAddons.Options.WxWidgets
 import SConsAddons.AutoDist as sca_auto_dist
