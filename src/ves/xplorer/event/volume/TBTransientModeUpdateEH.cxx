@@ -51,6 +51,7 @@ TextureBasedTransientModeUpdateEventHandler::TextureBasedTransientModeUpdateEven
 ///////////////////////////////////////////////////////////////////
 TextureBasedTransientModeUpdateEventHandler
 ::TextureBasedTransientModeUpdateEventHandler( const TextureBasedTransientModeUpdateEventHandler& ceh )
+: ves::xplorer::event::TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedTransientModeUpdateEventHandler::~TextureBasedTransientModeUpdateEventHandler()

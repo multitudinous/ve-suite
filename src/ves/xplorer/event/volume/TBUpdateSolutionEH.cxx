@@ -53,6 +53,7 @@ TextureBasedUpdateSolutionEventHandler::TextureBasedUpdateSolutionEventHandler()
 ///////////////////////////////////////////////////////////////////
 TextureBasedUpdateSolutionEventHandler
 ::TextureBasedUpdateSolutionEventHandler( const TextureBasedUpdateSolutionEventHandler& ceh )
+: ves::xplorer::event::TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedUpdateSolutionEventHandler::~TextureBasedUpdateSolutionEventHandler()

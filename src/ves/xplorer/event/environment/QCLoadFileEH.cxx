@@ -48,7 +48,10 @@ QuatCamLoadFileEventHandler::QuatCamLoadFileEventHandler()
 ///////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler
 ::QuatCamLoadFileEventHandler( const QuatCamLoadFileEventHandler& ceh )
-{}
+    : 
+    ves::xplorer::event::EventHandler( ceh )
+{
+}
 /////////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler::~QuatCamLoadFileEventHandler()
 {}

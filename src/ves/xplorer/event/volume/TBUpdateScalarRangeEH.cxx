@@ -51,6 +51,7 @@ TextureBasedUpdateScalarRangeEventHandler::TextureBasedUpdateScalarRangeEventHan
 ///////////////////////////////////////////////////////////////////
 TextureBasedUpdateScalarRangeEventHandler
 ::TextureBasedUpdateScalarRangeEventHandler( const TextureBasedUpdateScalarRangeEventHandler& ceh )
+: ves::xplorer::event::TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedUpdateScalarRangeEventHandler::~TextureBasedUpdateScalarRangeEventHandler()

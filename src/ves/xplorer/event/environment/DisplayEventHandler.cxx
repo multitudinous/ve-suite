@@ -64,7 +64,8 @@ DisplayEventHandler::DisplayEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 DisplayEventHandler::DisplayEventHandler( const DisplayEventHandler& rhs )
-        : ves::xplorer::event::EventHandler()
+        : 
+        ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

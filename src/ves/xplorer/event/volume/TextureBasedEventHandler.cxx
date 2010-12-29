@@ -57,7 +57,7 @@ TextureBasedEventHandler::TextureBasedEventHandler()
 }
 ////////////////////////////////////////////////////////////
 TextureBasedEventHandler::TextureBasedEventHandler( const TextureBasedEventHandler& rhs )
-        : ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler( rhs )
 {
     _activeModel = rhs._activeModel;
     _activeTDSet = rhs._activeTDSet;

@@ -48,6 +48,8 @@ QuatCamClearDataEventHandler::QuatCamClearDataEventHandler()
 ///////////////////////////////////////////////////////////////////
 QuatCamClearDataEventHandler
 ::QuatCamClearDataEventHandler( const QuatCamClearDataEventHandler& ceh )
+    : 
+    ves::xplorer::event::EventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 QuatCamClearDataEventHandler::~QuatCamClearDataEventHandler()

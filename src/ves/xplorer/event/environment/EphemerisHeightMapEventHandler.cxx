@@ -52,6 +52,8 @@ EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler( const EphemerisHeightMapEventHandler& ceh )
+    : 
+    ves::xplorer::event::EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }

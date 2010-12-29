@@ -51,6 +51,8 @@ GeometryLODScaleEventHandler::GeometryLODScaleEventHandler()
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 GeometryLODScaleEventHandler::GeometryLODScaleEventHandler( const GeometryLODScaleEventHandler& ceh )
+    : 
+    ves::xplorer::event::EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }

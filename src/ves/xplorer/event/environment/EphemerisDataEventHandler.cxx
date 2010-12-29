@@ -50,6 +50,8 @@ EphemerisDataEventHandler::EphemerisDataEventHandler()
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 EphemerisDataEventHandler::EphemerisDataEventHandler( const EphemerisDataEventHandler& ceh )
+    : 
+    ves::xplorer::event::EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }
