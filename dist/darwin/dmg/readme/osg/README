@@ -1,0 +1,12 @@
+
+Name: OpenSceneGraph
+Version: 2.8.3
+Build Arguments:
+  ccmake
+    CMAKE_BUILD_TYPE to RelWithDebInfo
+    CMAKE_INSTALL_PREFIX to ${OSG_INSTALL_DIR}
+    CMAKE_OSX_ARCHITECTURES to x86_64
+  make install
+OS: Mac OS X 10.6
+Architecture: x86_64
+
