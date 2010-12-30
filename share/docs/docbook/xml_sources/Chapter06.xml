@@ -9,8 +9,78 @@
   <title>GIS Tools</title>
 
   <section>
-    <title>(coming soon)</title>
+    <title>Using GIS Tools in VE-Suite</title>
 
-    <para></para>
+    <para>To use VE-Suite's GIS tools: </para>
+
+    <orderedlist>
+      <listitem>
+        <para>Load a .ves file</para>
+      </listitem>
+
+      <listitem>
+        <para>In the VE-Xplorer menu, point to GIS</para>
+      </listitem>
+
+      <listitem>
+        <para>To add a planet, click Add Planet</para>
+      </listitem>
+
+      <listitem>
+        <para>To remove a planet, click Remove Planet</para>
+      </listitem>
+
+      <listitem>
+        <para>To add layers to a planet, click Configure Layers</para>
+
+        <orderedlist>
+          <listitem>
+            <para>To add a layer from a file, click Add file... and select the
+            appropriate file</para>
+          </listitem>
+
+          <listitem>
+            <para>To add a layer from WMS, click Add From WMS...</para>
+
+            <orderedlist>
+              <listitem>
+                <para>Enter the Server, Layers, and Styles</para>
+              </listitem>
+
+              <listitem>
+                <para>Select the appropriate image format</para>
+              </listitem>
+
+              <listitem>
+                <para>If you would like the layer to be transparent, check the
+                box next to Transparent</para>
+              </listitem>
+
+              <listitem>
+                <para>Click OK</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+
+          <listitem>
+            <para>To remove a layer, select the appropriate layer and click
+            Remove</para>
+          </listitem>
+
+          <listitem>
+            <para>When you are finished configuring layers, click OK</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+    </orderedlist>
+
+    <para>A visualization's latitude and longitude can also be changed in
+    VE-Suite. In the CADTree Manager, right-click on the appropriate node and
+    click Properties... </para>
+
+    <para>In the CAD Properties window, select the Geographic tab, enter the
+    appropriate longitude and latitude, and click OK. You can also enter a
+    location in the text box and click Geocode to have VE-Suite automatically
+    find the longitude and latitude data.</para>
   </section>
 </chapter>

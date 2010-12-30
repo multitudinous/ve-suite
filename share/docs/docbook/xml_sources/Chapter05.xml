@@ -9,8 +9,44 @@
   <title>Manipulation Tools</title>
 
   <section>
-    <title>(coming soon)</title>
+    <title>Using Manipulation Tools in VE-Suite</title>
 
-    <para></para>
+    <para>To use VE-Suite's manipulation tools, load your visualization file
+    and click the Transform Manipulator On/Off button in the toolbar. The four
+    manipulation mode buttons will be activated. To select a manipulator,
+    point it. When it turns yellow, click on it. The manipulator modes are
+    described below.</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Translate Manipulator Mode </para>
+
+        <para>Allows planar manipulation in the XY plane (blue planar
+        manipulator), YZ plane (red planar manipulator), or XZ plane (green
+        planar manipulator), or in the view plane (white circular
+        manipulator)</para>
+      </listitem>
+
+      <listitem>
+        <para>Rotate Manipulator Mode </para>
+
+        <para>Allows rotation around the X axis (red axial manipulator), Y
+        axis (green axial manipulator), Z axis (blue axial manipulator), or
+        around the view plane (white circular manipulator)</para>
+      </listitem>
+
+      <listitem>
+        <para>Scale Manipulator Mode </para>
+
+        <para>This mode is not currently implemented, but in the future it
+        will allow scaling of objects</para>
+      </listitem>
+
+      <listitem>
+        <para>Combo Manipulator Mode </para>
+
+        <para>Displays both translation and rotation manipulators</para>
+      </listitem>
+    </orderedlist>
   </section>
 </chapter>
