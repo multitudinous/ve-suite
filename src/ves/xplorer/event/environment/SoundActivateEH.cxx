@@ -50,6 +50,8 @@ SoundActivateEventHandler::SoundActivateEventHandler()
 ///////////////////////////////////////////////////////////////////
 SoundActivateEventHandler
 ::SoundActivateEventHandler( const SoundActivateEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     _activeModel = ceh._activeModel;
 }

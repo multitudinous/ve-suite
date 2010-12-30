@@ -50,6 +50,8 @@ SoundAddNewEventHandler::SoundAddNewEventHandler()
 ///////////////////////////////////////////////////////////////////
 SoundAddNewEventHandler
 ::SoundAddNewEventHandler( const SoundAddNewEventHandler& ceh )
+    :
+    EventHandler( ceh )
 {
     _activeModel = ceh._activeModel;
 }

@@ -61,7 +61,7 @@ ChangeWorkingDirectoryEventHandler::ChangeWorkingDirectoryEventHandler()
 {}
 ////////////////////////////////////////////////////////////
 ChangeWorkingDirectoryEventHandler::ChangeWorkingDirectoryEventHandler( const ChangeWorkingDirectoryEventHandler& rhs )
-        : ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler( rhs )
 {}
 ////////////////////////////////////
 ///Destructor                     //
