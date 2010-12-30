@@ -9,8 +9,47 @@
   <title>Ephemeris Tools</title>
 
   <section>
-    <title>(coming soon)</title>
+    <title>Using Ephemeris Tools in VE-Suite</title>
 
-    <para></para>
+    <para>To use VE-Suite's ephemeris tools:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Load your visualization</para>
+      </listitem>
+
+      <listitem>
+        <para>In the VE-Xplorer menu, click Ephemeris Data</para>
+      </listitem>
+
+      <listitem>
+        <para>In the Date and Time tab, select the correct date and time and
+        ensure that the box next to Display Ephemeris Data is checked</para>
+      </listitem>
+
+      <listitem>
+        <para>In the Latitude and Longitude tab, set the location by setting
+        the latitude and longitude or by loading a location</para>
+      </listitem>
+
+      <listitem>
+        <para>To save a location:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Set the longitude and latitude</para>
+          </listitem>
+
+          <listitem>
+            <para>Click Save location</para>
+          </listitem>
+
+          <listitem>
+            <para>Enter the new locations' name and click OK. That location
+            will now be available to load in the future.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+    </orderedlist>
   </section>
 </chapter>
