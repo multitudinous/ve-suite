@@ -1,0 +1,20 @@
+
+Name: osgBullet
+Version: 1.1.50
+Build Arguments:
+  ccmake
+    CMAKE_BUILD_TYPE to RelWithDebInfo
+    CMAKE_INSTALL_PREFIX to ${OSGBULLET_INSTALL_DIR}
+    BUILD_SHARED_LIBS to ON
+    OSGBULLET_BUILD_APPLICATIONS to ON
+    OSGBULLET_BUILD_EXAMPLES to OFF
+    OSGBULLET_BUILD_TESTS to OFF
+    OSGBULLET_USE_DOUBLE_PRECISION to OFF
+    BulletInstallType to Alternate Install Location
+    OSGInstallType to Alternate Install Location
+    BulletInstallLocation to ${BULLET_INSTALL_DIR}
+    OSGInstallLocation to ${OSG_INSTALL_DIR}
+  make install
+OS: Mac OS X 10.6
+Architecture: x86_64
+
