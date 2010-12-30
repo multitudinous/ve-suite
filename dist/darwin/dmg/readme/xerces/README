@@ -1,0 +1,12 @@
+
+Name: Xerces
+Version: 3.1.1
+Build Arguments:
+  configure
+    CFLAGS="-arch x86_64"
+    CXXFLAGS="-arch x86_64"
+    --prefix=${XERCES_INSTALL_DIR}
+  make install
+OS: Mac OS X 10.6
+Architecture: x86_64
+
