@@ -1,0 +1,14 @@
+
+Name: POCO
+Version: 1.4.0
+Build Arguments:
+  configure
+    --no-tests
+    --no-samples
+    --omit=Data/MySQL
+    --config=Darwin64
+    --prefix=${POCO_INSTALL_DIR}
+  make install
+OS: Mac OS X 10.6
+Architecture: x86_64
+
