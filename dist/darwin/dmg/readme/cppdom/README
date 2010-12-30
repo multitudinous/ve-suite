@@ -1,0 +1,13 @@
+
+Name: CppDOM
+Version: 1.0.3
+Build Arguments:
+  scons install
+    var_arch=x64
+    var_type=optimized
+    var_libtype=shared
+    darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk
+    prefix=${CPPDOM_INSTALL_DIR}
+OS: Mac OS X 10.6
+Architecture: x86_64
+
