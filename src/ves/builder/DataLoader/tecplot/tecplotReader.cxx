@@ -541,7 +541,6 @@ void tecplotReader::ComputeDimension()
         }
         else if( (i == 2) && hasZCoord )
         {
-        std::cout << i << std::endl;
             this->zIndex = i+1;
             this->dimension++;
         }
@@ -1339,6 +1338,7 @@ bool tecplotReader::TestForZVariable()
     // variable numbers are 1-based
     TecUtilVarGetName( 3, &this->m_varName[ 2 ] ); 
     std::string zVar( this->m_varName[ 2 ] );
+    std::cout << "The 3rd variable name is " << zVar << "." << std::endl;
     if( zVar[ 0 ] == 'Z' )
     {
         return true;
