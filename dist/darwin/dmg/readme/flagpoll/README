@@ -1,0 +1,9 @@
+
+Name: Flagpoll
+Version: 0.9.4
+Build Arguments:
+  python setup.py install
+    --prefix=${FLAGPOLL_INSTALL_DIR}
+OS: Mac OS X 10.6
+Architecture: x86_64
+

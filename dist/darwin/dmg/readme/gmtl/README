@@ -1,0 +1,9 @@
+
+Name: GMTL
+Version: 0.6.1
+Build Arguments:
+  scons install
+    prefix=${GMTL_INSTALL_DIR} 
+OS: Mac OS X 10.6
+Architecture: x86_64
+
