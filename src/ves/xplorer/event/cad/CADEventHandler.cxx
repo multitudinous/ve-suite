@@ -83,7 +83,7 @@ CADEventHandler::CADEventHandler()
 }
 ////////////////////////////////////////////////////////////
 CADEventHandler::CADEventHandler( const CADEventHandler& rhs )
-        : ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler( rhs )
 {
     m_cadNode = rhs.m_cadNode;
     m_activeModel = rhs.m_activeModel;
