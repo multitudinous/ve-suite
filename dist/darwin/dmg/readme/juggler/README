@@ -1,0 +1,13 @@
+
+Name: VR Juggler
+Version: 3.1.1
+Build Arguments:
+  autogen.sh
+  configure.pl
+    --with-boost=${BOOST_INSTALL_DIR}
+    --with-boost-includes=${BOOST_INSTALL_DIR}/include
+    --prefix=${JUGGLER_INSTALL_DIR}
+  make build install
+OS: Mac OS X 10.6
+Architecture: x86_64
+
