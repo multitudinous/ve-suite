@@ -69,7 +69,7 @@ CenterPointEventHandler::CenterPointEventHandler()
 CenterPointEventHandler::CenterPointEventHandler(
     const CenterPointEventHandler& rhs )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

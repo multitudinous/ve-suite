@@ -67,7 +67,7 @@ DeviceModeEventHandler::DeviceModeEventHandler()
 DeviceModeEventHandler::DeviceModeEventHandler(
     const DeviceModeEventHandler& rhs )
     :
-    ves::xplorer::event::EventHandler()
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
