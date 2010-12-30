@@ -1,0 +1,9 @@
+
+Name: Boost
+Version: 1.45.0
+Build Arguments:
+  bootstrap.sh --prefix=${BOOST_INSTALL_DIR}
+  bjam variant=release link=shared threading=multi install
+OS: Mac OS X 10.6
+Architecture: x86_64
+
