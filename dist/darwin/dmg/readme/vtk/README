@@ -1,0 +1,13 @@
+
+Name: VTK
+Version: 5.4.2
+Build Arguments:
+  ccmake
+    BUILD_SHARED_LIBS to ON
+    BUILD_TESTING to OFF
+    CMAKE_INSTALL_PREFIX to ${VTK_INSTALL_DIR}
+    VTK_USE_PARALLEL to ON
+  make install
+OS: Mac OS X 10.6
+Architecture: x86_64
+
