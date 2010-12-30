@@ -44,13 +44,22 @@ namespace Ui
 {
 class Visualization;
 }
+/*!\file Visualization.h
+ Visualization Qt Window
+ */
+/*!\class ves::conductor::Visualization
+ * This class manages the Visualization Qt window.
+ */
+/*!\namespace ves::conductor
+ * UI Namespace
+ */
 
 namespace ves
 {
 namespace conductor
 {
 class PropertyBrowser;
-
+    
 class Visualization : public QDialog
 {
     Q_OBJECT

@@ -34,7 +34,19 @@
 #define ICONSTACK_H
 
 #include <QtGui/QToolBar>
-
+/*!\file IconStack.h
+ Icon Stack Qt API
+ */
+/*!\class ves::conductor::IconStack
+ * This class helps manage Icon Stacks in the Qt UI.
+ */
+/*!\namespace ves::conductor
+ * Icon Stack wrapper
+ */
+namespace ves
+{
+namespace conductor
+{
 class IconStack : public QToolBar
 {
 Q_OBJECT
@@ -71,5 +83,7 @@ private:
     QAction* _connectAction( QAction* action );
 
 };
-
+    
+}
+}
 #endif // ICONSTACK_H

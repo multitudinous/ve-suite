@@ -30,12 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include "IconStack.h"
+#include <ves/conductor/qt/IconStack.h>
+
 #include <QtGui/QAction>
 
 #include <iostream>
 
-IconStack::IconStack( QWidget* positionParent, QWidget* parent ) :
+namespace ves
+{
+namespace conductor
+{
+////////////////////////////////////////////////////////////////////////////////
+IconStack::IconStack( QWidget* positionParent, QWidget* parent )
+    :
     QToolBar(parent),
     mPositionParent(positionParent),
     mPersistent(false)
@@ -47,7 +54,7 @@ IconStack::IconStack( QWidget* positionParent, QWidget* parent ) :
     setAutoFillBackground( true );
     hide();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void IconStack::Show()
 {
     if( mPositionParent )
@@ -61,38 +68,38 @@ void IconStack::Show()
     raise();
     adjustSize();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void IconStack::SetPersistence( bool persistence )
 {
     mPersistent = persistence;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void IconStack::AddAction ( QAction* action )
- {
-     addAction( action );
-     _connectAction( action );
- }
-
+{
+    addAction( action );
+    _connectAction( action );
+}
+////////////////////////////////////////////////////////////////////////////////
 QAction* IconStack::AddAction ( const QString& text )
 {
     return _connectAction( addAction( text ) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 QAction* IconStack::AddAction ( const QIcon& icon, const QString& text )
 {
     return _connectAction( addAction( icon, text ) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 QAction* IconStack::AddAction ( const QString& text, const QObject* receiver, const char* member )
 {
     return _connectAction( addAction( text, receiver, member ) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 QAction* IconStack::AddAction ( const QIcon& icon, const QString& text, const QObject* receiver, const char* member )
 {
    return  _connectAction( addAction( icon, text, receiver, member ) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 QAction* IconStack::_connectAction( QAction* action )
 {
     if( !mPersistent )
@@ -100,4 +107,7 @@ QAction* IconStack::_connectAction( QAction* action )
         QObject::connect( action, SIGNAL(triggered(bool)), SLOT(hide()) );
     }
     return action;
+}
+////////////////////////////////////////////////////////////////////////////////
+}
 }

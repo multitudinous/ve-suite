@@ -47,6 +47,16 @@ namespace Ui {
 
 class TreeModel;
 
+/*!\file TreeTab.h
+ Tree Tab
+ */
+/*!\class ves::conductor::TreeTab
+ * This class manages the CAD data for the Xplorer Qt window.
+ */
+/*!\namespace ves::conductor
+ * UI Namespace
+ */
+
 namespace ves
 {
 namespace conductor

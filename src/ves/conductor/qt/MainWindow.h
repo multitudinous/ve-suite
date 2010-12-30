@@ -35,20 +35,54 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QFileDialog>
 
-#include <ves/conductor/qt/IconStack.h>
-#include <ves/conductor/qt/TreeTab.h>
+//Needed for NodePath
+#include <osg/Node>
 
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 #include <ves/VEConfig.h>
 
-namespace ves { namespace conductor { namespace qt { namespace minerva { class LayersTree; } } } }
+#include <string>
+#include <map>
+
+
+namespace ves 
+{ 
+namespace conductor 
+{ 
+class PreferencesTab;
+class TreeTab;
+class IconStack;
+
+namespace qt 
+{ 
+namespace minerva 
+{ 
+class LayersTree; 
+} 
+} 
+} 
+}
 
 namespace Ui 
 {
-    class MainWindow;
+class MainWindow;
 } // Ui
 
+/*!\file MainWindow.h
+ Main Qt Window
+ */
+/*!\class ves::conductor::MainWindow
+ * This class manages the main Qt window.
+ */
+/*!\namespace ves::conductor
+ * UI Namespace
+ */
+
+namespace ves
+{
+namespace conductor
+{
 class VE_CONDUCTOR_QTUI_EXPORTS MainWindow : public QMainWindow 
 {
     Q_OBJECT
@@ -174,7 +208,7 @@ protected Q_SLOTS:
 
 protected Q_SLOTS:
     /// Slot corresponding to ActiveModelChanged queued signal
-    void QueuedOnActiveModelChanged( std::string modelID );
+    void QueuedOnActiveModelChanged( const std::string& modelID );
 
     /// Slot corresponding to ObjectPicked queued signal
     void QueuedOnObjectPicked( osg::NodePath nodePath );
@@ -192,11 +226,11 @@ private:
     ///Q file dialog
     QFileDialog* mFileDialog;
     ///File menu stack
-    IconStack* mFileOpsStack;
+    ves::conductor::IconStack* mFileOpsStack;
     ///Physics menu stack
-    IconStack* m_physicsMenuStack;
+    ves::conductor::IconStack* m_physicsMenuStack;
     ///Physics menu stack
-    IconStack* m_manipulatorMenuStack;
+    ves::conductor::IconStack* m_manipulatorMenuStack;
     ///Tree tab
     ves::conductor::TreeTab* mScenegraphTreeTab;
     ///The map of tabs
@@ -210,5 +244,12 @@ private:
     // Main tabs that this class owns and manages
     QWidget* mVisualizationTab;
 
-    ves::conductor::qt::minerva::LayersTree *mLayersTree;
+    ///The layers tree pointer
+    ves::conductor::qt::minerva::LayersTree* mLayersTree;
+    
+    ///The PreferencesTab pointer
+    ves::conductor::PreferencesTab* m_preferencesTab;
 };
+    
+}
+}

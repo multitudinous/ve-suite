@@ -146,6 +146,7 @@
 #include <iostream>
 
 using namespace ves::open::xml;
+using namespace ves::conductor;
 using namespace ves::xplorer;
 using namespace ves::xplorer::util;
 using namespace ves::xplorer::volume;

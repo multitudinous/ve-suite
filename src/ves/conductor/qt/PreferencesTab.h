@@ -45,6 +45,15 @@ namespace Ui {
 }
 
 
+/*!\file PreferencesTab.h
+ Preferences Tab
+ */
+/*!\class ves::conductor::PreferencesTab
+ * This class manages the preferences for Xplorer Qt window.
+ */
+/*!\namespace ves::conductor
+ * UI Namespace
+ */
 namespace ves
 {
 namespace conductor

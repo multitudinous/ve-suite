@@ -35,13 +35,16 @@
 
 #include "MainWindow.h"
 
-#include <ves/conductor/qt/ui_MainWindow.h>
-
 #include <QtGui/QPaintEvent>
+
+#include <ves/conductor/qt/ui_MainWindow.h>
 
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 #include <ves/conductor/qt/NetworkLoader.h>
 #include <ves/conductor/qt/CADFileLoader.h>
+#include <ves/conductor/qt/IconStack.h>
+#include <ves/conductor/qt/TreeTab.h>
+#include <ves/conductor/qt/PreferencesTab.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -80,6 +83,7 @@
 #include <iostream>
 
 using namespace ves::xplorer;
+using namespace ves::conductor;
 
 ///The Q_DECLARE_METATYPE maco allows us to use non-Qt types in 
 ///queued connections in Qt-signals
@@ -95,7 +99,8 @@ MainWindow::MainWindow(QWidget* parent) :
     mScenegraphTreeTab( 0 ),
     mActiveTab( "" ),
     mVisualizationTab( 0 ),
-    mLayersTree ( 0x0 )
+    mLayersTree ( 0 ),
+    m_preferencesTab( 0 )
 {
     ui->setupUi(this);
         
@@ -142,7 +147,8 @@ MainWindow::MainWindow(QWidget* parent) :
     
     // Create set of default dialogs that can be added as tabs
     mVisualizationTab = new ves::conductor::Visualization( 0 );
-    mScenegraphTreeTab = new ves::conductor::TreeTab();
+    mScenegraphTreeTab = new ves::conductor::TreeTab( 0 );
+    m_preferencesTab = new ves::conductor::PreferencesTab( 0 );
 
     // Connect queued signals for all slots connected via EventManager to ensure
     // that widgets can be altered during slot execution. All EventManager slots
@@ -402,21 +408,24 @@ void MainWindow::OnActiveModelChanged( const std::string& modelID )
     ActiveModelChanged( modelID );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::QueuedOnActiveModelChanged( std::string modelID )
+void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 {
     boost::ignore_unused_variable_warning( modelID );
 
     // We get rid of all existing tabs, then open only those appropriate
     // to the active model.
 
-    std::string LastKnownActive = mActiveTab;
+    const std::string LastKnownActive = mActiveTab;
 
     RemoveAllTabs();
+
+    //Put the preferences tab first
+    AddTab( m_preferencesTab, "Preferences" );
 
     // Show visualization tab?
     ves::xplorer::Model* model =
         ves::xplorer::ModelHandler::instance()->GetActiveModel( );
-
+    //Only if we have datasets
     if( model->GetNumberOfCfdDataSets() > 0 )
     {
         AddTab( mVisualizationTab, "Visualization" );
