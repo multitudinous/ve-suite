@@ -81,48 +81,50 @@ private:
     vtkPoints* vertex;
     vtkFloatArray** parameterData;
     int * timeToInitVtk;
-
+    ///???
     std::string getExtension( const std::string& s );
-
+    ///???
     int isFileReadable( const std::string filename );
-
+    ///???
     void ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
-
+    ///???
     vtkFloatArray* ZeroArray( std::string varName, int numTuples );
-
+    ///???
     void ReadVectorNameAndUpdateIndex( int currentIndex, int currentVar, std::string s, std::string& vecName, int* vectorIndex );
-
-    void ProcessAnyVectorData( int numNodalPointsInZone, vtkFloatArray** vectorData );
-
+    ///???
+    void ProcessAnyVectorData( vtkFloatArray** vectorData );
+    ///???
     void ComputeNumberOfOutputFiles();
-
+    ///???
     void ComputeDimension();
-
+    ///???
     void SeeIfDataSharedAcrossZones();
-
-    void InitializeVtkData( const EntIndex_t currentZone );
-
+    ///???
+    void InitializeVtkData();
+    ///???
     void ReadElementInfoInZone( const EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
                                 int & numNodesPerElement, int & numFacesPerCell, int & numNodalPointsInZone );
-
+    ///???
     void ReadZoneName( const EntIndex_t currentZone );
-
+    ///???
     void AddCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone,
-                         const int numNodesPerElement, const int numNodalPointsInZone );
-
+                         const int numNodesPerElement );
+    ///???
     void AddFaceCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone );
-
+    ///???
     void ReadNodalCoordinates( const EntIndex_t currentZone, const int numNodalPointsInZone );
-
+    ///???
     void ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone, const int numNodalPointsInZone );
-
-    void AttachPointsAndDataToGrid( const int numNodalPointsInZone );
-    
+    ///???
+    void AttachPointsAndDataToGrid();
+    ///???
     void CountNumberOfFilesUsingSolnTime();
-
+    ///???
     int GetStartingZoneForFile( const int fileNum );
-
+    ///???
     int * GetVtkInitArray();
+    ///Test variable index 3 for the Z coord array
+    bool TestForZVariable();
 };
 }
 }
