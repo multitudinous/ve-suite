@@ -1,0 +1,14 @@
+
+Name: ACE+TAO
+Version: 5.7.9
+Build Arguments:
+  configure
+    --disable-tao-tests
+    --disable-tao-examples
+    --disable-ace-tests
+    --disable-ace-examples
+    --prefix=${ACETAO_INSTALL_DIR}
+  make install
+OS: Mac OS X 10.6
+Architecture: x86_64
+

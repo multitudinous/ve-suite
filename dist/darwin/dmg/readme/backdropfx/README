@@ -1,0 +1,24 @@
+
+Name: backdropFX
+Version: 0.2.1
+Build Arguments:
+  ccmake
+    CMAKE_BUILD_TYPE to RelWithDebInfo
+    CMAKE_INSTALL_PREFIX to ${BACKDROPFX_INSTALL_DIR}
+    BDFX_BUILD_APPS to OFF
+    BDFX_BUILD_EXAMPLES to OFF
+    BDFX_BUILD_PROTOS to OFF
+    BDFX_BUILD_TESTS to OFF
+    BDFX_PROFILE_ENABLE to OFF
+    BulletInstallType to Alternate Install Location
+    OSGInstallType to Alternate Install Location
+    BulletInstallLocation to ${BULLET_INSTALL_DIR}
+    OSGInstallLocation to ${OSG_INSTALL_DIR}
+    OSGBULLET_ROOT to ${OSGBULLET_INSTALL_DIR}
+    OSGBULLETPLUS_ROOT to ${OSGBULLETPLUS_INSTALL_DIR}
+    OSGEPHEMERIS_ROOT to ${OSGEPHEMERIS_INSTALL_DIR}
+    Boost_INCLUDE_DIR to ${BOOST_INSTALL_DIR}/include
+  make install
+OS: Mac OS X 10.6
+Architecture: x86_64
+
