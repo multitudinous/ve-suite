@@ -1349,6 +1349,16 @@ bool tecplotReader::TestForZVariable()
         return true;
     }
 
+    if( zVar[ 0 ] == 'z' )
+    {
+        return true;
+    }
+    
+    if( zVar[ zVar.size() - 1 ] == 'z' )
+    {
+        return true;
+    }
+    
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
