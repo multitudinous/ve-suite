@@ -27,6 +27,9 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'TreeTab.h')]
 cppSources += lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'PreferencesTab.h')]
+cppSources += lib_env.qt_moc(source)
+
 source = [pj(buildSrcDir,'MainWindow.h')]
 cppSources += lib_env.qt_moc(source)
 
@@ -53,6 +56,9 @@ source = [pj(buildSrcDir,'titlebar.ui')]
 cppHeaders = lib_env.qt_uic(source)
 
 source = [pj(buildSrcDir,'TreeTab.ui')]
+cppHeaders += lib_env.qt_uic(source)
+
+source = [pj(buildSrcDir,'PreferencesTab.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
 source = [pj(buildSrcDir,'MainWindow.ui')]
