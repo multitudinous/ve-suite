@@ -11,7 +11,7 @@
   <section>
     <title>Using Manipulation Tools in VE-Suite</title>
 
-    <para>To use VE-Suite's manipulation tools, load your visualization file
+    <para>To use VE-Suite's manipulation tools, load your ves file
     and click the Transform Manipulator On/Off button in the toolbar. The four
     manipulation mode buttons will be activated. To select a manipulator,
     point it. When it turns yellow, click on it. The manipulator modes are

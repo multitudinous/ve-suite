@@ -109,6 +109,12 @@ env.Append(BUILDERS = {
             'htmlChunk': htmlChunkBuilder,
             'pdf': pdfBuilder})
 
+xmlFiles = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share','docs','docbook','xml_sources'), ['.xml'] )
+xmlFiles = map(lambda s: pj(baseDir, "xml_sources", "%s" %(s)), xmlFiles)
+xmlFiles.remove( srcs[ 0 ] )
+
+env.Depends( srcs, xmlFiles )
+env.Depends( resolvedSrcs, srcs)
 ##Build the docs.
 env.xmlResolve(srcs)
 
