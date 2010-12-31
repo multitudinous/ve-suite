@@ -1,1 +1,4 @@
 make NAME=osgBulletPlus VERSION=1.1.50 SOURCE_DIR=/stuff/data/skewmatrix-redmine-svn/osgBulletPlus/trunk TEMPLATE_DMG=/stuff/data/ves_trunk/dist/darwin/dmg/template_MacOSX10.6-x86_64.dmg SOURCE_FILES="install-mac"
+
+make NAME=osgBulletPlus VERSION=1.1.50 SOURCE_DIR=/stuff/data/skewmatrix-redmine-svn/osgBulletPlus/trunk TEMPLATE_DMG=/stuff/data/ves_trunk/dist/darwin/dmg/test_image.dmg SOURCE_FILES="install-mac" INSTALL_TARGET=/stuff/data/skewmatrix-redmine-svn/osgBulletPlus/trunk/install-mac INSTALL_README=readme/osgbulletplus/README
+

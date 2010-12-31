@@ -21,11 +21,14 @@
 NAME ?= MyApp
 VERSION ?= 0.1
 
-SOURCE_DIR ?= src
-SOURCE_FILES ?= README
+#SOURCE_DIR ?= src
+#SOURCE_FILES ?= README
 
 TEMPLATE_DMG ?= template.dmg
 
+INSTALL_TARGET ?= test
+
+INSTALL_README ?= README_test
 
 ################################################################################
 # DMG building. No editing should be needed beyond this point.
@@ -53,15 +56,20 @@ $(TEMPLATE_DMG).bz2:
 $(WC_DMG): $(TEMPLATE_DMG)
 	cp $< $@
 
-$(MASTER_DMG): $(WC_DMG) $(addprefix $(SOURCE_DIR)/,$(SOURCE_FILES))
+$(MASTER_DMG): $(WC_DMG)
 	@echo
 	@echo --------------------- Creating Disk Image --------------------
 	mkdir -p $(WC_DIR)
 	hdiutil attach "$(WC_DMG)" -noautoopen -quiet -mountpoint "$(WC_DIR)"
-	for i in $(SOURCE_FILES); do  \
-		rm -rf "$(WC_DIR)/$$i"; \
-		ditto -rsrc "$(SOURCE_DIR)/$$i" "$(WC_DIR)/$$i"; \
-	done
+	#for i in $(SOURCE_FILES); do  \
+	#	rm -rf "$(WC_DIR)/install"; \
+	#	ditto -rsrc "$(SOURCE_DIR)/$$i" "$(WC_DIR)/install"; \
+	#done
+	rm -rf "$(WC_DIR)/install"
+	ditto -rsrc "$(INSTALL_TARGET)" "$(WC_DIR)/install"
+	rm -rf "$(WC_DIR)/README"
+	ditto -rsrc "$(INSTALL_README)" "$(WC_DIR)/README"
+	#mv /Volumes/test_image /Volumes/$(NAME)_$(VERSION)
 	#rm -f "$@"
 	#hdiutil create -srcfolder "$(WC_DIR)" -format UDZO -imagekey zlib-level=9 "$@" -volname "$(NAME) $(VERSION)" -scrub -quiet
 	WC_DEV=`hdiutil info | grep "$(WC_DIR)" | grep "Apple_HFS" | awk '{print $$1}'` && \
