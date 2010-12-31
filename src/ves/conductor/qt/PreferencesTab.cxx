@@ -59,6 +59,10 @@ PreferencesTab::PreferencesTab(QWidget *parent) :
     
     m_featureBrowser->ParsePropertySet( m_propertySet );
     
+    ui->preferencesPropertyBrowser->setPropertyBrowser( m_featureBrowser );
+    ui->preferencesPropertyBrowser->RefreshContents();
+    ui->preferencesPropertyBrowser->show();
+    
     // No need to load before parsing, since values in browser are not
     // set during parsing. They're only set by signals from the property
     // set when things changed, which loading will do. But this doesn't
