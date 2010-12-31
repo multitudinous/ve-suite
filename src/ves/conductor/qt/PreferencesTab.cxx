@@ -35,6 +35,10 @@
 
 #include <ves/conductor/qt/PreferencesTab.h>
 
+#include <ves/xplorer/data/PreferencesPropertySet.h>
+
+#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+
 #include <iostream>
 
 namespace ves
@@ -47,6 +51,22 @@ PreferencesTab::PreferencesTab(QWidget *parent) :
     ui(new Ui::PreferencesTab)
 {
     ui->setupUi(this);
+    
+    m_featureBrowser = new PropertyBrowser( this );
+
+    m_propertySet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::PreferencesPropertySet() );
+    m_propertySet->WriteToDatabase();
+    
+    m_featureBrowser->ParsePropertySet( m_propertySet );
+    
+    // No need to load before parsing, since values in browser are not
+    // set during parsing. They're only set by signals from the property
+    // set when things changed, which loading will do. But this doesn't
+    // work until after parsing is complete.
+    //mTempSet->SetRecordID( text.toInt() );
+    //mTempSet->SetUUID( text.toStdString() );
+    m_propertySet->LoadFromDatabase();
+    m_featureBrowser->RefreshAll();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PreferencesTab::~PreferencesTab()

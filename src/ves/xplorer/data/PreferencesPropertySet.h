@@ -30,55 +30,59 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#ifndef VES_XPLORER_DATA_PREFERENCESPROPERTYSET_H
+#define VES_XPLORER_DATA_PREFERENCESPROPERTYSET_H
 
-#pragma once
+#include <ves/xplorer/data/PropertySet.h>
+#include <ves/xplorer/data/PropertyPtr.h>
 
-#define QT_NO_KEYWORDS
+#include <ves/VEConfig.h>
 
-#include <QtGui/QWidget>
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QModelIndex>
-
-#include <ves/xplorer/data/PropertySetPtr.h>
-
-namespace Ui {
-    class PreferencesTab;
-}
-
-
-/*!\file PreferencesTab.h
- Preferences Tab
- */
-/*!\class ves::conductor::PreferencesTab
- * This class manages the preferences for Xplorer Qt window.
- */
-/*!\namespace ves::conductor
- * UI Namespace
- */
 namespace ves
 {
-namespace conductor
+namespace xplorer
 {
-class PropertyBrowser;
+namespace data
+{
+/*!\file PreferencesPropertySet.h
+ *
+ */
 
-class PreferencesTab : public QWidget {
-    Q_OBJECT
+/*!\class ves::xplorer::data::PreferencesPropertySet
+ *
+ */
+
+/*!\namespace ves::xplorer::data
+ *
+ */
+class VE_DATA_EXPORTS PreferencesPropertySet : public PropertySet
+{
 public:
-    PreferencesTab(QWidget *parent = 0);
-    ~PreferencesTab();
-
-protected:
-    void changeEvent(QEvent *e);
-
-protected Q_SLOTS:
+    ///Constructor
+    PreferencesPropertySet();
+    ///Copy Contructor
+    PreferencesPropertySet( const PreferencesPropertySet& orig );
+    ///Destructor
+    virtual ~PreferencesPropertySet();
 
 private:
-    Ui::PreferencesTab *ui;
-    
-    ves::xplorer::data::PropertySetPtr m_propertySet;
-    
-    PropertyBrowser* m_featureBrowser;
-};
+    ///Update method
+    void UpdateModeOptions( PropertyPtr property );
+    ///Validate method
+    bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
+    ///Update method
+    void UpdateScalarDataOptions( PropertyPtr property );
+    ///Update method
+    void UpdateScalarDataRange( PropertyPtr property );
+    ///Update method
+    void UpdateVectorDataOptions( PropertyPtr property );
 
-} // namespace conductor
+private:
+    ///Create the skeleton
+    void CreateSkeleton();
+};
+} // namespace data
+} // namespace xplorer
 } // namespace ves
+
+#endif	/* _PreferencesPropertySet_H */
