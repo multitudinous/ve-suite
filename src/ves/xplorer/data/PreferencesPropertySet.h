@@ -68,13 +68,36 @@ public:
     virtual ~PreferencesPropertySet();
 
 private:
-    ///Update method
-    void UpdateNearFarRatio( PropertyPtr property );
-    ///Update method
-    void UpdateBackgroundColor( PropertyPtr property );
-    ///Update method
-    void UpdateDraggerScaling( PropertyPtr property );
+    ///Enable method
+    void EnableNearFarRatio( PropertyPtr property );
+    ///Enable method
+    void EnableBackgroundColor( PropertyPtr property );
+    ///Enable method
+    void EnableDraggerScaling( PropertyPtr property );
 
+    ///Relay method for passing signals on to xplorer
+    void UpdateBackgroundColor( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdateNavEqualZero( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdateNavGreaterZero( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdateShutdownXplorer( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdatePhysicsDebugger( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdateCADSelection( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdateScriptLogger( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdateScreenAlignedNormals( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdateDraggerScaling( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdateNearFarRatio( PropertyPtr property );
+    ///Relay method for passing signals on to xplorer
+    void UpdateLODScaling( PropertyPtr property );
+    
 private:
     ///Create the skeleton
     void CreateSkeleton();
@@ -83,7 +106,6 @@ private:
     typedef boost::signals2::signal< void ( const bool, const double  ) > UpdateCheckAndValueSignal_type;
     UpdateCheckAndValueSignal_type m_nearFarRatio;
     UpdateCheckAndValueSignal_type m_draggerScaling;
-    UpdateCheckAndValueSignal_type m_lodScaling;
 
     ///Update signal
     typedef boost::signals2::signal< void ( const bool, const std::vector< double >&  ) > UpdateCheckAndVectorSignal_type;
@@ -98,6 +120,10 @@ private:
     CheckValueSignal_type m_cadSelection;
     CheckValueSignal_type m_scriptLogger;
     CheckValueSignal_type m_screenAlignedNormals;    
+    
+    ///Update signal for check box preferences
+    typedef boost::signals2::signal< void ( const double ) > DoubleValueSignal_type;
+    DoubleValueSignal_type m_lodScaling;
 };
 } // namespace data
 } // namespace xplorer

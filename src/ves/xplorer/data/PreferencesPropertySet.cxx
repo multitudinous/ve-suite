@@ -55,7 +55,7 @@ PreferencesPropertySet::PreferencesPropertySet()
         name += ".GeometryLODScale";
         
         eventmanager::EventManager::instance()->RegisterSignal(
-           new SignalWrapper< UpdateCheckAndValueSignal_type >( &m_lodScaling ),
+           new SignalWrapper< DoubleValueSignal_type >( &m_lodScaling ),
            name, eventmanager::EventManager::unspecified_SignalType );
     }
     ///Signal for GeometryLODScale
@@ -181,12 +181,13 @@ void PreferencesPropertySet::CreateSkeleton()
     AddProperty( "GeometryLODScale", 1.00, "Geometry LOD Scale" );
     SetPropertyAttribute( "GeometryLODScale", "minimumValue", 0.00 );
     SetPropertyAttribute( "GeometryLODScale", "maximumValue", 100.00 );    
+    mPropertyMap["GeometryLODScale"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateLODScaling, this, _1 ) );
 
     ///Near far ratio
     AddProperty( "NearFarRatio", false, "Set Near-Far Ratio" );
     SetPropertyAttribute( "NearFarRatio", "isUIGroupOnly", false );
     SetPropertyAttribute( "NearFarRatio", "setExpanded", true );
-    mPropertyMap["NearFarRatio"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateNearFarRatio, this, _1 ) );
+    mPropertyMap["NearFarRatio"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableNearFarRatio, this, _1 ) );
 
     AddProperty( "NearFarRatio_Ratio", 0.000005, "Ratio" );
     SetPropertyAttribute( "NearFarRatio_Ratio", "minimumValue", 0.00 );
@@ -198,7 +199,7 @@ void PreferencesPropertySet::CreateSkeleton()
     AddProperty( "DraggerScaling", false, "Enable Dragger Scaling" );
     SetPropertyAttribute( "DraggerScaling", "isUIGroupOnly", false );
     SetPropertyAttribute( "DraggerScaling", "setExpanded", true );
-    mPropertyMap["DraggerScaling"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateDraggerScaling, this, _1 ) );
+    mPropertyMap["DraggerScaling"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableDraggerScaling, this, _1 ) );
 
     AddProperty( "DraggerScaling_Scale", 6.00,  "Scale Value" );
     SetPropertyAttribute( "DraggerScaling_Scale", "minimumValue", 0.00 );
@@ -210,7 +211,7 @@ void PreferencesPropertySet::CreateSkeleton()
     AddProperty( "UsePreferredBackgroundColor", false, "Use Preferred Background Color" );
     SetPropertyAttribute( "UsePreferredBackgroundColor", "isUIGroupOnly", false );
     SetPropertyAttribute( "UsePreferredBackgroundColor", "setExpanded", true );
-    mPropertyMap["UsePreferredBackgroundColor"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
+    mPropertyMap["UsePreferredBackgroundColor"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableBackgroundColor, this, _1 ) );
 
     AddProperty( "UsePreferredBackgroundColor_Red", 0.0, "Red" );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Red", "minimumValue", 0.00 );
@@ -231,23 +232,30 @@ void PreferencesPropertySet::CreateSkeleton()
     mPropertyMap["UsePreferredBackgroundColor_Blue"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
 
     AddProperty( "NavigationZEqual0Lock", false, "Navigation z = 0 Lock" );
+    mPropertyMap["NavigationZEqual0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateNavEqualZero, this, _1 ) );
 
     AddProperty( "NavigationZGreater0Lock", false, "Navigation z > 0 Lock" );
+    mPropertyMap["NavigationZGreater0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateNavGreaterZero, this, _1 ) );
 
     AddProperty( "ShutDownXplorerOption", false, "Shut Down Xplorer Option" );
+    mPropertyMap["ShutDownXplorerOption"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateShutdownXplorer, this, _1 ) );
 
     AddProperty( "PhysicsDebugger", false, "Physics Debugger" );
+    mPropertyMap["PhysicsDebugger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdatePhysicsDebugger, this, _1 ) );
 
     AddProperty( "CADSelection", false, "CAD Selection" );
-    
+    mPropertyMap["CADSelection"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCADSelection, this, _1 ) );
+
     AddProperty( "ScriptLogger", false, "Script Logger" );
+    mPropertyMap["ScriptLogger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateScriptLogger, this, _1 ) );
 
     AddProperty( "ScreenAlignedNormals", false, "Screen Aligned Normals" );
+    mPropertyMap["ScreenAlignedNormals"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateScreenAlignedNormals, this, _1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateNearFarRatio( PropertyPtr property )
+void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr property )
 {
-    bool value = boost::any_cast<bool>( GetProperty( "NearFarRatio" )->GetValue() );
+    bool value = boost::any_cast<bool>( property->GetValue() );
     
     if( value )
     {
@@ -257,11 +265,13 @@ void PreferencesPropertySet::UpdateNearFarRatio( PropertyPtr property )
     {
         GetProperty( "NearFarRatio_Ratio" )->SetDisabled();
     }
+    
+    UpdateNearFarRatio( GetProperty( "NearFarRatio_Ratio" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr property )
+void PreferencesPropertySet::EnableBackgroundColor( PropertyPtr property )
 {
-    bool value = boost::any_cast<bool>( GetProperty( "UsePreferredBackgroundColor" )->GetValue() );
+    bool value = boost::any_cast<bool>( property->GetValue() );
     
     if( value )
     {
@@ -275,11 +285,13 @@ void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr property )
         GetProperty( "UsePreferredBackgroundColor_Blue" )->SetDisabled();
         GetProperty( "UsePreferredBackgroundColor_Green" )->SetDisabled();
     }
+    
+    UpdateBackgroundColor( property );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateDraggerScaling( PropertyPtr property )
+void PreferencesPropertySet::EnableDraggerScaling( PropertyPtr property )
 {
-    bool value = boost::any_cast<bool>( GetProperty( "DraggerScaling" )->GetValue() );
+    bool value = boost::any_cast<bool>( property->GetValue() );
 
     if( value )
     {
@@ -289,5 +301,71 @@ void PreferencesPropertySet::UpdateDraggerScaling( PropertyPtr property )
     {
         GetProperty( "DraggerScaling_Scale" )->SetDisabled();
     }
+    
+    UpdateDraggerScaling( GetProperty( "DraggerScaling_Scale" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr property )
+{
+    double r = boost::any_cast<double>( GetPropertyValue( "UsePreferredBackgroundColor_Red" ) );
+    double g = boost::any_cast<double>( GetPropertyValue( "UsePreferredBackgroundColor_Green" ) );
+    double b = boost::any_cast<double>( GetPropertyValue( "UsePreferredBackgroundColor_Blue" ) );
+    std::vector< double > colors;
+    colors.push_back( r );
+    colors.push_back( g );
+    colors.push_back( b );
+    
+    m_backgroundColor( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateNavEqualZero( PropertyPtr property )
+{
+    m_navZEqual0( boost::any_cast<bool>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateNavGreaterZero( PropertyPtr property )
+{
+    m_navZGreater0( boost::any_cast<bool>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateShutdownXplorer( PropertyPtr property )
+{
+    m_shutdownXplorer( boost::any_cast<bool>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdatePhysicsDebugger( PropertyPtr property )
+{
+    m_physicsDebugger( boost::any_cast<bool>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateCADSelection( PropertyPtr property )
+{
+    m_cadSelection( boost::any_cast<bool>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateScriptLogger( PropertyPtr property )
+{
+    m_scriptLogger( boost::any_cast<bool>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateScreenAlignedNormals( PropertyPtr property )
+{
+    m_screenAlignedNormals( boost::any_cast<bool>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateDraggerScaling( PropertyPtr property )
+{
+    m_draggerScaling( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ), boost::any_cast<double>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateNearFarRatio( PropertyPtr property )
+{
+    m_nearFarRatio( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ), boost::any_cast<double>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateLODScaling( PropertyPtr property )
+{
+    m_lodScaling( boost::any_cast<double>( property->GetValue() ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+
