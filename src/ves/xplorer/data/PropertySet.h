@@ -113,7 +113,7 @@ public:
 
     ///
     /// Returns a pointer to the property identified by propertyName
-    virtual PropertyPtr GetProperty( const std::string& propertyName );
+    virtual PropertyPtr GetProperty( const std::string& propertyName ) const;
 
     ///
     /// Returns the boost::any main value of the property identified by

@@ -38,6 +38,8 @@
 
 #include <ves/VEConfig.h>
 
+#include <boost/signals2/signal.hpp>
+
 namespace ves
 {
 namespace xplorer
@@ -67,19 +69,35 @@ public:
 
 private:
     ///Update method
-    void UpdateModeOptions( PropertyPtr property );
-    ///Validate method
-    bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
+    void UpdateNearFarRatio( PropertyPtr property );
     ///Update method
-    void UpdateScalarDataOptions( PropertyPtr property );
+    void UpdateBackgroundColor( PropertyPtr property );
     ///Update method
-    void UpdateScalarDataRange( PropertyPtr property );
-    ///Update method
-    void UpdateVectorDataOptions( PropertyPtr property );
+    void UpdateDraggerScaling( PropertyPtr property );
 
 private:
     ///Create the skeleton
     void CreateSkeleton();
+    
+    ///Update signal containing new seed points dimensions
+    typedef boost::signals2::signal< void ( const bool, const double  ) > UpdateCheckAndValueSignal_type;
+    UpdateCheckAndValueSignal_type m_nearFarRatio;
+    UpdateCheckAndValueSignal_type m_draggerScaling;
+    UpdateCheckAndValueSignal_type m_lodScaling;
+
+    ///Update signal
+    typedef boost::signals2::signal< void ( const bool, const std::vector< double >&  ) > UpdateCheckAndVectorSignal_type;
+    UpdateCheckAndVectorSignal_type m_backgroundColor;
+
+    ///Update signal for check box preferences
+    typedef boost::signals2::signal< void ( const bool ) > CheckValueSignal_type;
+    CheckValueSignal_type m_navZEqual0;
+    CheckValueSignal_type m_navZGreater0;
+    CheckValueSignal_type m_shutdownXplorer;
+    CheckValueSignal_type m_physicsDebugger;
+    CheckValueSignal_type m_cadSelection;
+    CheckValueSignal_type m_scriptLogger;
+    CheckValueSignal_type m_screenAlignedNormals;    
 };
 } // namespace data
 } // namespace xplorer

@@ -57,8 +57,13 @@ PreferencesTab::PreferencesTab(QWidget *parent) :
     m_propertySet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::PreferencesPropertySet() );
     m_propertySet->WriteToDatabase();
     
+    // Let the PropertyBrowser container pars the initial property set
     m_featureBrowser->ParsePropertySet( m_propertySet );
     
+    // ui.preferencesPropertyBrowser is an instance of GenericPropertyBrowser, 
+    // which knows how
+    // to take the Qt-ized data from a PropertyBrowser such as
+    // m_featureBrowser and display it in the GUI.
     ui->preferencesPropertyBrowser->setPropertyBrowser( m_featureBrowser );
     ui->preferencesPropertyBrowser->RefreshContents();
     ui->preferencesPropertyBrowser->show();
@@ -67,8 +72,6 @@ PreferencesTab::PreferencesTab(QWidget *parent) :
     // set during parsing. They're only set by signals from the property
     // set when things changed, which loading will do. But this doesn't
     // work until after parsing is complete.
-    //mTempSet->SetRecordID( text.toInt() );
-    //mTempSet->SetUUID( text.toStdString() );
     m_propertySet->LoadFromDatabase();
     m_featureBrowser->RefreshAll();
 }
@@ -76,6 +79,7 @@ PreferencesTab::PreferencesTab(QWidget *parent) :
 PreferencesTab::~PreferencesTab()
 {
     delete ui;
+    delete m_featureBrowser;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesTab::changeEvent(QEvent *e)

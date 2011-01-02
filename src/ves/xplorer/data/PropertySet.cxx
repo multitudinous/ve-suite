@@ -124,9 +124,9 @@ const PropertySet::PSVectorOfStrings& PropertySet::GetPropertyList()
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-PropertyPtr PropertySet::GetProperty( const std::string& propertyName )
+PropertyPtr PropertySet::GetProperty( const std::string& propertyName ) const
 {
-    PropertyMap::iterator iterator = mPropertyMap.find( propertyName );
+    PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
     {
         return (*iterator ).second;
