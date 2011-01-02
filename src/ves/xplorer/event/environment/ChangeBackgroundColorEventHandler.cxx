@@ -31,14 +31,19 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/environment/ChangeBackgroundColorEventHandler.h>
+
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/EnvironmentHandler.h>
+
 #include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
 
 #include <osgText/Text>
 
@@ -47,37 +52,36 @@
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
-#ifdef WIN32
-#include <direct.h>
-#else
-#include <unistd.h>
-#endif
-
 using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler()
         : ves::xplorer::event::EventHandler()
-{}
-////////////////////////////////////////////////////////////
+{
+    CONNECTSIGNALS_2( "%UsePreferredBackgroundColor",
+                     void ( const bool enable, const std::vector< double >& color ),
+                     &ChangeBackgroundColorEventHandler::UpdateBackgroundColor,
+                     m_connections, any_SignalType, normal_Priority );    
+}
+////////////////////////////////////////////////////////////////////////////////
 ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler( const ChangeBackgroundColorEventHandler& rhs )
         : 
         ves::xplorer::event::EventHandler( rhs )
 {}
-////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ///Destructor                     //
-////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ChangeBackgroundColorEventHandler::~ChangeBackgroundColorEventHandler()
 {}
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {}
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ///Exectute the event                                                        //
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ChangeBackgroundColorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
@@ -86,12 +90,10 @@ void ChangeBackgroundColorEventHandler::Execute( const ves::open::xml::XMLObject
     activeModelDVP->GetData( color );
     if( !color.empty() )
     {
-        ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
-        ves::xplorer::EnvironmentHandler::instance()->
-            GetHeadsUpDisplay()->SetTextColor( color );
+        UpdateBackgroundColor( true, color );
     }
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ChangeBackgroundColorEventHandler& ChangeBackgroundColorEventHandler::operator=( const ChangeBackgroundColorEventHandler& rhs )
 {
     if( this != &rhs )
@@ -100,3 +102,11 @@ ChangeBackgroundColorEventHandler& ChangeBackgroundColorEventHandler::operator=(
     }
     return *this;
 }
+////////////////////////////////////////////////////////////////////////////////
+void ChangeBackgroundColorEventHandler::UpdateBackgroundColor( const bool enable, const std::vector< double >& color )
+{
+    ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
+    ves::xplorer::EnvironmentHandler::instance()->
+        GetHeadsUpDisplay()->SetTextColor( color );
+}
+////////////////////////////////////////////////////////////////////////////////

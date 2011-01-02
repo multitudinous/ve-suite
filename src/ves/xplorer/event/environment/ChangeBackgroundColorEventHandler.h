@@ -70,6 +70,9 @@ public:
     ///Equal operator
     ChangeBackgroundColorEventHandler& operator=( const ChangeBackgroundColorEventHandler& rhs );
 
+    ///Update background color
+    void UpdateBackgroundColor( const bool enable, const std::vector< double >& color );
+
 protected:
 };
 

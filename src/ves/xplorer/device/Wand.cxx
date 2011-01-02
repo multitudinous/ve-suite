@@ -56,10 +56,8 @@
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
-#ifdef QT_ON
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
-#endif
 
 // --- osgBullet Includes --- //
 #include <osgwTools/AbsoluteModelTransform.h>
@@ -117,13 +115,11 @@ Wand::Wand()
     m_beamLineSegment = new osgUtil::LineSegmentIntersector(
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
 
-#ifdef QT_ON
     eventmanager::EventManager::instance()->RegisterSignal(
        new eventmanager::SignalWrapper< InteractionSignal_type >( &m_interactionSignal ),
        "WandInteractionSignal",
        eventmanager::EventManager::input_SignalType);
-#endif // QT_ON
-    
+
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////

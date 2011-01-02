@@ -38,6 +38,9 @@
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/device/Wand.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -58,7 +61,10 @@ DeviceEventHandler::DeviceEventHandler()
     :
     ves::xplorer::event::EventHandler()
 {
-    ;
+    CONNECTSIGNALS_1( "%CADSelection",
+                     void ( const bool enable ),
+                     &DeviceEventHandler::UpdateCADSelectionMode,
+                     m_connections, any_SignalType, normal_Priority );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler( const DeviceEventHandler& rhs )
@@ -102,9 +108,7 @@ void DeviceEventHandler::Execute(
     {
         unsigned int cadSelection;
         deviceDVP->GetData( cadSelection );
-        static_cast< ves::xplorer::device::Wand* >( 
-            DeviceHandler::instance()->GetDevice( device::Device::WAND ) )->
-            SetCADSelectionMode( cadSelection );
+        UpdateCADSelectionMode( cadSelection );
         return;
     }
 }
@@ -118,5 +122,12 @@ DeviceEventHandler& DeviceEventHandler::operator=(
     }
 
     return *this;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceEventHandler::UpdateCADSelectionMode( const bool enable )
+{
+    static_cast< ves::xplorer::device::Wand* >( 
+        DeviceHandler::instance()->GetDevice( device::Device::WAND ) )->
+        SetCADSelectionMode( enable );
 }
 ////////////////////////////////////////////////////////////////////////////////

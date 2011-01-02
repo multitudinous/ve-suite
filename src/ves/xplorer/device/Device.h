@@ -41,6 +41,8 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 #include <ves/open/xml/CommandPtr.h>
 
 // --- VR Juggler Includes --- //
@@ -194,6 +196,12 @@ public:
 	///\param input Flag to insure translation doesn't leave zero plane
 	void SetZEqualsZeroFlag( int input);
 
+    ///Used as the slot for nav control signals
+    void UpdateZEqualZero( const bool enable );
+    
+    ///Used as the slot for nav control signals
+    void UpdateZGreaterZero( const bool enable );
+    
 protected:
     ///Process the selection of a piece of geometry
     virtual void ProcessSelection();
@@ -258,6 +266,10 @@ protected:
 
     ///
     scenegraph::camera::CameraManager& m_cameraManager;
+
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+
 };
 } //end device
 } //end xplorer

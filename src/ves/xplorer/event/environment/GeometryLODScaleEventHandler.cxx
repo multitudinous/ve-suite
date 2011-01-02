@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #include <ves/xplorer/event/environment/GeometryLODScaleEventHandler.h>
+
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -40,26 +40,33 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
+
 #include <osgEphemeris/EphemerisModel.h>
 
 using namespace ves::xplorer::event;
 
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 GeometryLODScaleEventHandler::GeometryLODScaleEventHandler()
 {
     m_activeModel = 0;
+    CONNECTSIGNALS_1( "%GeometryLODScale",
+                     void ( const double lodScale ),
+                     &GeometryLODScaleEventHandler::UpdateLODScale,
+                     m_connections, any_SignalType, normal_Priority );        
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 GeometryLODScaleEventHandler::GeometryLODScaleEventHandler( const GeometryLODScaleEventHandler& ceh )
     : 
     ves::xplorer::event::EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 GeometryLODScaleEventHandler::~GeometryLODScaleEventHandler()
 {}
-///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 GeometryLODScaleEventHandler&
 GeometryLODScaleEventHandler::operator=( const GeometryLODScaleEventHandler& rhs )
 {
@@ -69,7 +76,7 @@ GeometryLODScaleEventHandler::operator=( const GeometryLODScaleEventHandler& rhs
     }
     return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void GeometryLODScaleEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     try
@@ -81,9 +88,7 @@ void GeometryLODScaleEventHandler::Execute( const ves::open::xml::XMLObjectPtr& 
                 geometryLODScaleCmd->GetDataValuePair( "Geometry LOD Scale" );
             long alpha = 0;
             scaleValue->GetData( alpha );
-
-            double scale = .0001*exp( alpha * .18420680745);
-            ves::xplorer::EnvironmentHandler::instance()->SetGlobalLODScale( scale );
+            UpdateLODScale( alpha );
         }
     }
     catch ( ... )
@@ -95,7 +100,7 @@ void GeometryLODScaleEventHandler::Execute( const ves::open::xml::XMLObjectPtr& 
     }
 
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void GeometryLODScaleEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {
     try
@@ -115,5 +120,10 @@ void GeometryLODScaleEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase
         m_activeModel = 0;
     }
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
+void GeometryLODScaleEventHandler::UpdateLODScale( const double lodScale  )
+{
+    double scale = .0001*exp( lodScale * .18420680745);
+    ves::xplorer::EnvironmentHandler::instance()->SetGlobalLODScale( scale );
+}
+////////////////////////////////////////////////////////////////////////////////

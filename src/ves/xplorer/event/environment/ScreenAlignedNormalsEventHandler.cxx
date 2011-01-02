@@ -32,9 +32,14 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include <ves/xplorer/event/environment/ScreenAlignedNormalsEventHandler.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
+
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -42,22 +47,27 @@
 
 using namespace ves::xplorer::event;
 
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ScreenAlignedNormalsEventHandler::ScreenAlignedNormalsEventHandler()
 {
     m_activeModel = 0;
+
+    CONNECTSIGNALS_1( "%ScreenAlignedNormals",
+                     void ( const bool enable ),
+                     &ScreenAlignedNormalsEventHandler::UpdateScreenAlignedNormals,
+                     m_connections, any_SignalType, normal_Priority );    
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ScreenAlignedNormalsEventHandler::ScreenAlignedNormalsEventHandler( const ScreenAlignedNormalsEventHandler& ceh )
     :
     EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ScreenAlignedNormalsEventHandler::~ScreenAlignedNormalsEventHandler()
 {}
-///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ScreenAlignedNormalsEventHandler&
 ScreenAlignedNormalsEventHandler::operator=( const ScreenAlignedNormalsEventHandler& rhs )
 {
@@ -67,7 +77,7 @@ ScreenAlignedNormalsEventHandler::operator=( const ScreenAlignedNormalsEventHand
     }
     return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ScreenAlignedNormalsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     try
@@ -81,9 +91,7 @@ void ScreenAlignedNormalsEventHandler::Execute( const ves::open::xml::XMLObjectP
                 GetDataValuePair( "Screen Aligned Toggle Value" );
             long alpha = 0;
             scaleValue->GetData( alpha );
-
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                SetScreenAlignedNormals( alpha );
+            UpdateScreenAlignedNormals( alpha );
         }
     }
     catch ( ... )
@@ -92,7 +100,7 @@ void ScreenAlignedNormalsEventHandler::Execute( const ves::open::xml::XMLObjectP
         std::cout << "Invalid command passed to ScreenAlignedNormalsEventHandler!!" << std::endl;
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ScreenAlignedNormalsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {
     try
@@ -112,5 +120,10 @@ void ScreenAlignedNormalsEventHandler::SetGlobalBaseObject( ves::xplorer::Global
         m_activeModel = 0;
     }
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
+void ScreenAlignedNormalsEventHandler::UpdateScreenAlignedNormals( const bool enable )
+{
+    ves::xplorer::scenegraph::SceneManager::instance()->
+        SetScreenAlignedNormals( enable );
+}
+////////////////////////////////////////////////////////////////////////////////

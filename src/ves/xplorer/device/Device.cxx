@@ -34,6 +34,9 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Device.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
@@ -85,7 +88,15 @@ Device::Device( const Device::Type& type )
     m_manipulatorManager( m_sceneManager.GetManipulatorManager() ),
     m_cameraManager( m_sceneManager.GetCameraManager() )
 {
-    ;
+    CONNECTSIGNALS_1( "%NavigationZEqual0Lock",
+                     void ( const bool enable ),
+                     &Device::UpdateZEqualZero,
+                     m_connections, any_SignalType, normal_Priority );    
+    
+    CONNECTSIGNALS_1( "%NavigationZGreater0Lock",
+                     void ( const bool enable ),
+                     &Device::UpdateZGreaterZero,
+                     m_connections, any_SignalType, normal_Priority );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device( const Device& device )
@@ -341,5 +352,15 @@ void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, do
 	{
             worldTranslation[ 2 ] = 0;
 	}
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::UpdateZEqualZero( const bool enable )
+{
+    SetZEqualsZeroFlag( enable );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::UpdateZGreaterZero( const bool enable )
+{
+    SetSubZeroFlag( enable );
 }
 ////////////////////////////////////////////////////////////////////////////////

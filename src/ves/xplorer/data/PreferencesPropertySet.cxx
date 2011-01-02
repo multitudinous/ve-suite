@@ -48,7 +48,7 @@ using namespace ves::xplorer::data;
 PreferencesPropertySet::PreferencesPropertySet()
 {
     using eventmanager::SignalWrapper;
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale x
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -58,7 +58,7 @@ PreferencesPropertySet::PreferencesPropertySet()
            new SignalWrapper< DoubleValueSignal_type >( &m_lodScaling ),
            name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale - broken
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -68,7 +68,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< UpdateCheckAndValueSignal_type >( &m_nearFarRatio ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale x
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -78,7 +78,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< UpdateCheckAndValueSignal_type >( &m_draggerScaling ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale x
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -88,7 +88,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< UpdateCheckAndVectorSignal_type >( &m_backgroundColor ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale x
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -98,7 +98,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< CheckValueSignal_type >( &m_navZEqual0 ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale x 
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -108,7 +108,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< CheckValueSignal_type >( &m_navZGreater0 ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale - not used
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -118,7 +118,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< CheckValueSignal_type >( &m_shutdownXplorer ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale - wait
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -128,7 +128,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< CheckValueSignal_type >( &m_physicsDebugger ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale x
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -138,7 +138,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< CheckValueSignal_type >( &m_cadSelection ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale - not used
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
@@ -148,7 +148,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< CheckValueSignal_type >( &m_scriptLogger ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale
+    ///Signal for GeometryLODScale x
     {
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );

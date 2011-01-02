@@ -71,6 +71,9 @@ public:
     ///\param baseObject Active model
     virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject );
 
+    ///Update screen aligned normals
+    void UpdateScreenAlignedNormals( const bool enable );
+    
 protected:
     ves::xplorer::Model* m_activeModel;///<The active cfdModel
 };

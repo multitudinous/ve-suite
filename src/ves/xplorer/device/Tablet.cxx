@@ -65,13 +65,13 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
-Tablet::Tablet( )
+Tablet::Tablet()
     :
-    Device( TABLET )
+    Device( TABLET ),
+    rotationFlag( 1 )
 {
     head.init( "VJHead" );
 
-    rotationFlag = 1;
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
