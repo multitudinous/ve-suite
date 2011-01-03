@@ -76,6 +76,7 @@ public:
     virtual void InitializeNode( osg::Group* veworldDCS );
     virtual void PreFrameUpdate();
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
+    virtual void RemoveSelfFromSG();
 
 protected:
 

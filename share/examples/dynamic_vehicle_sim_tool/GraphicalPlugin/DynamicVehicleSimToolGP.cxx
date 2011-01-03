@@ -124,20 +124,7 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolGP::~DynamicVehicleSimToolGP()
 {
-    m_runSampleThread = false;
-    if( m_sampleThread )
-    {
-        try
-        {
-            m_sampleThread->kill();
-            m_sampleThread->join();
-        }
-        catch ( ... )
-        {
-            ;//do nothing
-        }
-        delete m_sampleThread;
-    }
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::InitializeNode(
@@ -301,6 +288,10 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
     {
         GetSimState( simState );
         vpr::System::msleep( 100 );  // thenth-second delay
+        if( simState == "Exit" )
+        {
+            return;
+        }
     }
 
     int status;
@@ -561,5 +552,29 @@ void DynamicVehicleSimToolGP::GetComputerData( std::string& computerName, std::s
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     computerName = m_computerName;
     computerPort = m_computerPort;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::RemoveSelfFromSG()
+{
+    mOnSceneGraph = false;
+    mWorldDCS->removeChild( mDCS.get() );
+
+    m_runSampleThread = false;
+    if( m_sampleThread )
+    {
+        try
+        {
+            std::string exitStr( "Exit" );
+            SetSimState( exitStr );
+            vpr::System::msleep( 300 );
+            m_sampleThread->kill();
+            m_sampleThread->join();
+            delete m_sampleThread;
+        }
+        catch( ... )
+        {
+            ;//do nothing
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
