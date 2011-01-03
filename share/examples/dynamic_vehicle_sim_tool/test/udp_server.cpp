@@ -90,7 +90,7 @@ int main (int argc, char* argv[])
         std::ofstream outputFile( "test_data_out.txt" );
         // Loop forever reading messages from clients.
         while ( true )
-      {
+        {
          vpr::InetAddr addr;
 
          try
@@ -131,7 +131,7 @@ int main (int argc, char* argv[])
              double tempDouble = 0;
              for( size_t i = 0; i < splitVec.size(); ++i )
              {
-                 std::cout << "<" << splitVec.at( i ) << "> ";
+                 //std::cout << "<" << splitVec.at( i ) << "> ";
                  try
                  {
                      tempDouble = boost::lexical_cast<double>( splitVec.at( i ) );
@@ -142,7 +142,7 @@ int main (int argc, char* argv[])
                      std::cout << "cannot cast data " << ex.what() << std::endl;
                  }
              }
-             std::cout << std::flush << std::endl;
+             //std::cout << std::flush << std::endl;
 
             /*for( size_t i = 0; i < d2.size(); ++i )
             {

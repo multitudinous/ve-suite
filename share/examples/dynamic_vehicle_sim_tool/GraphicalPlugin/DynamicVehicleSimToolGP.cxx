@@ -124,7 +124,20 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolGP::~DynamicVehicleSimToolGP()
 {
-    ;
+    m_runSampleThread = false;
+    if( m_sampleThread )
+    {
+        try
+        {
+            m_sampleThread->kill();
+            m_sampleThread->join();
+        }
+        catch ( ... )
+        {
+            ;//do nothing
+        }
+        delete m_sampleThread;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::InitializeNode(
@@ -139,17 +152,23 @@ void DynamicVehicleSimToolGP::InitializeNode(
 void DynamicVehicleSimToolGP::PreFrameUpdate()
 {
     UpdateSelectedGeometryPositions();
-        
+    bool syncedData = true;
     if( m_positionStack.size() < m_animationedNodes.size() )
     {
+        syncedData = false;
         std::cout << "we have a problem with the position stack size." << std::endl;
     }
     
     for( size_t i = 0; i < m_animationedNodes.size(); ++i )
     {
         std::string cadID = m_animationedNodes.at( i ).first;
-        osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode = m_animationedNodes.at( i ).second;
-        tempNode->SetMat( m_positionStack.at( i  ) );
+        //std::cout << cadID << std::endl;
+        osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode = 
+            m_animationedNodes.at( i ).second;
+        if( syncedData )
+        {
+            tempNode->SetMat( m_positionStack.at( i  ) );
+        }
     }
     
     //size_t constrainedGeom = 0;
@@ -228,15 +247,17 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         ves::open::xml::DataValuePairPtr dvp = 
             m_currentCommand->GetDataValuePair( "Contrainted Geometry" );
         std::string constrainedGeom;
-        dvp->GetData( constrainedGeom );
-        if( !constrainedGeom.empty() )
+        //if( dvp )
+        //    dvp->GetData( constrainedGeom );
+
+        if( !constrainedGeom.empty() ) //&& (constrainedGeom != "No Geom") )
         {
             m_constrainedGeom = 
                 mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
         }
 
-        std::cout << constrainedGeom << std::endl;
+        std::cout << "geom map update " << constrainedGeom << std::endl;
         return;
     }
 
@@ -297,6 +318,7 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
             std::cout << "cannot cast port data. defaulting to port " << port << std::endl;
         }
         
+        m_runSampleThread = true;
 
         // Create a datagram socket that will be bound to port.
         vpr::InetAddr local;
@@ -344,7 +366,7 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
                                                             addr);
                     
                     // If we read anything, print it and send a response.
-                    //std::cout << "Read '" << recv_buf << "' (" << bytes
+                    //std::cout << "Read '" << " " << "' (" << bytes
                     //    << " bytes) from " << addr.getAddressString()
                     //    << std::endl;
                     bufferData.resize( 0 );
@@ -446,6 +468,12 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
     gmtl::Matrix44d transMat;
     std::vector< double > positionData;
     GetPositionData( positionData );
+    if( positionData.size() == 0 )
+    {
+        positionData.resize( 9, 0.0 );
+        positionData.at( 3 ) = 1.0;
+        positionData.at( 7 ) = 1.0;
+    }
     unsigned int numObjects = positionData.size() / 9;
 
     std::string simState;
@@ -457,18 +485,31 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
             positionData.at( i ) = 0.0;
         }
     }
-
+    //std::cout << numObjects << std::endl;
     for( size_t i = 0; i < numObjects; ++i )
     {
-        GetPositionData( positionData );
-        posData.set( positionData.at( 0 ), positionData.at( 1 ), positionData.at( 2 ) );
-        xVec.set( positionData.at( 3 ), positionData.at( 4 ), positionData.at( 5 ) );
-        yVec.set( positionData.at( 6 ), positionData.at( 7 ), positionData.at( 8 ) );
-        gmtl::cross( zVec, xVec, yVec );
-        
-        transMat.set( xVec[ 0 ], xVec[ 1 ], xVec[ 2 ], posData[ 0 ]*cm2ft,
-                      yVec[ 0 ], yVec[ 1 ], yVec[ 2 ], posData[ 1 ]*cm2ft,
-                      zVec[ 0 ], zVec[ 1 ], zVec[ 2 ], posData[ 2 ]*cm2ft,
+        //GetPositionData( positionData );
+        posData.set( positionData.at( 0 ), -positionData.at( 2 ), positionData.at( 1 ) );
+        //std::cout << posData << std::endl;
+        //std::cout << positionData.at( 3 ) << ", " << positionData.at( 4 ) << ", " << positionData.at( 5 )<< std::endl;
+        //std::cout << positionData.at( 6 ) << ", " << positionData.at( 7 ) << ", " << positionData.at( 8 )<< std::endl;
+        //std::cout << positionData.at( 3 ) << ", " << positionData.at( 4 ) << ", " << positionData.at( 5 )<< std::endl;
+        xVec.set( positionData.at( 3 ), -positionData.at( 5 ), positionData.at( 4 ) );
+        zVec.set( positionData.at( 6 ), -positionData.at( 8 ), positionData.at( 7 ) );
+
+        yVec.set( (zVec[1]*xVec[2]) - (zVec[2]*xVec[1]),
+                  (zVec[2]*xVec[0]) - (zVec[0]*xVec[2]),
+                  (zVec[0]*xVec[1]) - (zVec[1]*xVec[0]) );
+        //I do not know what this does not work since the math above is cut out
+        //of the gmtl::cross function
+        //yVec = gmtl::cross( yVec, xVec, zVec );
+        //std::cout << xVec << std::endl << yVec << std::endl << zVec << std::endl;
+
+        //I do not know why the data is stored in columns but it works
+        //http://www.fastgraph.com/makegames/3drotation/
+        transMat.set( xVec[ 0 ], yVec[ 0 ], zVec[ 0 ], posData[ 0 ]*0.01,
+                      xVec[ 1 ], yVec[ 1 ], zVec[ 1 ], posData[ 1 ]*0.01,
+                      xVec[ 2 ], yVec[ 2 ], zVec[ 2 ], posData[ 2 ]*0.01,
                              0.,        0.,        0.,           1. );
         m_positionStack.push_back( transMat );
     }
