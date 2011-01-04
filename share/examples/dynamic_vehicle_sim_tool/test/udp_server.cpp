@@ -113,7 +113,7 @@ int main (int argc, char* argv[])
                     tempbuff.push_back( ' ' );
                     continue;
                 }
-                std::cout << recv_buf[ i ] << std::endl;
+                //std::cout << recv_buf[ i ] << std::endl;
                 tempbuff.push_back( recv_buf[ i ] );
             }
             
