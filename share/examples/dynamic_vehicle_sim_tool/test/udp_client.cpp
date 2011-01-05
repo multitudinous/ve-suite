@@ -138,6 +138,7 @@ int main (int argc, char* argv[])
                     sock.write(buffer, 2047);
                     sampleFile.getline( buffer, 2047 );
                     //std::cout << sampleFile.good() << std::endl;
+                    vpr::System::msleep( 50 );
                 }
                 while( !sampleFile.eof() );
                 sampleFile.clear();

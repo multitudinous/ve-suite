@@ -123,6 +123,8 @@ private:
     std::vector< gmtl::Matrix44d > m_positionStack;
     ///Matrix stack containing position data for the geometry
     std::vector< gmtl::Matrix44d > m_previousPositionStack;
+    ///Matrix stack containing position data for the geometry
+    std::vector< gmtl::Matrix44d > m_navStack;
 
     ///vector of names
     std::vector< std::pair< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > > > m_animationedNodes;
