@@ -167,8 +167,8 @@ void DynamicVehicleSimToolGP::PreFrameUpdate()
         //to multiply in the constrained geom position update
         navDCS->SetMat( m_constrainedGeom->GetMat() );
     }
-    
-    m_positionStack.clear();
+    m_previousPositionStack = m_positionStack;
+    m_positionStack.resize(0);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
@@ -198,7 +198,23 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             m_currentCommand->GetDataValuePair( "Contrainted Geometry" );
         std::string constrainedGeom;
         dvp3->GetData( constrainedGeom );
-        
+        if( !constrainedGeom.empty() ) //&& (constrainedGeom != "No Geom") )
+        {
+            if( mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->PartExists( constrainedGeom ) )
+            {
+                m_constrainedGeom = 
+                    mModelHandler->GetActiveModel()->
+                    GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
+            }
+            else if( mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->AssemblyExists( constrainedGeom ) )
+            {
+                m_constrainedGeom = 
+                    mModelHandler->GetActiveModel()->
+                    GetModelCADHandler()->GetAssembly( constrainedGeom );
+            }
+        }
         std::cout << computerName << " " << computerPort << " " << constrainedGeom << std::endl;
         return;
     }
@@ -220,9 +236,23 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                 //noGeom = true;
                 break;
             }
-            osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode = 
-                mModelHandler->GetActiveModel()->GetModelCADHandler()->
-                GetPart( nodeName )->GetDCS();
+            osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode;// = 
+                //mModelHandler->GetActiveModel()->GetModelCADHandler()->
+                //GetPart( nodeName )->GetDCS();
+            if( mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->PartExists( nodeName ) )
+            {
+                tempNode = 
+                    mModelHandler->GetActiveModel()->
+                    GetModelCADHandler()->GetPart( nodeName )->GetDCS();
+            }
+            else if( mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->AssemblyExists( nodeName ) )
+            {
+                tempNode = 
+                    mModelHandler->GetActiveModel()->
+                    GetModelCADHandler()->GetAssembly( nodeName );
+            }
             m_animationedNodes.push_back( std::make_pair< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( nodeName, tempNode.get() ) );
         }
         
@@ -239,9 +269,20 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
         if( !constrainedGeom.empty() ) //&& (constrainedGeom != "No Geom") )
         {
-            m_constrainedGeom = 
-                mModelHandler->GetActiveModel()->
-                GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
+            if( mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->PartExists( constrainedGeom ) )
+            {
+                m_constrainedGeom = 
+                    mModelHandler->GetActiveModel()->
+                    GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
+            }
+            else if( mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->AssemblyExists( constrainedGeom ) )
+            {
+                m_constrainedGeom = 
+                    mModelHandler->GetActiveModel()->
+                    GetModelCADHandler()->GetAssembly( constrainedGeom );
+            }
         }
 
         std::cout << "geom map update " << constrainedGeom << std::endl;
@@ -566,7 +607,7 @@ void DynamicVehicleSimToolGP::RemoveSelfFromSG()
         {
             std::string exitStr( "Exit" );
             SetSimState( exitStr );
-            vpr::System::msleep( 300 );
+            //vpr::System::msleep( 300 );
             m_sampleThread->kill();
             m_sampleThread->join();
             delete m_sampleThread;

@@ -121,6 +121,9 @@ private:
     bool m_runSampleThread;
     ///Matrix stack containing position data for the geometry
     std::vector< gmtl::Matrix44d > m_positionStack;
+    ///Matrix stack containing position data for the geometry
+    std::vector< gmtl::Matrix44d > m_previousPositionStack;
+
     ///vector of names
     std::vector< std::pair< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > > > m_animationedNodes;
     ///cm to feet conversion
