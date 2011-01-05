@@ -50,7 +50,7 @@ if GetPlatform() == 'darwin':
 
 #env.Append(LIBS = ['osgBulletPlus'])
 #env.Append(LIBS = ['osgBullet'])
-env.Append(LIBS = ['osgEphemeris'])
+env.Append(LIBS = ['osgEphemerisVES'])
 #env.Append(LIBPATH = [pj('#',buildDir,'external','osgBulletPlus')])
 #env.Append(LIBPATH = [pj('#',buildDir,'external', osgbulletBaseVar)])
 env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])

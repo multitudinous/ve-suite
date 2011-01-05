@@ -126,7 +126,7 @@ if baseEnv['MakeQtSupport'] == "yes":
 
 lib_env.AppendUnique(CPPPATH = [pj(RootDir,'external','osgEphemeris','include')])
 
-lib_env.AppendUnique(LIBS = ['osgEphemeris'])
+lib_env.AppendUnique(LIBS = ['osgEphemerisVES'])
 lib_env.AppendUnique(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 
 # New Physics work

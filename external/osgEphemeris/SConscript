@@ -23,10 +23,10 @@ if GetPlatform() == 'darwin':
 osg_options.apply( lib_env )
 
 if baseEnv['StaticLibs'] == "yes":
-    lib = ves_pkg.createStaticAndSharedLibrary('osgEphemeris', lib_env,
+    lib = ves_pkg.createStaticAndSharedLibrary('osgEphemerisVES', lib_env,
                                                installPrefix = LIBDIR)
 else:
-    lib = ves_pkg.createSharedLibrary('osgEphemeris', lib_env,
+    lib = ves_pkg.createSharedLibrary('osgEphemerisVES', lib_env,
                                       installPrefix = LIBDIR)
    
 lib.addSources(sources)
