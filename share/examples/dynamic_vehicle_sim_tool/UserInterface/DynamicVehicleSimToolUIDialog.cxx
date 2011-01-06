@@ -397,7 +397,8 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
     }
 
     //need to clear choice 3
-
+    m_choice3->Clear();
+    
 	m_choice3->Append( m_choice11Choices );
     m_choice3->SetSelection( 0 );
     //m_choice3->SetStringSelection( wxString( constrainedGeom.c_str(), wxConvUTF8 ) );
@@ -415,7 +416,7 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
     m_choice3->SetStringSelection( wxString( nodeListNames.at( nodeIndex1 ).c_str(), wxConvUTF8 ) );
 
     
-    
+    //Setup computer info
     std::string computerName;
     if( toolCommand )
     {
@@ -444,11 +445,12 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
         return;
     }
 
-    ///Setup the geom name map
-    //ves::open::xml::cad::CADNodePtr rootNode = mUIPluginBase->GetVEModel()->GetGeometry();
-    //dynamicvehicletool::CADListCreator nodeListCreator( rootNode );
-
     ///Need to clear any array choice selections
+    if( m_geomChoiceList.size() > 0 )
+    {
+        //we already have the choices loaded up
+        return;
+    }
 
     size_t numDVPs = toolCommand->GetNumberOfDataValuePairs();
     wxCommandEvent event;
@@ -462,6 +464,7 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
         {
             break;
         }
+        
         OnAddGeometryGroupButton( event );
         size_t nodeIndex = 0;
         for( size_t j = 0; j < m_nodeList.size(); ++j )
