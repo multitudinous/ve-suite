@@ -122,12 +122,17 @@ private:
     ///Matrix stack containing position data for the geometry
     std::vector< gmtl::Matrix44d > m_positionStack;
     ///Matrix stack containing position data for the geometry
-    std::vector< gmtl::Matrix44d > m_previousPositionStack;
+    std::vector< gmtl::Matrix44d > m_initialPositionStack;
+    ///Matrix stack containing position data for the geometry
+    std::vector< gmtl::Matrix44d > m_initialPositionAccumulatedStack;
     ///Matrix stack containing position data for the geometry
     std::vector< gmtl::Matrix44d > m_navStack;
+    ///Constrined geom node path
+    osg::NodePath m_constrainedGeomPath;
+    gmtl::Matrix44d m_initialNavMatrix;
 
     ///vector of names
-    std::vector< std::pair< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > > > m_animationedNodes;
+    std::vector< std::pair< double, osg::ref_ptr< ves::xplorer::scenegraph::DCS > > > m_animationedNodes;
     ///cm to feet conversion
     double cm2ft;
     ///The constrained geom pointer

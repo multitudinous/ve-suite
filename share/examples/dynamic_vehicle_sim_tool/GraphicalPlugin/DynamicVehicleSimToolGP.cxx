@@ -145,49 +145,54 @@ void DynamicVehicleSimToolGP::PreFrameUpdate()
     if( m_positionStack.size() < m_animationedNodes.size() )
     {
         syncedData = false;
-        std::cout << "we have a problem with the position stack size." << std::endl;
+        //std::cout << "we have a problem with the position stack size." << std::endl;
     }
-    size_t constrainedIndex = 0;
+
+    //Update the animated parts
     bool hasConstrainedData = false;
     for( size_t i = 0; i < m_animationedNodes.size(); ++i )
     {
-        std::string cadID = m_animationedNodes.at( i ).first;
-        //std::cout << cadID << std::endl;
+        //std::string cadID = m_animationedNodes.at( i ).first;
         osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode = 
             m_animationedNodes.at( i ).second;
-        if( tempNode.get() == m_constrainedGeom.get() )
-        {
-            constrainedIndex = i;
-            hasConstrainedData = true;
-        }
         if( syncedData )
         {
+            if( tempNode.get() == m_constrainedGeom.get() )
+            {
+                hasConstrainedData = true;
+            }
+            
             tempNode->SetMat( m_positionStack.at( i  ) );
         }
     }
-    //std::cout << constrainedIndex << std::endl;
-    //size_t constrainedGeom = 0;
+    //std::cout << syncedData << " " << hasConstrainedData << " " << m_constrainedGeom.valid() << std::endl;
+    //Now update the constrained geom
     if( hasConstrainedData && m_constrainedGeom.valid() )
     {
         osg::ref_ptr< DCS > navDCS = mSceneManager->GetNavDCS();
-        //We assume that the navDCS is not being manipulated by the user
-        //If we need to take into account the nav by a user we will need
-        //to multiply in the constrained geom position update
-        ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor( m_constrainedGeom.get(), mSceneManager->GetModelRoot() );
-        osg::NodePath tempPath = npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
-        osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( tempPath );
-        //osg::Matrixd localToWorldMatrixInvert;
-        //localToWorldMatrixInvert.invert( localToWorldMatrix );
+        
+        //Create the matrix stack for the constrained geom so that we get the 
+        //fully transformed sim data to be applied to the nav matrix
+        osg::Matrixd localToWorldMatrix = 
+            osg::computeLocalToWorld( m_constrainedGeomPath );
         gmtl::Matrix44d tempMat;
         tempMat.set( localToWorldMatrix.ptr() );
+        //Invert the view matrix because we want to negate the motion of the
+        //cosntrained geometry
         gmtl::invert( tempMat );
-        
+        //The sim data is rotated 90 -- I do not understand why this is needed
         gmtl::AxisAngled viewCorrection( gmtl::Math::deg2Rad( 90.0 ), 0, 0, 1 );
-        gmtl::Matrix44d myMat = gmtl::makeRot< gmtl::Matrix44d >( viewCorrection );
+        gmtl::Matrix44d myMat = 
+            gmtl::makeRot< gmtl::Matrix44d >( viewCorrection );
         tempMat = myMat * tempMat;
+        //Get the current nav position and add the constrained matrix into the 
+        //current nav position
+        //gmtl::Matrix44d navMat = navDCS->GetMat();
+        //tempMat = m_initialNavMatrix * tempMat;
         navDCS->SetMat( tempMat );
     }
-    m_previousPositionStack = m_positionStack;
+    
+    //Reset everything on a per frame basis
     m_positionStack.resize(0);
     m_navStack.resize(0);
 }
@@ -216,10 +221,11 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         SetComputerData( computerName, computerPort );
         
         ves::open::xml::DataValuePairPtr dvp3 = 
-            m_currentCommand->GetDataValuePair( "Contrainted Geometry" );
+            m_currentCommand->GetDataValuePair( "Constrained Geometry" );
         std::string constrainedGeom;
         dvp3->GetData( constrainedGeom );
-        if( !constrainedGeom.empty() ) //&& (constrainedGeom != "No Geom") )
+
+        if( !constrainedGeom.empty() )
         {
             if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->PartExists( constrainedGeom ) )
@@ -244,6 +250,15 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         {
             m_constrainedGeom = 0;
         }
+        
+        if( m_constrainedGeom.valid() )
+        {
+            ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor( 
+                m_constrainedGeom.get(), mSceneManager->GetModelRoot() );
+            m_constrainedGeomPath = 
+                npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
+        }
+        
         std::cout << computerName << " " << computerPort << " " << constrainedGeom << std::endl;
         return;
     }
@@ -251,6 +266,8 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
     if( commandName == "Geometry Data Map" )
     {
         m_animationedNodes.clear();
+        m_initialPositionStack.clear();
+        m_initialPositionAccumulatedStack.clear();
         size_t numDVPs = m_currentCommand->GetNumberOfDataValuePairs();
         std::string nodeName;
         //bool noGeom = false;
@@ -265,9 +282,8 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                 //noGeom = true;
                 break;
             }
-            osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode;// = 
-                //mModelHandler->GetActiveModel()->GetModelCADHandler()->
-                //GetPart( nodeName )->GetDCS();
+
+            osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode;
             if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->PartExists( nodeName ) )
             {
@@ -282,7 +298,51 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                     mModelHandler->GetActiveModel()->
                     GetModelCADHandler()->GetAssembly( nodeName );
             }
-            m_animationedNodes.push_back( std::make_pair< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( nodeName, tempNode.get() ) );
+
+            if( tempNode.valid() )
+            {
+                ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor( 
+                    tempNode.get(), mSceneManager->GetModelRoot() );
+                
+                osg::NodePath tempPath = 
+                    npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
+                
+                osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( tempPath );
+                gmtl::Matrix44d tempMat;
+                tempMat.set( localToWorldMatrix.ptr() );
+        double scaleFactor = 1;
+        //std::cout << i << " " <<  m_animationedNodes.size() << std::endl;
+        //Need matrix stack for data
+        //if( i < m_animationedNodes.size() )
+        {
+            //osg::Matrixd localToWorldMatrix = 
+            //    osg::computeLocalToWorld( m_animationedNodes.at( i ).first );
+            //gmtl::Matrix44d tempMat = m_initialPositionAccumulatedStack.at( i );
+            //tempMat.set( localToWorldMatrix.ptr() );
+            //std::cout << tempMat << std::endl;
+            //double tempScale = 1.0;
+            //Get the scale from the matrix. We are assuming a unifor scale.
+            //osg::Vec3d scaleVec = localToWorldMatrix.getScale();
+            gmtl::Vec3d scaleXVec( tempMat[ 0 ][ 0 ], tempMat[ 1 ][ 0 ], tempMat[ 2 ][ 0 ] );
+
+            /*std::cout << " test 1 " << scaleVec[ 0 ] << std::endl;
+            //tempMat
+            osg::Vec3d translation;
+            osg::Quat rotation;
+            osg::Vec3d scale;
+            osg::Quat so;
+            localToWorldMatrix.decompose( translation, rotation, scale, so );
+            std::cout << scale[ 0 ] << std::endl;*/
+            scaleFactor = gmtl::length( scaleXVec );
+        }
+
+                m_animationedNodes.push_back( std::make_pair< double, 
+                    osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( scaleFactor, tempNode.get() ) );
+                
+                m_initialPositionAccumulatedStack.push_back( tempMat );
+
+                m_initialPositionStack.push_back( tempNode->GetMat() );
+            }
         }
         
         return;
@@ -291,10 +351,10 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
     if( commandName == "Geometry Map Update" )
     {
         ves::open::xml::DataValuePairPtr dvp = 
-            m_currentCommand->GetDataValuePair( "Contrainted Geometry" );
+            m_currentCommand->GetDataValuePair( "Constrained Geometry" );
         std::string constrainedGeom;
         //if( dvp )
-        //    dvp->GetData( constrainedGeom );
+        dvp->GetData( constrainedGeom );
 
         if( !constrainedGeom.empty() ) //&& (constrainedGeom != "No Geom") )
         {
@@ -322,6 +382,15 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             m_constrainedGeom = 0;
         }
 
+        if( m_constrainedGeom.valid() )
+        {
+            std::cout << " constrained set " << std::endl;
+            ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor( 
+                m_constrainedGeom.get(), mSceneManager->GetModelRoot() );
+            m_constrainedGeomPath = 
+                npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
+        }
+
         std::cout << "geom map update " << constrainedGeom << std::endl;
         return;
     }
@@ -334,6 +403,11 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         dvp->GetData( simState );
         SetSimState( simState );
         std::cout << "SimState " << simState << std::endl;
+        if( simState == "Start" )
+        {
+            m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
+            //gmtl::invert( m_initialNavMatrix );
+        }
         return;
     }
 
@@ -532,6 +606,13 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
 {
+    std::string simState;
+    GetSimState( simState );
+    if( simState == "Pause" )
+    {
+        return;
+    }
+
     gmtl::Point3d posData;
     gmtl::Vec3d xVec, yVec, zVec;
     gmtl::Matrix44d transMat;
@@ -545,8 +626,6 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
     }
     unsigned int numObjects = positionData.size() / 9;
 
-    std::string simState;
-    GetSimState( simState );
     if( simState == "Reset" )
     {
         for( size_t i = 0; i < positionData.size(); ++i )
@@ -573,20 +652,35 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
         //of the gmtl::cross function
         //yVec = gmtl::cross( yVec, xVec, zVec );
         //std::cout << xVec << std::endl << yVec << std::endl << zVec << std::endl;
-         // 0.00328 mikes data
+        // 0.00328 mikes data
+        //If we know we have an animated node for this data then figure out the 
+        //scale factor
+        double scaleFactor = 0.0328;
+        //std::cout << i << " " << m_animationedNodes.size() << std::endl;
+
+        if( i < m_animationedNodes.size() )
+        {
+            //std::cout << m_animationedNodes.at( i ).first << std::endl;
+            scaleFactor = scaleFactor / m_animationedNodes.at( i ).first;
+        }
+
+        //std::cout << scaleFactor << std::endl;
+        //scaleFactor = 0.01;
         //I do not know why the data is stored in columns but it works
         //http://www.fastgraph.com/makegames/3drotation/
-        transMat.set( xVec[ 0 ], yVec[ 0 ], zVec[ 0 ], posData[ 0 ]*0.01,
-                      xVec[ 1 ], yVec[ 1 ], zVec[ 1 ], posData[ 1 ]*0.01,
-                      xVec[ 2 ], yVec[ 2 ], zVec[ 2 ], posData[ 2 ]*0.01,
+        transMat.set( xVec[ 0 ], yVec[ 0 ], zVec[ 0 ], posData[ 0 ]*scaleFactor,
+                      xVec[ 1 ], yVec[ 1 ], zVec[ 1 ], posData[ 1 ]*scaleFactor,
+                      xVec[ 2 ], yVec[ 2 ], zVec[ 2 ], posData[ 2 ]*scaleFactor,
                              0.,        0.,        0.,           1. );
+        
+        //We can grab the ith matrix because the indices of the position stack
+        //correspond to the position of the data coming back from the simulator
+        transMat = m_initialPositionStack.at( i ) * transMat;
+            //gmtl::Vec3d scaleXVec( transMat[ 0 ][ 0 ], transMat[ 1 ][ 0 ], transMat[ 2 ][ 0 ] );
+            //scaleFactor = gmtl::length( scaleXVec );
+            //std::cout << scaleFactor << std::endl;
+        //Now we push back the whole new matrix
         m_positionStack.push_back( transMat );
-
-        transMat.set( xVec[ 0 ], yVec[ 0 ], zVec[ 0 ], posData[ 0 ]*0.0328,
-                      xVec[ 1 ], yVec[ 1 ], zVec[ 1 ], posData[ 1 ]*0.0328,
-                      xVec[ 2 ], yVec[ 2 ], zVec[ 2 ], posData[ 2 ]*0.0328,
-                             0.,        0.,        0.,           1. );
-        m_navStack.push_back( transMat );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

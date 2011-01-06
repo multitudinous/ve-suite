@@ -254,7 +254,7 @@ void DynamicVehicleSimToolUIDialog::OnConstrainedGeometrySelection( wxCommandEve
     ves::open::xml::DataValuePairPtr constrainedText( new ves::open::xml::DataValuePair() );
     ves::open::xml::cad::CADNodePtr tempCADNode = m_nodeList.at( m_choice3->GetSelection() );
     //geomDVP->SetData( tempCADNode->GetNodeName(), tempCADNode->GetID() );
-    constrainedText->SetData( "Contrainted Geometry", tempCADNode->GetID() );
+    constrainedText->SetData( "Constrained Geometry", tempCADNode->GetID() );
     //constrainedText->SetData( "Contrainted Geometry", ConvertUnicode( m_choice3->GetStringSelection().c_str() ) );
     
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
@@ -269,12 +269,37 @@ void DynamicVehicleSimToolUIDialog::OnApplyButton( wxCommandEvent& event )
 {
     OnComputerNameEnter( event );
     OnConstrainedGeometrySelection( event );
+    
+    ves::open::xml::CommandPtr geomCommand( new ves::open::xml::Command() );
+    geomCommand->SetCommandName( "Geometry Data Map" );
+    if( m_nodeList.size() > 0 )
+    {
+        for( size_t i = 0; i < m_geomChoiceList.size(); ++i )
+        {
+            //std::string dvpName = "Geometry_" + boost::lexical_cast<std::string>( i );
+
+            ves::open::xml::DataValuePairPtr geomDVP( new ves::open::xml::DataValuePair() );
+            //std::string nodeName = ConvertUnicode( m_geomChoiceList.at( i )->GetStringSelection().c_str() );
+            //nodeIter = std::find( 
+            ves::open::xml::cad::CADNodePtr tempCADNode = 
+                m_nodeList.at( m_geomChoiceList.at( i )->GetSelection() );
+            geomDVP->SetData( tempCADNode->GetNodeName(), tempCADNode->GetID() );
+            geomCommand->AddDataValuePair( geomDVP );
+        }
+    }
+    if( (m_geomChoiceList.size() == 0) || (m_nodeList.size() == 0) )
+    {
+        ves::open::xml::DataValuePairPtr geomDVP( new ves::open::xml::DataValuePair() );
+        geomDVP->SetData( "No Geometry Selected", "No Geom" );
+        geomCommand->AddDataValuePair( geomDVP );
+    }
+    mServiceList->SendCommandStringToXplorer( geomCommand );
     UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnOKButton( wxCommandEvent& event )
 {
-    OnApplyButton( event );
+    //OnApplyButton( event );
     //Do not do anything and close the dialog
     Close();
 }
@@ -291,7 +316,7 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
         ves::open::xml::cad::CADNodePtr tempCADNode = 
                 m_nodeList.at( m_choice3->GetSelection() );
         //geomDVP->SetData( tempCADNode->GetNodeName(), tempCADNode->GetID() );
-        constrainedText->SetData( "Contrainted Geometry", tempCADNode->GetID() );
+        constrainedText->SetData( "Constrained Geometry", tempCADNode->GetID() );
         toolCommand->AddDataValuePair( constrainedText );
     }
     
@@ -303,7 +328,7 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
     computerPortText->SetData( "ComputerPort", ConvertUnicode( m_textCtrl2->GetValue().c_str() ) );
     toolCommand->AddDataValuePair( computerPortText );
     tempModel->SetInput( toolCommand );
-    mServiceList->SendCommandStringToXplorer( toolCommand );
+    //mServiceList->SendCommandStringToXplorer( toolCommand );
 
     /*
     ves::open::xml::cad::CADNodePtr rootNode = mUIPluginBase->GetVEModel()->GetGeometry();
@@ -311,7 +336,7 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
     std::vector< ves::open::xml::cad::CADNodePtr > nodeList = 
         nodeListCreator.GetNodeList();
     */
-    std::vector< ves::open::xml::cad::CADNodePtr >::iterator nodeIter;
+    //std::vector< ves::open::xml::cad::CADNodePtr >::iterator nodeIter;
     
     ves::open::xml::CommandPtr geomCommand( new ves::open::xml::Command() );
     geomCommand->SetCommandName( "Geometry Data Map" );
@@ -337,7 +362,7 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
         geomCommand->AddDataValuePair( geomDVP );
     }
     tempModel->SetInput( geomCommand );
-    mServiceList->SendCommandStringToXplorer( geomCommand );
+    //mServiceList->SendCommandStringToXplorer( geomCommand );
  }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::PopulateDialogs()
@@ -348,7 +373,11 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
     std::string constrainedGeom;
     if( toolCommand )
     {
-        toolCommand->GetDataValuePair( "Contrainted Geometry" )->GetData( constrainedGeom );
+        ves::open::xml::DataValuePairPtr geomDVP = toolCommand->GetDataValuePair( "Constrained Geometry" );
+        if( geomDVP )
+        {
+            geomDVP->GetData( constrainedGeom );
+        }
     }
     
     ves::open::xml::cad::CADNodePtr rootNode = tempModel->GetGeometry();
@@ -366,6 +395,9 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
     {
         m_choice11Choices.Add( wxString( nodeListNames.at( i ).c_str(), wxConvUTF8 ) );
     }
+
+    //need to clear choice 3
+
 	m_choice3->Append( m_choice11Choices );
     m_choice3->SetSelection( 0 );
     //m_choice3->SetStringSelection( wxString( constrainedGeom.c_str(), wxConvUTF8 ) );
@@ -415,6 +447,8 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
     ///Setup the geom name map
     //ves::open::xml::cad::CADNodePtr rootNode = mUIPluginBase->GetVEModel()->GetGeometry();
     //dynamicvehicletool::CADListCreator nodeListCreator( rootNode );
+
+    ///Need to clear any array choice selections
 
     size_t numDVPs = toolCommand->GetNumberOfDataValuePairs();
     wxCommandEvent event;
