@@ -173,22 +173,31 @@ void DynamicVehicleSimToolGP::PreFrameUpdate()
         
         //Create the matrix stack for the constrained geom so that we get the 
         //fully transformed sim data to be applied to the nav matrix
-        osg::Matrixd localToWorldMatrix = 
+        const osg::Matrixd localToWorldMatrix = 
             osg::computeLocalToWorld( m_constrainedGeomPath );
         gmtl::Matrix44d tempMat;
         tempMat.set( localToWorldMatrix.ptr() );
         //Invert the view matrix because we want to negate the motion of the
         //cosntrained geometry
         gmtl::invert( tempMat );
+
+        gmtl::Vec3d scaleXVec( tempMat[ 0 ][ 0 ], tempMat[ 1 ][ 0 ], tempMat[ 2 ][ 0 ] );
+        double scaleVal = gmtl::length( scaleXVec );
+        //std::cout << scaleVal << std::endl;
+        const gmtl::Matrix44d invertScale = gmtl::makeScale< gmtl::Matrix44d >( 1.0/scaleVal );
+        //std::cout << invertScale << std::endl;
         //The sim data is rotated 90 -- I do not understand why this is needed
-        gmtl::AxisAngled viewCorrection( gmtl::Math::deg2Rad( 90.0 ), 0, 0, 1 );
-        gmtl::Matrix44d myMat = 
-            gmtl::makeRot< gmtl::Matrix44d >( viewCorrection );
-        tempMat = myMat * tempMat;
+        //gmtl::AxisAngled viewCorrection( gmtl::Math::deg2Rad( 90.0 ), 0, 0, 1 );
+        //gmtl::Matrix44d myMat = 
+        //    gmtl::makeRot< gmtl::Matrix44d >( viewCorrection );
+        //std::cout << "nave update" << std::endl;
+        //std::cout << myMat << std::endl;
+        //tempMat = myMat * tempMat;
         //Get the current nav position and add the constrained matrix into the 
         //current nav position
         //gmtl::Matrix44d navMat = navDCS->GetMat();
-        //tempMat = m_initialNavMatrix * tempMat;
+        //std::cout << tempMat << std::endl;
+        tempMat = m_initialNavMatrix * invertScale * tempMat;
         navDCS->SetMat( tempMat );
     }
     
@@ -304,37 +313,15 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                 ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor( 
                     tempNode.get(), mSceneManager->GetModelRoot() );
                 
-                osg::NodePath tempPath = 
+                const osg::NodePath tempPath = 
                     npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
                 
-                osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( tempPath );
+                const osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( tempPath );
                 gmtl::Matrix44d tempMat;
                 tempMat.set( localToWorldMatrix.ptr() );
-        double scaleFactor = 1;
-        //std::cout << i << " " <<  m_animationedNodes.size() << std::endl;
-        //Need matrix stack for data
-        //if( i < m_animationedNodes.size() )
-        {
-            //osg::Matrixd localToWorldMatrix = 
-            //    osg::computeLocalToWorld( m_animationedNodes.at( i ).first );
-            //gmtl::Matrix44d tempMat = m_initialPositionAccumulatedStack.at( i );
-            //tempMat.set( localToWorldMatrix.ptr() );
-            //std::cout << tempMat << std::endl;
-            //double tempScale = 1.0;
-            //Get the scale from the matrix. We are assuming a unifor scale.
-            //osg::Vec3d scaleVec = localToWorldMatrix.getScale();
-            gmtl::Vec3d scaleXVec( tempMat[ 0 ][ 0 ], tempMat[ 1 ][ 0 ], tempMat[ 2 ][ 0 ] );
+                gmtl::Vec3d scaleXVec( tempMat[ 0 ][ 0 ], tempMat[ 1 ][ 0 ], tempMat[ 2 ][ 0 ] );
+                const double scaleFactor = gmtl::length( scaleXVec );
 
-            /*std::cout << " test 1 " << scaleVec[ 0 ] << std::endl;
-            //tempMat
-            osg::Vec3d translation;
-            osg::Quat rotation;
-            osg::Vec3d scale;
-            osg::Quat so;
-            localToWorldMatrix.decompose( translation, rotation, scale, so );
-            std::cout << scale[ 0 ] << std::endl;*/
-            scaleFactor = gmtl::length( scaleXVec );
-        }
 
                 m_animationedNodes.push_back( std::make_pair< double, 
                     osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( scaleFactor, tempNode.get() ) );
@@ -406,6 +393,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         if( simState == "Start" )
         {
             m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
+            //std::cout << m_initialNavMatrix << std::endl;
             //gmtl::invert( m_initialNavMatrix );
         }
         return;
@@ -633,30 +621,19 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
             positionData.at( i ) = 0.0;
         }
     }
-    //std::cout << numObjects << std::endl;
+
     for( size_t i = 0; i < numObjects; ++i )
     {
-        //GetPositionData( positionData );
         posData.set( positionData.at( 0 ), -positionData.at( 2 ), positionData.at( 1 ) );
-        //std::cout << posData << std::endl;
-        //std::cout << positionData.at( 3 ) << ", " << positionData.at( 4 ) << ", " << positionData.at( 5 )<< std::endl;
-        //std::cout << positionData.at( 6 ) << ", " << positionData.at( 7 ) << ", " << positionData.at( 8 )<< std::endl;
-        //std::cout << positionData.at( 3 ) << ", " << positionData.at( 4 ) << ", " << positionData.at( 5 )<< std::endl;
         xVec.set( positionData.at( 3 ), -positionData.at( 5 ), positionData.at( 4 ) );
         zVec.set( positionData.at( 6 ), -positionData.at( 8 ), positionData.at( 7 ) );
 
         yVec.set( (zVec[1]*xVec[2]) - (zVec[2]*xVec[1]),
                   (zVec[2]*xVec[0]) - (zVec[0]*xVec[2]),
                   (zVec[0]*xVec[1]) - (zVec[1]*xVec[0]) );
-        //I do not know what this does not work since the math above is cut out
-        //of the gmtl::cross function
-        //yVec = gmtl::cross( yVec, xVec, zVec );
-        //std::cout << xVec << std::endl << yVec << std::endl << zVec << std::endl;
-        // 0.00328 mikes data
-        //If we know we have an animated node for this data then figure out the 
-        //scale factor
+
+        //All sim data is coming in as centimeters so scale it.
         double scaleFactor = 0.0328;
-        //std::cout << i << " " << m_animationedNodes.size() << std::endl;
 
         if( i < m_animationedNodes.size() )
         {
@@ -664,9 +641,7 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
             scaleFactor = scaleFactor / m_animationedNodes.at( i ).first;
         }
 
-        //std::cout << scaleFactor << std::endl;
-        //scaleFactor = 0.01;
-        //I do not know why the data is stored in columns but it works
+        //GMTL is columan major order so this is why the data is laid out in columns
         //http://www.fastgraph.com/makegames/3drotation/
         transMat.set( xVec[ 0 ], yVec[ 0 ], zVec[ 0 ], posData[ 0 ]*scaleFactor,
                       xVec[ 1 ], yVec[ 1 ], zVec[ 1 ], posData[ 1 ]*scaleFactor,
@@ -676,9 +651,7 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
         //We can grab the ith matrix because the indices of the position stack
         //correspond to the position of the data coming back from the simulator
         transMat = m_initialPositionStack.at( i ) * transMat;
-            //gmtl::Vec3d scaleXVec( transMat[ 0 ][ 0 ], transMat[ 1 ][ 0 ], transMat[ 2 ][ 0 ] );
-            //scaleFactor = gmtl::length( scaleXVec );
-            //std::cout << scaleFactor << std::endl;
+
         //Now we push back the whole new matrix
         m_positionStack.push_back( transMat );
     }
@@ -753,6 +726,14 @@ void DynamicVehicleSimToolGP::RemoveSelfFromSG()
         {
             ;//do nothing
         }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::ResetScene()
+{
+    for( size_t i = 0; i < m_initialPositionStack.size(); ++i )
+    {
+        m_animationedNodes.at( i ).second->SetMat( m_initialPositionStack.at( i ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

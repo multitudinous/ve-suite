@@ -81,6 +81,8 @@ public:
 protected:
 
 private:
+    ///Reset the scene data
+    void ResetScene();
     ///Thread for grabbing data from sim
     void SimulatorCaptureThread();
     ///
