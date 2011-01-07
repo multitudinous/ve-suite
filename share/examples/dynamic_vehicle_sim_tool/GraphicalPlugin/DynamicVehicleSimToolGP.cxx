@@ -277,7 +277,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                 npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
         }
         
-        std::cout << computerName << " " << computerPort << " " << constrainedGeom << std::endl;
+        //std::cout << computerName << " " << computerPort << " " << constrainedGeom << std::endl;
         return;
     }
     
@@ -295,7 +295,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             ves::open::xml::DataValuePairPtr geomDVP = 
                 m_currentCommand->GetDataValuePair( i );
             geomDVP->GetData( nodeName );
-            std::cout << nodeName << std::endl;
+            //std::cout << nodeName << std::endl;
             if( nodeName == "No Geom" )
             {
                 //noGeom = true;
@@ -388,7 +388,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                 npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
         }
 
-        std::cout << "geom map update " << constrainedGeom << std::endl;
+        //std::cout << "geom map update " << constrainedGeom << std::endl;
         return;
     }
 
@@ -399,7 +399,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         std::string simState;
         dvp->GetData( simState );
         SetSimState( simState );
-        std::cout << "SimState " << simState << std::endl;
+        //std::cout << "SimState " << simState << std::endl;
         if( simState == "Start" )
         {
             //m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
@@ -438,7 +438,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         dvp2->GetData( computerPort );
         SetComputerData( computerName, computerPort );
 
-        std::cout << computerName << " " << computerPort << std::endl;
+        //std::cout << computerName << " " << computerPort << std::endl;
 
         return;
     }
