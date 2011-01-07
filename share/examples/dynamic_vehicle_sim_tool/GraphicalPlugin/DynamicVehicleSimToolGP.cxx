@@ -141,6 +141,14 @@ void DynamicVehicleSimToolGP::InitializeNode(
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::PreFrameUpdate()
 {
+    std::string simState;
+    GetSimState( simState );
+
+    if( simState != "Start" )
+    {
+        return;
+    }
+
     UpdateSelectedGeometryPositions();
     bool syncedData = true;
     if( m_positionStack.size() < m_animationedNodes.size() )
@@ -563,7 +571,7 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
                      }
                      }
                      //std::cout << "Column Count " << columnCount1 << std::endl;*/
-                    
+                    //std::cout << bufferData << std::endl;
                     boost::split( splitVec, bufferData, boost::is_any_of(" "), boost::token_compress_on );
                     double tempDouble = 0;
                     for( size_t i = 0; i < splitVec.size(); ++i )
@@ -619,6 +627,7 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
         return;
     }
 
+    const size_t numEntries = 9;
     gmtl::Point3d posData;
     gmtl::Vec3d xVec, yVec, zVec;
     gmtl::Matrix44d transMat;
@@ -626,11 +635,11 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
     GetPositionData( positionData );
     if( positionData.size() == 0 )
     {
-        positionData.resize( 9, 0.0 );
+        positionData.resize( numEntries, 0.0 );
         positionData.at( 3 ) = 1.0;
         positionData.at( 7 ) = 1.0;
     }
-    unsigned int numObjects = positionData.size() / 9;
+    unsigned int numObjects = positionData.size() / numEntries;
 
     /*if( simState == "Reset" )
     {
@@ -640,11 +649,13 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
         }
     }*/
 
+    //std::cout << numObjects << std::endl;
     for( size_t i = 0; i < numObjects; ++i )
     {
-        posData.set( positionData.at( 0 ), -positionData.at( 2 ), positionData.at( 1 ) );
-        xVec.set( positionData.at( 3 ), -positionData.at( 5 ), positionData.at( 4 ) );
-        zVec.set( positionData.at( 6 ), -positionData.at( 8 ), positionData.at( 7 ) );
+        const size_t indexOffset = i*numEntries;
+        posData.set( positionData.at( 0 + indexOffset ), -positionData.at( 2 + indexOffset ), positionData.at( 1 + indexOffset ) );
+        xVec.set( positionData.at( 3 + indexOffset ), -positionData.at( 5 + indexOffset ), positionData.at( 4 + indexOffset ) );
+        zVec.set( positionData.at( 6 + indexOffset ), -positionData.at( 8 + indexOffset ), positionData.at( 7 + indexOffset ) );
 
         yVec.set( (zVec[1]*xVec[2]) - (zVec[2]*xVec[1]),
                   (zVec[2]*xVec[0]) - (zVec[0]*xVec[2]),
