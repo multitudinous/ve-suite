@@ -274,6 +274,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
     
     if( commandName == "Geometry Data Map" )
     {
+        ResetScene();
         m_animationedNodes.clear();
         m_initialPositionStack.clear();
         m_initialPositionAccumulatedStack.clear();
@@ -395,6 +396,10 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
             //std::cout << m_initialNavMatrix << std::endl;
             //gmtl::invert( m_initialNavMatrix );
+        }
+        else if( simState == "Reset" )
+        {
+            ResetScene();
         }
         return;
     }
@@ -614,13 +619,13 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
     }
     unsigned int numObjects = positionData.size() / 9;
 
-    if( simState == "Reset" )
+    /*if( simState == "Reset" )
     {
         for( size_t i = 0; i < positionData.size(); ++i )
         {
             positionData.at( i ) = 0.0;
         }
-    }
+    }*/
 
     for( size_t i = 0; i < numObjects; ++i )
     {

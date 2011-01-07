@@ -92,6 +92,7 @@ protected:
 	void OnAddGeometryGroupButton( wxCommandEvent& event );
 	void OnRemoveGeometryGroupButton( wxCommandEvent& event );
 	void OnConstrainedGeometrySelection( wxCommandEvent& event );
+    void OnRegisterButton( wxCommandEvent& event );
 	void OnApplyButton( wxCommandEvent& event );
 	void OnOKButton( wxCommandEvent& event );
 

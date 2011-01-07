@@ -100,7 +100,7 @@ DynamicVehicleSimToolUIDialog::DynamicVehicleSimToolUIDialog()
     dvst::DynamicVehicleSimToolBase( 0 ),
     mServiceList( 0 )
 {
-    m_textCtrl1->SetValue( wxString( "225.0.0.37", wxConvUTF8 ) );
+    m_computerTextCtrl->SetValue( wxString( "225.0.0.37", wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolUIDialog::DynamicVehicleSimToolUIDialog( 
@@ -113,7 +113,7 @@ DynamicVehicleSimToolUIDialog::DynamicVehicleSimToolUIDialog(
 {    
     CenterOnParent();
     //SetTitle( _("Deere Analytics") );
-    m_textCtrl1->SetValue( wxString( "225.0.0.37", wxConvUTF8 ) );
+    m_computerTextCtrl->SetValue( wxString( "225.0.0.37", wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolUIDialog::~DynamicVehicleSimToolUIDialog()
@@ -135,9 +135,9 @@ bool DynamicVehicleSimToolUIDialog::TransferDataFromWindow()
 void DynamicVehicleSimToolUIDialog::OnComputerNameEnter( wxCommandEvent& WXUNUSED( event ) )
 {
     ves::open::xml::DataValuePairPtr computerNameText( new ves::open::xml::DataValuePair() );
-    computerNameText->SetData( "ComputerName", ConvertUnicode( m_textCtrl1->GetValue().c_str() ) );
+    computerNameText->SetData( "ComputerName", ConvertUnicode( m_computerTextCtrl->GetValue().c_str() ) );
     ves::open::xml::DataValuePairPtr computerPortText( new ves::open::xml::DataValuePair() );
-    computerPortText->SetData( "ComputerPort", ConvertUnicode( m_textCtrl2->GetValue().c_str() ) );
+    computerPortText->SetData( "ComputerPort", ConvertUnicode( m_portTextCtrl->GetValue().c_str() ) );
     
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     command->AddDataValuePair( computerNameText );
@@ -228,20 +228,20 @@ void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WX
 	choice->SetSelection( 0 );
 	bSizer->Add( choice, 0, wxALIGN_CENTER, 5 );
 	
-	bSizer9->Add( bSizer, 0, 0, 5 );
+	m_scrolledWindowSizer->Add( bSizer, 0, 0, 5 );
     m_scrolledWindow1->Layout();
     m_geomChoiceList.push_back( choice );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent& WXUNUSED( event ) )
 {
-    wxSizerItemList& list = bSizer9->GetChildren();
+    wxSizerItemList& list = m_scrolledWindowSizer->GetChildren();
     size_t num = list.size();
     if( num > 0 )
     {
         ///Remove the last item;
         list.back()->DeleteWindows();
-        bSizer9->Remove( num - 1 );
+        m_scrolledWindowSizer->Remove( num - 1 );
         //m_geomChoiceList.back()->Destroy();
         m_geomChoiceList.pop_back();
     }
@@ -252,10 +252,17 @@ void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent&
 void DynamicVehicleSimToolUIDialog::OnConstrainedGeometrySelection( wxCommandEvent& WXUNUSED( event ) )
 {
     ves::open::xml::DataValuePairPtr constrainedText( new ves::open::xml::DataValuePair() );
-    ves::open::xml::cad::CADNodePtr tempCADNode = m_nodeList.at( m_choice3->GetSelection() );
-    //geomDVP->SetData( tempCADNode->GetNodeName(), tempCADNode->GetID() );
-    constrainedText->SetData( "Constrained Geometry", tempCADNode->GetID() );
-    //constrainedText->SetData( "Contrainted Geometry", ConvertUnicode( m_choice3->GetStringSelection().c_str() ) );
+    if( m_constrainedGeomChoice->GetSelection() == 0 )
+    {
+        constrainedText->SetData( "Constrained Geometry", "None" );
+    }
+    else
+    {
+        ves::open::xml::cad::CADNodePtr tempCADNode = m_nodeList.at( m_constrainedGeomChoice->GetSelection() - 1 );
+        //geomDVP->SetData( tempCADNode->GetNodeName(), tempCADNode->GetID() );
+        constrainedText->SetData( "Constrained Geometry", tempCADNode->GetID() );
+        //constrainedText->SetData( "Contrainted Geometry", ConvertUnicode( m_choice3->GetStringSelection().c_str() ) );
+    }
     
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     command->AddDataValuePair( constrainedText );
@@ -297,7 +304,7 @@ void DynamicVehicleSimToolUIDialog::OnApplyButton( wxCommandEvent& event )
     UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolUIDialog::OnOKButton( wxCommandEvent& event )
+void DynamicVehicleSimToolUIDialog::OnOKButton( wxCommandEvent& WXUNUSED( event ) )
 {
     //OnApplyButton( event );
     //Do not do anything and close the dialog
@@ -313,19 +320,31 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
 
     {
         ves::open::xml::DataValuePairPtr constrainedText( new ves::open::xml::DataValuePair() );
-        ves::open::xml::cad::CADNodePtr tempCADNode = 
-                m_nodeList.at( m_choice3->GetSelection() );
+        if( m_constrainedGeomChoice->GetSelection() == 0 )
+        {
+            constrainedText->SetData( "Constrained Geometry", "None" );
+        }
+        else
+        {
+            ves::open::xml::cad::CADNodePtr tempCADNode = m_nodeList.at( m_constrainedGeomChoice->GetSelection() - 1 );
+            //geomDVP->SetData( tempCADNode->GetNodeName(), tempCADNode->GetID() );
+            constrainedText->SetData( "Constrained Geometry", tempCADNode->GetID() );
+            //constrainedText->SetData( "Contrainted Geometry", ConvertUnicode( m_choice3->GetStringSelection().c_str() ) );
+        }
+        
+        //ves::open::xml::cad::CADNodePtr tempCADNode = 
+        //        m_nodeList.at( m_constrainedGeomChoice->GetSelection() );
         //geomDVP->SetData( tempCADNode->GetNodeName(), tempCADNode->GetID() );
-        constrainedText->SetData( "Constrained Geometry", tempCADNode->GetID() );
+        //constrainedText->SetData( "Constrained Geometry", tempCADNode->GetID() );
         toolCommand->AddDataValuePair( constrainedText );
     }
     
     ves::open::xml::DataValuePairPtr computerNameText( new ves::open::xml::DataValuePair() );
-    computerNameText->SetData( "ComputerName", ConvertUnicode( m_textCtrl1->GetValue().c_str() ) );
+    computerNameText->SetData( "ComputerName", ConvertUnicode( m_computerTextCtrl->GetValue().c_str() ) );
     toolCommand->AddDataValuePair( computerNameText );
 
     ves::open::xml::DataValuePairPtr computerPortText( new ves::open::xml::DataValuePair() );
-    computerPortText->SetData( "ComputerPort", ConvertUnicode( m_textCtrl2->GetValue().c_str() ) );
+    computerPortText->SetData( "ComputerPort", ConvertUnicode( m_portTextCtrl->GetValue().c_str() ) );
     toolCommand->AddDataValuePair( computerPortText );
     tempModel->SetInput( toolCommand );
     //mServiceList->SendCommandStringToXplorer( toolCommand );
@@ -391,16 +410,18 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
         nodeListCreator.GetNodeNameList();
     
 	wxArrayString m_choice11Choices;
+    m_choice11Choices.Add( wxString( "None", wxConvUTF8 ) );
+
     for( size_t i = 0; i < nodeListNames.size(); ++i )
     {
         m_choice11Choices.Add( wxString( nodeListNames.at( i ).c_str(), wxConvUTF8 ) );
     }
 
     //need to clear choice 3
-    m_choice3->Clear();
+    m_constrainedGeomChoice->Clear();
     
-	m_choice3->Append( m_choice11Choices );
-    m_choice3->SetSelection( 0 );
+	m_constrainedGeomChoice->Append( m_choice11Choices );
+    m_constrainedGeomChoice->SetSelection( 0 );
     //m_choice3->SetStringSelection( wxString( constrainedGeom.c_str(), wxConvUTF8 ) );
     size_t nodeIndex1 = 0;
     for( size_t j = 0; j < m_nodeList.size(); ++j )
@@ -413,7 +434,7 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
             break;
         }
     }
-    m_choice3->SetStringSelection( wxString( nodeListNames.at( nodeIndex1 ).c_str(), wxConvUTF8 ) );
+    m_constrainedGeomChoice->SetStringSelection( wxString( nodeListNames.at( nodeIndex1 ).c_str(), wxConvUTF8 ) );
 
     
     //Setup computer info
@@ -426,7 +447,7 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
     {
         computerName = "225.0.0.37";
     }
-    m_textCtrl1->ChangeValue( wxString( computerName.c_str(), wxConvUTF8 ) );
+    m_computerTextCtrl->ChangeValue( wxString( computerName.c_str(), wxConvUTF8 ) );
 
     std::string computerPort;
     if( toolCommand )
@@ -437,8 +458,11 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
     {
         computerPort = "12345";
     }
-    m_textCtrl2->ChangeValue( wxString( computerPort.c_str(), wxConvUTF8 ) );
+    m_portTextCtrl->ChangeValue( wxString( computerPort.c_str(), wxConvUTF8 ) );
 
+    //Initialize the registration data
+    //Get bird info from VR Juggler
+    
     toolCommand = tempModel->GetInput( "Geometry Data Map" );
     if( !toolCommand )
     {
@@ -478,5 +502,13 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
         }
         m_geomChoiceList.at( i )->SetStringSelection( wxString( nodeListNames.at( nodeIndex ).c_str(), wxConvUTF8 ) );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnRegisterButton( wxCommandEvent& WXUNUSED( event ) )
+{
+    //Gather data from the birds
+    //Gater sip offsets
+    //Get the scale
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
