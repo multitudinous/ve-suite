@@ -509,6 +509,13 @@ void DynamicVehicleSimToolUIDialog::OnRegisterButton( wxCommandEvent& WXUNUSED( 
     //Gather data from the birds
     //Gater sip offsets
     //Get the scale
-    ;
+    ves::open::xml::DataValuePairPtr simText( new ves::open::xml::DataValuePair() );
+    simText->SetData( "Registration", "Registration" );
+    
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+    command->AddDataValuePair( simText );
+    const std::string commandName = "DVST Registration Update";
+    command->SetCommandName( commandName );
+    mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////

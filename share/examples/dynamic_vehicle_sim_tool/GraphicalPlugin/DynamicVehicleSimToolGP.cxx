@@ -122,6 +122,7 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
     mEventHandlerMap[ "Geometry Map Update" ] = this;
     mEventHandlerMap[ "Simulator Update" ] = this;
     mEventHandlerMap[ "Computer Info Update" ] = this;
+    mEventHandlerMap[ "DVST Registration Update" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolGP::~DynamicVehicleSimToolGP()
@@ -393,7 +394,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         std::cout << "SimState " << simState << std::endl;
         if( simState == "Start" )
         {
-            m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
+            //m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
             //std::cout << m_initialNavMatrix << std::endl;
             //gmtl::invert( m_initialNavMatrix );
         }
@@ -401,6 +402,18 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         {
             ResetScene();
         }
+        return;
+    }
+
+    if( commandName == "DVST Registration Update" )
+    {
+        //ves::open::xml::DataValuePairPtr dvp = 
+        //    m_currentCommand->GetDataValuePair( "Simulator State" );
+        //std::string simState;
+        //dvp->GetData( simState );
+        
+        m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
+
         return;
     }
 
