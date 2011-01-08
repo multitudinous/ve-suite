@@ -153,12 +153,13 @@ void DynamicVehicleSimToolUIDialog::OnPortNumberEnter( wxCommandEvent& event )
     OnComputerNameEnter( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolUIDialog::OnStartStopButton( wxCommandEvent& WXUNUSED( event ) )
+void DynamicVehicleSimToolUIDialog::OnStartStopButton( wxCommandEvent& event )
 {
     bool state = m_toggleBtn1->GetValue();
     std::string simState = "Stop";
     if( state )
     {
+        OnComputerNameEnter( event );
         simState = "Start";
     }
     ves::open::xml::DataValuePairPtr simText( new ves::open::xml::DataValuePair() );
@@ -274,7 +275,6 @@ void DynamicVehicleSimToolUIDialog::OnConstrainedGeometrySelection( wxCommandEve
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnApplyButton( wxCommandEvent& event )
 {
-    OnComputerNameEnter( event );
     OnConstrainedGeometrySelection( event );
     
     ves::open::xml::CommandPtr geomCommand( new ves::open::xml::Command() );
