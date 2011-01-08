@@ -64,6 +64,7 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
 
@@ -154,7 +155,9 @@ void DynamicVehicleSimToolGP::PreFrameUpdate()
     if( m_positionStack.size() < m_animationedNodes.size() )
     {
         syncedData = false;
-        //std::cout << "we have a problem with the position stack size." << std::endl;
+        vprDEBUG( vesDBG, 2 ) 
+            << "\t\tDVST There is not enough position data from the simulator." 
+            << std::endl << vprDEBUG_FLUSH;
     }
 
     //Update the animated parts
@@ -174,7 +177,7 @@ void DynamicVehicleSimToolGP::PreFrameUpdate()
             tempNode->SetMat( m_positionStack.at( i  ) );
         }
     }
-    //std::cout << syncedData << " " << hasConstrainedData << " " << m_constrainedGeom.valid() << std::endl;
+
     //Now update the constrained geom
     if( hasConstrainedData && m_constrainedGeom.valid() )
     {
@@ -243,7 +246,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         std::string constrainedGeom;
         dvp3->GetData( constrainedGeom );
 
-        if( !constrainedGeom.empty() )
+        if( !constrainedGeom.empty() && (constrainedGeom != "None") )
         {
             if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->PartExists( constrainedGeom ) )
@@ -276,8 +279,6 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             m_constrainedGeomPath = 
                 npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
         }
-        
-        //std::cout << computerName << " " << computerPort << " " << constrainedGeom << std::endl;
         return;
     }
     
@@ -298,7 +299,6 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             //std::cout << nodeName << std::endl;
             if( nodeName == "No Geom" )
             {
-                //noGeom = true;
                 break;
             }
 
@@ -350,10 +350,9 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         ves::open::xml::DataValuePairPtr dvp = 
             m_currentCommand->GetDataValuePair( "Constrained Geometry" );
         std::string constrainedGeom;
-        //if( dvp )
         dvp->GetData( constrainedGeom );
 
-        if( !constrainedGeom.empty() ) //&& (constrainedGeom != "No Geom") )
+        if( !constrainedGeom.empty() && (constrainedGeom != "None") )
         {
             if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->PartExists( constrainedGeom ) )
@@ -381,14 +380,11 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
         if( m_constrainedGeom.valid() )
         {
-            std::cout << " constrained set " << std::endl;
             ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor( 
                 m_constrainedGeom.get(), mSceneManager->GetModelRoot() );
             m_constrainedGeomPath = 
                 npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
         }
-
-        //std::cout << "geom map update " << constrainedGeom << std::endl;
         return;
     }
 
@@ -399,12 +395,10 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         std::string simState;
         dvp->GetData( simState );
         SetSimState( simState );
-        //std::cout << "SimState " << simState << std::endl;
+
         if( simState == "Start" )
         {
-            //m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
-            //std::cout << m_initialNavMatrix << std::endl;
-            //gmtl::invert( m_initialNavMatrix );
+            ;
         }
         else if( simState == "Reset" )
         {
@@ -437,9 +431,6 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         std::string computerPort;
         dvp2->GetData( computerPort );
         SetComputerData( computerName, computerPort );
-
-        //std::cout << computerName << " " << computerPort << std::endl;
-
         return;
     }
 }
@@ -521,20 +512,20 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
                     // Read a message from a client.
                     const vpr::Uint32 bytes = sock.recvfrom(recv_buf, bufferSize,
                                                             addr);
-                    
+
                     // If we read anything, print it and send a response.
-                    //std::cout << "Read '" << " " << "' (" << bytes
-                    //    << " bytes) from " << addr.getAddressString()
-                    //    << std::endl;
+                    vprDEBUG( vesDBG, 2 ) << "\t\tDVST read (" << bytes
+                        << " bytes) from " << addr.getAddressString()
+                        << std::endl << vprDEBUG_FLUSH;
+
                     bufferData.resize( 0 );
-                    for( size_t i = 0; i < bytes; ++i )//bufferSize; ++i )
+                    for( size_t i = 0; i < bytes; ++i )
                     {
                         if( recv_buf[ i ] == '\0' )
                         {
                             bufferData.push_back( ' ' );
                             continue;
                         }
-                        //std::cout << recv_buf[ i ] << std::endl;
                         bufferData.push_back( recv_buf[ i ] );
                     }
                     
@@ -571,12 +562,13 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
                      }
                      }
                      //std::cout << "Column Count " << columnCount1 << std::endl;*/
-                    //std::cout << bufferData << std::endl;
+                    vprDEBUG( vesDBG, 2 ) << "\t\tDVST buffer data " 
+                        << bufferData << std::endl << vprDEBUG_FLUSH;
+
                     boost::split( splitVec, bufferData, boost::is_any_of(" "), boost::token_compress_on );
                     double tempDouble = 0;
                     for( size_t i = 0; i < splitVec.size(); ++i )
                     {
-                        //std::cout << "<" << splitVec.at( i ) << "> ";
                         try
                         {
                             tempDouble = boost::lexical_cast<double>( splitVec.at( i ) );
@@ -584,7 +576,8 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
                         }
                         catch( boost::bad_lexical_cast& ex )
                         {
-                            std::cout << "cannot cast data " << ex.what() << std::endl;
+                            std::cout << "cannot cast data " << ex.what() 
+                                << " data is " << splitVec.at( i ) << std::endl;
                         }
                     }
                     SetPositionData( positionData );
@@ -641,17 +634,17 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
     }
     unsigned int numObjects = positionData.size() / numEntries;
 
-    /*if( simState == "Reset" )
-    {
-        for( size_t i = 0; i < positionData.size(); ++i )
-        {
-            positionData.at( i ) = 0.0;
-        }
-    }*/
+    vprDEBUG( vesDBG, 2 ) << "|\t\tDVST Number of objects from the simulator "
+        << numObjects << std::endl << vprDEBUG_FLUSH;
 
-    //std::cout << numObjects << std::endl;
     for( size_t i = 0; i < numObjects; ++i )
     {
+        if( i == m_animationedNodes.size() )
+        {
+            ///If we are not trying to map data to nodes then do not process the data
+            break;
+        }
+
         const size_t indexOffset = i*numEntries;
         posData.set( positionData.at( 0 + indexOffset ), -positionData.at( 2 + indexOffset ), positionData.at( 1 + indexOffset ) );
         xVec.set( positionData.at( 3 + indexOffset ), -positionData.at( 5 + indexOffset ), positionData.at( 4 + indexOffset ) );
@@ -663,12 +656,7 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
 
         //All sim data is coming in as centimeters so scale it.
         double scaleFactor = 0.0328;
-
-        if( i < m_animationedNodes.size() )
-        {
-            //std::cout << m_animationedNodes.at( i ).first << std::endl;
-            scaleFactor = scaleFactor / m_animationedNodes.at( i ).first;
-        }
+        scaleFactor = scaleFactor / m_animationedNodes.at( i ).first;
 
         //GMTL is columan major order so this is why the data is laid out in columns
         //http://www.fastgraph.com/makegames/3drotation/
@@ -676,7 +664,7 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
                       xVec[ 1 ], yVec[ 1 ], zVec[ 1 ], posData[ 1 ]*scaleFactor,
                       xVec[ 2 ], yVec[ 2 ], zVec[ 2 ], posData[ 2 ]*scaleFactor,
                              0.,        0.,        0.,           1. );
-        
+    
         //We can grab the ith matrix because the indices of the position stack
         //correspond to the position of the data coming back from the simulator
         transMat = m_initialPositionStack.at( i ) * transMat;
