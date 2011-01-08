@@ -46,6 +46,8 @@
 
 #include <jccl/RTRC/ConfigManager.h>
 
+#include <vpr/Util/GUID.h>
+
 using namespace vrj;
 
 // Utility function to draw a cube
@@ -85,8 +87,11 @@ public: // ---- INITIALIZATION FUNCTIONS ---- //
       mHead.init("VJHead");
       mButton0.init("VJButton0");
       mButton1.init("VJButton1");
+      vpr::GUID new_guid(vpr::GUID::generateTag);
+      //new_guid.generate();
+      std::string filename = "bird_out_" + new_guid.toString() + ".txt";
       
-      m_fileOut.open( "bird_out.txt" );
+      m_fileOut.open( filename.c_str() );
    }
 
    /**
