@@ -232,6 +232,7 @@ void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WX
 	m_scrolledWindowSizer->Add( bSizer, 0, 0, 5 );
     m_scrolledWindow1->Layout();
     m_geomChoiceList.push_back( choice );
+    Layout();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent& WXUNUSED( event ) )
@@ -247,6 +248,7 @@ void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent&
         m_geomChoiceList.pop_back();
     }
     m_scrolledWindow1->Layout();
+    Layout();
     UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -424,18 +426,18 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
     m_constrainedGeomChoice->SetSelection( 0 );
     //m_choice3->SetStringSelection( wxString( constrainedGeom.c_str(), wxConvUTF8 ) );
     size_t nodeIndex1 = 0;
+    std::string selectedNode( "None" );
     for( size_t j = 0; j < m_nodeList.size(); ++j )
     {
         std::string nodeID = m_nodeList.at( j )->GetID();
         if( nodeID == constrainedGeom )
         {
             nodeIndex1 = j;
-            constrainedGeom = nodeListNames.at( nodeIndex1 );
+            selectedNode = nodeListNames.at( nodeIndex1 );
             break;
         }
     }
-    m_constrainedGeomChoice->SetStringSelection( wxString( nodeListNames.at( nodeIndex1 ).c_str(), wxConvUTF8 ) );
-
+    m_constrainedGeomChoice->SetStringSelection( wxString( selectedNode.c_str(), wxConvUTF8 ) );
     
     //Setup computer info
     std::string computerName;

@@ -60,7 +60,8 @@ protected:
     wxStdDialogButtonSizer* m_sdbSizer1;
     wxButton* m_sdbSizer1OK;
     wxButton* m_sdbSizer1Apply;
-    
+    wxButton* m_applyButton;
+
     // Virtual event handlers, overide them in your derived class
     virtual void OnComputerNameEnter( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnPortNumberEnter( wxCommandEvent& event ) { event.Skip(); }
