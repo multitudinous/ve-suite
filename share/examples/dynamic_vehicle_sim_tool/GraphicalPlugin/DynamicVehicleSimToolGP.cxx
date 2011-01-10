@@ -624,6 +624,8 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
     gmtl::Point3d posData;
     gmtl::Vec3d xVec, yVec, zVec;
     gmtl::Matrix44d transMat;
+    gmtl::Matrix44d hackTransMat;
+
     std::vector< double > positionData;
     GetPositionData( positionData );
     if( positionData.size() == 0 )
@@ -665,9 +667,24 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
                       xVec[ 2 ], yVec[ 2 ], zVec[ 2 ], posData[ 2 ]*scaleFactor,
                              0.,        0.,        0.,           1. );
     
+        //This is a hack to record the body position
+        if( i == 0 )
+        {
+            hackTransMat = transMat;
+        }
+
         //We can grab the ith matrix because the indices of the position stack
         //correspond to the position of the data coming back from the simulator
-        transMat = m_initialPositionStack.at( i ) * transMat;
+        if( i > 1 )
+        {
+            //This is a hack to make the wheels spin relative to the machine
+            transMat = m_initialPositionStack.at( i ) * hackTransMat * transMat;            
+
+        }
+        else
+        {
+            transMat = m_initialPositionStack.at( i ) * transMat;            
+        }
 
         //Now we push back the whole new matrix
         m_positionStack.push_back( transMat );
