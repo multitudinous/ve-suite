@@ -45,6 +45,8 @@
 
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/data/MakeLive.h>
+
 // Forward declarations
 namespace Poco
 {
@@ -269,6 +271,8 @@ protected:
 
     boost::uuids::uuid mUUID;
     std::string mUUIDString;
+
+    std::vector< MakeLiveBasePtr > mLiveObjects;
 
 private:
     // Empty string to use when need to return an empty string by reference
