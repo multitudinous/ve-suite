@@ -508,16 +508,43 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnRegisterButton( wxCommandEvent& WXUNUSED( event ) )
 {
-    //Gather data from the birds
-    //Gater sip offsets
-    //Get the scale
-    ves::open::xml::DataValuePairPtr simText( new ves::open::xml::DataValuePair() );
-    simText->SetData( "Registration", "Registration" );
-    
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+
+    ves::open::xml::DataValuePairPtr simText( new ves::open::xml::DataValuePair() );
+    simText->SetData( "Mode", ConvertUnicode( m_registrationChoice->GetStringSelection().c_str() ) );
+    if( m_registrationChoice->GetSelection() == 1 )
+    {
+        ves::open::xml::DataValuePairPtr fileText( new ves::open::xml::DataValuePair() );
+        fileText->SetData( "Filename", m_fileName );
+        command->AddDataValuePair( fileText );
+    }
     command->AddDataValuePair( simText );
     const std::string commandName = "DVST Registration Update";
     command->SetCommandName( commandName );
     mServiceList->SendCommandStringToXplorer( command );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolUIDialog::OnRegistrationFileChoice( wxCommandEvent& WXUNUSED( event ) ) 
+{ 
+    if( m_registrationChoice->GetSelection() == 1 )
+    {
+        wxFileDialog dialog
+        (
+         this,
+         _T( "Select File" ),
+         ::wxGetCwd(),
+         wxT( "" ),
+         _T( "Files (*.*)|*.*" ),
+         wxFD_OPEN | wxFD_FILE_MUST_EXIST
+         );
+        
+        if( dialog.ShowModal() != wxID_OK )
+        {
+            return;
+        }
+        
+        //wxFileName vesFileName( dialog.GetPath() );
+        m_fileName = ConvertUnicode( dialog.GetFilename().c_str() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

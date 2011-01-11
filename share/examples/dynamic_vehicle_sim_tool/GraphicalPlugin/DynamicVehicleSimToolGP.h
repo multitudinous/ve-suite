@@ -105,6 +105,8 @@ private:
     void GetComputerData( std::string& computerName, std::string& computerPort );
     ///Registration code
     void CalculateRegistrationVariables();
+    ///Read bird file
+    void ReadBirdRegistrationFile();
 
     ///Sample thread
     vpr::Thread* m_sampleThread;
@@ -120,7 +122,17 @@ private:
     std::string m_computerPort;
     ///
     ves::open::xml::CommandPtr m_currentCommand;
-    
+    ///
+    std::string m_birdFilename;
+    ///
+    std::string m_frontBird;
+    ///
+    std::string m_lrBird;
+    ///
+    std::string m_rrBird;
+    ///Stored in sets of three in Front, Left Rear, Right Rear
+    std::vector< double > m_birdData;
+
     ///Control wether the thread continues to run
     bool m_runSampleThread;
     ///Matrix stack containing position data for the geometry

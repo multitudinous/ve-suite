@@ -49,19 +49,13 @@ protected:
     wxChoice* m_choice11;
     wxButton* m_addButton;
     wxButton* m_removeButton;
+    wxButton* m_applyButton;
     wxChoice* m_constrainedGeomChoice;
-    wxChoice* m_frontBird;
-    wxChoice* m_leftRearBird;
-    wxChoice* m_rightRearBird;
-    wxTextCtrl* m_xSIPOffset;
-    wxTextCtrl* m_ySIPOffset;
-    wxTextCtrl* m_zSIPOffset;
+    wxChoice* m_registrationChoice;
     wxButton* m_registrationButton;
     wxStdDialogButtonSizer* m_sdbSizer1;
     wxButton* m_sdbSizer1OK;
-    wxButton* m_sdbSizer1Apply;
-    wxButton* m_applyButton;
-
+    
     // Virtual event handlers, overide them in your derived class
     virtual void OnComputerNameEnter( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnPortNumberEnter( wxCommandEvent& event ) { event.Skip(); }
@@ -70,15 +64,16 @@ protected:
     virtual void OnGeometryDataMapping( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnAddGeometryGroupButton( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnRemoveGeometryGroupButton( wxCommandEvent& event ) { event.Skip(); }
-    virtual void OnConstrainedGeometrySelection( wxCommandEvent& event ) { event.Skip(); }
-    virtual void OnRegisterButton( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnApplyButton( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnConstrainedGeometrySelection( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnRegistrationFileChoice( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnRegisterButton( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnOKButton( wxCommandEvent& event ) { event.Skip(); }
     
 
 public:
     
-    DynamicVehicleSimToolBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Dynamic Vehicle Sim Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,800 ), long style = wxDEFAULT_DIALOG_STYLE );
+    DynamicVehicleSimToolBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Dynamic Vehicle Sim Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,800 ), long style = wxDEFAULT_DIALOG_STYLE );
     ~DynamicVehicleSimToolBase();
 };
 } // namespace dvst

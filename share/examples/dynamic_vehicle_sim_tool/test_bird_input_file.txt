@@ -1,5 +1,6 @@
 # The measurements are in mm
 # The coords are x to the rear, y up, z to the left
+# The order is Front, Left Rear, Right Rear
 VJHead -1048.1 686.8 13.3
 VJWand 597.8 792.5 421.4
 VESPointer 600.9 792.4 -421.4

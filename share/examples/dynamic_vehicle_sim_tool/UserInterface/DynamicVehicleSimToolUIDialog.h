@@ -81,6 +81,8 @@ private:
     std::vector< wxChoice* > m_geomChoiceList;
     ///Node list
     std::vector< ves::open::xml::cad::CADNodePtr > m_nodeList;
+    ///
+    std::string m_fileName;
     
 protected:
 	// Handlers for DynamicVehicleSimTool events.
@@ -92,6 +94,7 @@ protected:
 	void OnAddGeometryGroupButton( wxCommandEvent& event );
 	void OnRemoveGeometryGroupButton( wxCommandEvent& event );
 	void OnConstrainedGeometrySelection( wxCommandEvent& event );
+    void OnRegistrationFileChoice( wxCommandEvent& event );
     void OnRegisterButton( wxCommandEvent& event );
 	void OnApplyButton( wxCommandEvent& event );
 	void OnOKButton( wxCommandEvent& event );

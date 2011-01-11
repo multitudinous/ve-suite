@@ -414,14 +414,26 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
     if( commandName == "DVST Registration Update" )
     {
-        //ves::open::xml::DataValuePairPtr dvp = 
-        //    m_currentCommand->GetDataValuePair( "Simulator State" );
-        //std::string simState;
-        //dvp->GetData( simState );
+        ves::open::xml::DataValuePairPtr dvp = 
+            m_currentCommand->GetDataValuePair( "Mode" );
+        std::string simState;
+        dvp->GetData( simState );
         
-        m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
-        std::cout << m_initialNavMatrix << std::endl;
-        CalculateRegistrationVariables();
+        if( simState == "Manual" )
+        {
+            m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
+        }
+        else
+        {
+            ves::open::xml::DataValuePairPtr dvp1 = 
+                m_currentCommand->GetDataValuePair( "Filename" );
+            dvp1->GetData( m_birdFilename );
+
+            ReadBirdRegistrationFile();
+            
+            CalculateRegistrationVariables();
+        }
+
         return;
     }
 
@@ -778,12 +790,17 @@ void DynamicVehicleSimToolGP::ResetScene()
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
 {
+    if( m_birdData.size() != 9 )
+    {
+        std::cout << "There are not enough birds in the bird config file." << std::endl;
+        return;
+    }
     gadget::PositionInterface  headposDevice;
-    headposDevice.init( "VJHead" );
+    headposDevice.init( m_frontBird );
     gadget::PositionInterface  wandposDevice;
-    wandposDevice.init( "VJWand" );
+    wandposDevice.init( m_lrBird );
     gadget::PositionInterface  pointerposDevice;
-    pointerposDevice.init( "VESPointer" );
+    pointerposDevice.init( m_rrBird );
     
     //Get the bird data from
     //VJHead
@@ -814,8 +831,8 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
 #endif
 
     //Create the centroid for the triangle
-    //centroid = ((pt1[0]+pt2[0]+pt3[0])/3.0, \
-    //            (pt1[1]+pt2[1]+pt3[1])/3.0, \
+    //centroid = ((pt1[0]+pt2[0]+pt3[0])/3.0,
+    //            (pt1[1]+pt2[1]+pt3[1])/3.0,
     //            (pt1[2]+pt2[2]+pt3[2])/3)
     gmtl::Point3d centroid;
     centroid.set( 
@@ -865,7 +882,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
 	//rrbirdd = (sip[0]*u.mm+600.9*u.mm,sip[1]*u.mm+792.4*u.mm,sip[2]*u.mm-421.4*u.mm)
     double mm2ft = 0.0032808;
 
-    double frontBirdX = -1048.1 * mm2ft;
+    /*double frontBirdX = -1048.1 * mm2ft;
     double frontBirdY = 686.8 * mm2ft;
     double frontBirdZ = 13.3 * mm2ft;
 
@@ -875,7 +892,20 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
 
     double rightRearBirdX = 600.9 * mm2ft;
     double rightRearBirdY = 792.4 * mm2ft;
-    double rightRearBirdZ = -421.4 * mm2ft;
+    double rightRearBirdZ = -421.4 * mm2ft;*/
+    
+    double frontBirdX = m_birdData.at( 0 ) * mm2ft;
+    double frontBirdY = m_birdData.at( 1 ) * mm2ft;
+    double frontBirdZ = m_birdData.at( 2 ) * mm2ft;
+    
+    double leftRearBirdX = m_birdData.at( 3 ) * mm2ft;
+    double leftRearBirdY = m_birdData.at( 4 ) * mm2ft;
+    double leftRearBirdZ = m_birdData.at( 5 ) * mm2ft;
+    
+    double rightRearBirdX = m_birdData.at( 6 ) * mm2ft;
+    double rightRearBirdY = m_birdData.at( 7 ) * mm2ft;
+    double rightRearBirdZ = m_birdData.at( 8 ) * mm2ft;
+    
     //These coords are transformed into ves coord space
     //x = -z
     //y = -x
@@ -914,5 +944,57 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     m_initialNavMatrix = registerMat * myMat;
 #endif
     //std::cout << m_initialNavMatrix << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::ReadBirdRegistrationFile()
+{
+    std::ifstream birdFile( m_birdFilename.c_str() );
+    std::string bufferData;
+    typedef std::vector< std::string > split_vector_type;
+    split_vector_type splitVec;
+    size_t count = 0;
+    do
+    {
+        std::getline( birdFile, bufferData );
+        boost::algorithm::trim( bufferData );
+        if( bufferData[ 0 ] == '#' )
+        {
+            //test for a comment
+        }
+        else
+        {
+            boost::split( splitVec, bufferData, boost::is_any_of(" "), boost::token_compress_on );
+            if( count == 0 )
+            {
+                m_frontBird = boost::lexical_cast<std::string>( splitVec.at( 0 ) );
+                count += 1;
+            }
+            else if( count == 1 )
+            {
+                m_lrBird = boost::lexical_cast<std::string>( splitVec.at( 0 ) );
+                count += 1;
+            }
+            else if( count == 2 )
+            {
+                m_rrBird = boost::lexical_cast<std::string>( splitVec.at( 0 ) );
+                count += 1;
+            }
+
+            for( size_t i = 1; i < splitVec.size(); ++i )
+            {
+                try
+                {
+                    double tempDouble = boost::lexical_cast<double>( splitVec.at( i ) );
+                    m_birdData.push_back( tempDouble );
+                }
+                catch( boost::bad_lexical_cast& ex )
+                {
+                    std::cout << "cannot cast data " << ex.what() 
+                    << " data is " << splitVec.at( i ) << std::endl;
+                }
+            }          
+        }
+    }
+    while( !birdFile.eof() );
 }
 ////////////////////////////////////////////////////////////////////////////////

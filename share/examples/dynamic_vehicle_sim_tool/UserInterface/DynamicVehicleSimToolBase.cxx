@@ -9,18 +9,16 @@
 
 ///////////////////////////////////////////////////////////////////////////
 using namespace dvst;
-using namespace ves::conductor;
 
-DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
-    :
-    UIDialog( parent, id, title )
+DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) 
+     :
+     UIDialog( parent, id, title )
 {
     this->SetSizeHints( wxDefaultSize, wxDefaultSize );
     
     wxBoxSizer* bSizer1;
     bSizer1 = new wxBoxSizer( wxVERTICAL );
-    bSizer1->SetMinSize( wxSize( 150,-1 ) );
-
+    
     wxStaticBoxSizer* sbSizer1;
     sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Simulator Info") ), wxVERTICAL );
     
@@ -120,7 +118,7 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     
     m_applyButton = new wxButton( this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     bSizer3->Add( m_applyButton, 0, wxALL, 5 );
-
+    
     bSizer2->Add( bSizer3, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
     
     wxStaticBoxSizer* sbSizer6;
@@ -139,90 +137,22 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     bSizer1->Add( sbSizer2, 0, wxALL|wxEXPAND, 5 );
     
     wxStaticBoxSizer* registrationSizer;
-    registrationSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Registration Tools") ), wxVERTICAL );
+    registrationSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Registration Tools") ), wxHORIZONTAL );
     
-    wxBoxSizer* bSizer81;
-    bSizer81 = new wxBoxSizer( wxHORIZONTAL );
-    
-    wxBoxSizer* bSizer9;
-    bSizer9 = new wxBoxSizer( wxVERTICAL );
-    
-    wxStaticBoxSizer* sbSizer8;
-    sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Front Bird") ), wxVERTICAL );
-    
-    wxString m_frontBirdChoices[] = { wxT("None"), wxT("Bird1"), wxT("Bird2"), wxT("Bird3") };
-    int m_frontBirdNChoices = sizeof( m_frontBirdChoices ) / sizeof( wxString );
-    m_frontBird = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_frontBirdNChoices, m_frontBirdChoices, 0 );
-    m_frontBird->SetSelection( 0 );
-    sbSizer8->Add( m_frontBird, 0, 0, 5 );
-    
-    bSizer9->Add( sbSizer8, 0, wxEXPAND|wxRIGHT, 5 );
-    
-    wxStaticBoxSizer* sbSizer9;
-    sbSizer9 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Left Rear Bird") ), wxVERTICAL );
-    
-    wxString m_leftRearBirdChoices[] = { wxT("None") };
-    int m_leftRearBirdNChoices = sizeof( m_leftRearBirdChoices ) / sizeof( wxString );
-    m_leftRearBird = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_leftRearBirdNChoices, m_leftRearBirdChoices, 0 );
-    m_leftRearBird->SetSelection( 0 );
-    sbSizer9->Add( m_leftRearBird, 0, 0, 5 );
-    
-    bSizer9->Add( sbSizer9, 0, wxEXPAND|wxRIGHT, 5 );
-    
-    wxStaticBoxSizer* sbSizer10;
-    sbSizer10 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Right Rear Bird") ), wxVERTICAL );
-    
-    wxString m_rightRearBirdChoices[] = { wxT("None") };
-    int m_rightRearBirdNChoices = sizeof( m_rightRearBirdChoices ) / sizeof( wxString );
-    m_rightRearBird = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_rightRearBirdNChoices, m_rightRearBirdChoices, 0 );
-    m_rightRearBird->SetSelection( 0 );
-    sbSizer10->Add( m_rightRearBird, 0, 0, 5 );
-    
-    bSizer9->Add( sbSizer10, 0, wxEXPAND|wxRIGHT, 5 );
-    
-    bSizer81->Add( bSizer9, 1, wxEXPAND, 5 );
-    
-    wxBoxSizer* bSizer10;
-    bSizer10 = new wxBoxSizer( wxVERTICAL );
-    
-    wxStaticBoxSizer* sbSizer11;
-    sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("X SIP Offset (ft)") ), wxVERTICAL );
-    
-    m_xSIPOffset = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxDefaultSize, 0 );
-    sbSizer11->Add( m_xSIPOffset, 0, 0, 5 );
-    
-    bSizer10->Add( sbSizer11, 0, wxEXPAND|wxLEFT, 5 );
-    
-    wxStaticBoxSizer* sbSizer12;
-    sbSizer12 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Y SIP Offset (ft)") ), wxVERTICAL );
-    
-    m_ySIPOffset = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxDefaultSize, 0 );
-    sbSizer12->Add( m_ySIPOffset, 0, 0, 5 );
-    
-    bSizer10->Add( sbSizer12, 0, wxEXPAND|wxLEFT, 5 );
-    
-    wxStaticBoxSizer* sbSizer13;
-    sbSizer13 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Z SIP Offset (ft)") ), wxVERTICAL );
-    
-    m_zSIPOffset = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxDefaultSize, 0 );
-    sbSizer13->Add( m_zSIPOffset, 0, 0, 5 );
-    
-    bSizer10->Add( sbSizer13, 0, wxEXPAND|wxLEFT, 5 );
-    
-    bSizer81->Add( bSizer10, 1, wxEXPAND, 5 );
-    
-    registrationSizer->Add( bSizer81, 1, wxEXPAND, 5 );
+    wxString m_registrationChoiceChoices[] = { wxT("Manual"), wxT("Choose file...") };
+    int m_registrationChoiceNChoices = sizeof( m_registrationChoiceChoices ) / sizeof( wxString );
+    m_registrationChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_registrationChoiceNChoices, m_registrationChoiceChoices, 0 );
+    m_registrationChoice->SetSelection( 0 );
+    registrationSizer->Add( m_registrationChoice, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
     
     m_registrationButton = new wxButton( this, wxID_ANY, wxT("Register"), wxDefaultPosition, wxDefaultSize, 0 );
-    registrationSizer->Add( m_registrationButton, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+    registrationSizer->Add( m_registrationButton, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT, 5 );
     
-    bSizer1->Add( registrationSizer, 0, wxALL|wxEXPAND, 5 );
+    bSizer1->Add( registrationSizer, 0, wxEXPAND, 5 );
     
     m_sdbSizer1 = new wxStdDialogButtonSizer();
     m_sdbSizer1OK = new wxButton( this, wxID_OK );
     m_sdbSizer1->AddButton( m_sdbSizer1OK );
-    //m_sdbSizer1Apply = new wxButton( this, wxID_APPLY );
-    //m_sdbSizer1->AddButton( m_sdbSizer1Apply );
     m_sdbSizer1->Realize();
     bSizer1->Add( m_sdbSizer1, 0, wxALIGN_CENTER|wxALL, 5 );
     
@@ -230,7 +160,7 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     this->Layout();
     
     bSizer1->Fit( this );
-
+    
     // Connect Events
     m_computerTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( DynamicVehicleSimToolBase::OnComputerNameEnter ), NULL, this );
     m_portTextCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( DynamicVehicleSimToolBase::OnPortNumberEnter ), NULL, this );
@@ -240,9 +170,11 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     //m_choice11->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
     m_addButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnAddGeometryGroupButton ), NULL, this );
     m_removeButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRemoveGeometryGroupButton ), NULL, this );
-    m_constrainedGeomChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnConstrainedGeometrySelection ), NULL, this );
-    m_registrationButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRegisterButton ), NULL, this );
     m_applyButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnApplyButton ), NULL, this );
+    m_constrainedGeomChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnConstrainedGeometrySelection ), NULL, this );
+    m_registrationChoice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRegistrationFileChoice ), NULL, this );
+    m_registrationButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRegisterButton ), NULL, this );
+    //m_sdbSizer1Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnApplyButton ), NULL, this );
     m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnOKButton ), NULL, this );
 }
 
@@ -257,9 +189,11 @@ DynamicVehicleSimToolBase::~DynamicVehicleSimToolBase()
     //m_choice11->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnGeometryDataMapping ), NULL, this );
     m_addButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnAddGeometryGroupButton ), NULL, this );
     m_removeButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRemoveGeometryGroupButton ), NULL, this );
-    m_constrainedGeomChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnConstrainedGeometrySelection ), NULL, this );
-    m_registrationButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRegisterButton ), NULL, this );
     m_applyButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnApplyButton ), NULL, this );
+    m_constrainedGeomChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnConstrainedGeometrySelection ), NULL, this );
+    m_registrationChoice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRegistrationFileChoice ), NULL, this );
+    m_registrationButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnRegisterButton ), NULL, this );
+    //m_sdbSizer1Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnApplyButton ), NULL, this );
     m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DynamicVehicleSimToolBase::OnOKButton ), NULL, this );
     
 }
