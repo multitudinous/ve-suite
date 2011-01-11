@@ -103,7 +103,9 @@ private:
     void SetComputerData( std::string& computerName, std::string& computerPort );
     ///
     void GetComputerData( std::string& computerName, std::string& computerPort );
-        
+    ///Registration code
+    void CalculateRegistrationVariables();
+
     ///Sample thread
     vpr::Thread* m_sampleThread;
     ///Position buffer
