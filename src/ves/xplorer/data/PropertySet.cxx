@@ -68,6 +68,8 @@ PropertySet::PropertySet():
     std::stringstream ss;
     ss << mUUID;
     mUUIDString = ss.str();
+
+    AddProperty("NameTag", mUUIDString, "Name Tag");
 }
 ////////////////////////////////////////////////////////////////////////////////
 PropertySet::PropertySet( const PropertySet& orig )
@@ -437,6 +439,11 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
     statement.execute();
 
     Poco::Data::RecordSet recordset( statement );
+
+    if( recordset.rowCount() == 0 )
+    {
+        return false;
+    }
 
     // Parse out the record column by column and put the data into the
     // appropriate places
