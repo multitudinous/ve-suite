@@ -175,6 +175,7 @@ public:
         std::cout << "================================" << std::endl;
     }
     
+    void CalculateRegistrationVariables();
    /**
     * Called during the Frame.
     *

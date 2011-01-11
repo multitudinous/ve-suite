@@ -39,6 +39,8 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Vec.h>
+#include <gmtl/Point.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 #include "simpleApp.h"
 
@@ -204,4 +206,113 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
          glVertex3dv(&v[faces[i][3]][0]);
       glEnd();
    }
+}
+
+void simpleApp::CalculateRegistrationVariables()
+{
+    gadget::PositionInterface  headposDevice;
+    headposDevice.init( "VJHead" );
+    gadget::PositionInterface  wandposDevice;
+    wandposDevice.init( "VJWand" );
+    gadget::PositionInterface  pointerposDevice;
+    pointerposDevice.init( "VESPointer" );
+    
+    //Get the bird data from
+    //VJHead
+    gmtl::Matrix44d headMat = gmtl::convertTo< double >( headposDevice->getData() );
+    gmtl::Point4d headPoint = gmtl::makeTrans< gmtl::Point4d >( headMat );
+    //VJWand
+    gmtl::Matrix44d wandMat = gmtl::convertTo< double >( wandposDevice->getData() );
+    gmtl::Point4d wandPoint = gmtl::makeTrans< gmtl::Point4d >( wandMat );
+    //VJPointer
+    gmtl::Matrix44d pointerMat = gmtl::convertTo< double >( pointerposDevice->getData() );
+    gmtl::Point4d pointerPoint = gmtl::makeTrans< gmtl::Point4d >( pointerMat );
+
+    //Create the centroid for the triangle
+    //centroid = ((pt1[0]+pt2[0]+pt3[0])/3.0, \
+    //            (pt1[1]+pt2[1]+pt3[1])/3.0, \
+    //            (pt1[2]+pt2[2]+pt3[2])/3)
+    gmtl::Point3d centroid;
+    centroid.set( 
+        (headPoint[ 0 ] + wandPoint[ 0 ] + pointerPoint[ 0 ])/3.0, 
+        (headPoint[ 1 ] + wandPoint[ 1 ] + pointerPoint[ 1 ])/3.0,
+        (headPoint[ 2 ] + wandPoint[ 2 ] + pointerPoint[ 2 ])/3.0 );
+        
+    //Create vector from the origin of the triangle to the fron bird
+    gmtl::Vec3d forwardVec;
+    forwardVec.set( headPoint[ 0 ] - centroid[ 0 ], 
+                   -(headPoint[ 2 ] - centroid[ 2 ]), 
+                   headPoint[ 1 ] - centroid[ 1 ] );
+    gmtl::normalize( forwardVec );
+
+    //Cross the front vector with the vector from one of the rear bird corners
+    gmtl::Vec3d rearVec;
+    rearVec.set( wandPoint[ 0 ] - centroid[ 0 ], 
+                -(wandPoint[ 2 ] - centroid[ 2 ]), 
+                wandPoint[ 1 ] - centroid[ 1 ] );
+    gmtl::normalize( rearVec );
+
+    //Create the up vector
+    gmtl::Vec3d upVec;
+    upVec.set( (rearVec[1]*forwardVec[2]) - (rearVec[2]*forwardVec[1]),
+             (rearVec[2]*forwardVec[0]) - (rearVec[0]*forwardVec[2]),
+             (rearVec[0]*forwardVec[1]) - (rearVec[1]*forwardVec[0]) );
+    gmtl::normalize( upVec );
+
+    gmtl::Vec3d rightVec;
+    rightVec.set( (forwardVec[1]*upVec[2]) - (forwardVec[2]*upVec[1]),
+                 (forwardVec[2]*upVec[0]) - (forwardVec[0]*upVec[2]),
+                 (forwardVec[0]*upVec[1]) - (forwardVec[1]*upVec[0]) );
+    gmtl::normalize( rightVec );
+    
+    //GMTL is columan major order so this is why the data is laid out in columns
+    //http://www.fastgraph.com/makegames/3drotation/
+    gmtl::Matrix44d transMat;
+    transMat.set( rightVec[ 0 ], forwardVec[ 0 ], upVec[ 0 ],  centroid[ 0 ],
+                  rightVec[ 1 ], forwardVec[ 1 ], upVec[ 1 ], -centroid[ 2 ],
+                  rightVec[ 2 ], forwardVec[ 2 ], upVec[ 2 ],  centroid[ 1 ],
+                             0.,         0.,              0.,             1. );
+    
+    //Get the SIP offsets from the birds to the centroid
+    //X is to the rear, y is up, z is to the left
+    //fbirdd = (sip[0]*u.mm-1048.1*u.mm,sip[1]*u.mm+686.8*u.mm,sip[2]*u.mm+13.3*u.mm)
+	//lrbirdd = (sip[0]*u.mm+597.8*u.mm,sip[1]*u.mm+792.5*u.mm,sip[2]*u.mm+421.4*u.mm)
+	//rrbirdd = (sip[0]*u.mm+600.9*u.mm,sip[1]*u.mm+792.4*u.mm,sip[2]*u.mm-421.4*u.mm)
+    double frontBirdX = -1048.1;
+    double frontBirdY = 686.8;
+    double frontBirdZ = 13.3;
+
+    double leftRearBirdX = 597.8;
+    double leftRearBirdY = 792.5;
+    double leftRearBirdZ = 421.4;
+
+    double rightRearBirdX = 600.9;
+    double rightRearBirdY = 792.4;
+    double rightRearBirdZ = -421.4;
+    //These coords are transformed into ves coord space
+    //x = -z
+    //y = -x
+    //z = y
+    gmtl::Point3d sipOffSetFrontBird;
+    sipOffSetFrontBird.set( -frontBirdZ, -frontBirdX, frontBirdY );
+
+    gmtl::Point3d sipOffSetLeftRearBird;
+    sipOffSetLeftRearBird.set( -leftRearBirdZ, -leftRearBirdX, leftRearBirdY );
+    
+    gmtl::Point3d sipOffSetRightRearBird;
+    sipOffSetRightRearBird.set( -rightRearBirdZ, -rightRearBirdX, rightRearBirdY );
+    
+    gmtl::Point3d measuredSIPCentroid;
+    measuredSIPCentroid.set( 
+        (sipOffSetFrontBird[ 0 ] + sipOffSetLeftRearBird[ 0 ] + sipOffSetRightRearBird[ 0 ])/3.0, 
+        (sipOffSetFrontBird[ 1 ] + sipOffSetLeftRearBird[ 1 ] + sipOffSetRightRearBird[ 1 ])/3.0,
+        (sipOffSetFrontBird[ 2 ] + sipOffSetLeftRearBird[ 2 ] + sipOffSetRightRearBird[ 2 ])/3.0 );
+    
+    gmtl::Matrix44d measuredSIPCentroidMat = 
+        gmtl::makeTrans< gmtl::Matrix44d >( measuredSIPCentroid );
+    
+    //Now we convert the sip matrix back through the transform mat to move it 
+    //to the VR Juggler coord
+    gmtl::Matrix44d registerMat = transMat * measuredSIPCentroidMat;
+    gmtl::invert( registerMat );
 }
