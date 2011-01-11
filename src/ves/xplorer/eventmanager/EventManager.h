@@ -101,6 +101,7 @@
             CONNECT____5( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
 
 
+
 #define CONNECTSIGNALS_0( name, signature, slot, connections, type, priority ) \
             CONNECT____0( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
 
@@ -118,6 +119,21 @@
 
 #define CONNECTSIGNALS_5( name, signature, slot, connections, type, priority ) \
             CONNECT____5( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+
+
+/// The CONNECTSIGNAL_STATIC and CONNECTSIGNALS_STATIC macros are to be used
+/// to connect signals to slots that do not reside in a class. In most cases,
+/// such slots will be static functions declared in a header. Internally, the
+/// difference between these two macros and the CONNECTSIGNAL(S)_N macros
+/// is that the _STATIC versions do not use boost::bind to make a functor from
+/// a class method.
+#define CONNECTSIGNAL_STATIC( name, signature, slot, connections, type, priority ) \
+            CONNECTSIGNALPRE( signature ) slot CONNECTSIGNALPOST CONNECTSIGNALCALL( name, connections, priority )
+
+#define CONNECTSIGNALS_STATIC( name, signature, slot, connections, type, priority ) \
+            CONNECTSIGNALPRE( signature ) slot CONNECTSIGNALPOST CONNECTSIGNALSCALL( name, connections, type, priority )
+
 
 
 
