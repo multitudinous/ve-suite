@@ -43,6 +43,11 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <string>
+#include <vector>
+
+#include <boost/concept_check.hpp>
+
 #include <vtkDataSet.h>
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
@@ -55,8 +60,8 @@ SeedPointDimensionsEventHandler::SeedPointDimensionsEventHandler()
 {
     _activeModel = 0;
 
-    CONNECTSIGNALS_1( "%UpdateSeedPointDimensions",
-                      void ( const std::vector< long >& allDimensions ),
+    CONNECTSIGNALS_2( "%UpdateSeedPointDimensions",
+                      void ( const std::string&, const std::vector< int >& ),
                       &SeedPointDimensionsEventHandler::UpdateDimensions,
                       m_connections, any_SignalType, normal_Priority );
 }
@@ -113,7 +118,12 @@ void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPt
         std::vector<long> allDimensions;
         DataValuePairPtr dimensions = command->GetDataValuePair( "Dimensions" );
         dimensions->GetData( allDimensions );
-        UpdateDimensions( allDimensions );
+
+        std::vector<int> allDimensionsAsInt;
+        allDimensionsAsInt.push_back( allDimensions.at(0) );
+        allDimensionsAsInt.push_back( allDimensions.at(1) );
+        allDimensionsAsInt.push_back( allDimensions.at(2) );
+        UpdateDimensions( "", allDimensionsAsInt );
     }
     catch ( ... )
     {
@@ -122,11 +132,9 @@ void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPt
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SeedPointDimensionsEventHandler::UpdateDimensions( const std::vector< long >& allDimensions )
+void SeedPointDimensionsEventHandler::UpdateDimensions( const std::string& uuid, const std::vector< int >& allDimensions )
 {
-    // Temporary debuggish message. Remove when satisfied correct behavior
-    // is occurring.
-    //std::cout << "SeedPointDimensionsEventHandler::UpdateDimensions: Proof of realtime updates." << std::endl << std::flush;
+    boost::ignore_unused_variable_warning( uuid );
     ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
         SetDimensions( allDimensions[0],
             allDimensions[1],

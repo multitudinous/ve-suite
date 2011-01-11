@@ -38,6 +38,7 @@
 #include <ves/xplorer/ModelPtr.h>
 
 #include <vector>
+#include <string>
 
 namespace ves
 {
@@ -77,7 +78,7 @@ protected:
     /// Does the actual update of seedpoint dimensions. Broken out so that signals
     /// can be connected directly to it without going through entire EventHandler
     /// interface
-    void UpdateDimensions( const std::vector< long >& allDimensions );
+    void UpdateDimensions( const std::string& uuid, const std::vector< int >& allDimensions );
 
     ves::xplorer::Model* _activeModel;///<The active model;
 };
