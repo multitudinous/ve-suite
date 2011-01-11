@@ -37,6 +37,8 @@
 
 #include <ves/conductor/qt/propertyBrowser/GenericPropertyBrowser.h>
 
+#include <iostream>
+
 using namespace ves::conductor;
 
 GenericPropertyBrowser::GenericPropertyBrowser(QWidget* parent) :

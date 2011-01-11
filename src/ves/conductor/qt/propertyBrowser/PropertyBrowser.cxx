@@ -161,7 +161,19 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
         PropertySet::PSVectorOfStrings::iterator end = mPropertyNames.end();
         for( iterator = mPropertyNames.begin(); iterator != end; iterator++ )
         {
-            mProperties.push_back( set->GetProperty( ( *iterator ) ) );
+            // If the userVisible attribute is false, do not add this property
+            // to any of our lists.
+            bool show = true;
+            boost::any visible = set->GetPropertyAttribute( (*iterator),
+                                                            "userVisible" );
+            if( !visible.empty() )
+            {
+                show = boost::any_cast<bool>( visible );
+            }
+            if( show )
+            {
+                mProperties.push_back( set->GetProperty( ( *iterator ) ) );
+            }
         }
     }
 
@@ -319,7 +331,8 @@ void PropertyBrowser::_refreshItem( int index )
         }
         double currentMin = mDoubleManager->minimum( item );
         double currentMax = mDoubleManager->maximum( item );
-        double step = ( currentMax - currentMin ) / 100.0;
+        //double step = ( currentMax - currentMin ) / 100.0;
+        double step = 0.01;
         mDoubleManager->setSingleStep( item, step );
     }
     else if( property->IsDouble() )
@@ -334,7 +347,8 @@ void PropertyBrowser::_refreshItem( int index )
         }
         double currentMin = mDoubleManager->minimum( item );
         double currentMax = mDoubleManager->maximum( item );
-        double step = ( currentMax - currentMin ) / 100.0;
+        //double step = ( currentMax - currentMin ) / 100.0;
+        double step = 0.01;
         mDoubleManager->setSingleStep( item, step );
     }
 
