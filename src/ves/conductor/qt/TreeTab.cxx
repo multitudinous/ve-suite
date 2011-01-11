@@ -34,12 +34,20 @@
 #include <ves/conductor/qt/ui_TreeTab.h>
 
 #include <ves/conductor/qt/TreeTab.h>
+#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+
 #include <osgQtTree/osgQtTree.h>
 #include <osgQtTree/treemodel.h>
 #include <osgQtTree/osgTreeItem.h>
 
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/data/CADPropertySet.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/Model.h>
+
+#include <ves/open/xml/cad/CADNode.h>
 
 #include <iostream>
 
@@ -64,10 +72,12 @@ TreeTab::TreeTab(QWidget *parent) :
     // Connect the tree model up to a tree view.
     ui->mTreeView->setModel( mModel );
 
+    mBrowser = new PropertyBrowser( this );
 }
 
 TreeTab::~TreeTab()
 {
+    delete mBrowser;
     delete mModel;
     delete ui;
 }
@@ -116,8 +126,20 @@ QModelIndex TreeTab::OpenToAndSelect( osg::NodePath& nodepath )
 
 void TreeTab::on_mTreeView_clicked( const QModelIndex& index )
 {
+    on_mTreeView_activated( index );
+}
+
+void TreeTab::on_mTreeView_activated( const QModelIndex& index )
+{
     //Unselect the previously-selected DCS
     ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+
+    // Write out the previously-selected CADPropertySet so that changes are not
+    // lost
+    if( mActiveSet.get() != 0 )
+    {
+        mActiveSet->WriteToDatabase();
+    }
 
     // Get the node associated with this QModelIndex
     osgQtTree::osgTreeItem* item = static_cast< osgQtTree::osgTreeItem* >( index.internalPointer() );
@@ -148,17 +170,56 @@ void TreeTab::on_mTreeView_clicked( const QModelIndex& index )
         }
     }
 
+    ves::xplorer::data::PropertySetPtr nullPtr;
+
     if( !found )
     {
+        // Clear out the PropertyBrowser widget
+        mBrowser->ParsePropertySet( nullPtr );
+        mActiveSet = nullPtr;
         return;
     }
-
 
     ves::xplorer::scenegraph::DCS* newSelectedDCS = static_cast< ves::xplorer::scenegraph::DCS* >( node );
 
     //Set the selected DCS
     ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
     newSelectedDCS->SetTechnique( "Glow" );
+
+    // Set mActiveSet null to cause previous propertyset to go out of scope
+    mActiveSet = nullPtr;
+
+    // Create a CADPropertySet and load it in the browser
+    mActiveSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CADPropertySet() );
+    mActiveSet->SetUUID( newSelectedDCS->GetCADPart()->GetID() );
+    mBrowser->ParsePropertySet( mActiveSet );
+
+    ui->cadPropertyBrowser->setPropertyBrowser( mBrowser );
+    ui->cadPropertyBrowser->RefreshContents();
+    ui->cadPropertyBrowser->show();
+
+    mActiveSet->LoadFromDatabase();
+    mBrowser->RefreshAll();
+}
+
+void TreeTab::on_RefreshButton_clicked()
+{
+    if( mActiveSet )
+    {
+        mActiveSet->LoadFromDatabase();
+        mBrowser->RefreshAll();
+    }
+}
+
+void TreeTab::on_OKButton_clicked()
+{
+    if( mActiveSet )
+    {
+        mActiveSet->WriteToDatabase();
+        ves::xplorer::ModelHandler::instance()->GetActiveModel()->
+                GetModelCADHandler()->
+                UpdateCADNode( mActiveSet->GetUUIDAsString() );
+    }
 }
 
 } // namespace conductor

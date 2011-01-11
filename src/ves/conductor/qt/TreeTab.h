@@ -35,6 +35,8 @@
 
 #define QT_NO_KEYWORDS
 
+#include <ves/xplorer/data/PropertySetPtr.h>
+
 #include <QtGui/QWidget>
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QModelIndex>
@@ -61,6 +63,7 @@ namespace ves
 {
 namespace conductor
 {
+class PropertyBrowser;
 
 class TreeTab : public QWidget {
     Q_OBJECT
@@ -85,12 +88,22 @@ protected Q_SLOTS:
     /// Called when user changes selection in tree.
     /// This function looks up the scenegraph to find a valid DCS and then
     /// selects the corresponding geometry in the scene.
+    void on_mTreeView_activated( const QModelIndex& index );
+
     void on_mTreeView_clicked( const QModelIndex& index );
+
+    void on_RefreshButton_clicked();
+
+    void on_OKButton_clicked();
 
 private:
     Ui::TreeTab *ui;
 
     TreeModel* mModel;
+
+    PropertyBrowser* mBrowser;
+
+    ves::xplorer::data::PropertySetPtr mActiveSet;
 };
 
 } // namespace conductor
