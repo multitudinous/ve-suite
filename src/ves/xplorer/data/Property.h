@@ -64,7 +64,7 @@
 ///
 /// Special Types of main value
 ///
-/// Strings: The main value can easily hold std::sting values, but these must be
+/// Strings: The main value can easily hold std::string values, but these must be
 /// passed in one of the following ways. 
 /// 1) As a pointer to an existing string (not recommended )
 /// 2) As a copyable reference to an existing string (recommended)
