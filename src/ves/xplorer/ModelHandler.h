@@ -40,10 +40,9 @@
 #include <ves/xplorer/DataSetPtr.h>
 #include <ves/xplorer/event/EventHandlerPtr.h>
 
-#ifdef QT_ON
+#include <ves/xplorer/event/cad/CADSlotInitializerPtr.h>
+
 #include <boost/signals2/signal.hpp>
-#include <ves/xplorer/eventmanager/InteractionEvent.h>
-#endif // QT_ON
 
 #include <ves/open/xml/CommandPtr.h>
 
@@ -165,10 +164,11 @@ private:
     std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* > m_filenameToCADMap;
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
-#ifdef QT_ON
+
     typedef boost::signals2::signal<void ( const std::string& )> ActiveModelChangedSignal_type;
     ActiveModelChangedSignal_type mActiveModelChangedSignal;
-#endif // QT_ON
+
+    ves::xplorer::event::cad::CADSlotInitializerPtr m_CADSlotInitializer;
 };
 }
 }

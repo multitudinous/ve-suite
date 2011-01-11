@@ -70,6 +70,7 @@
 #include <ves/xplorer/event/cad/TogglePluginsEventHandler.h>
 #include <ves/xplorer/event/cad/NavigateToEventHandler.h>
 #include <ves/xplorer/event/cad/OcclusionSettingsEventHandler.h>
+#include <ves/xplorer/event/cad/CADSlotInitializer.h>
 
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
 #include <ves/xplorer/event/data/AxesEventHandler.h>
@@ -91,10 +92,8 @@
 #include <ves/xplorer/volume/cfdTextureManager.h>
 using namespace ves::xplorer::volume;
 
-#ifdef QT_ON
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
-#endif // QT_ON
 
 //#include <vtkPolyDataWriter.h>
 #include <vtkPolyDataNormals.h>
@@ -123,7 +122,8 @@ ModelHandler::ModelHandler( void )
     arrow( 0 ),
     _activeModel( 0 ),
     tbased( false ),
-    _activeTDSet( 0 )
+    _activeTDSet( 0 ),
+    m_CADSlotInitializer( new ves::xplorer::event::cad::CADSlotInitializer )
 {
     vprDEBUG( vesDBG, 2 ) << "ModelHandler constructor"
         << std::endl << vprDEBUG_FLUSH;
