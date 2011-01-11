@@ -216,9 +216,9 @@ void TreeTab::on_OKButton_clicked()
     if( mActiveSet )
     {
         mActiveSet->WriteToDatabase();
-        ves::xplorer::ModelHandler::instance()->GetActiveModel()->
-                GetModelCADHandler()->
-                UpdateCADNode( mActiveSet->GetUUIDAsString() );
+//        ves::xplorer::ModelHandler::instance()->GetActiveModel()->
+//                GetModelCADHandler()->
+//                UpdateCADNode( mActiveSet->GetUUIDAsString() );
     }
 }
 
