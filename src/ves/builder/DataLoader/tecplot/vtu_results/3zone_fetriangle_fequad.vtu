@@ -27,7 +27,7 @@
         </DataArray>
       </Points>
       <Cells>
-        <DataArray type="Int32" Name="connectivity" format="ascii" RangeMin="0" RangeMax="18">
+        <DataArray type="Int64" Name="connectivity" format="ascii" RangeMin="0" RangeMax="18">
           0 1 2 0 2 3
           0 3 4 0 4 1
           5 9 10 6 6 10
@@ -37,7 +37,7 @@
           15 16 18 18 16 13
           17 18
         </DataArray>
-        <DataArray type="Int32" Name="offsets" format="ascii" RangeMin="3" RangeMax="44">
+        <DataArray type="Int64" Name="offsets" format="ascii" RangeMin="3" RangeMax="44">
           3 6 9 12 16 20
           24 28 32 36 40 44
         </DataArray>
