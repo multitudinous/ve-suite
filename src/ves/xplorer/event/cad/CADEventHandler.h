@@ -106,6 +106,10 @@ protected:
     ///\param node CADNode to extract transform from.
     void _setTransformOnNode( ves::open::xml::cad::CADNodePtr node );
 
+    /// Set up a database entry for a new CAD part
+    /// \param newPart The CADPart to add to the DB
+    void _writePartToDB( ves::open::xml::cad::CADNodePtr newPart );
+
     ves::xplorer::Model* m_activeModel;///<The active cfdModel;
     ves::xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
     ves::open::xml::cad::CADNodePtr m_cadNode;///<The CADNode.

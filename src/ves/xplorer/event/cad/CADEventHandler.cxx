@@ -46,6 +46,8 @@
 
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
 
+#include <ves/xplorer/data/CADPropertySet.h>
+
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAssembly.h>
 #include <ves/open/xml/cad/CADAttribute.h>
@@ -307,6 +309,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
 
         m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity() );
+
+        _writePartToDB( newAssembly );
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
@@ -414,6 +418,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
 
             ves::xplorer::minerva::MinervaManager::instance()->AddModel ( id, modelWrapper.get() );
 #endif
+
+            _writePartToDB( newPart );
         }
         else
         {
@@ -421,4 +427,67 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             << correctedPath.native_file_string() << std::endl;
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
+{
+    ves::xplorer::data::CADPropertySet newSet;
+    newSet.SetUUID( newPart->GetID() );
+    newSet.SetPropertyValue( "NameTag", newPart->GetNodeName() );
+    newSet.SetPropertyValue( "Opacity", static_cast<double>( newPart->GetOpacity() ) );
+    newSet.SetPropertyValue( "TransparencyFlag", newPart->GetTransparentFlag() );
+    ves::open::xml::TransformPtr nodeTransform = newPart->GetTransform();
+    if( nodeTransform )
+    {
+
+        ves::open::xml::FloatArrayPtr nodeTranslation =
+                nodeTransform->GetTranslationArray();
+        ves::open::xml::FloatArrayPtr nodeRotation =
+                nodeTransform->GetRotationArray();
+        ves::open::xml::FloatArrayPtr nodeScale =
+                nodeTransform->GetScaleArray();
+
+        newSet.SetPropertyValue( "Transform_Translation_X",
+                                 nodeTranslation->GetElement( 0 ) );
+        newSet.SetPropertyValue( "Transform_Translation_Y",
+                                 nodeTranslation->GetElement( 1 ) );
+        newSet.SetPropertyValue( "Transform_Translation_Z",
+                                 nodeTranslation->GetElement( 2 ) );
+        newSet.SetPropertyValue( "Transform_Rotation_X",
+                                 nodeRotation->GetElement( 0 ) );
+        newSet.SetPropertyValue( "Transform_Rotation_Y",
+                                 nodeRotation->GetElement( 1 ) );
+        newSet.SetPropertyValue( "Transform_Rotation_Z",
+                                 nodeRotation->GetElement( 2 ) );
+        newSet.SetPropertyValue( "Transform_Scale_X",
+                                 nodeScale->GetElement( 0 ) );
+        newSet.SetPropertyValue( "Transform_Scale_Y",
+                                 nodeScale->GetElement( 1 ) );
+        newSet.SetPropertyValue( "Transform_Scale_Z",
+                                 nodeScale->GetElement( 2 ) );
+    }
+
+    newSet.SetPropertyValue( "Physics_Mass",
+                             newPart->GetMass() );
+    newSet.SetPropertyValue( "Physics_Friction",
+                             newPart->GetFriction() );
+    newSet.SetPropertyValue( "Physics_Restitution",
+                             newPart->GetRestitution() );
+
+    newSet.SetPropertyValue( "Culling",
+                             newPart->GetOcclusionSettings() );
+
+    // What needs to be tested to turn GPS on/off?
+//    if( ??minerva_gps_condition?? )
+//    {
+//        newSet.SetPropertyValue( "GPS", true );
+//    }
+//    else
+//    {
+//        newSet.SetPropertyValue( "GPS", false );
+//    }
+    newSet.SetPropertyValue( "GPS_Longitude", newPart->GetLongitude() );
+    newSet.SetPropertyValue( "GPS_Latitude", newPart->GetLatitude() );
+
+    newSet.WriteToDatabase();
 }
