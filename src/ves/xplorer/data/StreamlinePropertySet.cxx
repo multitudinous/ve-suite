@@ -34,6 +34,7 @@
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/data/MakeLive.h>
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 
@@ -48,16 +49,7 @@ using namespace ves::xplorer::data;
 StreamlinePropertySet::StreamlinePropertySet()
 {
     using eventmanager::SignalWrapper;
-    ///Signal for handling seed point number changes
-    {
-        std::string name("StreamlinePropertySet");
-        name += boost::lexical_cast<std::string>( this );
-        name += ".UpdateSeedPointDimensions";
-        
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< UpdateDimsSignal_type >( &mUpdateDims ),
-            name, eventmanager::EventManager::unspecified_SignalType );
-    }
+
     ///Signal for turning on seed points
     {
         std::string name("StreamlinePropertySet");
@@ -169,13 +161,24 @@ void StreamlinePropertySet::CreateSkeleton()
     mPropertyMap["SeedPoints_DisplaySeedPoints"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateSeedPointDisplay, this, _1 ) );
     AddProperty( "SeedPoints_NumberOfPointsInX", 2, "Number of Points in X" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInX", "minimumValue",   0 );
-    mPropertyMap["SeedPoints_NumberOfPointsInX"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateNumberOfPoints, this, _1 ) );
     AddProperty( "SeedPoints_NumberOfPointsInY", 2, "Number of Points in Y" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInY", "minimumValue",   0 );
-    mPropertyMap["SeedPoints_NumberOfPointsInY"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateNumberOfPoints, this, _1 ) );
     AddProperty( "SeedPoints_NumberOfPointsInZ", 2, "Number of Points in Z" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInZ", "minimumValue",   0 );
-    mPropertyMap["SeedPoints_NumberOfPointsInZ"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateNumberOfPoints, this, _1 ) );
+
+    // Link the three NumberOfPointsIn... properties together and have them
+    // fire a signal with signature void( std::vector<int> ) whose tail is
+    // named "UpdateSeedPointDimensions"
+    std::vector< PropertyPtr > numberOfPointsLink;
+    numberOfPointsLink.push_back( GetProperty( "SeedPoints_NumberOfPointsInX" ) );
+    numberOfPointsLink.push_back( GetProperty( "SeedPoints_NumberOfPointsInY" ) );
+    numberOfPointsLink.push_back( GetProperty( "SeedPoints_NumberOfPointsInZ" ) );
+    MakeLiveBasePtr p( new MakeLiveLinked< int >(
+            mUUIDString,
+            numberOfPointsLink,
+            "UpdateSeedPointDimensions" ) );
+    mLiveObjects.push_back( p );
+
     AddProperty( "SeedPoints_Bounds", boost::any(), "Bounds");
     SetPropertyAttribute( "SeedPoints_Bounds", "isUIGroupOnly", true );
     SetPropertyAttribute( "SeedPoints_Bounds", "setExpanded", true );
@@ -371,24 +374,6 @@ bool StreamlinePropertySet::ValidateScalarMinMax( PropertyPtr property, boost::a
     {
         return false;
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void StreamlinePropertySet::UpdateNumberOfPoints( PropertyPtr property )
-{
-    boost::ignore_unused_variable_warning( property );
-
-    // Package up the new seed point dimensions and fire off an update signal.
-    // At the moment, xplorer::event::SeedPointDimensionsEventHandler listens
-    // for the update signal.
-    std::vector< long > dimensions;
-    int temp1 = boost::any_cast< int >( GetPropertyValue("SeedPoints_NumberOfPointsInX") );
-    int temp2 = boost::any_cast< int >( GetPropertyValue("SeedPoints_NumberOfPointsInY") );
-    int temp3 = boost::any_cast< int >( GetPropertyValue("SeedPoints_NumberOfPointsInZ") );
-    dimensions.push_back( temp1 );
-    dimensions.push_back( temp2 );
-    dimensions.push_back( temp3 );
-
-    mUpdateDims( dimensions );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StreamlinePropertySet::UpdateSeedPointDisplay( PropertyPtr property )
