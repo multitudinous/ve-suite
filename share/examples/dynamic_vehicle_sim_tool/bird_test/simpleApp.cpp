@@ -278,17 +278,19 @@ void simpleApp::CalculateRegistrationVariables()
     //fbirdd = (sip[0]*u.mm-1048.1*u.mm,sip[1]*u.mm+686.8*u.mm,sip[2]*u.mm+13.3*u.mm)
 	//lrbirdd = (sip[0]*u.mm+597.8*u.mm,sip[1]*u.mm+792.5*u.mm,sip[2]*u.mm+421.4*u.mm)
 	//rrbirdd = (sip[0]*u.mm+600.9*u.mm,sip[1]*u.mm+792.4*u.mm,sip[2]*u.mm-421.4*u.mm)
-    double frontBirdX = -1048.1;
-    double frontBirdY = 686.8;
-    double frontBirdZ = 13.3;
+    double mm2ft = 0.0032808;
 
-    double leftRearBirdX = 597.8;
-    double leftRearBirdY = 792.5;
-    double leftRearBirdZ = 421.4;
+    double frontBirdX = -1048.1 * mm2ft;
+    double frontBirdY = 686.8 * mm2ft;
+    double frontBirdZ = 13.3 * mm2ft;
 
-    double rightRearBirdX = 600.9;
-    double rightRearBirdY = 792.4;
-    double rightRearBirdZ = -421.4;
+    double leftRearBirdX = 597.8 * mm2ft;
+    double leftRearBirdY = 792.5 * mm2ft;
+    double leftRearBirdZ = 421.4 * mm2ft;
+
+    double rightRearBirdX = 600.9 * mm2ft;
+    double rightRearBirdY = 792.4 * mm2ft;
+    double rightRearBirdZ = -421.4 * mm2ft;
     //These coords are transformed into ves coord space
     //x = -z
     //y = -x
