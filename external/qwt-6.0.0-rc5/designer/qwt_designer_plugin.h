@@ -10,9 +10,9 @@
 #ifndef QWT_DESIGNER_PLUGIN_H
 #define QWT_DESIGNER_PLUGIN_H
 
-#include <QDesignerCustomWidgetInterface>
-#include <QDesignerTaskMenuExtension>
-#include <QExtensionFactory>
+#include <QtDesigner/QDesignerCustomWidgetInterface>
+#include <QtDesignerQDesignerTaskMenuExtension>
+#include <QtDesigner/QExtensionFactory>
 
 namespace QwtDesignerPlugin
 {

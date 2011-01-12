@@ -10,7 +10,7 @@
 #ifndef QWT_DESIGNER_PLOTDIALOG_H
 #define QWT_DESIGNER_PLOTDIALOG_H
 
-#include <QDialog>
+#include <QtGui/QDialog>
 
 namespace QwtDesignerPlugin
 {

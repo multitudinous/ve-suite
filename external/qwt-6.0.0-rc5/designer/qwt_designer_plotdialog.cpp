@@ -7,10 +7,10 @@
  * modify it under the terms of the Qwt License, Version 1.0
  *****************************************************************************/
 
-#include <QLineEdit>
-#include <QTabWidget>
-#include <QHBoxLayout>
-#include <QPushButton>
+#include <QtGui/QLineEdit>
+#include <QtGui/QTabWidget>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QPushButton>
 #include "qwt_designer_plotdialog.h"
 
 using namespace QwtDesignerPlugin;

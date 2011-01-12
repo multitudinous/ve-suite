@@ -11,14 +11,14 @@
 #pragma warning ( disable : 4786 )
 #endif
 
-#include <qglobal.h>
-#include <qaction.h>
-#include <QtPlugin>
-#include <QDesignerFormEditorInterface>
-#include <QDesignerFormWindowInterface>
-#include <QDesignerFormWindowCursorInterface>
-#include <QExtensionManager>
-#include <QErrorMessage>
+#include <QtCore/qglobal.h>
+#include <QtGui/qaction.h>
+#include <QtCore/QtPlugin>
+#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/QDesignerFormWindowCursorInterface>
+#include <QtDesigner/QExtensionManager>
+#include <QtGui/QErrorMessage>
 
 #include "qwt_designer_plugin.h"
 
