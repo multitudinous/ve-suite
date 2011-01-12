@@ -103,7 +103,7 @@ def generate(env,**kw):
 def applyQtBuildFlags(env):
     env.AppendUnique( CPPDEFINES = ['QT_ON'] )
     if sca_util.GetPlatform() == 'darwin':
-        env.Append( LINKFLAGS = ['-framework','QtCore', '-framework','QtGui','-framework','QtOpenGL','-framework','OpenGL'])
+        env.Append( LINKFLAGS = ['-framework','QtCore', '-framework','QtGui','-framework','QtSvg','-framework','QtOpenGL','-framework','OpenGL'])
         env.AppendUnique( CXXFLAGS =['-F/Library/Frameworks/QtOpenGL.framework','-F/Library/Frameworks/QtCore.framework','-F/Library/Frameworks/QtGui.framework'] )
     else:
         print "Please use the flagpoll based method for compiling against Qt on Linux."
