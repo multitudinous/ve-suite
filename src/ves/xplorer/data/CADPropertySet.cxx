@@ -158,16 +158,16 @@ void CADPropertySet::CreateSkeleton()
     enumValues.push_back( "High" );
     SetPropertyAttribute( "Physics_MeshDecimation", "enumValues", enumValues );
 
-    std::vector< PropertyPtr > physicsLink;
-    physicsLink.push_back( GetProperty("Physics_MotionType") );
-    physicsLink.push_back( GetProperty("Physics_LODType") );
-    physicsLink.push_back( GetProperty("Physics_MeshType") );
-    physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
-    p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
-            mUUIDString,
-            physicsLink,
-            "SetCADPhysicsMesh"));
-    mLiveObjects.push_back(p);
+//    std::vector< PropertyPtr > physicsLink;
+//    physicsLink.push_back( GetProperty("Physics_MotionType") );
+//    physicsLink.push_back( GetProperty("Physics_LODType") );
+//    physicsLink.push_back( GetProperty("Physics_MeshType") );
+//    physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
+//    p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
+//            mUUIDString,
+//            physicsLink,
+//            "SetCADPhysicsMesh"));
+//    mLiveObjects.push_back(p);
 
     AddProperty( "Culling", 0, "Occlusion Culling" );
     enumValues.clear();
