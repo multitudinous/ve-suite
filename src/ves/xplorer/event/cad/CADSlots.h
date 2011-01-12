@@ -180,13 +180,16 @@ static void SetCADPhysicsMesh( const std::string& nodeID,
         const std::string motion = meshDetails.at(2);
         const std::string decimation = meshDetails.at(3);
 
-        cadHandler->GetPart( nodeID )->
+        if( cadHandler->PartExists( nodeID ) )
+        {
+            cadHandler->GetPart( nodeID )->
             GetPhysicsRigidBody()->
             CreateRigidBody( lod, motion, mesh, decimation );
-
-        vprDEBUG( vesDBG, 1 ) << "|\tChanged Physics Mesh: "
+            
+            vprDEBUG( vesDBG, 1 ) << "|\tChanged Physics Mesh: "
             << cadHandler->GetPart( nodeID )->GetFilename()
             << std::endl << vprDEBUG_FLUSH;
+        }
     }
 }
 
