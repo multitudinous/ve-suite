@@ -232,6 +232,7 @@ void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WX
 	m_scrolledWindowSizer->Add( bSizer, 0, 0, 5 );
     m_scrolledWindow1->Layout();
     m_geomChoiceList.push_back( choice );
+    m_scrolledWindow1->Layout();
     Layout();
 }
 ////////////////////////////////////////////////////////////////////////////////
