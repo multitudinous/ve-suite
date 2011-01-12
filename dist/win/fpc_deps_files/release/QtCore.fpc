@@ -3,11 +3,11 @@ exec_prefix=${prefix}
 libdir=${exec_prefix}\lib
 includedir=${prefix}\include
 
-Name: Qtcore
-Description: Qtcore Library
+Name: QtCore
+Description: QtCore Library
 Version: 4.6.2
 Libs: /libpath:"${libdir}" QtCore4.lib
 Cflags: /DQT_DLL /I"${prefix}\include\" /I"${includedir}"
 Requires: 
-Arch: noarch
 Provides: QtCore
+Arch: noarch

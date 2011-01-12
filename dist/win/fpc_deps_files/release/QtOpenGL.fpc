@@ -3,11 +3,11 @@ exec_prefix=${prefix}
 libdir=${exec_prefix}\lib
 includedir=${prefix}\include
 
-Name: Qtopengl
-Description: Qtopengl Library
+Name: QtOpenGL
+Description: QtOpenGL Library
 Version: 4.6.2
 Libs: /libpath:"${libdir}" QtOpenGL4.lib opengl32.lib glu32.lib
 Cflags: /DQT_DLL /I"${prefix}\include\" /I"${includedir}"
 Requires: QtCore QtGui
-Arch: noarch
 Provides: QtOpenGL
+Arch: noarch
