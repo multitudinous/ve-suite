@@ -106,7 +106,7 @@ using namespace warrantytool;
 #include <gmtl/Misc/MatrixConvert.h>
 
 //Define to test any of the dvst code
-//#define DVST_TEST 1
+#define DVST_TEST 1
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -948,6 +948,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::ReadBirdRegistrationFile()
 {
+    m_birdData.resize( 0 );
     std::ifstream birdFile( m_birdFilename.c_str() );
     std::string bufferData;
     typedef std::vector< std::string > split_vector_type;

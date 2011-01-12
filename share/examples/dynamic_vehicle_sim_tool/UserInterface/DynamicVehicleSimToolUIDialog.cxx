@@ -544,7 +544,7 @@ void DynamicVehicleSimToolUIDialog::OnRegistrationFileChoice( wxCommandEvent& WX
         }
         
         //wxFileName vesFileName( dialog.GetPath() );
-        m_fileName = ConvertUnicode( dialog.GetFilename().c_str() );
+        m_fileName = ConvertUnicode( dialog.GetPath().c_str() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
