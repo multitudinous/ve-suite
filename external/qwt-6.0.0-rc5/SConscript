@@ -1,0 +1,68 @@
+#Builds Qwt
+import os, sys, string, glob
+pj = os.path.join
+import SConsAddons.Util as sca_util
+Import( 'baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform' )
+
+openDir = os.path.abspath( pj( RootDir, 'external', 'qwt-6.0.0-rc5' ) )
+buildSrcDir = pj( '#', buildDir, 'external', 'qwt-6.0.0-rc5', 'src' )
+
+lib_env = ves_pkg.getEnv().Clone()
+
+headers = sca_util.getHeadersRecursive( pj( openDir, 'src' ) )
+sources = sca_util.getSourcesRecursive( pj( openDir, 'src' ) )
+
+mocced = []
+mocsources = [ pj( buildSrcDir, 'qwt_abstract_slider.h' ),
+               pj( buildSrcDir, 'qwt_analog_clock.h' ),
+               pj( buildSrcDir, 'qwt_compass.h' ),
+               pj( buildSrcDir, 'qwt_counter.h' ),
+               pj( buildSrcDir, 'qwt_dial.h' ),
+               pj( buildSrcDir, 'qwt_dyngrid_layout.h' ),
+               pj( buildSrcDir, 'qwt_knob.h' ),
+               pj( buildSrcDir, 'qwt_legend.h' ),
+               pj( buildSrcDir, 'qwt_legend_item.h' ),
+               pj( buildSrcDir, 'qwt_magnifier.h' ),
+               pj( buildSrcDir, 'qwt_panner.h' ),
+               pj( buildSrcDir, 'qwt_picker.h' ),
+               pj( buildSrcDir, 'qwt_plot.h' ),
+               pj( buildSrcDir, 'qwt_plot_canvas.h' ),
+               pj( buildSrcDir, 'qwt_plot_magnifier.h' ),
+               pj( buildSrcDir, 'qwt_plot_panner.h' ),
+               pj( buildSrcDir, 'qwt_plot_picker.h' ),
+               pj( buildSrcDir, 'qwt_plot_renderer.h' ),
+               pj( buildSrcDir, 'qwt_plot_zoomer.h' ),
+               pj( buildSrcDir, 'qwt_sampling_thread.h' ),
+               pj( buildSrcDir, 'qwt_scale_widget.h' ),
+               pj( buildSrcDir, 'qwt_slider.h' ),
+               pj( buildSrcDir, 'qwt_text_label.h' ),
+               pj( buildSrcDir, 'qwt_thermo.h' ),
+               pj( buildSrcDir, 'qwt_wheel.h' ) ]
+
+for x in mocsources:
+    mocced += lib_env.qt_moc( x )
+
+headers = map( lambda s: pj( 'src', s ), headers )
+sources = map( lambda s: pj( 'src', s ), sources )
+sources += mocced
+
+if GetPlatform() == 'linux':
+    lib_env.Append( CCFLAGS=[ '-fPIC' ] )
+
+if GetPlatform() != 'darwin':
+    Import( 'qt_options' )
+    qt_options.apply( lib_env )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QT_ON' ] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QWT_DLL' ] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QWT_MAKEDLL' ] )
+else:
+    import qt46
+    qt46.applyQtBuildFlags( lib_env )
+
+lib = ves_pkg.createSharedLibrary(
+    'qwt', lib_env, installPrefix = LIBDIR )
+
+lib.addHeaders( headers, pj( '..', 'include', 'qwt-6.0.0-rc5' ) )
+lib.addSources( sources )
+
+lib.build()

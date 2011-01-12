@@ -394,12 +394,12 @@ bdfx_options = fp_option.FlagPollBasedOption("backdropFX",
 #Setup qt on linux
 if GetPlatform() != 'darwin':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
-      "QtGui QtCore QtOpenGL",
+      "QtGui QtCore QtOpenGL QtSvg",
       "4.0", False, True, helpText=None, compileTest=True,
       headerToCheck="QtCore/qglobal.h")
    opts.AddOption( qt_options )
-   Export('qt_options')			
-						  
+   Export('qt_options')
+
 #opts.AddOption( apr_options )
 #opts.AddOption( apu_options )
 opts.AddOption( bullet_options )
@@ -732,12 +732,14 @@ if not SConsAddons.Util.hasHelpFlag():
     issBuilder = pj(buildDir,'dist','win','iss')
     qtTestBuilder = pj(buildDir,'test','qt','BasicQtOffscreenRender')
     qtpropertybrowserSubdirs = pj( buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource' )
+    qwtSubdirs = pj( buildDir, 'external', 'qwt-6.0.0-rc5' )
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, minervaDataSubdirs]
 
     if baseEnv[ 'MakeQtSupport' ] == 'yes':
         ves_dirs.append( qtpropertybrowserSubdirs )
+        ves_dirs.append( qwtSubdirs )
         ves_dirs.append(pj(buildDir, 'external','osgQtTree'))
         if GetPlatform() != 'win32':
             ves_dirs.append( qtTestBuilder )
