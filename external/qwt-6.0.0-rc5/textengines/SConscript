@@ -1,0 +1,9 @@
+#external\qwt-6.0.0-rc5\textengines\SConscript
+
+textEngineSubdirs = Split("""
+    mathml
+""")
+
+#Run SConscript files in all of those folders.
+for d in textEngineSubdirs:
+   SConscript( dirs = d )

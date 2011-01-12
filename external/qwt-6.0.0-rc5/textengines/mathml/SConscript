@@ -1,0 +1,36 @@
+#Builds QwtMathML
+import os, sys, string, glob
+pj = os.path.join
+import SConsAddons.Util as sca_util
+Import( 'baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform' )
+
+openDir = os.path.abspath( pj( RootDir, 'external', 'qwt-6.0.0-rc5', 'textengines', 'mathml' ) )
+buildSrcDir = pj( '#', buildDir, 'external', 'qwt-6.0.0-rc5', 'textengines', 'mathml' )
+
+lib_env = ves_pkg.getEnv().Clone()
+
+headers = sca_util.getHeadersRecursive( pj( openDir ) )
+sources = sca_util.getSourcesRecursive( pj( openDir ) )
+headers = map( lambda s: pj( '.', s ), headers )
+sources = map( lambda s: pj( '.', s ), sources )
+
+if GetPlatform() == 'linux':
+    lib_env.Append( CCFLAGS=[ '-fPIC' ] )
+
+if GetPlatform() != 'darwin':
+    Import( 'qt_options' )
+    qt_options.apply( lib_env )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QT_ON' ] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QWT_DLL' ] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QWT_MAKEDLL' ] )
+else:
+    import qt46
+    qt46.applyQtBuildFlags( lib_env )
+
+lib = ves_pkg.createSharedLibrary(
+    'qwtmathml', lib_env, installPrefix = LIBDIR )
+
+lib.addHeaders( headers, pj( '..', 'include', 'qwt-6.0.0-rc5' ) )
+lib.addSources( sources )
+
+lib.build()

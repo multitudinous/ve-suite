@@ -1,8 +1,8 @@
-#include <QApplication>
-#include <QMap>
-#include <QDesktopWidget>
-#include <QPainter>
-#include <QDomNode>
+#include <QtGui/QApplication>
+#include <QtCore/QMap>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QPainter>
+#include <QtXml/QDomNode>
 
 #include "qwt_mml_document.h"
 

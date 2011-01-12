@@ -9,8 +9,8 @@
 
 // vim: expandtab
 
-#include <qstring.h>
-#include <qpainter.h>
+#include <QtCore/qstring.h>
+#include <QtGui/qpainter.h>
 #include "qwt_mathml_text_engine.h"
 #include "qwt_mml_document.h"
 
