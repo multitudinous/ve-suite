@@ -61,7 +61,7 @@ namespace data
 class MakeLiveBase 
 {
 public:
-    virtual ~MakeLiveBase(){std::cout << "MakeLiveBase::dtor" << std::endl << std::flush;}
+    virtual ~MakeLiveBase(){;}
 };
 
 
