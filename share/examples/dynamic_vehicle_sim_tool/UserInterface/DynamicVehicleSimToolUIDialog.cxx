@@ -110,7 +110,9 @@ DynamicVehicleSimToolUIDialog::DynamicVehicleSimToolUIDialog(
     :
     dvst::DynamicVehicleSimToolBase( parent, id ),
     mServiceList( service )
-{    
+{
+    SetSizeHints( wxSize( 500, -1 ), wxDefaultSize );
+
     CenterOnParent();
     //SetTitle( _("Deere Analytics") );
     m_computerTextCtrl->SetValue( wxString( "225.0.0.37", wxConvUTF8 ) );
