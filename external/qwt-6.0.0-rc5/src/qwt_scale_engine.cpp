@@ -10,8 +10,8 @@
 #include "qwt_scale_engine.h"
 #include "qwt_math.h"
 #include "qwt_scale_map.h"
-#include <qalgorithms.h>
-#include <qmath.h>
+#include <QtCore/qalgorithms.h>
+#include <QtCore/qmath.h>
 
 #if QT_VERSION < 0x040601
 #define qFabs(x) ::fabs(x)

@@ -14,8 +14,8 @@
 #include "qwt_painter.h"
 #include "qwt_column_symbol.h"
 #include "qwt_scale_map.h"
-#include <qstring.h>
-#include <qpainter.h>
+#include <QtCore/qstring.h>
+#include <QtGui/qpainter.h>
 
 static inline bool isCombinable( const QwtInterval &d1,
     const QwtInterval &d2 )

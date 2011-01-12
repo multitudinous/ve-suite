@@ -12,7 +12,7 @@
 
 #include "qwt_global.h"
 #include "qwt_raster_data.h"
-#include <qvector.h>
+#include <QtCore/qvector.h>
 
 /*!
   \brief A class representing a matrix of values as raster data

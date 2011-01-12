@@ -9,8 +9,8 @@
 
 #include "qwt_abstract_slider.h"
 #include "qwt_math.h"
-#include <qevent.h>
-#include <qdatetime.h>
+#include <QtGui/qevent.h>
+#include <QtCore/qdatetime.h>
 
 #if QT_VERSION < 0x040601
 #define qFabs(x) ::fabs(x)

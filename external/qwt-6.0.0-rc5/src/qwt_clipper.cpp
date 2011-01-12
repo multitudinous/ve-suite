@@ -9,7 +9,7 @@
 
 #include "qwt_clipper.h"
 #include "qwt_math.h"
-#include <qrect.h>
+#include <QtCore/qrect.h>
 
 #if QT_VERSION < 0x040601
 #define qAtan(x) ::atan(x)

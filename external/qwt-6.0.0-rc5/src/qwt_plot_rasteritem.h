@@ -13,9 +13,9 @@
 #include "qwt_global.h"
 #include "qwt_plot_item.h"
 #include "qwt_interval.h"
-#include <qglobal.h>
-#include <qstring.h>
-#include <qimage.h>
+#include <QtCore/qglobal.h>
+#include <QtCore/qstring.h>
+#include <QtGui/qimage.h>
 
 /*!
   \brief A class, which displays raster data

@@ -9,9 +9,9 @@
 
 #include "qwt_arrow_button.h"
 #include "qwt_math.h"
-#include <qpainter.h>
-#include <qstyle.h>
-#include <qevent.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qstyle.h>
+#include <QtGui/qevent.h>
 
 static const int MaxNum = 3;
 static const int Margin = 2;
@@ -25,7 +25,7 @@ public:
 };
 
 
-#include <qstyleoption.h>
+#include <QtGui/qstyleoption.h>
 static QStyleOptionButton styleOpt( const QwtArrowButton* btn )
 {
     QStyleOptionButton option;

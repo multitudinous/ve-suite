@@ -16,11 +16,11 @@
 #include "qwt_legend.h"
 #include "qwt_dyngrid_layout.h"
 #include "qwt_plot_canvas.h"
-#include <qpainter.h>
-#include <qpointer.h>
-#include <qpaintengine.h>
-#include <qapplication.h>
-#include <qevent.h>
+#include <QtGui/qpainter.h>
+#include <QtCore/qpointer.h>
+#include <QtGui/qpaintengine.h>
+#include <QtGui/qapplication.h>
+#include <QtGui/qevent.h>
 
 class QwtPlot::PrivateData
 {

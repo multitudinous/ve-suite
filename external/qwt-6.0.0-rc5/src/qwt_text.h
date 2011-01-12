@@ -11,9 +11,9 @@
 #define QWT_TEXT_H
 
 #include "qwt_global.h"
-#include <qstring.h>
-#include <qsize.h>
-#include <qfont.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qsize.h>
+#include <QtGui/qfont.h>
 
 class QColor;
 class QPen;

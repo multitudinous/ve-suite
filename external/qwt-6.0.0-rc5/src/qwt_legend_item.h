@@ -14,7 +14,7 @@
 #include "qwt_legend.h"
 #include "qwt_text.h"
 #include "qwt_text_label.h"
-#include <qpixmap.h>
+#include <QtGui/qpixmap.h>
 
 /*!
   \brief A widget representing something on a QwtLegend().

@@ -13,7 +13,7 @@
 #include "qwt_global.h"
 #include "qwt_raster_data.h"
 #include "qwt_plot_rasteritem.h"
-#include <qlist.h>
+#include <QtCore/qlist.h>
 
 class QwtColorMap;
 

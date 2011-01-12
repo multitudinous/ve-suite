@@ -12,20 +12,20 @@
 #include "qwt_clipper.h"
 #include "qwt_color_map.h"
 #include "qwt_scale_map.h"
-#include <qwindowdefs.h>
-#include <qwidget.h>
-#include <qrect.h>
-#include <qpainter.h>
-#include <qpalette.h>
-#include <qpaintdevice.h>
-#include <qpixmap.h>
-#include <qstyle.h>
-#include <qtextdocument.h>
-#include <qabstracttextdocumentlayout.h>
-#include <qstyleoption.h>
-#include <qpaintengine.h>
-#include <qapplication.h>
-#include <qdesktopwidget.h>
+#include <QtGui/qwindowdefs.h>
+#include <QtGui/qwidget.h>
+#include <QtCore/qrect.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpalette.h>
+#include <QtGui/qpaintdevice.h>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qstyle.h>
+#include <QtGui/qtextdocument.h>
+#include <QtGui/qabstracttextdocumentlayout.h>
+#include <QtGui/qstyleoption.h>
+#include <QtGui/qpaintengine.h>
+#include <QtGui/qapplication.h>
+#include <QtGui/qdesktopwidget.h>
 
 bool QwtPainter::d_polylineSplitting = true;
 bool QwtPainter::d_roundingAlignment = true;

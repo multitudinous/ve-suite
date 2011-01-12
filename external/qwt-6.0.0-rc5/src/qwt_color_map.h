@@ -12,8 +12,8 @@
 
 #include "qwt_global.h"
 #include "qwt_interval.h"
-#include <qcolor.h>
-#include <qvector.h>
+#include <QtGui/qcolor.h>
+#include <QtCore/qvector.h>
 
 /*!
   \brief QwtColorMap is used to map values into colors.

@@ -12,9 +12,9 @@
 #include "qwt_scale_map.h"
 #include "qwt_math.h"
 #include "qwt_painter.h"
-#include <qpen.h>
-#include <qpainter.h>
-#include <qmath.h>
+#include <QtGui/qpen.h>
+#include <QtGui/qpainter.h>
+#include <QtCore/qmath.h>
 
 class QwtScaleDraw::PrivateData
 {

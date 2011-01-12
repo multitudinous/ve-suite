@@ -11,12 +11,12 @@
 #include "qwt_math.h"
 #include "qwt_painter.h"
 #include "qwt_symbol.h"
-#include <qpainter.h>
-#include <qdrawutil.h>
-#include <qstyle.h>
-#include <qpen.h>
-#include <qevent.h>
-#include <qstyleoption.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qdrawutil.h>
+#include <QtGui/qstyle.h>
+#include <QtGui/qpen.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qstyleoption.h>
 
 static const int ButtonFrame = 2;
 static const int Margin = 2;

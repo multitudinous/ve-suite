@@ -8,7 +8,7 @@
  *****************************************************************************/
 
 #include "qwt_event_pattern.h"
-#include <qevent.h>
+#include <QtGui/qevent.h>
 
 /*!
   Constructor

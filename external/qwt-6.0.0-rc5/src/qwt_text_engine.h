@@ -11,7 +11,7 @@
 #define QWT_TEXT_ENGINE_H 1
 
 #include "qwt_global.h"
-#include <qsize.h>
+#include <QtCore/qsize.h>
 
 class QFont;
 class QRectF;

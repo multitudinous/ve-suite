@@ -13,7 +13,7 @@
 #include "qwt_global.h"
 #include "qwt_interval.h"
 #include "qwt_plot.h"
-#include <qobject.h>
+#include <QtCore/qobject.h>
 
 class QwtPlotCanvas;
 class QwtPlot;

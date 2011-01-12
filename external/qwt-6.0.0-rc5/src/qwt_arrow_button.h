@@ -11,7 +11,7 @@
 #define QWT_ARROW_BUTTON_H
 
 #include "qwt_global.h"
-#include <qpushbutton.h>
+#include <QtGui/qpushbutton.h>
 
 /*!
   \brief Arrow Button

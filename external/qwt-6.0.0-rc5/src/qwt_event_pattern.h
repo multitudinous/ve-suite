@@ -11,8 +11,8 @@
 #define QWT_EVENT_PATTERN 1
 
 #include "qwt_global.h"
-#include <qnamespace.h>
-#include <qvector.h>
+#include <QtCore/qnamespace.h>
+#include <QtCore/qvector.h>
 
 class QMouseEvent;
 class QKeyEvent;

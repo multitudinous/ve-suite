@@ -11,8 +11,8 @@
 #define QWT_PLOT_CANVAS_H
 
 #include "qwt_global.h"
-#include <qframe.h>
-#include <qpen.h>
+#include <QtGui/qframe.h>
+#include <QtGui/qpen.h>
 
 class QwtPlot;
 class QPixmap;

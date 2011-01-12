@@ -11,14 +11,14 @@
 #include "qwt_painter.h"
 #include "qwt_math.h"
 #include "qwt_plot.h"
-#include <qpainter.h>
-#include <qstyle.h>
-#include <qstyleoption.h>
-#include <qpaintengine.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qstyle.h>
+#include <QtGui/qstyleoption.h>
+#include <QtGui/qpaintengine.h>
 #ifdef Q_WS_X11
-#include <qx11info_x11.h>
+#include <QtCore/qx11info_x11.h>
 #endif
-#include <qevent.h>
+#include <QtGui/qevent.h>
 
 class QwtPlotCanvas::PrivateData
 {

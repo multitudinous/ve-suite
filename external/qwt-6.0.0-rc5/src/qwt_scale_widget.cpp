@@ -14,9 +14,9 @@
 #include "qwt_math.h"
 #include "qwt_scale_div.h"
 #include "qwt_text.h"
-#include <qpainter.h>
-#include <qevent.h>
-#include <qmath.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qevent.h>
+#include <QtCore/qmath.h>
 
 class QwtScaleWidget::PrivateData
 {

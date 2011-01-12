@@ -9,7 +9,7 @@
 
 #include "qwt_interval.h"
 #include "qwt_math.h"
-#include <qalgorithms.h>
+#include <QtCore/qalgorithms.h>
 
 /*!
    \brief Normalize the limits of the interval

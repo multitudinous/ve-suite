@@ -13,7 +13,7 @@
 #include "qwt_global.h"
 #include "qwt_legend_itemmanager.h"
 #include "qwt_text.h"
-#include <qrect.h>
+#include <QtCore/qrect.h>
 
 class QString;
 class QPainter;

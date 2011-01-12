@@ -23,8 +23,8 @@
 #define _USE_MATH_DEFINES 1
 #endif
 
-#include <qpoint.h>
-#include <qmath.h>
+#include <QtCore/qpoint.h>
+#include <QtCore/qmath.h>
 #include "qwt_global.h"
 
 #ifndef LOG10_2

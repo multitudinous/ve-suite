@@ -12,9 +12,9 @@
 
 #include "qwt_global.h"
 #include "qwt_interval.h"
-#include <qpen.h>
-#include <qsize.h>
-#include <qrect.h>
+#include <QtGui/qpen.h>
+#include <QtCore/qsize.h>
+#include <QtCore/qrect.h>
 
 class QPainter;
 class QPalette;

@@ -13,8 +13,8 @@
 #include "qwt_global.h"
 #include "qwt_plot_seriesitem.h"
 #include "qwt_column_symbol.h"
-#include <qcolor.h>
-#include <qvector.h>
+#include <QtGui/qcolor.h>
+#include <QtCore/qvector.h>
 
 class QwtIntervalData;
 class QString;

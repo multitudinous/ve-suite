@@ -12,15 +12,15 @@
 #include "qwt_interval.h"
 #include "qwt_scale_map.h"
 #include "qwt_color_map.h"
-#include <qimage.h>
-#include <qpen.h>
-#include <qpainter.h>
-#include <qmath.h>
-#include <qalgorithms.h>
+#include <QtGui/qimage.h>
+#include <QtGui/qpen.h>
+#include <QtGui/qpainter.h>
+#include <QtCore/qmath.h>
+#include <QtCore/qalgorithms.h>
 #if QT_VERSION >= 0x040400
-#include <qthread.h>
-#include <qfuture.h>
-#include <qtconcurrentrun.h>
+#include <QtCore/qthread.h>
+#include <QtCore/qfuture.h>
+#include <QtCore/qtconcurrentrun.h>
 #endif
 
 class QwtPlotSpectrogram::PrivateData

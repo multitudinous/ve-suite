@@ -2,7 +2,7 @@
 #define _QWT_SAMPLING_THREAD_H_
 
 #include "qwt_global.h"
-#include <qthread.h>
+#include <QtCore/qthread.h>
 
 /*!
   \brief A thread collecting samples at regular intervals.

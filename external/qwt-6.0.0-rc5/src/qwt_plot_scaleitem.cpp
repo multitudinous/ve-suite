@@ -12,8 +12,8 @@
 #include "qwt_plot_canvas.h"
 #include "qwt_scale_map.h"
 #include "qwt_interval.h"
-#include <qpalette.h>
-#include <qpainter.h>
+#include <QtGui/qpalette.h>
+#include <QtGui/qpainter.h>
 
 class QwtPlotScaleItem::PrivateData
 {

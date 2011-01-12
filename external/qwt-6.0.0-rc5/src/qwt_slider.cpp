@@ -11,11 +11,11 @@
 #include "qwt_painter.h"
 #include "qwt_scale_draw.h"
 #include "qwt_scale_map.h"
-#include <qevent.h>
-#include <qdrawutil.h>
-#include <qpainter.h>
-#include <qalgorithms.h>
-#include <qmath.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qdrawutil.h>
+#include <QtGui/qpainter.h>
+#include <QtCore/qalgorithms.h>
+#include <QtCore/qmath.h>
 
 class QwtSlider::PrivateData
 {

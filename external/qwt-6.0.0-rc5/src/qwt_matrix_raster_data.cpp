@@ -8,8 +8,8 @@
  *****************************************************************************/
 
 #include "qwt_matrix_raster_data.h"
-#include <qnumeric.h>
-#include <qmath.h>
+#include <QtCore/qnumeric.h>
+#include <QtCore/qmath.h>
 
 class QwtMatrixRasterData::PrivateData
 {

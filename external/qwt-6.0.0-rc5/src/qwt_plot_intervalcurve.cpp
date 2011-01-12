@@ -12,7 +12,7 @@
 #include "qwt_scale_map.h"
 #include "qwt_painter.h"
 
-#include <qpainter.h>
+#include <QtGui/qpainter.h>
 
 class QwtPlotIntervalCurve::PrivateData
 {

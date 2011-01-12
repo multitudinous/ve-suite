@@ -13,10 +13,10 @@
 #include "qwt_global.h"
 #include "qwt_text.h"
 #include "qwt_event_pattern.h"
-#include <qobject.h>
-#include <qpen.h>
-#include <qfont.h>
-#include <qrect.h>
+#include <QtCore/qobject.h>
+#include <QtGui/qpen.h>
+#include <QtGui/qfont.h>
+#include <QtCore/qrect.h>
 
 class QWidget;
 class QMouseEvent;
@@ -56,8 +56,8 @@ class QwtPickerMachine;
   position.
 
   \par Example
-  \verbatim #include <qwt_picker.h>
-#include <qwt_picker_machine.h>
+  \verbatim #include <QtCore/qwt_picker.h>
+#include <QtCore/qwt_picker_machine.h>
 
 QwtPicker *picker = new QwtPicker(widget);
 picker->setStateMachine(new QwtPickerDragRectMachine);

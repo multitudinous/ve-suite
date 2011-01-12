@@ -12,7 +12,7 @@
 
 #include "qwt_global.h"
 #include "qwt_abstract_scale_draw.h"
-#include <qpoint.h>
+#include <QtCore/qpoint.h>
 
 class QPen;
 

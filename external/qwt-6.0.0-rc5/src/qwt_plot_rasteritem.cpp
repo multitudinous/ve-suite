@@ -12,10 +12,10 @@
 #include "qwt_legend_item.h"
 #include "qwt_scale_map.h"
 #include "qwt_painter.h"
-#include <qapplication.h>
-#include <qdesktopwidget.h>
-#include <qpainter.h>
-#include <qpaintengine.h>
+#include <QtGui/qapplication.h>
+#include <QtGui/qdesktopwidget.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpaintengine.h>
 #include <float.h>
 
 class QwtPlotRasterItem::PrivateData

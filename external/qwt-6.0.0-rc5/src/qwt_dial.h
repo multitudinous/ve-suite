@@ -13,8 +13,8 @@
 #include "qwt_global.h"
 #include "qwt_abstract_slider.h"
 #include "qwt_round_scale_draw.h"
-#include <qframe.h>
-#include <qpalette.h>
+#include <QtGui/qframe.h>
+#include <QtGui/qpalette.h>
 
 class QwtDialNeedle;
 class QwtDial;

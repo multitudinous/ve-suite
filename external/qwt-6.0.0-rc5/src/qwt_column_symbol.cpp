@@ -11,8 +11,8 @@
 #include "qwt_math.h"
 #include "qwt_text.h"
 #include "qwt_painter.h"
-#include <qpainter.h>
-#include <qpalette.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpalette.h>
 
 static void drawBox( QPainter *p, const QRectF &rect,
     const QPalette &pal, double lw )

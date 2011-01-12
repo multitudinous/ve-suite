@@ -12,7 +12,7 @@
 
 #include "qwt_global.h"
 #include "qwt_text.h"
-#include <qframe.h>
+#include <QtGui/qframe.h>
 
 class QString;
 class QPaintEvent;

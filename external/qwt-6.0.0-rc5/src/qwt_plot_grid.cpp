@@ -13,8 +13,8 @@
 #include "qwt_scale_map.h"
 #include "qwt_scale_div.h"
 #include "qwt_math.h"
-#include <qpainter.h>
-#include <qpen.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpen.h>
 
 class QwtPlotGrid::PrivateData
 {

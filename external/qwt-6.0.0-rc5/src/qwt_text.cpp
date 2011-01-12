@@ -10,15 +10,15 @@
 #include "qwt_text.h"
 #include "qwt_painter.h"
 #include "qwt_text_engine.h"
-#include <qmap.h>
-#include <qfont.h>
-#include <qcolor.h>
-#include <qpen.h>
-#include <qbrush.h>
-#include <qpainter.h>
-#include <qapplication.h>
-#include <qdesktopwidget.h>
-#include <qmath.h>
+#include <QtCore/qmap.h>
+#include <QtGui/qfont.h>
+#include <QtGui/qcolor.h>
+#include <QtGui/qpen.h>
+#include <QtGui/qbrush.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qapplication.h>
+#include <QtGui/qdesktopwidget.h>
+#include <QtCore/qmath.h>
 
 class QwtTextEngineDict
 {

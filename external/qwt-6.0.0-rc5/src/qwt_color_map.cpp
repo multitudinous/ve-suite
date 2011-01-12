@@ -10,7 +10,7 @@
 #include "qwt_color_map.h"
 #include "qwt_math.h"
 #include "qwt_interval.h"
-#include <qnumeric.h>
+#include <QtCore/qnumeric.h>
 
 typedef QVector<QRgb> QwtColorTable;
 

@@ -12,8 +12,8 @@
 
 #include "qwt_global.h"
 #include "qwt_dial.h"
-#include <qstring.h>
-#include <qmap.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qmap.h>
 
 class QwtCompassRose;
 

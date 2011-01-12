@@ -20,15 +20,15 @@
 #include "qwt_text.h"
 #include "qwt_text_label.h"
 #include "qwt_math.h"
-#include <qpainter.h>
-#include <qpaintengine.h>
-#include <qtransform.h>
-#include <qprinter.h>
-#include <qimagewriter.h>
-#include <qfileinfo.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpaintengine.h>
+#include <QtGui/qtransform.h>
+#include <QtGui/qprinter.h>
+#include <QtGui/qimagewriter.h>
+#include <QtCore/qfileinfo.h>
 #ifndef QWT_NO_SVG
 #ifdef QT_SVG_LIB
-#include <qsvggenerator.h>
+#include <QtCore/qsvggenerator.h>
 #endif
 #endif
 

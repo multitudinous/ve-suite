@@ -11,12 +11,12 @@
 #define _QWT_COMPAT_H_
 
 #include "qwt_global.h"
-#include <qlist.h>
-#include <qvector.h>
-#include <qpoint.h>
-#include <qsize.h>
-#include <qrect.h>
-#include <qpolygon.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qvector.h>
+#include <QtCore/qpoint.h>
+#include <QtCore/qsize.h>
+#include <QtCore/qrect.h>
+#include <QtGui/qpolygon.h>
 
 // A couple of definition for Qwt5 compatibility
 

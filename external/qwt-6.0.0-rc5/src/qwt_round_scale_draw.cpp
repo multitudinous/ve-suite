@@ -11,10 +11,10 @@
 #include "qwt_painter.h"
 #include "qwt_scale_div.h"
 #include "qwt_scale_map.h"
-#include <qpen.h>
-#include <qpainter.h>
-#include <qfontmetrics.h>
-#include <qmath.h>
+#include <QtGui/qpen.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qfontmetrics.h>
+#include <QtCore/qmath.h>
 
 class QwtRoundScaleDraw::PrivateData
 {

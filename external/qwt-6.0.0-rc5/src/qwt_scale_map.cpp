@@ -8,10 +8,10 @@
  *****************************************************************************/
 
 #include "qwt_scale_map.h"
-#include <qrect.h>
-#include <qalgorithms.h>
-#include <qmath.h>
-#include <qdebug.h>
+#include <QtCore/qrect.h>
+#include <QtCore/qalgorithms.h>
+#include <QtCore/qmath.h>
+#include <QtCore/qdebug.h>
 
 #if QT_VERSION < 0x040601
 #define qExp(x) ::exp(x)

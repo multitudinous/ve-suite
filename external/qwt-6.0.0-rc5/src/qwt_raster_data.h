@@ -12,9 +12,9 @@
 
 #include "qwt_global.h"
 #include "qwt_interval.h"
-#include <qmap.h>
-#include <qlist.h>
-#include <qpolygon.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qlist.h>
+#include <QtGui/qpolygon.h>
 
 class QwtScaleMap;
 

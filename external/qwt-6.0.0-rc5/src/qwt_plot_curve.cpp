@@ -18,10 +18,10 @@
 #include "qwt_plot_canvas.h"
 #include "qwt_curve_fitter.h"
 #include "qwt_symbol.h"
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qalgorithms.h>
-#include <qmath.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpixmap.h>
+#include <QtCore/qalgorithms.h>
+#include <QtCore/qmath.h>
 
 static int verifyRange( int size, int &i1, int &i2 )
 {

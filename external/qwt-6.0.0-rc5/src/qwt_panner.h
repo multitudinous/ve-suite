@@ -11,7 +11,7 @@
 #define QWT_PANNER_H 1
 
 #include "qwt_global.h"
-#include <qwidget.h>
+#include <QtGui/qwidget.h>
 
 class QCursor;
 

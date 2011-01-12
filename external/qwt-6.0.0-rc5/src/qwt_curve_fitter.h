@@ -11,8 +11,8 @@
 #define QWT_CURVE_FITTER_H
 
 #include "qwt_global.h"
-#include <qpolygon.h>
-#include <qrect.h>
+#include <QtGui/qpolygon.h>
+#include <QtCore/qrect.h>
 
 class QwtSpline;
 

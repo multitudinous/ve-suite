@@ -11,8 +11,8 @@
 #define QWT_LEGEND_H
 
 #include "qwt_global.h"
-#include <qframe.h>
-#include <qlist.h>
+#include <QtGui/qframe.h>
+#include <QtCore/qlist.h>
 
 class QScrollBar;
 class QwtLegendItemManager;

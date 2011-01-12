@@ -12,8 +12,8 @@
 
 #include "qwt_global.h"
 #include "qwt_interval.h"
-#include <qpolygon.h>
-#include <qvector.h>
+#include <QtGui/qpolygon.h>
+#include <QtCore/qvector.h>
 
 class QRect;
 class QRectF;

@@ -12,7 +12,7 @@
 
 #include "qwt_global.h"
 #include "qwt_double_range.h"
-#include <qwidget.h>
+#include <QtGui/qwidget.h>
 
 /*!
   \brief An abstract base class for slider widgets

@@ -11,15 +11,15 @@
 #include "qwt_picker_machine.h"
 #include "qwt_painter.h"
 #include "qwt_math.h"
-#include <qapplication.h>
-#include <qevent.h>
-#include <qpainter.h>
-#include <qframe.h>
-#include <qcursor.h>
-#include <qbitmap.h>
-#include <qpointer.h>
-#include <qpaintengine.h>
-#include <qmath.h>
+#include <QtGui/qapplication.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qframe.h>
+#include <QtGui/qcursor.h>
+#include <QtGui/qbitmap.h>
+#include <QtCore/qpointer.h>
+#include <QtGui/qpaintengine.h>
+#include <QtCore/qmath.h>
 
 class QwtPicker::PickerWidget: public QWidget
 {

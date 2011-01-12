@@ -13,10 +13,10 @@
 #include "qwt_global.h"
 #include "qwt_text.h"
 #include "qwt_scale_draw.h"
-#include <qwidget.h>
-#include <qfont.h>
-#include <qcolor.h>
-#include <qstring.h>
+#include <QtGui/qwidget.h>
+#include <QtGui/qfont.h>
+#include <QtGui/qcolor.h>
+#include <QtCore/qstring.h>
 
 class QPainter;
 class QwtScaleTransformation;

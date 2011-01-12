@@ -12,7 +12,7 @@
 
 #include "qwt_global.h"
 #include "qwt_interval.h"
-#include <qlist.h>
+#include <QtCore/qlist.h>
 
 class QwtInterval;
 

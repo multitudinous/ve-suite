@@ -9,9 +9,9 @@
 
 #include "qwt_symbol.h"
 #include "qwt_painter.h"
-#include <qapplication.h>
-#include <qpainter.h>
-#include <qmath.h>
+#include <QtGui/qapplication.h>
+#include <QtGui/qpainter.h>
+#include <QtCore/qmath.h>
 
 namespace QwtTriangle
 {

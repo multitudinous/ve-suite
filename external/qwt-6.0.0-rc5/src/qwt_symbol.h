@@ -11,7 +11,7 @@
 #define QWT_SYMBOL_H
 
 #include "qwt_global.h"
-#include <QPolygonF>
+#include <QtGui/QPolygonF>
 
 class QPainter;
 class QRect;

@@ -11,7 +11,7 @@
 #define QWT_PLOT_RENDERER_H
 
 #include "qwt_global.h"
-#include <qobject.h>
+#include <QtCore/qobject.h>
 
 class QwtPlot;
 class QwtScaleMap;

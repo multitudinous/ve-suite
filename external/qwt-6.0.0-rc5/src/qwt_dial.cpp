@@ -13,13 +13,13 @@
 #include "qwt_scale_engine.h"
 #include "qwt_scale_map.h"
 #include "qwt_painter.h"
-#include <qpainter.h>
-#include <qbitmap.h>
-#include <qpalette.h>
-#include <qpixmap.h>
-#include <qevent.h>
-#include <qalgorithms.h>
-#include <qmath.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qbitmap.h>
+#include <QtGui/qpalette.h>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qevent.h>
+#include <QtCore/qalgorithms.h>
+#include <QtCore/qmath.h>
 
 #if QT_VERSION < 0x040601
 #define qAtan(x) ::atan(x)

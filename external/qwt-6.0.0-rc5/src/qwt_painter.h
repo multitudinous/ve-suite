@@ -12,10 +12,10 @@
 
 #include "qwt_global.h"
 
-#include <qpoint.h>
-#include <qrect.h>
-#include <qpen.h>
-#include <qline.h>
+#include <QtCore/qpoint.h>
+#include <QtCore/qrect.h>
+#include <QtGui/qpen.h>
+#include <QtCore/qline.h>
 
 class QPainter;
 class QBrush;

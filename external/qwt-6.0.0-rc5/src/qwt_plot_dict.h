@@ -13,7 +13,7 @@
 
 #include "qwt_global.h"
 #include "qwt_plot_item.h"
-#include <qlist.h>
+#include <QtCore/qlist.h>
 
 /// \var typedef QList< QwtPlotItem *> QwtPlotItemList
 /// \brief See QT 4.x assistant documentation for QList

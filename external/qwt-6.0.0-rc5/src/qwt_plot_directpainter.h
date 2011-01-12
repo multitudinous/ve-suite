@@ -11,7 +11,7 @@
 #define QWT_PLOT_DIRECT_PAINTER_H
 
 #include "qwt_global.h"
-#include <qobject.h>
+#include <QtCore/qobject.h>
 
 class QwtPlotAbstractSeriesItem;
 

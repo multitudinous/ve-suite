@@ -11,7 +11,7 @@
 #define QWT_PICKER_MACHINE 1
 
 #include "qwt_global.h"
-#include <qlist.h>
+#include <QtCore/qlist.h>
 
 class QEvent;
 class QwtEventPattern;

@@ -11,8 +11,8 @@
 #define QWT_SPLINE_H
 
 #include "qwt_global.h"
-#include <qpolygon.h>
-#include <qvector.h>
+#include <QtGui/qpolygon.h>
+#include <QtCore/qvector.h>
 
 /*!
   \brief A class for spline interpolation
@@ -31,7 +31,7 @@
 
   \par Example:
   \code
-#include <qwt_spline.h>
+#include <QtCore/qwt_spline.h>
 
 QPolygonF interpolate(const QPolygonF& points, int numValues)
 {

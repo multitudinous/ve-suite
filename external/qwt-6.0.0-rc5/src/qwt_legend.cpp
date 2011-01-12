@@ -12,10 +12,10 @@
 #include "qwt_legend_item.h"
 #include "qwt_dyngrid_layout.h"
 #include "qwt_math.h"
-#include <qapplication.h>
-#include <qmap.h>
-#include <qscrollbar.h>
-#include <qscrollarea.h>
+#include <QtGui/qapplication.h>
+#include <QtCore/qmap.h>
+#include <QtGui/qscrollbar.h>
+#include <QtGui/qscrollarea.h>
 
 class QwtLegend::PrivateData
 {

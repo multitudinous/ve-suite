@@ -13,7 +13,7 @@
 #include "qwt_symbol.h"
 #include "qwt_text.h"
 #include "qwt_math.h"
-#include <qpainter.h>
+#include <QtGui/qpainter.h>
 
 class QwtPlotMarker::PrivateData
 {

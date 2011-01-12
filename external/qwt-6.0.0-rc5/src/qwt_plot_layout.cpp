@@ -13,8 +13,8 @@
 #include "qwt_plot_canvas.h"
 #include "qwt_scale_widget.h"
 #include "qwt_legend.h"
-#include <qscrollbar.h>
-#include <qmath.h>
+#include <QtGui/qscrollbar.h>
+#include <QtCore/qmath.h>
 
 class QwtPlotLayout::LayoutData
 {

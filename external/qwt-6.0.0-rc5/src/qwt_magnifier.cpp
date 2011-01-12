@@ -9,8 +9,8 @@
 
 #include "qwt_magnifier.h"
 #include "qwt_math.h"
-#include <qevent.h>
-#include <qwidget.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qwidget.h>
 
 class QwtMagnifier::PrivateData
 {

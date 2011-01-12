@@ -12,10 +12,10 @@
 
 #include "qwt_global.h"
 #include "qwt_abstract_scale.h"
-#include <qwidget.h>
-#include <qcolor.h>
-#include <qfont.h>
-#include <qrect.h>
+#include <QtGui/qwidget.h>
+#include <QtGui/qcolor.h>
+#include <QtGui/qfont.h>
+#include <QtCore/qrect.h>
 
 class QwtScaleDraw;
 
@@ -37,8 +37,8 @@ class QwtScaleDraw;
   The example shows how to make the scale indicate in degrees Fahrenheit and
   to set the value in degrees Kelvin:
 \code
-#include <qapplication.h>
-#include <qwt_thermo.h>
+#include <QtGui/qapplication.h>
+#include <QtCore/qwt_thermo.h>
 
 double Kelvin2Fahrenheit(double kelvin)
 {

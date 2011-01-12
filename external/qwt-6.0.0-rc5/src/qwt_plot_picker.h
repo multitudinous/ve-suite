@@ -13,7 +13,7 @@
 #include "qwt_global.h"
 #include "qwt_plot_canvas.h"
 #include "qwt_picker.h"
-#include <qvector.h>
+#include <QtCore/qvector.h>
 
 class QwtPlot;
 

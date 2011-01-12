@@ -10,9 +10,9 @@
 #include "qwt_text_label.h"
 #include "qwt_text.h"
 #include "qwt_painter.h"
-#include <qpainter.h>
-#include <qevent.h>
-#include <qmath.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qevent.h>
+#include <QtCore/qmath.h>
 
 class QwtTextLabel::PrivateData
 {

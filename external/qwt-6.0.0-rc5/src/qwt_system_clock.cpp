@@ -8,7 +8,7 @@
  *****************************************************************************/
 
 #include "qwt_system_clock.h"
-#include <qdatetime.h>
+#include <QtCore/qdatetime.h>
 
 #if !defined(Q_OS_WIN)
 #include <unistd.h>
@@ -23,7 +23,7 @@
 #define QWT_HIGH_RESOLUTION_CLOCK
 #elif defined(Q_OS_WIN)
 #define QWT_HIGH_RESOLUTION_CLOCK
-#include <qt_windows.h>
+#include <QtCore/qt_windows.h>
 #endif
 
 #if defined(QWT_HIGH_RESOLUTION_CLOCK)

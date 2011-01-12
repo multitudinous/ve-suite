@@ -10,11 +10,11 @@
 #include "qwt_arrow_button.h"
 #include "qwt_math.h"
 #include "qwt_counter.h"
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qvalidator.h>
-#include <qevent.h>
-#include <qstyle.h>
+#include <QtGui/qlayout.h>
+#include <QtGui/qlineedit.h>
+#include <QtGui/qvalidator.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qstyle.h>
 
 class QwtCounter::PrivateData
 {

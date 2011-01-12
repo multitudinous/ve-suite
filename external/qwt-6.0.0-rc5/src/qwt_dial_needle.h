@@ -11,7 +11,7 @@
 #define QWT_DIAL_NEEDLE_H 1
 
 #include "qwt_global.h"
-#include <qpalette.h>
+#include <QtGui/qpalette.h>
 
 class QPainter;
 class QPoint;

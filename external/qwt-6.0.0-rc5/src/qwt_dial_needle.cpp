@@ -11,8 +11,8 @@
 #include "qwt_global.h"
 #include "qwt_math.h"
 #include "qwt_painter.h"
-#include <qapplication.h>
-#include <qpainter.h>
+#include <QtGui/qapplication.h>
+#include <QtGui/qpainter.h>
 
 //! Constructor
 QwtDialNeedle::QwtDialNeedle():

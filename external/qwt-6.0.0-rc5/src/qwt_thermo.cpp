@@ -12,13 +12,13 @@
 #include "qwt_scale_engine.h"
 #include "qwt_scale_draw.h"
 #include "qwt_scale_map.h"
-#include <qpainter.h>
-#include <qevent.h>
-#include <qstyle.h>
-#include <qpixmap.h>
-#include <qdrawutil.h>
-#include <qalgorithms.h>
-#include <qmath.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qstyle.h>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qdrawutil.h>
+#include <QtCore/qalgorithms.h>
+#include <QtCore/qmath.h>
 
 class QwtThermo::PrivateData
 {

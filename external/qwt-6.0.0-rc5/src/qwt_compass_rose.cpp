@@ -10,7 +10,7 @@
 #include "qwt_compass_rose.h"
 #include "qwt_math.h"
 #include "qwt_painter.h"
-#include <qpainter.h>
+#include <QtGui/qpainter.h>
 
 static QPoint cutPoint( QPoint p11, QPoint p12, QPoint p21, QPoint p22 )
 {

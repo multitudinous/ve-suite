@@ -14,8 +14,8 @@
 #include "qwt_interval.h"
 #include "qwt_point_3d.h"
 #include "qwt_point_polar.h"
-#include <qvector.h>
-#include <qrect.h>
+#include <QtCore/qvector.h>
+#include <QtCore/qrect.h>
 
 //! \brief A sample of the types (x1-x2, y) or (x, y1-y2)
 class QWT_EXPORT QwtIntervalSample
@@ -359,10 +359,10 @@ private:
 
   \verbatim
 #include <cmath>
-#include <qwt_series_data.h>
-#include <qwt_plot_curve.h>
-#include <qwt_plot.h>
-#include <qapplication.h>
+#include <QtCore/qwt_series_data.h>
+#include <QtCore/qwt_plot_curve.h>
+#include <QtCore/qwt_plot.h>
+#include <QtGui/qapplication.h>
 
 class SinusData: public QwtSyntheticPointData
 {

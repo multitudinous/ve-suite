@@ -14,7 +14,7 @@
 #include "qwt_text.h"
 #include "qwt_plot_dict.h"
 #include "qwt_scale_map.h"
-#include <qframe.h>
+#include <QtGui/qframe.h>
 
 class QwtPlotLayout;
 class QwtLegend;
@@ -45,8 +45,8 @@ class QwtPlotCanvas;
   way to use QwtPlot. By default, only the left and bottom axes are
   visible and their scales are computed automatically.
   \verbatim
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
+#include <QtCore/qwt_plot.h>
+#include <QtCore/qwt_plot_curve.h>
 
 QwtPlot *myPlot = new QwtPlot("Two Curves", parent);
 

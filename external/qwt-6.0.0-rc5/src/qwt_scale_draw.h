@@ -12,9 +12,9 @@
 
 #include "qwt_global.h"
 #include "qwt_abstract_scale_draw.h"
-#include <qpoint.h>
-#include <qrect.h>
-#include <qtransform.h>
+#include <QtCore/qpoint.h>
+#include <QtCore/qrect.h>
+#include <QtGui/qtransform.h>
 
 /*!
   \brief A class for drawing scales

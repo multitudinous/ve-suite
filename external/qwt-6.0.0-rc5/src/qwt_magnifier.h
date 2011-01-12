@@ -11,7 +11,7 @@
 #define QWT_MAGNIFIER_H 1
 
 #include "qwt_global.h"
-#include <qobject.h>
+#include <QtCore/qobject.h>
 
 class QWidget;
 class QMouseEvent;

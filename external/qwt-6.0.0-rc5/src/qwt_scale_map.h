@@ -13,7 +13,7 @@
 #include "qwt_global.h"
 #include "qwt_math.h"
 #ifndef QT_NO_DEBUG_STREAM
-#include <qdebug.h>
+#include <QtCore/qdebug.h>
 #endif
 
 class QRectF;

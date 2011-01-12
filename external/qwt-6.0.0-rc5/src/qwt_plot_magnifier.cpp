@@ -11,7 +11,7 @@
 #include "qwt_plot_canvas.h"
 #include "qwt_scale_div.h"
 #include "qwt_plot_magnifier.h"
-#include <qevent.h>
+#include <QtGui/qevent.h>
 
 class QwtPlotMagnifier::PrivateData
 {

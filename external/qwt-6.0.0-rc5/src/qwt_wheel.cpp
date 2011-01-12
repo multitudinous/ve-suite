@@ -10,10 +10,10 @@
 #include "qwt_wheel.h"
 #include "qwt_math.h"
 #include "qwt_painter.h"
-#include <qevent.h>
-#include <qdrawutil.h>
-#include <qpainter.h>
-#include <qstyle.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qdrawutil.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qstyle.h>
 
 #define NUM_COLORS 30
 

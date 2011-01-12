@@ -10,8 +10,8 @@
 #include "qwt_curve_fitter.h"
 #include "qwt_math.h"
 #include "qwt_spline.h"
-#include <qstack.h>
-#include <qvector.h>
+#include <QtCore/qstack.h>
+#include <QtCore/qvector.h>
 
 #if QT_VERSION < 0x040601
 #define qFabs(x) ::fabs(x)

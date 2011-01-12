@@ -11,7 +11,7 @@
 #include "qwt_color_map.h"
 #include "qwt_scale_map.h"
 #include "qwt_painter.h"
-#include <qpainter.h>
+#include <QtGui/qpainter.h>
 
 class QwtPlotSpectroCurve::PrivateData
 {

@@ -11,11 +11,11 @@
 #include "qwt_round_scale_draw.h"
 #include "qwt_math.h"
 #include "qwt_painter.h"
-#include <qpainter.h>
-#include <qpalette.h>
-#include <qstyle.h>
-#include <qevent.h>
-#include <qmath.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpalette.h>
+#include <QtGui/qstyle.h>
+#include <QtGui/qevent.h>
+#include <QtCore/qmath.h>
 
 #if QT_VERSION < 0x040601
 #define qAtan2(y, x) ::atan2(y, x)

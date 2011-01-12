@@ -13,7 +13,7 @@
 #include "qwt_global.h"
 #include "qwt_dial.h"
 #include "qwt_dial_needle.h"
-#include <qdatetime.h>
+#include <QtCore/qdatetime.h>
 
 /*!
   \brief An analog clock
@@ -21,7 +21,7 @@
   \image html analogclock.png
 
   \par Example
-  \verbatim #include <qwt_analog_clock.h>
+  \verbatim #include <QtCore/qwt_analog_clock.h>
 
   QwtAnalogClock *clock = new QwtAnalogClock(...);
   clock->scaleDraw()->setPenWidth(3);

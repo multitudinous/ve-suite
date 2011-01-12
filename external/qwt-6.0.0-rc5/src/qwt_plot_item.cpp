@@ -12,7 +12,7 @@
 #include "qwt_plot.h"
 #include "qwt_legend.h"
 #include "qwt_legend_item.h"
-#include <qpainter.h>
+#include <QtGui/qpainter.h>
 
 class QwtPlotItem::PrivateData
 {

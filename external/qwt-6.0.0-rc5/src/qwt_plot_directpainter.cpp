@@ -12,10 +12,10 @@
 #include "qwt_plot.h"
 #include "qwt_plot_canvas.h"
 #include "qwt_plot_seriesitem.h"
-#include <qpainter.h>
-#include <qevent.h>
-#include <qapplication.h>
-#include <qpixmap.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qapplication.h>
+#include <QtGui/qpixmap.h>
 
 static void renderItem( QPainter *painter,
     QwtPlotAbstractSeriesItem *seriesItem, int from, int to )

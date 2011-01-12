@@ -11,9 +11,9 @@
 #define QWT_DYNGRID_LAYOUT_H
 
 #include "qwt_global.h"
-#include <qlayout.h>
-#include <qsize.h>
-#include <qlist.h>
+#include <QtGui/qlayout.h>
+#include <QtCore/qsize.h>
+#include <QtCore/qlist.h>
 
 /*!
   \brief The QwtDynGridLayout class lays out widgets in a grid,

@@ -9,11 +9,11 @@
 
 #include "qwt_panner.h"
 #include "qwt_picker.h"
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qevent.h>
-#include <qframe.h>
-#include <qcursor.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qframe.h>
+#include <QtGui/qcursor.h>
 
 static QVector<QwtPicker *> activePickers( QWidget *w )
 {
