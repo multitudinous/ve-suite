@@ -40,6 +40,8 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
 
+#include <ves/xplorer/behavior/Selection.h>
+
 #include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/network/GraphicalPluginManager.h>
@@ -134,21 +136,23 @@
 #include <cmath>
 
 using namespace ves::xplorer::device;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
     :
-    Device( KEYBOARD_MOUSE )
+    Device( KEYBOARD_MOUSE ),
+    m_selectionSlot( new ves::xplorer::behavior::Selection() )
 {
     //mHead.init( "VJHead" );
 
     // Connect to Juggler's new event handling interface
-    mMouseDoubleClickEventInterface.setClickTime(300);
-    mMouseDoubleClickEventInterface.init("VJKeyboard");
-    mMouseDoubleClickEventInterface.addCallback(boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1));
+    m_mouseDoubleClickEventInterface.setClickTime(300);
+    m_mouseDoubleClickEventInterface.init("VJKeyboard");
+    m_mouseDoubleClickEventInterface.addCallback(boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1));
 
-    mKeyboardMouseEventInterface.init("VJKeyboard");
-    mKeyboardMouseEventInterface.addCallback(boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1));
+    m_keyboardMouseEventInterface.init("VJKeyboard");
+    m_keyboardMouseEventInterface.addCallback(boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1));
 
     SetupButtonSignalMap();
     SetupKeySignalMap();
@@ -157,11 +161,11 @@ KeyboardMouse::KeyboardMouse()
     using eventmanager::SignalWrapper;
 
     evm->RegisterSignal(
-            new SignalWrapper< MouseMoveSignal_type >( &mMouseMove ),
+            new SignalWrapper< MouseMoveSignal_type >( &m_mouseMove ),
             "KeyboardMouse.MouseMove", eventmanager::EventManager::mouse_SignalType );
 
     evm->RegisterSignal(
-            new SignalWrapper< MouseDoubleClickSignal_type >( &mMouseDoubleClick ),
+            new SignalWrapper< MouseDoubleClickSignal_type >( &m_mouseDoubleClick ),
             "KeyboardMouse.DoubleClick", eventmanager::EventManager::button_SignalType );
 
     RegisterButtonSignals();
@@ -186,11 +190,20 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
 {
     const gadget::EventType eventType = event->type();
-
+    
+    //Get the current display from the input area
+    gadget::InputArea& inputArea = event->getSource();
+    vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
+    
     switch( eventType )
     {
     case gadget::KeyPressEvent:
     {
+        //Set the current GLTransfromInfo from the event
+        if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
+        {
+            return;
+        }
         /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::KeyPressEvent"
             << std::endl << vprDEBUG_FLUSH;*/
@@ -218,7 +231,11 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     case gadget::KeyReleaseEvent:
     {
-
+        //Set the current GLTransfromInfo from the event
+        if( !SetCurrentGLTransformInfo( currentDisplay, true ) )
+        {
+            return;
+        }
         /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::KeyReleaseEvent"
             << std::endl << vprDEBUG_FLUSH;*/
@@ -248,7 +265,15 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     {
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
-
+        
+        m_currX = mouseEvt->getX();
+        m_currY = mouseEvt->getY();
+        
+        if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+        {
+            return;
+        }        
+        
         /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonPressEvent "
             << mouseEvt->getButton() << ", " << mouseEvt->getX()
@@ -269,10 +294,19 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonReleaseEvent"
             << std::endl << vprDEBUG_FLUSH;*/
+        //Set the current GLTransfromInfo from the event
 
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
+        m_currX = mouseEvt->getX();
+        m_currY = mouseEvt->getY();
+
+        if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+        {
+            return;
+        }        
+        
         ButtonReleaseSignalMapType::iterator itr = mButtonReleaseSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonReleaseSignalMap.end() )
         {
@@ -283,6 +317,12 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     case gadget::MouseMoveEvent:
     {
+        //Set the current GLTransfromInfo from the event
+        if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
+        {
+            return;
+        }
+
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
@@ -292,13 +332,13 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             << ", 0, " << mouseEvt->getState()
             << std::endl << vprDEBUG_FLUSH;*/
         // x, y, z, state (modifier mask OR'd with button mask)
-        mMouseMove( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
+        m_mouseMove( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
 
         break;
     }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
 {
     const gadget::MouseEventPtr mouseEvt =
@@ -310,11 +350,11 @@ void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
         << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
         << std::endl << vprDEBUG_FLUSH;*/
 
-    mMouseDoubleClick( mouseEvt->getButton(), mouseEvt->getX(),
+    m_mouseDoubleClick( mouseEvt->getButton(), mouseEvt->getX(),
                        mouseEvt->getY(), 0, mouseEvt->getState() );
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetupButtonSignalMap()
 {
     mButtonPressSignalMap[ gadget::MBUTTON1 ] = &mButtonPress_1;
@@ -338,7 +378,7 @@ void KeyboardMouse::SetupButtonSignalMap()
     mButtonPressSignalMap[ gadget::MBUTTON7 ] = &mButtonPress_7;
     mButtonReleaseSignalMap[ gadget::MBUTTON7 ] = &mButtonRelease_7;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RegisterButtonSignals()
 {
     eventmanager::EventManager* evm = eventmanager::EventManager::instance();
@@ -393,7 +433,7 @@ void KeyboardMouse::RegisterButtonSignals()
             new SignalWrapper< ButtonReleaseSignal_type >( &mButtonRelease_7 ),
             "KeyboardMouse.ButtonRelease7", eventmanager::EventManager::button_SignalType );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetupKeySignalMap()
 {
     mKeyPressSignalMap[gadget::KEY_NONE] = &mKeyPress_KEY_NONE;
@@ -809,11 +849,8 @@ void KeyboardMouse::SetupKeySignalMap()
 
     mKeyPressSignalMap[gadget::KEY_ASCII_TILDE] = &mKeyPress_KEY_ASCII_TILDE;
     mKeyReleaseSignalMap[gadget::KEY_ASCII_TILDE] = &mKeyRelease_KEY_ASCII_TILDE;
-
-
-
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RegisterKeySignals()
 {
     eventmanager::EventManager* evm = eventmanager::EventManager::instance();
@@ -1785,65 +1822,171 @@ void KeyboardMouse::RegisterKeySignals()
             new SignalWrapper< KeyReleaseSignal_type >( &mKeyRelease_KEY_ASCII_TILDE ),
             "KeyboardMouse.KeyRelease_KEY_ASCII_TILDE", eventmanager::EventManager::keyboard_SignalType );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > values )
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetFrustumValues(
     double l, double r, double b, double t, double n, double f )
 {
 
 }
-
-void KeyboardMouse::FrameAll()
-{
-
-}
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SkyCam()
 {
 
 }
-
-void KeyboardMouse::FrameSelection()
-{
-
-}
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::UpdateSelectionLine()
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()
 {
     return mKeyboardMousePtr;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 osgUtil::LineSegmentIntersector* KeyboardMouse::GetLineSegmentIntersector()
 {
     return 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetProcessSelection( bool processSelection )
 {
 
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 bool KeyboardMouse::GetMousePickEvent()
 {
     return false;
 }
+////////////////////////////////////////////////////////////////////////////////
+vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
+    const gadget::InputArea* inputArea )
+{
+    const vrj::opengl::Window* window( NULL );
+#if defined( VPR_OS_Darwin )
+    const gadget::InputWindowCocoa* inputWindowCocoa =
+    dynamic_cast< const gadget::InputWindowCocoa* >( inputArea );
+    if( inputWindowCocoa )
+    {
+        return vrj::DisplayPtr();
+    }
+    //downcast
+    const vrj::opengl::WindowCocoa* windowCocoa =
+    static_cast< const vrj::opengl::WindowCocoa* >( inputArea );
+    //upcast
+    window = static_cast< const vrj::opengl::Window* >( windowCocoa );
+#elif defined( VPR_OS_Windows )
+    const gadget::InputWindowWin32* inputWindowWin32 =
+    dynamic_cast< const gadget::InputWindowWin32* >( inputArea );
+    if( inputWindowWin32 )
+    {
+        return vrj::DisplayPtr();
+    }
+    //downcast
+    const vrj::opengl::WindowWin32* windowWin32 =
+    static_cast< const vrj::opengl::WindowWin32* >( inputArea );
+    //upcast
+    window = dynamic_cast< const vrj::opengl::Window* >( windowWin32 );
+#elif defined( VPR_OS_Linux )
+    const gadget::InputWindowXWin* inputWindowXWin =
+    dynamic_cast< const gadget::InputWindowXWin* >( inputArea );
+    if( inputWindowXWin )
+    {
+        return vrj::DisplayPtr();
+    }
+    //downcast
+    const vrj::opengl::WindowXWin* windowXWin =
+    static_cast< const vrj::opengl::WindowXWin* >( inputArea );
+    //upcast
+    window = dynamic_cast< const vrj::opengl::Window* >( windowXWin );
+#endif
+    
+    if( window )
+    {
+        return window->getDisplay();
+    }
+    else
+    {
+        //Error output, this should never happen
+        vprDEBUG( vesDBG, 2 ) 
+        << "VPR OS is not defined properly in KeyboardMouse::GetCurrentDisplay." 
+        << std::endl << vprDEBUG_FLUSH;
+        return vrj::DisplayPtr();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+bool KeyboardMouse::SetCurrentGLTransformInfo(
+    const vrj::DisplayPtr display, bool isKeyEvent )
+{
+    //If current display is invalid, return
+    if( display == vrj::DisplayPtr() )
+    {
+        m_sceneManager.SetCurrentGLTransformInfo( GLTransformInfoPtr() );
+        return false;
+    }
+    
+    scenegraph::manipulator::TransformManipulator* sceneManipulator =
+        m_manipulatorManager.GetSceneManipulator();
+    vrj::ViewportPtr viewport;
+    //Iterate over the viewports
+    for( unsigned int i = 0; i < display->getNumViewports(); ++i )
+    {
+        viewport = display->getViewport( i );
+        m_currentGLTransformInfo = m_sceneManager.GetGLTransformInfo( viewport );
+        if( m_currentGLTransformInfo == scenegraph::GLTransformInfoPtr() )
+        {
+            m_sceneManager.SetCurrentGLTransformInfo( GLTransformInfoPtr() );
+            return false;
+        }
+        
+        // ---------- This needs to be optimized ------------ //
+        // --- Does not need to be set for every viewport --- //
+        const int& windowWidth = m_currentGLTransformInfo->GetWindowWidth();
+        const int& windowHeight = m_currentGLTransformInfo->GetWindowHeight();
+        SetWindowValues( windowWidth, windowHeight );
+        // -------------------------------------------------- //
+        
+        if( isKeyEvent )
+        {
+            m_sceneManager.SetCurrentGLTransformInfo( m_currentGLTransformInfo );
+            return true;
+        }
+        
+        //Get dimensions of viewport in pixels
+        const int& viewportOriginX = m_currentGLTransformInfo->GetViewportOriginX();
+        const int& viewportOriginY = m_currentGLTransformInfo->GetViewportOriginY();
+        const int& viewportWidth = m_currentGLTransformInfo->GetViewportWidth();
+        const int& viewportHeight = m_currentGLTransformInfo->GetViewportHeight();
+        
+        //Check if mouse is inside viewport
+        if( ( m_currX >= viewportOriginX ) &&
+           ( m_currY >= viewportOriginY ) &&
+           ( m_currX <= viewportOriginX + viewportWidth ) &&
+           ( m_currY <= viewportOriginY + viewportHeight ) )
+        {
+            sceneManipulator->SetCurrentGLTransformInfo(
+                                                        m_currentGLTransformInfo );
+            m_sceneManager.SetCurrentGLTransformInfo( m_currentGLTransformInfo );            
+            return true;
+        }
+    }
+    
+    m_sceneManager.SetCurrentGLTransformInfo( GLTransformInfoPtr() );
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////

@@ -85,6 +85,11 @@ namespace ves
 {
 namespace xplorer
 {
+namespace behavior
+{
+class Selection;
+}
+
 namespace device
 {
 
@@ -133,13 +138,7 @@ public:
         double l, double r, double b, double t, double n, double f );
 
     ///Fit the world bounding volume into the viewing frustum
-    void FrameAll();
-
-    ///Fit the world bounding volume into the viewing frustum
     void SkyCam();
-
-    ///Fit the selected objects bounding volume into the viewing frustum
-    void FrameSelection();
 
     ///Resets the scene to original position
     void ResetTransforms();
@@ -164,8 +163,30 @@ public:
     ///\return
     bool GetMousePickEvent();
 
-private:
+    ///Get the current display based on the VR Juggler InputArea
+    ///\return The display where this event occurred
+    vrj::DisplayPtr const GetCurrentDisplay( const gadget::InputArea* inputArea );
 
+    ///Set the current matrix transform information for a given display
+    ///\return Wether this operation was succesfull
+    bool SetCurrentGLTransformInfo( const vrj::DisplayPtr display, bool isKeyEvent );
+
+private:
+    ves::xplorer::behavior::Selection* m_selectionSlot;
+    
+    ///The current X mouse position
+    int m_currX;
+    
+    ///The current Y mouse position
+    int m_currY;
+
+    ///
+    scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;    
+
+    ///The point about which rotation occurs
+    ///Do not allocate memory 'new' for this pointer
+    gmtl::Point3d* mCenterPoint;
+    
 //    typedef boost::signals2::signal<bool (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
 //    InteractionSignal_type mInteractionSignal;
 
@@ -175,7 +196,7 @@ private:
     
     /// The keyboardmouse device needed for juggler >= 3.1
     gadget::KeyboardMouseEventInterface<gadget::event::all_events_tag,
-        gadget::event::immediate_tag> mKeyboardMouseEventInterface;
+        gadget::event::immediate_tag> m_keyboardMouseEventInterface;
     
     /// All keyboardmouse events get delivered here
     void onKeyboardMouseEvent(gadget::EventPtr event);
@@ -183,23 +204,19 @@ private:
     /// Interface to receive double-click events from gadgeteer
     gadget::MouseMultiClickEventInterface< 2,
         gadget::event::all_events_tag,
-        gadget::event::immediate_tag > mMouseDoubleClickEventInterface;
+        gadget::event::immediate_tag > m_mouseDoubleClickEventInterface;
 
     void onMouseDoubleClick( gadget::EventPtr event );
-
-
 
     /// MouseMove signal
     /// Params are: x, y, z, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal< void ( int, int, int, int ) > MouseMoveSignal_type;
-    MouseMoveSignal_type mMouseMove;
-
+    MouseMoveSignal_type m_mouseMove;
 
     /// MouseDoubleClick signal
     /// Params are: button, x, y, z, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal< void ( gadget::Keys, int, int, int, int ) > MouseDoubleClickSignal_type;
-    MouseDoubleClickSignal_type mMouseDoubleClick;
-
+    MouseDoubleClickSignal_type m_mouseDoubleClick;
 
     /// Sets up the mouse/wand button signal map
     void SetupButtonSignalMap();
@@ -242,9 +259,6 @@ private:
 
     ButtonPressSignal_type mButtonPress_7;
     ButtonReleaseSignal_type mButtonRelease_7;
-
-
-
 
     /// Sets up maps for KeyPress and KeyRelease signals
     void SetupKeySignalMap();

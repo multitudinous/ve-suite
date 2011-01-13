@@ -129,7 +129,7 @@ void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
             device::KeyboardMouse* keyboardMouse =
                 DeviceHandler::instance()->GetDevice(
                     device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
-            keyboardMouse->FrameAll();
+            //keyboardMouse->FrameAll();
         }
         else if( viewData == "CHANGE_XPLORER_VIEW_CAD" )
         {

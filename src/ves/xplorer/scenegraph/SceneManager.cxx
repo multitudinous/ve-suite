@@ -693,3 +693,13 @@ osg::Group& SceneManager::GetDeviceHandlerGroup()
     return *m_deviceHandlerGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
+GLTransformInfoPtr const SceneManager::GetCurrentGLTransformInfo()
+{
+    return m_currentGLTransformInfo;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::SetCurrentGLTransformInfo( GLTransformInfoPtr const transformInfo )
+{
+    m_currentGLTransformInfo = transformInfo;
+}
+////////////////////////////////////////////////////////////////////////////////

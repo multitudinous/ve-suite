@@ -101,15 +101,15 @@ void ViewEventHandler::Execute(
             device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
     if( view == "Frame All" )
     {
-        keyboardMouse->FrameAll();
+        //keyboardMouse->FrameAll();
     }
     else if( view == "Frame Selection" )
     {
-        keyboardMouse->FrameSelection();
+        //keyboardMouse->FrameSelection();
     }
     else if( view == "Reset" )
     {
-        keyboardMouse->ResetTransforms();
+        //keyboardMouse->ResetTransforms();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

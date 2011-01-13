@@ -133,6 +133,14 @@ public:
     GLTransformInfoPtr const GetGLTransformInfo(
         vrj::ViewportPtr const viewport );
 
+    ///
+    ///\return
+    GLTransformInfoPtr const GetCurrentGLTransformInfo();
+    
+    ///
+    ///
+    void SetCurrentGLTransformInfo( GLTransformInfoPtr const transformInfo );
+    
     ///Return the graphical plugin manager
     Group& GetGraphicalPluginManager() const;
 
@@ -374,6 +382,9 @@ private:
     
     ///A reference to the device handler group node
     osg::ref_ptr< osg::Group > m_deviceHandlerGroup;
+    
+    ///
+    scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;    
 };
 } //end scenegraph
 } //end xplorer
