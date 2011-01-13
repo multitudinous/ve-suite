@@ -8,6 +8,6 @@ Description: QtSvg Library
 Version: 4.6.2
 Libs: /libpath:"${libdir}" QtSvg4.lib
 Cflags: /DQT_DLL /I"${prefix}\include\" /I"${includedir}"
-Requires: QtCore
+Requires: QtCore QtGui
 Provides: QtSvg
 Arch: noarch

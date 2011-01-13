@@ -8,6 +8,6 @@ Description: QtDesigner Library
 Version: 4.6.2
 Libs: /libpath:"${libdir}" QtDesigner4.lib
 Cflags: /DQT_DLL /I"${prefix}\include\" /I"${includedir}"
-Requires: QtCore
+Requires: QtCore QtGui QtScript QtXml
 Provides: QtDesigner
 Arch: noarch
