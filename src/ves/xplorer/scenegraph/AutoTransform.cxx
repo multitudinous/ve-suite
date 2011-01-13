@@ -62,6 +62,7 @@ using namespace gmtl;
 AutoTransform::AutoTransform()
     :
     osg::Transform(),
+    m_currentGLTransformInfo( GLTransformInfoPtr() ),
     m_autoRotateMode( NO_ROTATION ),
     m_autoScaleToScreen( false ),
     m_maximumScale( DBL_MAX ),
@@ -70,8 +71,7 @@ AutoTransform::AutoTransform()
     m_position( 0.0, 0.0, 0.0 ),
     _scale( 1.0, 1.0, 1.0 ),
     m_scale( 1.0, 1.0, 1.0 ),
-    m_rotation( 0.0, 0.0, 0.0, 1.0 ),
-    m_currentGLTransformInfo( GLTransformInfoPtr() )
+    m_rotation( 0.0, 0.0, 0.0, 1.0 )
 {
     m_headPosition.init( "VJHead" );
 }
@@ -81,6 +81,7 @@ AutoTransform::AutoTransform(
     const osg::CopyOp& copyop )
     :
     osg::Transform( autoTransform, copyop ),
+    m_currentGLTransformInfo( GLTransformInfoPtr() ),
     m_autoRotateMode( autoTransform.m_autoRotateMode ),
     m_autoScaleToScreen( autoTransform.m_autoScaleToScreen ),
     m_maximumScale( autoTransform.m_maximumScale ),
@@ -89,8 +90,7 @@ AutoTransform::AutoTransform(
     m_position( autoTransform.m_position ),
     _scale( autoTransform._scale ),
     m_scale( autoTransform.m_scale ),
-    m_rotation( autoTransform.m_rotation ),
-    m_currentGLTransformInfo( GLTransformInfoPtr() )
+    m_rotation( autoTransform.m_rotation )
 {
     ;
 }
