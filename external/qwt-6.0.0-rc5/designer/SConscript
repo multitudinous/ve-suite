@@ -19,9 +19,17 @@ mocsources = [ pj( buildSrcDir, 'qwt_designer_plotdialog.h' ),
 for x in mocsources:
     mocced += lib_env.qt_moc( x )
 
+rccsource = [ pj( buildSrcDir, 'qwt_designer_plugin.qrc' ) ]
+rccsource = lib_env.qt_rcc( rccsource )
+
 headers = map( lambda s: pj( '.', s ), headers )
 sources = map( lambda s: pj( '.', s ), sources )
 sources += mocced
+sources += rccsource
+
+lib_env.Append( CPPPATH = [ pj( RootDir, 'external', 'qwt-6.0.0-rc5', 'src' ) ] )
+lib_env.Append( LIBS = [ 'qwt' ] )
+lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'external', 'qwt-6.0.0-rc5', 'src' ) ] )
 
 if GetPlatform() == 'linux':
     lib_env.Append( CCFLAGS=[ '-fPIC' ] )
@@ -31,6 +39,10 @@ if GetPlatform() != 'darwin':
     qt_options.apply( lib_env )
     lib_env.AppendUnique( CPPDEFINES = [ 'QT_ON' ] )
     lib_env.AppendUnique( CPPDEFINES = [ 'QWT_DLL' ] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QT_PLUGIN' ] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QT_NO_DEBUG' ] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QT_SHARED' ] )
+    lib_env.AppendUnique( CPPDEFINES = [ 'QDESIGNER_EXPORT_WIDGETS' ] )
 else:
     import qt46
     qt46.applyQtBuildFlags( lib_env )

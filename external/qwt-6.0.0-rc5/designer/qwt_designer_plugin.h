@@ -11,7 +11,7 @@
 #define QWT_DESIGNER_PLUGIN_H
 
 #include <QtDesigner/QDesignerCustomWidgetInterface>
-#include <QtDesignerQDesignerTaskMenuExtension>
+#include <QtDesigner/QDesignerTaskMenuExtension>
 #include <QtDesigner/QExtensionFactory>
 
 namespace QwtDesignerPlugin
