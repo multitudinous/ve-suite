@@ -2,6 +2,7 @@
 
 qwtSubdirs = Split("""
     src
+    textengines
 """)
 
 #Run SConscript files in all of those folders.
