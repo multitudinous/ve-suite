@@ -1,0 +1,13 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}\include
+
+Name: QtScript
+Description: QtScriptLibrary
+Version: 4.6.2
+Libs: /libpath:"${libdir}" QtScript4.lib
+Cflags: /DQT_DLL /I"${prefix}\include\" /I"${includedir}"
+Requires: QtCore
+Provides: QtScript
+Arch: noarch

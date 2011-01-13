@@ -1,0 +1,13 @@
+prefix=${fp_file_cwd}\..\..
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}\include
+
+Name: QtXml
+Description: QtXml Library
+Version: 4.6.2
+Libs: /libpath:"${libdir}" QtXml4.lib
+Cflags: /DQT_DLL /I"${prefix}\include\" /I"${includedir}"
+Requires: QtCore
+Provides: QtXml
+Arch: noarch
