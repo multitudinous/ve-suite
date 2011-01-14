@@ -115,7 +115,7 @@ def applyQtBuildFlags(env):
         env.AppendUnique( CXXFLAGS = [
             '-F/Library/Frameworks/QtCore.framework',
             '-F/Library/Frameworks/QtDesigner.framework',
-            '-F/Library/Frameworks/QtGui.framework'
+            '-F/Library/Frameworks/QtGui.framework',
             '-F/Library/Frameworks/QtOpenGL.framework',
             '-F/Library/Frameworks/QtScript.framework',
             '-F/Library/Frameworks/QtSvg.framework',
