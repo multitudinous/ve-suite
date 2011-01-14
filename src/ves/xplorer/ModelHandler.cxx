@@ -117,18 +117,17 @@ using namespace ves::xplorer::util;
 
 ModelHandler::ModelHandler( void )
     :
-    m_rescaleCADEntityTextures( false ),
     activeDataset( 0 ),
-    arrow( 0 ),
+    activeCommand( ves::open::xml::CommandPtr() ),
     _activeModel( 0 ),
-    tbased( false ),
     _activeTDSet( 0 ),
+    tbased( false ),
+    arrow( 0 ),
+    m_rescaleCADEntityTextures( false ),
     m_CADSlotInitializer( new ves::xplorer::event::cad::CADSlotInitializer )
 {
     vprDEBUG( vesDBG, 2 ) << "ModelHandler constructor"
         << std::endl << vprDEBUG_FLUSH;
-
-    activeCommand  = ves::open::xml::CommandPtr();
 
     _eventHandlers[ std::string( "SET_ROOT_CAD_NODE" )] = 
         new ves::xplorer::event::CADSetRootNodeEventHandler();
@@ -195,12 +194,10 @@ ModelHandler::ModelHandler( void )
     _eventHandlers[ std::string( "Culling Settings" )] = 
         new ves::xplorer::event::cad::OcclusionSettingsEventHandler();
     
-#ifdef QT_ON
     // Register signal(s) with EventManager
     eventmanager::EventManager::instance()->RegisterSignal(
     new eventmanager::SignalWrapper< ActiveModelChangedSignal_type >( &mActiveModelChangedSignal ),
     "ModelHandler.ActiveModelChangedSignal");
-#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::Initialize( std::string param )
