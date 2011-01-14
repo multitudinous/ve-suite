@@ -312,20 +312,6 @@ void UIManager::Initialize( osg::Group* parentNode )
 
     parentNode->addChild( mProjection.get() );
 
-    //Vertex shader not used yet
-    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
-    std::string vertexSource =
-            "void main() \n"
-            "{ \n"
-            //Ignore MVP transformation as vertices are already in Normalized Device Coord.
-            "gl_Position = gl_Vertex; \n"
-            "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
-            "} \n";
-
-    vertexShader->setType( osg::Shader::VERTEX );
-    vertexShader->setShaderSource( vertexSource );
-    vertexShader->setName( "VS Quad Vertex Shader" );
-
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     std::string fragmentSource =
             "uniform sampler2D baseMap; \n"
@@ -346,43 +332,35 @@ void UIManager::Initialize( osg::Group* parentNode )
 
     //
     osg::ref_ptr< osg::Program > program = new osg::Program();
-    //program->addShader( vertexShader.get() );
     program->addShader( fragmentShader.get() );
     program->setName( "VS Quad Program" );
 
     //Set depth test to always pass and don't write to the depth buffer
     osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    //depth->setFunction( osg::Depth::ALWAYS );
+    depth->setFunction( osg::Depth::ALWAYS );
     depth->setWriteMask( false );
 
     //Create stateset for adding texture
+	osg::StateAttribute::GLModeValue glModeValue =
+		osg::StateAttribute::ON |
+		osg::StateAttribute::PROTECTED |
+		osg::StateAttribute::OVERRIDE;
     osg::ref_ptr< osg::StateSet > stateset = mUIGroup->getOrCreateStateSet();
     stateset->setRenderBinDetails( 99, "RenderBin" );
-    stateset->setAttributeAndModes(
-                                    depth.get(),
-                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED |
-                                    osg::StateAttribute::OVERRIDE );
+    stateset->setAttributeAndModes( depth.get(), glModeValue );
     stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
-    stateset->setMode(
-                       GL_LIGHTING,
-                       osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED |
-                       osg::StateAttribute::OVERRIDE );
-    stateset->setAttributeAndModes(
-                                    program.get(),
-                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED |
-                                    osg::StateAttribute::OVERRIDE );
+    stateset->setMode( GL_LIGHTING, glModeValue);
+    stateset->setAttributeAndModes( program.get(), glModeValue );
     stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
     m_opacityUniform = new osg::Uniform( "opacityVal", mOpacity );
     stateset->addUniform( m_opacityUniform.get() );
 
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
     bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
-                    osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-    stateset->setMode( GL_BLEND, 
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setAttributeAndModes( bf.get(), 
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    
+                     osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+    stateset->setMode( GL_BLEND, glModeValue );
+    stateset->setAttributeAndModes( bf.get(), glModeValue );
+
     mInitialized = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
