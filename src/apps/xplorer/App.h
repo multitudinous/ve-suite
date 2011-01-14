@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CFD_APP_H
-#define CFD_APP_H
+#ifndef VES_XPLORER_APP_H
+#define VES_XPLORER_APP_H
 
 // --- VE-Suite Includes --- //
 #include "SceneRenderToTexturePtr.h"
@@ -70,7 +70,7 @@ class SceneView;
 class UpdateVisitor;
 }
 
-// --- C/C++ Libraries --- //
+// --- STL Includes --- //
 #include <sstream>
 
 namespace ves
@@ -192,29 +192,52 @@ public:
 protected:
 
 private:
+    ///
+    void UIEnterLeave( bool entered );
+
     ///Update sceneview
     bool svUpdate;
+
     ///Are we in cluster mode
     bool isCluster;
+
     ///Not sure what this is for
     bool m_captureNextFrame;
+
     ///Not sure what this is for
     bool m_captureMovie;
+
     ///Turn off/on RTT
     bool mRTT;
 
+    ///
+    bool m_uiInitialized;
+
+    ///
+    bool m_MouseInsideUI;
+
+    ///
+    vrj::opengl::ContextData< bool > mViewportsChanged;
+
+    ///
+    vrj::opengl::ContextData< bool > m_skipDraw;
+
     ///The current frame number
     unsigned int _frameNumber;
+
     ///Used to count frames specifically for profilling
     unsigned int mProfileCounter;
 
     //Only used in preframe for transient stuff
     ///The last frame
     int lastFrame;
+
     ///Not sure what this is for
     int webImageWidth;
+
     ///Not sure what this is for
     int webImageHeight;
+
     ///Command line args
     int argc;
 
@@ -226,68 +249,84 @@ private:
 
     ///Used for framerate calculation as integers only
     float mLastTime;
+
     ///Last time from last frame
     float mLastFrameTime;
+
     ///The frame delta time
     float mFrameDT;
 
     ///Time to start
     double time_since_start;
 
+    ///
+    double mLastQtLoopTime;
+
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
+
     ///File name for screen capture filename
     std::string m_filename;
+
     ///Stream buffer to write stats too
     std::ostringstream mStatsStream;
 
     ///The timer for framestamp
     osg::Timer _timer;
+
     ///The timer for framestamp
     osg::Timer_t _start_tick;
+
     ///Update visitor
     osg::ref_ptr< osg::NodeVisitor > mUpdateVisitor;
+
     ///Framestamp
     osg::ref_ptr< osg::FrameStamp > mFrameStamp;
+
     ///Light for the scene
     osg::ref_ptr< osg::Light > light_0;
+
     ///Light source for the scene
     osg::ref_ptr< osg::LightSource > light_source_0;
+
     ///Light model for the scene
     osg::ref_ptr< osg::LightModel > light_model_0;
+
     ///User nav position for camera
     gmtl::Matrix44d mNavPosition;
+
     ///Sound listener position matrix
     osg::Matrixd m_listenerPosition;
-    
+
     ///The vjobs wrapper
     VjObsWrapper* m_vjobsWrapper;
+
 #ifdef _PBUFFER
     //biv --may convert this to a singleton later
     ///Should be removed since this is a singleton
     ves::xplorer::volume::cfdPBufferManager* _pbuffer;
 #endif //_PBUFFER
+
     ///Should be removed since this is a singleton
     ves::xplorer::TextureBasedVizHandler* _tbvHandler;
+
     ///
     ves::xplorer::SceneRenderToTexturePtr mSceneRenderToTexture;
+
     ///
     ves::xplorer::SceneGLTransformInfoPtr m_sceneGLTransformInfo;
 
-    vrj::opengl::ContextData< bool > mViewportsChanged;
-    vrj::opengl::ContextData< bool > m_skipDraw;
     ///Thread to run the Qt ui
     //vpr::Thread* m_qtUIThread;
 
-    bool m_uiInitialized;
+    ///
     QApplication* m_qtApp;
 
+    ///
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
-    void UIEnterLeave( bool entered );
-    bool m_MouseInsideUI;
-    double mLastQtLoopTime;
+
 };
 } //end xplorer
 } //end ves
 
-#endif //CFD_APP_H
+#endif //VES_XPLORER_APP_H
