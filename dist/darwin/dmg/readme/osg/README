@@ -6,6 +6,7 @@ Build Arguments:
     CMAKE_BUILD_TYPE to RelWithDebInfo
     CMAKE_INSTALL_PREFIX to ${OSG_INSTALL_DIR}
     CMAKE_OSX_ARCHITECTURES to x86_64
+    OSG_WINDOWING_SYSTEM to Cocoa
   make install
 OS: Mac OS X 10.6
 Architecture: x86_64
