@@ -27,6 +27,7 @@ sources = map( lambda s: pj( '.', s ), sources )
 sources += mocced
 sources += rccsource
 
+lib_env.Append( CPPPATH = [ '/Library/Frameworks/QtDesigner.framework/Headers' ] )
 lib_env.Append( CPPPATH = [ pj( RootDir, 'external', 'qwt-6.0.0-rc5', 'src' ) ] )
 lib_env.Append( LIBS = [ 'qwt' ] )
 lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'external', 'qwt-6.0.0-rc5', 'src' ) ] )
@@ -47,10 +48,14 @@ else:
     import qt46
     qt46.applyQtBuildFlags( lib_env )
 
+libDir = pj( LIBDIR, 'plugins', 'designer' )
 lib = ves_pkg.createSharedLibrary(
-    'qwt_designer_plugin', lib_env, installPrefix = LIBDIR )
+    'qwt_designer_plugin', lib_env, installPrefix = libDir )
 
 lib.addHeaders( headers, pj( '..', 'include', 'qwt-6.0.0-rc5' ) )
 lib.addSources( sources )
+
+fileBundle = ves_pkg.createFileBundle( libDir )
+fileBundle.addFiles( [ 'INSTALL' ] )
 
 lib.build()

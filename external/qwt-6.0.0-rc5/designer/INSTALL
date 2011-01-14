@@ -1,0 +1,14 @@
+
+To install QWTPlot designer plugin
+
+Windows:
+  Copy 'qwt_designer_plugin.dll' into
+  ''
+
+Mac OS X:
+  Copy or symlink 'libqwt_designer_plugin.dylib' into
+  '/Developer/Applications/Qt/plugins/designer'
+
+Linux:
+  Copy '' into
+  ''
