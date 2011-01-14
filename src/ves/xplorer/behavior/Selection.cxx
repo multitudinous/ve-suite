@@ -369,7 +369,7 @@ void Selection::ProcessSelection()
     //In the future the center point will be in world coordinates
     center = center * osg::Matrixd( m_sceneManager.GetNavDCS()->GetMat().mData );
     //center = center * m_currentGLTransformInfo->GetViewMatrixOSG();
-    //mCenterPoint->set( center.x(), center.y(), center.z() );
+    m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
     
     //Set the selected DCS
     DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );

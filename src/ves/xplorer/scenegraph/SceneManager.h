@@ -62,6 +62,7 @@
 #include <gadget/Type/PositionInterface.h>
 
 #include <gmtl/Matrix.h>
+#include <gmtl/Point.h>
 
 namespace ves
 {
@@ -263,6 +264,9 @@ public:
     ///Get device handler group node
     osg::Group& GetDeviceHandlerGroup();
     
+    ///Get the center point
+    gmtl::Point3d& GetCenterPoint();
+    
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -383,8 +387,11 @@ private:
     ///A reference to the device handler group node
     osg::ref_ptr< osg::Group > m_deviceHandlerGroup;
     
-    ///
-    scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;    
+    ///The current GLTransformIno pointer
+    scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;
+    
+    ///The center point used for rotation purposes with the kmb and wand
+    gmtl::Point3d m_centerPoint;
 };
 } //end scenegraph
 } //end xplorer

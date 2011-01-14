@@ -183,10 +183,6 @@ private:
     ///
     scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;    
 
-    ///The point about which rotation occurs
-    ///Do not allocate memory 'new' for this pointer
-    gmtl::Point3d* mCenterPoint;
-    
     ///Determine if the mouse is inside the UI
     bool m_mouseInsideUI;
 

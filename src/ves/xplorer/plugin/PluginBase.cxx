@@ -87,18 +87,18 @@ PluginBase::PluginBase():
         mDevice( 0 ),
         mModelHandler( 0 ),
         mModel( 0 ),
-        mPhysicsSimulator( 0 ),
-        mEnvironmentHandler( 0 ),
         mSceneManager( 0 ),
+        mEnvironmentHandler( 0 ),
         mResourceManager( 0 ),
         mCommunicationHandler( 0 ),
+        mXmlModel( ves::open::xml::model::ModelPtr() ),
+        mPhysicsSimulator( 0 ),
         m_graphicalPluginManager( 0 ),
 #ifdef VE_SOUND
         mSoundManager( 0 ),
 #endif
         mDCS( 0 ),
-        mWorldDCS( 0 ),
-        mXmlModel( ves::open::xml::model::ModelPtr() )
+        mWorldDCS( 0 )
 {
     //This needs to match the name of the gui plugin.
     //It is used in cfdVEPluginLoader::CreateObject. The name used is the name

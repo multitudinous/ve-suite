@@ -51,8 +51,8 @@ CoordinateSystemTransform::CoordinateSystemTransform(
     bool includeCameraTransform )
     :
     NodeVisitor( TRAVERSE_PARENTS ),
-    mStopNode( stopNode ),
-    mIncludeCameraTransform( includeCameraTransform )
+    mIncludeCameraTransform( includeCameraTransform ),
+    mStopNode( stopNode )
 {
     gmtl::identity( mStartToStopMatrix );
     gmtl::identity( mStartToStopMatrixWithoutLocal );

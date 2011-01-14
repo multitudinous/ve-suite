@@ -95,10 +95,10 @@ Dragger::Dragger( const TransformationType::Enum& transformationType )
     m_deltaRotation( 0.0, 0.0, 0.0, 0.0 ),
     m_deltaTranslation( 0.0, 0.0, 0.0 ),
     m_deltaScale( 0.0, 0.0, 0.0 ),
-    m_isRootDragger( true ),
-    m_color( NULL ),
     m_physicsSimulator( *scenegraph::PhysicsSimulator::instance() ),
-    m_sceneManager( *scenegraph::SceneManager::instance() )
+    m_sceneManager( *scenegraph::SceneManager::instance() ),
+    m_isRootDragger( true ),
+    m_activeAssociation( 0 )
 {
     m_rootDragger = this;
 
@@ -127,11 +127,12 @@ Dragger::Dragger( const Dragger& dragger, const osg::CopyOp& copyop )
     m_deltaRotation( dragger.m_deltaRotation ),
     m_deltaTranslation( dragger.m_deltaTranslation ),
     m_deltaScale( dragger.m_deltaScale ),
-    m_isRootDragger( dragger.m_isRootDragger ),
-    m_colorMap( dragger.m_colorMap ),
-    m_color( dragger.m_color ),
     m_physicsSimulator( *scenegraph::PhysicsSimulator::instance() ),
-    m_sceneManager( *scenegraph::SceneManager::instance() )
+    m_sceneManager( *scenegraph::SceneManager::instance() ),
+    m_isRootDragger( dragger.m_isRootDragger ),
+    m_activeAssociation( dragger.m_activeAssociation ),
+    m_colorMap( dragger.m_colorMap ),
+    m_color( dragger.m_color )
 {
     ;
 }
