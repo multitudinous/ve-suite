@@ -134,7 +134,9 @@ void AppWrapper::SetupOSGFILEPATH()
     vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
     std::string vesDir = xplorerBaseDir + "/share/vesuite";
     std::string glslDir = vesDir + "/glsl";
+	std::string bdfxDir = vesDir + "/bdfx-data";
     fileList.push_back( vesDir );
     fileList.push_back( glslDir );
+	fileList.push_back( bdfxDir );
 }
 ////////////////////////////////////////////////////////////////////////////////
