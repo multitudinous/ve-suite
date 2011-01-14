@@ -95,8 +95,10 @@ public:
     ~Selection();
 
 private:
-    ///Execute the frame all functionality
+    ///Process the Button release
     void ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
+    ///Register button press
+    void RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Clear the point constraints
     void ClearPointConstraint();
     ///Setup the start and end point for a mouse pick 

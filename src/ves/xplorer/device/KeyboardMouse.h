@@ -187,6 +187,9 @@ private:
     ///Do not allocate memory 'new' for this pointer
     gmtl::Point3d* mCenterPoint;
     
+    ///Determine if the mouse is inside the UI
+    bool m_mouseInsideUI;
+
 //    typedef boost::signals2::signal<bool (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
 //    InteractionSignal_type mInteractionSignal;
 
@@ -223,6 +226,9 @@ private:
 
     /// Registers ButtonPress and ButtonRelease signals with EventManager
     void RegisterButtonSignals();
+
+    ///Slot to determine if the mouse is inside the UI
+    void UIEnterLeave( bool insideUI );
 
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)

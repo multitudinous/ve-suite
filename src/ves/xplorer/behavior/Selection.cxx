@@ -116,6 +116,9 @@ Selection::Selection()
 {    
     CONNECTSIGNALS_4( "%ButtonRelease1%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
                       m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4( "%ButtonPress1%", void( gadget::Keys, int, int, int ), &Selection::RegisterButtonPress,
+                     m_connections, any_SignalType, normal_Priority );
     
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
@@ -135,9 +138,25 @@ void Selection::UIEnterLeave( bool insideUI )
     m_mouseInsideUI = insideUI;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Selection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+{
+    m_currX = xPos;
+    m_currY = yPos;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
     if( m_mouseInsideUI )
+    {
+        return;
+    }
+
+    if( (xPos > m_currX + 2) || (xPos < m_currX - 2) )
+    {
+        return;
+    }
+
+    if( (yPos > m_currY + 2) || (yPos < m_currY - 2) )
     {
         return;
     }
@@ -212,16 +231,16 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
     }
     
     //No modifier key
-    if( buttonState == gadget::KEY_NONE )
+    if( buttonState & gadget::KEY_NONE )
     {
         ;
     }
     //Mod key shift
-    else if( buttonState == gadget::KEY_SHIFT )
+    else if( buttonState & gadget::KEY_SHIFT )
     {
         ;
     }
-    else if( buttonState == gadget::KEY_ALT )
+    else if( buttonState & gadget::KEY_ALT )
     {
         //OnMouseRelease();
         scenegraph::DCS* infoDCS = DeviceHandler::instance()->GetSelectedDCS();

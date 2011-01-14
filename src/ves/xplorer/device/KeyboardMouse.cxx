@@ -142,7 +142,8 @@ using namespace ves::xplorer::scenegraph;
 KeyboardMouse::KeyboardMouse()
     :
     Device( KEYBOARD_MOUSE ),
-    m_selectionSlot( new ves::xplorer::behavior::Selection() )
+    m_selectionSlot( new ves::xplorer::behavior::Selection() ),
+    m_mouseInsideUI( true )
 {
     //mHead.init( "VJHead" );
 
@@ -170,6 +171,9 @@ KeyboardMouse::KeyboardMouse()
 
     RegisterButtonSignals();
     RegisterKeySignals();
+    
+    CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &KeyboardMouse::UIEnterLeave,
+                    m_connections, highest_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -180,6 +184,11 @@ KeyboardMouse::~KeyboardMouse()
 KeyboardMouse* KeyboardMouse::AsKeyboardMouse()
 {
     return this;
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::UIEnterLeave( bool insideUI )
+{
+    m_mouseInsideUI = insideUI;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
@@ -290,7 +299,6 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     case gadget::MouseButtonReleaseEvent:
     {
-
         /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonReleaseEvent"
             << std::endl << vprDEBUG_FLUSH;*/
@@ -328,13 +336,19 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
 
         /*vprDEBUG( vesDBG, 2 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseMoveEvent"
-            << mouseEvt->getX() << ", " << mouseEvt->getY()
+            << mouseEvt->getButton() << " " << mouseEvt->getX() << ", " << mouseEvt->getY()
             << ", 0, " << mouseEvt->getState()
-            << std::endl << vprDEBUG_FLUSH;*/
-        // x, y, z, state (modifier mask OR'd with button mask)
+            << std::endl << vprDEBUG_FLUSH;
+        // x, y, z, state (modifier mask OR'd with button mask)*/
+        //int buttonMask = mouseEvt->getState();
+        //bool test = buttonMask&gadget::BUTTON1_MASK;
         m_mouseMove( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
 
         break;
+    }
+    default:
+    {
+        std::cout << "KeyboardMouse event not implemented." << std::endl;
     }
     }
 }
