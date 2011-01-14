@@ -59,10 +59,14 @@ namespace ves
 namespace xplorer
 {
 ModelDatasetHandler::ModelDatasetHandler( ves::xplorer::scenegraph::DCS* rootNode )
+    :
+    GlobalBase()
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelDatasetHandler::ModelDatasetHandler( const ModelDatasetHandler& rhs )
+    :
+    GlobalBase( rhs )
 {
     m_datasetList = rhs.m_datasetList;
 }

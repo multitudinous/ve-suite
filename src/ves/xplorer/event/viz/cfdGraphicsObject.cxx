@@ -53,11 +53,11 @@ using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 cfdGraphicsObject::cfdGraphicsObject()
     :
-    m_dataset( 0 ),
     parentNode( 0 ),
     worldNode( 0 ),
     type( OTHER ),
-    model( 0 )
+    model( 0 ),
+    m_dataset( 0 )
 {
     ;
 }

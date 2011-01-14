@@ -200,11 +200,6 @@ ModelHandler::ModelHandler( void )
     "ModelHandler.ActiveModelChangedSignal");
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ModelHandler::Initialize( std::string param )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler( void )
 {
     //vprDEBUG(vesDBG,2) << "ModelHandler destructor"

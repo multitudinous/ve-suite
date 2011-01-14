@@ -101,7 +101,6 @@ private:
     ~ModelHandler( void );
     vprSingletonHeader( ModelHandler );
 public:
-    void Initialize( std::string );
     //void CleanUp( void );
     void InitScene( void );
     void PreFrameUpdate( void );
