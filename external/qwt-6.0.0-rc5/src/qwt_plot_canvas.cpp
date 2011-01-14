@@ -16,7 +16,7 @@
 #include <QtGui/qstyleoption.h>
 #include <QtGui/qpaintengine.h>
 #ifdef Q_WS_X11
-#include <QtCore/qx11info_x11.h>
+#include <qx11info_x11.h>
 #endif
 #include <QtGui/qevent.h>
 
