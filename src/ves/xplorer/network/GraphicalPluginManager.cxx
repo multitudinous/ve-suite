@@ -42,9 +42,7 @@
 #include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
 #include <ves/xplorer/network/ReloadPluginsEventHandler.h>
-#ifdef QT_ON
 #include <ves/xplorer/network/LoadVesFileEventHandler.h>
-#endif // QT_ON
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
@@ -109,11 +107,10 @@ vprSingletonImpLifetime( ves::xplorer::network::GraphicalPluginManager, 0 );
 GraphicalPluginManager::GraphicalPluginManager()
     :
     mAvailableModules( 0 ),
-    mNetworkBuffer( std::string() ),
-    ui_i( 0 ),
+    netSystemView( 0 ),
     naming_context( 0 ),
     _exec( 0 ),
-    netSystemView( 0 ),
+    ui_i( 0 ),
     m_ChildPOA( 0 )
 {
     ;
