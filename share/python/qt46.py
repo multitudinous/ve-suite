@@ -87,7 +87,7 @@ def generate(env,**kw):
 
     #moc ='moc'
     # setup moc
-    mocCmd = '%s ${SOURCES} -o ${TARGET}' %(moc) 
+    mocCmd = '%s ${SOURCES} -o ${TARGET}' %(moc)
     bld = Builder(action = mocCmd, prefix = "moc_", suffix = ".cpp", single_source = True)
     env.Append(BUILDERS = {'qt_moc': bld})
     # cxx->moc variant
@@ -96,14 +96,29 @@ def generate(env,**kw):
 
     #rcc ='rcc'
     # Setup rcc
-    #rccCmd = '%s ${SOURCES} -o ${TARGET}' %(rcc)    
+    #rccCmd = '%s ${SOURCES} -o ${TARGET}' %(rcc)
     bld = Builder(action = SCons.Action.CommandGeneratorAction(__qrc_generator, {}), prefix = "qrc_", suffix = ".cxx", single_source = True )
     env.Append(BUILDERS = {'qt_rcc': bld})
 
 def applyQtBuildFlags(env):
     env.AppendUnique( CPPDEFINES = ['QT_ON'] )
     if sca_util.GetPlatform() == 'darwin':
-        env.Append( LINKFLAGS = ['-framework','QtCore', '-framework','QtGui','-framework','QtOpenGL','-framework','QtSvg','-framework','QtXml','-framework','OpenGL'])
-        env.AppendUnique( CXXFLAGS =['-F/Library/Frameworks/QtOpenGL.framework','-F/Library/Frameworks/QtCore.framework','-F/Library/Frameworks/QtGui.framework'] )
+        env.Append( LINKFLAGS = [
+            '-framework','QtCore',
+            '-framework','QtDesigner',
+            '-framework','QtGui',
+            '-framework','QtOpenGL',
+            '-framework','QtScript',
+            '-framework','QtSvg',
+            '-framework','QtXml',
+            '-framework','OpenGL' ] )
+        env.AppendUnique( CXXFLAGS = [
+            '-F/Library/Frameworks/QtCore.framework',
+            '-F/Library/Frameworks/QtDesigner.framework',
+            '-F/Library/Frameworks/QtGui.framework'
+            '-F/Library/Frameworks/QtOpenGL.framework',
+            '-F/Library/Frameworks/QtScript.framework',
+            '-F/Library/Frameworks/QtSvg.framework',
+            '-F/Library/Frameworks/QtXml.framework' ] )
     else:
         print "Please use the flagpoll based method for compiling against Qt on Linux."
