@@ -88,7 +88,6 @@ using namespace ves::conductor;
 ///The Q_DECLARE_METATYPE maco allows us to use non-Qt types in 
 ///queued connections in Qt-signals
 Q_DECLARE_METATYPE(std::string)
-Q_DECLARE_METATYPE(osg::NodePath)
 ////////////////////////////////////////////////////////////////////////////////
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
@@ -155,31 +154,16 @@ MainWindow::MainWindow(QWidget* parent) :
     // should emit one of the Qt signals listed below if they alter any widget in
     // any way.
     qRegisterMetaType<std::string>();
-    qRegisterMetaType<osg::NodePath>();
     QObject::connect( this, SIGNAL( ActiveModelChanged( std::string ) ),
                       this, SLOT( QueuedOnActiveModelChanged( std::string ) ),
-                      Qt::QueuedConnection );
-    QObject::connect( this, SIGNAL( ObjectPicked( osg::NodePath ) ),
-                      this, SLOT( QueuedOnObjectPicked( osg::NodePath ) ),
                       Qt::QueuedConnection );
 
     // Connect to the ActiveModelChangedSignal so we can show the correct 
     // tabs when the model changes
-    {
-        CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
-                         void ( const std::string& ), 
-                         &MainWindow::OnActiveModelChanged,
-                         mConnections, normal_Priority );
-    }
-    
-    // Connect to ObjectPickedSignal so we can update the scenegraph tree view when
-    // an object is picked
-    {
-//        typedef boost::signals2::signal< void ( osg::NodePath& ) > ObjectPickedSignal_type;
-//        ObjectPickedSignal_type::slot_type slotFunctor( boost::bind( &MainWindow::OnObjectPicked, this, _1 ) );
-//        ves::xplorer::eventmanager::SlotWrapper< ObjectPickedSignal_type > slotWrapper( slotFunctor );
-//        ves::xplorer::eventmanager::EventManager::instance( )->ConnectSignal( "KeyboardMouse.ObjectPickedSignal", &slotWrapper, mConnections );
-    }
+    CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
+                     void ( const std::string& ),
+                     &MainWindow::OnActiveModelChanged,
+                     mConnections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 MainWindow::~MainWindow()
@@ -476,26 +460,6 @@ void MainWindow::on_actionConfigure_Layers_triggered ( bool )
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::OnObjectPicked( osg::NodePath& nodePath )
-{    
-    // emit Qt-signal which is connected to QueuedOnObjectPicked
-    // A queued connection is necessary because widgets are altered during
-    // this event.
-    ObjectPicked( nodePath );
-}
-////////////////////////////////////////////////////////////////////////////////
-void MainWindow::QueuedOnObjectPicked( osg::NodePath nodePath )
-{
-    // This is a bit hackish. Instead of re-reading the scenegraph every time a new
-    // selection is made, we should be hooked up to signals for changes to the
-    // scenegraph so we can re-read at the appropriate time. The only operation
-    // that *should* be done here is OpenToAndSelect.
-    mScenegraphTreeTab->PopulateWithRoot( 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
-
-    mScenegraphTreeTab->OpenToAndSelect( nodePath );
-}
-////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionStepPhysics_triggered()
 {
     scenegraph::PhysicsSimulator::instance()->SetIdle( true );
@@ -535,17 +499,17 @@ void MainWindow::on_actionManipulatorStack_triggered()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::on_actionManipulatorStack_hovered()
-{
-    if( m_manipulatorMenuStack->isVisible() )
-    {
-        m_manipulatorMenuStack->hide();
-    }
-    else
-    {
-        m_manipulatorMenuStack->Show();
-    }
-}
+//void MainWindow::on_actionManipulatorStack_hovered()
+//{
+//    if( m_manipulatorMenuStack->isVisible() )
+//    {
+//        m_manipulatorMenuStack->hide();
+//    }
+//    else
+//    {
+//        m_manipulatorMenuStack->Show();
+//    }
+//}
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionScaleManipulator_triggered()
 {

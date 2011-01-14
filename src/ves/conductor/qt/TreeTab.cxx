@@ -46,10 +46,14 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/open/xml/cad/CADNode.h>
 
 #include <iostream>
+
+Q_DECLARE_METATYPE(osg::NodePath)
 
 namespace ves
 {
@@ -71,8 +75,21 @@ TreeTab::TreeTab(QWidget *parent) :
 
     // Connect the tree model up to a tree view.
     ui->mTreeView->setModel( mModel );
+    ui->mTreeView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
     mBrowser = new PropertyBrowser( this );
+
+    qRegisterMetaType<osg::NodePath>();
+    QObject::connect( this, SIGNAL( ObjectPicked( osg::NodePath ) ),
+                      this, SLOT( QueuedOnObjectPicked( osg::NodePath ) ),
+                      Qt::QueuedConnection );
+
+    // Connect to ObjectPickedSignal so we can update the scenegraph tree view when
+    // an object is picked
+    CONNECTSIGNAL_1( "KeyboardMouse.ObjectPickedSignal",
+                     void( osg::NodePath& ),
+                     &TreeTab::OnObjectPicked,
+                     mConnections, normal_Priority );
 }
 
 TreeTab::~TreeTab()
@@ -121,7 +138,9 @@ void TreeTab::PopulateWithRoot( osg::Node* root )
 
 QModelIndex TreeTab::OpenToAndSelect( osg::NodePath& nodepath )
 {
-    return osgQtTree::openToAndSelect( ui->mTreeView, mModel, nodepath );
+    QModelIndex result( osgQtTree::openToAndSelect( ui->mTreeView, mModel, nodepath ) );
+    on_mTreeView_activated( result );
+    return result;
 }
 
 void TreeTab::on_mTreeView_clicked( const QModelIndex& index )
@@ -220,6 +239,26 @@ void TreeTab::on_OKButton_clicked()
 //                GetModelCADHandler()->
 //                UpdateCADNode( mActiveSet->GetUUIDAsString() );
     }
+}
+
+void TreeTab::OnObjectPicked( osg::NodePath& nodePath )
+{
+    // emit Qt-signal which is connected to QueuedOnObjectPicked
+    // A queued connection is necessary because widgets are altered during
+    // this event.
+    ObjectPicked( nodePath );
+}
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::QueuedOnObjectPicked( osg::NodePath nodePath )
+{
+    // This is a bit hackish. Instead of re-reading the scenegraph every time a new
+    // selection is made, we should be hooked up to signals for changes to the
+    // scenegraph so we can re-read at the appropriate time. The only operation
+    // that *should* be done here is OpenToAndSelect.
+    PopulateWithRoot(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+
+    OpenToAndSelect( nodePath );
 }
 
 } // namespace conductor

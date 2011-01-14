@@ -36,6 +36,7 @@
 #define QT_NO_KEYWORDS
 
 #include <ves/xplorer/data/PropertySetPtr.h>
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 #include <QtGui/QWidget>
 #include <QtCore/QAbstractItemModel>
@@ -84,17 +85,37 @@ public:
 protected:
     void changeEvent(QEvent *e);
 
+    // Is connected to KeyboardMouse.ObjectPickedSignal so the
+    // tree selection is synchronized with object selection.
+    void OnObjectPicked( osg::NodePath& nodePath );
+
 protected Q_SLOTS:
     /// Called when user changes selection in tree.
     /// This function looks up the scenegraph to find a valid DCS and then
     /// selects the corresponding geometry in the scene.
     void on_mTreeView_activated( const QModelIndex& index );
 
+    /// Called when mouse is used to select an entry in the tree. Simply calls
+    /// on_mTreeView_activated.
     void on_mTreeView_clicked( const QModelIndex& index );
 
+    /// Reloads the current CADPropertySet from the DB.
     void on_RefreshButton_clicked();
 
+    /// Writes the current CADPropertySet to the DB.
     void on_OKButton_clicked();
+
+    /// Slot corresponding to ObjectPicked queued signal. The final destination
+    /// of logic begun in slot OnObjectPicked.
+    void QueuedOnObjectPicked( osg::NodePath nodePath );
+
+
+
+    Q_SIGNALS:
+
+    /// Queued signal emitted when OnObjectPicked slot is called. This is
+    /// required for thread safety
+    void ObjectPicked( osg::NodePath nodePath );
 
 private:
     Ui::TreeTab *ui;
@@ -104,6 +125,8 @@ private:
     PropertyBrowser* mBrowser;
 
     ves::xplorer::data::PropertySetPtr mActiveSet;
+
+    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
 };
 
 } // namespace conductor

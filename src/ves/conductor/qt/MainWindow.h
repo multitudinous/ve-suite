@@ -117,10 +117,6 @@ protected:
     /// Is connected to ModelHandler.ActiveModelChangedSignal so that
     /// appropriate tabs can be shown when the active model changes.
     void OnActiveModelChanged( const std::string& modelID );
-    
-    // Is connected to KeyboardMouse.ObjectPickedSignal so the scenegraph
-    // tree selection is synchronized with object selection.
-    void OnObjectPicked( osg::NodePath& nodePath );
 
 protected Q_SLOTS:
     
@@ -154,7 +150,7 @@ protected Q_SLOTS:
     
     /// Called when the manipulators icon is pressed on the toolbar
     /// Autoconnected slot
-    void on_actionManipulatorStack_hovered();
+    //void on_actionManipulatorStack_hovered();
 
     /// Enables physics engine
     /// Autoconnected slot
@@ -202,16 +198,10 @@ protected Q_SLOTS:
     /// required for thread safety
     void ActiveModelChanged( std::string modelID );
 
-    /// Queued signal emitted when OnObjectPicked slot is called. This is
-    /// required for thread safety
-    void ObjectPicked( osg::NodePath nodePath );
-
 protected Q_SLOTS:
     /// Slot corresponding to ActiveModelChanged queued signal
     void QueuedOnActiveModelChanged( const std::string& modelID );
 
-    /// Slot corresponding to ObjectPicked queued signal
-    void QueuedOnObjectPicked( osg::NodePath nodePath );
 #ifdef MINERVA_GIS_SUPPORT
 
 private Q_SLOTS:
