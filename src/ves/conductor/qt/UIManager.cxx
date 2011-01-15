@@ -106,26 +106,26 @@ UIManager::UIManager() :
                       any_SignalType, highest_Priority);
 
     CONNECTSIGNAL_4( "KeyboardMouse.MouseMove", void ( int, int, int, int ),
-                     &UIManager::MouseMoveEvent, mConnections, highest_Priority );
+                     &UIManager::MouseMoveEvent, mInputConnections, highest_Priority );
 
     CONNECTSIGNALS_4( "%ButtonPress%",void ( gadget::Keys, int, int, int ),
-                      &UIManager::ButtonPressEvent, mConnections,
+                      &UIManager::ButtonPressEvent, mInputConnections,
                       button_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4( "%ButtonRelease%",void ( gadget::Keys, int, int, int ),
-                      &UIManager::ButtonReleaseEvent, mConnections,
+                      &UIManager::ButtonReleaseEvent, mInputConnections,
                       button_SignalType, highest_Priority );
 
     CONNECTSIGNALS_5( "%DoubleClick%", void( gadget::Keys, int, int, int, int ),
-                      &UIManager::MouseDoubleClickEvent, mConnections,
+                      &UIManager::MouseDoubleClickEvent, mInputConnections,
                       button_SignalType, highest_Priority );
 
     CONNECTSIGNALS_3( "%KeyPress%", void ( gadget::Keys, int, char ),
-                      &UIManager::KeyPressEvent, mConnections,
+                      &UIManager::KeyPressEvent, mInputConnections,
                       keyboard_SignalType, highest_Priority );
 
     CONNECTSIGNALS_3( "%KeyRelease%", void ( gadget::Keys, int, char ),
-                      &UIManager::KeyReleaseEvent, mConnections,
+                      &UIManager::KeyReleaseEvent, mInputConnections,
                       keyboard_SignalType, highest_Priority );
 
 }
@@ -907,11 +907,13 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
     {
         mMouseInsideUI = true;
         mUIEnterLeaveSignal( true );
+        _monopolizeInput( true );
     }
     else if( !OrthoTest && mMouseInsideUI )
     {
         mMouseInsideUI = false;
         mUIEnterLeaveSignal( false );
+        _monopolizeInput( false );
     }
 
     // If we're actually not over a managed quad, do no more
@@ -1067,3 +1069,34 @@ bool UIManager::_okayToSendEvent()
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void UIManager::_monopolizeInput( bool monopolize )
+{
+    if( monopolize )
+    {
+        // Monopolize all key/button input events
+        ves::xplorer::eventmanager::EventManager* evm =
+                ves::xplorer::eventmanager::EventManager::instance();
+
+        ves::xplorer::eventmanager::ScopedConnectionList::ConnectionList_type::iterator iter
+                = mInputConnections.GetBegin();
+
+        while( iter != mInputConnections.GetEnd() )
+        {
+            mInputMonopolies.push_back(
+                    evm->MonopolizeConnectionStrong( (*iter) ) );
+            ++iter;
+        }
+    }
+    else
+    {
+        // Release all key/button monopolies
+        std::vector< boost::shared_ptr<
+            ves::xplorer::eventmanager::ConnectionMonopoly >
+            >::iterator iter = mInputMonopolies.begin();
+        while( iter != mInputMonopolies.end() )
+        {
+            (*iter).reset();
+            ++iter;
+        }
+    }
+}

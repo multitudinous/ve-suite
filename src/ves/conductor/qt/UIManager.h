@@ -36,6 +36,7 @@
 
 // --- VES Includes --- //
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <ves/xplorer/eventmanager/ConnectionMonopoly.h>
 #include <ves/VEConfig.h>
 
 // --- VR Juggler includes --- //
@@ -342,8 +343,12 @@ private:
 
     osg::Vec4 _computeMouseBoundsForElement( UIElement* element );
 
-    ///
+    void _monopolizeInput( bool monopolize );
+
+    /// Holds all non-input signal connections
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+    /// Holds all Key/Button input signal connections
+    ves::xplorer::eventmanager::ScopedConnectionList mInputConnections;
 
     ///
     std::map< UIElement*, osg::Vec4 > mElementPositionsOrtho2D;
@@ -353,6 +358,8 @@ private:
     voidBoolSignalType mUIEnterLeaveSignal;
 
     bool mMouseInsideUI;
+
+    std::vector< boost::shared_ptr< ves::xplorer::eventmanager::ConnectionMonopoly > > mInputMonopolies;
 };
 
 } //end conductor
