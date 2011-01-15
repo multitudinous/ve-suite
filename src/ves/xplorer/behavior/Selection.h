@@ -107,8 +107,7 @@ private:
     void UpdateSelectionLine();
     ///Now try and pick the object
     void ProcessSelection();
-    ///Tell if the mouse is inside or outside the UI
-    void UIEnterLeave( bool insideUI );
+
     /// Required connections list for connecting to events via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
     
@@ -148,9 +147,6 @@ private:
     
     ///GL transform info about the scene
     scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;
-    
-    ///Determine if the mouse is inside the UI
-    bool m_mouseInsideUI;
 };
 
 }

@@ -111,8 +111,7 @@ Selection::Selection()
     m_currX( 0 ),
     m_currY( 0 ),
     m_pickedBody( 0 ),
-    m_pickConstraint( 0 ),
-    m_mouseInsideUI( false )
+    m_pickConstraint( 0 )
 {    
     CONNECTSIGNALS_4( "%ButtonRelease1%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
                       m_connections, any_SignalType, normal_Priority );
@@ -123,19 +122,11 @@ Selection::Selection()
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
         "KeyboardMouse.ObjectPickedSignal" );
-        
-    CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &Selection::UIEnterLeave,
-                    m_connections, highest_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Selection::~Selection()
 {
     ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Selection::UIEnterLeave( bool insideUI )
-{
-    m_mouseInsideUI = insideUI;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
@@ -146,10 +137,6 @@ void Selection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos,
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
-    if( m_mouseInsideUI )
-    {
-        return;
-    }
 
     if( (xPos > m_currX + 2) || (xPos < m_currX - 2) )
     {
