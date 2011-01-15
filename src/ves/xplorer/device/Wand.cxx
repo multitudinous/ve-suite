@@ -99,8 +99,53 @@ Wand::Wand()
 {
     wand.init( "VJWand" );
     head.init( "VJHead" );
+    
+    // Connect to Juggler's new event handling interface
+    m_wandButton0DoubleClickEventInterface.setClickTime(300);
+    m_wandButton0DoubleClickEventInterface.init("VJButton0");
+    m_wandButton0DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton0DoubleClick, this, _1));
+    
+    m_wandButton1DoubleClickEventInterface.setClickTime(300);
+    m_wandButton1DoubleClickEventInterface.init("VJButton1");
+    m_wandButton1DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton1DoubleClick, this, _1));
+
+    m_wandButton2DoubleClickEventInterface.setClickTime(300);
+    m_wandButton2DoubleClickEventInterface.init("VJButton2");
+    m_wandButton2DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton2DoubleClick, this, _1));
+
+    m_wandButton3DoubleClickEventInterface.setClickTime(300);
+    m_wandButton3DoubleClickEventInterface.init("VJButton3");
+    m_wandButton3DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton3DoubleClick, this, _1));
+
+    m_wandButton4DoubleClickEventInterface.setClickTime(300);
+    m_wandButton4DoubleClickEventInterface.init("VJButton4");
+    m_wandButton4DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton4DoubleClick, this, _1));
+
+    m_wandButton5DoubleClickEventInterface.setClickTime(300);
+    m_wandButton5DoubleClickEventInterface.init("VJButton5");
+    m_wandButton5DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton5DoubleClick, this, _1));
+
+    
+    m_wandButton0EventInterface.init("VJButton0");
+    m_wandButton0EventInterface.addCallback(boost::bind(&Wand::OnWandButton0Event, this, _1));
+
+    m_wandButton1EventInterface.init("VJButton1");
+    m_wandButton1EventInterface.addCallback(boost::bind(&Wand::OnWandButton1Event, this, _1));
+
+    m_wandButton2EventInterface.init("VJButton2");
+    m_wandButton2EventInterface.addCallback(boost::bind(&Wand::OnWandButton2Event, this, _1));
+
+    m_wandButton3EventInterface.init("VJButton3");
+    m_wandButton3EventInterface.addCallback(boost::bind(&Wand::OnWandButton3Event, this, _1));
+
+    m_wandButton4EventInterface.init("VJButton4");
+    m_wandButton4EventInterface.addCallback(boost::bind(&Wand::OnWandButton4Event, this, _1));
+
+    m_wandButton5EventInterface.init("VJButton5");
+    m_wandButton5EventInterface.addCallback(boost::bind(&Wand::OnWandButton5Event, this, _1));
+    
     // trigger (and top right button) used for the selection line
-    digital[ 0 ].init( "VJButton0" );
+    /*digital[ 0 ].init( "VJButton0" );
     // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
     digital[ 1 ].init( "VJButton1" );
     // 12 o'clock -- forward navigation
@@ -110,7 +155,7 @@ Wand::Wand()
     // 6 o'clock -- reset
     digital[ 4 ].init( "VJButton4" );
     // 9 o'clock -- exit streamer while loop
-    digital[ 5 ].init( "VJButton5" );
+    digital[ 5 ].init( "VJButton5" );*/
 
     m_beamLineSegment = new osgUtil::LineSegmentIntersector(
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
@@ -1127,5 +1172,65 @@ void Wand::MakeWandLine()
 void Wand::SetCADSelectionMode( bool cadSelectionMode )
 {
     m_cadSelectionMode = cadSelectionMode;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton0Event( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton1Event( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton2Event( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton3Event( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton4Event( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton5Event( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton0DoubleClick( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton1DoubleClick( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton2DoubleClick( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton3DoubleClick( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton4DoubleClick( gadget::DigitalState::State event )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
+{
+    
 }
 ////////////////////////////////////////////////////////////////////////////////

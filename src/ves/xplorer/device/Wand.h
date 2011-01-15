@@ -53,6 +53,9 @@
 #include <gmtl/Matrix.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
+#include <gadget/Event/DigitalEventInterface.h>
+#include <gadget/Event/DigitalMultiClickEventInterface.h>
+#include <gadget/Event/EventPtr.h>
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
@@ -182,6 +185,42 @@ protected:
     void EnsureCameraStaysAboveGround( osg::Quat& world_quat );
 
 private:
+    /// The keyboardmouse device needed for juggler >= 3.1
+    typedef gadget::DigitalEventInterface<gadget::event::all_events_tag,
+        gadget::event::synchronized_tag> WandClickInterface;
+    WandClickInterface m_wandButton0EventInterface;
+    WandClickInterface m_wandButton1EventInterface;
+    WandClickInterface m_wandButton2EventInterface;
+    WandClickInterface m_wandButton3EventInterface;
+    WandClickInterface m_wandButton4EventInterface;
+    WandClickInterface m_wandButton5EventInterface;
+
+    /// All keyboardmouse events get delivered here
+    void OnWandButton0Event( gadget::DigitalState::State event );
+    void OnWandButton1Event( gadget::DigitalState::State event );
+    void OnWandButton2Event( gadget::DigitalState::State event );
+    void OnWandButton3Event( gadget::DigitalState::State event );
+    void OnWandButton4Event( gadget::DigitalState::State event );
+    void OnWandButton5Event( gadget::DigitalState::State event );
+
+    /// Interface to receive double-click events from gadgeteer
+    typedef gadget::DigitalMultiClickEventInterface< 2,
+        gadget::event::all_events_tag,
+        gadget::event::immediate_tag > WandDoubleClickInterface;
+    WandDoubleClickInterface m_wandButton0DoubleClickEventInterface;
+    WandDoubleClickInterface m_wandButton1DoubleClickEventInterface;
+    WandDoubleClickInterface m_wandButton2DoubleClickEventInterface;
+    WandDoubleClickInterface m_wandButton3DoubleClickEventInterface;
+    WandDoubleClickInterface m_wandButton4DoubleClickEventInterface;
+    WandDoubleClickInterface m_wandButton5DoubleClickEventInterface;
+
+    void OnWandButton0DoubleClick( gadget::DigitalState::State event );
+    void OnWandButton1DoubleClick( gadget::DigitalState::State event );
+    void OnWandButton2DoubleClick( gadget::DigitalState::State event );
+    void OnWandButton3DoubleClick( gadget::DigitalState::State event );
+    void OnWandButton4DoubleClick( gadget::DigitalState::State event );
+    void OnWandButton5DoubleClick( gadget::DigitalState::State event );
+
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
     int buttonData[ 6 ]; ///<do not know what this does
 
