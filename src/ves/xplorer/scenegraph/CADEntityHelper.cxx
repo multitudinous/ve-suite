@@ -100,7 +100,7 @@
 
 #include <osg/Version>
 
-//#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #if( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
 #include <osg/OcclusionQueryNode>
@@ -110,7 +110,13 @@
 #include <osgOQ/OcclusionQueryVisitor.h>
 #endif
 
-// --- C/C++ Libraries --- //
+// --- BackdropFX Includes --- //
+#include <backdropFX/Version.h>
+#include <backdropFX/Manager.h>
+#include <backdropFX/ShaderModule.h>
+#include <backdropFX/ShaderModuleVisitor.h>
+
+// --- STL Includes --- //
 #include <cctype>
 #include <sstream>
 #include <istream>
@@ -582,6 +588,14 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         //osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
         osgDB::writeObjectFile( *mn.get(), pname );
     }*/
+
+	//Create shader modules emulating ffp
+	if( !scenegraph::SceneManager::instance()->IsRTTOn() )
+	{
+		backdropFX::ShaderModuleVisitor smv;
+		smv.setAddDefaults( false );
+		mCadNode->accept( smv );
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::

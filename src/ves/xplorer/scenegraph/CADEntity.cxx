@@ -34,7 +34,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
-//#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 //#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
@@ -50,7 +50,13 @@
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
 
-// --- C/C++ Libraries --- //
+// --- BackdropFX Includes --- //
+#include <backdropFX/Version.h>
+#include <backdropFX/Manager.h>
+#include <backdropFX/ShaderModule.h>
+#include <backdropFX/ShaderModuleVisitor.h>
+
+// --- STL Includes --- //
 #include <cassert>
 
 using namespace ves::xplorer::scenegraph;
@@ -81,6 +87,11 @@ CADEntity::CADEntity(
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
+	if( !scenegraph::SceneManager::instance()->IsRTTOn() )
+	{
+		//backdropFX::RebuildShaderModules rsm;
+		//SceneManager::instance()->GetRootNode()->accept( rsm );
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity(

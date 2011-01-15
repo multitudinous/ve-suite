@@ -108,6 +108,18 @@
 #include <osgUtil/UpdateVisitor>
 #include <osgUtil/Statistics>
 
+// --- BackdropFX Includes --- //
+#include <backdropFX/Version.h>
+#include <backdropFX/Manager.h>
+#include <backdropFX/SkyDome.h>
+#include <backdropFX/DepthPartition.h>
+#include <backdropFX/DepthPeelUtils.h>
+#include <backdropFX/RenderingEffects.h>
+#include <backdropFX/EffectLibraryUtils.h>
+#include <backdropFX/LocationData.h>
+#include <backdropFX/ShaderModule.h>
+#include <backdropFX/ShaderModuleVisitor.h>
+
 // --- VR Juggler Includes --- //
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
@@ -157,15 +169,17 @@ using namespace ves::xplorer::scenegraph;
 App::App( int argc, char* argv[], bool enableRTT )
     :
     vrj::osg::App( vrj::Kernel::instance() ),
+    svUpdate( false ),
     isCluster( false ),
     m_captureNextFrame( false ),
     m_captureMovie( false ),
     mRTT( enableRTT ),
+    m_uiInitialized( false ),
+    m_MouseInsideUI( true ),
     mProfileCounter( 0 ),
     mLastFrame( 0 ),
     mLastTime( 0 ),
-    m_MouseInsideUI( true ),
-    mLastQtLoopTime(0.0f)
+    mLastQtLoopTime( 0.0 )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -173,7 +187,6 @@ App::App( int argc, char* argv[], bool enableRTT )
     mUpdateVisitor = new osgUtil::UpdateVisitor();
     mFrameStamp->setReferenceTime( 0.0 );
     mFrameStamp->setFrameNumber( 0 );
-    svUpdate = false;
 
     light_0 = new osg::Light();
     light_source_0 = new osg::LightSource();
@@ -232,11 +245,10 @@ App::App( int argc, char* argv[], bool enableRTT )
     m_sceneGLTransformInfo = SceneGLTransformInfoPtr( new SceneGLTransformInfo(
         ortho2DMatrix, identityMatrix, zUpMatrix ) );
 
-    // Set the current database file and clear it out in case it contains data
-    // from a previous session
-    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath("ves.db");
+    //Set the current database file and clear it out in case it contains data
+    //from a previous session
+    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( "ves.db" );
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
-    m_uiInitialized = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -257,6 +269,12 @@ void App::exit()
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 #endif
     ves::xplorer::network::GraphicalPluginManager::instance()->UnRegisterExecutive();
+
+	if( !mRTT )
+	{
+    	//Cleanup backdropFX
+    	backdropFX::Manager::instance( true );
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* App::getScene()
@@ -286,11 +304,11 @@ void App::contextInit()
     {
         vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
         new_sv->getCamera()->setName( "SV Camera" );
-        if( !mRTT )
+        //if( !mRTT )
         {
-            new_sv->getCamera()->addChild( getScene() );
+            //new_sv->getCamera()->addChild( getScene() );
         }
-        else
+        //else
         {
             //*m_skipDraw = false;
         }
@@ -377,16 +395,16 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     // for the possible settings for this function.
     //This defaults to setting the near and far plane based on the
     //bounding volume.
-    if( mRTT )
+    //if( mRTT )
     {
         //newSceneViewer->setComputeNearFarMode(
             //osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
         //newSceneViewer->getCamera()->setCullingActive( false );
     }
-    else
+    //else
     {
-        newSceneViewer->setComputeNearFarMode(
-            osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+        //newSceneViewer->setComputeNearFarMode(
+            //osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
     }
 
     //Set default viewport, projection matrix, and view matrix for each scene view
@@ -853,7 +871,7 @@ void App::contextPreDraw()
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
             update();
 
-            if( mRTT )
+            //if( mRTT )
             {
                 vpr::System::msleep( 200 );  // thenth-second delay
                 //*m_skipDraw = true;
@@ -899,12 +917,9 @@ void App::contextPreDraw()
 ///so setting variables should not be done here
 void App::draw()
 {
-    if( mRTT )
+    if( !mSceneRenderToTexture->CameraConfigured() )
     {
-        if( !mSceneRenderToTexture->CameraConfigured() )
-        {
-            return;
-        }
+        return;
     }
 
     //std::cout << "----------Draw-----------" << std::endl;

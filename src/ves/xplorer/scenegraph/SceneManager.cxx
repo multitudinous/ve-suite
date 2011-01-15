@@ -61,6 +61,12 @@
 #include <osgDB/ReadFile>
 #include <osgDB/FileUtils>
 
+// --- BackdropFX Includes --- //
+#include <backdropFX/Version.h>
+#include <backdropFX/Manager.h>
+#include <backdropFX/ShaderModule.h>
+#include <backdropFX/ShaderModuleVisitor.h>
+
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
 #include <osgAudio/SoundManager.h>
@@ -509,7 +515,18 @@ void SceneManager::_createLogo()
     //Add the logo model
     osg::ref_ptr< osg::Node > vesuiteNode =
         osgDB::readNodeFile( "logo/ve-suite.ive" );
-    mLogoNode->addChild( vesuiteNode.get() );
+	if( !m_isRTTOn )
+	{
+		backdropFX::ShaderModuleVisitor smv;
+		smv.setAddDefaults( false );
+		vesuiteNode->accept( smv );
+	}
+	mLogoNode->addChild( vesuiteNode.get() );
+	if( !m_isRTTOn )
+	{
+		//backdropFX::RebuildShaderModules rsm;
+		//mRootNode->accept( rsm );
+	}
     /*
     std::string vsName = osgDB::findDataFile( "phong.vs" );
     std::string fsName = osgDB::findDataFile( "phong.fs" );
