@@ -253,8 +253,8 @@ public:
      * C still are.
      *
      * This method returns a boost::shared_ptr to a ConnectionMonopoly that the
-     * caller should keep in scope as long as it want the monopoly to remain in
-     * effect. To end the monoply, the caller should either call
+     * caller should keep in scope as long as it wants the monopoly to remain in
+     * effect. To end the monopoly, the caller should either call
      * boost::shared_ptr::reset on the ptr returned by this method, or should
      * allow the returned ptr to go out of scope.
      *
