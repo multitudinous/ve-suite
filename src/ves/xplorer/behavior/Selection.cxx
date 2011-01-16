@@ -113,10 +113,10 @@ Selection::Selection()
     m_pickedBody( 0 ),
     m_pickConstraint( 0 )
 {    
-    CONNECTSIGNALS_4( "%ButtonRelease1%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
+    CONNECTSIGNALS_4( "KeyboardMouse.ButtonRelease1%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4( "%ButtonPress1%", void( gadget::Keys, int, int, int ), &Selection::RegisterButtonPress,
+    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress1%", void( gadget::Keys, int, int, int ), &Selection::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
     
     eventmanager::EventManager::instance()->RegisterSignal(
@@ -220,12 +220,12 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
     //No modifier key
     if( buttonState & gadget::KEY_NONE )
     {
-        ;
+        return;
     }
     //Mod key shift
     else if( buttonState & gadget::KEY_SHIFT )
     {
-        ;
+        return;
     }
     else if( buttonState & gadget::KEY_ALT )
     {
@@ -274,7 +274,11 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         {
             pluginIter->second->GetCFDModel()->RenderTextualDisplay( true );
         }
+        return;
     }
+
+    UpdateSelectionLine();
+    ProcessSelection();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::UpdateSelectionLine()
