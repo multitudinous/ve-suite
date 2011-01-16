@@ -277,11 +277,33 @@ private:
     ///Selected DCS
     ves::xplorer::scenegraph::DCS* m_activeDCS;
     
-#ifdef QT_ON
-    typedef boost::signals2::signal<void (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
-    InteractionSignal_type m_interactionSignal;
-#endif // QT_ON
+    /// ButtonPress signal type
+    /// Params are: button, x, y, state (modifier mask OR'd with button mask)
+    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > WandButtonPressSignal_type;
     
+    /// ButtonRelease signal type
+    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > WandButtonReleaseSignal_type;
+
+    /// ButtonRelease signal type
+    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > WandButtonOnSignal_type;
+
+    /// MouseDoubleClick signal
+    /// Params are: button, x, y, z, state (modifier mask OR'd with button mask)
+    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int, int ) > WandDoubleClickSignal_type;
+    
+    /// Map to hold ButtonPress signals
+    typedef std::map< std::string, WandButtonPressSignal_type* > WandButtonPressSignalMapType;
+    WandButtonPressSignalMapType m_wandButtonPressSignalMap;
+    
+    /// Map to hold ButtonRelease signals
+    typedef std::map< std::string, WandButtonReleaseSignal_type* > WandButtonReleaseSignalMapType;
+    WandButtonReleaseSignalMapType m_wandButtonReleaseSignalMap;
+    
+    typedef std::map< std::string, WandButtonOnSignal_type* > WandButtonOnSignalMapType;
+    WandButtonOnSignalMapType m_wandButtonOnSignalMap;
+    
+    typedef std::map< std::string, WandDoubleClickSignal_type* > WandDoubleClickSignalMapType;
+    WandDoubleClickSignalMapType m_wandDoubleClickSignalMap;    
 };
 } //end device
 } //end xplorer

@@ -144,6 +144,89 @@ Wand::Wand()
     m_wandButton5EventInterface.init("VJButton5");
     m_wandButton5EventInterface.addCallback(boost::bind(&Wand::OnWandButton5Event, this, _1));
     
+    ///Setup the ves signals generated from the VR Juggler events
+    m_wandButtonPressSignalMap["Wand.ButtonPress0"] = new WandButtonPressSignal_type;
+    m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"] = new WandButtonReleaseSignal_type;
+    m_wandButtonOnSignalMap["Wand.ButtonOn0"] = new WandButtonOnSignal_type;
+    m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick0"] = new WandDoubleClickSignal_type;
+    
+    m_wandButtonPressSignalMap["Wand.ButtonPress1"] = new WandButtonPressSignal_type;
+    m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"] = new WandButtonReleaseSignal_type;
+    m_wandButtonOnSignalMap["Wand.ButtonOn1"] = new WandButtonOnSignal_type;
+    m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick1"] = new WandDoubleClickSignal_type;
+
+    m_wandButtonPressSignalMap["Wand.ButtonPress2"] = new WandButtonPressSignal_type;
+    m_wandButtonReleaseSignalMap["Wand.ButtonRelease2"] = new WandButtonReleaseSignal_type;
+    m_wandButtonOnSignalMap["Wand.ButtonOn2"] = new WandButtonOnSignal_type;
+    m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick2"] = new WandDoubleClickSignal_type;
+
+    m_wandButtonPressSignalMap["Wand.ButtonPress3"] = new WandButtonPressSignal_type;
+    m_wandButtonReleaseSignalMap["Wand.ButtonRelease3"] = new WandButtonReleaseSignal_type;
+    m_wandButtonOnSignalMap["Wand.ButtonOn3"] = new WandButtonOnSignal_type;
+    m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick3"] = new WandDoubleClickSignal_type;
+
+    m_wandButtonPressSignalMap["Wand.ButtonPress4"] = new WandButtonPressSignal_type;
+    m_wandButtonReleaseSignalMap["Wand.ButtonRelease4"] = new WandButtonReleaseSignal_type;
+    m_wandButtonOnSignalMap["Wand.ButtonOn4"] = new WandButtonOnSignal_type;
+    m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick4"] = new WandDoubleClickSignal_type;
+
+    m_wandButtonPressSignalMap["Wand.ButtonPress5"] = new WandButtonPressSignal_type;
+    m_wandButtonReleaseSignalMap["Wand.ButtonRelease5"] = new WandButtonReleaseSignal_type;
+    m_wandButtonOnSignalMap["Wand.ButtonOn5"] = new WandButtonOnSignal_type;
+    m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick5"] = new WandDoubleClickSignal_type;
+
+    m_wandButtonPressSignalMap["Wand.ButtonPress6"] = new WandButtonPressSignal_type;
+    m_wandButtonReleaseSignalMap["Wand.ButtonRelease6"] = new WandButtonReleaseSignal_type;
+    m_wandButtonOnSignalMap["Wand.ButtonOn6"] = new WandButtonOnSignal_type;
+    m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick6"] = new WandDoubleClickSignal_type;
+
+    eventmanager::EventManager* evm = eventmanager::EventManager::instance();
+    using eventmanager::SignalWrapper;
+    
+    ///Setup Button Press
+    for( WandButtonPressSignalMapType::const_iterator 
+        iter = m_wandButtonPressSignalMap.begin(); 
+        iter != m_wandButtonPressSignalMap.end(); ++iter)
+    {
+        evm->RegisterSignal(
+            new SignalWrapper< WandButtonPressSignal_type >( iter->second ),
+            iter->first, 
+            eventmanager::EventManager::button_SignalType );
+    }
+
+    ///Setup Button Release
+    for( WandButtonReleaseSignalMapType::const_iterator 
+        iter = m_wandButtonReleaseSignalMap.begin(); 
+        iter != m_wandButtonReleaseSignalMap.end(); ++iter)
+    {
+        evm->RegisterSignal(
+            new SignalWrapper< WandButtonReleaseSignal_type >( iter->second ),
+            iter->first, 
+            eventmanager::EventManager::button_SignalType );
+    }
+    
+    ///Setup Button On
+    for( WandButtonOnSignalMapType::const_iterator 
+        iter = m_wandButtonOnSignalMap.begin(); 
+        iter != m_wandButtonOnSignalMap.end(); ++iter)
+    {
+        evm->RegisterSignal(
+            new SignalWrapper< WandButtonOnSignal_type >( iter->second ),
+            iter->first, 
+            eventmanager::EventManager::button_SignalType );
+    }
+    
+    ///Setup Button Double Click
+    for( WandDoubleClickSignalMapType::const_iterator 
+        iter = m_wandDoubleClickSignalMap.begin(); 
+        iter != m_wandDoubleClickSignalMap.end(); ++iter)
+    {
+        evm->RegisterSignal(
+            new SignalWrapper< WandDoubleClickSignal_type >( iter->second ),
+            iter->first, 
+            eventmanager::EventManager::button_SignalType );
+    }
+
     // trigger (and top right button) used for the selection line
     /*digital[ 0 ].init( "VJButton0" );
     // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
@@ -159,11 +242,6 @@ Wand::Wand()
 
     m_beamLineSegment = new osgUtil::LineSegmentIntersector(
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
-
-    eventmanager::EventManager::instance()->RegisterSignal(
-       new eventmanager::SignalWrapper< InteractionSignal_type >( &m_interactionSignal ),
-       "WandInteractionSignal",
-       eventmanager::EventManager::input_SignalType);
 
     Initialize();
 }
@@ -526,14 +604,6 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         }
     }
     
-    if( 0 )
-    {
-#ifdef QT_ON
-        ves::xplorer::eventmanager::InteractionEvent 
-            ie( ves::xplorer::eventmanager::InteractionEvent::keyPress, 0, 0, 0, 0 );
-        m_interactionSignal( ie );
-#endif        
-    }
     ///If we actually pushed a button then move things
     if( m_buttonPushed && !m_characterController.IsEnabled() )
     {
@@ -1176,6 +1246,29 @@ void Wand::SetCADSelectionMode( bool cadSelectionMode )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 {
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {
+        (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        (*(m_wandButtonPressSignalMap["Wand.ButtonPress0"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        break;
+    }
+    default:
+        break;
+    }
+
+
+    
     //Update the juggler location of the wand
     if( event == gadget::DigitalState::ON )
     {        
