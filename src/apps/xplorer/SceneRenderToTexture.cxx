@@ -116,6 +116,8 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
     m_1dyFP( NULL ),
     m_finalShader( NULL )
 {
+    /// When m_enableRTT is true we will use our old RTT and post processing 
+    /// pipeline. When it is false we will use bdfx.
 	if( m_enableRTT )
 	{
 		osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
@@ -419,8 +421,10 @@ void SceneRenderToTexture::InitRTTCamera(
 	}
 	else
 	{
+        ///With depth partitioning enabled this should be set to: 
+        ///DO_NOT_COMPUTE_NEAR_FAR
 		rttCamera->setComputeNearFarMode(
-			osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR );
+			osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
