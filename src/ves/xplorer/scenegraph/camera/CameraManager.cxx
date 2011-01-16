@@ -105,6 +105,12 @@ CameraManager::CameraManager()
     //Initialize m_texGenNode
     m_texGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
     m_texGenNode->setTextureUnit( 6 );
+    
+    //I am not sure if this is correct or not but for now I am disabling the 
+    //manager to help debug our new signals and slots. When we wire up the 
+    //CPT we will need to review this change and potentially remove the 
+    //Enable code below.
+    Enable( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraManager::CameraManager(

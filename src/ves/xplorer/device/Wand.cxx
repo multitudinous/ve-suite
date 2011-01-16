@@ -40,6 +40,8 @@
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/DeviceHandler.h>
 
+#include <ves/xplorer/behavior/WandEvents.h>
+
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
@@ -95,7 +97,8 @@ Wand::Wand()
     rotationFlag( 1 ),
     m_distance( 1000 ),
     m_buttonPushed( false ),
-    m_cadSelectionMode( false )
+    m_cadSelectionMode( false ),
+    m_wandEvents( new ves::xplorer::behavior::WandEvents )
 {
     wand.init( "VJWand" );
     head.init( "VJHead" );
@@ -228,7 +231,7 @@ Wand::Wand()
     }
 
     // trigger (and top right button) used for the selection line
-    /*digital[ 0 ].init( "VJButton0" );
+    digital[ 0 ].init( "VJButton0" );
     // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
     digital[ 1 ].init( "VJButton1" );
     // 12 o'clock -- forward navigation
@@ -238,7 +241,7 @@ Wand::Wand()
     // 6 o'clock -- reset
     digital[ 4 ].init( "VJButton4" );
     // 9 o'clock -- exit streamer while loop
-    digital[ 5 ].init( "VJButton5" );*/
+    digital[ 5 ].init( "VJButton5" );
 
     m_beamLineSegment = new osgUtil::LineSegmentIntersector(
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
@@ -887,7 +890,6 @@ void Wand::UpdateObjectHandler()
     else if( digital[ 0 ]->getData() == gadget::Digital::TOGGLE_OFF )
     {
         UpdateSelectionLine( false );
-
         if( m_manipulatorManager.IsEnabled() && 
            m_manipulatorManager.LeafDraggerIsActive() )
         {
@@ -1246,6 +1248,15 @@ void Wand::SetCADSelectionMode( bool cadSelectionMode )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 {
+    //std::cout << " here 1 " << event << " " << digital[ 0 ]->getData() << std::endl;
+    event = digital[ 0 ]->getData();
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+
+    PreProcessNav();
+    
     switch(event) 
     {
     case gadget::DigitalState::ON:
@@ -1266,95 +1277,40 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     default:
         break;
     }
-
-
-    
-    //Update the juggler location of the wand
-    if( event == gadget::DigitalState::ON )
-    {        
-        UpdateSelectionLine( true );
-        
-        ///Push the FOCUS event if we are using manipulators and a dragger is not
-        ///active
-        if( m_manipulatorManager.IsEnabled() && 
-           !m_manipulatorManager.LeafDraggerIsActive() )
-        {
-            osg::ref_ptr< osg::StateSet > stateset = 
-            m_wandPAT->getOrCreateStateSet();
-            if( m_manipulatorManager.Handle( scenegraph::manipulator::Event::FOCUS,
-                                            m_beamLineSegment.get() ) )
-            {
-                
-                stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );                
-                stateset->setAttributeAndModes( m_depth.get(), 
-                                               osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-                m_wandPAT->setCullingActive( false );
-            }
-            else
-            {
-                stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
-                stateset->removeAttribute( m_depth.get() );
-                m_wandPAT->setCullingActive( true );
-            }
-        }
-        
-        if( m_manipulatorManager.IsEnabled() && 
-           m_manipulatorManager.LeafDraggerIsActive() )
-        {
-            if( m_manipulatorManager.Handle(
-                                            scenegraph::manipulator::Event::DRAG ) )
-            {
-                return;
-            }
-        }
-    }
-    //Now select and object based on the new wand location
-    else if( event == gadget::DigitalState::TOGGLE_OFF )
-    {
-        UpdateSelectionLine( false );
-        
-        if( m_manipulatorManager.IsEnabled() && 
-           m_manipulatorManager.LeafDraggerIsActive() )
-        {
-            bool success = m_manipulatorManager.Handle( 
-                                                       scenegraph::manipulator::Event::RELEASE );
-            if( success )
-            {
-                vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully released a dragger." 
-                << std::endl << vprDEBUG_FLUSH;
-                return;
-            }
-        }
-        
-        if( m_manipulatorManager.IsEnabled() )
-        {
-            vprDEBUG( vesDBG, 2 ) << "|\tTrying to push a dragger." 
-            << std::endl << vprDEBUG_FLUSH;
-            bool success = m_manipulatorManager.Handle(
-                                                       scenegraph::manipulator::Event::PUSH,
-                                                       m_beamLineSegment.get() );
-            if( m_manipulatorManager.LeafDraggerIsActive() )
-            {
-                vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully pushed a dragger." 
-                << std::endl << vprDEBUG_FLUSH;
-                return;
-            }
-        }
-        
-        ProcessHit();
-    }
-    /*
-     //Now we can move the object if the button
-     int buttonData = digital[ 0 ]->getData();
-     if( ( buttonData == gadget::Digital::ON ) && selectedGeometry.valid() )
-     {
-     TranslateObject();
-     }
-     */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton1Event( gadget::DigitalState::State event )
 {
+    event = digital[ 1 ]->getData();
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    PreProcessNav();
+    
+    switch(event) 
+    {
+        case gadget::DigitalState::ON:
+        {
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn1"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_ON:
+        {
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress1"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_OFF:
+        {
+            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            break;
+        }
+        default:
+            break;
+    }
+    
+
     ///Check and see if the cpt is enabled so that we can handle
     ///button events differently
     ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
@@ -1427,6 +1383,35 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton2Event( gadget::DigitalState::State event )
 {
+    event = digital[ 2 ]->getData();
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+
+    PreProcessNav();
+    
+    switch(event) 
+    {
+        case gadget::DigitalState::ON:
+        {
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn2"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_ON:
+        {
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress2"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_OFF:
+        {
+            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease2"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            break;
+        }
+        default:
+            break;
+    }
+    
     if( event == gadget::DigitalState::TOGGLE_ON ||
        event == gadget::DigitalState::ON )
     {
@@ -1456,6 +1441,35 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton3Event( gadget::DigitalState::State event )
 {
+    event = digital[ 3 ]->getData();
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+
+    PreProcessNav();
+    
+    switch(event) 
+    {
+        case gadget::DigitalState::ON:
+        {
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn3"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_ON:
+        {
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress3"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_OFF:
+        {
+            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease3"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            break;
+        }
+        default:
+            break;
+    }
+    
     if (( event == gadget::DigitalState::TOGGLE_ON ) ||
         ( event == gadget::DigitalState::ON ) )
     {
@@ -1466,6 +1480,35 @@ void Wand::OnWandButton3Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton4Event( gadget::DigitalState::State event )
 {
+    event = digital[ 4 ]->getData();
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+
+    PreProcessNav();
+    
+    switch(event) 
+    {
+        case gadget::DigitalState::ON:
+        {
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn4"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_ON:
+        {
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress4"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_OFF:
+        {
+            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease4"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            break;
+        }
+        default:
+            break;
+    }
+    
     if( event == gadget::DigitalState::TOGGLE_ON ||
             event == gadget::DigitalState::ON )
     {
@@ -1496,6 +1539,36 @@ void Wand::OnWandButton4Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton5Event( gadget::DigitalState::State event )
 {
+    event = digital[ 5 ]->getData();
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    PreProcessNav();
+    
+    switch(event) 
+    {
+        case gadget::DigitalState::ON:
+        {
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn5"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_ON:
+        {
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress5"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_OFF:
+        {
+            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease5"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            break;
+        }
+        default:
+            break;
+    }
+    
+
     ///Check and see if the cpt is enabled so that we can handle
     ///button events differently
     ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
@@ -1604,32 +1677,50 @@ void Wand::OnWandButton5Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton0DoubleClick( gadget::DigitalState::State event )
 {
-    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton1DoubleClick( gadget::DigitalState::State event )
 {
-    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton2DoubleClick( gadget::DigitalState::State event )
 {
-    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton3DoubleClick( gadget::DigitalState::State event )
 {
-    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton4DoubleClick( gadget::DigitalState::State event )
 {
-    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
 {
-    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::PreProcessNav()
@@ -1721,5 +1812,10 @@ void Wand::PostProcessNav()
             m_characterController.StepForward( true );
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::MatrixTransform& Wand::GetWandTransform()
+{
+    return *(m_wandPAT.get());
 }
 ////////////////////////////////////////////////////////////////////////////////

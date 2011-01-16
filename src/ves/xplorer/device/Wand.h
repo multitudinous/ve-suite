@@ -89,6 +89,11 @@ namespace scenegraph
 class DCS;
 }
 
+namespace behavior
+{
+class WandEvents;
+}
+
 namespace device
 {
 /*!\file Wand.h
@@ -156,6 +161,17 @@ public:
     ///Set wether when selecting parts if the parts will be turned off
     void SetCADSelectionMode( bool cadSelectionMode );
 
+    ///Return the transform that holds the geode for the wand line
+    osg::MatrixTransform& GetWandTransform();
+    
+    ///Identifies selection chosen by wand
+    void UpdateSelectionLine( bool drawLine = true );
+        
+    ///Draws a beam from the wand to object
+    ///\param startPoint The start position
+    ///\param endPoint The end position
+    virtual void DrawLine( const osg::Vec3d& startPoint, const osg::Vec3d& endPoint );
+    
 protected:
     ///Set the start and end point
     ///\param startPoint The start point
@@ -167,14 +183,6 @@ protected:
     ///\param endPoint The end position
     void SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
 
-    ///Draws a beam from the wand to object
-    ///\param startPoint The start position
-    ///\param endPoint The end position
-    virtual void DrawLine( const osg::Vec3d& startPoint, const osg::Vec3d& endPoint );
-
-    ///Identifies selection chosen by wand
-    void UpdateSelectionLine( bool drawLine = true );
-    
     ///Make the raw geometry for the wand line
     void MakeWandLine();
 
@@ -303,7 +311,10 @@ private:
     WandButtonOnSignalMapType m_wandButtonOnSignalMap;
     
     typedef std::map< std::string, WandDoubleClickSignal_type* > WandDoubleClickSignalMapType;
-    WandDoubleClickSignalMapType m_wandDoubleClickSignalMap;    
+    WandDoubleClickSignalMapType m_wandDoubleClickSignalMap;
+    
+    ///Wand event management
+    ves::xplorer::behavior::WandEvents* m_wandEvents;
 };
 } //end device
 } //end xplorer
