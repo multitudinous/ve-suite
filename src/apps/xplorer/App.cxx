@@ -514,7 +514,7 @@ void App::initScene()
     for( int i = 1; i < argc; ++i )
     {
         if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
-            ( argc >= i + 2 ) )
+            ( argc > i + 2 ) )
         {
             EnvironmentHandler::instance()->
                 SetDesktopSize( atoi( argv[ i + 1 ] ), atoi( argv[ i + 2 ] ) );
