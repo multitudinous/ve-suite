@@ -184,6 +184,12 @@ protected:
     ///Ensure that the camera stays above ground.
     void EnsureCameraStaysAboveGround( osg::Quat& world_quat );
 
+    ///Preprocess data for nav
+    void PreProcessNav();
+
+    ///Preprocess data for nav
+    void PostProcessNav();
+    
 private:
     /// The keyboardmouse device needed for juggler >= 3.1
     typedef gadget::DigitalEventInterface<gadget::event::all_events_tag,
@@ -266,7 +272,11 @@ private:
     bool m_cadSelectionMode;
     ///Keep track fo the cad files that the user has unselected with the wand
     std::vector< osg::Node* > m_unselectedCADFiles;
-
+    ///The quat for the wand
+    osg::Quat m_worldQuat;
+    ///Selected DCS
+    ves::xplorer::scenegraph::DCS* m_activeDCS;
+    
 #ifdef QT_ON
     typedef boost::signals2::signal<void (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
     InteractionSignal_type m_interactionSignal;

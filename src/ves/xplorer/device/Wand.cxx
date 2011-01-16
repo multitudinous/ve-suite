@@ -225,7 +225,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     buttonData[ 5 ] = digital[ 5 ]->getData();
 
     m_rotIncrement.set( 0, 0, 0, 1 );
-    osg::Quat world_quat = activeDCS->getAttitude();
+    m_worldQuat = activeDCS->getAttitude();
 
     double* tempWorldTrans = activeDCS->GetVETranslationArray();
     m_worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
@@ -509,7 +509,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         if( !m_cadSelectionMode )
         {
             m_buttonPushed = true;
-            world_quat = *mResetAxis;
+            m_worldQuat = *mResetAxis;
             for( unsigned int i = 0; i < 3; ++i )
             {
                 m_worldTrans[ i ] = -mResetPosition->at( i );
@@ -544,13 +544,13 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             m_worldTrans[ i ] = -m_worldTrans[ i ];
         }
 
-        world_quat *= m_rotIncrement;
+        m_worldQuat *= m_rotIncrement;
 
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, world_quat, m_subzeroFlag, m_zEqualsZeroFlag );
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
 
         activeDCS->SetTranslationArray( m_worldTrans );
-        activeDCS->SetQuat( world_quat );
+        activeDCS->SetQuat( m_worldQuat );
     }
     else if( m_characterController.IsEnabled() && m_buttonPushed )
     {
@@ -561,13 +561,13 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             m_worldTrans[ i ] = -m_worldTrans[ i ];
         }
         
-        world_quat *= m_rotIncrement;
+        m_worldQuat *= m_rotIncrement;
         
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, world_quat, m_subzeroFlag, m_zEqualsZeroFlag );
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
 
         activeDCS->SetTranslationArray( m_worldTrans );
-        activeDCS->SetQuat( world_quat );
+        activeDCS->SetQuat( m_worldQuat );
         //If the z axis is positive then rotate by a specific dz
         if( m_rotIncrement[ 3 ] > 0 )
         {
@@ -1176,32 +1176,337 @@ void Wand::SetCADSelectionMode( bool cadSelectionMode )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 {
-    
+    //Update the juggler location of the wand
+    if( event == gadget::DigitalState::ON )
+    {        
+        UpdateSelectionLine( true );
+        
+        ///Push the FOCUS event if we are using manipulators and a dragger is not
+        ///active
+        if( m_manipulatorManager.IsEnabled() && 
+           !m_manipulatorManager.LeafDraggerIsActive() )
+        {
+            osg::ref_ptr< osg::StateSet > stateset = 
+            m_wandPAT->getOrCreateStateSet();
+            if( m_manipulatorManager.Handle( scenegraph::manipulator::Event::FOCUS,
+                                            m_beamLineSegment.get() ) )
+            {
+                
+                stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );                
+                stateset->setAttributeAndModes( m_depth.get(), 
+                                               osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                m_wandPAT->setCullingActive( false );
+            }
+            else
+            {
+                stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+                stateset->removeAttribute( m_depth.get() );
+                m_wandPAT->setCullingActive( true );
+            }
+        }
+        
+        if( m_manipulatorManager.IsEnabled() && 
+           m_manipulatorManager.LeafDraggerIsActive() )
+        {
+            if( m_manipulatorManager.Handle(
+                                            scenegraph::manipulator::Event::DRAG ) )
+            {
+                return;
+            }
+        }
+    }
+    //Now select and object based on the new wand location
+    else if( event == gadget::DigitalState::TOGGLE_OFF )
+    {
+        UpdateSelectionLine( false );
+        
+        if( m_manipulatorManager.IsEnabled() && 
+           m_manipulatorManager.LeafDraggerIsActive() )
+        {
+            bool success = m_manipulatorManager.Handle( 
+                                                       scenegraph::manipulator::Event::RELEASE );
+            if( success )
+            {
+                vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully released a dragger." 
+                << std::endl << vprDEBUG_FLUSH;
+                return;
+            }
+        }
+        
+        if( m_manipulatorManager.IsEnabled() )
+        {
+            vprDEBUG( vesDBG, 2 ) << "|\tTrying to push a dragger." 
+            << std::endl << vprDEBUG_FLUSH;
+            bool success = m_manipulatorManager.Handle(
+                                                       scenegraph::manipulator::Event::PUSH,
+                                                       m_beamLineSegment.get() );
+            if( m_manipulatorManager.LeafDraggerIsActive() )
+            {
+                vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully pushed a dragger." 
+                << std::endl << vprDEBUG_FLUSH;
+                return;
+            }
+        }
+        
+        ProcessHit();
+    }
+    /*
+     //Now we can move the object if the button
+     int buttonData = digital[ 0 ]->getData();
+     if( ( buttonData == gadget::Digital::ON ) && selectedGeometry.valid() )
+     {
+     TranslateObject();
+     }
+     */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton1Event( gadget::DigitalState::State event )
 {
-    
+    ///Check and see if the cpt is enabled so that we can handle
+    ///button events differently
+    ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
+    m_sceneManager.GetCameraManager();
+    bool cptEnabled = cameraManager.IsCPTEnabled();
+    if(( event == gadget::DigitalState::TOGGLE_ON ) ||
+       ( event == gadget::DigitalState::ON ) )
+    {
+        if( cptEnabled && ( event == gadget::DigitalState::TOGGLE_ON ) )
+        {
+            if( cameraManager.IsPictureMode() )
+            {
+                cameraManager.GetActiveCameraObject()->
+                SetPictureFrameProjection( true );
+                cameraManager.DisplayProjectionEffect( true, true );
+                return;
+            }
+            
+            if( !m_sceneManager.IsMasterNode() )
+            {
+                return;
+            }
+            
+            open::xml::DataValuePairPtr dvp( new open::xml::DataValuePair() );
+            unsigned int addFlag = 1;
+            dvp->SetData( "AddCameraObject", addFlag );
+            cameraManager.UpdateConductorData( dvp );
+        }
+        
+        if( !cptEnabled )
+        {
+            if( ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
+            {
+                ves::xplorer::NavigationAnimationEngine::instance()->
+                IncrementAnimationSpeed( -0.5 );
+                return;
+            }
+            else
+            {
+                m_buttonPushed = true;
+                FreeRotateAboutWand();
+            }
+        }
+    }
+    else if( event == gadget::DigitalState::TOGGLE_OFF )
+    {
+        if( cptEnabled )
+        {
+            if( cameraManager.IsPictureMode() )
+            {
+                cameraManager.DisplayProjectionEffect( false, true );
+                cameraManager.GetActiveCameraObject()->
+                SetPictureFrameProjection( false );
+            }
+            
+            if( !m_sceneManager.IsMasterNode() )
+            {
+                return;
+            }
+            
+            if( cameraManager.IsPictureMode() )
+            {
+                std::string tempDir( "." );
+                cameraManager.WriteActiveCameraImageFile( tempDir );
+                return;
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton2Event( gadget::DigitalState::State event )
 {
-    
+    if( event == gadget::DigitalState::TOGGLE_ON ||
+       event == gadget::DigitalState::ON )
+    {
+        double* tempWandDir = GetDirection();
+        vprDEBUG( vesDBG, 3 ) << "|\tWand direction :"
+        << tempWandDir[ 0 ] << " : "
+        << tempWandDir[ 1 ] << " : " << tempWandDir[ 2 ]
+        << std::endl << vprDEBUG_FLUSH;
+        
+        m_buttonPushed = true;
+        for( int i = 0; i < 3; ++i )
+        {
+            //Update the translation movement for the objects
+            //How much object should move
+            m_worldTrans[ i ] += tempWandDir[ i ] * translationStepSize;
+        }
+    }
+    //Reset back to 0, 0, 0
+    else if( event == gadget::DigitalState::TOGGLE_OFF )
+    {
+        if( m_characterController.IsEnabled() )
+        {
+            m_characterController.StepForward( false );
+        }
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton3Event( gadget::DigitalState::State event )
 {
-    
+    if (( event == gadget::DigitalState::TOGGLE_ON ) ||
+        ( event == gadget::DigitalState::ON ) )
+    {
+        m_buttonPushed = true;
+        FreeRotateAboutWand( false );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton4Event( gadget::DigitalState::State event )
 {
-    
+    if( event == gadget::DigitalState::TOGGLE_ON ||
+            event == gadget::DigitalState::ON )
+    {
+        if( m_cadSelectionMode && 
+           ( event == gadget::DigitalState::TOGGLE_ON ) )
+        {
+            if( m_unselectedCADFiles.size() )
+            {
+                m_unselectedCADFiles.back()->setNodeMask( 1 );
+                m_unselectedCADFiles.pop_back();
+            }
+            return;
+        }
+        
+        if( !m_cadSelectionMode )
+        {
+            m_buttonPushed = true;
+            m_worldQuat = *mResetAxis;
+            for( unsigned int i = 0; i < 3; ++i )
+            {
+                m_worldTrans[ i ] = -mResetPosition->at( i );
+                //world_quat[ i ] = 0.0f;
+                mCenterPoint->mData[ i ] = 0.0f;
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton5Event( gadget::DigitalState::State event )
 {
-    
+    ///Check and see if the cpt is enabled so that we can handle
+    ///button events differently
+    ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
+    m_sceneManager.GetCameraManager();
+    bool cptEnabled = cameraManager.IsCPTEnabled();
+    if( ( event == gadget::DigitalState::TOGGLE_ON ) ||
+       ( event == gadget::DigitalState::ON ) )
+    {
+        if( cptEnabled && ( event == gadget::DigitalState::TOGGLE_ON ) )
+        {
+            if( cameraManager.getNumChildren() == 0 )
+            {
+                return;
+            }
+            ves::xplorer::scenegraph::camera::CameraObject* activeCamera =
+            cameraManager.GetActiveCameraObject();
+            unsigned int activeNum = 0;
+            if( activeCamera )
+            {
+                activeNum = cameraManager.getChildIndex( 
+                                                        static_cast< osg::Group* >( activeCamera ) );
+            }
+            
+            ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+            
+            if( activeNum + 1 < cameraManager.getNumChildren() )
+            {
+                activeNum += 1;
+            }
+            else
+            {
+                activeNum = 0;
+            }
+            
+            ves::xplorer::scenegraph::camera::CameraObject* newCameraObject = 
+            static_cast< ves::xplorer::scenegraph::camera::CameraObject* >( 
+                                                                           cameraManager.getChild( activeNum ) );
+            cameraManager.SetActiveCameraObject( newCameraObject, true );
+            
+            //Right now we are saying you must have a DCS
+            scenegraph::DCS& selectedDCS = newCameraObject->GetDCS();
+            gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
+            
+            //Set the connection between the scene manipulator and the selected dcs
+            //sceneManipulator->Connect( &selectedDCS );
+            
+            //If dcs is from a camera object, we want to rotate about local zero point
+            //osg::Vec3d center( 0.0, 0.0, 0.0 );
+            //center = center * osg::Matrixd( selectedMatrix.mData );
+            //sceneManipulator->SetPosition( center );
+            
+            //We need to transform center point into camera space
+            //In the future the center point will be in world coordinates
+            //center = center * osg::Matrixd( sceneManager.GetNavDCS()->GetMat().mData );
+            //gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
+            //deviceHandler.SetCenterPoint( &tempCenter );
+            
+            //Set the selected DCS
+            ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( &selectedDCS );
+            
+            //Need to do this for multi-pass techniques
+            if( m_sceneManager.IsRTTOn() )
+            {
+                selectedDCS.SetTechnique( "Glow" );
+            }
+            else
+            {
+                selectedDCS.SetTechnique( "Select" );
+            }
+            
+            //Hand the node we are interested in off to the animation engine
+            NavigationAnimationEngine& nae =
+            *(NavigationAnimationEngine::instance());
+            nae.SetDCS( m_sceneManager.GetNavDCS() );
+            
+            //Hand our created end points off to the animation engine
+            selectedMatrix = gmtl::invert( selectedMatrix );
+            const gmtl::Matrix44d tempHeadMatrix = m_sceneManager.GetHeadMatrix();
+            const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
+            gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+            selectedMatrix = tempHeadMatrix * myMat * selectedMatrix;
+            
+            gmtl::Vec3d navToPoint =
+            gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
+            gmtl::Quatd rotationPoint =
+            gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
+            nae.SetAnimationEndPoints( navToPoint, rotationPoint );
+            return;
+        }
+        
+        if( !cptEnabled )
+        {
+            if( ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
+            {
+                ves::xplorer::NavigationAnimationEngine::instance()->
+                IncrementAnimationSpeed( 0.5 );
+            }
+            else
+            {
+                DeviceHandler::instance()->UnselectObjects();
+            }
+            return;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton0DoubleClick( gadget::DigitalState::State event )
@@ -1232,5 +1537,96 @@ void Wand::OnWandButton4DoubleClick( gadget::DigitalState::State event )
 void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
 {
     
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::PreProcessNav()
+{
+    m_activeDCS =
+        ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
+    if( !m_activeDCS )
+    {
+        return;
+    }
+    
+    //If the wand does not exist
+    if( wand->isStupefied() )
+    {
+        return;
+    }
+    
+    m_buttonPushed = false;
+    
+    //Update the wand direction every frame
+    UpdateWandLocalDirection();
+    UpdateWandGlobalLocation();
+    
+    buttonData[ 0 ] = digital[ 0 ]->getData();
+    buttonData[ 1 ] = digital[ 1 ]->getData();
+    buttonData[ 2 ] = digital[ 2 ]->getData();
+    buttonData[ 3 ] = digital[ 3 ]->getData();
+    buttonData[ 4 ] = digital[ 4 ]->getData();
+    buttonData[ 5 ] = digital[ 5 ]->getData();
+    
+    m_rotIncrement.set( 0, 0, 0, 1 );
+    m_worldQuat = m_activeDCS->getAttitude();
+    
+    double* tempWorldTrans = m_activeDCS->GetVETranslationArray();
+    m_worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
+    m_worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
+    m_worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::PostProcessNav()
+{
+    ///If we actually pushed a button then move things
+    if( m_buttonPushed && !m_characterController.IsEnabled() )
+    {
+        //Set the DCS postion based off of previous
+        //manipulation of the worldTrans array
+        for( unsigned int i = 0; i < 3; ++i )
+        {
+            m_worldTrans[ i ] = -m_worldTrans[ i ];
+        }
+        
+        m_worldQuat *= m_rotIncrement;
+        
+        gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
+        
+        m_activeDCS->SetTranslationArray( m_worldTrans );
+        m_activeDCS->SetQuat( m_worldQuat );
+    }
+    else if( m_characterController.IsEnabled() && m_buttonPushed )
+    {
+        //Set the DCS postion based off of previous
+        //manipulation of the worldTrans array
+        for( unsigned int i = 0; i < 3; ++i )
+        {
+            m_worldTrans[ i ] = -m_worldTrans[ i ];
+        }
+        
+        m_worldQuat *= m_rotIncrement;
+        
+        gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
+        
+        m_activeDCS->SetTranslationArray( m_worldTrans );
+        m_activeDCS->SetQuat( m_worldQuat );
+        //If the z axis is positive then rotate by a specific dz
+        if( m_rotIncrement[ 3 ] > 0 )
+        {
+            m_characterController.Rotate( 0., osg::DegreesToRadians( -rotationStepSize ) );
+        }
+        else
+        {
+            m_characterController.Rotate( 0., osg::DegreesToRadians( rotationStepSize ) );
+        }
+        
+        if( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
+           buttonData[ 2 ] == gadget::Digital::ON )
+        {
+            m_characterController.StepForward( true );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
