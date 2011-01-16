@@ -36,7 +36,7 @@
 #include "App.h"
 #include "VjObsWrapper.h"
 
-#if defined QT_ON && defined _DARWIN
+#if defined _DARWIN
 #include "CocoaHelper.h"
 #endif
 
@@ -83,7 +83,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     m_cfdApp->SetWrapper( m_vjObsWrapper );
     
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
-#if defined QT_ON && defined _DARWIN
+#if defined _DARWIN
     CocoaInit( m_cfdApp );
 #endif
     kernel->start();                          // Start the kernel thread
