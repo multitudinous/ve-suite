@@ -54,6 +54,9 @@
 #include <osg/Timer>
 #include <osg/LightModel>
 
+// --- Boost Includes --- //
+#include <boost/signals2/signal.hpp>
+
 class QApplication;
 
 namespace osg
@@ -92,6 +95,8 @@ class cfdPBufferManager;
 
 /*!\class ves::xplorer::App
  *
+ * Signals emitted:
+ *      "App.LatePreFrame" -- allows sync to draw loop
  */
 class App : public vrj::osg::App
 {
@@ -192,7 +197,8 @@ public:
 protected:
 
 private:
-    ///
+    /// Slot connected to signal "UIManager.EnterLeaveUI", called whenever
+    /// mouse enters or leaves UI quad
     void UIEnterLeave( bool entered );
 
     ///Update sceneview
@@ -210,10 +216,10 @@ private:
     ///Turn off/on RTT
     bool mRTT;
 
-    ///
+    /// Is the UI initialized?
     bool m_uiInitialized;
 
-    ///
+    /// Is the mouse inside the UI quad?
     bool m_MouseInsideUI;
 
     ///
@@ -319,11 +325,16 @@ private:
     ///Thread to run the Qt ui
     //vpr::Thread* m_qtUIThread;
 
-    ///
+    /// The UI
     QApplication* m_qtApp;
 
-    ///
+    /// Required for connecting to signals via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+
+    /// Signal "App.LatePreFrame", emitted during LatePreFrame to allow
+    /// other objects to sync operations to the draw loop
+    typedef boost::signals2::signal< void () > latePreFrame_SignalType;
+    latePreFrame_SignalType mLatePreFrame;
 
 };
 } //end xplorer

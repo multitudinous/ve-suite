@@ -65,6 +65,7 @@
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/eventmanager/EventMapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElementQt.h>
 #include <ves/conductor/qt/MainWindow.h>
@@ -249,6 +250,11 @@ App::App( int argc, char* argv[], bool enableRTT )
     //from a previous session
     ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( "ves.db" );
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
+
+    // Register signal(s) with EventManager
+    eventmanager::EventManager::instance()->RegisterSignal(
+    new eventmanager::SignalWrapper< latePreFrame_SignalType >( &mLatePreFrame ),
+    "App.LatePreFrame");
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -765,12 +771,10 @@ void App::latePreFrame()
         GraphicalPluginManager::instance()->PreFrameUpdate();
     }
     ///////////////////////
-#ifdef QT_ON
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame EventMapper", 20 );
         ves::xplorer::eventmanager::EventMapper::instance()->LatePreFrameUpdate();
     }
-#endif
     ///////////////////////
 #ifdef MINERVA_GIS_SUPPORT
     {
@@ -784,6 +788,11 @@ void App::latePreFrame()
         mNavPosition = gmtl::convertTo< double >( 
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveNavSwitchNode()->GetMat() );
+    }
+    ///////////////////////
+    // Signal allowing other listeners to perform processing synced to draw
+    {
+        mLatePreFrame();
     }
     ///////////////////////
 
