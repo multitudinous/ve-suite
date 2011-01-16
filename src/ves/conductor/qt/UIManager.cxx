@@ -128,6 +128,8 @@ UIManager::UIManager() :
                       &UIManager::KeyReleaseEvent, mInputConnections,
                       keyboard_SignalType, highest_Priority );
 
+    // Force input signal monopoly to agree with default state of mMouseInsideUI
+    _monopolizeInput( mMouseInsideUI );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIManager::~UIManager()
@@ -881,7 +883,6 @@ void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::MouseMoveEvent( int x, int y, int z, int state )
 {
-
     if( !_okayToSendEvent() )
     {
         return;
