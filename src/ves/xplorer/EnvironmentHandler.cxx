@@ -388,10 +388,12 @@ void EnvironmentHandler::InitScene()
 void EnvironmentHandler::PreFrameUpdate()
 {
     //Process all events for active device
-    if( !ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
+    ///With signals we do not need to explicitly call into device handler
+    ///to get the devices to execute nav updates
+    /*if( !ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
     {
         ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
-    }
+    }*/
 
     ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
     ves::xplorer::NavigationAnimationEngine::instance()->PreFrameUpdate();
