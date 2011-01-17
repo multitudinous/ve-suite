@@ -45,6 +45,12 @@ using namespace ves::xplorer::data;
 ContourPlanePropertySet::ContourPlanePropertySet()
 {
     mTableName = "ContourPlane";
+
+    std::string prependTag( mTableName );
+    prependTag.append(" ");
+    std::string tag = boost::any_cast<std::string>(GetPropertyValue("NameTag"));
+    SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
+
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
