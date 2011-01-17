@@ -128,9 +128,6 @@ WandEvents::WandEvents()
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
         "KeyboardMouse.ObjectPickedSignal" );
         
-    m_wand = ves::xplorer::DeviceHandler::instance()->
-        GetDevice( ves::xplorer::device::Device::WAND )->AsWand();
-    
     m_cadSelectionMode = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -354,6 +351,9 @@ void WandEvents::ClearPointConstraint()
 ////////////////////////////////////////////////////////////////////////////////
 void WandEvents::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
+    m_wand = ves::xplorer::DeviceHandler::instance()->
+    GetDevice( ves::xplorer::device::Device::WAND )->AsWand();
+    
     double* wandPosition = m_wand->GetObjLocation();
     double* wandDirection = m_wand->GetDirection();
     double wandEndPoint[ 3 ];
@@ -379,6 +379,9 @@ void WandEvents::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint 
 ////////////////////////////////////////////////////////////////////////////////
 void WandEvents::UpdateSelectionLine( bool drawLine )
 {
+    m_wand = ves::xplorer::DeviceHandler::instance()->
+    GetDevice( ves::xplorer::device::Device::WAND )->AsWand();
+    
     osg::Vec3d startPoint, endPoint;
     SetStartEndPoint( startPoint, endPoint );
     m_lineSegmentIntersector->reset();
