@@ -47,10 +47,31 @@
 	selection-background-color: rgba(255,255,255,50);
 }
 
+QListWidget::item
+{
+	background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(30, 30, 30, 255), stop:1 rgba(80, 80, 80, 255));
+	color: rgb(220,220,220);
+	selection-background-color: rgba(255,255,255,50);
+}
+
+QListWidget::item:selected
+{
+	background: rgba(255,255,255,50);
+}
+
 /*QListWidget:item:hover
 {
 	background: rgb(0,0,0);
 }*/</string>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="tabKeyNavigation">
+        <bool>true</bool>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectItems</enum>
        </property>
        <property name="iconSize">
         <size>
@@ -58,8 +79,17 @@
          <height>64</height>
         </size>
        </property>
+       <property name="flow">
+        <enum>QListView::TopToBottom</enum>
+       </property>
        <property name="viewMode">
         <enum>QListView::ListMode</enum>
+       </property>
+       <property name="uniformItemSizes">
+        <bool>false</bool>
+       </property>
+       <property name="selectionRectVisible">
+        <bool>true</bool>
        </property>
        <property name="currentRow">
         <number>0</number>
