@@ -69,7 +69,8 @@ PropertySet::PropertySet():
     ss << mUUID;
     mUUIDString = ss.str();
 
-    AddProperty("NameTag", mUUIDString, "Name Tag");
+    // Set NameTag to the first 4-characters of the uuid
+    AddProperty("NameTag", mUUIDString.substr( 0, 4 ), "Name Tag");
 }
 ////////////////////////////////////////////////////////////////////////////////
 PropertySet::PropertySet( const PropertySet& orig )
@@ -281,7 +282,7 @@ bool PropertySet::DeleteFromDatabase()
     bool retval = DeleteFromDatabase( &session );
     return retval;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool PropertySet::DeleteFromDatabase( const std::string& DatabaseName )
 {
     return DeleteFromDatabase( DatabaseName, mTableName );
@@ -334,7 +335,7 @@ bool PropertySet::DeleteFromDatabase( Poco::Data::Session* session, const std::s
 
     try
     {
-        ( *session ) << "DELETE FROM " << TableName << " WHERE id=:mID", Poco::Data::use( mID ), Poco::Data::now;
+        ( *session ) << "DELETE FROM " << TableName << " WHERE uuid=:mUUID", Poco::Data::use( mUUIDString ), Poco::Data::now;
         returnValue = true;
     }
     catch( Poco::Data::DataException& ex )
