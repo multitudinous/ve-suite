@@ -94,7 +94,8 @@ public:
 
     void UpdateFeature( const std::string& featureName, const std::string& UUID );
 
-    std::vector<std::string> GetIDsForFeature( const std::string& featureName );
+    std::vector< std::pair< std::string, std::string > >
+        GetNameIDPairsForFeature( const std::string& featureName );
 
 private:
 

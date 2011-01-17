@@ -148,9 +148,12 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, const std
     feature->Update( UUID );
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<std::string> VisFeatureManager::GetIDsForFeature( const std::string& featureName )
+std::vector< std::pair< std::string, std::string > >
+VisFeatureManager::GetNameIDPairsForFeature( const std::string& featureName )
 {
+    std::vector< std::pair< std::string, std::string > > nameIDPairs;
     std::vector<std::string> ids;
+    std::vector<std::string> names;
     using namespace ves::xplorer::data;
 
     std::map<std::string, std::string>::const_iterator iter = 
@@ -158,12 +161,24 @@ std::vector<std::string> VisFeatureManager::GetIDsForFeature( const std::string&
     if( iter != m_featureNameToTableName.end() )
     {
         ids = DatabaseManager::instance()->GetStringVector( iter->second, "uuid" );
-        return ids;
+        names = DatabaseManager::instance()->GetStringVector( iter->second, "NameTag" );
+
+        // Pair up the names and IDs
+        std::pair< std::string, std::string > tempPair;
+        assert( names.size() == ids.size() );
+        for( size_t index = 0; index < names.size(); ++index )
+        {
+            tempPair.first = names.at( index );
+            tempPair.second = ids.at( index );
+            nameIDPairs.push_back( tempPair );
+        }
+
+        return nameIDPairs;
     }
 
     std::cout << "We do not have a " << featureName 
         << " vis feature registered yet." << std::endl;
-    return ids;
+    return nameIDPairs;
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
