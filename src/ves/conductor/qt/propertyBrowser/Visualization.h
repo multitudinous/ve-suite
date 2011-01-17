@@ -39,6 +39,8 @@
 
 #include <ves/xplorer/data/PropertySetPtr.h>
 
+#include <map>
+
 // Forward declarations
 namespace Ui
 {
@@ -79,7 +81,7 @@ protected Q_SLOTS:
     void on_NewFeatureButton_clicked(); // Automatic connection
     void on_DeleteFeatureButton_clicked(); // Automatic connection
     void on_FeaturesList_currentTextChanged( const QString& currentText ); // Automatic connection
-    void on_FeatureIDSelector_currentIndexChanged ( const QString& text ); // Automatic connection
+    void on_FeatureIDSelector_currentIndexChanged ( int index ); // Automatic connection
 
 
 private:
@@ -88,6 +90,8 @@ private:
 
     ves::xplorer::data::PropertySetPtr mTempSet;
     bool mIgnoreIndexChange;
+
+    std::vector< std::string > m_ids;
 };
 
 } // namespace conductor

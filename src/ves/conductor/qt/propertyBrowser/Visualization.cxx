@@ -93,6 +93,8 @@ void Visualization::on_WritePropertiesButton_clicked()
             m_ui->FeaturesList->currentItem()->text().toStdString();
         VisFeatureManager::instance()->
             UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
+        // Update the choices in case user changed the Name Tag of a feature
+        UpdateFeatureIDSelectorChoices();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,6 +125,7 @@ void Visualization::on_NewFeatureButton_clicked()
     // Re-read available feature IDs from database, and select the last one added,
     // which by definition corresponds to the "new" one
     UpdateFeatureIDSelectorChoices();
+    m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_DeleteFeatureButton_clicked()
@@ -162,27 +165,41 @@ void Visualization::UpdateFeatureIDSelectorChoices()
 
     // Remove all entries from feature id selection combobox
     m_ui->FeatureIDSelector->clear();
+
+    // Drop all entries from uuid list
+    m_ids.clear();
+
 //    mIgnoreIndexChange = tIgnore;
 
     // Get all available IDs for current feature type
     QString featureName = m_ui->FeaturesList->currentItem()->text();
-    std::vector<std::string> ids = VisFeatureManager::instance()->GetIDsForFeature( featureName.toStdString() );
+    std::vector< std::pair< std::string, std::string > > nameIDPairs =
+            VisFeatureManager::instance()->GetNameIDPairsForFeature(
+                    featureName.toStdString() );
 
-    // Convert IDs to format needed by QComboBox and add them as choices
-    QStringList idList;
-    QString qCurrentID;
-    for( size_t index = 0; index < ids.size(); ++index )
+    // Get Name Tag for each feature and add these as choices
+    QStringList nameList;
+    //QString qCurrentID;
+    QString qCurrentName;
+    std::string tempName;
+    std::string tempID;
+    for( size_t index = 0; index < nameIDPairs.size(); ++index )
     {
-        qCurrentID = qCurrentID.fromStdString( ids.at( index ) );
-        idList.append( qCurrentID );
+        tempName = nameIDPairs.at( index ).first;
+        tempID = nameIDPairs.at( index ).second;
+
+        qCurrentName = qCurrentName.fromStdString( tempName );
+        m_ids.push_back( tempID );
+
+        nameList.append( qCurrentName );
     }
 
-    m_ui->FeatureIDSelector->addItems( idList );
+    m_ui->FeatureIDSelector->addItems( nameList );
 
-    m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
+    //m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& text )
+void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
 {
     if(mIgnoreIndexChange)
     {
@@ -191,7 +208,7 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& tex
     }
     ves::xplorer::data::PropertySetPtr nullPtr;
 
-    if( text.isEmpty() )
+    if( (index == -1) || (index > m_ids.size()) )
     {
         // If null selection was made, we want to remove any visible PropertySet
         mFeatureBrowser->ParsePropertySet( nullPtr );
@@ -219,7 +236,8 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( const QString& tex
             // set when things changed, which loading will do. But this doesn't
             // work until after parsing is complete.
             //mTempSet->SetRecordID( text.toInt() );
-            mTempSet->SetUUID( text.toStdString() );
+            mTempSet->SetUUID( m_ids.at( index ) );
+            //mTempSet->SetUUID( text.toStdString() );
             mTempSet->LoadFromDatabase();
             mFeatureBrowser->RefreshAll();
         }
