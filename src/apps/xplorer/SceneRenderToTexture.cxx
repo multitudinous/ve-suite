@@ -109,7 +109,7 @@ using namespace ves::xplorer;
 SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
     :
     m_enableRTT( enableRTT ),
-    m_rootGroup( NULL ),
+    m_rootGroup( new osg::Group() ),
     m_1dxVP( NULL ),
     m_1dxFP( NULL ),
     m_1dyVP( NULL ),
@@ -158,22 +158,31 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
 		{
 			std::cerr << "Could not load shader files!" << std::endl;
 		}
+
+        //
+        InitRootGroup();
 	}
 	else
 	{
-		//
-		backdropFX::SkyDome& skyDome =
-			backdropFX::Manager::instance()->getSkyDome();
-		skyDome.setSunScale( 2.0 );
-		skyDome.setMoonScale( 2.0 );
+        //The order of initialization matters substantially for dbfx
+
+		//backdropFX::SkyDome& skyDome =
+		//	backdropFX::Manager::instance()->getSkyDome();
+		//skyDome.setSunScale( 2.0 );
+		//skyDome.setMoonScale( 2.0 );
+
 
 		backdropFX::DepthPartition& depthPartition =
 			backdropFX::Manager::instance()->getDepthPartition();
-		depthPartition.setNumPartitions( 0 );
-	}
+		depthPartition.setNumPartitions( 1 );
 
-    //
-    InitRootGroup();
+		//Add root group to backdropFX::Manager
+		backdropFX::Manager::instance()->setSceneData( m_rootGroup.get() );
+		backdropFX::Manager::instance()->rebuild( 0 );//backdropFX::Manager::depthPeel );
+        
+        //
+        InitRootGroup();
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
@@ -183,7 +192,6 @@ SceneRenderToTexture::~SceneRenderToTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitRootGroup()
 {
-    m_rootGroup = new osg::Group();
 	scenegraph::SceneManager::instance()->SetRootNode( m_rootGroup.get() );
 
     //If we are in rtt mode, set the main shader
@@ -231,19 +239,6 @@ void SceneRenderToTexture::InitRootGroup()
         stateset->addUniform(
             new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
     }
-	else
-	{
-		backdropFX::ShaderModuleVisitor smv;
-		smv.setAttachMain( false );
-		//Only set to "true" if using outside the backdropFX::Manager
-		smv.setAttachTransform( false );
-		smv.setSupportSunLighting( false );
-		m_rootGroup->accept( smv );
-
-		//Add root group to backdropFX::Manager
-		backdropFX::Manager::instance()->setSceneData( m_rootGroup.get() );
-		backdropFX::Manager::instance()->rebuild( backdropFX::Manager::depthPeel );
-	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
@@ -316,6 +311,12 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
 	}
 	else
 	{
+        backdropFX::ShaderModuleVisitor smv;
+        smv.setAttachMain( false );
+        //Only set to "true" if using outside the backdropFX::Manager
+        smv.setAttachTransform( false );
+        smv.setSupportSunLighting( false );
+        m_rootGroup->accept( smv );
 		//
 		backdropFX::Manager::instance()->setTextureWidthHeight(
 			viewportDimensions.first, viewportDimensions.second );
@@ -323,6 +324,9 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
 		//Add managed root to each SceneView
 		svCamera->addChild(
 			backdropFX::Manager::instance()->getManagedRoot() );
+            
+        backdropFX::RebuildShaderModules rsm;
+        backdropFX::Manager::instance()->getManagedRoot()->accept( rsm );
 	}
 
     //Make sure that existing scene graph objects are
