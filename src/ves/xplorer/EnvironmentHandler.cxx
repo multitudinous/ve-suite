@@ -377,7 +377,7 @@ void EnvironmentHandler::InitScene()
     device::KeyboardMouse* keyboardMouse =
         DeviceHandler::instance()->GetDevice(
             device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
-    keyboardMouse->SetWindowValues( screenDims.first, screenDims.second );
+    //keyboardMouse->SetWindowValues( screenDims.first, screenDims.second );
     keyboardMouse->SetScreenCornerValues(
         displaySettings->GetScreenCornerValues() );
 
@@ -431,28 +431,6 @@ void EnvironmentHandler::SetWindowDimensions( unsigned int w, unsigned int h )
     _windowHeight = h;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnvironmentHandler::SetFrustumValues(
-    float _left, float _right, float _bottom, float _top, float _near, float _far )
-{
-    _frustumLeft = _left;
-    _frustumRight = _right;
-    _frustumBottom = _bottom;
-    _frustumTop = _top;
-    _frustumNear = _near;
-    _frustumFar = _far;
-}
-////////////////////////////////////////////////////////////////////////////////
-void EnvironmentHandler::GetFrustumValues( std::vector<float>& values )
-{
-    values.clear();
-    values.push_back( _frustumLeft );
-    values.push_back( _frustumRight );
-    values.push_back( _frustumBottom );
-    values.push_back( _frustumTop );
-    values.push_back( _frustumNear );
-    values.push_back( _frustumFar );
-}
-////////////////////////////////////////////////////////////////////////////////
 unsigned int EnvironmentHandler::GetWindowWidth()
 {
     return _windowWidth;
@@ -475,13 +453,7 @@ float EnvironmentHandler::GetFrameRate()
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::PostFrameUpdate()
 {
-    //Update the values in trackball
-    device::KeyboardMouse* keyboardMouse =
-        DeviceHandler::instance()->GetDevice(
-            device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
-    keyboardMouse->SetFrustumValues(
-        _frustumLeft, _frustumRight, _frustumBottom,
-        _frustumTop, _frustumNear, _frustumFar );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::SeedPoints* EnvironmentHandler::GetSeedPoints()

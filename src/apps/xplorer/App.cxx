@@ -1044,10 +1044,6 @@ void App::draw()
     {
         //Get the frustum planes based on the current bounding volume of the scene
         sv->getCamera()->getProjectionMatrixAsFrustum( l, r, b, t, n, f );
-        //This code will go away eventually
-        //The code below is not thread safe and will result in random results
-        //in multithreaded use cases
-        EnvironmentHandler::instance()->SetFrustumValues( l, r, b, t, n, f );
         //Recalculate the projection matrix from the new frustum values
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
     }

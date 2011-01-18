@@ -88,6 +88,7 @@ namespace xplorer
 namespace behavior
 {
 class Selection;
+class Navigation;
 }
 
 namespace device
@@ -121,21 +122,6 @@ public:
     ///Sets the screen corner values
     ///\param values A map of strings to doubles
     void SetScreenCornerValues( std::map< std::string, double > values );
-
-    ///Set the window properties
-    ///\param w Set the width of the window
-    ///\param h Set the height of the window
-    void SetWindowValues( unsigned int w, unsigned int h );
-
-    ///Set the frustrum values
-    ///\param l
-    ///\param r
-    ///\param t
-    ///\param b
-    ///\param n
-    ///\param f
-    void SetFrustumValues(
-        double l, double r, double b, double t, double n, double f );
 
     ///Fit the world bounding volume into the viewing frustum
     void SkyCam();
@@ -172,6 +158,10 @@ public:
     bool SetCurrentGLTransformInfo( const vrj::DisplayPtr display, bool isKeyEvent );
 
 private:
+    ///Navigation slot
+    ves::xplorer::behavior::Navigation* m_navigationSlot;
+
+    ///The KBM selection slot
     ves::xplorer::behavior::Selection* m_selectionSlot;
     
     ///The current X mouse position

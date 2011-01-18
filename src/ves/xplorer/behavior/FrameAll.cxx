@@ -31,12 +31,16 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/behavior/FrameAll.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/EnvironmentHandler.h>
-#include <ves/xplorer/environment/cfdDisplaySettings.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
+#include <ves/xplorer/EnvironmentHandler.h>
+
+#include <ves/xplorer/environment/cfdDisplaySettings.h>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
 
 #include <osg/BoundingSphere>
 #include <osg/Vec3d>
@@ -124,22 +128,8 @@ void FrameAll::DoFrameAll()
     double mAspectRatio =
             static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
 
-    std::vector<float> frustumValues;
-    ves::xplorer::EnvironmentHandler::instance()->GetFrustumValues( frustumValues );
-    double mLeftFrustum = frustumValues[0];
-    double mRightFrustum = frustumValues[1];
-    double mBottomFrustum = frustumValues[2];
-    double mTopFrustum = frustumValues[3];
-    double mNearFrustum = frustumValues[4];
-    double mFarFrustum = frustumValues[5];
-
-    double topAngle = atan( mTopFrustum / mNearFrustum );
-    double tempDiv = fabs( mBottomFrustum ) / mNearFrustum;
-    double bottomAngle = atan( tempDiv );
-
-    double mFoVZ = topAngle + bottomAngle;
-
-
+    double mFoVZ = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
+std::cout << mFoVZ << std::endl;
     //Set the end point
     osg::Vec3d endPoint( 0.0, 0.0, 0.0 );
     {

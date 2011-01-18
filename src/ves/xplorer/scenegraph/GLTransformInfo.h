@@ -138,6 +138,9 @@ public:
     ///
     const double& GetFarFrustum() const;
 
+    ///Calculates and returns the FoVZ
+    const double& GetFOVZ();
+
     ///
     const gmtl::Matrix44d& GetVrjViewMatrix() const;
 
@@ -243,7 +246,9 @@ private:
     double m_nearFrustum;
     ///
     double m_farFrustum;
-
+    ///
+    double m_fovz;
+    
     ///
     gmtl::Matrix44d m_vrjViewMatrix;
 

@@ -41,6 +41,7 @@
 #include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/behavior/Selection.h>
+#include <ves/xplorer/behavior/Navigation.h>
 
 #include <ves/xplorer/plugin/PluginBase.h>
 
@@ -142,6 +143,7 @@ using namespace ves::xplorer::scenegraph;
 KeyboardMouse::KeyboardMouse()
     :
     Device( KEYBOARD_MOUSE ),
+    m_navigationSlot( new ves::xplorer::behavior::Navigation() ),
     m_selectionSlot( new ves::xplorer::behavior::Selection() ),
     m_mouseInsideUI( true )
 {
@@ -1842,17 +1844,6 @@ void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > value
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetFrustumValues(
-    double l, double r, double b, double t, double n, double f )
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SkyCam()
 {
 
@@ -1970,9 +1961,9 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
         
         // ---------- This needs to be optimized ------------ //
         // --- Does not need to be set for every viewport --- //
-        const int& windowWidth = m_currentGLTransformInfo->GetWindowWidth();
-        const int& windowHeight = m_currentGLTransformInfo->GetWindowHeight();
-        SetWindowValues( windowWidth, windowHeight );
+        //const int& windowWidth = m_currentGLTransformInfo->GetWindowWidth();
+        //const int& windowHeight = m_currentGLTransformInfo->GetWindowHeight();
+        //SetWindowValues( windowWidth, windowHeight );
         // -------------------------------------------------- //
         
         if( isKeyEvent )

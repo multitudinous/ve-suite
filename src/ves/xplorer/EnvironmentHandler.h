@@ -139,18 +139,6 @@ public:
     ///\param height The window height
     void SetWindowDimensions( unsigned int width, unsigned int height );
 
-    ///Set up the frustum values
-    ///\param _left
-    ///\param _right
-    ///\param _top
-    ///\param _bottom
-    ///\param _near
-    ///\param _far
-    void SetFrustumValues( float _left, float _right, float _bottom, float _top, float _near, float _far );
-
-    ///Get the frustum values
-    void GetFrustumValues( std::vector<float>& values );
-
     ///Get the window width
     unsigned int GetWindowWidth();
 

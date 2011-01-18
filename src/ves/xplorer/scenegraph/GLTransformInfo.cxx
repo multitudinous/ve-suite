@@ -66,6 +66,7 @@ GLTransformInfo::GLTransformInfo(
     m_topFrustum( 0.0 ),
     m_nearFrustum( 0.0 ),
     m_farFrustum( 0.0 ),
+    m_fovz( 0.0 ),
 
     m_windowMatrix( windowMatrix ),
     m_windowMatrixOSG( m_windowMatrix.mData ),
@@ -350,5 +351,15 @@ void  GLTransformInfo::UpdateCenterViewMatrix( const gmtl::Matrix44d& vrjViewMat
     
     m_centerViewMatrix = m_vrjCenterViewMatrix * m_cameraMatrix;
     m_centerViewMatrixOSG.set( m_centerViewMatrix.mData );
+}
+////////////////////////////////////////////////////////////////////////////////
+const double& GLTransformInfo::GetFOVZ()
+{
+    double topAngle = atan( m_topFrustum / m_nearFrustum );
+    double tempDiv = fabs( m_bottomFrustum ) / m_nearFrustum;
+    double bottomAngle = atan( tempDiv );
+    
+    m_fovz = topAngle + bottomAngle;
+    return m_fovz;
 }
 ////////////////////////////////////////////////////////////////////////////////
