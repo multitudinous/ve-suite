@@ -99,6 +99,7 @@ GLTransformInfo::GLTransformInfo( const GLTransformInfo& glTransformInfo )
     m_topFrustum( glTransformInfo.m_topFrustum ),
     m_nearFrustum( glTransformInfo.m_nearFrustum ),
     m_farFrustum( glTransformInfo.m_farFrustum ),
+    m_fovz( glTransformInfo.m_fovz ),
 
     m_vrjViewMatrix( glTransformInfo.m_vrjViewMatrix ),
     m_vrjViewMatrixOSG( glTransformInfo.m_vrjViewMatrixOSG ),
