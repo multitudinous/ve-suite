@@ -129,7 +129,7 @@ void FrameAll::DoFrameAll()
             static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
 
     double mFoVZ = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
-std::cout << mFoVZ << std::endl;
+
     //Set the end point
     osg::Vec3d endPoint( 0.0, 0.0, 0.0 );
     {
