@@ -65,8 +65,6 @@ public:
     virtual ~CADPropertySet();
 
 private:
-
-private:
     ///Create the skeleton
     void CreateSkeleton();
 };

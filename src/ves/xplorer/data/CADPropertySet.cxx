@@ -50,14 +50,21 @@ namespace data
 
 ////////////////////////////////////////////////////////////////////////////////
 CADPropertySet::CADPropertySet()
-{
+{ 
     mTableName = "CADPropertySet";
+
+    std::string prependTag( mTableName );
+    prependTag.append(" ");
+    std::string tag = boost::any_cast<std::string>(GetPropertyValue("NameTag"));
+    SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
+
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADPropertySet::CADPropertySet( const CADPropertySet& orig )
     :
-    PropertySet( orig )
+    PropertySet( orig ),
+    m_Logger( orig.m_Logger )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
