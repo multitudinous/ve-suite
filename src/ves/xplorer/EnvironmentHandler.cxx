@@ -112,12 +112,6 @@ EnvironmentHandler::EnvironmentHandler()
     displaySettings( 0 ),
     desktopWidth( 0 ),
     desktopHeight( 0 ),
-    _frustumLeft( 0 ),
-    _frustumRight( 0 ),
-    _frustumTop( 0 ),
-    _frustumBottom( 0 ),
-    _frustumNear( 0 ),
-    _frustumFar( 0 ),
     m_lodScale( 0.01 ),
     framerate( 0 )
 {
@@ -427,17 +421,6 @@ void EnvironmentHandler::SetWindowDimensions( unsigned int w, unsigned int h )
     _windowHeight = h;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnvironmentHandler::SetFrustumValues(
-    float _left, float _right, float _bottom, float _top, float _near, float _far )
-{
-    _frustumLeft = _left;
-    _frustumRight = _right;
-    _frustumBottom = _bottom;
-    _frustumTop = _top;
-    _frustumNear = _near;
-    _frustumFar = _far;
-}
-////////////////////////////////////////////////////////////////////////////////
 unsigned int EnvironmentHandler::GetWindowWidth()
 {
     return _windowWidth;
@@ -460,13 +443,7 @@ float EnvironmentHandler::GetFrameRate()
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::PostFrameUpdate()
 {
-    //Update the values in trackball
-    device::KeyboardMouse* keyboardMouse =
-        DeviceHandler::instance()->GetDevice(
-            device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
-    keyboardMouse->SetFrustumValues(
-        _frustumLeft, _frustumRight, _frustumBottom,
-        _frustumTop, _frustumNear, _frustumFar );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::SeedPoints* EnvironmentHandler::GetSeedPoints()

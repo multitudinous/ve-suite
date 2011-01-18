@@ -142,15 +142,6 @@ public:
     ///\param height The window height
     void SetWindowDimensions( unsigned int width, unsigned int height );
 
-    ///Set up the frustum values
-    ///\param _left
-    ///\param _right
-    ///\param _top
-    ///\param _bottom
-    ///\param _near
-    ///\param _far
-    void SetFrustumValues( float _left, float _right, float _bottom, float _top, float _near, float _far );
-
     ///Get the window width
     unsigned int GetWindowWidth();
 
@@ -222,13 +213,6 @@ private:
 
     int _windowWidth;///<Window width.
     int _windowHeight;///<Window height.
-
-    float _frustumLeft;///<Left frustum.
-    float _frustumRight;///<Right frustum.
-    float _frustumTop;///<Top frustum.
-    float _frustumBottom;///<Bottom frustum.
-    float _frustumNear;///<Near frustum.
-    float _frustumFar;///<Far frustum.
 
     double m_lodScale;///<Global geometry LOD scale
     float framerate;///<Frame rate.

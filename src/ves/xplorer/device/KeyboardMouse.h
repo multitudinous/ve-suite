@@ -120,16 +120,6 @@ public:
     ///\param h Set the height of the window
     void SetWindowValues( unsigned int w, unsigned int h );
 
-    ///Set the frustrum values
-    ///\param l
-    ///\param r
-    ///\param t
-    ///\param b
-    ///\param n
-    ///\param f
-    void SetFrustumValues(
-        double l, double r, double b, double t, double n, double f );
-
     ///Fit the world bounding volume into the viewing frustum
     void FrameAll();
 
@@ -296,9 +286,6 @@ private:
 
     ///Aspect ratio of window
     double mAspectRatio;
-
-    ///Field of view in the y direction
-    double mFoVZ;
 
     ///The left frustum value
     double mLeftFrustum;

@@ -165,7 +165,6 @@ KeyboardMouse::KeyboardMouse()
 #endif
 
     mAspectRatio( 0.0 ),
-    mFoVZ( 0.0 ),
 
     mLeftFrustum( 0.0 ),
     mRightFrustum( 0.0 ),
@@ -637,23 +636,6 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
         static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetFrustumValues(
-    double l, double r, double b, double t, double n, double f )
-{
-    mLeftFrustum = l;
-    mRightFrustum = r;
-    mBottomFrustum = b;
-    mTopFrustum = t;
-    mNearFrustum = n;
-    mFarFrustum = f;
-
-    double topAngle = atan( mTopFrustum / mNearFrustum );
-    double tempDiv = fabs( mBottomFrustum ) / mNearFrustum;
-    double bottomAngle = atan( tempDiv );
-
-    mFoVZ = topAngle + bottomAngle;
-}
-////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
 {
     osg::Group* activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
@@ -706,7 +688,7 @@ void KeyboardMouse::FrameAll()
 
         //Calculate the distance we need to move along the center vector to fit
         //the bounding sphere of all the geometry inside the viewing frustum
-        double theta = mFoVZ * 0.5;
+        double theta = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ() * 0.5;
         if( mAspectRatio < 1.0 )
         {
             theta *= mAspectRatio;
@@ -1538,7 +1520,7 @@ void KeyboardMouse::Pan( double dx, double dz )
     */
 
     double d = mCenterPoint->mData[ 1 ];
-    double theta = mFoVZ * 0.5 ;
+    double theta = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ() * 0.5 ;
     double b = 2.0 * d * tan( theta );
     double dwx = dx * b;
     double dwz =  dz * b;
@@ -1748,6 +1730,7 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
     //If current display is invalid, return
     if( display == vrj::DisplayPtr() )
     {
+        m_sceneManager.SetCurrentGLTransformInfo( scenegraph::GLTransformInfoPtr() );
         return false;
     }
 
@@ -1761,6 +1744,7 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
         m_currentGLTransformInfo = m_sceneManager.GetGLTransformInfo( viewport );
         if( m_currentGLTransformInfo == scenegraph::GLTransformInfoPtr() )
         {
+            m_sceneManager.SetCurrentGLTransformInfo( scenegraph::GLTransformInfoPtr() );
             return false;
         }
 
@@ -1773,6 +1757,7 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
 
         if( isKeyEvent )
         {
+            m_sceneManager.SetCurrentGLTransformInfo( m_currentGLTransformInfo );
             return true;
         }
 
@@ -1790,11 +1775,12 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
         {
             sceneManipulator->SetCurrentGLTransformInfo(
                 m_currentGLTransformInfo );
-
+            m_sceneManager.SetCurrentGLTransformInfo( m_currentGLTransformInfo );
             return true;
         }
     }
 
+    m_sceneManager.SetCurrentGLTransformInfo( scenegraph::GLTransformInfoPtr() );
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
