@@ -55,7 +55,6 @@ export CTAGS_SRC_DIR=${CTAGS_BASE_DIR}/ctags_5.8
 export CTAGS_BUILD_DIR=${CTAGS_BASE_DIR}/ctags_5.8_build
 export CTAGS_INSTALL_DIR=${CTAGS_BASE_DIR}/ctags_5.8_install
 export PATH=${CTAGS_INSTALL_DIR}/bin:${PATH}
-ctagscmd="ctags -RI --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ ."
 
 # --- Set flagpoll paths --- #
 export FLAGPOLL_BASE_DIR=${DEPS_BASE_DIR}/flagpoll
@@ -189,25 +188,93 @@ export XERCES_INSTALL_DIR=${XERCES_BASE_DIR}/xerces_3.1.1_install
 export PATH=${XERCES_INSTALL_DIR}/bin:${PATH}
 export DYLD_LIBRARY_PATH=${XERCES_INSTALL_DIR}/lib:${DYLD_LIBRARY_PATH}
 
-# --- Set build aliases --- #
-alias buildacetao=" \
-  cd ${ACETAO_BUILD_DIR}; \
+# --- Set build functions --- #
+function usage()
+{
+ echo "usage: $0 options
+
+  This function builds the named package.
+
+  OPTIONS:
+    -h      Show this message
+    -c      Clean the build directory before building
+    -u      Update the source code before building
+    -j      Build with multithreading enabled
+            Requires argument to specify number of threads to use
+    -t      Create tag file with exuberant ctags" > /dev/stdout
+}
+
+function argscase()
+{
+  declare -a args=( 0 0 1 0 )
+  while getopts "hcutj:" opts
+  do
+    case $opts in
+      h)
+        usage
+        kill -SIGINT $$
+        ;;
+      c)
+        args[0]=1
+        ;;
+      u)
+        args[1]=1
+        ;;
+      j)
+        if [[ $OPTARG =~ [^1-8] ]] ; then
+          echo "Error: '$OPTARG' not a valid number." > /dev/stdout;
+          usage;
+          kill -SIGINT $$;
+        fi
+        args[2]=$OPTARG
+        ;;
+      t)
+        args[3]=1
+        ;;
+      \?)
+        echo "Invalid option: $OPTARG"
+        usage
+        kill -SIGINT $$
+        ;;
+      :)
+        echo "Option $OPTARG requires an argument."
+        usage
+        kill -SIGINT $$
+        ;;
+    esac
+  done
+  shift $(($OPTIND - 1))
+  echo "${args[@]}"
+}
+
+function ctags()
+{
+  ${CTAGS_INSTALL_DIR}/bin/ctags -RI --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ .
+  rm ${VIM_CONFIG_DIR}/tags/${1}
+  mv tags ${VIM_CONFIG_DIR}/tags/${1}
+}
+
+function acetao()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${ACETAO_BUILD_DIR}/*; fi
+  cd ${ACETAO_BUILD_DIR}
   ${ACETAO_SRC_DIR}/configure \
     --disable-tao-tests \
     --disable-tao-examples \
     --disable-ace-tests \
     --disable-ace-examples \
-    --prefix=${ACETAO_INSTALL_DIR}; \
-  make install; \
-  cd ${ACETAO_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/acetao; \
-  mv tags ${VIM_CONFIG_DIR}/tags/acetao;"
+    --prefix=${ACETAO_INSTALL_DIR}
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${ACETAO_INSTALL_DIR}/include; ctags acetao; fi
+}
 
-alias buildbdfx=" \
-  cd ${BACKDROPFX_SRC_DIR}; \
-  svn up; \
-  cd ${BACKDROPFX_BUILD_DIR}; \
+function bdfx()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${BACKDROPFX_BUILD_DIR}/*; fi
+  if [ ${args[1]} == 1 ]; then cd ${BACKDROPFX_SRC_DIR}; svn up; fi
+  cd ${BACKDROPFX_BUILD_DIR}
   cmake ${BACKDROPFX_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${BACKDROPFX_INSTALL_DIR} \
@@ -216,36 +283,34 @@ alias buildbdfx=" \
     -DBDFX_BUILD_PROTOS=ON \
     -DBDFX_BUILD_TESTS=ON \
     -DBDFX_PROFILE_ENABLE=OFF \
-    -DBulletInstallType=\"Alternate Install Location\" \
-    -DOSGInstallType=\"Alternate Install Location\" \
+    -DBulletInstallType="Alternate Install Location" \
+    -DOSGInstallType="Alternate Install Location" \
     -DBulletInstallLocation=${BULLET_INSTALL_DIR} \
     -DOSGInstallLocation=${OSG_INSTALL_DIR} \
     -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include \
     -DOSGBULLET_ROOT=${OSGBULLET_INSTALL_DIR} \
     -DOSGBULLETPLUS_ROOT=${OSGBULLETPLUS_INSTALL_DIR} \
     -DOSGEPHEMERIS_ROOT=${OSGEPHEMERIS_INSTALL_DIR} \
-    -DBoost_INCLUDE_DIR=${BOOST_INSTALL_DIR}/include; \
-  make install; \
-  cd ${BACKDROPFX_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/bdfx; \
-  mv tags ${VIM_CONFIG_DIR}/tags/bdfx;"
+    -DBoost_INCLUDE_DIR=${BOOST_INSTALL_DIR}/include
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${BACKDROPFX_INSTALL_DIR}/include; ctags bdfx; fi
+}
 
-alias buildboost=" \
-  cd ${BOOST_SRC_DIR}; \
+function boost()
+{
+  declare -a args=( `argscase "$@"` )
+  cd ${BOOST_SRC_DIR}
   bash bootstrap.sh \
-    --prefix=${BOOST_INSTALL_DIR}; \
-  ./bjam \
+    --prefix=${BOOST_INSTALL_DIR}
+  ./bjam -j${args[2]} \
     variant=release \
     link=shared \
     threading=multi \
-    install; \
-  cd ${BOOST_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/boost; \
-  mv tags ${VIM_CONFIG_DIR}/tags/boost;"
+    install
+  if [ ${args[3]} == 1 ]; then cd ${BOOST_INSTALL_DIR}/include; ctags boost; fi
+}
 
-alias buildbullet=" \
+alias bullet=" \
   cd ${BULLET_BUILD_DIR}; \
   cmake ${BULLET_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -271,7 +336,8 @@ alias buildbullet=" \
   rm ${VIM_CONFIG_DIR}/tags/bullet; \
   mv tags ${VIM_CONFIG_DIR}/tags/bullet;"
 
-alias buildcppdom=" \
+
+alias cppdom=" \
   cd ${CPPDOM_SRC_DIR}; \
   scons install \
     var_arch=x64 \
@@ -284,12 +350,12 @@ alias buildcppdom=" \
   rm ${VIM_CONFIG_DIR}/tags/cppdom; \
   mv tags ${VIM_CONFIG_DIR}/tags/cppdom;"
 
-alias buildflagpoll=" \
+alias flagpoll=" \
   cd ${FLAGPOLL_SRC_DIR}; \
   python setup.py install \
     --prefix=${FLAGPOLL_INSTALL_DIR};"
 
-alias buildgmtl=" \
+alias gmtl=" \
   cd ${GMTL_SRC_DIR}; \
   scons install \
     prefix=${GMTL_INSTALL_DIR};
@@ -298,7 +364,7 @@ alias buildgmtl=" \
   rm ${VIM_CONFIG_DIR}/tags/gmtl; \
   mv tags ${VIM_CONFIG_DIR}/tags/gmtl;"
 
-alias buildjuggler=" \
+alias juggler=" \
   cd ${JUGGLER_SRC_DIR}; \
   svn up; \
   bash autogen.sh; \
@@ -313,7 +379,7 @@ alias buildjuggler=" \
   rm ${VIM_CONFIG_DIR}/tags/juggler; \
   mv tags ${VIM_CONFIG_DIR}/tags/juggler;"
 
-alias buildosg=" \
+alias osg=" \
   cd ${OSG_BUILD_DIR}; \
   cmake ${OSG_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
