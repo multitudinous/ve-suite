@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# --- Set vim config path --- #
-export VIM_CONFIG_DIR=${HOME}/.vim
-
 # --- Set dev & deps paths --- #
 export DEV_BASE_DIR=${HOME}/dev
 export DEPS_BASE_DIR=${DEV_BASE_DIR}/deps
@@ -55,6 +52,8 @@ export CTAGS_SRC_DIR=${CTAGS_BASE_DIR}/ctags_5.8
 export CTAGS_BUILD_DIR=${CTAGS_BASE_DIR}/ctags_5.8_build
 export CTAGS_INSTALL_DIR=${CTAGS_BASE_DIR}/ctags_5.8_install
 export PATH=${CTAGS_INSTALL_DIR}/bin:${PATH}
+# --- Set path where tags will be installed --- #
+export TAGS_DIR=${HOME}/.vim/tags
 
 # --- Set flagpoll paths --- #
 export FLAGPOLL_BASE_DIR=${DEPS_BASE_DIR}/flagpoll
@@ -250,8 +249,8 @@ function argscase()
 function ctags()
 {
   ${CTAGS_INSTALL_DIR}/bin/ctags -RI --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ .
-  rm ${VIM_CONFIG_DIR}/tags/${1}
-  mv tags ${VIM_CONFIG_DIR}/tags/${1}
+  rm ${TAGS_DIR}/${1}
+  mv tags ${TAGS_DIR}/${1}
 }
 
 function bld_acetao()
