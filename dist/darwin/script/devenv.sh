@@ -200,7 +200,7 @@ function usage()
     -c      Clean the build directory before building
     -u      Update the source code before building
     -j      Build with multithreading enabled
-            Requires argument to specify number of threads to use
+            Requires argument to specify number of jobs to use
     -t      Create tag file with exuberant ctags" > /dev/stdout
 }
 
@@ -254,7 +254,7 @@ function ctags()
   mv tags ${VIM_CONFIG_DIR}/tags/${1}
 }
 
-function acetao()
+function bld_acetao()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == 1 ]; then rm -rf ${ACETAO_BUILD_DIR}/*; fi
@@ -269,7 +269,7 @@ function acetao()
   if [ ${args[3]} == 1 ]; then cd ${ACETAO_INSTALL_DIR}/include; ctags acetao; fi
 }
 
-function bdfx()
+function bld_bdfx()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == 1 ]; then rm -rf ${BACKDROPFX_BUILD_DIR}/*; fi
@@ -296,7 +296,7 @@ function bdfx()
   if [ ${args[3]} == 1 ]; then cd ${BACKDROPFX_INSTALL_DIR}/include; ctags bdfx; fi
 }
 
-function boost()
+function bld_boost()
 {
   declare -a args=( `argscase "$@"` )
   cd ${BOOST_SRC_DIR}
@@ -310,8 +310,11 @@ function boost()
   if [ ${args[3]} == 1 ]; then cd ${BOOST_INSTALL_DIR}/include; ctags boost; fi
 }
 
-alias bullet=" \
-  cd ${BULLET_BUILD_DIR}; \
+function bld_bullet()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${BULLET_BUILD_DIR}/*; fi
+  cd ${BULLET_BUILD_DIR}
   cmake ${BULLET_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${BULLET_INSTALL_DIR} \
@@ -329,76 +332,83 @@ alias bullet=" \
     -DUSE_DOUBLE_PRECISION=OFF \
     -DUSE_GLUT=OFF \
     -DUSE_GRAPHICAL_BENCHMARK=OFF \
-    -DUSE_MSVC_RUNTIME_LIBRARY_DLL=OFF; \
-  make install; \
-  cd ${BULLET_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/bullet; \
-  mv tags ${VIM_CONFIG_DIR}/tags/bullet;"
+    -DUSE_MSVC_RUNTIME_LIBRARY_DLL=OFF
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${BULLET_INSTALL_DIR}/include; ctags bullet; fi
+}
 
-
-alias cppdom=" \
-  cd ${CPPDOM_SRC_DIR}; \
-  scons install \
+function bld_cppdom()
+{
+  declare -a args=( `argscase "$@"` )
+  cd ${CPPDOM_SRC_DIR}
+  scons install -j${args[2]} \
     var_arch=x64 \
     var_type=optimized \
     var_libtype=shared \
     darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk \
-    prefix=${CPPDOM_INSTALL_DIR}; \
-  cd ${CPPDOM_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/cppdom; \
-  mv tags ${VIM_CONFIG_DIR}/tags/cppdom;"
+    prefix=${CPPDOM_INSTALL_DIR}
+  if [ ${args[3]} == 1 ]; then cd ${CPPDOM_INSTALL_DIR}/include; ctags cppdom; fi
+}
 
-alias flagpoll=" \
-  cd ${FLAGPOLL_SRC_DIR}; \
+function bld_flagpoll()
+{
+  declare -a args=( `argscase "$@"` )
+  cd ${FLAGPOLL_SRC_DIR}
   python setup.py install \
-    --prefix=${FLAGPOLL_INSTALL_DIR};"
+    --prefix=${FLAGPOLL_INSTALL_DIR}
+}
 
-alias gmtl=" \
-  cd ${GMTL_SRC_DIR}; \
-  scons install \
-    prefix=${GMTL_INSTALL_DIR};
-  cd ${GMTL_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/gmtl; \
-  mv tags ${VIM_CONFIG_DIR}/tags/gmtl;"
+function bld_gmtl()
+{
+  declare -a args=( `argscase "$@"` )
+  cd ${GMTL_SRC_DIR}
+  scons install -j${args[2]} \
+    prefix=${GMTL_INSTALL_DIR}
+  if [ ${args[3]} == 1 ]; then cd ${GMTL_INSTALL_DIR}/include; ctags gmtl; fi
+}
 
-alias juggler=" \
-  cd ${JUGGLER_SRC_DIR}; \
-  svn up; \
-  bash autogen.sh; \
-  cd ${JUGGLER_BUILD_DIR}; \
+function bld_juggler()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${JUGGLER_BUILD_DIR}/*; fi
+  if [ ${args[1]} == 1 ]; then cd ${JUGGLER_SRC_DIR}; svn up; fi
+  bash autogen.sh
+  cd ${JUGGLER_BUILD_DIR}
   ${JUGGLER_SRC_DIR}/configure.pl \
     --with-boost=${BOOST_INSTALL_DIR} \
     --with-boost-includes=${BOOST_INSTALL_DIR}/include \
-    --prefix=${JUGGLER_INSTALL_DIR}; \
-  make install; \
-  cd ${JUGGLER_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/juggler; \
-  mv tags ${VIM_CONFIG_DIR}/tags/juggler;"
+    --prefix=${JUGGLER_INSTALL_DIR}
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${JUGGLER_INSTALL_DIR}/include; ctags juggler; fi
+}
 
-alias osg=" \
-  cd ${OSG_BUILD_DIR}; \
+function bld_osg()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${OSG_BUILD_DIR}/*; fi
+  if [ ${args[1]} == 1 ]; then cd ${OSG_SRC_DIR}; svn up; fi
+  cd ${OSG_BUILD_DIR}
   cmake ${OSG_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${OSG_INSTALL_DIR} \
     -DCMAKE_OSX_ARCHITECTURES=x86_64 \
     -DOSG_WINDOWING_SYSTEM=Cocoa
-  make install; \
-  cd ${OSG_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/osg; \
-  mv tags ${VIM_CONFIG_DIR}/tags/osg;"
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${OSG_INSTALL_DIR}/include; ctags osg; fi
+}
 
-alias buildosgaudio=" \
-"
+function bld_osgaudio()
+{
+  #declare -a args=( `argscase "$@"` )
+  #if [ ${args[3]} == 1 ]; then cd ${OSGAUDIO_INSTALL_DIR}/include; ctags osgaudio; fi
+}
 
-alias buildosgbullet=" \
-  cd ${OSGBULLET_SRC_DIR}; \
-  svn up; \
-  cd ${OSGBULLET_BUILD_DIR}; \
+function bld_osgbullet()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${OSGBULLET_BUILD_DIR}/*; fi
+  if [ ${args[1]} == 1 ]; then cd ${OSGBULLET_SRC_DIR}; svn up; fi
+  cd ${OSGBULLET_BUILD_DIR}
   cmake ${OSGBULLET_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${OSGBULLET_INSTALL_DIR} \
@@ -407,21 +417,21 @@ alias buildosgbullet=" \
     -DOSGBULLET_BUILD_EXAMPLES=OFF \
     -DOSGBULLET_BUILD_TESTS=OFF \
     -DOSGBULLET_USE_DOUBLE_PRECISION=OFF \
-    -DBulletInstallType=\"Alternate Install Location\" \
-    -DOSGInstallType=\"Alternate Install Location\" \
+    -DBulletInstallType="Alternate Install Location" \
+    -DOSGInstallType="Alternate Install Location" \
     -DBulletInstallLocation=${BULLET_INSTALL_DIR} \
     -DOSGInstallLocation=${OSG_INSTALL_DIR} \
-    -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include; \
-  make install; \
-  cd ${OSGBULLET_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/osgbullet; \
-  mv tags ${VIM_CONFIG_DIR}/tags/osgbullet;"
+    -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${OSGBULLET_INSTALL_DIR}/include; ctags osgbullet; fi
+}
 
-alias buildosgbulletplus=" \
-  cd ${OSGBULLETPLUS_SRC_DIR}; \
-  svn up; \
-  cd ${OSGBULLETPLUS_BUILD_DIR}; \
+function bld_osgbulletplus()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${OSGBULLETPLUS_BUILD_DIR}/*; fi
+  if [ ${args[1]} == 1 ]; then cd ${OSGBULLETPLUS_SRC_DIR}; svn up; fi
+  cd ${OSGBULLETPLUS_BUILD_DIR}
   cmake ${OSGBULLETPLUS_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${OSGBULLETPLUS_INSTALL_DIR} \
@@ -431,89 +441,99 @@ alias buildosgbulletplus=" \
     -DOSGBULLETPLUS_BUILD_TESTS=OFF \
     -DOSGBULLETPLUS_USE_DOUBLE_PRECISION=OFF \
     -DOSGBULLET_ROOT=${OSGBULLET_INSTALL_DIR} \
-    -DBulletInstallType=\"Alternate Install Location\" \
-    -DOSGInstallType=\"Alternate Install Location\" \
+    -DBulletInstallType="Alternate Install Location" \
+    -DOSGInstallType="Alternate Install Location" \
     -DBulletInstallLocation=${BULLET_INSTALL_DIR} \
     -DOSGInstallLocation=${OSG_INSTALL_DIR} \
-    -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include; \
-  make install; \
-  cd ${OSGBULLETPLUS_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/osgbulletplus; \
-  mv tags ${VIM_CONFIG_DIR}/tags/osgbulletplus;"
+    -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${OSGBULLETPLUS_INSTALL_DIR}/include; ctags osgbulletplus; fi
+}
 
-alias buildosgephemeris=" \
-  cd ${OSGEPHEMERIS_SRC_DIR}; \
-  svn up; \
-  cd ${OSGEPHEMERIS_BUILD_DIR}; \
+function bld_osgephemeris()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${OSGEPHEMERIS_BUILD_DIR}/*; fi
+  if [ ${args[1]} == 1 ]; then cd ${OSGEPHEMERIS_SRC_DIR}; svn up; fi
+  cd ${OSGEPHEMERIS_BUILD_DIR}
   cmake ${OSGEPHEMERIS_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_INSTALL_PREFIX=${OSGEPHEMERIS_INSTALL_DIR}; \
-  make install; \
-  cd ${OSGEPHEMERIS_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/osgephemeris; \
-  mv tags ${VIM_CONFIG_DIR}/tags/osgephemeris;"
+    -DCMAKE_INSTALL_PREFIX=${OSGEPHEMERIS_INSTALL_DIR}
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${OSGEPHEMERIS_INSTALL_DIR}/include; ctags osgephemeris; fi
+}
 
-alias buildosgworks=" \
-  cd ${OSGWORKS_SRC_DIR}; \
-  svn up; \
-  cd ${OSGWORKS_BUILD_DIR}; \
+function bld_osgworks()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${OSGWORKS_BUILD_DIR}/*; fi
+  if [ ${args[1]} == 1 ]; then cd ${OSGWORKS_SRC_DIR}; svn up; fi
+  cd ${OSGWORKS_BUILD_DIR}
   cmake ${OSGWORKS_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${OSGWORKS_INSTALL_DIR} \
     -DCMAKE_OSX_ARCHITECTURES=x86_64 \
-    -DOSGInstallType=\"Alternate Install Location\" \
+    -DOSGInstallType="Alternate Install Location" \
     -DOSGInstallLocation=${OSG_INSTALL_DIR} \
-    -DBoost_INCLUDE_DIR=${BOOST_INSTALL_DIR}/include; \
-  make install; \
-  cd ${OSGWORKS_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/osgworks; \
-  mv tags ${VIM_CONFIG_DIR}/tags/osgworks;"
+    -DBoost_INCLUDE_DIR=${BOOST_INSTALL_DIR}/include
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${OSGWORKS_INSTALL_DIR}/include; ctags osgworks; fi
+}
 
-alias buildpoco=" \
-  cd ${POCO_BUILD_DIR}; \
+function bld_poco()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${POCO_BUILD_DIR}/*; fi
+  cd ${POCO_BUILD_DIR}
   ${POCO_SRC_DIR}/configure \
     --no-tests \
     --no-samples \
     --omit=Data/MySQL \
     --config=Darwin64 \
-    --prefix=${POCO_INSTALL_DIR}; \
-  make install; \
-  cd ${POCO_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/poco; \
-  mv tags ${VIM_CONFIG_DIR}/tags/poco;"
+    --prefix=${POCO_INSTALL_DIR}
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${POCO_INSTALL_DIR}/include; ctags poco; fi
+}
 
-alias buildscons=" \
-  cd ${SCONS_SRC_DIR}; \
+function bld_scons()
+{
+  declare -a args=( `argscase "$@"` )
+  cd ${SCONS_SRC_DIR}
   python setup.py install \
-    --prefix=${SCONS_INSTALL_DIR};"
+    --prefix=${SCONS_INSTALL_DIR}
+}
 
-alias buildvtk=" \
-  cd ${VTK_BUILD_DIR}; \
+function bld_ves()
+{
+  #declare -a args=( `argscase "$@"` )
+  #if [ ${args[3]} == 1 ]; then cd ${VES_INSTALL_DIR}/include; ctags ves; fi
+}
+
+function bld_vtk()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${VTK_BUILD_DIR}/*; fi
+  cd ${VTK_BUILD_DIR}
   cmake ${VTK_SRC_DIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${VTK_INSTALL_DIR} \
     -DBUILD_SHARED_LIBS=ON \
     -DBUILD_TESTING=OFF \
-    -DVTK_USE_PARALLEL=ON; \
-  make install; \
-  cd ${VTK_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/vtk; \
-  mv tags ${VIM_CONFIG_DIR}/tags/vtk;"
+    -DVTK_USE_PARALLEL=ON
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${VTK_INSTALL_DIR}/include; ctags vtk; fi
+}
 
-alias buildxerces=" \
-  cd ${XERCES_BUILD_DIR}; \
+function bld_xerces()
+{
+  declare -a args=( `argscase "$@"` )
+  if [ ${args[0]} == 1 ]; then rm -rf ${XERCES_BUILD_DIR}/*; fi
+  cd ${XERCES_BUILD_DIR}
   ${XERCES_SRC_DIR}/configure \
-    CFLAGS=\"-arch x86_64\" \
-    CXXFLAGS=\"-arch x86_64\" \
-    --prefix=${XERCES_INSTALL_DIR}; \
-  make install; \
-  cd ${XERCES_INSTALL_DIR}/include; \
-  $ctagscmd; \
-  rm ${VIM_CONFIG_DIR}/tags/xerces; \
-  mv tags ${VIM_CONFIG_DIR}/tags/xerces;"
+    CFLAGS="-arch x86_64" \
+    CXXFLAGS="-arch x86_64" \
+    --prefix=${XERCES_INSTALL_DIR}
+  make install -j${args[2]}
+  if [ ${args[3]} == 1 ]; then cd ${XERCES_INSTALL_DIR}/include; ctags xerces; fi
+}
 
