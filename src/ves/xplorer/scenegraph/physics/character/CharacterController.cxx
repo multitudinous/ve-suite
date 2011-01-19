@@ -53,7 +53,7 @@
 #include <osg/MatrixTransform>
 #include <osg/ShapeDrawable>
 #include <osgDB/ReadFile>
-#include <osg/AutoTransform>
+#include <osg/PositionAttitudeTransform>
 
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
@@ -162,11 +162,11 @@ void CharacterController::Initialize()
     mCharacterAnimations->setName( "Character Switch Control" );
 
     //for scaling if necessary
-    osg::ref_ptr< osg::AutoTransform > scaleDown = new osg::AutoTransform(); 
-    scaleDown->setName( "Character Auto Transform" );
+    osg::ref_ptr< osg::PositionAttitudeTransform > scaleDown = new osg::PositionAttitudeTransform(); 
+    scaleDown->setName( "Character Scale Transform" );
     scaleDown->addChild( mCharacterAnimations.get() );
-    scaleDown->setScale( 0.055 );
-    scaleDown->setRotation( osg::Quat(
+    scaleDown->setScale( osg::Vec3d( 0.055, 0.055, 0.055 ) );
+    scaleDown->setAttitude( osg::Quat(
         osg::DegreesToRadians( 180.0 ), osg::Vec3f( 0.0, 0.0, 1.0 ) ) );
 
     mMatrixTransform->addChild( scaleDown.get() );
