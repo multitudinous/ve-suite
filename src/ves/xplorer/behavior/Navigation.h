@@ -176,13 +176,13 @@ private:
     int m_currY;
     
     //These variables are needed on linux and mac to calculate mouse dx and dy
-#if !defined( VPR_OS_Windows )
+//#if !defined( VPR_OS_Windows )
     ///The previous X mouse position
     int m_prevX;
     
     ///The previous Y mouse position
     int m_prevY;
-#endif
+//#endif
     
     ///Aspect ratio of window
     double mAspectRatio;

@@ -43,14 +43,13 @@
 
 #include <ves/open/xml/CommandPtr.h>
 
-#ifdef QT_ON
 #include <boost/signals2/signal.hpp>
 #include <ves/xplorer/eventmanager/InteractionEvent.h>
-#endif // QT_ON
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
+#include <gadget/Type/DigitalData.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 #include <gadget/Event/DigitalEventInterface.h>

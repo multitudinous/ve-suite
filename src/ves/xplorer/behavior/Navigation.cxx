@@ -144,10 +144,10 @@ void Navigation::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos
     m_currX = xPos;
     m_currY = yPos;
 
-#if !defined( VPR_OS_Windows )
+//#if !defined( VPR_OS_Windows )
     m_prevX = m_currX;
     m_prevY = m_currY;
-#endif
+//#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonState )
@@ -159,18 +159,18 @@ void Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
     m_currX = xPos;
     m_currY = yPos;
     
-#if defined( VPR_OS_Windows )
+/*#if defined( VPR_OS_Windows )
     double dx = mouse_evt->getScrollDeltaX();
     double dy = mouse_evt->getScrollDeltaY();
-#else
+#else*/
     double dx = m_currX - m_prevX;
     double dy = m_currY - m_prevY;
-#endif
+//#endif
     
-#if !defined( VPR_OS_Windows )
+//#if !defined( VPR_OS_Windows )
     m_prevX = m_currX;
     m_prevY = m_currY;
-#endif
+//#endif
     
     const int& windowWidth = m_sceneManager.GetCurrentGLTransformInfo()->GetWindowWidth();
     const int& windowHeight = m_sceneManager.GetCurrentGLTransformInfo()->GetWindowHeight();
