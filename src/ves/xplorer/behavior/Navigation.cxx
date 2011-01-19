@@ -112,6 +112,8 @@ Navigation::Navigation()
     m_currY( 0 ),
     m_pickedBody( 0 ),
     m_pickConstraint( 0 ),
+    mDeltaRotation( 0.0, 0.0, 0.0, 1.0 ),
+    mDeltaTranslation( 0.0, 0.0, 0.0 ),
     mCenterPointThreshold( 0.1 ),
     mCenterPointJump( 10.0 )
 {    
@@ -119,6 +121,12 @@ Navigation::Navigation()
                       m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress1%", void( gadget::Keys, int, int, int ), &Navigation::RegisterButtonPress,
+                     m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress2%", void( gadget::Keys, int, int, int ), &Navigation::RegisterButtonPress,
+                     m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress3%", void( gadget::Keys, int, int, int ), &Navigation::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
     
     //eventmanager::EventManager::instance()->RegisterSignal(
