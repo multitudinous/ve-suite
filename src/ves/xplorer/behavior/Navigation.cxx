@@ -152,7 +152,7 @@ void Navigation::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonState )
 {
-    if( buttonState == 0 )
+    if( buttonState == 0 || buttonState&gadget::KEY_SHIFT )
     {
         return;
     }
@@ -183,12 +183,6 @@ void Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
 
     if( buttonState&gadget::BUTTON1_MASK )
     {
-        //No modifier key
-        if( buttonState&gadget::KEY_SHIFT )
-        {
-            //UpdatePointConstraint();
-        }
-        else
         {
             
             {

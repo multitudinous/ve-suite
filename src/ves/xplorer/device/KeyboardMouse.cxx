@@ -41,6 +41,7 @@
 #include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/behavior/Selection.h>
+#include <ves/xplorer/behavior/ConstraintSelection.h>
 #include <ves/xplorer/behavior/Navigation.h>
 
 #include <ves/xplorer/plugin/PluginBase.h>
@@ -145,6 +146,7 @@ KeyboardMouse::KeyboardMouse()
     Device( KEYBOARD_MOUSE ),
     m_navigationSlot( new ves::xplorer::behavior::Navigation() ),
     m_selectionSlot( new ves::xplorer::behavior::Selection() ),
+    m_constraintSelectionSlot( new ves::xplorer::behavior::ConstraintSelection() ),
     m_mouseInsideUI( true )
 {
     //mHead.init( "VJHead" );
@@ -337,23 +339,32 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     case gadget::MouseMoveEvent:
     {
+        const gadget::MouseEventPtr mouseEvt =
+            boost::static_pointer_cast< gadget::MouseEvent >( event );
+        
+        m_currX = mouseEvt->getX();
+        m_currY = mouseEvt->getY();
+        
         //Set the current GLTransfromInfo from the event
         if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
         {
             return;
+        }        
+        
+        int buttonMask = mouseEvt->getState();
+        if( buttonMask&gadget::BUTTON1_MASK )
+        {
+            //Send current Start and end points - needed for constraint selection
+            SetStartEndPoint( m_startPoint, m_endPoint );
+            m_startEndPointSignal( m_startPoint, m_endPoint );
         }
-
-        const gadget::MouseEventPtr mouseEvt =
-            boost::static_pointer_cast< gadget::MouseEvent >( event );
-
+        
         /*vprDEBUG( vesDBG, 2 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseMoveEvent"
             << mouseEvt->getButton() << " " << mouseEvt->getX() << ", " << mouseEvt->getY()
             << ", 0, " << mouseEvt->getState()
             << std::endl << vprDEBUG_FLUSH;
         // x, y, z, state (modifier mask OR'd with button mask)*/
-        //int buttonMask = mouseEvt->getState();
-        //bool test = buttonMask&gadget::BUTTON1_MASK;
         m_mouseMove( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
 
         break;

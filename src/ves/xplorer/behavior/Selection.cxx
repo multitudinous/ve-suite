@@ -155,7 +155,7 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
     m_currY = yPos;
 
     //Do not require mod key depending on what the user did
-    ClearPointConstraint();
+    //ClearPointConstraint();
     
     if( m_characterController.IsEnabled() )
     {
@@ -424,17 +424,6 @@ void Selection::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
     m_startPoint = startPoint;
     m_endPoint = endPoint;
-    return;
-    ///In quad buffered stereo this call returns a VPW matrix from a centered
-    ///view rather than from one of the eye positions.
-    osg::Matrixd inverseVPW( m_sceneManager.GetCurrentGLTransformInfo()->GetVPWMatrixOSG() );
-    inverseVPW.invert( inverseVPW );
-    startPoint = osg::Vec3d( m_currX, m_currY, 0.0 ) * inverseVPW;
-    endPoint = osg::Vec3d( m_currX, m_currY, 1.0 ) * inverseVPW;
-    
-    //std::cout << m_currX << " " << m_currY << std::endl;
-    //std::cout << "startPoint: " << startPoint << std::endl;
-    //std::cout << "endPoint: " << endPoint << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
