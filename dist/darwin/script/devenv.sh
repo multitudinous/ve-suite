@@ -190,17 +190,18 @@ export DYLD_LIBRARY_PATH=${XERCES_INSTALL_DIR}/lib:${DYLD_LIBRARY_PATH}
 # --- Set build functions --- #
 function usage()
 {
- echo "usage: $0 options
+  echo "
+    usage: $0 options
 
-  This function builds the named package.
+    This function builds the named package.
 
-  OPTIONS:
-    -h      Show this message
-    -c      Clean the build directory before building
-    -u      Update the source code before building
-    -j      Build with multithreading enabled
-            Requires argument to specify number of jobs to use
-    -t      Create tag file with exuberant ctags" > /dev/stdout
+    OPTIONS:
+      -h      Show this message
+      -c      Clean the build directory before building
+      -u      Update the source code before building
+      -j      Build with multithreading enabled
+              Requires argument to specify number of jobs (1:8) to use
+      -t      Create tag file with exuberant ctags" >&2
 }
 
 function argscase()
@@ -221,7 +222,7 @@ function argscase()
         ;;
       j)
         if [[ $OPTARG =~ [^1-8] ]] ; then
-          echo "Error: '$OPTARG' not a valid number." > /dev/stdout;
+          echo "Error: '$OPTARG' not a valid number." >&2;
           usage;
           kill -SIGINT $$;
         fi
@@ -230,13 +231,13 @@ function argscase()
       t)
         args[3]=1
         ;;
-      \?)
-        echo "Invalid option: $OPTARG"
+      ?)
+        echo "Invalid option: $OPTARG" >&2
         usage
         kill -SIGINT $$
         ;;
       :)
-        echo "Option $OPTARG requires an argument."
+        echo "Option $OPTARG requires an argument." >&2
         usage
         kill -SIGINT $$
         ;;
@@ -398,7 +399,7 @@ function bld_osg()
 
 function bld_osgaudio()
 {
-  #declare -a args=( `argscase "$@"` )
+  declare -a args=( `argscase "$@"` )
   #if [ ${args[3]} == 1 ]; then cd ${OSGAUDIO_INSTALL_DIR}/include; ctags osgaudio; fi
 }
 
@@ -504,7 +505,7 @@ function bld_scons()
 
 function bld_ves()
 {
-  #declare -a args=( `argscase "$@"` )
+  declare -a args=( `argscase "$@"` )
   #if [ ${args[3]} == 1 ]; then cd ${VES_INSTALL_DIR}/include; ctags ves; fi
 }
 
