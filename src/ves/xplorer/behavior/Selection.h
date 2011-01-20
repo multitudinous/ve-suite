@@ -45,7 +45,6 @@
 
 // --- Boost includes --- //
 #include <boost/signals2/signal.hpp>
-#include <ves/xplorer/eventmanager/InteractionEvent.h>
 
 // --- Bullet Includes --- //
 class btRigidBody;
