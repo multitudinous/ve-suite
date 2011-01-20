@@ -205,13 +205,13 @@ function usage()
 
     OPTIONS:
       -h      Show this message
-      -u      Update the source code before building
-      -c      Clean the build directory before building
+      -u      Update the source code
+      -c      Clean the build directory
       -p      Execute prebuild script, e.g., cmake, configure, and autogen
       -b      Build
       -j      Build with multithreading enabled
               Requires argument to specify number of jobs (1:8) to use
-	  -d      Create disk image containing install files for package
+      -d      Create disk image containing install files for package
       -t      Create tag file with exuberant ctags" >&2
 }
 
@@ -245,9 +245,9 @@ function argscase()
         fi
         args[4]=$OPTARG
         ;;
-	  d)
-	    args[5]="d"
-		;;
+      d)
+        args[5]="d"
+        ;;
       t)
         args[6]="t"
         ;;
@@ -277,13 +277,13 @@ function ctags()
   mv tags ${TAGS_DIR}/${1}
 }
 
-function bld_acetao()
+function pkg_acetao()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${ACETAO_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${ACETAO_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${ACETAO_BUILD_DIR};
+    cd ${ACETAO_BUILD_DIR};
     ${ACETAO_SRC_DIR}/configure \
       --disable-tao-tests \
       --disable-tao-examples \
@@ -292,24 +292,24 @@ function bld_acetao()
       --prefix=${ACETAO_INSTALL_DIR};
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${ACETAO_BUILD_DIR};
+    cd ${ACETAO_BUILD_DIR};
     rm -rf ${ACETAO_INSTALL_DIR}/*;
     make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${ACETAO_INSTALL_DIR}/lib/flagpoll;
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${ACETAO_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for acetao!"; fi
   if [ ${args[6]} == "t" ]; then cd ${ACETAO_INSTALL_DIR}/include; ctags acetao; fi
 }
 
-function bld_bdfx()
+function pkg_bdfx()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${BACKDROPFX_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${BACKDROPFX_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${BACKDROPFX_BUILD_DIR};
+    cd ${BACKDROPFX_BUILD_DIR};
     cmake ${BACKDROPFX_SRC_DIR} \
       -DCMAKE_BUILD_TYPE=RelWithDebInfo \
       -DCMAKE_INSTALL_PREFIX=${BACKDROPFX_INSTALL_DIR} \
@@ -329,29 +329,29 @@ function bld_bdfx()
       -DBoost_INCLUDE_DIR=${BOOST_INSTALL_DIR}/include;
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${BACKDROPFX_BUILD_DIR};
+    cd ${BACKDROPFX_BUILD_DIR};
     rm -rf ${BACKDROPFX_INSTALL_DIR}/*;
     make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${BACKDROPFX_INSTALL_DIR}/lib/flagpoll;
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${BACKDROPFX_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for bdfx!"; fi
   if [ ${args[6]} == "t" ]; then cd ${BACKDROPFX_INSTALL_DIR}/include; ctags bdfx; fi
 }
 
-function bld_boost()
+function pkg_boost()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${BOOST_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then echo "Currently cannot use build directory for boost!"; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${BOOST_SRC_DIR};
+    cd ${BOOST_SRC_DIR};
     bash bootstrap.sh \
       --prefix=${BOOST_INSTALL_DIR};
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${BOOST_SRC_DIR};
+    cd ${BOOST_SRC_DIR};
     rm -rf ${BOOST_INSTALL_DIR}/*;
     ./bjam \
       variant=release \
@@ -364,117 +364,117 @@ function bld_boost()
   if [ ${args[6]} == "t" ]; then cd ${BOOST_INSTALL_DIR}/include; ctags boost; fi
 }
 
-function bld_bullet()
+function pkg_bullet()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${BULLET_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${BULLET_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${BULLET_BUILD_DIR};
-	cmake ${BULLET_SRC_DIR} \
-	  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	  -DCMAKE_INSTALL_PREFIX=${BULLET_INSTALL_DIR} \
-	  -DINCLUDE_INSTALL_DIR=${BULLET_INSTALL_DIR}/include \
-	  -DLIB_DESTINATION=${BULLET_INSTALL_DIR}/lib \
-	  -DPKGCONFIG_INSTALL_PREFIX=${BULLET_INSTALL_DIR}/pkgconfig \
-	  -DBUILD_CPU_DEMOS=OFF \
-	  -DBUILD_DEMOS=OFF \
-	  -DBUILD_EXTRAS=ON \
-	  -DBUILD_MINICL_OPENCL_DEMOS=OFF \
-	  -DBUILD_UNIT_TESTS=OFF \
-	  -DINSTALL_EXTRA_LIBS=ON \
-	  -DINSTALL_LIBS=ON \
-	  -DUSE_CUSTOM_VECTOR_MATH=OFF \
-	  -DUSE_DOUBLE_PRECISION=OFF \
-	  -DUSE_GLUT=OFF \
-	  -DUSE_GRAPHICAL_BENCHMARK=OFF \
-	  -DUSE_MSVC_RUNTIME_LIBRARY_DLL=OFF;
+    cd ${BULLET_BUILD_DIR};
+    cmake ${BULLET_SRC_DIR} \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_INSTALL_PREFIX=${BULLET_INSTALL_DIR} \
+      -DINCLUDE_INSTALL_DIR=${BULLET_INSTALL_DIR}/include \
+      -DLIB_DESTINATION=${BULLET_INSTALL_DIR}/lib \
+      -DPKGCONFIG_INSTALL_PREFIX=${BULLET_INSTALL_DIR}/pkgconfig \
+      -DBUILD_CPU_DEMOS=OFF \
+      -DBUILD_DEMOS=OFF \
+      -DBUILD_EXTRAS=ON \
+      -DBUILD_MINICL_OPENCL_DEMOS=OFF \
+      -DBUILD_UNIT_TESTS=OFF \
+      -DINSTALL_EXTRA_LIBS=ON \
+      -DINSTALL_LIBS=ON \
+      -DUSE_CUSTOM_VECTOR_MATH=OFF \
+      -DUSE_DOUBLE_PRECISION=OFF \
+      -DUSE_GLUT=OFF \
+      -DUSE_GRAPHICAL_BENCHMARK=OFF \
+      -DUSE_MSVC_RUNTIME_LIBRARY_DLL=OFF;
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${BULLET_BUILD_DIR};
-	rm -rf ${BULLET_INSTALL_DIR}/*;
-	make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist ${BULLET_INSTALL_DIR}/lib/flagpoll;
+    cd ${BULLET_BUILD_DIR};
+    rm -rf ${BULLET_INSTALL_DIR}/*;
+    make install -j${args[4]};
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist ${BULLET_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for bullet!"; fi
   if [ ${args[6]} == "t" ]; then cd ${BULLET_INSTALL_DIR}/include; ctags bullet; fi
 }
 
-function bld_cppdom()
+function pkg_cppdom()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${CPPDOM_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then echo "Currently cannot use build directory for cppdom!"; fi
   if [ ${args[2]} == "p" ]; then echo "Currently no prebuild generation script for cppdom!"; fi
   if [ ${args[3]} == "b" ]; then
-	cd ${CPPDOM_SRC_DIR};
-	rm -rf ${CPPDOM_INSTALL_DIR}/*;
-	scons install -j${args[4]} \
-	  var_arch=x64 \
-	  var_type=optimized \
-	  var_libtype=shared \
-	  darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk \
-	  prefix=${CPPDOM_INSTALL_DIR};
+    cd ${CPPDOM_SRC_DIR};
+    rm -rf ${CPPDOM_INSTALL_DIR}/*;
+    scons install -j${args[4]} \
+      var_arch=x64 \
+      var_type=optimized \
+      var_libtype=shared \
+      darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk \
+      prefix=${CPPDOM_INSTALL_DIR};
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for cppdom!"; fi
   if [ ${args[6]} == "t" ]; then cd ${CPPDOM_INSTALL_DIR}/include; ctags cppdom; fi
 }
 
-function bld_flagpoll()
+function pkg_flagpoll()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${FLAGPOLL_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then echo "Currently cannot use build directory for flagpoll!"; fi
   if [ ${args[2]} == "p" ]; then echo "Currently no prebuild generation script for flagpoll!"; fi
   if [ ${args[3]} == "b" ]; then
-	cd ${FLAGPOLL_SRC_DIR};
-	rm -rf ${FLAGPOLL_INSTALL_DIR}/*;
-	python setup.py install \
-	  --prefix=${FLAGPOLL_INSTALL_DIR}; #Look into adding multithreading support with ${args[4]}
+    cd ${FLAGPOLL_SRC_DIR};
+    rm -rf ${FLAGPOLL_INSTALL_DIR}/*;
+    python setup.py install \
+      --prefix=${FLAGPOLL_INSTALL_DIR}; #Look into adding multithreading support with ${args[4]}
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for flagpoll!"; fi
   if [ ${args[6]} == "t" ]; then echo "No reason to generate ctags for flagpoll!"; fi
 }
 
-function bld_gmtl()
+function pkg_gmtl()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${GMTL_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then echo "Currently cannot use build directory for gmtl!"; fi
   if [ ${args[2]} == "p" ]; then echo "Currently no prebuild generation script for gmtl!"; fi
   if [ ${args[3]} == "b" ]; then
-	cd ${GMTL_SRC_DIR};
-	rm -rf ${GMTL_INSTALL_DIR}/*;
-	scons install -j${args[4]} \
-	  prefix=${GMTL_INSTALL_DIR};
+    cd ${GMTL_SRC_DIR};
+    rm -rf ${GMTL_INSTALL_DIR}/*;
+    scons install -j${args[4]} \
+      prefix=${GMTL_INSTALL_DIR};
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for gmtl!"; fi
   if [ ${args[6]} == "t" ]; then cd ${GMTL_INSTALL_DIR}/include; ctags gmtl; fi
 }
 
-function bld_juggler()
+function pkg_juggler()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${JUGGLER_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${JUGGLER_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${JUGGLER_SRC_DIR};
-	find ./ -type f -name "aclocal.m4" -exec rm -rf {} \;
-	bash autogen.sh;
-	cd ${JUGGLER_BUILD_DIR};
-	${JUGGLER_SRC_DIR}/configure.pl \
-	  --with-boost=${BOOST_INSTALL_DIR} \
-	  --with-boost-includes=${BOOST_INSTALL_DIR}/include \
-	  --prefix=${JUGGLER_INSTALL_DIR};
+    cd ${JUGGLER_SRC_DIR};
+    find ./ -type f -name "aclocal.m4" -exec rm -rf {} \;
+    bash autogen.sh;
+    cd ${JUGGLER_BUILD_DIR};
+    ${JUGGLER_SRC_DIR}/configure.pl \
+      --with-boost=${BOOST_INSTALL_DIR} \
+      --with-boost-includes=${BOOST_INSTALL_DIR}/include \
+      --prefix=${JUGGLER_INSTALL_DIR};
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${JUGGLER_BUILD_DIR};
-	rm -rf ${JUGGLER_INSTALL_DIR}/*;
+    cd ${JUGGLER_BUILD_DIR};
+    rm -rf ${JUGGLER_INSTALL_DIR}/*;
     make build install; #-j${args[4]} #Sometimes the juggler build fails with multithreading
   fi
   #To do: Create dmg installer for package
@@ -482,273 +482,272 @@ function bld_juggler()
   if [ ${args[6]} == "t" ]; then cd ${JUGGLER_INSTALL_DIR}/include; ctags juggler; fi
 }
 
-function bld_osg()
+function pkg_osg()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${OSG_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${OSG_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${OSG_BUILD_DIR};
-	cmake ${OSG_SRC_DIR} \
-	  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	  -DCMAKE_INSTALL_PREFIX=${OSG_INSTALL_DIR} \
-	  -DCMAKE_OSX_ARCHITECTURES=x86_64 \
-	  -DOSG_WINDOWING_SYSTEM=Cocoa;
+    cd ${OSG_BUILD_DIR};
+    cmake ${OSG_SRC_DIR} \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_INSTALL_PREFIX=${OSG_INSTALL_DIR} \
+      -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+      -DOSG_WINDOWING_SYSTEM=Cocoa;
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${OSG_BUILD_DIR};
-	rm -rf ${OSG_INSTALL_DIR}/*;
-	make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${OSG_INSTALL_DIR}/lib/flagpoll;
+    cd ${OSG_BUILD_DIR};
+    rm -rf ${OSG_INSTALL_DIR}/*;
+    make install -j${args[4]};
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${OSG_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for osg!"; fi
   if [ ${args[6]} == "t" ]; then cd ${OSG_INSTALL_DIR}/include; ctags osg; fi
 }
 
-function bld_osgaudio()
+function pkg_osgaudio()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${OSGAUDIO_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${OSGAUDIO_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${OSGAUDIO_BUILD_DIR};
-	#cmake
+    cd ${OSGAUDIO_BUILD_DIR};
+    #cmake
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${OSGAUDIO_BUILD_DIR};
-	rm -rf ${OSGAUDIO_INSTALL_DIR}/*;
-	make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${OSGAUDIO_INSTALL_DIR}/lib/flagpoll;
+    cd ${OSGAUDIO_BUILD_DIR};
+    rm -rf ${OSGAUDIO_INSTALL_DIR}/*;
+    make install -j${args[4]};
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${OSGAUDIO_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for osgaudio!"; fi
   if [ ${args[6]} == "t" ]; then cd ${OSGAUDIO_INSTALL_DIR}/include; ctags osgaudio; fi
 }
 
-function bld_osgbullet()
+function pkg_osgbullet()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${OSGBULLET_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${OSGBULLET_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${OSGBULLET_BUILD_DIR};
-	cmake ${OSGBULLET_SRC_DIR} \
-	  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	  -DCMAKE_INSTALL_PREFIX=${OSGBULLET_INSTALL_DIR} \
-	  -DBUILD_SHARED_LIBS=ON \
-	  -DOSGBULLET_BUILD_APPLICATIONS=ON \
-	  -DOSGBULLET_BUILD_EXAMPLES=OFF \
-	  -DOSGBULLET_BUILD_TESTS=OFF \
-	  -DOSGBULLET_USE_DOUBLE_PRECISION=OFF \
-	  -DBulletInstallType="Alternate Install Location" \
-	  -DOSGInstallType="Alternate Install Location" \
-	  -DBulletInstallLocation=${BULLET_INSTALL_DIR} \
-	  -DOSGInstallLocation=${OSG_INSTALL_DIR} \
-	  -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include;
+    cd ${OSGBULLET_BUILD_DIR};
+    cmake ${OSGBULLET_SRC_DIR} \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_INSTALL_PREFIX=${OSGBULLET_INSTALL_DIR} \
+      -DBUILD_SHARED_LIBS=ON \
+      -DOSGBULLET_BUILD_APPLICATIONS=ON \
+      -DOSGBULLET_BUILD_EXAMPLES=OFF \
+      -DOSGBULLET_BUILD_TESTS=OFF \
+      -DOSGBULLET_USE_DOUBLE_PRECISION=OFF \
+      -DBulletInstallType="Alternate Install Location" \
+      -DOSGInstallType="Alternate Install Location" \
+      -DBulletInstallLocation=${BULLET_INSTALL_DIR} \
+      -DOSGInstallLocation=${OSG_INSTALL_DIR} \
+      -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include;
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${OSGBULLET_BUILD_DIR};
-	rm -rf ${OSGBULLET_INSTALL_DIR}/*;
-	make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${OSGBULLET_INSTALL_DIR}/lib/flagpoll;
+    cd ${OSGBULLET_BUILD_DIR};
+    rm -rf ${OSGBULLET_INSTALL_DIR}/*;
+    make install -j${args[4]};
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${OSGBULLET_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for osgbullet!"; fi
   if [ ${args[6]} == "t" ]; then cd ${OSGBULLET_INSTALL_DIR}/include; ctags osgbullet; fi
 }
 
-function bld_osgbulletplus()
+function pkg_osgbulletplus()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${OSGBULLETPLUS_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${OSGBULLETPLUS_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${OSGBULLETPLUS_BUILD_DIR};
-	cmake ${OSGBULLETPLUS_SRC_DIR} \
-	  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	  -DCMAKE_INSTALL_PREFIX=${OSGBULLETPLUS_INSTALL_DIR} \
-	  -DOSGBULLETPLUS_BUILD_APPLICATIONS=ON \
-	  -DOSGBULLETPLUS_BUILD_EXAMPLES=OFF \
-	  -DOSGBULLETPLUS_BUILD_PROTOS=OFF \
-	  -DOSGBULLETPLUS_BUILD_TESTS=OFF \
-	  -DOSGBULLETPLUS_USE_DOUBLE_PRECISION=OFF \
-	  -DOSGBULLET_ROOT=${OSGBULLET_INSTALL_DIR} \
-	  -DBulletInstallType="Alternate Install Location" \
-	  -DOSGInstallType="Alternate Install Location" \
-	  -DBulletInstallLocation=${BULLET_INSTALL_DIR} \
-	  -DOSGInstallLocation=${OSG_INSTALL_DIR} \
-	  -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include;
+    cd ${OSGBULLETPLUS_BUILD_DIR};
+    cmake ${OSGBULLETPLUS_SRC_DIR} \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_INSTALL_PREFIX=${OSGBULLETPLUS_INSTALL_DIR} \
+      -DOSGBULLETPLUS_BUILD_APPLICATIONS=ON \
+      -DOSGBULLETPLUS_BUILD_EXAMPLES=OFF \
+      -DOSGBULLETPLUS_BUILD_PROTOS=OFF \
+      -DOSGBULLETPLUS_BUILD_TESTS=OFF \
+      -DOSGBULLETPLUS_USE_DOUBLE_PRECISION=OFF \
+      -DOSGBULLET_ROOT=${OSGBULLET_INSTALL_DIR} \
+      -DBulletInstallType="Alternate Install Location" \
+      -DOSGInstallType="Alternate Install Location" \
+      -DBulletInstallLocation=${BULLET_INSTALL_DIR} \
+      -DOSGInstallLocation=${OSG_INSTALL_DIR} \
+      -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include;
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${OSGBULLETPLUS_BUILD_DIR};
-	rm -rf ${OSGBULLETPLUS_INSTALL_DIR}/*;
-	make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${OSGBULLETPLUS_INSTALL_DIR}/lib/flagpoll;
+    cd ${OSGBULLETPLUS_BUILD_DIR};
+    rm -rf ${OSGBULLETPLUS_INSTALL_DIR}/*;
+    make install -j${args[4]};
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${OSGBULLETPLUS_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for osgbulletplus!"; fi
   if [ ${args[6]} == "t" ]; then cd ${OSGBULLETPLUS_INSTALL_DIR}/include; ctags osgbulletplus; fi
 }
 
-function bld_osgephemeris()
+function pkg_osgephemeris()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${OSGEPHEMERIS_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${OSGEPHEMERIS_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${OSGEPHEMERIS_BUILD_DIR};
-	cmake ${OSGEPHEMERIS_SRC_DIR} \
-	  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	  -DCMAKE_INSTALL_PREFIX=${OSGEPHEMERIS_INSTALL_DIR};
+    cd ${OSGEPHEMERIS_BUILD_DIR};
+    cmake ${OSGEPHEMERIS_SRC_DIR} \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_INSTALL_PREFIX=${OSGEPHEMERIS_INSTALL_DIR};
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${OSGEPHEMERIS_BUILD_DIR};
-	rm -rf ${OSGEPHEMERIS_INSTALL_DIR}/*;
-	make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${OSGEPHEMERIS_INSTALL_DIR}/lib/flagpoll;
+    cd ${OSGEPHEMERIS_BUILD_DIR};
+    rm -rf ${OSGEPHEMERIS_INSTALL_DIR}/*;
+    make install -j${args[4]};
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${OSGEPHEMERIS_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for osgephemeris!"; fi
   if [ ${args[6]} == "t" ]; then cd ${OSGEPHEMERIS_INSTALL_DIR}/include; ctags osgephemeris; fi
 }
 
-function bld_osgworks()
+function pkg_osgworks()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${OSGWORKS_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${OSGWORKS_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${OSGWORKS_BUILD_DIR};
-	cmake ${OSGWORKS_SRC_DIR} \
-	  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	  -DCMAKE_INSTALL_PREFIX=${OSGWORKS_INSTALL_DIR} \
-	  -DCMAKE_OSX_ARCHITECTURES=x86_64 \
-	  -DOSGInstallType="Alternate Install Location" \
-	  -DOSGInstallLocation=${OSG_INSTALL_DIR} \
-	  -DBoost_INCLUDE_DIR=${BOOST_INSTALL_DIR}/include;
+    cd ${OSGWORKS_BUILD_DIR};
+    cmake ${OSGWORKS_SRC_DIR} \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_INSTALL_PREFIX=${OSGWORKS_INSTALL_DIR} \
+      -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+      -DOSGInstallType="Alternate Install Location" \
+      -DOSGInstallLocation=${OSG_INSTALL_DIR} \
+      -DBoost_INCLUDE_DIR=${BOOST_INSTALL_DIR}/include;
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${OSGWORKS_BUILD_DIR};
-	rm -rf ${OSGWORKS_INSTALL_DIR}/*;
-	make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${OSGWORKS_INSTALL_DIR}/lib/flagpoll;
+    cd ${OSGWORKS_BUILD_DIR};
+    rm -rf ${OSGWORKS_INSTALL_DIR}/*;
+    make install -j${args[4]};
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${OSGWORKS_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for osgworks!"; fi
   if [ ${args[6]} == "t" ]; then cd ${OSGWORKS_INSTALL_DIR}/include; ctags osgworks; fi
 }
 
-function bld_poco()
+function pkg_poco()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${POCO_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${POCO_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${POCO_BUILD_DIR};
-	${POCO_SRC_DIR}/configure \
-	  --no-tests \
-	  --no-samples \
-	  --omit=Data/MySQL \
-	  --config=Darwin64 \
-	  --prefix=${POCO_INSTALL_DIR};
+    cd ${POCO_BUILD_DIR};
+    ${POCO_SRC_DIR}/configure \
+      --no-tests \
+      --no-samples \
+      --omit=Data/MySQL \
+      --config=Darwin64 \
+      --prefix=${POCO_INSTALL_DIR};
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${POCO_BUILD_DIR};
-	rm -rf ${POCO_INSTALL_DIR}/*;
-	make install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${POCO_INSTALL_DIR}/lib/flagpoll;
+    cd ${POCO_BUILD_DIR};
+    rm -rf ${POCO_INSTALL_DIR}/*;
+    make install -j${args[4]};
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${POCO_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for poco!"; fi
   if [ ${args[6]} == "t" ]; then cd ${POCO_INSTALL_DIR}/include; ctags poco; fi
 }
 
-function bld_scons()
+function pkg_scons()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${SCONS_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then echo "Currently cannot use build directory for scons!"; fi
   if [ ${args[2]} == "p" ]; then echo "Currently no prebuild generation script for scons!"; fi
   if [ ${args[3]} == "b" ]; then
-	cd ${SCONS_SRC_DIR};
-	rm -rf ${SCONS_INSTALL_DIR}/*;
-	python setup.py install \
-	  --prefix=${SCONS_INSTALL_DIR};  #Look into adding multithreading support with ${args[4]}
+    cd ${SCONS_SRC_DIR};
+    rm -rf ${SCONS_INSTALL_DIR}/*;
+    python setup.py install \
+      --prefix=${SCONS_INSTALL_DIR};  #Look into adding multithreading support with ${args[4]}
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for scons!"; fi
   if [ ${args[6]} == "t" ]; then echo "No reason to generate ctags for scons!"; fi
 }
 
-function bld_ves()
+function pkg_ves()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${VES_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${VES_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then echo "Not implemented yet!"; fi
   if [ ${args[3]} == "b" ]; then
-	cd ${VES_SRC_DIR};
-	scons install -j${args[4]};
-	#To do: Move flagpoll files to lib directory
-	#cp ${VES_SRC_DIR}/dist/ ${VES_INSTALL_DIR}/lib/flagpoll;
+    cd ${VES_SRC_DIR};
+    scons install -j${args[4]};
+    #To do: Move flagpoll files to lib directory
+    #cp ${VES_SRC_DIR}/dist/ ${VES_INSTALL_DIR}/lib/flagpoll;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for ves!"; fi
-  #Can call 'bld_ves -t' on command line to update tags as developing
+  #Can call 'pkg_ves -t' on command line to update tags as developing
   if [ ${args[6]} == "t" ]; then cd ${VES_SRC_DIR}/src; ctags ves; fi
 }
 
-function bld_vtk()
+function pkg_vtk()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${VTK_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${VTK_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${VTK_BUILD_DIR};
-	cmake ${VTK_SRC_DIR} \
-	  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	  -DCMAKE_INSTALL_PREFIX=${VTK_INSTALL_DIR} \
-	  -DBUILD_SHARED_LIBS=ON \
-	  -DBUILD_TESTING=OFF \
-	  -DVTK_USE_PARALLEL=ON;
+    cd ${VTK_BUILD_DIR};
+    cmake ${VTK_SRC_DIR} \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_INSTALL_PREFIX=${VTK_INSTALL_DIR} \
+      -DBUILD_SHARED_LIBS=ON \
+      -DBUILD_TESTING=OFF \
+      -DVTK_USE_PARALLEL=ON;
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${VTK_BUILD_DIR};
-	rm -rf ${VTK_INSTALL_DIR}/*;
-	make install -j${args[4]};
+    cd ${VTK_BUILD_DIR};
+    rm -rf ${VTK_INSTALL_DIR}/*;
+    make install -j${args[4]};
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for vtk!"; fi
   if [ ${args[6]} == "t" ]; then cd ${VTK_INSTALL_DIR}/include; ctags vtk; fi
 }
 
-function bld_xerces()
+function pkg_xerces()
 {
   declare -a args=( `argscase "$@"` )
   if [ ${args[0]} == "u" ]; then cd ${XERCES_SRC_DIR}; svn up; fi
   if [ ${args[1]} == "c" ]; then rm -rf ${XERCES_BUILD_DIR}/*; fi
   if [ ${args[2]} == "p" ]; then
-	cd ${XERCES_BUILD_DIR};
-	${XERCES_SRC_DIR}/configure \
-	  CFLAGS="-arch x86_64" \
-	  CXXFLAGS="-arch x86_64" \
-	  --prefix=${XERCES_INSTALL_DIR};
+    cd ${XERCES_BUILD_DIR};
+    ${XERCES_SRC_DIR}/configure \
+      CFLAGS="-arch x86_64" \
+      CXXFLAGS="-arch x86_64" \
+      --prefix=${XERCES_INSTALL_DIR};
   fi
   if [ ${args[3]} == "b" ]; then
-	cd ${XERCES_BUILD_DIR};
-	rm -rf ${XERCES_INSTALL_DIR}/*;
-	make install -j${args[4]};
+    cd ${XERCES_BUILD_DIR};
+    rm -rf ${XERCES_INSTALL_DIR}/*;
+    make install -j${args[4]};
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for xerces!"; fi
   if [ ${args[6]} == "t" ]; then cd ${XERCES_INSTALL_DIR}/include; ctags xerces; fi
 }
-
