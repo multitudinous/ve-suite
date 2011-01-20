@@ -86,19 +86,19 @@ TreeTab::TreeTab(QWidget *parent) :
 
     // Connect to ObjectPickedSignal so we can update the scenegraph tree view when
     // an object is picked
-    CONNECTSIGNAL_1( "KeyboardMouse.ObjectPickedSignal",
+    CONNECTSIGNALS_1( "%ObjectPickedSignal",
                      void( osg::NodePath& ),
                      &TreeTab::OnObjectPicked,
-                     mConnections, normal_Priority );
+                     mConnections, any_SignalType, normal_Priority );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 TreeTab::~TreeTab()
 {
     delete mBrowser;
     delete mModel;
     delete ui;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
@@ -110,7 +110,7 @@ void TreeTab::changeEvent(QEvent *e)
         break;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::Clear()
 {
     ui->mTreeView->setModel( 0 );
@@ -118,7 +118,7 @@ void TreeTab::Clear()
     mModel = new TreeModel;
     ui->mTreeView->setModel( mModel );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::PopulateWithRoot( osg::Node* root )
 {
     mModel->BeginReset();
@@ -135,19 +135,19 @@ void TreeTab::PopulateWithRoot( osg::Node* root )
 
     mModel->EndReset();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 QModelIndex TreeTab::OpenToAndSelect( osg::NodePath& nodepath )
 {
     QModelIndex result( osgQtTree::openToAndSelect( ui->mTreeView, mModel, nodepath ) );
     on_mTreeView_activated( result );
     return result;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_mTreeView_clicked( const QModelIndex& index )
 {
     on_mTreeView_activated( index );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_mTreeView_activated( const QModelIndex& index )
 {
     //Unselect the previously-selected DCS
@@ -220,7 +220,7 @@ void TreeTab::on_mTreeView_activated( const QModelIndex& index )
     mActiveSet->LoadFromDatabase();
     mBrowser->RefreshAll();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_RefreshButton_clicked()
 {
     if( mActiveSet )
@@ -229,7 +229,7 @@ void TreeTab::on_RefreshButton_clicked()
         mBrowser->RefreshAll();
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_OKButton_clicked()
 {
     if( mActiveSet )
@@ -240,7 +240,7 @@ void TreeTab::on_OKButton_clicked()
 //                UpdateCADNode( mActiveSet->GetUUIDAsString() );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::OnObjectPicked( osg::NodePath& nodePath )
 {
     // emit Qt-signal which is connected to QueuedOnObjectPicked

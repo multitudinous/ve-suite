@@ -111,6 +111,11 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
 
         if( exists )
         {
+            vprDEBUG( vesDBG, 2 )
+                << "EventManager::RegisterSignal: Warning! " << sigName
+                << " will hide previous signal with same name. Was this intentional?"
+                << std::endl << vprDEBUG_FLUSH;
+
             ( *mSession ) << "UPDATE signals SET type=:type WHERE name=:name",
                     Poco::Data::use( sigType ),
                     Poco::Data::use( sigName ),
@@ -237,8 +242,8 @@ void EventManager::_ConnectSignal( const std::string& sigName,
         }
         else
         {
-            vprDEBUG( vesDBG, 3 )
-                << "EventManager::ConnectSignal: Connection failed"
+            vprDEBUG( vesDBG, 2 )
+                << "EventManager::ConnectSignal: Connection to " << sigName << " failed"
                 << std::endl << vprDEBUG_FLUSH;
         }
     }

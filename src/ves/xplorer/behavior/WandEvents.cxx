@@ -126,7 +126,7 @@ WandEvents::WandEvents()
     
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
-        "KeyboardMouse.ObjectPickedSignal" );
+        "WandEvents.ObjectPickedSignal" );
         
     m_cadSelectionMode = false;
 }

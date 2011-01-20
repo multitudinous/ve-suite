@@ -118,13 +118,13 @@ Selection::Selection()
 
     CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress1%", void( gadget::Keys, int, int, int ), &Selection::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
-    
+
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
                      m_connections, any_SignalType, normal_Priority );
 
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
-        "KeyboardMouse.ObjectPickedSignal" );
+        "Selection.ObjectPickedSignal" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Selection::~Selection()
