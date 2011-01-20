@@ -127,7 +127,7 @@ ConstraintSelection::ConstraintSelection()
 
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
-        "KeyboardMouse.ObjectPickedSignal" );
+        "ConstraintSelection.ObjectPickedSignal" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ConstraintSelection::~ConstraintSelection()
