@@ -158,6 +158,9 @@ public:
     bool SetCurrentGLTransformInfo( const vrj::DisplayPtr display, bool isKeyEvent );
 
 private:
+    ///Setup the start and end point for a mouse pick 
+    void SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
+
     ///Navigation slot
     ves::xplorer::behavior::Navigation* m_navigationSlot;
 
@@ -175,7 +178,17 @@ private:
 
     ///Determine if the mouse is inside the UI
     bool m_mouseInsideUI;
+    
+    ///Selection ray start point
+    osg::Vec3d m_startPoint;
+    ///Selection ray end point
+    osg::Vec3d m_endPoint;
 
+    /// signal
+    /// Params are: x, y, z, state (modifier mask OR'd with button mask)
+    typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
+    StartEndPointSignal_type m_startEndPointSignal;
+    
 //    typedef boost::signals2::signal<bool (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
 //    InteractionSignal_type mInteractionSignal;
 

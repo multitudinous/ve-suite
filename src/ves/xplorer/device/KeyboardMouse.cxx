@@ -161,19 +161,22 @@ KeyboardMouse::KeyboardMouse()
     using eventmanager::SignalWrapper;
 
     evm->RegisterSignal(
-            new SignalWrapper< MouseMoveSignal_type >( &m_mouseMove ),
-            "KeyboardMouse.MouseMove", eventmanager::EventManager::mouse_SignalType );
+        new SignalWrapper< MouseMoveSignal_type >( &m_mouseMove ),
+        "KeyboardMouse.MouseMove", eventmanager::EventManager::mouse_SignalType );
 
     evm->RegisterSignal(
-            new SignalWrapper< MouseDoubleClickSignal_type >( &m_mouseDoubleClick ),
-            "KeyboardMouse.DoubleClick", eventmanager::EventManager::button_SignalType );
+        new SignalWrapper< MouseDoubleClickSignal_type >( &m_mouseDoubleClick ),
+        "KeyboardMouse.DoubleClick", eventmanager::EventManager::button_SignalType );
 
+    evm->RegisterSignal(
+        new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
+        "KeyboardMouse.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
+    
     RegisterButtonSignals();
     RegisterKeySignals();
     
     CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &KeyboardMouse::UIEnterLeave,
                     m_connections, highest_Priority );
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -278,11 +281,16 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         m_currX = mouseEvt->getX();
         m_currY = mouseEvt->getY();
         
+        //Set the current GLTransfromInfo from the event
         if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
         {
             return;
-        }        
+        }
         
+        //Send current Start and end points
+        SetStartEndPoint( m_startPoint, m_endPoint );
+        m_startEndPointSignal( m_startPoint, m_endPoint );
+
         /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonPressEvent "
             << mouseEvt->getButton() << ", " << mouseEvt->getX()
@@ -302,7 +310,6 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonReleaseEvent"
             << std::endl << vprDEBUG_FLUSH;*/
-        //Set the current GLTransfromInfo from the event
 
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
@@ -310,10 +317,15 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         m_currX = mouseEvt->getX();
         m_currY = mouseEvt->getY();
 
+        //Set the current GLTransfromInfo from the event
         if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
         {
             return;
         }        
+        
+        //Send current Start and end points
+        SetStartEndPoint( m_startPoint, m_endPoint );
+        m_startEndPointSignal( m_startPoint, m_endPoint );
         
         ButtonReleaseSignalMapType::iterator itr = mButtonReleaseSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonReleaseSignalMap.end() )
@@ -648,5 +660,19 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
     
     m_sceneManager.SetCurrentGLTransformInfo( GLTransformInfoPtr() );
     return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
+{
+    ///In quad buffered stereo this call returns a VPW matrix from a centered
+    ///view rather than from one of the eye positions.
+    osg::Matrixd inverseVPW( m_sceneManager.GetCurrentGLTransformInfo()->GetVPWMatrixOSG() );
+    inverseVPW.invert( inverseVPW );
+    startPoint = osg::Vec3d( m_currX, m_currY, 0.0 ) * inverseVPW;
+    endPoint = osg::Vec3d( m_currX, m_currY, 1.0 ) * inverseVPW;
+    
+    //std::cout << m_currX << " " << m_currY << std::endl;
+    //std::cout << "startPoint: " << startPoint << std::endl;
+    //std::cout << "endPoint: " << endPoint << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////

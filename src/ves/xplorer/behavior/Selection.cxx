@@ -119,6 +119,9 @@ Selection::Selection()
     CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress1%", void( gadget::Keys, int, int, int ), &Selection::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
     
+    CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
+                     m_connections, any_SignalType, normal_Priority );
+
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
         "KeyboardMouse.ObjectPickedSignal" );
@@ -284,11 +287,11 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
 void Selection::UpdateSelectionLine()
 {
     //std::cout << "update selection line " << std::endl;
-    osg::Vec3d startPoint, endPoint;
-    SetStartEndPoint( startPoint, endPoint );
+    //osg::Vec3d startPoint, endPoint;
+    //SetStartEndPoint( startPoint, endPoint );
     m_lineSegmentIntersector->reset();
-    m_lineSegmentIntersector->setStart( startPoint );
-    m_lineSegmentIntersector->setEnd( endPoint );
+    m_lineSegmentIntersector->setStart( m_startPoint );
+    m_lineSegmentIntersector->setEnd( m_endPoint );
     
     //Used to debug the selection line
     //If working correctly, the line should show up as 1 red pixel where picked
@@ -332,11 +335,6 @@ void Selection::ProcessSelection()
         return;
     }
     
-    //Set the connection between the scene manipulator and the selected dcs
-    scenegraph::manipulator::TransformManipulator* sceneManipulator =
-    m_manipulatorManager.GetSceneManipulator();
-    sceneManipulator->Connect( newSelectedDCS );
-    
     //
     osg::Vec3d center( 0.0, 0.0, 0.0 );
     //If dcs is from a camera object, we want to rotate about local zero point
@@ -352,10 +350,19 @@ void Selection::ProcessSelection()
     {
         ;
     }
+
     osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
     center = center * localToWorldMatrix;
-    sceneManipulator->SetPosition( center );
-    
+
+    if( m_manipulatorManager.IsEnabled() )
+    {
+        //Set the connection between the scene manipulator and the selected dcs
+        scenegraph::manipulator::TransformManipulator* sceneManipulator =
+        m_manipulatorManager.GetSceneManipulator();
+        sceneManipulator->Connect( newSelectedDCS );
+        sceneManipulator->SetPosition( center );
+    }
+        
     //We need to transform center point into camera space
     //In the future the center point will be in world coordinates
     center = center * osg::Matrixd( m_sceneManager.GetNavDCS()->GetMat().mData );
@@ -413,8 +420,11 @@ void Selection::ClearPointConstraint()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Selection::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
+void Selection::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
+    m_startPoint = startPoint;
+    m_endPoint = endPoint;
+    return;
     ///In quad buffered stereo this call returns a VPW matrix from a centered
     ///view rather than from one of the eye positions.
     osg::Matrixd inverseVPW( m_sceneManager.GetCurrentGLTransformInfo()->GetVPWMatrixOSG() );

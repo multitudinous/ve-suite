@@ -102,11 +102,15 @@ private:
     ///Clear the point constraints
     void ClearPointConstraint();
     ///Setup the start and end point for a mouse pick 
-    void SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
+    void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
     ///Update the selection line
     void UpdateSelectionLine();
     ///Now try and pick the object
     void ProcessSelection();
+
+    ///Selection start end point line
+    osg::Vec3d m_startPoint;
+    osg::Vec3d m_endPoint;
 
     /// Required connections list for connecting to events via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
