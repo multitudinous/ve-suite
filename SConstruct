@@ -361,7 +361,7 @@ else:
     poco_options = SConsAddons.Options.StandardPackageOption("POCO",
       "POCO library options, default : POCO_incdir=<POCO>/include POCO_libdir=<POCO>/lib(64)", 
       pj('Poco','Data','SQLite','SQLite.h'), library=['PocoFoundation','PocoData',
-      'PocoNet','PocoSQLite','PocoUtil','PocoXML','PocoZip'], symbol="main", required=False)
+      'PocoNet','PocoSQLite','PocoUtil','PocoXML','PocoZip'], symbol="main", required=True)
 
 # Setup osgWorks library
 if GetPlatform() == 'win32':
