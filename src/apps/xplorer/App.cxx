@@ -150,6 +150,11 @@
 //// --- Boost includes --- //
 #include <boost/bind.hpp>
 
+//// --- Poco includes --- //
+#include <Poco/SimpleFileChannel.h>
+#include <Poco/FormattingChannel.h>
+#include <Poco/PatternFormatter.h>
+
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
 #include <osgAudio/SoundManager.h>
@@ -180,8 +185,23 @@ App::App( int argc, char* argv[], bool enableRTT )
     mProfileCounter( 0 ),
     mLastFrame( 0 ),
     mLastTime( 0 ),
-    mLastQtLoopTime( 0.0 )
+    mLastQtLoopTime( 0.0 ),
+    m_Logger( Poco::Logger::get( "xplorer" ) )
 {
+    Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
+    fileChannel->setProperty( "path", "xplorerRunLog.log" );
+
+    // Format the logged output as
+    // time_with_microseconds [thread number] (priority) source message extra_crlf
+    Poco::PatternFormatter* formatter = new Poco::PatternFormatter;
+    formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%p) %s: %t\n");
+    Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel);
+
+    m_Logger.setChannel( formattingChannel );
+    m_Logger.setLevel( Poco::Message::PRIO_TRACE );
+
+    poco_information( m_Logger, "Starting App" );
+
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
     mFrameStamp = new osg::FrameStamp();
@@ -259,6 +279,7 @@ App::App( int argc, char* argv[], bool enableRTT )
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
 {
+    poco_information( m_Logger, "Quitting App" );
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -57,6 +57,10 @@
 // --- Boost Includes --- //
 #include <boost/signals2/signal.hpp>
 
+
+// --- Poco Includes --- //
+#include <Poco/Logger.h>
+
 class QApplication;
 
 namespace osg
@@ -335,6 +339,8 @@ private:
     /// other objects to sync operations to the draw loop
     typedef boost::signals2::signal< void () > latePreFrame_SignalType;
     latePreFrame_SignalType mLatePreFrame;
+
+    Poco::Logger& m_Logger;
 
 };
 } //end xplorer

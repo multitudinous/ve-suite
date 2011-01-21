@@ -55,8 +55,11 @@ vprSingletonImp( EventManager );
 
 ////////////////////////////////////////////////////////////////////////////////
 EventManager::EventManager():
-    mMonotonicID(0)
+    mMonotonicID(0),
+    m_Logger( Poco::Logger::get("xplorer.EventManager") )
 {
+    poco_trace( m_Logger, "ctor" );
+
     // Open an in-memory database to allow efficient searches of existing signals
     Poco::Data::SQLite::Connector::registerConnector();
     mSession = new Poco::Data::Session( "SQLite", ":memory:" );
@@ -71,6 +74,8 @@ EventManager::EventManager():
 ////////////////////////////////////////////////////////////////////////////////
 EventManager::~EventManager()
 {
+    poco_trace( m_Logger, "dtor" );
+
     Poco::Data::SQLite::Connector::unregisterConnector();
 
     // Delete all our signals
@@ -100,6 +105,8 @@ EventManager::~EventManager()
 ////////////////////////////////////////////////////////////////////////////////
 void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& sigName, SignalType sigType )
 {
+    poco_trace( m_Logger, "RegisterSignal" );
+
     // Add this signal to the lookup table
     try
     {
@@ -111,10 +118,14 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
 
         if( exists )
         {
-            vprDEBUG( vesDBG, 2 )
-                << "EventManager::RegisterSignal: Warning! " << sigName
-                << " will hide previous signal with same name. Was this intentional?"
-                << std::endl << vprDEBUG_FLUSH;
+            std::string warning( "RegisterSignal: " );
+            warning.append( sigName );
+            warning.append( " will hide previous signal with same name. Was this intentional?" );
+            poco_warning( m_Logger, warning );
+//            vprDEBUG( vesDBG, 2 )
+//                << "EventManager::RegisterSignal: Warning! " << sigName
+//                << " will hide previous signal with same name. Was this intentional?"
+//                << std::endl << vprDEBUG_FLUSH;
 
             ( *mSession ) << "UPDATE signals SET type=:type WHERE name=:name",
                     Poco::Data::use( sigType ),
@@ -123,6 +134,9 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
         }
         else
         {
+            std::string msg( "RegisterSignal: Registering new signal " );
+            msg.append( sigName );
+            poco_information( m_Logger, msg );
             ( *mSession ) << "INSERT INTO signals (name, type) VALUES (:name,:type)",
                     Poco::Data::use( sigName ),
                     Poco::Data::use( sigType ),
@@ -142,6 +156,8 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
 ////////////////////////////////////////////////////////////////////////////////
 void EventManager::ConnectToPreviousSlots( const std::string& sigName )
 {
+    poco_trace( m_Logger, "ConnectToPreviousSlots" );
+
     std::vector< int > ids;
     std::vector< int > priorities;
     GetSlotMatches( sigName, ids, priorities );
@@ -245,6 +261,10 @@ void EventManager::_ConnectSignal( const std::string& sigName,
             vprDEBUG( vesDBG, 2 )
                 << "EventManager::ConnectSignal: Connection to " << sigName << " failed"
                 << std::endl << vprDEBUG_FLUSH;
+            std::string err("_ConnectSignal: Connections to ");
+            err.append( sigName );
+            err.append( " failed" );
+            poco_error( m_Logger,  );
         }
     }
 

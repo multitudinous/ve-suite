@@ -51,6 +51,8 @@
 
 #include <ves/VEConfig.h>
 
+#include <Poco/Logger.h>
+
 // Macros to make connecting signals an easier process
 // To add more macros for making connections that require N arguments,
 // add a new CONNECT____N macro, adding the appropriate number of parameters
@@ -442,6 +444,8 @@ private:
     std::map< int, boost::weak_ptr< ScopedConnectionList > > mExactSlotConnections;
 
     int mMonotonicID;
+
+    Poco::Logger& m_Logger;
 };
 
 
