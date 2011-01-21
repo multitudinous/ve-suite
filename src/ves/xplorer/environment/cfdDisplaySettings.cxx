@@ -37,6 +37,8 @@
 
 #include <jccl/RTRC/ConfigManager.h>
 
+#include <gmtl/Math.h>
+
 #include <string>
 
 using namespace ves::xplorer;
@@ -128,6 +130,10 @@ void cfdDisplaySettings::ProcessCommand()
         for( size_t i = 0; i < elements.size(); ++i )
         {
             ChangeDisplayElements( true, elements.at( i ) );
+            double vpWidth, vpHeight;
+            vpWidth = elements.at( i )->getProperty< double >( "size", 0 );
+            vpHeight = elements.at( i )->getProperty< double >( "size", 1 );
+
             //Process the resolution
             // 2/3 the width
 #if 0
@@ -162,8 +168,16 @@ void cfdDisplaySettings::ProcessCommand()
                 double xmin = svPtr->getProperty< double >( "lower_left_corner", 0 );
                 double xmax = svPtr->getProperty< double >( "lower_right_corner", 0 );
                 double xScreenDim = xmax - xmin;
+                
+                // Get horizontal and vertical vectors using corner points
+                //mHDirection = mLRCorner - mLLCorner;
+                //mVDirection = mULCorner - mLLCorner;
+                
+                // Use width & height to compute scale
+                double mPixelsPerUnitX = gmtl::Math::abs(xmax-xmin) / vpWidth;
+                
                 //this constant number is meters / pixel
-                double newXScreenDim = 0.0019050f * xSize;
+                double newXScreenDim = mPixelsPerUnitX * xSize;
                 double xScreenDif = newXScreenDim - xScreenDim;
                 double xScreenDifHalf = xScreenDif * 0.5f;
                 newXmin = xmin - xScreenDifHalf;
@@ -178,7 +192,9 @@ void cfdDisplaySettings::ProcessCommand()
                 double ymax = svPtr->getProperty< double >( "upper_left_corner", 1 );
                 double yScreenDim = ymax - ymin;
                 //this constant number is meters / pixel
-                double newYScreenDim = 0.001786f * ySize;
+                double mPixelsPerUnitY = gmtl::Math::abs(ymax-ymin) / vpHeight;
+
+                double newYScreenDim = mPixelsPerUnitY * ySize;
                 double yScreenDif = newYScreenDim - yScreenDim;
                 double yScreenDifHalf = yScreenDif * 0.5f;
                 newYmin = ymin - yScreenDifHalf;
