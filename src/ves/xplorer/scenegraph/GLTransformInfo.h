@@ -83,105 +83,103 @@ class VE_SCENEGRAPH_EXPORTS GLTransformInfo
 {
 public:
     ///Constructor
-    GLTransformInfo(
-        const int& viewportOriginX, const int& viewportOriginY,
-        const int& viewportWidth, const int& viewportHeight,
-        const int& windowOriginX, const int& windowOriginY,
-        const int& windowWidth, const int& windowHeight,
-        const gmtl::Matrix44d& windowMatrix, const bool inStereo );
+    GLTransformInfo( bool const& inStereo );
 
     ///Copy Constructor
-    GLTransformInfo( const GLTransformInfo& glTransformInfo );
+    GLTransformInfo( GLTransformInfo const& glTransformInfo );
 
     ///Destructor
     ~GLTransformInfo();
 
     ///
-    const int& GetViewportOriginX() const;
+    int const& GetViewportOriginX() const;
 
     ///
-    const int& GetViewportOriginY() const;
+    int const& GetViewportOriginY() const;
 
     ///
-    const int& GetViewportWidth() const;
+    int const& GetViewportWidth() const;
 
     ///
-    const int& GetViewportHeight() const;
+    int const& GetViewportHeight() const;
 
     ///
-    const int& GetWindowOriginX() const;
+    //int const& GetWindowOriginX() const;
 
     ///
-    const int& GetWindowOriginY() const;
+    //int const& GetWindowOriginY() const;
 
     ///
-    const int& GetWindowWidth() const;
+    int const& GetWindowWidth() const;
 
     ///
-    const int& GetWindowHeight() const;
+    int const& GetWindowHeight() const;
 
     ///
-    const double& GetLeftFrustum() const;
+    double const& GetLeftFrustum() const;
 
     ///
-    const double& GetRightFrustum() const;
+    double const& GetRightFrustum() const;
 
     ///
-    const double& GetBottomFrustum() const;
+    double const& GetBottomFrustum() const;
 
     ///
-    const double& GetTopFrustum() const;
+    double const& GetTopFrustum() const;
 
     ///
-    const double& GetNearFrustum() const;
+    double const& GetNearFrustum() const;
 
     ///
-    const double& GetFarFrustum() const;
+    double const& GetFarFrustum() const;
 
     ///Calculates and returns the FoVZ
-    const double& GetFOVZ();
+    double const& GetFOVZ();
 
     ///
-    const gmtl::Matrix44d& GetVrjViewMatrix() const;
+    double const& GetAspectRatio() const;
 
     ///
-    const osg::Matrixd& GetVrjViewMatrixOSG() const;
+    gmtl::Matrix44d const& GetVrjViewMatrix() const;
 
     ///
-    const gmtl::Matrix44d& GetVrjCenterViewMatrix() const;
+    osg::Matrixd const& GetVrjViewMatrixOSG() const;
 
     ///
-    const osg::Matrixd& GetVrjCenterViewMatrixOSG() const;
-    
-    ///
-    const gmtl::Matrix44d& GetCameraMatrix() const;
+    gmtl::Matrix44d const& GetVrjCenterViewMatrix() const;
 
     ///
-    const osg::Matrixd& GetCameraMatrixOSG() const;
+    osg::Matrixd const& GetVrjCenterViewMatrixOSG() const;
 
     ///
-    const gmtl::Matrix44d& GetViewMatrix() const;
+    gmtl::Matrix44d const& GetCameraMatrix() const;
 
     ///
-    const osg::Matrixd& GetViewMatrixOSG() const;
+    osg::Matrixd const& GetCameraMatrixOSG() const;
 
     ///
-    const gmtl::Matrix44d& GetCenterViewMatrix() const;
-    
-    ///
-    const osg::Matrixd& GetCenterViewMatrixOSG() const;
-    
-    ///
-    const gmtl::Matrix44d& GetProjectionMatrix() const;
+    gmtl::Matrix44d const& GetViewMatrix() const;
 
     ///
-    const osg::Matrixd& GetProjectionMatrixOSG() const;
+    osg::Matrixd const& GetViewMatrixOSG() const;
 
     ///
-    const gmtl::Matrix44d& GetWindowMatrix() const;
+    gmtl::Matrix44d const& GetCenterViewMatrix() const;
 
     ///
-    const osg::Matrixd& GetWindowMatrixOSG() const;
+    osg::Matrixd const& GetCenterViewMatrixOSG() const;
+
+    ///
+    gmtl::Matrix44d const& GetProjectionMatrix() const;
+
+    ///
+    osg::Matrixd const& GetProjectionMatrixOSG() const;
+
+    ///
+    gmtl::Matrix44d const& GetWindowMatrix() const;
+
+    ///
+    osg::Matrixd const& GetWindowMatrixOSG() const;
 
     ///
     const gmtl::Matrix44d GetVPWMatrix() const;
@@ -191,25 +189,37 @@ public:
 
     ///
     const gmtl::Matrix44d GetCenterVPWMatrix() const;
-    
+
     ///
     const osg::Matrixd GetCenterVPWMatrixOSG() const;
-    
+
     ///
     void UpdateFrustumValues(
-        const double& l, const double& r,
-        const double& b, const double& t,
-        const double& n, const double& f );
+        double const& l, double const& r,
+        double const& b, double const& t,
+        double const& n, double const& f );
 
     ///
     void UpdateViewMatrix(
-        const gmtl::Matrix44d& vrjViewMatrix,
-        const gmtl::Matrix44d& cameraMatrix );
+        gmtl::Matrix44d const& vrjViewMatrix,
+        gmtl::Matrix44d const& cameraMatrix );
 
     ///Update the center view matrix from VR Juggler
     ///Note: This must be called AFTER UpdateViewMatrix
-    void UpdateCenterViewMatrix( const gmtl::Matrix44d& vrjViewMatrix );
-    
+    void UpdateCenterViewMatrix( gmtl::Matrix44d const& vrjViewMatrix );
+
+    ///
+    void UpdateViewportValues(
+        int const& viewportOriginX,
+        int const& viewportOriginY,
+        int const& viewportWidth,
+        int const& viewportHeight );
+
+    ///
+    void UpdateWindowValues(
+        int const& windowWidth,
+        int const& windowHeight );
+
 protected:
 
 private:
@@ -217,38 +227,60 @@ private:
     void UpdateProjectionMatrix();
 
     ///
-    const int m_viewportOriginX;
-    ///
-    const int m_viewportOriginY;
-    ///
-    const int m_viewportWidth;
-    ///
-    const int m_viewportHeight;
+    void UpdateWindowMatrix();
+
+    ///Flag to tell if the viewport associated with this matrix stack is for a
+    ///stereo viewport
+    const bool m_inStereo;
 
     ///
-    const int m_windowOriginX;
+    int m_viewportOriginX;
+
     ///
-    const int m_windowOriginY;
+    int m_viewportOriginY;
+
     ///
-    const int m_windowWidth;
+    int m_viewportWidth;
+
     ///
-    const int m_windowHeight;
+    int m_viewportHeight;
+
+    ///
+    //int m_windowOriginX;
+
+    ///
+    //int m_windowOriginY;
+
+    ///
+    int m_windowWidth;
+
+    ///
+    int m_windowHeight;
 
     ///
     double m_leftFrustum;
+
     ///
     double m_rightFrustum;
+
     ///
     double m_bottomFrustum;
+
     ///
     double m_topFrustum;
+
     ///
     double m_nearFrustum;
+
     ///
     double m_farFrustum;
+
     ///
     double m_fovz;
-    
+
+    ///
+    double m_aspectRatio;
+
     ///
     gmtl::Matrix44d m_vrjViewMatrix;
 
@@ -274,27 +306,23 @@ private:
     osg::Matrixd m_projectionMatrixOSG;
 
     ///
-    const gmtl::Matrix44d m_windowMatrix;
+    gmtl::Matrix44d m_windowMatrix;
 
     ///
-    const osg::Matrixd m_windowMatrixOSG;
+    osg::Matrixd m_windowMatrixOSG;
 
     ///
     gmtl::Matrix44d m_vrjCenterViewMatrix;
-    
+
     ///
     osg::Matrixd m_vrjCenterViewMatrixOSG;
-    
+
     ///
     gmtl::Matrix44d m_centerViewMatrix;
-    
+
     ///
     osg::Matrixd m_centerViewMatrixOSG;
-    
-    ///Flag to tell if the viewport associated with this matrix stack is for a
-    ///stereo viewport
-    bool m_inStereo;
-    
+
 };
 } //end scenegraph
 } //end xplorer

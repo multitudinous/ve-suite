@@ -163,21 +163,11 @@ void SceneGLTransformInfo::Initialize()
         const int viewportWidth = static_cast< int >( vp_sx * windowWidth );
         const int viewportHeight = static_cast< int >( vp_sy * windowHeight );
 
-        //Calculate the window matrix for the viewport
-        gmtl::Matrix44d windowMatrix;
-        windowMatrix.mState = gmtl::Matrix44d::FULL;
-        windowMatrix.mData[  0 ] = 0.5 * viewportWidth;
-        windowMatrix.mData[  5 ] = 0.5 * viewportHeight;
-        windowMatrix.mData[ 10 ] = 0.5;
-        windowMatrix.mData[ 12 ] = ( 0.5 * viewportWidth ) + viewportOriginX;
-        windowMatrix.mData[ 13 ] = ( 0.5 * viewportHeight ) + viewportOriginY;
-        windowMatrix.mData[ 14 ] = 0.5;
-
         scenegraph::GLTransformInfoPtr glTransformInfo(
-            new scenegraph::GLTransformInfo(
-                viewportOriginX, viewportOriginY, viewportWidth, viewportHeight,
-                0, 0, windowWidth, windowHeight,
-                windowMatrix, viewport->inStereo() ) );
+            new scenegraph::GLTransformInfo( viewport->inStereo() ) );
+        glTransformInfo->UpdateViewportValues(
+            viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
+        glTransformInfo->UpdateWindowValues( windowWidth, windowHeight );
         (*m_glTransformInfoMap)[ viewport ] = glTransformInfo;
         sceneManager->PushBackGLTransformInfo( viewport, glTransformInfo );
     }

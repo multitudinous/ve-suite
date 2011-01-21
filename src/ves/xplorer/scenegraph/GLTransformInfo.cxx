@@ -43,22 +43,19 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-GLTransformInfo::GLTransformInfo(
-    const int& viewportOriginX, const int& viewportOriginY,
-    const int& viewportWidth, const int& viewportHeight,
-    const int& windowOriginX, const int& windowOriginY,
-    const int& windowWidth, const int& windowHeight,
-    const gmtl::Matrix44d& windowMatrix, const bool inStereo )
+GLTransformInfo::GLTransformInfo( bool const& inStereo )
     :
-    m_viewportOriginX( viewportOriginX ),
-    m_viewportOriginY( viewportOriginY ),
-    m_viewportWidth( viewportWidth ),
-    m_viewportHeight( viewportHeight ),
+    m_inStereo( inStereo ),
 
-    m_windowOriginX( windowOriginX ),
-    m_windowOriginY( windowOriginY ),
-    m_windowWidth( windowWidth ),
-    m_windowHeight( windowHeight ),
+    m_viewportOriginX( 0 ),
+    m_viewportOriginY( 0 ),
+    m_viewportWidth( 0 ),
+    m_viewportHeight( 0 ),
+
+    //m_windowOriginX( windowOriginX ),
+    //m_windowOriginY( windowOriginY ),
+    m_windowWidth( 0 ),
+    m_windowHeight( 0 ),
 
     m_leftFrustum( 0.0 ),
     m_rightFrustum( 0.0 ),
@@ -67,29 +64,32 @@ GLTransformInfo::GLTransformInfo(
     m_nearFrustum( 0.0 ),
     m_farFrustum( 0.0 ),
     m_fovz( 0.0 ),
-
-    m_windowMatrix( windowMatrix ),
-    m_windowMatrixOSG( m_windowMatrix.mData ),
-    
-    m_inStereo( inStereo )
+    m_aspectRatio( 0.0 )
 {
     m_vrjViewMatrix.mState = gmtl::Matrix44d::FULL;
     m_cameraMatrix.mState = gmtl::Matrix44d::FULL;
     m_viewMatrix.mState = gmtl::Matrix44d::FULL;
     m_projectionMatrix.mState = gmtl::Matrix44d::FULL;
+    m_windowMatrix.mState = gmtl::Matrix44d::FULL;
+
     m_projectionMatrix.mData[ 11 ] = -1.0;
     m_projectionMatrix.mData[ 15 ] =  0.0;
+
+    m_windowMatrix.mData[ 10 ] = 0.5;
+    m_windowMatrix.mData[ 14 ] = 0.5;
 }
 ////////////////////////////////////////////////////////////////////////////////
-GLTransformInfo::GLTransformInfo( const GLTransformInfo& glTransformInfo )
+GLTransformInfo::GLTransformInfo( GLTransformInfo const& glTransformInfo )
     :
+    m_inStereo( glTransformInfo.m_inStereo ),
+
     m_viewportOriginX( glTransformInfo.m_viewportOriginX ),
     m_viewportOriginY( glTransformInfo.m_viewportOriginY ),
     m_viewportWidth( glTransformInfo.m_viewportWidth ),
     m_viewportHeight( glTransformInfo.m_viewportHeight ),
 
-    m_windowOriginX( glTransformInfo.m_windowOriginX ),
-    m_windowOriginY( glTransformInfo.m_windowOriginY ),
+    //m_windowOriginX( glTransformInfo.m_windowOriginX ),
+    //m_windowOriginY( glTransformInfo.m_windowOriginY ),
     m_windowWidth( glTransformInfo.m_windowWidth ),
     m_windowHeight( glTransformInfo.m_windowHeight ),
 
@@ -100,6 +100,7 @@ GLTransformInfo::GLTransformInfo( const GLTransformInfo& glTransformInfo )
     m_nearFrustum( glTransformInfo.m_nearFrustum ),
     m_farFrustum( glTransformInfo.m_farFrustum ),
     m_fovz( glTransformInfo.m_fovz ),
+    m_aspectRatio( glTransformInfo.m_aspectRatio ),
 
     m_vrjViewMatrix( glTransformInfo.m_vrjViewMatrix ),
     m_vrjViewMatrixOSG( glTransformInfo.m_vrjViewMatrixOSG ),
@@ -120,142 +121,159 @@ GLTransformInfo::~GLTransformInfo()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const int& GLTransformInfo::GetViewportOriginX() const
+int const& GLTransformInfo::GetViewportOriginX() const
 {
     return m_viewportOriginX;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const int& GLTransformInfo::GetViewportOriginY() const
+int const& GLTransformInfo::GetViewportOriginY() const
 {
     return m_viewportOriginY;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const int& GLTransformInfo::GetViewportWidth() const
+int const& GLTransformInfo::GetViewportWidth() const
 {
     return m_viewportWidth;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const int& GLTransformInfo::GetViewportHeight() const
+int const& GLTransformInfo::GetViewportHeight() const
 {
     return m_viewportHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const int& GLTransformInfo::GetWindowOriginX() const
+/*
+int const& GLTransformInfo::GetWindowOriginX() const
 {
     return m_windowOriginX;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const int& GLTransformInfo::GetWindowOriginY() const
+int const& GLTransformInfo::GetWindowOriginY() const
 {
     return m_windowOriginY;
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
-const int& GLTransformInfo::GetWindowWidth() const
+int const& GLTransformInfo::GetWindowWidth() const
 {
     return m_windowWidth;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const int& GLTransformInfo::GetWindowHeight() const
+int const& GLTransformInfo::GetWindowHeight() const
 {
     return m_windowHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const double& GLTransformInfo::GetLeftFrustum() const
+double const& GLTransformInfo::GetLeftFrustum() const
 {
     return m_leftFrustum;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const double& GLTransformInfo::GetRightFrustum() const
+double const& GLTransformInfo::GetRightFrustum() const
 {
     return m_rightFrustum;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const double& GLTransformInfo::GetBottomFrustum() const
+double const& GLTransformInfo::GetBottomFrustum() const
 {
     return m_bottomFrustum;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const double& GLTransformInfo::GetTopFrustum() const
+double const& GLTransformInfo::GetTopFrustum() const
 {
     return m_topFrustum;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const double& GLTransformInfo::GetNearFrustum() const
+double const& GLTransformInfo::GetNearFrustum() const
 {
     return m_nearFrustum;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const double& GLTransformInfo::GetFarFrustum() const
+double const& GLTransformInfo::GetFarFrustum() const
 {
     return m_farFrustum;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& GLTransformInfo::GetVrjViewMatrix() const
+double const& GLTransformInfo::GetFOVZ()
+{
+    double topAngle = atan( m_topFrustum / m_nearFrustum );
+    double tempDiv = fabs( m_bottomFrustum ) / m_nearFrustum;
+    double bottomAngle = atan( tempDiv );
+
+    m_fovz = topAngle + bottomAngle;
+    return m_fovz;
+}
+////////////////////////////////////////////////////////////////////////////////
+double const& GLTransformInfo::GetAspectRatio() const
+{
+    return m_aspectRatio;
+}
+////////////////////////////////////////////////////////////////////////////////
+gmtl::Matrix44d const& GLTransformInfo::GetVrjViewMatrix() const
 {
     return m_vrjViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& GLTransformInfo::GetVrjViewMatrixOSG() const
+osg::Matrixd const& GLTransformInfo::GetVrjViewMatrixOSG() const
 {
     return m_vrjViewMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& GLTransformInfo::GetVrjCenterViewMatrix() const
+gmtl::Matrix44d const& GLTransformInfo::GetVrjCenterViewMatrix() const
 {
     return m_vrjCenterViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& GLTransformInfo::GetVrjCenterViewMatrixOSG() const
+osg::Matrixd const& GLTransformInfo::GetVrjCenterViewMatrixOSG() const
 {
     return m_vrjCenterViewMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& GLTransformInfo::GetCameraMatrix() const
+gmtl::Matrix44d const& GLTransformInfo::GetCameraMatrix() const
 {
     return m_cameraMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& GLTransformInfo::GetCameraMatrixOSG() const
+osg::Matrixd const& GLTransformInfo::GetCameraMatrixOSG() const
 {
     return m_cameraMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& GLTransformInfo::GetViewMatrix() const
+gmtl::Matrix44d const& GLTransformInfo::GetViewMatrix() const
 {
     return m_viewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& GLTransformInfo::GetViewMatrixOSG() const
+osg::Matrixd const& GLTransformInfo::GetViewMatrixOSG() const
 {
     return m_viewMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& GLTransformInfo::GetCenterViewMatrix() const
+gmtl::Matrix44d const& GLTransformInfo::GetCenterViewMatrix() const
 {
     return m_centerViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& GLTransformInfo::GetCenterViewMatrixOSG() const
+osg::Matrixd const& GLTransformInfo::GetCenterViewMatrixOSG() const
 {
     return m_centerViewMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& GLTransformInfo::GetProjectionMatrix() const
+gmtl::Matrix44d const& GLTransformInfo::GetProjectionMatrix() const
 {
     return m_projectionMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& GLTransformInfo::GetProjectionMatrixOSG() const
+osg::Matrixd const& GLTransformInfo::GetProjectionMatrixOSG() const
 {
     return m_projectionMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d& GLTransformInfo::GetWindowMatrix() const
+gmtl::Matrix44d const& GLTransformInfo::GetWindowMatrix() const
 {
     return m_windowMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd& GLTransformInfo::GetWindowMatrixOSG() const
+osg::Matrixd const& GLTransformInfo::GetWindowMatrixOSG() const
 {
     return m_windowMatrixOSG;
 }
@@ -295,9 +313,9 @@ const osg::Matrixd GLTransformInfo::GetCenterVPWMatrixOSG() const
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLTransformInfo::UpdateFrustumValues(
-    const double& l, const double& r,
-    const double& b, const double& t,
-    const double& n, const double& f )
+    double const& l, double const& r,
+    double const& b, double const& t,
+    double const& n, double const& f )
 {
     m_leftFrustum = l;
     m_rightFrustum = r;
@@ -310,8 +328,8 @@ void GLTransformInfo::UpdateFrustumValues(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLTransformInfo::UpdateViewMatrix(
-    const gmtl::Matrix44d& vrjViewMatrix,
-    const gmtl::Matrix44d& cameraMatrix )
+    gmtl::Matrix44d const& vrjViewMatrix,
+    gmtl::Matrix44d const& cameraMatrix )
 {
     m_vrjViewMatrix = vrjViewMatrix;
     m_vrjViewMatrixOSG.set( m_vrjViewMatrix.mData );
@@ -319,6 +337,42 @@ void GLTransformInfo::UpdateViewMatrix(
     m_cameraMatrixOSG.set( m_cameraMatrix.mData );
     m_viewMatrix = m_vrjViewMatrix * m_cameraMatrix;
     m_viewMatrixOSG.set( m_viewMatrix.mData );
+}
+////////////////////////////////////////////////////////////////////////////////
+void  GLTransformInfo::UpdateCenterViewMatrix(
+    gmtl::Matrix44d const& vrjViewMatrix )
+{
+    m_vrjCenterViewMatrix = vrjViewMatrix;
+    m_vrjCenterViewMatrixOSG.set( m_vrjCenterViewMatrix.mData );
+
+    m_centerViewMatrix = m_vrjCenterViewMatrix * m_cameraMatrix;
+    m_centerViewMatrixOSG.set( m_centerViewMatrix.mData );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GLTransformInfo::UpdateViewportValues(
+    int const& viewportOriginX,
+    int const& viewportOriginY,
+    int const& viewportWidth,
+    int const& viewportHeight )
+{
+    m_viewportOriginX = viewportOriginX;
+    m_viewportOriginY = viewportOriginY;
+    m_viewportWidth = viewportWidth;
+    m_viewportHeight = viewportHeight;
+
+    UpdateWindowMatrix();
+}
+////////////////////////////////////////////////////////////////////////////////
+void GLTransformInfo::UpdateWindowValues(
+    int const& windowWidth,
+    int const& windowHeight )
+{
+    m_windowWidth = windowWidth;
+    m_windowHeight = windowHeight;
+
+    m_aspectRatio =
+        static_cast< double >( m_windowWidth ) /
+        static_cast< double >( m_windowHeight );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLTransformInfo::UpdateProjectionMatrix()
@@ -345,22 +399,13 @@ void GLTransformInfo::UpdateProjectionMatrix()
     m_projectionMatrixOSG.set( m_projectionMatrix.mData );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  GLTransformInfo::UpdateCenterViewMatrix( const gmtl::Matrix44d& vrjViewMatrix )
+void GLTransformInfo::UpdateWindowMatrix()
 {
-    m_vrjCenterViewMatrix = vrjViewMatrix;
-    m_vrjCenterViewMatrixOSG.set( m_vrjCenterViewMatrix.mData );
-    
-    m_centerViewMatrix = m_vrjCenterViewMatrix * m_cameraMatrix;
-    m_centerViewMatrixOSG.set( m_centerViewMatrix.mData );
-}
-////////////////////////////////////////////////////////////////////////////////
-const double& GLTransformInfo::GetFOVZ()
-{
-    double topAngle = atan( m_topFrustum / m_nearFrustum );
-    double tempDiv = fabs( m_bottomFrustum ) / m_nearFrustum;
-    double bottomAngle = atan( tempDiv );
-    
-    m_fovz = topAngle + bottomAngle;
-    return m_fovz;
+    m_windowMatrix.mData[  0 ] = 0.5 * m_viewportWidth;
+    m_windowMatrix.mData[  5 ] = 0.5 * m_viewportHeight;
+    m_windowMatrix.mData[ 12 ] = m_windowMatrix.mData[ 0 ] + m_viewportOriginX;
+    m_windowMatrix.mData[ 13 ] = m_windowMatrix.mData[ 5 ] + m_viewportOriginY;
+
+    m_windowMatrixOSG.set( m_windowMatrix.mData );
 }
 ////////////////////////////////////////////////////////////////////////////////
