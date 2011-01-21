@@ -977,8 +977,13 @@ void App::draw()
         m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
     if( glTI )
     {
-        //Get the projection matrix
+        ///Remember that the VR Juggler near/far values are hard coded to 
+        ///0.1 and 10000. With OSG set to auto compute the near and far planes
+        ///these values are overriden. If we use GLTransformInfo just after
+        ///these values are set the projection matrix will not reflect
+        ///what OSG is actually using for rendering.
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
+        //Get the projection matrix
         const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
 
         //Get the view matrix from vrj and transform into z-up land

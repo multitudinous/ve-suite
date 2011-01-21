@@ -188,29 +188,41 @@ private:
     ///Selection ray end point
     osg::Vec3d m_endPoint;
 
-    /// signal
-    /// Params are: x, y, z, state (modifier mask OR'd with button mask)
+    /// signal for generating the start and end point for selection and other
+    ///interaction tools.
+    /// Params are: start point and end point
     typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
     StartEndPointSignal_type m_startEndPointSignal;
     
-//    typedef boost::signals2::signal<bool (ves::xplorer::eventmanager::InteractionEvent&)> InteractionSignal_type;
-//    InteractionSignal_type mInteractionSignal;
-
-    // Temporarily needed until legacy functions in this class can be
-    // completely removed
+    /// Temporarily needed until legacy functions in this class can be
+    /// completely removed
     gadget::KeyboardMousePtr mKeyboardMousePtr;
     
-    /// The keyboardmouse device needed for juggler >= 3.1
+    /// The keyboardmouse device needed for juggler
+    ///For now we will use the synchronized_tag rather than the immediate tag
+    ///so the the function callbacks are executed from VR Juggler in sync with
+    ///the draw loop rather than when the events occur. If we use the immediate
+    ///tag then our event management will execute code whenever an event
+    ///is called in VR Juggler. This has the potential to cause big thread
+    ///sync issues. Again, for now we will use the draw loop to help us sync
+    ///data access.
     gadget::KeyboardMouseEventInterface<gadget::event::all_events_tag,
-        gadget::event::immediate_tag> m_keyboardMouseEventInterface;
+        gadget::event::synchronized_tag> m_keyboardMouseEventInterface;
     
     /// All keyboardmouse events get delivered here
     void onKeyboardMouseEvent(gadget::EventPtr event);
 
     /// Interface to receive double-click events from gadgeteer
+    ///For now we will use the synchronized_tag rather than the immediate tag
+    ///so the the function callbacks are executed from VR Juggler in sync with
+    ///the draw loop rather than when the events occur. If we use the immediate
+    ///tag then our event management will execute code whenever an event
+    ///is called in VR Juggler. This has the potential to cause big thread
+    ///sync issues. Again, for now we will use the draw loop to help us sync
+    ///data access.
     gadget::MouseMultiClickEventInterface< 2,
         gadget::event::all_events_tag,
-        gadget::event::immediate_tag > m_mouseDoubleClickEventInterface;
+        gadget::event::synchronized_tag > m_mouseDoubleClickEventInterface;
 
     void onMouseDoubleClick( gadget::EventPtr event );
 

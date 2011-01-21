@@ -679,11 +679,11 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoi
     ///view rather than from one of the eye positions.
     osg::Matrixd inverseVPW( m_sceneManager.GetCurrentGLTransformInfo()->GetVPWMatrixOSG() );
     inverseVPW.invert( inverseVPW );
-    startPoint = osg::Vec3d( m_currX, m_currY, 0.0 ) * inverseVPW;
-    endPoint = osg::Vec3d( m_currX, m_currY, 1.0 ) * inverseVPW;
+    startPoint = osg::Vec3d( m_currX, m_currY, 0.0f ) * inverseVPW;
+    endPoint = osg::Vec3d( m_currX, m_currY, 1.0f ) * inverseVPW;
     
-    //std::cout << m_currX << " " << m_currY << std::endl;
-    //std::cout << "startPoint: " << startPoint << std::endl;
-    //std::cout << "endPoint: " << endPoint << std::endl;
+    //std::cout << m_currX << " " << m_currY << std::endl << std::flush;
+    //std::cout << "startPoint: " << startPoint << std::endl << std::flush;
+    //std::cout << "endPoint: " << endPoint << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
