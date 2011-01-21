@@ -264,7 +264,7 @@ void EventManager::_ConnectSignal( const std::string& sigName,
             std::string err("_ConnectSignal: Connections to ");
             err.append( sigName );
             err.append( " failed" );
-            poco_error( m_Logger,  );
+            poco_error( m_Logger, err );
         }
     }
 
