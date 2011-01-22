@@ -5,7 +5,7 @@ pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR osg_options vtk_options RootDir buildDir xerces_options GetPlatform')
 Import('gmtl_options vpr_options gadgeteer_options vrjuggler_options osgal_options tao_options osgworks_options')
-Import('ApplyBulletVars bullet_options osgbulletplus_options osgbullet_options bdfx_options')
+Import('ApplyBulletVars bullet_options osgbulletplus_options osgbullet_options bdfx_options poco_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','scenegraph') )
 sources = sca_util.getSourcesRecursive( srcDir )
@@ -34,6 +34,7 @@ osgbullet_options.apply( lib_env )
 osgbulletplus_options.apply( lib_env )
 bullet_options.apply( lib_env )
 bdfx_options.apply( lib_env )
+poco_options.apply( lib_env )
 
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
