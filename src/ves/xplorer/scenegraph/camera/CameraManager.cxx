@@ -84,7 +84,8 @@ CameraManager::CameraManager()
     m_projectionTechnique( new technique::ProjectionTechnique() ),
     m_texGenNode( new osg::TexGenNode() ),
     m_isPictureMode( false ),
-    m_isTakingScreenCap( false )
+    m_isTakingScreenCap( false ),
+    m_imageDir( "." )
 {
     Enable();
 
@@ -503,13 +504,18 @@ void CameraManager::UpdateConductorData( ves::open::xml::DataValuePairPtr inDvp 
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )
 {
+    if( saveImageDir.empty() )
+    {
+        m_imageDir = saveImageDir;
+    }
+
     CameraObject* cameraObject( NULL );
     for( unsigned int i = 0; i < getNumChildren(); ++i )
     {
         cameraObject = ConvertNodeToCameraObject( getChild( i ) );
         if( cameraObject )
         {
-            cameraObject->WriteImageFile( saveImageDir );
+            cameraObject->WriteImageFile( m_imageDir );
         }
         else
         {
@@ -521,11 +527,16 @@ void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::WriteActiveCameraImageFile( std::string const& saveImageDir )
 {
+    if( saveImageDir.empty() )
+    {
+        m_imageDir = saveImageDir;
+    }
+
     scenegraph::camera::CameraObject* const activeCameraObject =
         GetActiveCameraObject();
     if( activeCameraObject )
     {
-        activeCameraObject->WriteImageFile( saveImageDir );
+        activeCameraObject->WriteImageFile( m_imageDir );
         m_isTakingScreenCap = true;
     }
 }
@@ -574,5 +585,10 @@ void CameraManager::PostFrameUpdate()
         }
         m_isTakingScreenCap = false;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::SetImageStoreDirectory( const std::string& imageDir )
+{
+    m_imageDir = imageDir;
 }
 ////////////////////////////////////////////////////////////////////////////////

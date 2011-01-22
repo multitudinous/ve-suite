@@ -174,6 +174,9 @@ public:
     ///Called after the draw function
     void PostFrameUpdate();
 
+    ///Set the directory to use for saving images
+    void SetImageStoreDirectory( const std::string& imageDir );
+
 protected:
     ///Destructor
     virtual ~CameraManager();
@@ -214,6 +217,9 @@ private:
     osg::ref_ptr< CameraObject > m_headShotCamera;
     ///Tell wether we are taking screen caps
     bool m_isTakingScreenCap;
+    
+    ///The directory for storing images
+    std::string m_imageDir;
 };
 } //end camera
 } //end scenegraph

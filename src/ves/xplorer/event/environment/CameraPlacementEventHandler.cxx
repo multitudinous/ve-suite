@@ -84,7 +84,9 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
         SAVE_CAMERA_IMAGE;
     mCommandNameToInt[ "SAVE_ALL_CAMERA_IMAGES" ] =
         SAVE_ALL_CAMERA_IMAGES;
-
+    mCommandNameToInt[ "CHANGE_IMAGE_DIRECTORY" ] =
+        CHANGE_IMAGE_DIRECTORY;
+        
     mCommandNameToInt[ "TOGGLE_HIGHLIGHT_TOOL" ] =
         TOGGLE_HIGHLIGHT_TOOL;
     mCommandNameToInt[ "SELECT_MARKER_OBJECT" ] =
@@ -356,6 +358,21 @@ void CameraPlacementEventHandler::Execute(
         
         cameraManager.WriteAllImageFiles( saveImageDir );
 
+        break;
+    }
+    case CHANGE_IMAGE_DIRECTORY:
+    {
+        if( !sceneManager.IsMasterNode() )
+        {
+            return;
+        }
+        
+        std::string saveImageDir;
+        command->GetDataValuePair(
+            "saveImageDirectory" )->GetData( saveImageDir );
+        
+        cameraManager.SetImageStoreDirectory( saveImageDir );
+        
         break;
     }
     case TOGGLE_HIGHLIGHT_TOOL:
