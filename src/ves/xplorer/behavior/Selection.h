@@ -150,6 +150,9 @@ private:
     
     ///GL transform info about the scene
     scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;
+    
+    ///Control cad selection
+    bool m_cadSelectionMode;
 };
 
 }

@@ -111,7 +111,8 @@ Selection::Selection()
     m_currX( 0 ),
     m_currY( 0 ),
     m_pickedBody( 0 ),
-    m_pickConstraint( 0 )
+    m_pickConstraint( 0 ),
+    m_cadSelectionMode( false )
 {    
     CONNECTSIGNALS_4( "KeyboardMouse.ButtonRelease1%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
                       m_connections, any_SignalType, normal_Priority );
@@ -122,6 +123,13 @@ Selection::Selection()
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
                      m_connections, any_SignalType, normal_Priority );
 
+    ///Handle some wand signals
+    CONNECTSIGNALS_4( "Wand.ButtonRelease0%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
+                     m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
+                     m_connections, any_SignalType, normal_Priority );
+        
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
         "Selection.ObjectPickedSignal" );
@@ -316,15 +324,53 @@ void Selection::ProcessSelection()
         return;
     }
     
+    //Search for first item that is not the laser
+    {
+        osg::Node* objectHit( NULL );
+        for( osgUtil::LineSegmentIntersector::Intersections::iterator itr = 
+            intersections.begin(); itr != intersections.end(); ++itr )
+        {
+            objectHit = *( itr->nodePath.rbegin() );
+            if( objectHit->getName() != "Laser" &&
+               objectHit->getName() != "Root Node" )
+            {
+                break;
+            }
+        }
+        
+        if( !objectHit )
+        {
+            vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit No object selected"
+                << std::endl << vprDEBUG_FLUSH;
+            
+            ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+                ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
+            
+            return;
+        }        
+    }
+    
+    ///CAD selection code
+    /*if( m_cadSelectionMode )
+    {
+        osg::NodePath nodePath = intersections.begin()->nodePath;
+        osg::Node* node = nodePath[ nodePath.size() - 1 ];
+        node->setNodeMask( 0 );
+        m_unselectedCADFiles.push_back( node );
+        return;
+    }*/
+    
     //Now find the new selected object
     osg::NodePath nodePath = intersections.begin()->nodePath;
     osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
     if( !vesObject )
     {
         vprDEBUG( vesDBG, 1 )
-        << "|\tKeyboardMouse::ProcessHit Invalid object selected"
-        << std::endl << vprDEBUG_FLUSH;
-        
+            << "|\tKeyboardMouse::ProcessHit Invalid object selected"
+            << std::endl << vprDEBUG_FLUSH;
+    
+        ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+            ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
         return;
     }
     

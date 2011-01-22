@@ -312,8 +312,18 @@ private:
     typedef std::map< std::string, WandDoubleClickSignal_type* > WandDoubleClickSignalMapType;
     WandDoubleClickSignalMapType m_wandDoubleClickSignalMap;
     
+    /// signal for generating the start and end point for selection and other
+    ///interaction tools.
+    /// Params are: start point and end point
+    typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
+    StartEndPointSignal_type m_startEndPointSignal;
+    
     ///Wand event management
     ves::xplorer::behavior::WandEvents* m_wandEvents;
+    ///Selection ray start point
+    osg::Vec3d m_startPoint;
+    ///Selection ray end point
+    osg::Vec3d m_endPoint;
 };
 } //end device
 } //end xplorer

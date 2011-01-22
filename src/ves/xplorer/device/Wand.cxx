@@ -230,6 +230,10 @@ Wand::Wand()
             eventmanager::EventManager::button_SignalType );
     }
 
+    evm->RegisterSignal(
+        new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
+        "Wand.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
+    
     // trigger (and top right button) used for the selection line
     digital[ 0 ].init( "VJButton0" );
     // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
@@ -673,16 +677,16 @@ void Wand::SetHeadRotationFlag( int input )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateSelectionLine( bool drawLine )
 {
-    osg::Vec3d startPoint, endPoint;
+    /*osg::Vec3d startPoint, endPoint;
     SetupStartEndPoint( startPoint, endPoint );
     m_beamLineSegment->reset();
     m_beamLineSegment->setStart( startPoint );
-    m_beamLineSegment->setEnd( endPoint );
+    m_beamLineSegment->setEnd( endPoint );*/
     
     if( drawLine )
     {
         m_wandPAT->setNodeMask( 1 );
-        DrawLine( startPoint, endPoint );
+        DrawLine( m_startPoint, m_endPoint );
     }
     else
     {
@@ -1249,7 +1253,7 @@ void Wand::SetCADSelectionMode( bool cadSelectionMode )
 void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 {
     //std::cout << " here 1 " << event << " " << digital[ 0 ]->getData() << std::endl;
-    event = digital[ 0 ]->getData();
+    //event = digital[ 0 ]->getData();
     if( event == gadget::DigitalState::OFF )
     {
         return;
@@ -1257,10 +1261,15 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 
     PreProcessNav();
     
+    SetupStartEndPoint( m_startPoint, m_endPoint );
+    m_startEndPointSignal( m_startPoint, m_endPoint );
+
     switch(event) 
     {
     case gadget::DigitalState::ON:
     {
+        UpdateSelectionLine( true );
+
         (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
         break;
     }
@@ -1271,6 +1280,8 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
+        UpdateSelectionLine( false );
+
         (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
         break;
     }

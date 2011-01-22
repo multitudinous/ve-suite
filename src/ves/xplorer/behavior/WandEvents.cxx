@@ -138,7 +138,7 @@ WandEvents::~WandEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void WandEvents::Button0OnEvent( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
-    UpdateSelectionLine( true );
+    //UpdateSelectionLine( true );
     
     ///Push the FOCUS event if we are using manipulators and a dragger is not
     ///active
@@ -183,8 +183,8 @@ void WandEvents::Button0PressEvent( gadget::Keys buttonKey, int xPos, int yPos, 
 ////////////////////////////////////////////////////////////////////////////////
 void WandEvents::Button0ReleaseEvent( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
-    std::cout << " Button0ReleaseEvent 2 " << std::endl;
-    UpdateSelectionLine( false );
+    //std::cout << " Button0ReleaseEvent 2 " << std::endl;
+    //UpdateSelectionLine( false );
     
     if( m_manipulatorManager.IsEnabled() && 
        m_manipulatorManager.LeafDraggerIsActive() )
@@ -214,17 +214,17 @@ void WandEvents::Button0ReleaseEvent( gadget::Keys buttonKey, int xPos, int yPos
         }
     }
     
-    ProcessHit();
+    //ProcessHit();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WandEvents::UpdateSelectionLine()
 {
     //std::cout << "update selection line " << std::endl;
-    osg::Vec3d startPoint, endPoint;
-    SetStartEndPoint( startPoint, endPoint );
+    //osg::Vec3d startPoint, endPoint;
+    //SetStartEndPoint( startPoint, endPoint );
     m_lineSegmentIntersector->reset();
-    m_lineSegmentIntersector->setStart( startPoint );
-    m_lineSegmentIntersector->setEnd( endPoint );
+    //m_lineSegmentIntersector->setStart( m_startPoint );
+    //m_lineSegmentIntersector->setEnd( m_endPoint );
     
     //Used to debug the selection line
     //If working correctly, the line should show up as 1 red pixel where picked
@@ -346,56 +346,6 @@ void WandEvents::ClearPointConstraint()
         m_pickedBody->forceActivationState( ACTIVE_TAG );
         m_pickedBody->setDeactivationTime( 0.0 );
         m_pickedBody = NULL;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void WandEvents::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
-{
-    m_wand = ves::xplorer::DeviceHandler::instance()->
-    GetDevice( ves::xplorer::device::Device::WAND )->AsWand();
-    
-    double* wandPosition = m_wand->GetObjLocation();
-    double* wandDirection = m_wand->GetDirection();
-    double wandEndPoint[ 3 ];
-    
-    for( int i = 0; i < 3; ++i )
-    {
-        wandEndPoint[ i ] = ( wandDirection [ i ] * 1000 );
-    }
-    
-    startPoint.set( wandPosition[ 0 ], wandPosition[ 1 ], wandPosition[ 2 ] );
-    endPoint.set( wandEndPoint[ 0 ], wandEndPoint[ 1 ], wandEndPoint[ 2 ] );
-    
-    //Need to negate the the camera transform that is multiplied into the view
-    {
-        osg::Matrixd inverseCameraTransform(
-            ves::xplorer::scenegraph::SceneManager::instance()->
-            GetInvertedNavMatrix().getData() );
-        
-        startPoint = startPoint * inverseCameraTransform;
-        endPoint = endPoint * inverseCameraTransform;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void WandEvents::UpdateSelectionLine( bool drawLine )
-{
-    m_wand = ves::xplorer::DeviceHandler::instance()->
-    GetDevice( ves::xplorer::device::Device::WAND )->AsWand();
-    
-    osg::Vec3d startPoint, endPoint;
-    SetStartEndPoint( startPoint, endPoint );
-    m_lineSegmentIntersector->reset();
-    m_lineSegmentIntersector->setStart( startPoint );
-    m_lineSegmentIntersector->setEnd( endPoint );
-    
-    if( drawLine )
-    {
-        m_wand->GetWandTransform().setNodeMask( 1 );
-        m_wand->DrawLine( startPoint, endPoint );
-    }
-    else
-    {
-        m_wand->GetWandTransform().setNodeMask( 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
