@@ -169,15 +169,11 @@ void cfdDisplaySettings::ProcessCommand()
                 double xmax = svPtr->getProperty< double >( "lower_right_corner", 0 );
                 double xScreenDim = xmax - xmin;
                 
-                // Get horizontal and vertical vectors using corner points
-                //mHDirection = mLRCorner - mLLCorner;
-                //mVDirection = mULCorner - mLLCorner;
-                
                 // Use width & height to compute scale
-                double mPixelsPerUnitX = gmtl::Math::abs(xmax-xmin) / vpWidth;
+                double metersPerPixelX = gmtl::Math::abs(xmax-xmin) / vpWidth;
                 
                 //this constant number is meters / pixel
-                double newXScreenDim = mPixelsPerUnitX * xSize;
+                double newXScreenDim = metersPerPixelX * xSize;
                 double xScreenDif = newXScreenDim - xScreenDim;
                 double xScreenDifHalf = xScreenDif * 0.5f;
                 newXmin = xmin - xScreenDifHalf;
@@ -187,14 +183,15 @@ void cfdDisplaySettings::ProcessCommand()
                 svPtr->setProperty( "lower_right_corner", 0, newXmax );
                 svPtr->setProperty( "upper_left_corner", 0, newXmin );
                 svPtr->setProperty( "upper_right_corner", 0, newXmax );
+
                 // now process y
                 double ymin = svPtr->getProperty< double >( "lower_left_corner", 1 );
                 double ymax = svPtr->getProperty< double >( "upper_left_corner", 1 );
                 double yScreenDim = ymax - ymin;
                 //this constant number is meters / pixel
-                double mPixelsPerUnitY = gmtl::Math::abs(ymax-ymin) / vpHeight;
+                double metersPerPixelY = gmtl::Math::abs(ymax-ymin) / vpHeight;
 
-                double newYScreenDim = mPixelsPerUnitY * ySize;
+                double newYScreenDim = metersPerPixelY * ySize;
                 double yScreenDif = newYScreenDim - yScreenDim;
                 double yScreenDifHalf = yScreenDif * 0.5f;
                 newYmin = ymin - yScreenDifHalf;

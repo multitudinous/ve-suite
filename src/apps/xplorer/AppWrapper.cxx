@@ -88,6 +88,10 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
 #endif
     kernel->start();                          // Start the kernel thread
 
+    //We could ask to resize our window here based on command line args.
+    //After we call start the application has handed the config files
+    //off to jccl::ConfigManager.
+
     kernel->setApplication( m_cfdApp );    // Give application to kernel
 
     //vpr::Thread* thread = 
