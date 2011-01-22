@@ -118,7 +118,8 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
     m_computerName( "" ),
     m_computerPort( "" ),
     m_runSampleThread( false ),
-    cm2ft( 0.032808399 )
+    cm2ft( 0.032808399 ),
+    m_simScale( 0.032808399 )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "DynamicVehicleSimToolUI";
@@ -409,6 +410,13 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         {
             ResetScene();
         }
+
+        dvp = 
+            m_currentCommand->GetDataValuePair( "Simulator Scale" );
+        if( dvp )
+        {
+            dvp->GetData( m_simScale );
+        }
         return;
     }
 
@@ -676,7 +684,7 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
 
         //All sim data is coming in as centimeters so scale it.
         double scaleFactor = 0.0328;
-        scaleFactor = scaleFactor / m_animationedNodes.at( i ).first;
+        scaleFactor = m_simScale / m_animationedNodes.at( i ).first;
 
         //GMTL is columan major order so this is why the data is laid out in columns
         //http://www.fastgraph.com/makegames/3drotation/
@@ -944,6 +952,8 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     m_initialNavMatrix = registerMat * myMat;
 #endif
     //std::cout << m_initialNavMatrix << std::endl;
+    ///Now apply the nave matrix to update the view
+    mSceneManager->GetNavDCS()->SetMat( m_initialNavMatrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::ReadBirdRegistrationFile()

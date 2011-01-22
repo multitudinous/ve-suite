@@ -153,6 +153,8 @@ private:
     double cm2ft;
     ///The constrained geom pointer
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_constrainedGeom;
+    ///The custom scale to apply to the simulator
+    double m_simScale;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( DynamicVehicleSimToolGP )

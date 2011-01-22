@@ -167,8 +167,32 @@ void DynamicVehicleSimToolUIDialog::OnStartStopButton( wxCommandEvent& event )
     ves::open::xml::DataValuePairPtr simText( new ves::open::xml::DataValuePair() );
     simText->SetData( "Simulator State", simState );
     
+    double scaleValue = 1.0;
+    //wxT("m -> ft"), wxT("cm -> ft"), wxT("mm -> ft"), wxT("in -> ft")
+    int choice = m_simScale->GetSelection();
+    if( choice == 0 )
+    {
+        scaleValue = 3.2808399;
+    }
+    else if( choice == 1 )
+    {
+        scaleValue = 0.032808399;
+    }
+    else if( choice == 2 )
+    {
+        scaleValue = 0.0032808399;
+    }
+    else if( choice == 3 )
+    {
+        scaleValue = 0.0833333;
+    }
+
+    ves::open::xml::DataValuePairPtr simScale( new ves::open::xml::DataValuePair() );
+    simScale->SetData( "Simulator Scale", scaleValue );
+
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     command->AddDataValuePair( simText );
+    command->AddDataValuePair( simScale );
     const std::string commandName = "Simulator Update";
     command->SetCommandName( commandName );
     mServiceList->SendCommandStringToXplorer( command );
@@ -232,10 +256,8 @@ void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WX
 	bSizer->Add( choice, 0, wxALIGN_CENTER, 5 );
 	
 	m_scrolledWindowSizer->Add( bSizer, 0, 0, 5 );
-    m_scrolledWindow1->Layout();
+    m_scrolledWindowSizer->FitInside( m_scrolledWindow1 );
     m_geomChoiceList.push_back( choice );
-    m_scrolledWindow1->Layout();
-    Layout();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent& WXUNUSED( event ) )
@@ -250,8 +272,8 @@ void DynamicVehicleSimToolUIDialog::OnRemoveGeometryGroupButton( wxCommandEvent&
         //m_geomChoiceList.back()->Destroy();
         m_geomChoiceList.pop_back();
     }
-    m_scrolledWindow1->Layout();
-    Layout();
+
+    m_scrolledWindowSizer->FitInside( m_scrolledWindow1 );
     UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -351,7 +373,51 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
     ves::open::xml::DataValuePairPtr computerPortText( new ves::open::xml::DataValuePair() );
     computerPortText->SetData( "ComputerPort", ConvertUnicode( m_portTextCtrl->GetValue().c_str() ) );
     toolCommand->AddDataValuePair( computerPortText );
+    //tempModel->SetInput( toolCommand );
+
+    double scaleValue = 1.0;
+    //wxT("m -> ft"), wxT("cm -> ft"), wxT("mm -> ft"), wxT("in -> ft")
+    int choice = m_simScale->GetSelection();
+    if( choice == 0 )
+    {
+        scaleValue = 3.2808399;
+    }
+    else if( choice == 1 )
+    {
+        scaleValue = 0.032808399;
+    }
+    else if( choice == 2 )
+    {
+        scaleValue = 0.0032808399;
+    }
+    else if( choice == 3 )
+    {
+        scaleValue = 0.0833333;
+    }
+
+    ves::open::xml::DataValuePairPtr simScale( new ves::open::xml::DataValuePair() );
+    simScale->SetData( "Simulator Scale", scaleValue );
+    toolCommand->AddDataValuePair( simScale );
     tempModel->SetInput( toolCommand );
+
+    ves::open::xml::CommandPtr regCommand( new ves::open::xml::Command() );
+    regCommand->SetCommandName( "DVST Registration Update" );
+    double sipVal = 0.0;
+    ves::open::xml::DataValuePairPtr sipValX( new ves::open::xml::DataValuePair() );
+    m_sipLocX->GetValue().ToDouble( &sipVal );
+    sipValX->SetData( "SIP X", sipVal );
+    regCommand->AddDataValuePair( sipValX );
+
+    ves::open::xml::DataValuePairPtr sipValY( new ves::open::xml::DataValuePair() );
+    m_sipLocY->GetValue().ToDouble( &sipVal );
+    sipValY->SetData( "SIP Y", sipVal );
+    regCommand->AddDataValuePair( sipValY );
+
+    ves::open::xml::DataValuePairPtr sipValZ( new ves::open::xml::DataValuePair() );
+    m_sipLocZ->GetValue().ToDouble( &sipVal );
+    sipValZ->SetData( "SIP Z", sipVal );
+    regCommand->AddDataValuePair( sipValZ );
+    tempModel->SetInput( regCommand );
     //mServiceList->SendCommandStringToXplorer( toolCommand );
 
     /*
@@ -465,9 +531,55 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
     }
     m_portTextCtrl->ChangeValue( wxString( computerPort.c_str(), wxConvUTF8 ) );
 
+    double scaleValue = 1.0;
+    if( toolCommand )
+    {
+        ves::open::xml::DataValuePairPtr simScale = toolCommand->GetDataValuePair( "Simulator Scale" );
+        if( simScale )
+        {
+            simScale->GetData( scaleValue );
+        }
+    }
+
+    //wxT("m -> ft"), wxT("cm -> ft"), wxT("mm -> ft"), wxT("in -> ft")
+    int choice = 1;
+    if( scaleValue == 3.2808399 )
+    {
+        choice = 0;
+    }
+    else if( scaleValue == 0.032808399 )
+    {
+        choice = 1;
+    }
+    else if( scaleValue == 0.0032808399 )
+    {
+        choice = 2;
+    }
+    else if( scaleValue == 0.0833333 )
+    {
+        choice = 3;
+    }
+    m_simScale->SetSelection( choice );
+
     //Initialize the registration data
     //Get bird info from VR Juggler
-    
+    toolCommand = tempModel->GetInput( "DVST Registration Update" );
+    if( toolCommand )
+    {
+        double sipVal = 0.0;
+        ves::open::xml::DataValuePairPtr sipValDVP = toolCommand->GetDataValuePair( "SIP X" );
+        sipValDVP->GetData( sipVal );
+        m_sipLocX->SetValue( wxString::Format( "%d", sipVal ) );
+
+        sipValDVP = toolCommand->GetDataValuePair( "SIP Y" );
+        sipValDVP->GetData( sipVal );
+        m_sipLocY->SetValue( wxString::Format( "%d", sipVal ) );
+        
+        sipValDVP = toolCommand->GetDataValuePair( "SIP Z" );
+        sipValDVP->GetData( sipVal );
+        m_sipLocZ->SetValue( wxString::Format( "%d", sipVal ) );
+    }
+
     toolCommand = tempModel->GetInput( "Geometry Data Map" );
     if( !toolCommand )
     {
@@ -522,6 +634,23 @@ void DynamicVehicleSimToolUIDialog::OnRegisterButton( wxCommandEvent& WXUNUSED( 
         command->AddDataValuePair( fileText );
     }
     command->AddDataValuePair( simText );
+
+    double sipVal = 0.0;
+    ves::open::xml::DataValuePairPtr sipValX( new ves::open::xml::DataValuePair() );
+    m_sipLocX->GetValue().ToDouble( &sipVal );
+    sipValX->SetData( "SIP X", sipVal );
+    command->AddDataValuePair( sipValX );
+
+    ves::open::xml::DataValuePairPtr sipValY( new ves::open::xml::DataValuePair() );
+    m_sipLocY->GetValue().ToDouble( &sipVal );
+    sipValY->SetData( "SIP Y", sipVal );
+    command->AddDataValuePair( sipValY );
+
+    ves::open::xml::DataValuePairPtr sipValZ( new ves::open::xml::DataValuePair() );
+    m_sipLocZ->GetValue().ToDouble( &sipVal );
+    sipValZ->SetData( "SIP Z", sipVal );
+    command->AddDataValuePair( sipValZ );
+
     const std::string commandName = "DVST Registration Update";
     command->SetCommandName( commandName );
     mServiceList->SendCommandStringToXplorer( command );
