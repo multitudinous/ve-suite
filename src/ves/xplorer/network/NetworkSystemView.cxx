@@ -57,6 +57,7 @@
 #include <osg/TexMat>
 #include <osg/StateSet>
 #include <osg/LightModel>
+#include <osg/ComputeBoundsVisitor>
 
 #include <ves/open/xml/model/Model.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
@@ -64,7 +65,6 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>
-#include <ves/xplorer/scenegraph/util/ComputeBoundsVisitor.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -197,7 +197,7 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
             rotatedComp->addChild( scaledComp.get() );
             
             //move pivot point to center
-            ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor2;
+            osg::ComputeBoundsVisitor visitor2;
             rotatedComp->accept( visitor2 );
             osg::BoundingBox bounds2 = visitor2.getBoundingBox();
             rotatedComp->setPivotPoint(bounds2.center());
@@ -215,7 +215,7 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
             mirrorComp->addChild( rotatedComp.get() );
             
             //move pivot point to center
-            ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor3;
+            osg::ComputeBoundsVisitor visitor3;
             mirrorComp->accept( visitor3 );
             osg::BoundingBox bounds3 = visitor3.getBoundingBox();
             mirrorComp->setPivotPoint(bounds3.center());
@@ -239,7 +239,7 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
             reRotatedComp->addChild( mirrorComp.get() );
             
             //move pivot point to center
-            ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor4;
+            osg::ComputeBoundsVisitor visitor4;
             reRotatedComp->accept( visitor4 );
             osg::BoundingBox bounds4 = visitor4.getBoundingBox();
             reRotatedComp->setPivotPoint(bounds4.center());
@@ -256,7 +256,7 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
             mModelTrans->addChild( reRotatedComp.get() );
             
             //find offset from center to upper left corner
-            ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor5;
+            osg::ComputeBoundsVisitor visitor5;
             mModelTrans->accept( visitor5 );
             osg::BoundingBox bounds5 = visitor5.getBoundingBox();
             osg::Vec3 centerTrans = osg::Vec3( xyPair.first + 
