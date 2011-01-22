@@ -33,8 +33,6 @@
 #include <ves/xplorer/ModelDatasetHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 
-#include <ves/xplorer/Debug.h>
-
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -53,6 +51,9 @@
 
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
+
+///This must be here due to boost header conflicts on windows
+#include <ves/xplorer/Debug.h>
 
 namespace ves
 {

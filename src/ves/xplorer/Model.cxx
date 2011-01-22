@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/Model.h>
 
-#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelDatasetHandler.h>
@@ -91,6 +90,9 @@ using namespace ves::xplorer::volume;
 
 #include <fstream>
 #include <sstream>
+
+///This must be here due to boost header conflicts on windows
+#include <ves/xplorer/Debug.h>
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
