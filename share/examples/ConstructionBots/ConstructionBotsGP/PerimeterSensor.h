@@ -69,7 +69,7 @@ public:
     const btVector3& GetNormalizedResultantForceVector();
 
     ///Get the drawable of the block that was queried for connection
-    osg::Drawable* const GetQueriedConnection() const;
+    osg::Drawable* GetQueriedConnection() const;
 
     ///Get the range for this perimeter sensor
     const double& GetRange() const;

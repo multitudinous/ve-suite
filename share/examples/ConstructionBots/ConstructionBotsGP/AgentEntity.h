@@ -100,25 +100,25 @@ public:
     void CommunicatingBlocksAlgorithm();
 
     ///Get the plugin DCS
-    ves::xplorer::scenegraph::DCS* const GetPluginDCS() const;
+    ves::xplorer::scenegraph::DCS* GetPluginDCS() const;
 
     ///Get the target DCS
-    ves::xplorer::scenegraph::DCS* const GetTargetDCS() const;
+    ves::xplorer::scenegraph::DCS* GetTargetDCS() const;
 
     ///Get the block sensor
-    bots::BlockSensorPtr const GetBlockSensor() const;
+    bots::BlockSensorPtr GetBlockSensor() const;
 
     ///Get the hold block sensor
-    bots::HoldBlockSensorPtr const GetHoldBlockSensor() const;
+    bots::HoldBlockSensorPtr GetHoldBlockSensor() const;
 
     ///Get the obstacle sensor
-    bots::ObstacleSensorPtr const GetObstacleSensor() const;
+    bots::ObstacleSensorPtr GetObstacleSensor() const;
 
     ///Get the perimeter sensor
-    bots::PerimeterSensorPtr const GetPerimeterSensor() const;
+    bots::PerimeterSensorPtr GetPerimeterSensor() const;
 
     ///Get the site sensor
-    bots::SiteSensorPtr const GetSiteSensor() const;
+    bots::SiteSensorPtr GetSiteSensor() const;
 
     ///Reset the agent to its initialized state
     void Reset();

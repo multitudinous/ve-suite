@@ -56,7 +56,7 @@ public:
     META_Node( bots, Agent );
 
     ///A custom shape to hold blocks on top the agent
-    btCompoundShape* const CreateCompoundShape() const;
+    btCompoundShape* CreateCompoundShape() const;
 
 protected:
     ///Destructor

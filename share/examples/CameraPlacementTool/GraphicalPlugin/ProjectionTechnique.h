@@ -45,11 +45,11 @@ public:
     ProjectionTechnique();
     virtual ~ProjectionTechnique();
 
-    osg::Uniform* const GetAlpha() const;
-    osg::Uniform* const GetNearPlaneUniform() const;
-    osg::Uniform* const GetFarPlaneUniform() const;
-    osg::Uniform* const GetFocalDistanceUniform() const;
-    osg::Uniform* const GetFocalRangeUniform() const;
+    osg::Uniform* GetAlpha() const;
+    osg::Uniform* GetNearPlaneUniform() const;
+    osg::Uniform* GetFarPlaneUniform() const;
+    osg::Uniform* GetFocalDistanceUniform() const;
+    osg::Uniform* GetFocalRangeUniform() const;
 
 protected:
     virtual void DefinePasses();

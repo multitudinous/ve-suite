@@ -45,8 +45,8 @@ public:
     DepthOfFieldTechnique();
     virtual ~DepthOfFieldTechnique();
 
-    osg::Uniform* const GetTextureDimensionsUniform() const;
-    osg::Uniform* const GetMaxCircleOfConfusionUniform() const;
+    osg::Uniform* GetTextureDimensionsUniform() const;
+    osg::Uniform* GetMaxCircleOfConfusionUniform() const;
 
 protected:
     virtual void DefinePasses();

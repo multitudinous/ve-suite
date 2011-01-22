@@ -75,7 +75,7 @@ public:
     const bool AttachUpdate( bool isStartBlock = false );
 
     ///Get this block's geometry
-    bots::Block* const GetBlockGeometry() const;
+    bots::Block* GetBlockGeometry() const;
 
     ///Get this block's location
     const std::pair< int, int >& GetLocation() const;

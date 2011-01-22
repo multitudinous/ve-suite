@@ -403,27 +403,27 @@ void AgentEntity::QueryBlock()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::BlockSensorPtr const AgentEntity::GetBlockSensor() const
+bots::BlockSensorPtr AgentEntity::GetBlockSensor() const
 {
     return mBlockSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::HoldBlockSensorPtr const AgentEntity::GetHoldBlockSensor() const
+bots::HoldBlockSensorPtr AgentEntity::GetHoldBlockSensor() const
 {
     return mHoldBlockSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::ObstacleSensorPtr const AgentEntity::GetObstacleSensor() const
+bots::ObstacleSensorPtr AgentEntity::GetObstacleSensor() const
 {
     return mObstacleSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::PerimeterSensorPtr const AgentEntity::GetPerimeterSensor() const
+bots::PerimeterSensorPtr AgentEntity::GetPerimeterSensor() const
 {
     return mPerimeterSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::SiteSensorPtr const AgentEntity::GetSiteSensor() const
+bots::SiteSensorPtr AgentEntity::GetSiteSensor() const
 {
     return mSiteSensor;
 }
