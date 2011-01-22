@@ -1,0 +1,12 @@
+Get list of birds from VR Juggler for sensor proxys
+Let the user choose the 3 birds that are attached to the buck
+Let the user set the front, left rear, right rear birds
+make a vector from the centroid of the resulting triangle to the front bird
+make a vector from the centroid of the triangle to one of the rear birds
+Do a cross product of the above two vectors to get the up vector
+cross the up vector and the front vector to get the right vector
+do the transform from the resulting coordinate system to the sip (mike will provide the transform)
+Press a calibrate button to create the transform offset 
+User will then remove all of the birds
+Apply transform to the nav matrix just like it was an initial offsite in the nav keyboard
+
