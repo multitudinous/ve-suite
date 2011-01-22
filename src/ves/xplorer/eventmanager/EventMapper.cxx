@@ -38,6 +38,9 @@
 
 #include <boost/ref.hpp>
 
+#include <sstream>
+
+
 namespace ves
 {
 namespace xplorer
@@ -47,8 +50,11 @@ namespace eventmanager
 
 vprSingletonImp( EventMapper );
 
-EventMapper::EventMapper()
+EventMapper::EventMapper():
+        m_Logger( Poco::Logger::get( "xplorer.EventMapper" ) )
 {
+    CREATE_LOG_STREAM;
+    LOG_TRACE( "ctor" );
     // Connect to signals to get all keypresses, keyreleases, buttonpresses,
     // and buttonreleases
     CONNECTSIGNALS_4( "%ButtonPress%",void ( gadget::Keys, int, int, int ),
@@ -76,40 +82,63 @@ EventMapper::EventMapper()
 
 EventMapper::~EventMapper()
 {
-    ;
+    // Delete signal objects generated in calls to AddMappableEvent
+    BehaviorMapType::iterator iter = mSyncNoneBehaviorMap.begin();
+    while( iter != mSyncNoneBehaviorMap.end() )
+    {
+        delete iter->second;
+        ++iter;
+    }
+
+    BehaviorMapType::iterator g_iter = mSyncGraphicsBehaviorMap.begin();
+    while( g_iter != mSyncGraphicsBehaviorMap.end() )
+    {
+        delete g_iter->second;
+        ++g_iter;
+    }
 }
 
 void EventMapper::MapEvent( const std::string& KeyButton, const std::string& Behavior )
 {
+    LOG_INFO( "MapEvent: Mapping " << KeyButton << " to " << Behavior );
+
     mEventBehaviorMap[ KeyButton ] = Behavior;
 }
 
 void EventMapper::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
+    LOG_TRACE( "ButtonPressEvent: " << button << ", " << x << ", " << y << ", "
+               << state );
     std::string EventName( "ButtonPress_" );
     QueueAndEmit( EventName, button );
 }
 
 void EventMapper::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
+    LOG_TRACE( "ButtonReleaseEvent: " << button << ", " << x << ", " << y << ", "
+               << state );
     std::string EventName( "ButtonRelease_" );
     QueueAndEmit( EventName, button );
 }
 
 void EventMapper::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
 {
+    LOG_TRACE( "MouseDoubleClickEvent: " << button << ", " << x << ", " << y << ", "
+               << z << "," << state );
     std::string EventName( "DoubleClick_" );
     QueueAndEmit( EventName, button );
 }
 
 void EventMapper::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
 {
+    LOG_TRACE( "KeyPressEvent: " << key << ", " << modifiers << ", " << unicode );
     std::string EventName( "KeyPress_" );
     QueueAndEmit( EventName, key );
 }
 
 void EventMapper::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
 {
+    LOG_TRACE( "KeyReleaseEvent: " << key << ", " << modifiers << ", " << unicode );
     std::string EventName( "KeyRelease_" );
     QueueAndEmit( EventName, key );
 }
@@ -117,6 +146,7 @@ void EventMapper::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode
 void EventMapper::QueueAndEmit( std::string& eventName, gadget::Keys key )
 {
     eventName.append( getKeyName( key ) );
+    LOG_TRACE( "QueueAndEmit: " << eventName );
 
     // See if this event is mapped to a signal
     EventBehaviorMapType::const_iterator ebIter = mEventBehaviorMap.find( eventName );
@@ -145,6 +175,7 @@ void EventMapper::LatePreFrameUpdate()
 
 void EventMapper::EmitSyncGraphicsSignals()
 {
+    LOG_TRACE( "EmitSyncGraphicsSignals" );
     if( mSyncGraphicsQueue.empty() )
     {
         return;
@@ -165,49 +196,50 @@ void EventMapper::EmitSyncGraphicsSignals()
     mSyncGraphicsQueue.clear();
 }
 
+void EventMapper::AddMappableEvent( const std::string& EventName, syncType sync )
+{
+    // Check event map to see if this event already exists
+    EventBehaviorMapType::const_iterator iter =
+            mEventBehaviorMap.find( EventName );
+    if( iter != mEventBehaviorMap.end() )
+    {
+        // Event already exists in our map. No need to add it again.
+        return;
+    }
+    else
+    {
+        // Register signal for event
+        voidSignalType* signal = new ( voidSignalType );
+        std::string name("EventMapper.");
+        name.append( EventName );
+        ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
+                new ves::xplorer::eventmanager::SignalWrapper< voidSignalType >( signal ),
+                name );
+
+        // Add signal to appropriate map based on sync type
+        if( sync == syncNone )
+        {
+            mSyncNoneBehaviorMap[ EventName ] = signal;
+        }
+        else if( sync == syncGraphics )
+        {
+            mSyncGraphicsBehaviorMap[ EventName ] = signal;
+        }
+    }
+}
+
 void EventMapper::SetupDefaultBindings()
 {
-    using ves::xplorer::eventmanager::SignalWrapper;
+    LOG_TRACE( "SetupDefaultBindings" );
 
     // FrameAll -- Sync to Graphics
-    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< voidSignalType >( &mFrameAllSignal ),
-            "EventMapper.FrameAll" );
-    mSyncGraphicsBehaviorMap[ "FrameAll" ] = &mFrameAllSignal ;
+    AddMappableEvent( "FrameAll", syncGraphics );
     MapEvent( "KeyRelease_KEY_F", "FrameAll" );
 
 
     // HideShowUI -- Sync to Graphics
-    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< voidSignalType >( &mHideShowUISignal ),
-            "EventMapper.HideShowUI" );
-    mSyncGraphicsBehaviorMap[ "HideShowUI" ] = &mHideShowUISignal;
+    AddMappableEvent( "HideShowUI", syncGraphics );
     MapEvent( "KeyRelease_KEY_F1", "HideShowUI" );
-
-
-// Code block below won't be used since we don't want to do this type of
-// direct chaining of signals, because then there's no way to deal with sync
-// issues. This block is useful though because it demonstrates chaining signals
-// directly together that have different signatures -- so signal A can call signal
-// B even though the signatures differ.
-
-//    using namespace ves::xplorer::eventmanager;
-//    typedef boost::signals2::signal<void (gadget::Keys, int, char ) > keySignal_t;
-//    {
-//        keySignal_t::slot_type* slotFunctor = new keySignal_t::slot_type( boost::bind( boost::ref(mFrameAllSignal) ) );
-//        SlotWrapper< keySignal_t >* slotWrapper = new SlotWrapper< keySignal_t >( *slotFunctor );
-//        EventManager::instance()->ConnectSignals( "%KeyRelease_KEY_F", slotWrapper,
-//                      mConnections, EventManager::keyboard_SignalType,
-//                      EventManager::normal_Priority );
-//    }
-//
-//    {
-//        keySignal_t::slot_type* slotFunctor = new keySignal_t::slot_type( boost::bind( boost::ref(mHideShowUISignal) ) );
-//        SlotWrapper< keySignal_t >* slotWrapper = new SlotWrapper< keySignal_t >( *slotFunctor );
-//        EventManager::instance()->ConnectSignals( "%KeyRelease_KEY_F1", slotWrapper,
-//                      mConnections, EventManager::keyboard_SignalType,
-//                      EventManager::normal_Priority );
-//    }
 }
 
 const std::string EventMapper::getKeyName(const gadget::Keys keyId) const

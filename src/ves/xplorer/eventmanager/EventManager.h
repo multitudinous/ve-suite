@@ -51,7 +51,7 @@
 
 #include <ves/VEConfig.h>
 
-#include <Poco/Logger.h>
+#include <ves/xplorer/Debug.h>
 
 // Macros to make connecting signals an easier process
 // To add more macros for making connections that require N arguments,
@@ -445,7 +445,7 @@ private:
 
     int mMonotonicID;
 
-    Poco::Logger& m_Logger;
+    DECLARE_LOGGER;
 };
 
 

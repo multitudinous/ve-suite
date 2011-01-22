@@ -39,6 +39,7 @@
 
 #include <ves/VEConfig.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <ves/xplorer/Debug.h>
 
 #include <boost/signals2/signal.hpp>
 
@@ -46,6 +47,8 @@
 
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
+
+
 
 namespace ves
 {
@@ -67,7 +70,16 @@ class VE_EVENTMANAGER_EXPORTS EventMapper
 {
 public:
 
+    enum syncType
+    {
+        syncNone,
+        syncGraphics
+    };
+
     void MapEvent( const std::string& KeyButton, const std::string& Behavior );
+
+    void AddMappableEvent( const std::string& EventName, syncType sync = syncNone );
+
     void LatePreFrameUpdate();
 
 private:
@@ -125,8 +137,10 @@ private:
     // All the basic behavior signals go here. All must have the signature
     // void () since there are no logical, generic arguments to a key or button
     // mapping.
-    voidSignalType mFrameAllSignal; ///< Show everything in the scene
-    voidSignalType mHideShowUISignal; ///< Toggle visibility of UI
+//    voidSignalType mFrameAllSignal; ///< Show everything in the scene
+//    voidSignalType mHideShowUISignal; ///< Toggle visibility of UI
+
+    DECLARE_LOGGER;
 
 };
 
