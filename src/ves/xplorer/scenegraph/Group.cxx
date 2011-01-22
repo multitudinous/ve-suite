@@ -50,7 +50,8 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 Group::Group( const Group& group, const osg::CopyOp& copyop )
     :
-    osg::Group( group, copyop )
+    osg::Group( group, copyop ),
+    SceneNode( group )
 {
     ;
 }

@@ -279,7 +279,7 @@ void Dragger::Disconnect()
     if( m_isRootDragger )
     {
         AssociationSet::const_iterator itr = m_associationSet.begin();
-        for( itr; itr != m_associationSet.end(); ++itr )
+        for( ; itr != m_associationSet.end(); ++itr )
         {
             osgwTools::AbsoluteModelTransform* amt =
                 dynamic_cast< osgwTools::AbsoluteModelTransform* >( *itr );
@@ -445,7 +445,7 @@ void Dragger::ComputeAssociationMatrices()
 {
     //Compute local to world and world to local matrices for associated transforms
     AssociationSet::const_iterator itr = m_associationSet.begin();
-    for( itr; itr != m_associationSet.end(); ++itr )
+    for( ; itr != m_associationSet.end(); ++itr )
     {
         LocalToWorldNodePath nodePath(
             *itr, SceneManager::instance()->GetModelRoot() );
@@ -490,7 +490,7 @@ void Dragger::UpdateAssociations()
 {
     //Set all associated transforms
     AssociationSet::const_iterator asItr = m_associationSet.begin();
-    for( asItr; asItr != m_associationSet.end(); ++asItr )
+    for( ; asItr != m_associationSet.end(); ++asItr )
     {
         osg::Transform* transform = *asItr;
         AssociationMatricesMap::const_iterator ammItr =

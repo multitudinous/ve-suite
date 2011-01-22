@@ -45,13 +45,17 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Switch::Switch()
+    :
+    osg::Switch(),
+    SceneNode()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Switch::Switch( const Switch& switchNode, const osg::CopyOp& copyop )
     :
-    osg::Switch( switchNode, copyop )
+    osg::Switch( switchNode, copyop ),
+    SceneNode( switchNode )
 {
     ;
 }

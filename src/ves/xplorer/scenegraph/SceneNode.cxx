@@ -52,6 +52,13 @@ SceneNode::SceneNode()
     AddTechnique( "Default", new technique::DefaultTechnique() );
 }
 ////////////////////////////////////////////////////////////////////////////////
+SceneNode::SceneNode( const SceneNode& rhs )
+    :
+    mActiveTechnique( rhs.mActiveTechnique )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
 SceneNode::~SceneNode()
 {
     //Delete techniques in map

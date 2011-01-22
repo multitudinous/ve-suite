@@ -140,6 +140,7 @@ DCS::DCS( double* scale, double* trans, double* rot )
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
     :
     osg::PositionAttitudeTransform( dcs, copyop ),
+    SceneNode( dcs ),
     mPhysicsRigidBody( 0 )
 {
     /*m_udcb = new TransferPhysicsDataCallback();

@@ -67,7 +67,8 @@ Geode::Geode()
 ////////////////////////////////////////////////////////////////////////////////
 Geode::Geode( const Geode& geode, const osg::CopyOp& copyop )
     :
-    osg::Geode( geode, copyop )
+    osg::Geode( geode, copyop ),
+    SceneNode( geode )
 {
     ;
 }
