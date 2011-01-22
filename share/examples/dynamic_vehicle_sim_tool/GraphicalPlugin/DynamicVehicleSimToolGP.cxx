@@ -119,7 +119,9 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
     m_computerPort( "" ),
     m_runSampleThread( false ),
     cm2ft( 0.032808399 ),
-    m_simScale( 0.032808399 )
+    m_simScale( 0.032808399 ),
+    m_needInitialized( false ),
+    m_frameCount( 0 )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "DynamicVehicleSimToolUI";
@@ -148,6 +150,24 @@ void DynamicVehicleSimToolGP::InitializeNode(
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::PreFrameUpdate()
 {
+    m_frameCount += 1;
+    if( m_needInitialized && m_frameCount == 3 )
+    {
+        ves::open::xml::CommandPtr toolInfo = mXmlModel->GetInput( "Tool Info" );
+        if( toolInfo )
+        {
+            toolInfo->SetCommandName( "Geometry Map Update" );
+            SetCurrentCommand( toolInfo );
+        }
+
+        toolInfo = mXmlModel->GetInput( "Geometry Data Map" );
+        if( toolInfo )
+        {
+            SetCurrentCommand( toolInfo );
+        }
+        m_needInitialized = false;
+    }
+
     std::string simState;
     GetSimState( simState );
 
@@ -1026,5 +1046,15 @@ void DynamicVehicleSimToolGP::ReadBirdRegistrationFile()
         }
     }
     while( !birdFile.eof() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::ProcessOnSubmitJob()
+{
+    ves::open::xml::CommandPtr toolInfo = mXmlModel->GetInput( "Tool Info" );
+    if( toolInfo )
+    {
+        m_needInitialized = true;
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

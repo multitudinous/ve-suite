@@ -71,13 +71,21 @@ class VE_USER_PLUGIN_EXPORTS DynamicVehicleSimToolGP :
     public ves::xplorer::plugin::PluginBase
 {
 public:
+    ///Constructor
     DynamicVehicleSimToolGP();
+    ///Destructor
     virtual ~DynamicVehicleSimToolGP();
 
+    ///Add all of the data to the scenegraph
     virtual void InitializeNode( osg::Group* veworldDCS );
+    ///Called everything frame
     virtual void PreFrameUpdate();
+    ///Process any commands comming in from conductor
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
+    ///Remove this plugin from xplorer and the sg
     virtual void RemoveSelfFromSG();
+    ///Called after everything is initialized for the plugin
+    virtual void ProcessOnSubmitJob();
 
 protected:
 
@@ -158,6 +166,10 @@ private:
     double m_simScale;
     ///SIP location
     gmtl::Point3d m_sip;
+    ///Initialize based on ves file
+    bool m_needInitialized;
+    ///Frame count
+    unsigned int m_frameCount;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( DynamicVehicleSimToolGP )
