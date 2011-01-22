@@ -329,9 +329,14 @@ void CADNodePropertiesDlg::_buildTransformPanel()
     _zRotationCtrl->SetIncrement( 1.0 );
     _zRotationCtrl->Raise();
 
-    rotationSizer->Add( _xRotationCtrl, 1, wxALIGN_CENTER_HORIZONTAL );
+    //_xRotationCtrl = yaw
+    //_yRotationCtrl = pitch
+    //_zRotationCtrl = roll
+    //The order of the widgets below is now rotation about:
+    //x axis, y axis, z axis
     rotationSizer->Add( _yRotationCtrl, 1, wxALIGN_CENTER_HORIZONTAL );
     rotationSizer->Add( _zRotationCtrl, 1, wxALIGN_CENTER_HORIZONTAL );
+    rotationSizer->Add( _xRotationCtrl, 1, wxALIGN_CENTER_HORIZONTAL );
 
     transformPropSizer->Add( rotationSizer, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
 
