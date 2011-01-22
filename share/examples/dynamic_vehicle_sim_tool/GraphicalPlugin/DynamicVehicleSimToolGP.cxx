@@ -422,6 +422,22 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
     if( commandName == "DVST Registration Update" )
     {
+        ves::open::xml::DataValuePairPtr dvp1 = 
+            m_currentCommand->GetDataValuePair( "SIP X" );
+        if( dvp1 )
+        {   
+            double sipX, sipY, sipZ;
+            dvp1->GetData( sipX );
+            dvp1 = m_currentCommand->GetDataValuePair( "SIP Y" );
+            dvp1->GetData( sipY );
+            dvp1 = m_currentCommand->GetDataValuePair( "SIP Z" );
+            dvp1->GetData( sipZ );
+            m_sip.set( sipX, sipY, sipZ );
+        }
+        else
+        {
+            m_sip.set( 0.0, 0.0, 0.0 );
+        }
         ves::open::xml::DataValuePairPtr dvp = 
             m_currentCommand->GetDataValuePair( "Mode" );
         std::string simState;
@@ -429,7 +445,9 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         
         if( simState == "Manual" )
         {
-            m_initialNavMatrix = mSceneManager->GetNavDCS()->GetMat();
+            gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
+            m_initialNavMatrix = gmtl::invert( sipLoc ) * mSceneManager->GetNavDCS()->GetMat();
+            mSceneManager->GetNavDCS()->SetMat( m_initialNavMatrix );
         }
         else
         {
@@ -936,10 +954,11 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     gmtl::Matrix44d measuredSIPCentroidMat = 
         gmtl::makeTrans< gmtl::Matrix44d >( measuredSIPCentroid );
     
+    gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
     //Now we convert the sip matrix back through the transform mat to move it 
     //to the VR Juggler coord
 #ifndef DVST_TEST
-    gmtl::Matrix44d registerMat = transMat * measuredSIPCentroidMat;
+    gmtl::Matrix44d registerMat = sipLoc * transMat * measuredSIPCentroidMat;
     gmtl::invert( registerMat );
 
     m_initialNavMatrix = registerMat;

@@ -47,6 +47,7 @@
 #include <vpr/Sync/Mutex.h>
 
 #include <gmtl/Matrix.h>
+#include <gmtl/Point.h>
 
 namespace ves
 {
@@ -155,6 +156,8 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_constrainedGeom;
     ///The custom scale to apply to the simulator
     double m_simScale;
+    ///SIP location
+    gmtl::Point3d m_sip;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( DynamicVehicleSimToolGP )

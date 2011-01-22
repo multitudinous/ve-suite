@@ -50,13 +50,13 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     sbSizer3->Add( m_toggleBtn1, 0, wxRIGHT, 5 );
     
     m_resetButton = new wxButton( this, wxID_ANY, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
-    sbSizer3->Add( m_resetButton, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT, 5 );
+    sbSizer3->Add( m_resetButton, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT, 5 );
     
     wxString m_simScaleChoices[] = { wxT("m -> ft"), wxT("cm -> ft"), wxT("mm -> ft"), wxT("in -> ft") };
     int m_simScaleNChoices = sizeof( m_simScaleChoices ) / sizeof( wxString );
     m_simScale = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_simScaleNChoices, m_simScaleChoices, 0 );
     m_simScale->SetSelection( 1 );
-    sbSizer3->Add( m_simScale, 0, wxLEFT, 5 );
+    sbSizer3->Add( m_simScale, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT, 5 );
     
     sbSizer1->Add( sbSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxEXPAND|wxTOP, 5 );
     

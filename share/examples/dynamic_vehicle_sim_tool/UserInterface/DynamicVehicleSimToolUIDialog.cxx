@@ -255,6 +255,9 @@ void DynamicVehicleSimToolUIDialog::OnAddGeometryGroupButton( wxCommandEvent& WX
 	choice->SetSelection( 0 );
 	bSizer->Add( choice, 0, wxALIGN_CENTER, 5 );
 	
+    wxCheckBox* checkBox = new wxCheckBox( m_scrolledWindow1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    bSizer->Add( checkBox, 0, wxALL, 5 );
+
 	m_scrolledWindowSizer->Add( bSizer, 0, 0, 5 );
     m_scrolledWindowSizer->FitInside( m_scrolledWindow1 );
     m_geomChoiceList.push_back( choice );
@@ -569,15 +572,15 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
         double sipVal = 0.0;
         ves::open::xml::DataValuePairPtr sipValDVP = toolCommand->GetDataValuePair( "SIP X" );
         sipValDVP->GetData( sipVal );
-        m_sipLocX->SetValue( wxString::Format( "%d", sipVal ) );
+        m_sipLocX->ChangeValue( wxString::Format( "%f", sipVal ) );
 
         sipValDVP = toolCommand->GetDataValuePair( "SIP Y" );
         sipValDVP->GetData( sipVal );
-        m_sipLocY->SetValue( wxString::Format( "%d", sipVal ) );
-        
+        m_sipLocY->ChangeValue( wxString::Format( "%f", sipVal ) );
+
         sipValDVP = toolCommand->GetDataValuePair( "SIP Z" );
         sipValDVP->GetData( sipVal );
-        m_sipLocZ->SetValue( wxString::Format( "%d", sipVal ) );
+        m_sipLocZ->ChangeValue( wxString::Format( "%f", sipVal ) );
     }
 
     toolCommand = tempModel->GetInput( "Geometry Data Map" );
@@ -654,6 +657,8 @@ void DynamicVehicleSimToolUIDialog::OnRegisterButton( wxCommandEvent& WXUNUSED( 
     const std::string commandName = "DVST Registration Update";
     command->SetCommandName( commandName );
     mServiceList->SendCommandStringToXplorer( command );
+
+    UpdateModelData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolUIDialog::OnRegistrationFileChoice( wxCommandEvent& WXUNUSED( event ) ) 
