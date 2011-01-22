@@ -39,7 +39,7 @@
 
 #include <ves/VEConfig.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
-#include <ves/xplorer/Debug.h>
+//#include <ves/xplorer/Debug.h>
 
 #include <boost/signals2/signal.hpp>
 
@@ -140,7 +140,7 @@ private:
 //    voidSignalType mFrameAllSignal; ///< Show everything in the scene
 //    voidSignalType mHideShowUISignal; ///< Toggle visibility of UI
 
-    DECLARE_LOGGER;
+    //DECLARE_LOGGER;
 
 };
 

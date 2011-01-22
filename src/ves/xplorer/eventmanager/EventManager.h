@@ -51,7 +51,7 @@
 
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/Debug.h>
+//#include <ves/xplorer/Debug.h>
 
 // Macros to make connecting signals an easier process
 // To add more macros for making connections that require N arguments,
@@ -375,10 +375,10 @@ public:
 private:
     
     /// Constructor
-    EventManager( );
+    EventManager();
     
     /// Destructor
-    virtual ~EventManager( );
+    virtual ~EventManager();
 
     /// Singleton declarations
     vprSingletonHeader( EventManager );
@@ -445,7 +445,7 @@ private:
 
     int mMonotonicID;
 
-    DECLARE_LOGGER;
+    //DECLARE_LOGGER;
 };
 
 

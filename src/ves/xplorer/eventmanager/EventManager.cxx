@@ -30,15 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-// Uncomment to turn on debug and trace log messages
-//#define _DEBUG
-#include<Poco/Data/Session.h>
-#include<Poco/Data/SQLite/Connector.h>
+#include <Poco/Data/Session.h>
+#include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/DataException.h>
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 
-#include <ves/xplorer/Debug.h>
+//#include <ves/xplorer/Debug.h>
 
 using boost::shared_ptr;
 using boost::weak_ptr;
@@ -56,11 +54,12 @@ vprSingletonImp( EventManager );
 
 ////////////////////////////////////////////////////////////////////////////////
 EventManager::EventManager():
-    mMonotonicID(0),
-    m_Logger( Poco::Logger::get("xplorer.EventManager") )
+    mMonotonicID(0)//,
+    //m_Logger( Poco::Logger::get("xplorer.EventManager") )
 {
-    CREATE_LOG_STREAM;
-    LOG_TRACE( "ctor" );
+    //DECLARE_LOGGER;
+    //CREATE_LOG_STREAM;
+    //LOG_TRACE( "ctor" );
 
     // Open an in-memory database to allow efficient searches of existing signals
     Poco::Data::SQLite::Connector::registerConnector();
@@ -76,7 +75,7 @@ EventManager::EventManager():
 ////////////////////////////////////////////////////////////////////////////////
 EventManager::~EventManager()
 {
-    LOG_TRACE( "dtor" );
+    //LOG_TRACE( "dtor" );
 
     Poco::Data::SQLite::Connector::unregisterConnector();
 
@@ -107,7 +106,7 @@ EventManager::~EventManager()
 ////////////////////////////////////////////////////////////////////////////////
 void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& sigName, SignalType sigType )
 {
-    LOG_DEBUG( "RegisterSignal: " << sigName );
+    //LOG_DEBUG( "RegisterSignal: " << sigName );
 
     // Add this signal to the lookup table
     try
@@ -120,7 +119,7 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
 
         if( exists )
         {
-            LOG_WARNING( "RegisterSignal: " << sigName << " will hide previous signal with same name" );
+            //LOG_WARNING( "RegisterSignal: " << sigName << " will hide previous signal with same name" );
             std::string warning( "RegisterSignal: " );
 
             ( *mSession ) << "UPDATE signals SET type=:type WHERE name=:name",
@@ -130,7 +129,7 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
         }
         else
         {
-            LOG_DEBUG( "RegisterSignal: Registering new signal " << sigName );
+            //LOG_DEBUG( "RegisterSignal: Registering new signal " << sigName );
 
             ( *mSession ) << "INSERT INTO signals (name, type) VALUES (:name,:type)",
                     Poco::Data::use( sigName ),
@@ -140,7 +139,7 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
     }
     catch( Poco::Data::DataException& ex )
     {
-         LOG_ERROR( ex.displayText() );
+         //LOG_ERROR( ex.displayText() );
     }
 
     // Store the signal in the signal map
@@ -151,7 +150,7 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
 ////////////////////////////////////////////////////////////////////////////////
 void EventManager::ConnectToPreviousSlots( const std::string& sigName )
 {
-    LOG_TRACE( "ConnectToPreviousSlots" );
+    //LOG_TRACE( "ConnectToPreviousSlots" );
 
     std::vector< int > ids;
     std::vector< int > priorities;
@@ -215,18 +214,18 @@ void EventManager::_ConnectSignal( const std::string& sigName,
                                   int priority,
                                   bool store )
 {
-    LOG_TRACE( "_ConnectSignal" );
+    //LOG_TRACE( "_ConnectSignal" );
     // Find the appropriate SignalWrapperBase
     std::map< std::string, SignalWrapperBase* >::const_iterator iter = mSignals.find( sigName );
     if( iter != mSignals.end() )
     {
-        LOG_DEBUG( "_ConnectSignal: Connecting " << slot << " to signal "
-                << sigName << " (" << iter->second->GetSignalAddress() << ")" );
+        //LOG_DEBUG( "_ConnectSignal: Connecting " << slot << " to signal "
+        //        << sigName << " (" << iter->second->GetSignalAddress() << ")" );
         // Tell the SignalWrapper to connect its signal to this slot
         SignalWrapperBase* signalWrapper = iter->second;
         if( signalWrapper->ConnectSlot( slot, connections, priority ) )
         {
-            LOG_DEBUG( "_ConnectSignal: Connection successful" );
+            //LOG_DEBUG( "_ConnectSignal: Connection successful" );
             //Connection was successful; store the details
             StoreConnection( connections, signalWrapper );
 
@@ -250,7 +249,7 @@ void EventManager::_ConnectSignal( const std::string& sigName,
         }
         else
         {
-            LOG_ERROR( "_ConnectSignal: Connection to " << sigName << " failed" );
+            //LOG_ERROR( "_ConnectSignal: Connection to " << sigName << " failed" );
         }
     }
 
@@ -267,7 +266,7 @@ void EventManager::ConnectSignals( const std::string& stringToMatch,
                                    SignalType sigType,
                                    int priority )
 {
-    LOG_DEBUG( "ConnectSignals: " << stringToMatch << " " << slot );
+    //LOG_DEBUG( "ConnectSignals: " << stringToMatch << " " << slot );
     std::vector< std::string > names;
     GetMatches( stringToMatch, sigType, names );
 
@@ -290,7 +289,7 @@ void EventManager::StoreSlot( const std::string& sigName,
                               int type,
                               int priority )
 {
-    LOG_TRACE( "StoreSlot " << sigName << " " << slot );
+    //LOG_TRACE( "StoreSlot " << sigName << " " << slot );
     mExactSlotMap[ mMonotonicID ] = slot;
 
     mExactSlotConnections[ mMonotonicID ] = connections.GetWeakPtr();
@@ -307,7 +306,7 @@ void EventManager::StoreSlot( const std::string& sigName,
     }
     catch( Poco::Data::DataException& ex )
     {
-         LOG_ERROR( ex.displayText() );
+         //LOG_ERROR( ex.displayText() );
     }
 
     // Increment the ID so we never have name clashes when things get deleted
@@ -317,7 +316,7 @@ void EventManager::StoreSlot( const std::string& sigName,
 ////////////////////////////////////////////////////////////////////////////////
 void EventManager::GetMatches( const std::string stringToMatch, SignalType sigType, std::vector< std::string >& names )
 {
-    LOG_TRACE( "GetMatches: " << stringToMatch << " " << sigType );
+    //LOG_TRACE( "GetMatches: " << stringToMatch << " " << sigType );
     try
     {
         Poco::Data::Statement statement( *mSession );
@@ -333,13 +332,13 @@ void EventManager::GetMatches( const std::string stringToMatch, SignalType sigTy
     }
     catch( Poco::Data::DataException& ex )
     {
-        LOG_ERROR( ex.displayText() );
+        //LOG_ERROR( ex.displayText() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EventManager::GetSlotMatches( const std::string& sigName, std::vector< int >& ids, std::vector< int >& priorities )
 {
-    LOG_TRACE( "GetSlotMatches: " << sigName );
+    //LOG_TRACE( "GetSlotMatches: " << sigName );
     // TODO: Needs slightly more subtle matching that includes signal type
     try
     {
@@ -360,13 +359,13 @@ void EventManager::GetSlotMatches( const std::string& sigName, std::vector< int 
     }
     catch( Poco::Data::DataException& ex )
     {
-         LOG_ERROR( ex.displayText() );
+         //LOG_ERROR( ex.displayText() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EventManager::StoreConnection( ScopedConnectionList& connections, SignalWrapperBase* sigWrapper )
 {
-    LOG_TRACE( "StoreConnection" );
+    //LOG_TRACE( "StoreConnection" );
     // Only store the connection if it represents an active connection
     boost::shared_ptr< boost::signals2::scoped_connection > connection = connections.GetLastConnection();
     if( connection->connected() )
@@ -378,7 +377,7 @@ void EventManager::StoreConnection( ScopedConnectionList& connections, SignalWra
 ////////////////////////////////////////////////////////////////////////////////
 shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionWeak( shared_ptr< scoped_connection > connection )
 {
-    LOG_TRACE( "MonopolizeConnectionWeak" );
+    //LOG_TRACE( "MonopolizeConnectionWeak" );
     shared_ptr< ConnectionMonopoly > monopoly( new ConnectionMonopoly );
 
     // Determine which SignalWrapper this connection is associated with
@@ -423,7 +422,7 @@ shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionWeak( shared_
 ////////////////////////////////////////////////////////////////////////////////
 shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionStrong( shared_ptr< scoped_connection > connection )
 {
-    LOG_TRACE( "MonopolizeConnectionStrong" );
+    //LOG_TRACE( "MonopolizeConnectionStrong" );
     // Determine which SignalWrapper this connection is associated with
     ConnectionMap_type::iterator iter = mConnections.find( connection );
 

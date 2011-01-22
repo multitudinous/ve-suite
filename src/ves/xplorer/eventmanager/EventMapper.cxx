@@ -50,11 +50,11 @@ namespace eventmanager
 
 vprSingletonImp( EventMapper );
 
-EventMapper::EventMapper():
-        m_Logger( Poco::Logger::get( "xplorer.EventMapper" ) )
+EventMapper::EventMapper()//:
+        //m_Logger( Poco::Logger::get( "xplorer.EventMapper" ) )
 {
-    CREATE_LOG_STREAM;
-    LOG_TRACE( "ctor" );
+    //CREATE_LOG_STREAM;
+    //LOG_TRACE( "ctor" );
     // Connect to signals to get all keypresses, keyreleases, buttonpresses,
     // and buttonreleases
     CONNECTSIGNALS_4( "%ButtonPress%",void ( gadget::Keys, int, int, int ),
@@ -100,45 +100,45 @@ EventMapper::~EventMapper()
 
 void EventMapper::MapEvent( const std::string& KeyButton, const std::string& Behavior )
 {
-    LOG_INFO( "MapEvent: Mapping " << KeyButton << " to " << Behavior );
+    //LOG_INFO( "MapEvent: Mapping " << KeyButton << " to " << Behavior );
 
     mEventBehaviorMap[ KeyButton ] = Behavior;
 }
 
 void EventMapper::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
-    LOG_TRACE( "ButtonPressEvent: " << button << ", " << x << ", " << y << ", "
-               << state );
+    //LOG_TRACE( "ButtonPressEvent: " << button << ", " << x << ", " << y << ", "
+    //           << state );
     std::string EventName( "ButtonPress_" );
     QueueAndEmit( EventName, button );
 }
 
 void EventMapper::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
-    LOG_TRACE( "ButtonReleaseEvent: " << button << ", " << x << ", " << y << ", "
-               << state );
+    //LOG_TRACE( "ButtonReleaseEvent: " << button << ", " << x << ", " << y << ", "
+    //           << state );
     std::string EventName( "ButtonRelease_" );
     QueueAndEmit( EventName, button );
 }
 
 void EventMapper::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
 {
-    LOG_TRACE( "MouseDoubleClickEvent: " << button << ", " << x << ", " << y << ", "
-               << z << "," << state );
+    //LOG_TRACE( "MouseDoubleClickEvent: " << button << ", " << x << ", " << y << ", "
+    //           << z << "," << state );
     std::string EventName( "DoubleClick_" );
     QueueAndEmit( EventName, button );
 }
 
 void EventMapper::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
 {
-    LOG_TRACE( "KeyPressEvent: " << key << ", " << modifiers << ", " << unicode );
+    //LOG_TRACE( "KeyPressEvent: " << key << ", " << modifiers << ", " << unicode );
     std::string EventName( "KeyPress_" );
     QueueAndEmit( EventName, key );
 }
 
 void EventMapper::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
 {
-    LOG_TRACE( "KeyReleaseEvent: " << key << ", " << modifiers << ", " << unicode );
+    //LOG_TRACE( "KeyReleaseEvent: " << key << ", " << modifiers << ", " << unicode );
     std::string EventName( "KeyRelease_" );
     QueueAndEmit( EventName, key );
 }
@@ -146,7 +146,7 @@ void EventMapper::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode
 void EventMapper::QueueAndEmit( std::string& eventName, gadget::Keys key )
 {
     eventName.append( getKeyName( key ) );
-    LOG_TRACE( "QueueAndEmit: " << eventName );
+    //LOG_TRACE( "QueueAndEmit: " << eventName );
 
     // See if this event is mapped to a signal
     EventBehaviorMapType::const_iterator ebIter = mEventBehaviorMap.find( eventName );
@@ -175,7 +175,7 @@ void EventMapper::LatePreFrameUpdate()
 
 void EventMapper::EmitSyncGraphicsSignals()
 {
-    LOG_TRACE( "EmitSyncGraphicsSignals" );
+    //LOG_TRACE( "EmitSyncGraphicsSignals" );
     if( mSyncGraphicsQueue.empty() )
     {
         return;
@@ -230,7 +230,7 @@ void EventMapper::AddMappableEvent( const std::string& EventName, syncType sync 
 
 void EventMapper::SetupDefaultBindings()
 {
-    LOG_TRACE( "SetupDefaultBindings" );
+    //LOG_TRACE( "SetupDefaultBindings" );
 
     // FrameAll -- Sync to Graphics
     AddMappableEvent( "FrameAll", syncGraphics );
@@ -411,6 +411,7 @@ const std::string EventMapper::getKeyName(const gadget::Keys keyId) const
 
         case KEY_UNKNOWN : return std::string("KEY_UNKNOWN");
         case LAST_KEY    : return std::string("LAST_KEY");
+        default : return std::string("KEY_UNKNOWN");
    }
 }
 
