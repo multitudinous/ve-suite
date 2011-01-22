@@ -166,7 +166,7 @@ void VE_i::Raise(
 
     std::cout << "|\tNotification Message : " << notification
         << "|\tModule Being Called : " << UIName_ 
-        << " : Raise called" << std::endl;
+        << " : Raise called" << std::endl << std::flush;
 
     std::string temp( notification );
     if( !temp.compare( 0, 35, "VE-Suite Network Execution Complete" ) )//||
@@ -178,7 +178,7 @@ void VE_i::Raise(
     }
     else
     {
-        std::cout << "|\tNot Going To Do Anything" << std::endl;
+        std::cout << "|\tNot Going To Do Anything" << std::endl << std::flush;
     }
 
     {
@@ -186,7 +186,7 @@ void VE_i::Raise(
         statusStringBuffer.push_back( std::string( notification ) );
     }
 
-    std::cout << "|\tEnd Raise " << std::endl;
+    std::cout << "|\tEnd Raise " << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VE_i::GetNetworkFromCE( void )
@@ -198,13 +198,13 @@ void VE_i::GetNetworkFromCE( void )
         if( !network.empty() )
         {
             this->SetNetworkString( network );
-            std::cout << "|\tGoing to store the network" << std::endl;
+            std::cout << "|\tGoing to store the network" << std::endl << std::flush;
         }
         delete tempNetwork;
     }
     catch ( CORBA::Exception & )
     {
-        std::cerr << "Bod_UI_i::GetNetworkFromCE : no exec found! " << std::endl;
+        std::cerr << "Bod_UI_i::GetNetworkFromCE : no exec found! " << std::endl << std::flush;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -250,7 +250,7 @@ std::string VE_i::QueryCE( const std::string& query )
     }
     catch ( CORBA::Exception & )
     {
-        std::cerr << "VE_i::QueryCE : no exec found! " << std::endl;
+        std::cerr << "VE_i::QueryCE : no exec found! " << std::endl << std::flush;
         return "";
     }
 }

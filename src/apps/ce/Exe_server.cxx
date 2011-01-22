@@ -125,7 +125,7 @@ int main( int argc, char* argv[] )
         name.length( 1 );
         name[0].id = CORBA::string_dup( "Executive" );
 
-        std::cout << " VE_CE : Trying to Register to Naming Service" << std::endl;
+        std::cout << " VE_CE : Trying to Register to Naming Service" << std::endl << std::flush;
         //Bind the object
         try
         {
@@ -134,9 +134,9 @@ int main( int argc, char* argv[] )
         catch ( CosNaming::NamingContext::AlreadyBound& ex )
         {
             naming_context->rebind( name, exec.in() );
-            std::cout << ex._info().c_str() << std::endl;
+            std::cout << ex._info().c_str() << std::endl << std::flush;
         }
-        std::cout << " VE_CE : Registered to Naming Service" << std::endl;
+        std::cout << " VE_CE : Registered to Naming Service" << std::endl << std::flush;
         orb->run();
 
         // Destroy the POA, waiting until the destruction terminates
@@ -149,7 +149,7 @@ int main( int argc, char* argv[] )
         std::cerr 
             << "CORBA exception raised : Unable to connect to Naming Service!" 
             << std::endl
-            << ex._info().c_str() << std::endl;
+            << ex._info().c_str() << std::endl << std::flush;
     }
     return 0;
 }

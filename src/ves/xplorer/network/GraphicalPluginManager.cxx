@@ -493,7 +493,7 @@ void GraphicalPluginManager::LoadDataFromCE()
     {
         std::cerr 
             << "|\tTried to load data from VE-CE but there is no connection." 
-            << std::endl;
+            << std::endl << std::flush;
         // Don't fail out here for now -RPT
         //return;
     }
@@ -618,7 +618,7 @@ void GraphicalPluginManager::ConnectToCE()
     
     try
     {
-        std::cout << "|\tTrying to register " << m_UINAME << std::endl;
+        std::cout << "|\tTrying to register " << m_UINAME << std::endl << std::flush;
 
         CosNaming::Name name( 1 );
         name.length( 1 );
@@ -647,14 +647,14 @@ void GraphicalPluginManager::ConnectToCE()
         // to get the ref for Executive
         
         //Call the Executive CORBA call to register it to the Executive
-        std::cout << "|\tRegistering " << m_UINAME << std::endl;
+        std::cout << "|\tRegistering " << m_UINAME << std::endl << std::flush;
         _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
-        std::cout << "|\tConnected to the Executive " << std::endl;
+        std::cout << "|\tConnected to the Executive " << std::endl << std::flush;
     }
     catch( CORBA::Exception& ex )
     {
         std::cerr << "|\tExecutive not present or VEClient registration error"
-            << ex._info().c_str() << std::endl;
+            << ex._info().c_str() << std::endl << std::flush;
         ui_i = 0;
     }
 }    
@@ -800,7 +800,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             catch( CORBA::Exception& ex )
             {
                 std::cerr << "|\tExecutive Query error: "
-                    << ex._info().c_str() << std::endl;
+                    << ex._info().c_str() << std::endl << std::flush;
             }
         }
 

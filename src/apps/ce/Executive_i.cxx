@@ -86,7 +86,7 @@ void Body_Executive_i::execute( std::string mn )
 
     if( _exec_thread.find( mn ) == _exec_thread.end() )
     {
-        std::cerr << "Cannot find execution thread for " << mn << std::endl;
+        std::cerr << "Cannot find execution thread for " << mn << std::endl << std::flush;
     }
     else
     {
@@ -110,7 +110,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     if( moduleIndex < 0 )
     {
         std::cerr << "Unit ID " << module_id << " cannot be found in the list"
-            << " of available units." << std::endl;
+            << " of available units." << std::endl << std::flush;
         return;
     }
     
@@ -130,13 +130,13 @@ void Body_Executive_i::execute_next_mod( long module_id )
         catch ( CORBA::Exception & )
         {
             std::cerr << "Cannot contact module id " << module_id
-            << " name " << mod_type << std::endl;
+            << " name " << mod_type << std::endl << std::flush;
             return;
         }
     }
     else
     {
-        std::cerr << "Module name " << mod_type << " is not yet connected." << std::endl;
+        std::cerr << "Module name " << mod_type << " is not yet connected." << std::endl << std::flush;
         return;
     }
 
@@ -183,7 +183,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     //to be able to index into the vector of modules stored in the network class
     int rt = _scheduler->execute( _network->GetModule( moduleIndex ) ) - 1;
     std::cout << "VE-CE::execute_next_mod Vector id of next module to execute " 
-        << rt << " Just executed module ID " << module_id << std::endl;
+        << rt << " Just executed module ID " << module_id << std::endl << std::flush;
     if( rt < 0 )
     {
         ClientMessage( "VE-Suite Network Execution Complete\n" );
@@ -207,7 +207,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     catch ( CORBA::Exception& ex )
     {
         std::cerr << "VE-CE : Cannot contact Module " << module_id 
-            << std::endl << ex._info().c_str() << std::endl;
+            << std::endl << ex._info().c_str() << std::endl << std::flush;
     }
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -220,11 +220,11 @@ std::string Body_Executive_i::GetResults( int rt )
     {
         std::cerr <<  "VE-CE : Cannot find running unit " 
             << nextModule->GetModuleName() << std::endl
-            << "The units that are registerd are " << std::endl;
+            << "The units that are registerd are " << std::endl << std::flush;
         for( std::map< std::string, Body::Unit_var >::const_iterator iter = 
             _mod_units.begin(); iter != _mod_units.end(); ++iter )
         {
-            std::cout << "Unit name = " << iter->first << std::endl;
+            std::cout << "Unit name = " << iter->first << std::endl << std::flush;
         }
         return "return";
     }
@@ -245,7 +245,7 @@ std::string Body_Executive_i::GetResults( int rt )
             OPort* oport = conn->get_oport();
             Module* m = oport->get_module();
             std::cout << "Upstream Module Name: " << m->GetModuleName() 
-                << " and ID " << m->get_id() << std::endl;
+                << " and ID " << m->get_id() << std::endl << std::flush;
             //previousModuleIndex = _network->moduleIdx( m->get_id() );
             {
                 std::string unitResultsData = "NULL";
@@ -453,7 +453,7 @@ void Body_Executive_i::StartCalc(
 
     if( rt < 0 )
     {
-        std::cerr << "VES Network Execution Complete" << std::endl;
+        std::cerr << "VES Network Execution Complete" << std::endl << std::flush;
     }
     else
     {
@@ -495,7 +495,7 @@ void Body_Executive_i::StartCalc(
                 else
                 {
                     std::cerr << "Initial Execute, module " << moduleName
-                        << " is not registered yet" << std::endl;
+                        << " is not registered yet" << std::endl << std::flush;
                 }
             }
             else
@@ -507,7 +507,7 @@ void Body_Executive_i::StartCalc(
         {
             std::cerr << "Initial Execute, cannot contact Module "
                 << _network->GetModule( rt )->GetModuleName() 
-                << std::endl << ex._info().c_str() << std::endl;
+                << std::endl << ex._info().c_str() << std::endl << std::flush;
         }
     }
 
@@ -667,7 +667,7 @@ char *  Body_Executive_i::Query( const char * command
 
     if( iter == _mod_units.end() )
     {
-        std::cout << "VE-CE : No units to query" << std::endl;
+        std::cout << "VE-CE : No units to query" << std::endl << std::flush;
         _mutex.release();
         return 0;
     }
@@ -705,7 +705,7 @@ void Body_Executive_i::RegisterUI(
     {
         Body::UI_var ui = Body::UI::_duplicate( ui_ptr );
         if( CORBA::is_nil( ui ) )
-            std::cerr << "NULL UI" << std::endl;
+            std::cerr << "NULL UI" << std::endl << std::flush;
 
         m_uiMap[ tempName ] = ui;
 
@@ -713,12 +713,12 @@ void Body_Executive_i::RegisterUI(
         std::string msg = tempName + " Connected to VE-CE\n";
         ui->Raise( msg.c_str() );
         //ClientMessage( msg.c_str() );
-        std::cerr << tempName << " : registered a UI" << std::endl;
+        std::cerr << tempName << " : registered a UI" << std::endl << std::flush;
     }
     catch ( CORBA::Exception& ex )
     {
         std::cerr << "Can't call UI name " << tempName
-        << " " << ex._info().c_str() << std::endl;
+        << " " << ex._info().c_str() << std::endl << std::flush;
         _mutex.release();
     }
     return;
@@ -870,14 +870,14 @@ void Body_Executive_i::SetID(
     }
     catch ( CORBA::Exception & )
     {
-        std::cout << "VE-CE : " << iter->first << " is obsolete." << std::endl;
+        std::cout << "VE-CE : " << iter->first << " is obsolete." << std::endl << std::flush;
         _mod_units.erase( iter );
         _mutex.release();
         UnRegisterUnit( moduleName );
     }
     catch ( ... )
     {
-        std::cout << "VE-CE : another kind of exception " << std::endl;
+        std::cout << "VE-CE : another kind of exception " << std::endl << std::flush;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -925,7 +925,7 @@ void Body_Executive_i::SetParams(
         {
             std::cout << "VE-CE::SetParams : " << iter->first 
                 << " is obsolete." << std::endl
-                << ex._info().c_str() << std::endl;
+                << ex._info().c_str() << std::endl << std::flush;
             // it seems this call should be blocked as we are messing with
             // a map that is used everywhere
             m_uiMap.erase( iter++ );
@@ -933,7 +933,7 @@ void Body_Executive_i::SetParams(
         catch( std::exception& ex )
         {
             std::cout << "VE-CE::SetParams : another kind of exception " 
-                << std::endl << ex.what() << std::endl;
+                << std::endl << ex.what() << std::endl << std::flush;
             ++iter;
         }
     }
@@ -945,7 +945,7 @@ void Body_Executive_i::ClientMessage( const char *msg )
     for( std::map<std::string, Body::UI_var>::iterator
             iter = m_uiMap.begin(); iter != m_uiMap.end(); )
     {
-        std::cout << "VE-CE : " << msg << " to -> " << iter->first << std::endl;
+        std::cout << "VE-CE : " << msg << " to -> " << iter->first << std::endl << std::flush;
         try
         {
             iter->second->_non_existent();
@@ -956,7 +956,7 @@ void Body_Executive_i::ClientMessage( const char *msg )
         {
             std::cout << "VE-CE : " << iter->first 
                 << " is obsolete." << std::endl
-                << ex._info().c_str() << std::endl;
+                << ex._info().c_str() << std::endl << std::flush;
             // it seems this call should be blocked as we are messing with
             // a map that is used everywhere
             m_uiMap.erase( iter++ );
@@ -964,7 +964,7 @@ void Body_Executive_i::ClientMessage( const char *msg )
         catch( std::exception& ex )
         {
             std::cout << "VE-CE : another kind of exception " 
-                << std::endl << ex.what() << std::endl;
+                << std::endl << ex.what() << std::endl << std::flush;
         }
     }
 }
