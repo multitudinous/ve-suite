@@ -11,8 +11,8 @@
 using namespace dvst;
 
 DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) 
-     :
-     UIDialog( parent, id, title )
+    : 
+    UIDialog( parent, id, title )
 {
     this->SetSizeHints( wxDefaultSize, wxDefaultSize );
     
@@ -31,7 +31,7 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     m_computerTextCtrl = new wxTextCtrl( this, wxID_ANY, wxT("225.0.0.37"), wxDefaultPosition, wxDefaultSize, 0 );
     sbSizer4->Add( m_computerTextCtrl, 0, wxEXPAND, 5 );
     
-    bSizer8->Add( sbSizer4, 1, wxLEFT|wxRIGHT, 5 );
+    bSizer8->Add( sbSizer4, 1, wxRIGHT, 5 );
     
     wxStaticBoxSizer* sbSizer5;
     sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Port Number") ), wxVERTICAL );
@@ -39,7 +39,7 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     m_portTextCtrl = new wxTextCtrl( this, wxID_ANY, wxT("12345"), wxDefaultPosition, wxDefaultSize, 0 );
     sbSizer5->Add( m_portTextCtrl, 0, wxEXPAND, 5 );
     
-    bSizer8->Add( sbSizer5, 1, wxLEFT|wxRIGHT, 5 );
+    bSizer8->Add( sbSizer5, 1, wxLEFT, 5 );
     
     sbSizer1->Add( bSizer8, 0, wxEXPAND, 5 );
     
@@ -58,7 +58,7 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     m_simScale->SetSelection( 1 );
     sbSizer3->Add( m_simScale, 0, wxLEFT, 5 );
     
-    sbSizer1->Add( sbSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND, 5 );
+    sbSizer1->Add( sbSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxEXPAND|wxTOP, 5 );
     
     bSizer1->Add( sbSizer1, 0, wxALL|wxEXPAND, 5 );
     
@@ -68,13 +68,13 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     wxBoxSizer* bSizer2;
     bSizer2 = new wxBoxSizer( wxVERTICAL );
     
-    m_scrolledWindow1 = new wxScrolledWindow( this, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), wxHSCROLL|wxSUNKEN_BORDER|wxVSCROLL );
+    m_scrolledWindow1 = new wxScrolledWindow( this, wxID_ANY, wxDefaultPosition, wxSize( -1,150 ), wxFULL_REPAINT_ON_RESIZE|wxHSCROLL|wxSUNKEN_BORDER|wxVSCROLL );
     m_scrolledWindow1->SetScrollRate( 5, 5 );
-    m_scrolledWindow1->SetMinSize( wxSize( -1,100 ) );
+    m_scrolledWindow1->SetMinSize( wxSize( -1,150 ) );
     
     m_scrolledWindowSizer = new wxBoxSizer( wxVERTICAL );
     
-    m_scrolledWindowSizer->SetMinSize( wxSize( -1,100 ) ); 
+    m_scrolledWindowSizer->SetMinSize( wxSize( -1,150 ) ); 
     /*wxBoxSizer* bSizer4;
     bSizer4 = new wxBoxSizer( wxHORIZONTAL );
     
@@ -86,6 +86,9 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     m_choice1 = new wxChoice( m_scrolledWindow1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice1Choices, 0 );
     m_choice1->SetSelection( 0 );
     bSizer4->Add( m_choice1, 0, wxALIGN_CENTER, 5 );
+    
+    m_checkBox1 = new wxCheckBox( m_scrolledWindow1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    bSizer4->Add( m_checkBox1, 0, wxALL, 5 );
     
     m_scrolledWindowSizer->Add( bSizer4, 0, 0, 5 );
     
@@ -101,11 +104,14 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     m_choice11->SetSelection( 0 );
     bSizer41->Add( m_choice11, 0, wxALIGN_CENTER, 5 );
     
+    m_checkBox2 = new wxCheckBox( m_scrolledWindow1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    bSizer41->Add( m_checkBox2, 0, wxALL, 5 );
+    
     m_scrolledWindowSizer->Add( bSizer41, 0, 0, 5 );*/
     
     m_scrolledWindow1->SetSizer( m_scrolledWindowSizer );
     m_scrolledWindow1->Layout();
-    bSizer2->Add( m_scrolledWindow1, 1, wxEXPAND | wxALL, 5 );
+    bSizer2->Add( m_scrolledWindow1, 1, wxBOTTOM|wxEXPAND|wxTOP, 5 );
     
     wxBoxSizer* bSizer3;
     bSizer3 = new wxBoxSizer( wxHORIZONTAL );
@@ -137,18 +143,37 @@ DynamicVehicleSimToolBase::DynamicVehicleSimToolBase( wxWindow* parent, wxWindow
     bSizer1->Add( sbSizer2, 0, wxALL|wxEXPAND, 5 );
     
     wxStaticBoxSizer* registrationSizer;
-    registrationSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Registration Tools") ), wxHORIZONTAL );
+    registrationSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Registration Tools") ), wxVERTICAL );
+    
+    wxStaticBoxSizer* sbSizer8;
+    sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("SIP Location X, Y, Z (ft)") ), wxHORIZONTAL );
+    
+    m_sipLocX = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxDefaultSize, 0 );
+    sbSizer8->Add( m_sipLocX, 0, wxALL, 5 );
+    
+    m_sipLocY = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxDefaultSize, 0 );
+    sbSizer8->Add( m_sipLocY, 0, wxALL, 5 );
+    
+    m_sipLocZ = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxDefaultSize, 0 );
+    sbSizer8->Add( m_sipLocZ, 0, wxALL, 5 );
+    
+    registrationSizer->Add( sbSizer8, 0, wxBOTTOM|wxEXPAND|wxTOP, 5 );
+    
+    wxBoxSizer* bSizer81;
+    bSizer81 = new wxBoxSizer( wxHORIZONTAL );
     
     wxString m_registrationChoiceChoices[] = { wxT("Manual"), wxT("Choose file...") };
     int m_registrationChoiceNChoices = sizeof( m_registrationChoiceChoices ) / sizeof( wxString );
     m_registrationChoice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_registrationChoiceNChoices, m_registrationChoiceChoices, 0 );
     m_registrationChoice->SetSelection( 0 );
-    registrationSizer->Add( m_registrationChoice, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+    bSizer81->Add( m_registrationChoice, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
     
     m_registrationButton = new wxButton( this, wxID_ANY, wxT("Register"), wxDefaultPosition, wxDefaultSize, 0 );
-    registrationSizer->Add( m_registrationButton, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT, 5 );
+    bSizer81->Add( m_registrationButton, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT, 5 );
     
-    bSizer1->Add( registrationSizer, 0, wxEXPAND, 5 );
+    registrationSizer->Add( bSizer81, 1, wxEXPAND, 5 );
+    
+    bSizer1->Add( registrationSizer, 0, wxALL|wxEXPAND, 5 );
     
     m_sdbSizer1 = new wxStdDialogButtonSizer();
     m_sdbSizer1OK = new wxButton( this, wxID_OK );

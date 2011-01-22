@@ -7,6 +7,7 @@
 
 #ifndef __DynamicVehicleSimToolBase__
 #define __DynamicVehicleSimToolBase__
+
 #include <ves/conductor/UIDialog.h>
 
 #include <wx/string.h>
@@ -21,6 +22,7 @@
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/stattext.h>
+#include <wx/checkbox.h>
 #include <wx/scrolwin.h>
 #include <wx/dialog.h>
 
@@ -28,10 +30,11 @@
 
 namespace dvst
 {
+
 ///////////////////////////////////////////////////////////////////////////////
 /// Class DynamicVehicleSimToolBase
 ///////////////////////////////////////////////////////////////////////////////
-class DynamicVehicleSimToolBase : public ves::conductor::UIDialog 
+class DynamicVehicleSimToolBase : public ves::conductor::UIDialog
 {
 private:
 
@@ -45,12 +48,17 @@ protected:
     wxBoxSizer* m_scrolledWindowSizer;
     wxStaticText* m_staticText1;
     wxChoice* m_choice1;
+    wxCheckBox* m_checkBox1;
     wxStaticText* m_staticText11;
     wxChoice* m_choice11;
+    wxCheckBox* m_checkBox2;
     wxButton* m_addButton;
     wxButton* m_removeButton;
     wxButton* m_applyButton;
     wxChoice* m_constrainedGeomChoice;
+    wxTextCtrl* m_sipLocX;
+    wxTextCtrl* m_sipLocY;
+    wxTextCtrl* m_sipLocZ;
     wxChoice* m_registrationChoice;
     wxButton* m_registrationButton;
     wxStdDialogButtonSizer* m_sdbSizer1;
@@ -75,7 +83,9 @@ public:
     
     DynamicVehicleSimToolBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Dynamic Vehicle Sim Tool"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,800 ), long style = wxDEFAULT_DIALOG_STYLE );
     ~DynamicVehicleSimToolBase();
+
 };
+
 } // namespace dvst
 
 #endif //__DynamicVehicleSimToolBase__
