@@ -56,7 +56,7 @@ namespace ves
 namespace xplorer
 {
 /// Typedef for the SmartPtr types.
-typedef ves::util::ClassPtrDef<Poco::LogStream::LogStream>::type  LogStreamPtr;
+typedef ves::util::ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
 }
 }
 
