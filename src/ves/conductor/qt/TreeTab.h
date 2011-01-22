@@ -80,7 +80,7 @@ public:
     void PopulateWithRoot( osg::Node* root );
 
     /// Open tree view to the leaf specified in nodepath, if possible.
-    QModelIndex OpenToAndSelect( osg::NodePath& nodepath );
+    QModelIndex OpenToAndSelect( osg::NodePath& nodepath, bool highlight = true );
 
 protected:
     void changeEvent(QEvent *e);
@@ -93,7 +93,7 @@ protected Q_SLOTS:
     /// Called when user changes selection in tree.
     /// This function looks up the scenegraph to find a valid DCS and then
     /// selects the corresponding geometry in the scene.
-    void on_mTreeView_activated( const QModelIndex& index );
+    void on_mTreeView_activated( const QModelIndex& index, bool highlight = true );
 
     /// Called when mouse is used to select an entry in the tree. Simply calls
     /// on_mTreeView_activated.

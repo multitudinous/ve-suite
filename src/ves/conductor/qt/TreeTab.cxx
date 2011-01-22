@@ -136,22 +136,27 @@ void TreeTab::PopulateWithRoot( osg::Node* root )
     mModel->EndReset();
 }
 ////////////////////////////////////////////////////////////////////////////////
-QModelIndex TreeTab::OpenToAndSelect( osg::NodePath& nodepath )
+QModelIndex TreeTab::OpenToAndSelect( osg::NodePath& nodepath, bool highlight )
 {
+    // Get the modelindex associated with this nodepath
     QModelIndex result( osgQtTree::openToAndSelect( ui->mTreeView, mModel, nodepath ) );
-    on_mTreeView_activated( result );
+
+    on_mTreeView_activated( result, highlight );
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_mTreeView_clicked( const QModelIndex& index )
 {
-    on_mTreeView_activated( index );
+    on_mTreeView_activated( index, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TreeTab::on_mTreeView_activated( const QModelIndex& index )
+void TreeTab::on_mTreeView_activated( const QModelIndex& index, bool highlight )
 {
     //Unselect the previously-selected DCS
-    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+    if( highlight )
+    {
+        ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+    }
 
     // Write out the previously-selected CADPropertySet so that changes are not
     // lost
@@ -201,9 +206,15 @@ void TreeTab::on_mTreeView_activated( const QModelIndex& index )
 
     ves::xplorer::scenegraph::DCS* newSelectedDCS = static_cast< ves::xplorer::scenegraph::DCS* >( node );
 
-    //Set the selected DCS
-    ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
-    newSelectedDCS->SetTechnique( "Glow" );
+    // highlight will be true if this method was called from the tree widget in
+    // any form, and false if it was called as a side-effect of
+    // ObjectPickedSignal
+    if( highlight )
+    {
+        //Set the selected DCS
+        ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
+        newSelectedDCS->SetTechnique( "Glow" );
+    }
 
     // Set mActiveSet null to cause previous propertyset to go out of scope
     mActiveSet = nullPtr;
@@ -258,7 +269,9 @@ void TreeTab::QueuedOnObjectPicked( osg::NodePath nodePath )
     PopulateWithRoot(
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 
-    OpenToAndSelect( nodePath );
+    // Open the tree to this node, but don't attempt to highlight the geometry
+    // again
+    OpenToAndSelect( nodePath, false );
 }
 
 } // namespace conductor
