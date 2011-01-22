@@ -296,7 +296,7 @@ void KinematicCharacterController::SetConvexShape( btConvexShape* convexShape )
     m_ghostObject->setCollisionFlags( btCollisionObject::CF_CHARACTER_OBJECT );
 }
 ////////////////////////////////////////////////////////////////////////////////
-btPairCachingGhostObject* const KinematicCharacterController::GetGhostObject() const
+btPairCachingGhostObject* KinematicCharacterController::GetGhostObject() const
 {
     return m_ghostObject;
 }

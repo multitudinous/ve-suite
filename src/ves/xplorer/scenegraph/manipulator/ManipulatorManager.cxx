@@ -190,12 +190,12 @@ Dragger* ManipulatorManager::GetChild( unsigned int i )
     return dynamic_cast< Dragger* >( osg::Group::getChild( i ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-RotateTwist* const ManipulatorManager::GetTwistManipulator() const
+RotateTwist* ManipulatorManager::GetTwistManipulator() const
 {
     return m_rotateTwist.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-TransformManipulator* const ManipulatorManager::GetSceneManipulator() const
+TransformManipulator* ManipulatorManager::GetSceneManipulator() const
 {
     return m_sceneManipulator.get();
 }

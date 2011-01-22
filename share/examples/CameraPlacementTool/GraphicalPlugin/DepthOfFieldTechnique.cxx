@@ -100,12 +100,12 @@ void DepthOfFieldTechnique::DefinePasses()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const DepthOfFieldTechnique::GetTextureDimensionsUniform() const
+osg::Uniform* DepthOfFieldTechnique::GetTextureDimensionsUniform() const
 {
     return mTextureDimensionsUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const DepthOfFieldTechnique::GetMaxCircleOfConfusionUniform() const
+osg::Uniform* DepthOfFieldTechnique::GetMaxCircleOfConfusionUniform() const
 {
     return mMaxCircleOfConfusionUniform.get();
 }

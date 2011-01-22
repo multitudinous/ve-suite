@@ -94,7 +94,7 @@ public:
     btPairCachingGhostObject& GetGhostObject() const;
 
     ///
-    btMotionState* const GetMotionState() const;
+    btMotionState* GetMotionState() const;
 
     ///
     void Reset();

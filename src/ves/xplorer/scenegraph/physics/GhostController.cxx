@@ -305,7 +305,7 @@ btPairCachingGhostObject& GhostController::GetGhostObject() const
     return *m_ghostObject;
 }
 ////////////////////////////////////////////////////////////////////////////////
-btMotionState* const GhostController::GetMotionState() const
+btMotionState* GhostController::GetMotionState() const
 {
     return m_motionState;
 }

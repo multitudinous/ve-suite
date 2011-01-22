@@ -466,7 +466,7 @@ void BlockEntity::ConnectionDetection()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::Block* const BlockEntity::GetBlockGeometry() const
+bots::Block* BlockEntity::GetBlockGeometry() const
 {
     return mBlockGeometry.get();
 }

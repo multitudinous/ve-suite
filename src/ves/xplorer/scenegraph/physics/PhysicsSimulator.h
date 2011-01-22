@@ -141,7 +141,7 @@ public:
         btCollisionShape* shape );
 
     ///Returns the dynamics world
-    btDynamicsWorld* const GetDynamicsWorld() const;
+    btDynamicsWorld* GetDynamicsWorld() const;
 
     ///Create flat ground plane for the world
     void CreateGroundPlane();

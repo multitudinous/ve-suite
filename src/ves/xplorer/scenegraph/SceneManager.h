@@ -110,10 +110,10 @@ class VE_SCENEGRAPH_EXPORTS SceneManager
 public:
     ///Return the active nav switch node of the scenegraph
     ///\return The DCS that should be used for nav matrix generation
-    DCS* const GetActiveNavSwitchNode() const;
+    DCS* GetActiveNavSwitchNode() const;
 
     ///Return the active switch node of the scenegraph
-    osg::Group* const GetActiveSwitchNode() const;
+    osg::Group* GetActiveSwitchNode() const;
 
     ///Return the camera manager of the scenegraph
     camera::CameraManager& GetCameraManager() const;
@@ -127,7 +127,7 @@ public:
 
     ///Get the framestamp used by SceneView
     ///\return The osg::FrameStamp for the osg::SceneView
-    osg::FrameStamp* const GetFrameStamp() const;
+    osg::FrameStamp* GetFrameStamp() const;
 
     ///
     ///\return
@@ -153,17 +153,17 @@ public:
 
     ///Return the model root node of the scenegraph
     ///\return
-    osg::Group* const GetModelRoot() const;
+    osg::Group* GetModelRoot() const;
 
     ///Return the network DCS of the scenegraph
-    osg::Group* const GetNetworkDCS() const;
+    osg::Group* GetNetworkDCS() const;
     
     ///Return the root node of the scenegraph
-    osg::Group* const GetRootNode() const;
+    osg::Group* GetRootNode() const;
 
     ///Return the world DCS of the scenegraph
     ///\return The world DCS
-    DCS* const GetNavDCS() const;
+    DCS* GetNavDCS() const;
 
     ///Get the inverted world DCS matrix
     ///\return The inverted matrix

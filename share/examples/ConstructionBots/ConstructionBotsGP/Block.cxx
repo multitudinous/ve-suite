@@ -246,7 +246,7 @@ const osg::Vec4& Block::GetBlockColor() const
     return mBlockColor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Geometry* const Block::GetDrawable( unsigned int position ) const
+const osg::Geometry* Block::GetDrawable( unsigned int position ) const
 {
     std::map< unsigned int, osg::ref_ptr< osg::Geometry > >::const_iterator
         itr = mDrawables.find( position );

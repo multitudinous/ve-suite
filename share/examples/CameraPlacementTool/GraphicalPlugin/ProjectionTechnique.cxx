@@ -88,27 +88,27 @@ void ProjectionTechnique::DefinePasses()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const ProjectionTechnique::GetAlpha() const
+osg::Uniform* ProjectionTechnique::GetAlpha() const
 {
     return mAlpha.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const ProjectionTechnique::GetNearPlaneUniform() const
+osg::Uniform* ProjectionTechnique::GetNearPlaneUniform() const
 {
     return mNearPlaneUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const ProjectionTechnique::GetFarPlaneUniform() const
+osg::Uniform* ProjectionTechnique::GetFarPlaneUniform() const
 {
     return mFarPlaneUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const ProjectionTechnique::GetFocalDistanceUniform() const
+osg::Uniform* ProjectionTechnique::GetFocalDistanceUniform() const
 {
     return mFocalDistanceUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const ProjectionTechnique::GetFocalRangeUniform() const
+osg::Uniform* ProjectionTechnique::GetFocalRangeUniform() const
 {
     return mFocalRangeUniform.get();
 }

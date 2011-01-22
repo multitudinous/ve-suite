@@ -379,7 +379,7 @@ void SceneManager::SetRootNode( osg::Group* rootNode )
     mRootNode = rootNode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* const SceneManager::GetRootNode() const
+osg::Group* SceneManager::GetRootNode() const
 {
     return mRootNode.get();
 }
@@ -400,7 +400,7 @@ GLTransformInfoPtr const SceneManager::GetGLTransformInfo(
     return GLTransformInfoPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* const SceneManager::GetModelRoot() const
+osg::Group* SceneManager::GetModelRoot() const
 {
     return mModelRoot.get();
 }
@@ -425,7 +425,7 @@ manipulator::ManipulatorManager& SceneManager::GetManipulatorManager() const
     return *m_manipulatorManager.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-DCS* const SceneManager::GetNavDCS() const
+DCS* SceneManager::GetNavDCS() const
 {
     return m_navDCS.get();
 }
@@ -465,7 +465,7 @@ const osg::Matrixd& SceneManager::GetInvertedGlobalViewMatrixOSG() const
     return m_invertedGlobalViewMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* const SceneManager::GetNetworkDCS() const
+osg::Group* SceneManager::GetNetworkDCS() const
 {
     return mNetworkDCS.get();
 }
@@ -597,7 +597,7 @@ void SceneManager::PushBackGLTransformInfo(
     m_glTransformInfoMap[ viewport ] = glTransformInfo;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* const SceneManager::GetActiveSwitchNode() const
+osg::Group* SceneManager::GetActiveSwitchNode() const
 {
     osg::Switch::ValueList boolList = mLogoSwitch->getValueList();
 
@@ -611,7 +611,7 @@ osg::Group* const SceneManager::GetActiveSwitchNode() const
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DCS* const SceneManager::GetActiveNavSwitchNode() const
+DCS* SceneManager::GetActiveNavSwitchNode() const
 {
     osg::Switch::ValueList boolList = mNavSwitch->getValueList();
     
@@ -645,7 +645,7 @@ void SceneManager::SetFrameStamp( osg::FrameStamp* frameStamp )
     mFrameStamp = frameStamp;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::FrameStamp* const SceneManager::GetFrameStamp() const
+osg::FrameStamp* SceneManager::GetFrameStamp() const
 {
     return mFrameStamp.get();
 }

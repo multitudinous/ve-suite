@@ -78,14 +78,14 @@ public:
     virtual bool addChild( CircleHighlight* child );
 
     ///
-    CircleHighlight* const ConvertNodeToCircleHighlight(
+    CircleHighlight* ConvertNodeToCircleHighlight(
         osg::Node* const node );
 
     ///
     void Enable( const bool& enable = true );
 
     ///
-    CircleHighlight* const GetActiveCircleHighlight() const;
+    CircleHighlight* GetActiveCircleHighlight() const;
 
     ///Override the insertChild function to only accept Highlights
     virtual bool insertChild( unsigned int index, CircleHighlight* child );

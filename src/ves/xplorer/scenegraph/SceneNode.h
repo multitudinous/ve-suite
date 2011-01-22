@@ -99,10 +99,10 @@ public:
     void SetTechnique( const std::string& name );
 
     ///
-    technique::Technique* const GetTechnique( const std::string& name ) const;
+    technique::Technique* GetTechnique( const std::string& name ) const;
 
     ///
-    technique::Technique* const GetActiveTechnique() const;
+    technique::Technique* GetActiveTechnique() const;
 
 protected:
     ///

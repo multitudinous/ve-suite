@@ -100,7 +100,7 @@ public:
     void EnableFlying( bool const& canFly = true );
 
     ///
-    btPairCachingGhostObject* const GetGhostObject() const;
+    btPairCachingGhostObject* GetGhostObject() const;
 
     ///
     btScalar getGravity() const;

@@ -101,7 +101,7 @@ osg::Object* HelpCircle::cloneType() const
     return new HelpCircle();
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::ClipNode* const HelpCircle::GetClipNode() const
+const osg::ClipNode* HelpCircle::GetClipNode() const
 {
     return m_clipNode.get();
 }

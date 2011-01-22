@@ -108,17 +108,17 @@ public:
     void ExecuteCommands();
 
     ///Get the active coordinate system
-    scenegraph::DCS* const GetActiveDCS() const;
+    scenegraph::DCS* GetActiveDCS() const;
 
     ///Get a device
     ///\param deviceName The device name
     ///\return Get the device being requested
-    device::Device* const GetDevice( const device::Device::Type& type ) const;
+    device::Device* GetDevice( const device::Device::Type& type ) const;
 
     ///Get the device currently being processed
     ///Note: Will only return valid device during ProcessDeviceEvents() function
     ///\return Get the device being processed
-    device::Device* const GetDeviceBeingProcessed() const;
+    device::Device* GetDeviceBeingProcessed() const;
 
     ///Get the reset location of the world
     ///\param quat
@@ -126,7 +126,7 @@ public:
     void GetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
 
     ///Get the active coordinate system
-    scenegraph::DCS* const GetSelectedDCS() const;
+    scenegraph::DCS* GetSelectedDCS() const;
 
     ///Process navigation and selection commands
     void ProcessDeviceEvents();

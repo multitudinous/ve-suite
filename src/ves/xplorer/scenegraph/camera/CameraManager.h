@@ -95,7 +95,7 @@ public:
     virtual bool addChild( std::string const& name );
 
     ///
-    CameraObject* const ConvertNodeToCameraObject( osg::Node* const node );
+    CameraObject* ConvertNodeToCameraObject( osg::Node* const node );
 
     ///
     void DisplayProjectionEffect(
@@ -109,7 +109,7 @@ public:
     void EnableCPT( const bool& enable = true );
 
     ///
-    CameraObject* const GetActiveCameraObject() const;
+    CameraObject* GetActiveCameraObject() const;
 
     ///Get the RTT quad
     ///\return The geode with the RTT quad

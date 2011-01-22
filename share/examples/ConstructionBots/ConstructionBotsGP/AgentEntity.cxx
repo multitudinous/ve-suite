@@ -437,12 +437,12 @@ void AgentEntity::Reset()
     mSiteSensor->Reset();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* const AgentEntity::GetPluginDCS() const
+ves::xplorer::scenegraph::DCS* AgentEntity::GetPluginDCS() const
 {
     return mPluginDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* const AgentEntity::GetTargetDCS() const
+ves::xplorer::scenegraph::DCS* AgentEntity::GetTargetDCS() const
 {
     return mTargetDCS.get();
 }

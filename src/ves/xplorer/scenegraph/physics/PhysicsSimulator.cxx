@@ -660,7 +660,7 @@ btRigidBody* PhysicsSimulator::CreateRigidBody(
     return body;
 }
 ////////////////////////////////////////////////////////////////////////////////
-btDynamicsWorld* const PhysicsSimulator::GetDynamicsWorld() const
+btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld() const
 {
     return mDynamicsWorld;
 }

@@ -151,7 +151,7 @@ bool CameraManager::addChild( std::string const& name )
     return osg::Group::addChild( cameraObject.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraObject* const CameraManager::ConvertNodeToCameraObject(
+CameraObject* CameraManager::ConvertNodeToCameraObject(
     osg::Node* const node )
 {
     return dynamic_cast< CameraObject* >( node );
@@ -212,7 +212,7 @@ void CameraManager::EnableCPT( const bool& enable )
     m_cptEnabled = enable;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraObject* const CameraManager::GetActiveCameraObject() const
+CameraObject* CameraManager::GetActiveCameraObject() const
 {
     return m_activeCameraObject;
 }

@@ -831,7 +831,7 @@ osg::Geode* SceneRenderToTexture::CreateRTTQuad( osg::Texture2D* texture )
     return rttQuad;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* const SceneRenderToTexture::GetRootGroup() const
+osg::Group* SceneRenderToTexture::GetRootGroup() const
 {
     return m_rootGroup.get();
 }

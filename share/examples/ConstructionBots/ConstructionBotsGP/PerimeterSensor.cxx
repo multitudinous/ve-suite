@@ -388,7 +388,7 @@ const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
     return mResultantForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Drawable* const PerimeterSensor::GetQueriedConnection() const
+osg::Drawable* PerimeterSensor::GetQueriedConnection() const
 {
     return mQueriedConnection.get();
 }

@@ -107,7 +107,7 @@ public:
     ///Return an input texture of a certain mrt index
     ///\param inputIndex Index of the input texture
     ///\return
-    osg::Texture* const GetInputTexture( int inputIndex ) const;
+    osg::Texture* GetInputTexture( int inputIndex ) const;
 
     ///Return complete index to texture mapping
     ///\return
@@ -116,7 +116,7 @@ public:
     ///Return an output texture of a certain mrt index
     ///\param mrt
     ///\return
-    osg::Texture* const GetOutputTexture( int mrt = 0 ) const;
+    osg::Texture* GetOutputTexture( int mrt = 0 ) const;
 
     ///Return mOutputTextures
     ///\return
@@ -142,7 +142,7 @@ public:
 
     ///Get geode to which the unit's drawables are attached
     ///\return
-    osg::Geode* const GetGeode() const;
+    osg::Geode* GetGeode() const;
 
     ///Helper function to create viewport sized quads
     void CreateTexturedQuadDrawable(

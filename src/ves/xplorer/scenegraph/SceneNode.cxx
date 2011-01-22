@@ -91,7 +91,7 @@ void SceneNode::SetTechnique( const std::string& name )
     mActiveTechnique = name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-technique::Technique* const SceneNode::GetTechnique(
+technique::Technique* SceneNode::GetTechnique(
     const std::string& name ) const
 {
     std::map< std::string, technique::Technique* >::const_iterator itr =
@@ -104,7 +104,7 @@ technique::Technique* const SceneNode::GetTechnique(
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-technique::Technique* const SceneNode::GetActiveTechnique() const
+technique::Technique* SceneNode::GetActiveTechnique() const
 {
     std::map< std::string, technique::Technique* >::const_iterator itr =
         mTechniques.find( mActiveTechnique );

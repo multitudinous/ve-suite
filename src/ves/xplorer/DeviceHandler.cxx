@@ -199,7 +199,7 @@ void DeviceHandler::ExecuteCommands()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-device::Device* const DeviceHandler::GetDevice(
+device::Device* DeviceHandler::GetDevice(
     const device::Device::Type& type ) const
 {
     DeviceMap::const_iterator itr = m_deviceMap.find( type );
@@ -212,12 +212,12 @@ device::Device* const DeviceHandler::GetDevice(
     return itr->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
-device::Device* const DeviceHandler::GetDeviceBeingProcessed() const
+device::Device* DeviceHandler::GetDeviceBeingProcessed() const
 {
     return m_deviceBeingProcessed;
 }
 ////////////////////////////////////////////////////////////////////////////////
-scenegraph::DCS* const DeviceHandler::GetActiveDCS() const
+scenegraph::DCS* DeviceHandler::GetActiveDCS() const
 {
     return mActiveDCS.get();
 }
@@ -229,7 +229,7 @@ void DeviceHandler::GetResetWorldPosition(
     pos = mResetPosition;
 }
 ////////////////////////////////////////////////////////////////////////////////
-scenegraph::DCS* const DeviceHandler::GetSelectedDCS() const
+scenegraph::DCS* DeviceHandler::GetSelectedDCS() const
 {
     return mSelectedDCS.get();
 }

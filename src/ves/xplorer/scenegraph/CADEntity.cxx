@@ -186,17 +186,17 @@ void CADEntity::InitPhysics()
     return;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntityHelper* const CADEntity::GetNode() const
+ves::xplorer::scenegraph::CADEntityHelper* CADEntity::GetNode() const
 {
     return mCADEntityHelper;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* const CADEntity::GetDCS() const
+ves::xplorer::scenegraph::DCS* CADEntity::GetDCS() const
 {
     return mDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsRigidBody* const CADEntity::GetPhysicsRigidBody()
+PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
 {
     //can't say that this function is const because mPhysicsRigidBody can change
     InitPhysics();

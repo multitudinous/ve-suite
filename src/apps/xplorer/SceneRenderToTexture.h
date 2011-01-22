@@ -111,7 +111,7 @@ public:
 
     ///Get the root node for all children in the scene to be added to
     ///\return The root osg::Group node
-    osg::Group* const GetRootGroup() const;
+    osg::Group* GetRootGroup() const;
 
     ///Get the post process camera for this context
     ///\return The post process camera for this context

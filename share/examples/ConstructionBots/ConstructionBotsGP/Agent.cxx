@@ -70,7 +70,7 @@ Agent::~Agent()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-btCompoundShape* const Agent::CreateCompoundShape() const
+btCompoundShape* Agent::CreateCompoundShape() const
 {
     btScalar boxHalfWidth = 0.5;
     btScalar holderHalfThickness = 0.05;

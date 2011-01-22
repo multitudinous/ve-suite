@@ -166,7 +166,7 @@ const Unit::InputToUniformMap& Unit::GetInputToUniformMap() const
     return mInputToUniformMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture* const Unit::GetInputTexture( int inputIndex ) const
+osg::Texture* Unit::GetInputTexture( int inputIndex ) const
 {
     if( inputIndex < mInputTextures.size() )
     {
@@ -191,7 +191,7 @@ const Unit::TextureMap& Unit::GetInputTextureMap() const
     return mInputTextures;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture* const Unit::GetOutputTexture( int mrt ) const
+osg::Texture* Unit::GetOutputTexture( int mrt ) const
 {
     if( mrt < mOutputTextures.size() )
     {
@@ -278,7 +278,7 @@ const int Unit::GetInputTextureIndexForViewportReference() const
     return mInputTextureIndexForViewportReference;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Geode* const Unit::GetGeode() const
+osg::Geode* Unit::GetGeode() const
 {
     return mGeode.get();
 }

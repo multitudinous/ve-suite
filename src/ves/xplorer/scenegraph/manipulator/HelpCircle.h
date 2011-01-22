@@ -87,7 +87,7 @@ public:
     virtual osg::Object* cloneType() const;
 
     ///
-    const osg::ClipNode* const GetClipNode() const;
+    const osg::ClipNode* GetClipNode() const;
 
     ///
     ///\param obj

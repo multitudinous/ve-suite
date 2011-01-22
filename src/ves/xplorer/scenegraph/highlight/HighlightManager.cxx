@@ -120,7 +120,7 @@ bool HighlightManager::addChild( CircleHighlight* child )
     return osg::Group::addChild( child );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CircleHighlight* const HighlightManager::ConvertNodeToCircleHighlight(
+CircleHighlight* HighlightManager::ConvertNodeToCircleHighlight(
     osg::Node* const node )
 {
     return static_cast< CircleHighlight* >( node );
@@ -141,7 +141,7 @@ void HighlightManager::Enable( const bool& enable )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-CircleHighlight* const HighlightManager::GetActiveCircleHighlight() const
+CircleHighlight* HighlightManager::GetActiveCircleHighlight() const
 {
     return m_activeCircleHighlight;
 }

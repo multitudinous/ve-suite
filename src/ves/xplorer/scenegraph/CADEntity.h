@@ -113,15 +113,15 @@ public:
 
     ///Returns the DCS of CADEntity
     ///\return 
-    ves::xplorer::scenegraph::DCS* const GetDCS() const;
+    ves::xplorer::scenegraph::DCS* GetDCS() const;
 
     ///Returns the node of CADEntity
     ///\return 
-    ves::xplorer::scenegraph::CADEntityHelper* const GetNode() const;
+    ves::xplorer::scenegraph::CADEntityHelper* GetNode() const;
 
     ///Returns the physics rigid body of CADEntity
     ///\return 
-    ves::xplorer::scenegraph::PhysicsRigidBody* const GetPhysicsRigidBody();
+    ves::xplorer::scenegraph::PhysicsRigidBody* GetPhysicsRigidBody();
 
     ///Returns the filename of CADEntity
     ///\return 

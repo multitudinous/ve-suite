@@ -97,11 +97,11 @@ public:
 
     ///
     ///\return
-    RotateTwist* const GetTwistManipulator() const;
+    RotateTwist* GetTwistManipulator() const;
 
     ///
     ///\return
-    TransformManipulator* const GetSceneManipulator() const;
+    TransformManipulator* GetSceneManipulator() const;
 
     ///
     virtual bool Handle(
