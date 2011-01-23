@@ -141,16 +141,21 @@ QModelIndex TreeTab::OpenToAndSelect( osg::NodePath& nodepath, bool highlight )
     // Get the modelindex associated with this nodepath
     QModelIndex result( osgQtTree::openToAndSelect( ui->mTreeView, mModel, nodepath ) );
 
-    on_mTreeView_activated( result, highlight );
+    Select( result, highlight );
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_mTreeView_clicked( const QModelIndex& index )
 {
-    on_mTreeView_activated( index, true );
+    on_mTreeView_activated( index );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TreeTab::on_mTreeView_activated( const QModelIndex& index, bool highlight )
+void TreeTab::on_mTreeView_activated( const QModelIndex& index )
+{
+    Select( index, true );
+}
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::Select( const QModelIndex& index, bool highlight )
 {
     //Unselect the previously-selected DCS
     if( highlight )
@@ -231,6 +236,7 @@ void TreeTab::on_mTreeView_activated( const QModelIndex& index, bool highlight )
     mActiveSet->LoadFromDatabase();
     mBrowser->RefreshAll();
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_RefreshButton_clicked()
 {

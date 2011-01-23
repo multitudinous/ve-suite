@@ -89,11 +89,13 @@ protected:
     // tree selection is synchronized with object selection.
     void OnObjectPicked( osg::NodePath& nodePath );
 
+    void Select( const QModelIndex& index, bool highlight );
+
 protected Q_SLOTS:
     /// Called when user changes selection in tree.
     /// This function looks up the scenegraph to find a valid DCS and then
     /// selects the corresponding geometry in the scene.
-    void on_mTreeView_activated( const QModelIndex& index, bool highlight = true );
+    void on_mTreeView_activated( const QModelIndex& index );
 
     /// Called when mouse is used to select an entry in the tree. Simply calls
     /// on_mTreeView_activated.
