@@ -1,5 +1,6 @@
 <RCC>
   <qresource>
+    <file>../../xpm/ToolBar/BBCenterPointJumpButton.xpm</file>
     <file>images/add.png</file>
     <file>images/configure.png</file>
     <file>images/ok.png</file>

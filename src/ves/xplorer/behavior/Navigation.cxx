@@ -129,6 +129,9 @@ Navigation::Navigation()
     CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress3%", void( gadget::Keys, int, int, int ), &Navigation::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
     
+    CONNECTSIGNALS_1( "MainWindow.JumpSignal", void( const std::string ), &Navigation::SetCenterPointJumpMode,
+                     m_connections, any_SignalType, normal_Priority );
+
     //eventmanager::EventManager::instance()->RegisterSignal(
     //    new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
     //    "KeyboardMouse.ObjectPickedSignal" );

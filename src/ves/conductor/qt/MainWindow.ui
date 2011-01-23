@@ -391,6 +391,90 @@ QToolButton:hover
     <string>Enable</string>
    </property>
   </action>
+  <action name="actionSmallJump">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/SmallCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/SmallCenterPointJumpButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>SmallJump</string>
+   </property>
+   <property name="toolTip">
+    <string>Small Jump</string>
+   </property>
+  </action>
+  <action name="actionMediumJump">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/MediumCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/MediumCenterPointJumpButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>MediumJump</string>
+   </property>
+   <property name="toolTip">
+    <string>Medium Jump</string>
+   </property>
+  </action>
+  <action name="actionLargeJump">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/LargeCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/LargeCenterPointJumpButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>LargeJump</string>
+   </property>
+   <property name="toolTip">
+    <string>Large Jump</string>
+   </property>
+  </action>
+  <action name="actionBoundingBoxJump">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/BBCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/BBCenterPointJumpButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>BoundingBoxJump</string>
+   </property>
+   <property name="toolTip">
+    <string>Bounding Box Jump</string>
+   </property>
+  </action>
+  <action name="actionNavigationStack">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/WorldNavigationButton.xpm</normaloff>:/xpm/ToolBar/WorldNavigationButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>NavigationStack</string>
+   </property>
+   <property name="toolTip">
+    <string>Navigation</string>
+   </property>
+  </action>
+  <action name="actionWorldNavigation">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/WorldNavigationButton.xpm</normaloff>:/xpm/ToolBar/WorldNavigationButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>WorldNavigation</string>
+   </property>
+   <property name="toolTip">
+    <string>World Navigation</string>
+   </property>
+  </action>
+  <action name="actionObjectNavigation">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/ObjectNavigationButton.xpm</normaloff>:/xpm/ToolBar/ObjectNavigationButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>ObjectNavigation</string>
+   </property>
+   <property name="toolTip">
+    <string>Object Navigation</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

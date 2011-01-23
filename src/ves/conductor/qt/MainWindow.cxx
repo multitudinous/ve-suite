@@ -106,41 +106,65 @@ MainWindow::MainWindow(QWidget* parent) :
     //ui->menuBar->close();
     
     ///The file menu stack
-    ui->mainToolBar->addAction( ui->actionFile );
-
-    mFileOpsStack = new IconStack( ui->mainToolBar->
-        widgetForAction( ui->actionFile ), this );
-    mFileOpsStack->AddAction( ui->actionNew );
-    mFileOpsStack->AddAction( ui->actionOpen);
-    mFileOpsStack->AddAction( ui->actionSave );
+    {
+        ui->mainToolBar->addAction( ui->actionFile );
+        
+        mFileOpsStack = new IconStack( ui->mainToolBar->
+            widgetForAction( ui->actionFile ), this );
+        mFileOpsStack->AddAction( ui->actionNew );
+        mFileOpsStack->AddAction( ui->actionOpen);
+        mFileOpsStack->AddAction( ui->actionSave );
+    }
 
     ///The physics menu stack
-    ui->mainToolBar->addAction( ui->actionPhysicsStack );
-    
-    m_physicsMenuStack = new IconStack( ui->mainToolBar->
-        widgetForAction( ui->actionPhysicsStack ), this );
-    m_physicsMenuStack->AddAction( ui->actionPlayPhysics);
-    m_physicsMenuStack->AddAction( ui->actionPausePhysics);
-    m_physicsMenuStack->AddAction( ui->actionResetPhysics );
-    m_physicsMenuStack->AddAction( ui->actionStepPhysics );
+    {
+        ui->mainToolBar->addAction( ui->actionPhysicsStack );
+        
+        m_physicsMenuStack = new IconStack( ui->mainToolBar->
+            widgetForAction( ui->actionPhysicsStack ), this );
+        m_physicsMenuStack->AddAction( ui->actionPlayPhysics);
+        m_physicsMenuStack->AddAction( ui->actionPausePhysics);
+        m_physicsMenuStack->AddAction( ui->actionResetPhysics );
+        m_physicsMenuStack->AddAction( ui->actionStepPhysics );
+    }
 
     ///The manipulator menu stack
-    ui->mainToolBar->addAction( ui->actionManipulatorStack );
+    {
+        ui->mainToolBar->addAction( ui->actionManipulatorStack );
+        
+        m_manipulatorMenuStack = new IconStack( ui->mainToolBar->
+            widgetForAction( ui->actionManipulatorStack ), this );
+        m_manipulatorMenuStack->AddAction( ui->actionEnableManipulator );
+        m_manipulatorMenuStack->AddAction( ui->actionScaleManipulator );
+        m_manipulatorMenuStack->AddAction( ui->actionTranslateManipulator );
+        m_manipulatorMenuStack->AddAction( ui->actionRotateManipulator );
+        m_manipulatorMenuStack->AddAction( ui->actionComboManipulator );
+        //ui->actionManipulatorStack
+        
+        ui->actionScaleManipulator->setEnabled( false );
+        ui->actionTranslateManipulator->setEnabled( false );
+        ui->actionRotateManipulator->setEnabled( false );
+        ui->actionComboManipulator->setEnabled( false );    
+    }
     
-    m_manipulatorMenuStack = new IconStack( ui->mainToolBar->
-        widgetForAction( ui->actionManipulatorStack ), this );
-    m_manipulatorMenuStack->AddAction( ui->actionEnableManipulator);
-    m_manipulatorMenuStack->AddAction( ui->actionScaleManipulator);
-    m_manipulatorMenuStack->AddAction( ui->actionTranslateManipulator );
-    m_manipulatorMenuStack->AddAction( ui->actionRotateManipulator );
-    m_manipulatorMenuStack->AddAction( ui->actionComboManipulator );
-    //ui->actionManipulatorStack
-    
-    ui->actionScaleManipulator->setEnabled( false );
-    ui->actionTranslateManipulator->setEnabled( false );
-    ui->actionRotateManipulator->setEnabled( false );
-    ui->actionComboManipulator->setEnabled( false );    
-    
+    ///The nav menu stack
+    {
+        ui->mainToolBar->addAction( ui->actionNavigationStack );
+
+        m_navMenuStack = new IconStack( ui->mainToolBar->
+            widgetForAction( ui->actionNavigationStack ), this );
+        m_navMenuStack->AddAction( ui->actionSmallJump );
+        m_navMenuStack->AddAction( ui->actionMediumJump );
+        m_navMenuStack->AddAction( ui->actionLargeJump );
+        m_navMenuStack->AddAction( ui->actionBoundingBoxJump );
+        m_navMenuStack->AddAction( ui->actionWorldNavigation );
+        m_navMenuStack->AddAction( ui->actionObjectNavigation );
+        
+        eventmanager::EventManager::instance()->RegisterSignal(
+           new eventmanager::SignalWrapper< NavJumpSignal_type >( &m_jumpSignal ),
+           "MainWindow.JumpSignal" );
+    }
+        
     // Make sure there is no statusbar on this widget.
     setStatusBar(0);
     
@@ -581,5 +605,47 @@ void MainWindow::on_actionEnableManipulator_triggered( bool triggered )
     ui->actionTranslateManipulator->setEnabled( triggered );
     ui->actionRotateManipulator->setEnabled( triggered );
     ui->actionComboManipulator->setEnabled( triggered );    
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionNavigationStack_triggered()
+{
+    if( m_navMenuStack->isVisible() )
+    {
+        m_navMenuStack->hide();
+    }
+    else
+    {
+        m_navMenuStack->Show();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionSmallJump_hovered()
+{
+    m_jumpSignal( "Small" );    
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionMediumJump_triggered()
+{
+    m_jumpSignal( "Medium" );    
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionLargeJump_triggered()
+{
+    m_jumpSignal( "Large" );    
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionBoundingBoxJump_triggered()
+{
+    m_jumpSignal( "Bounding Box" );    
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionWorldNavigation_triggered()
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionObjectNavigation_triggered()
+{
+    
 }
 ////////////////////////////////////////////////////////////////////////////////

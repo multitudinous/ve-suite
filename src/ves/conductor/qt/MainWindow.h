@@ -193,6 +193,35 @@ protected Q_SLOTS:
     /// Autoconnected slot
     void on_tabWidget_currentChanged( int index );
 
+
+    /// Called when the manipulators icon is pressed on the toolbar
+    /// Autoconnected slot
+    void on_actionNavigationStack_triggered(); 
+    
+    /// Called when the manipulators icon is pressed on the toolbar
+    /// Autoconnected slot
+    void on_actionSmallJump_hovered();
+    
+    /// Enables physics engine
+    /// Autoconnected slot
+    void on_actionMediumJump_triggered(); 
+    
+    ///Start the physics engine
+    /// Autoconnected slot
+    void on_actionLargeJump_triggered(); 
+    
+    ///Pause he physics engine
+    /// Autoconnected slot
+    void on_actionBoundingBoxJump_triggered(); 
+    
+    ///Reset the physics engine
+    /// Autoconnected slot
+    void on_actionWorldNavigation_triggered(); 
+
+    ///Reset the physics engine
+    /// Autoconnected slot
+    void on_actionObjectNavigation_triggered(); 
+    
     Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
     /// required for thread safety
@@ -221,6 +250,8 @@ private:
     ves::conductor::IconStack* m_physicsMenuStack;
     ///Physics menu stack
     ves::conductor::IconStack* m_manipulatorMenuStack;
+    ///Nav menu stack
+    ves::conductor::IconStack* m_navMenuStack;
     ///Tree tab
     ves::conductor::TreeTab* mScenegraphTreeTab;
     ///The map of tabs
@@ -239,6 +270,11 @@ private:
     
     ///The PreferencesTab pointer
     ves::conductor::PreferencesTab* m_preferencesTab;
+    
+    /// ButtonPress signal type
+    /// Params are: button, x, y, state (modifier mask OR'd with button mask)
+    typedef boost::signals2::signal< void ( const std::string ) > NavJumpSignal_type;
+    NavJumpSignal_type m_jumpSignal;  
 };
     
 }
