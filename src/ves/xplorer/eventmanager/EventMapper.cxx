@@ -53,7 +53,7 @@ vprSingletonImp( EventMapper );
 EventMapper::EventMapper()//:
         //m_Logger( Poco::Logger::get( "xplorer.EventMapper" ) )
 {
-    //CREATE_LOG_STREAM;
+    //m_LogStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_Logger ) );
     //LOG_TRACE( "ctor" );
     // Connect to signals to get all keypresses, keyreleases, buttonpresses,
     // and buttonreleases
@@ -98,11 +98,52 @@ EventMapper::~EventMapper()
     }
 }
 
-void EventMapper::MapEvent( const std::string& KeyButton, const std::string& Behavior )
+void EventMapper::PushMapEvent( const std::string& KeyButton, const std::string& Behavior )
 {
-    //LOG_INFO( "MapEvent: Mapping " << KeyButton << " to " << Behavior );
+    //LOG_INFO( "PushMapEvent: Mapping " << KeyButton << " to " << Behavior );
+
+    // If there's already a history for this KeyButton, push the existing mapping
+    // down into it. If not, create an empty history. Future mappings for this
+    // KeyButton will then find the history.
+    mEventHistoryMapType::iterator iter = mEventHistoryMap.find( KeyButton );
+    if( iter != mEventHistoryMap.end() )
+    {
+        iter->second->push_back( mEventBehaviorMap[ KeyButton ] );
+    }
+    else
+    {
+        std::vector< std::string >* tHistory = new std::vector< std::string >;
+        mEventHistoryMap[ KeyButton ] = tHistory;
+    }
 
     mEventBehaviorMap[ KeyButton ] = Behavior;
+}
+
+void EventMapper::PopMapEvent( const std::string& KeyButton )
+{
+    //LOG_INFO( "PopMapEvent: " << KeyButton );
+    // If there's a non-empty history for this KeyButton, jettison the current
+    // mapping and restore it to the previous one, then remove the "previous one"
+    // from the history
+    mEventHistoryMapType::const_iterator iter = mEventHistoryMap.find( KeyButton );
+    if( iter != mEventHistoryMap.end() )
+    {
+        std::vector< std::string >* history = iter->second;
+        if( !history->empty() )
+        {
+            //LOG_INFO( "Restoring mapping to: " << history->back() );
+            mEventBehaviorMap[ KeyButton ] = history->back();
+            history->pop_back();
+        }
+        else
+        {
+            //LOG_INFO( "Empty history for this event" );
+        }
+    }
+    else
+    {
+        //LOG_INFO( "No history for this event" );
+    }
 }
 
 void EventMapper::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
@@ -196,35 +237,47 @@ void EventMapper::EmitSyncGraphicsSignals()
     mSyncGraphicsQueue.clear();
 }
 
-void EventMapper::AddMappableEvent( const std::string& EventName, syncType sync )
+void EventMapper::AddMappableBehavior( const std::string& BehaviorName, syncType sync )
 {
-    // Check event map to see if this event already exists
-    EventBehaviorMapType::const_iterator iter =
-            mEventBehaviorMap.find( EventName );
-    if( iter != mEventBehaviorMap.end() )
+    //LOG_INFO( "AddMappableBehavior: " << BehaviorName << ", sync type " << sync );
+    // Check behavior maps to see if this behavior already exists
+    BehaviorMapType::const_iterator iter =
+            mSyncNoneBehaviorMap.find( BehaviorName );
+    if( iter != mSyncNoneBehaviorMap.end() )
     {
-        // Event already exists in our map. No need to add it again.
+        // Behavior already exists in our map. No need to add it again.
+        //LOG_WARNING( "Behavior already exists; not adding." );
         return;
     }
-    else
-    {
-        // Register signal for event
-        voidSignalType* signal = new ( voidSignalType );
-        std::string name("EventMapper.");
-        name.append( EventName );
-        ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-                new ves::xplorer::eventmanager::SignalWrapper< voidSignalType >( signal ),
-                name );
 
-        // Add signal to appropriate map based on sync type
-        if( sync == syncNone )
-        {
-            mSyncNoneBehaviorMap[ EventName ] = signal;
-        }
-        else if( sync == syncGraphics )
-        {
-            mSyncGraphicsBehaviorMap[ EventName ] = signal;
-        }
+    iter = mSyncGraphicsBehaviorMap.find( BehaviorName );
+    if( iter != mSyncGraphicsBehaviorMap.end() )
+    {
+        // Behavior already exists in our map. No need to add it again.
+        //LOG_WARNING( "Behavior already exists; not adding." );
+        return;
+    }
+
+    // If we've made it this far, the behavior does not exist in our maps
+    // yet and we need to register a signal for it then add it to the proper
+    // map based on sync type.
+
+    // Register signal for behavior
+    voidSignalType* signal = new ( voidSignalType );
+    std::string name("EventMapper.");
+    name.append( BehaviorName );
+    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
+            new ves::xplorer::eventmanager::SignalWrapper< voidSignalType >( signal ),
+            name );
+
+    // Add signal to appropriate map based on sync type
+    if( sync == syncNone )
+    {
+        mSyncNoneBehaviorMap[ BehaviorName ] = signal;
+    }
+    else if( sync == syncGraphics )
+    {
+        mSyncGraphicsBehaviorMap[ BehaviorName ] = signal;
     }
 }
 
@@ -233,13 +286,13 @@ void EventMapper::SetupDefaultBindings()
     //LOG_TRACE( "SetupDefaultBindings" );
 
     // FrameAll -- Sync to Graphics
-    AddMappableEvent( "FrameAll", syncGraphics );
-    MapEvent( "KeyRelease_KEY_F", "FrameAll" );
+    AddMappableBehavior( "FrameAll", syncGraphics );
+    PushMapEvent( "KeyRelease_KEY_F", "FrameAll" );
 
 
     // HideShowUI -- Sync to Graphics
-    AddMappableEvent( "HideShowUI", syncGraphics );
-    MapEvent( "KeyRelease_KEY_F1", "HideShowUI" );
+    AddMappableBehavior( "HideShowUI", syncGraphics );
+    PushMapEvent( "KeyRelease_KEY_F1", "HideShowUI" );
 }
 
 const std::string EventMapper::getKeyName(const gadget::Keys keyId) const

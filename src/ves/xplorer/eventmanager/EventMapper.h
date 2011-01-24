@@ -39,7 +39,7 @@
 
 #include <ves/VEConfig.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
-//#include <ves/xplorer/Debug.h>
+#include <ves/xplorer/Logging.h>
 
 #include <boost/signals2/signal.hpp>
 
@@ -76,9 +76,35 @@ public:
         syncGraphics
     };
 
-    void MapEvent( const std::string& KeyButton, const std::string& Behavior );
+    /// Add a new mapping for KeyButton so that it executes Behavior. The mapping
+    /// is added to a stack so the previous mapping can be restored by
+    /// calling PopMapEvent.
+    /// @param KeyButton Valid
+    /// KeyButton strings are formed with the prefix "KeyPress_" or "KeyRelease_"
+    /// followed by the suffix "KEY_#" where # represents a valid juggler keyname.
+    /// Alpha characters are always capitalized (eg. "KEY_F" is a valid suffix,
+    /// whereas "KEY_f" is not). The other type of valid KeyButton string is made
+    /// from either the prefix "ButtonPress_" or "ButtonRelease_" and the suffix
+    /// "MBUTTON#" where # is a number from 1 to 9.
+    /// @param Behavior The name of the behavior signal to send out. The
+    /// behavior should have been previously added via AddMappableBehavior.
+    void PushMapEvent( const std::string& KeyButton, const std::string& Behavior );
 
-    void AddMappableEvent( const std::string& EventName, syncType sync = syncNone );
+    /// Pops the most recent mapping involving KeyButton off the stack and replaces
+    /// the KeyButton->Behavior mapping with the previous one.
+    void PopMapEvent( const std::string& KeyButton );
+
+    /// Adds a mappable behavior. This will cause a signal with signature void()
+    /// and name EventMapper.[BehaviorName] to be registered with EventManager.
+    /// Once a behavior has been added in this way, it can be mapped to a KeyButton
+    /// by calling PushMapEvent.
+    /// @BehaviorName The name of the behavior (eg. "FrameAll")
+    /// @sync One of (syncNone,syncGraphics): indicated whether this operation
+    /// must be synced to the draw loop. syncNone behaviors are called immediately
+    /// upon arrival of the mapped KeyButton; syncGraphics behaviors are stored in
+    /// a queue and are processed during application's latePreFrameUpdate, when
+    /// it is safe to touch the scenegraph.
+    void AddMappableBehavior( const std::string& BehaviorName, syncType sync = syncNone );
 
     void LatePreFrameUpdate();
 
@@ -130,18 +156,13 @@ private:
 
     BehaviorMapType mSyncGraphicsBehaviorMap;
 
+    typedef std::map< std::string, std::vector< std::string >* > mEventHistoryMapType;
+    mEventHistoryMapType mEventHistoryMap;
+
     std::vector< std::string > mSyncGraphicsQueue;
 
-
-
-    // All the basic behavior signals go here. All must have the signature
-    // void () since there are no logical, generic arguments to a key or button
-    // mapping.
-//    voidSignalType mFrameAllSignal; ///< Show everything in the scene
-//    voidSignalType mHideShowUISignal; ///< Toggle visibility of UI
-
-    //DECLARE_LOGGER;
-
+    //Poco::Logger& m_Logger;
+    //ves::xplorer::LogStreamPtr m_LogStream;
 };
 
 }
