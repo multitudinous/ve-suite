@@ -1,0 +1,14 @@
+#Build all the qwt test apps
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import( 'ves_pkg buildDir RootDir GetPlatform' )
+
+qwtSubdirs = Split("""
+    dbplot
+""")
+
+#Run SConscript files in all of those folders
+for d in qwtSubdirs:
+   SConscript( dirs = d )

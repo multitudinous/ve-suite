@@ -1,0 +1,51 @@
+#Builds Qwt dbplot example program
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import( 'buildDir GetPlatform RootDir ves_pkg' )
+
+openDir = os.path.abspath( pj( RootDir, 'test', 'qwt', 'dbplot' ) )
+buildSrcDir = pj( '#', buildDir, 'test', 'qwt', 'dbplot' )
+
+env = ves_pkg.getEnv().Clone()
+
+headers = sca_util.getHeadersRecursive( pj( openDir ) )
+sources = sca_util.getSourcesRecursive( pj( openDir ) )
+
+#ui = []
+#uisources = [ pj( buildSrcDir, 'name.ui' ) ]
+#for x in uisources:
+    #ui += env.qt_uic( source )
+
+moc = []
+mocsources = [ pj( buildSrcDir, 'cpuplot.h' ) ]
+for x in mocsources:
+    moc += env.qt_moc( x )
+
+headers = map( lambda s: pj( '.', s ), headers )
+sources = map( lambda s: pj( '.', s ), sources )
+sources += moc
+
+env.Append( CPPPATH = [ pj( RootDir, 'external', 'qwt-6.0.0-rc5', 'src' ) ] )
+env.Append( LIBS = [ 'qwt' ] )
+env.Append( LIBPATH = [ pj( '#', buildDir, 'external', 'qwt-6.0.0-rc5', 'src' ) ] )
+
+if GetPlatform() == 'linux':
+    env.Append( CCFLAGS=[ '-fPIC' ] )
+
+if GetPlatform() != 'darwin':
+    Import( 'qt_options' )
+    qt_options.apply( env )
+    env.AppendUnique( CPPDEFINES = [ 'QT_ON' ] )
+    env.AppendUnique( CPPDEFINES = [ 'QWT_DLL' ] )
+else:
+    import qt46
+    qt46.applyQtBuildFlags( env )
+
+qtprog = ves_pkg.createProgram( 'dbplot' + env[ "PROGSUFFIX" ], env, 'bin' )
+
+qtprog.addHeaders( headers, pj( 'test' ) )
+qtprog.addSources( sources )
+
+qtprog.build()
