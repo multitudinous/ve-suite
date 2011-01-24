@@ -50,11 +50,12 @@ namespace eventmanager
 
 vprSingletonImp( EventMapper );
 
-EventMapper::EventMapper()//:
-        //m_Logger( Poco::Logger::get( "xplorer.EventMapper" ) )
+EventMapper::EventMapper()
+    :
+    m_logger( Poco::Logger::get( "xplorer.EventMapper" ) )
 {
-    //m_LogStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_Logger ) );
-    //LOG_TRACE( "ctor" );
+    m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
+    LOG_TRACE( "ctor" );
     // Connect to signals to get all keypresses, keyreleases, buttonpresses,
     // and buttonreleases
     CONNECTSIGNALS_4( "%ButtonPress%",void ( gadget::Keys, int, int, int ),
@@ -100,7 +101,7 @@ EventMapper::~EventMapper()
 
 void EventMapper::PushMapEvent( const std::string& KeyButton, const std::string& Behavior )
 {
-    //LOG_INFO( "PushMapEvent: Mapping " << KeyButton << " to " << Behavior );
+    LOG_INFO( "PushMapEvent: Mapping " << KeyButton << " to " << Behavior );
 
     // If there's already a history for this KeyButton, push the existing mapping
     // down into it. If not, create an empty history. Future mappings for this
@@ -121,7 +122,7 @@ void EventMapper::PushMapEvent( const std::string& KeyButton, const std::string&
 
 void EventMapper::PopMapEvent( const std::string& KeyButton )
 {
-    //LOG_INFO( "PopMapEvent: " << KeyButton );
+    LOG_INFO( "PopMapEvent: " << KeyButton );
     // If there's a non-empty history for this KeyButton, jettison the current
     // mapping and restore it to the previous one, then remove the "previous one"
     // from the history
@@ -131,55 +132,55 @@ void EventMapper::PopMapEvent( const std::string& KeyButton )
         std::vector< std::string >* history = iter->second;
         if( !history->empty() )
         {
-            //LOG_INFO( "Restoring mapping to: " << history->back() );
+            LOG_INFO( "Restoring mapping to: " << history->back() );
             mEventBehaviorMap[ KeyButton ] = history->back();
             history->pop_back();
         }
         else
         {
-            //LOG_INFO( "Empty history for this event" );
+            LOG_INFO( "Empty history for this event" );
         }
     }
     else
     {
-        //LOG_INFO( "No history for this event" );
+        LOG_INFO( "No history for this event" );
     }
 }
 
 void EventMapper::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
-    //LOG_TRACE( "ButtonPressEvent: " << button << ", " << x << ", " << y << ", "
-    //           << state );
+    LOG_TRACE( "ButtonPressEvent: " << button << ", " << x << ", " << y << ", "
+               << state );
     std::string EventName( "ButtonPress_" );
     QueueAndEmit( EventName, button );
 }
 
 void EventMapper::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
-    //LOG_TRACE( "ButtonReleaseEvent: " << button << ", " << x << ", " << y << ", "
-    //           << state );
+    LOG_TRACE( "ButtonReleaseEvent: " << button << ", " << x << ", " << y << ", "
+               << state );
     std::string EventName( "ButtonRelease_" );
     QueueAndEmit( EventName, button );
 }
 
 void EventMapper::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
 {
-    //LOG_TRACE( "MouseDoubleClickEvent: " << button << ", " << x << ", " << y << ", "
-    //           << z << "," << state );
+    LOG_TRACE( "MouseDoubleClickEvent: " << button << ", " << x << ", " << y << ", "
+               << z << "," << state );
     std::string EventName( "DoubleClick_" );
     QueueAndEmit( EventName, button );
 }
 
 void EventMapper::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
 {
-    //LOG_TRACE( "KeyPressEvent: " << key << ", " << modifiers << ", " << unicode );
+    LOG_TRACE( "KeyPressEvent: " << key << ", " << modifiers << ", " << unicode );
     std::string EventName( "KeyPress_" );
     QueueAndEmit( EventName, key );
 }
 
 void EventMapper::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
 {
-    //LOG_TRACE( "KeyReleaseEvent: " << key << ", " << modifiers << ", " << unicode );
+    LOG_TRACE( "KeyReleaseEvent: " << key << ", " << modifiers << ", " << unicode );
     std::string EventName( "KeyRelease_" );
     QueueAndEmit( EventName, key );
 }
@@ -187,7 +188,7 @@ void EventMapper::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode
 void EventMapper::QueueAndEmit( std::string& eventName, gadget::Keys key )
 {
     eventName.append( getKeyName( key ) );
-    //LOG_TRACE( "QueueAndEmit: " << eventName );
+    LOG_TRACE( "QueueAndEmit: " << eventName );
 
     // See if this event is mapped to a signal
     EventBehaviorMapType::const_iterator ebIter = mEventBehaviorMap.find( eventName );
@@ -216,7 +217,7 @@ void EventMapper::LatePreFrameUpdate()
 
 void EventMapper::EmitSyncGraphicsSignals()
 {
-    //LOG_TRACE( "EmitSyncGraphicsSignals" );
+    LOG_TRACE( "EmitSyncGraphicsSignals" );
     if( mSyncGraphicsQueue.empty() )
     {
         return;
@@ -239,14 +240,14 @@ void EventMapper::EmitSyncGraphicsSignals()
 
 void EventMapper::AddMappableBehavior( const std::string& BehaviorName, syncType sync )
 {
-    //LOG_INFO( "AddMappableBehavior: " << BehaviorName << ", sync type " << sync );
+    LOG_INFO( "AddMappableBehavior: " << BehaviorName << ", sync type " << sync );
     // Check behavior maps to see if this behavior already exists
     BehaviorMapType::const_iterator iter =
             mSyncNoneBehaviorMap.find( BehaviorName );
     if( iter != mSyncNoneBehaviorMap.end() )
     {
         // Behavior already exists in our map. No need to add it again.
-        //LOG_WARNING( "Behavior already exists; not adding." );
+        LOG_WARNING( "Behavior already exists; not adding." );
         return;
     }
 
@@ -254,7 +255,7 @@ void EventMapper::AddMappableBehavior( const std::string& BehaviorName, syncType
     if( iter != mSyncGraphicsBehaviorMap.end() )
     {
         // Behavior already exists in our map. No need to add it again.
-        //LOG_WARNING( "Behavior already exists; not adding." );
+        LOG_WARNING( "Behavior already exists; not adding." );
         return;
     }
 
@@ -283,7 +284,7 @@ void EventMapper::AddMappableBehavior( const std::string& BehaviorName, syncType
 
 void EventMapper::SetupDefaultBindings()
 {
-    //LOG_TRACE( "SetupDefaultBindings" );
+    LOG_TRACE( "SetupDefaultBindings" );
 
     // FrameAll -- Sync to Graphics
     AddMappableBehavior( "FrameAll", syncGraphics );

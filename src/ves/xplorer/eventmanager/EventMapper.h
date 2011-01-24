@@ -161,8 +161,8 @@ private:
 
     std::vector< std::string > mSyncGraphicsQueue;
 
-    //Poco::Logger& m_Logger;
-    //ves::xplorer::LogStreamPtr m_LogStream;
+    Poco::Logger& m_logger;
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 }

@@ -51,7 +51,7 @@ typedef ves::util::ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
 //#define DECLARE_LOGGER Poco::Logger& m_Logger; LogStreamPtr m_LogStream
 //#define CREATE_LOG_STREAM m_LogStream = LogStreamPtr( new Poco::LogStream::LogStream( m_Logger ) )
 
-#define _LOG_CALL( prio, msg ) do {if( m_Logger.prio() ){ (*m_LogStream).prio() << msg << std::endl; } } while( 0 )
+#define _LOG_CALL( prio, msg ) do {if( m_logger.prio() ){ (*m_logStream).prio() << msg << std::endl; } } while( 0 )
 
 #define LOG_FATAL( msg ) _LOG_CALL( fatal, msg )
 #define LOG_CRITICAL( msg ) _LOG_CALL( critical, msg )
