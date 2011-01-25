@@ -36,6 +36,10 @@
 #include "App.h"
 #include "VjObsWrapper.h"
 
+#include <ves/xplorer/environment/cfdDisplaySettings.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+
 #if defined _DARWIN
 #include "CocoaHelper.h"
 #endif
@@ -65,7 +69,10 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
 {
     SetupOSGFILEPATH();
     
+    int desktopWidth = 0;
+    int desktopHeight = 0;
     bool enableRTT = false;
+    bool desktopMode = false;
     for( int i = 1;i < argc;++i )
     {
         if( std::string( argv[i] ) == std::string( "-VESRTT" ) )
@@ -73,6 +80,17 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
             enableRTT = true;
             std::cout << "Enabling RTT"<< std::endl;
             break;
+        }
+        else if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
+           ( argc > i + 2 ) )
+        {
+            desktopWidth = atoi( argv[ i + 1 ] );
+            desktopHeight = atoi( argv[ i + 2 ] );
+            desktopMode = true;
+            //EnvironmentHandler::instance()->
+            //SetDesktopSize( atoi( argv[ i + 1 ] ), atoi( argv[ i + 2 ] ) );
+            //ves::xplorer::scenegraph::SceneManager::instance()->
+            //SetDesktopMode( true );
         }
     }
 
@@ -91,6 +109,31 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     //We could ask to resize our window here based on command line args.
     //After we call start the application has handed the config files
     //off to jccl::ConfigManager.
+    if( (desktopWidth > 0) && (desktopHeight > 0) && desktopMode )
+    {
+        cfdDisplaySettings* displaySettings = new cfdDisplaySettings();
+
+        std::cout << 
+            "| Initializing....................................  Desktop Display |" 
+            << std::endl;
+        // Create the command and data value pairs
+        // to adjust the desktop settings.
+        ves::open::xml::DataValuePairPtr dvpDesktopWidth( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
+        dvpDesktopWidth->SetDataName( "desktop_width" );
+        dvpDesktopWidth->SetDataValue( static_cast< double >( desktopWidth ) );
+        
+        ves::open::xml::DataValuePairPtr dvpDesktopHeight( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
+        dvpDesktopHeight->SetDataName( "desktop_height" );
+        dvpDesktopHeight->SetDataValue( static_cast< double >( desktopHeight ) );
+        
+        ves::open::xml::CommandPtr displayCommand( new ves::open::xml::Command() );
+        displayCommand->SetCommandName( std::string( "Juggler_Desktop_Data" ) );
+        displayCommand->AddDataValuePair( dvpDesktopWidth );
+        displayCommand->AddDataValuePair( dvpDesktopHeight );
+        displaySettings->SetVECommand( displayCommand );
+        displaySettings->ProcessCommand();
+        delete displaySettings;
+    }    
 
     kernel->setApplication( m_cfdApp );    // Give application to kernel
 

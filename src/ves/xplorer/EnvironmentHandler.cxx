@@ -362,7 +362,7 @@ void EnvironmentHandler::InitScene()
         displayCommand->AddDataValuePair( dvpDesktopWidth );
         displayCommand->AddDataValuePair( dvpDesktopHeight );
         displaySettings->SetVECommand( displayCommand );
-        displaySettings->ProcessCommand();
+        //displaySettings->ProcessCommand();
     }
 
     //
