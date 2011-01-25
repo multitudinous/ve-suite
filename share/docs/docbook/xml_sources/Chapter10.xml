@@ -57,6 +57,10 @@
         <para>Embedded in C Preprocessor macro and identifier names (e.g.,
         <code>DEGREES_TO_RADIANS()</code>)</para>
       </listitem>
+      
+      <listitem>
+        <para>For use in member variable names.</para>
+      </listitem>
     </itemizedlist>
 
     <para>Use capitalization to indicate words within a name (CamelCase). For
@@ -99,9 +103,9 @@
       character. Words should be separated by an underscore. Variables should
       be declared where they are first used.</para>
 
-      <para>Member variable names should use the prefix <code>m</code>
-      (lower-case m). An upper-case letter should follow the prefix. An
-      example of a valid member variable name is <code>mViewMatrix</code>. If
+      <para>Member variable names should use the prefix <code>m_</code>
+      (lower-case m). A lower-case letter should follow the underscors. An
+      example of a valid member variable name is <code>m_viewMatrix</code>. If
       it is a static variable then use the prefix <code>s</code> (lower-case
       s).</para>
 
