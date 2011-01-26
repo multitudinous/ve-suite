@@ -34,7 +34,6 @@
 #include <ves/xplorer/eventmanager/EventMapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
-#include <ves/xplorer/eventmanager/ConnectSignals.h>
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
