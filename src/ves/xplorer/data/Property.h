@@ -38,7 +38,7 @@
 #include <map>
 
 #include <boost/any.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2/signal.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 #include <ves/VEConfig.h>
@@ -106,7 +106,7 @@ namespace data
 {
 
 
-class VE_DATA_EXPORTS Property : public boost::signals::trackable, public boost::enable_shared_from_this< Property >
+class VE_DATA_EXPORTS Property : public boost::signals2::trackable, public boost::enable_shared_from_this< Property >
 {
 public:
 
@@ -192,17 +192,17 @@ public:
     /// Property emits this signal anytime something attempts to change its value.
     /// A validation slot can subscribe to this and return true to allow the
     /// change, or false to disallow it.
-    boost::signal< bool ( PropertyPtr, boost::any ) > SignalRequestValidation;
+    boost::signals2::signal< bool ( PropertyPtr, boost::any ) > SignalRequestValidation;
 
     ///
     /// Signals to which other objects can subscribe to get basic state updates
     /// about this property. A pointer to this instance is passed in the signal
     /// since many slots will be concerned with the identity of the caller in
     /// order to choose the appropriate action.
-    boost::signal< void ( PropertyPtr ) > SignalValueChanged;
-    boost::signal< void ( PropertyPtr ) > SignalAttributeChanged;
-    boost::signal< void ( PropertyPtr ) > SignalEnabled;
-    boost::signal< void ( PropertyPtr ) > SignalDisabled;
+    boost::signals2::signal< void ( PropertyPtr ) > SignalValueChanged;
+    boost::signals2::signal< void ( PropertyPtr ) > SignalAttributeChanged;
+    boost::signals2::signal< void ( PropertyPtr ) > SignalEnabled;
+    boost::signals2::signal< void ( PropertyPtr ) > SignalDisabled;
 
     ///
     /// Basic typechecking methods
