@@ -41,7 +41,7 @@ Plot::Plot( QWidget* parent )
     m_directPainter( new QwtPlotDirectPainter() )
 {
     setAutoReplot( false );
-    setCanvasBackground( Qt::black );
+    //setCanvasBackground( Qt::black );
     setTitle( "Sensor Data" );
     plotLayout()->setAlignCanvasToScales( true );
 
@@ -74,7 +74,7 @@ Plot::Plot( QWidget* parent )
     grid->enableYMin( false );
     grid->attach( this );
 
-    //Currently no used
+    //Currently not used
     m_marker->setValue(  QPointF( 0.0, 0.0 ) );
     m_marker->setLineStyle( QwtPlotMarker::VLine );
     m_marker->setLinePen( QPen( Qt::gray, 1, Qt::SolidLine ) );
@@ -95,6 +95,8 @@ Plot::~Plot()
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::start()
 {
+    //Need QwtSystemClock to handle sampling measurements
+    //It is more accurate than QTime
     m_clock.start();
     //This is how often the timerEvent gets executed, basically a draw refresh rate
     //So here we tell m_directPainter to draw new points every 20 milliseconds
@@ -178,6 +180,7 @@ void Plot::timerEvent( QTimerEvent* event )
     {
         updateCurve();
 
+        //Use the more accurate QwtSystemClock to get elapsed time
         double const elapsed = m_clock.elapsed() / 1000.0;
         if( elapsed > m_interval.maxValue() )
         {
@@ -195,18 +198,16 @@ void Plot::resizeEvent( QResizeEvent* event )
     m_directPainter->reset();
     QwtPlot::resizeEvent( event );
 
-    /*
-    const QColor color( 46, 74, 95 );
+    const QColor color( 77, 77, 77 );
     const QRect cr = canvas()->contentsRect();
     QLinearGradient gradient( cr.topLeft(), cr.topRight() );
     gradient.setColorAt( 0.0, color.light( 130 ) );
     gradient.setColorAt( 0.2, color.dark( 110 ) );
     gradient.setColorAt( 0.7, color );
-    gradient.setColorAt( 1.0, color.dark(150 ) );
+    gradient.setColorAt( 1.0, color.dark( 150 ) );
 
     QPalette pal = canvas()->palette();
     pal.setBrush( QPalette::Window, QBrush( gradient ) );
     canvas()->setPalette( pal );
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////

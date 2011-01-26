@@ -25,6 +25,7 @@ SamplingThread::~SamplingThread()
 ////////////////////////////////////////////////////////////////////////////////
 void SamplingThread::sample( double elapsed )
 {
+    std::cout << elapsed << std::endl;
     //This is where we would query the database at some interval and
     //append points to SignalData
     if( 1 )
