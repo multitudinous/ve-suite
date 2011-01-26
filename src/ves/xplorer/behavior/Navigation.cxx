@@ -44,6 +44,7 @@
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -117,16 +118,20 @@ Navigation::Navigation()
     mCenterPointThreshold( 0.1 ),
     mCenterPointJump( 10.0 )
 {    
-    CONNECTSIGNALS_4( "KeyboardMouse.MouseMove", void( int, int, int, int ), &Navigation::ProcessNavigation,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
+                      eventmanager::BooleanPropagationCombiner, &Navigation::ProcessNavigation,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress1%", void( gadget::Keys, int, int, int ), &Navigation::RegisterButtonPress,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
+                     eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress2%", void( gadget::Keys, int, int, int ), &Navigation::RegisterButtonPress,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ),
+                     eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress3%", void( gadget::Keys, int, int, int ), &Navigation::RegisterButtonPress,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ),
+                     eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
     
     CONNECTSIGNALS_1( "MainWindow.JumpSignal", void( const std::string ), &Navigation::SetCenterPointJumpMode,
@@ -142,7 +147,7 @@ Navigation::~Navigation()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Navigation::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+bool Navigation::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
     m_currX = xPos;
     m_currY = yPos;
@@ -151,13 +156,14 @@ void Navigation::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos
     m_prevX = m_currX;
     m_prevY = m_currY;
 //#endif
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonState )
+bool Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonState )
 {
     if( buttonState == 0 || buttonState&gadget::KEY_SHIFT )
     {
-        return;
+        return false;
     }
     m_currX = xPos;
     m_currY = yPos;
@@ -206,21 +212,21 @@ void Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
             }
         }
         //Mod key shift
-        return;
+        return false;
     }
     
     if( buttonState&gadget::BUTTON2_MASK )
     {
         Pan( dx, dy );
         ProcessNavigation();
-        return;      
+        return false;
     }
     
     if( buttonState&gadget::BUTTON3_MASK )
     {
         Zoom( dy );
         ProcessNavigation();
-        return;
+        return false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

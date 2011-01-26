@@ -174,24 +174,24 @@ public:
 
     /// Receives mouse move events connected via EventManager
     /// state = modifier mask OR'd with button mask
-    void MouseMoveEvent( int x, int y, int z, int state );
+    bool MouseMoveEvent( int x, int y, int z, int state );
 
     /// Receives mouse double clicks connected via EventManager
-    void MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state );
+    bool MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state );
 
     /// Receives mouse buttonpress events connected via EventManager
     /// state = modifier mask OR'd with button mask
-    void ButtonPressEvent( gadget::Keys button, int x, int y, int state );
+    bool ButtonPressEvent( gadget::Keys button, int x, int y, int state );
 
     /// Receives mouse buttonrelease events connected via EventManager
     /// state = modifier mask OR'd with button mask
-    void ButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
+    bool ButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
 
     /// Receives key press events connected via EventManager
-    void KeyPressEvent( gadget::Keys key, int modifiers, char unicode );
+    bool KeyPressEvent( gadget::Keys key, int modifiers, char unicode );
 
     /// Receives key release events connected via EventManager
-    void KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode );
+    bool KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode );
 
     ///Sets the projection matrix when not in Ortho2D mode
     void SetProjectionMatrix( osg::Matrixd& matrix );

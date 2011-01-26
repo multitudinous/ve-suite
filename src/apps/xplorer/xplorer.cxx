@@ -37,6 +37,7 @@
 //End TAO headers
 
 #include <ves/open/moduleS.h>
+#include <ves/xplorer/Logging.h>
 #include "AppWrapper.h"
 #include "VjObsWrapper.h"
 
@@ -53,6 +54,12 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
+
+//// --- Poco includes --- //
+#include <Poco/SimpleFileChannel.h>
+#include <Poco/FormattingChannel.h>
+#include <Poco/PatternFormatter.h>
+
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
@@ -62,6 +69,29 @@ using namespace ves::xplorer;
 #ifndef VES_QT_RENDER_DEBUG
 int main( int argc, char* argv[] )
 {    
+    Poco::Logger& m_logger( Poco::Logger::get( "xplorer" ) );
+    LogStreamPtr m_logStream;
+    m_logStream = LogStreamPtr( new Poco::LogStream( m_logger ) );
+    Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
+    fileChannel->setProperty( "path", "xplorerRunLog.log" );
+
+    // Format the logged output as
+    // time_with_microseconds [thread number] (priority) source message extra_crlf
+    Poco::PatternFormatter* formatter = new Poco::PatternFormatter;
+    formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%l) %s: %t\n");
+    Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel);
+
+    m_logger.setChannel( formattingChannel );
+    // Default log level will log messages with priorities error, critical, and
+    // fatal. Command line option parsed later may adjust this up or down.
+    m_logger.setLevel( Poco::Message::PRIO_ERROR );
+
+    LOG_FATAL( "########## VE-Xplorer Version "
+               << VES_MAJOR_VERSION << "."
+               << VES_MINOR_VERSION << "."
+               << VES_PATCH_VERSION << "."
+               << SVN_VES_REVISION );
+
     std::cout
         << "|-----------------------------------------------------------------|"
         << std::endl
@@ -135,6 +165,9 @@ int main( int argc, char* argv[] )
         "CORBA name server reference");
     //-ORBInitRef', 'NameService=corbaloc:iiop:localhost:1239/NameService'
 
+    xplorer_desc.add_options()("VESLog", po::value< std::string >(),
+        "Logging level: fatal, critical, error, warning, notice, information, debug, trace");
+
     // jconf files can be given as positional arguments.
     //po::positional_options_description pos_desc;
     //pos_desc.add("jconf", -1);
@@ -156,6 +189,55 @@ int main( int argc, char* argv[] )
         std::cout << xplorer_desc << std::endl;
         return 0;
     }
+
+    if( vm.count("VESLog") )
+    {
+        Poco::Message::Priority priority = Poco::Message::PRIO_ERROR;
+        std::string level = vm["VESLog"].as< std::string >();
+        if( level == "fatal" )
+        {
+            priority = Poco::Message::PRIO_FATAL;
+        }
+        else if( level == "critical" )
+        {
+            priority = Poco::Message::PRIO_CRITICAL;
+
+        }
+        else if( level == "error" )
+        {
+            priority = Poco::Message::PRIO_ERROR;
+
+        }
+        else if( level == "warning" )
+        {
+            priority = Poco::Message::PRIO_WARNING;
+
+        }
+        else if( level == "notice" )
+        {
+            priority = Poco::Message::PRIO_NOTICE;
+
+        }
+        else if( level == "information" )
+        {
+            priority = Poco::Message::PRIO_INFORMATION;
+
+        }
+        else if( level == "debug" )
+        {
+            priority = Poco::Message::PRIO_DEBUG;
+
+        }
+        else if( level == "trace" )
+        {
+            priority = Poco::Message::PRIO_TRACE;
+
+        }
+
+        LOG_FATAL( "Changing log level to: " << priority );
+        m_logger.setLevel( priority );
+    }
+
     ///Bool options evidently cannot be counted because they always return true
     //bool cluster_master = vm["vrjmaster"].as<bool>();
     bool cluster_slave = vm["vrjslave"].as<bool>();
@@ -329,6 +411,8 @@ int main( int argc, char* argv[] )
             << "that you are using the --dev flag for "
             << "development work." << std::endl;
     }
+
+    LOG_FATAL( "Exiting VE-Xplorer" );
 
     return 0;
 }

@@ -44,6 +44,7 @@
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -113,16 +114,19 @@ ConstraintSelection::ConstraintSelection()
     m_pickedBody( 0 ),
     m_pickConstraint( 0 )
 {    
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonRelease1%", void( gadget::Keys, int, int, int ), &ConstraintSelection::ProcessSelection,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
+                      eventmanager::BooleanPropagationCombiner, &ConstraintSelection::ProcessSelection,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress1%", void( gadget::Keys, int, int, int ), &ConstraintSelection::RegisterButtonPress,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
+                     eventmanager::BooleanPropagationCombiner, &ConstraintSelection::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
     
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &ConstraintSelection::SetStartEndPoint,
                      m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4( "KeyboardMouse.MouseMove", void( int, int, int, int ), &ConstraintSelection::ProcessNavigation,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
+                     eventmanager::BooleanPropagationCombiner, &ConstraintSelection::ProcessNavigation,
                      m_connections, any_SignalType, normal_Priority );
 
     eventmanager::EventManager::instance()->RegisterSignal(
@@ -135,7 +139,7 @@ ConstraintSelection::~ConstraintSelection()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstraintSelection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+bool ConstraintSelection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
     //m_currX = xPos;
     //m_currY = yPos;
@@ -144,9 +148,11 @@ void ConstraintSelection::RegisterButtonPress( gadget::Keys buttonKey, int xPos,
     {
         CreatePointConstraint();
     }
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstraintSelection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+bool ConstraintSelection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
     /*if( (xPos > m_currX + 2) || (xPos < m_currX - 2) )
     {
@@ -163,19 +169,21 @@ void ConstraintSelection::ProcessSelection( gadget::Keys buttonKey, int xPos, in
 
     //Do not require mod key depending on what the user did
     ClearPointConstraint();
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstraintSelection::ProcessNavigation( int xPos, int yPos, int zPos, int buttonState )
+bool ConstraintSelection::ProcessNavigation( int xPos, int yPos, int zPos, int buttonState )
 {
     if( buttonState == 0 )
     {
-        return;
+        return false;
     }
 
     if( buttonState&gadget::KEY_SHIFT )
     {
         UpdatePointConstraint();
     }
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstraintSelection::ClearPointConstraint()

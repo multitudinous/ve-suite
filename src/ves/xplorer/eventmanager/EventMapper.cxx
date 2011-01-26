@@ -33,6 +33,8 @@
 
 #include <ves/xplorer/eventmanager/EventMapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <ves/xplorer/eventmanager/ConnectSignals.h>
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
@@ -58,25 +60,35 @@ EventMapper::EventMapper()
     LOG_TRACE( "ctor" );
     // Connect to signals to get all keypresses, keyreleases, buttonpresses,
     // and buttonreleases
-    CONNECTSIGNALS_4( "%ButtonPress%",void ( gadget::Keys, int, int, int ),
+    CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonPress%",bool ( gadget::Keys, int, int, int ),
+                      BooleanPropagationCombiner,
                       &EventMapper::ButtonPressEvent, mConnections,
                       button_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4( "%ButtonRelease%",void ( gadget::Keys, int, int, int ),
+    CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonRelease%",bool ( gadget::Keys, int, int, int ),
+                      BooleanPropagationCombiner,
                       &EventMapper::ButtonReleaseEvent, mConnections,
                       button_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_5( "%DoubleClick%", void( gadget::Keys, int, int, int, int ),
+    CONNECTSIGNALS_5_COMBINER( "%Mouse.DoubleClick%", bool( gadget::Keys, int, int, int, int ),
+                      BooleanPropagationCombiner,
                       &EventMapper::MouseDoubleClickEvent, mConnections,
                       button_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_3( "%KeyPress%", void ( gadget::Keys, int, char ),
+    CONNECTSIGNALS_3_COMBINER( "%KeyPress%", bool ( gadget::Keys, int, char ),
+                      BooleanPropagationCombiner,
                       &EventMapper::KeyPressEvent, mConnections,
                       keyboard_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_3( "%KeyRelease%", void ( gadget::Keys, int, char ),
+    CONNECTSIGNALS_3_COMBINER( "%KeyRelease%", bool ( gadget::Keys, int, char ),
+                      BooleanPropagationCombiner,
                       &EventMapper::KeyReleaseEvent, mConnections,
                       keyboard_SignalType, normal_Priority );
+
+
+//    ConnectSignals_3<bool ( gadget::Keys, int, char ), BooleanPropagationCombiner>(
+//                    "%KeyRelease%", &EventMapper::KeyReleaseEvent, this, mConnections,
+//            EventManager::keyboard_SignalType, EventManager::normal_Priority );
 
     SetupDefaultBindings();
 }
@@ -147,42 +159,57 @@ void EventMapper::PopMapEvent( const std::string& KeyButton )
     }
 }
 
-void EventMapper::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
+bool EventMapper::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
     LOG_TRACE( "ButtonPressEvent: " << button << ", " << x << ", " << y << ", "
                << state );
     std::string EventName( "ButtonPress_" );
     QueueAndEmit( EventName, button );
+
+    // Don't prevent propagation of this signal!
+    return false;
 }
 
-void EventMapper::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
+bool EventMapper::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
     LOG_TRACE( "ButtonReleaseEvent: " << button << ", " << x << ", " << y << ", "
                << state );
     std::string EventName( "ButtonRelease_" );
     QueueAndEmit( EventName, button );
+
+    // Don't prevent propagation of this signal!
+    return false;
 }
 
-void EventMapper::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
+bool EventMapper::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
 {
     LOG_TRACE( "MouseDoubleClickEvent: " << button << ", " << x << ", " << y << ", "
                << z << "," << state );
     std::string EventName( "DoubleClick_" );
     QueueAndEmit( EventName, button );
+
+    // Don't prevent propagation of this signal!
+    return false;
 }
 
-void EventMapper::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
+bool EventMapper::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
 {
     LOG_TRACE( "KeyPressEvent: " << key << ", " << modifiers << ", " << unicode );
     std::string EventName( "KeyPress_" );
     QueueAndEmit( EventName, key );
+
+    // Don't prevent propagation of this signal!
+    return false;
 }
 
-void EventMapper::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
+bool EventMapper::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
 {
     LOG_TRACE( "KeyReleaseEvent: " << key << ", " << modifiers << ", " << unicode );
     std::string EventName( "KeyRelease_" );
     QueueAndEmit( EventName, key );
+
+    // Don't prevent propagation of this signal!
+    return false;
 }
 
 void EventMapper::QueueAndEmit( std::string& eventName, gadget::Keys key )

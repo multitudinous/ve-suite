@@ -471,12 +471,12 @@ void KeyboardMouse::RegisterKeySignals()
                 mKeyReleaseSignalHolder[ releaseName ];
 
         evm->RegisterSignal(
-                new SignalWrapper< KeyPressSignal_type >( 
+                new SignalWrapper< KeyPressSignal_type >(
                     mKeyPressSignalHolder[ pressName ] ),
                     pressName, 
                     eventmanager::EventManager::keyboard_SignalType );
         evm->RegisterSignal(
-                new SignalWrapper< KeyReleaseSignal_type >( 
+                new SignalWrapper< KeyReleaseSignal_type >(
                     mKeyReleaseSignalHolder[ releaseName ] ),
                     releaseName, 
                     eventmanager::EventManager::keyboard_SignalType );
@@ -503,12 +503,12 @@ void KeyboardMouse::RegisterKeySignals()
                 mKeyReleaseSignalHolder[ releaseName ];
 
         evm->RegisterSignal(
-                new SignalWrapper< KeyPressSignal_type >( 
+                new SignalWrapper< KeyPressSignal_type >(
                     mKeyPressSignalHolder[ pressName ] ),
                     pressName, 
                     eventmanager::EventManager::keyboard_SignalType );
         evm->RegisterSignal(
-                new SignalWrapper< KeyReleaseSignal_type >( 
+                new SignalWrapper< KeyReleaseSignal_type >(
                     mKeyReleaseSignalHolder[ releaseName ] ),
                     releaseName, 
                     eventmanager::EventManager::keyboard_SignalType );

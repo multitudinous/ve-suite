@@ -44,6 +44,7 @@
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -114,10 +115,12 @@ Selection::Selection()
     m_pickConstraint( 0 ),
     m_cadSelectionMode( false )
 {    
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonRelease1%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
+                      eventmanager::BooleanPropagationCombiner, &Selection::ProcessSelection,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress1%", void( gadget::Keys, int, int, int ), &Selection::RegisterButtonPress,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
+                     eventmanager::BooleanPropagationCombiner, &Selection::RegisterButtonPress,
                      m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
@@ -140,23 +143,25 @@ Selection::~Selection()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Selection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+bool Selection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
     m_currX = xPos;
     m_currY = yPos;
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
 
     if( (xPos > m_currX + 2) || (xPos < m_currX - 2) )
     {
-        return;
+        return false;
     }
 
     if( (yPos > m_currY + 2) || (yPos < m_currY - 2) )
     {
-        return;
+        return false;
     }
 
     m_currX = xPos;
@@ -179,7 +184,7 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
                                    *m_lineSegmentIntersector.get() ) )
         {
             ProcessSelection();
-            return;
+            return false;
         }
         
         scenegraph::highlight::HighlightManager& highlightManager =
@@ -187,7 +192,7 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         if( !highlightManager.IsToggled() )
         {
             ProcessSelection();
-            return;
+            return false;
         }
         
         osgUtil::LineSegmentIntersector::Intersections& intersections =
@@ -199,7 +204,7 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         if( intersections.empty() )
         {
             ProcessSelection();
-            return;
+            return false;
         }
         
         osg::NodePath nodePath = intersections.begin()->nodePath;
@@ -208,13 +213,13 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         if( !node )
         {
             ProcessSelection();
-            return;
+            return false;
         }
         
         highlightManager.CreateHighlightCircle( node, nodePath );
         
         ProcessSelection();
-        return;
+        return false;
     }
     
     if( m_manipulatorManager.IsEnabled() )
@@ -224,19 +229,19 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         {
             UpdateSelectionLine();
             ProcessSelection();
-            return;
+            return false;
         }
     }
     
     //No modifier key
     if( buttonState & gadget::KEY_NONE )
     {
-        return;
+        return false;
     }
     //Mod key shift
     else if( buttonState & gadget::KEY_SHIFT )
     {
-        return;
+        return false;
     }
     else if( buttonState & gadget::KEY_ALT )
     {
@@ -263,7 +268,7 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         {
             UpdateSelectionLine();
             ProcessSelection();
-            return;
+            return false;
         }
         osg::Node::DescriptionList descriptorsList;
         descriptorsList = infoDCS->getDescriptions();
@@ -276,7 +281,7 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
                 modelIdStr = descriptorsList.at( i + 1 );
                 UpdateSelectionLine();
                 ProcessSelection();
-                return;
+                return false;
             }
         }
         
@@ -285,11 +290,12 @@ void Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         {
             pluginIter->second->GetCFDModel()->RenderTextualDisplay( true );
         }
-        return;
+        return false;
     }
 
     UpdateSelectionLine();
     ProcessSelection();
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::UpdateSelectionLine()

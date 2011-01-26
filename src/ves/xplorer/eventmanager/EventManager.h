@@ -51,7 +51,7 @@
 
 #include <ves/VEConfig.h>
 
-//#include <ves/xplorer/Debug.h>
+#include <ves/xplorer/Logging.h>
 
 // Macros to make connecting signals an easier process
 // To add more macros for making connections that require N arguments,
@@ -123,18 +123,74 @@
             CONNECT____5( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
 
 
+// This block takes an extra parameter: a custom combiner. This version must
+// be used if the signal to which you are trying to connect uses a custom
+// combiner.
+#define CONNECTSIGNALPRE_COMBINER( signature, combiner ) do{\
+        typedef boost::signals2::signal< signature, combiner > sig_type; \
+        sig_type::slot_type* slotFunctor = new sig_type::slot_type(
+
+#define CONNECT____0_COMBINER( signature, combiner, slot ) \
+                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
+                boost::bind( slot, this ) CONNECTSIGNALPOST
+
+#define CONNECT____1_COMBINER( signature, combiner, slot ) \
+                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
+                boost::bind( slot, this, _1 ) CONNECTSIGNALPOST
+
+#define CONNECT____2_COMBINER( signature, combiner, slot ) \
+                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
+                boost::bind( slot, this, _1, _2 ) CONNECTSIGNALPOST
+
+#define CONNECT____3_COMBINER( signature, combiner, slot ) \
+                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
+                boost::bind( slot, this, _1, _2, _3 ) CONNECTSIGNALPOST
+
+#define CONNECT____4_COMBINER( signature, combiner, slot ) \
+                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
+                boost::bind( slot, this, _1, _2, _3, _4 ) CONNECTSIGNALPOST
+
+#define CONNECT____5_COMBINER( signature, combiner, slot ) \
+                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
+                boost::bind( slot, this, _1, _2, _3, _4, _5 ) CONNECTSIGNALPOST
+
+#define CONNECTSIGNALS_0_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
+            CONNECT____0_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_1_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
+            CONNECT____1_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_2_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
+            CONNECT____2_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_3_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
+            CONNECT____3_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_4_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
+            CONNECT____4_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_5_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
+            CONNECT____5_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
 
 /// The CONNECTSIGNAL_STATIC and CONNECTSIGNALS_STATIC macros are to be used
 /// to connect signals to slots that do not reside in a class. In most cases,
 /// such slots will be static functions declared in a header. Internally, the
 /// difference between these two macros and the CONNECTSIGNAL(S)_N macros
 /// is that the _STATIC versions do not use boost::bind to make a functor from
-/// a class method.
-#define CONNECTSIGNAL_STATIC( name, signature, slot, connections, type, priority ) \
+/// a class method. The _COMBINER version accepts a custom combiner, which is
+/// required if the signal to which you are trying to connect uses a custom
+/// combiner.
+#define CONNECTSIGNAL_STATIC( name, signature, slot, connections, priority ) \
             CONNECTSIGNALPRE( signature ) slot CONNECTSIGNALPOST CONNECTSIGNALCALL( name, connections, priority )
 
 #define CONNECTSIGNALS_STATIC( name, signature, slot, connections, type, priority ) \
             CONNECTSIGNALPRE( signature ) slot CONNECTSIGNALPOST CONNECTSIGNALSCALL( name, connections, type, priority )
+
+#define CONNECTSIGNAL_STATIC_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
+            CONNECTSIGNALPRE_COMBINER( signature, combiner ) slot CONNECTSIGNALPOST CONNECTSIGNALCALL( name, connections, type, priority )
+
+#define CONNECTSIGNALS_STATIC_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
+            CONNECTSIGNALPRE_COMBINER( signature, combiner ) slot CONNECTSIGNALPOST CONNECTSIGNALSCALL( name, connections, type, priority )
 
 
 
@@ -445,7 +501,8 @@ private:
 
     int mMonotonicID;
 
-    //DECLARE_LOGGER;
+    Poco::Logger& m_logger;
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 

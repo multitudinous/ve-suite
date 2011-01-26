@@ -39,6 +39,7 @@
 #include <ves/xplorer/eventmanager/InteractionEvent.h>
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
 
 // --- OSG Includes --- //
 //#include <osg/Geometry>
@@ -105,26 +106,33 @@ UIManager::UIManager() :
     CONNECTSIGNALS_0( "%HideShowUI%", void (), &UIManager::ToggleVisibility, mConnections,
                       any_SignalType, highest_Priority);
 
-    CONNECTSIGNAL_4( "KeyboardMouse.MouseMove", void ( int, int, int, int ),
-                     &UIManager::MouseMoveEvent, mInputConnections, highest_Priority );
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool ( int, int, int, int ),
+                     ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                     &UIManager::MouseMoveEvent, mInputConnections,
+                     any_SignalType,highest_Priority );
 
-    CONNECTSIGNALS_4( "%ButtonPress%",void ( gadget::Keys, int, int, int ),
+    CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonPress%",bool ( gadget::Keys, int, int, int ),
+                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
                       &UIManager::ButtonPressEvent, mInputConnections,
                       button_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_4( "%ButtonRelease%",void ( gadget::Keys, int, int, int ),
+    CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonRelease%",bool ( gadget::Keys, int, int, int ),
+                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
                       &UIManager::ButtonReleaseEvent, mInputConnections,
                       button_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_5( "%DoubleClick%", void( gadget::Keys, int, int, int, int ),
+    CONNECTSIGNALS_5_COMBINER( "%Mouse.DoubleClick%", bool( gadget::Keys, int, int, int, int ),
+                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
                       &UIManager::MouseDoubleClickEvent, mInputConnections,
                       button_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_3( "%KeyPress%", void ( gadget::Keys, int, char ),
+    CONNECTSIGNALS_3_COMBINER( "%KeyPress%", bool ( gadget::Keys, int, char ),
+                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
                       &UIManager::KeyPressEvent, mInputConnections,
                       keyboard_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_3( "%KeyRelease%", void ( gadget::Keys, int, char ),
+    CONNECTSIGNALS_3_COMBINER( "%KeyRelease%", bool ( gadget::Keys, int, char ),
+                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
                       &UIManager::KeyReleaseEvent, mInputConnections,
                       keyboard_SignalType, highest_Priority );
 
@@ -776,11 +784,11 @@ void UIManager::ToggleElementVisibility( UIElement* element )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
+bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
     if( !_okayToSendEvent() )
     {
-        return;
+        return false;
     }
 
     // Store off coordinates and deltas
@@ -791,7 +799,7 @@ void UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 
     if( !Ortho2DTestPointerCoordinates( x, y ) )
     {
-        return;
+        return false;
     }
 
     // TODO: his iterates over all elements. We should instead just find the match
@@ -825,13 +833,15 @@ void UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
             mUnminimize = true;
         }
     }
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
+bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
     if( !_okayToSendEvent() )
     {
-        return;
+        return false;
     }
 
     // Store off coordinates and deltas
@@ -845,12 +855,12 @@ void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
     {
         mElementPositionsOrtho2D[ mMoveElement ] = _computeMouseBoundsForElement( mMoveElement );
         mMoveElement = 0;
-        return;
+        return false;
     }
 
     if( !Ortho2DTestPointerCoordinates( x, y ) )
     {
-        return;
+        return false;
     }
 
     // TODO: this iterates over all elements. We should instead just find the match
@@ -879,13 +889,15 @@ void UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
             element->SendButtonReleaseEvent( button, x, y, state );
         }
     }
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::MouseMoveEvent( int x, int y, int z, int state )
+bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
 {
     if( !_okayToSendEvent() )
     {
-        return;
+        return false;
     }
 
     // Store off coordinates and deltas
@@ -898,7 +910,7 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
     if( mMoveElement )
     {
         mMoveElement->MoveCanvas( mDxPointer, mDyPointer );
-        return;
+        return false;
     }
 
     bool OrthoTest = Ortho2DTestPointerCoordinates( x, y );
@@ -920,7 +932,7 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
     // If we're actually not over a managed quad, do no more
     if( !OrthoTest )
     {
-        return;
+        return false;
     }
 
     // TODO: this iterates over all elements. We should instead just find the match
@@ -949,13 +961,15 @@ void UIManager::MouseMoveEvent( int x, int y, int z, int state )
             element->SendMouseMoveEvent( x, y, z, state );
         }
     }
+
+    return false;
 }
 
-void UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
+bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
 {
     if( !_okayToSendEvent() )
     {
-        return;
+        return false;
     }
 
     // Store off coordinates and deltas
@@ -966,7 +980,7 @@ void UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
 
     if( !Ortho2DTestPointerCoordinates( x, y ) )
     {
-        return;
+        return false;
     }
 
     // TODO: his iterates over all elements. We should instead just find the match
@@ -999,14 +1013,16 @@ void UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
             mUnminimize = true;
         }
     }
+
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
+bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
 {
     if( ! _okayToSendEvent() )
     {
-        return;
+        return false;
     }
 
     // TODO: this iterates over all elements. We should instead just find the match
@@ -1025,13 +1041,15 @@ void UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
             element->SendKeyPressEvent( key, modifiers, unicode );
         }
     }
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
+bool UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
 {
     if( ! _okayToSendEvent() )
     {
-        return;
+        return false;
     }
 
     // TODO: this iterates over all elements. We should instead just find the match
@@ -1051,6 +1069,8 @@ void UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
             element->SendKeyReleaseEvent( key, modifiers, unicode );
         }
     }
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::_okayToSendEvent()

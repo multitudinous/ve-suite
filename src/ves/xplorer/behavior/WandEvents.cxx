@@ -113,8 +113,12 @@ WandEvents::WandEvents()
     m_currX( 0 ),
     m_currY( 0 ),
     m_pickedBody( 0 ),
-    m_pickConstraint( 0 )
+    m_pickConstraint( 0 ),
+    m_logger( Poco::Logger::get( "xplorer.WandEvents" ) )
 {    
+    m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
+    LOG_TRACE( "Attempting to connect to wand Button0 signals" );
+
     CONNECTSIGNALS_4( "Wand.ButtonRelease0%", void( gadget::Keys, int, int, int ), &WandEvents::Button0ReleaseEvent,
                       m_connections, any_SignalType, normal_Priority );
 
@@ -123,6 +127,8 @@ WandEvents::WandEvents()
     
     CONNECTSIGNALS_4( "Wand.ButtonOn0%", void( gadget::Keys, int, int, int ), &WandEvents::Button0PressEvent,
                      m_connections, any_SignalType, normal_Priority );
+
+    LOG_TRACE( "Done attempting to connect to wand Button0 signals" );
     
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),

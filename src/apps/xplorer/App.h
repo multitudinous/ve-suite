@@ -40,6 +40,7 @@
 
 #include <ves/xplorer/TextureBasedVizHandlerPtr.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <ves/xplorer/Logging.h>
 
 // ---  VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
@@ -340,7 +341,8 @@ private:
     typedef boost::signals2::signal< void () > latePreFrame_SignalType;
     latePreFrame_SignalType mLatePreFrame;
 
-    Poco::Logger& m_Logger;
+    Poco::Logger& m_logger;
+    ves::xplorer::LogStreamPtr m_logStream;
 
 };
 } //end xplorer

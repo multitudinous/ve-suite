@@ -45,6 +45,7 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/Debug.h>
 
+
 #include <ves/xplorer/util/fileIO.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -150,11 +151,6 @@
 //// --- Boost includes --- //
 #include <boost/bind.hpp>
 
-//// --- Poco includes --- //
-#include <Poco/SimpleFileChannel.h>
-#include <Poco/FormattingChannel.h>
-#include <Poco/PatternFormatter.h>
-
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
 #include <osgAudio/SoundManager.h>
@@ -186,21 +182,10 @@ App::App( int argc, char* argv[], bool enableRTT )
     mLastFrame( 0 ),
     mLastTime( 0 ),
     mLastQtLoopTime( 0.0 ),
-    m_Logger( Poco::Logger::get( "xplorer" ) )
+    m_logger( Poco::Logger::get( "xplorer.App" ) )
 {
-    Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
-    fileChannel->setProperty( "path", "xplorerRunLog.log" );
-
-    // Format the logged output as
-    // time_with_microseconds [thread number] (priority) source message extra_crlf
-    Poco::PatternFormatter* formatter = new Poco::PatternFormatter;
-    formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%p) %s: %t\n");
-    Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel);
-
-    m_Logger.setChannel( formattingChannel );
-    m_Logger.setLevel( Poco::Message::PRIO_TRACE );
-
-    poco_information( m_Logger, "Starting App" );
+    m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
+    LOG_INFO( "Starting App" );
 
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -279,8 +264,7 @@ App::App( int argc, char* argv[], bool enableRTT )
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
 {
-    poco_information( m_Logger, "Quitting App" );
-    ;
+    LOG_INFO( "Quitting App" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::exit()

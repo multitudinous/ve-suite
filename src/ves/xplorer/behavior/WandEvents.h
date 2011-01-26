@@ -36,6 +36,8 @@
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
 
+#include <ves/xplorer/Logging.h>
+
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/gadgetParam.h>
 #include <gadget/Event/EventPtr.h>
@@ -172,7 +174,10 @@ private:
     bool m_cadSelectionMode;
 
     ///Keep track fo the cad files that the user has unselected with the wand
-    std::vector< osg::Node* > m_unselectedCADFiles;    
+    std::vector< osg::Node* > m_unselectedCADFiles;
+
+    Poco::Logger& m_logger;
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 }

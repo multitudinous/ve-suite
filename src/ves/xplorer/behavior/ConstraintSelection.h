@@ -96,15 +96,15 @@ public:
 
 private:
     ///Process the Button release
-    void ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
+    bool ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Register button press
-    void RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
+    bool RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Clear the point constraints
     void ClearPointConstraint();
     ///Setup the start and end point for a mouse pick 
     void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
     ///Process moving the constraint
-    void ProcessNavigation( int xPos, int yPos, int zPos, int buttonState );
+    bool ProcessNavigation( int xPos, int yPos, int zPos, int buttonState );
     ///Create the point constraint
     bool CreatePointConstraint();
     ///Update the selection line
