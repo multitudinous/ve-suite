@@ -32,11 +32,10 @@ Plot::Plot( QWidget* parent )
     :
     QwtPlot( parent ),
     m_timerId( -1 ),
-    m_paintedPoints( 0 ),
     //Seconds
     m_interval( 0.0, 10.0 ),
     m_marker( new QwtPlotMarker() ),
-    m_curve( new QwtPlotCurve() ),
+    m_curves(),
     m_clock(),
     m_directPainter( new QwtPlotDirectPainter() )
 {
@@ -80,12 +79,30 @@ Plot::Plot( QWidget* parent )
     m_marker->setLinePen( QPen( Qt::gray, 1, Qt::SolidLine ) );
     //m_marker->attach( this );
 
-    m_curve->setStyle( QwtPlotCurve::Lines );
-    m_curve->setPen( QPen( Qt::green ) );
-    m_curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
-    m_curve->setPaintAttribute( QwtPlotCurve::ClipPolygons, false );
-    m_curve->setData( new SensorData() );
-    m_curve->attach( this );
+    QwtPlotCurve* curve1 = new QwtPlotCurve( "Green Sensor" );
+    curve1->setStyle( QwtPlotCurve::Lines );
+    curve1->setPen( QPen( Qt::green ) );
+    curve1->setRenderHint( QwtPlotItem::RenderAntialiased, true );
+    curve1->setPaintAttribute( QwtPlotCurve::ClipPolygons, false );
+    curve1->setData( new SensorData() );
+    curve1->attach( this );
+    m_curves.push_back( curve1 );
+    showCurve( curve1, true );
+
+    QwtPlotCurve* curve2 = new QwtPlotCurve( "Red Sensor" );
+    curve2->setStyle( QwtPlotCurve::Lines );
+    curve2->setPen( QPen( Qt::red ) );
+    curve2->setRenderHint( QwtPlotItem::RenderAntialiased, true );
+    curve2->setPaintAttribute( QwtPlotCurve::ClipPolygons, false );
+    curve2->setData( new SensorData() );
+    curve2->attach( this );
+    m_curves.push_back( curve2 );
+    showCurve( curve2, false );
+
+    connect(
+        this,
+        SIGNAL( legendChecked( QwtPlotItem*, bool ) ),
+        SLOT( showCurve( QwtPlotItem*, bool ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Plot::~Plot()
@@ -96,9 +113,13 @@ Plot::~Plot()
 void Plot::start()
 {
     //Start the sensor data sampling thread first
-    SensorData* sensorData = static_cast< SensorData* >( m_curve->data() );
-    SamplingThread& samplingThread = sensorData->GetSamplingThread();
-    samplingThread.start();
+    std::vector< QwtPlotCurve* >::iterator itr = m_curves.begin();
+    for( ; itr != m_curves.end(); ++itr )
+    {
+        SensorData* sensorData = static_cast< SensorData* >( (*itr)->data() );
+        SamplingThread& samplingThread = sensorData->GetSamplingThread();
+        samplingThread.start();
+    }
 
     //Need QwtSystemClock to handle sampling measurements
     //It is more accurate than QTime
@@ -110,13 +131,14 @@ void Plot::start()
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::replot()
 {
-    SensorData* sensorData = static_cast< SensorData* >( m_curve->data() );
-    sensorData->lock();
+    std::vector< QwtPlotCurve* >::iterator itr = m_curves.begin();
+    for( ; itr != m_curves.end(); ++itr )
+    {
+        SensorData* sensorData = static_cast< SensorData* >( (*itr)->data() );
+        sensorData->SetNumPaintedPoints( sensorData->GetNumPoints() );
+    }
 
     QwtPlot::replot();
-    m_paintedPoints = sensorData->size();
-
-    sensorData->unlock();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::setIntervalLength( double interval )
@@ -131,21 +153,36 @@ void Plot::setIntervalLength( double interval )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Plot::updateCurve()
+void Plot::showCurve( QwtPlotItem* plotItem, bool on )
 {
-    SensorData* sensorData = static_cast< SensorData* >( m_curve->data() );
-    sensorData->lock();
-
-    int const numPoints = sensorData->size();
-    if( numPoints > m_paintedPoints )
+    plotItem->setVisible( on );
+    QWidget* w = legend()->find( plotItem );
+    if( w && w->inherits( "QwtLegendItem" ) )
     {
-        m_directPainter->drawSeries(
-            m_curve, m_paintedPoints - 1, numPoints - 1 );
-        //m_marker->setXValue( sensorData->value( numPoints - 1 ).x() );
-        m_paintedPoints = numPoints;
+        static_cast< QwtLegendItem* >( w )->setChecked( on );
     }
 
-    sensorData->unlock();
+    //replot();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Plot::updateCurves()
+{
+    std::vector< QwtPlotCurve* >::iterator itr = m_curves.begin();
+    for( ; itr != m_curves.end(); ++itr )
+    {
+        SensorData* sensorData = static_cast< SensorData* >( (*itr)->data() );
+        unsigned int const numPoints = sensorData->GetNumPoints();
+        unsigned int const& numPaintedPoints = sensorData->GetNumPaintedPoints();
+        QwtLegendItem* legendItem =
+            static_cast< QwtLegendItem* >( legend()->find( (*itr) ) );
+        if( numPoints > numPaintedPoints && legendItem->isChecked() )
+        {
+            m_directPainter->drawSeries(
+                (*itr), numPaintedPoints - 1, numPoints - 1 );
+            //m_marker->setXValue( sensorData->value( numPoints - 1 ).x() );
+            sensorData->SetNumPaintedPoints( numPoints );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::incrementInterval()
@@ -154,9 +191,14 @@ void Plot::incrementInterval()
     m_interval = QwtInterval(
         m_interval.maxValue(), m_interval.maxValue() + m_interval.width() );
 
-    SensorData* sensorData = static_cast< SensorData* >( m_curve->data() );
-    //Clear values from previous interval
-    sensorData->clearStaleValues( m_interval.minValue() );
+    //Clear values from previous interval for each SensorData
+    std::vector< QwtPlotCurve* >::iterator itr = m_curves.begin();
+    for( ; itr != m_curves.end(); ++itr )
+    {
+        SensorData* sensorData = static_cast< SensorData* >( (*itr)->data() );
+        sensorData->clearStaleValues( m_interval.minValue() );
+        //sensorData->SetNumPaintedPoints( 0 );
+    }
 
     //To avoid, that the grid is jumping, we disable
     //the autocalculation of the ticks and shift them
@@ -174,8 +216,6 @@ void Plot::incrementInterval()
     }
 
     setAxisScaleDiv( QwtPlot::xBottom, scaleDiv );
-
-    m_paintedPoints = 0;
     replot();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +223,7 @@ void Plot::timerEvent( QTimerEvent* event )
 {
     if( event->timerId() == m_timerId )
     {
-        updateCurve();
+        updateCurves();
 
         //Use the more accurate QwtSystemClock to get elapsed time
         double const elapsed = m_clock.elapsed() / 1000.0;

@@ -8,7 +8,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 SensorData::SensorData()
     :
-    m_samplingThread( this )
+    m_paintedPoints( 0 ),
+    m_samplingThread( this ),
+    m_lock(),
+    m_values(),
+    m_mutex(),
+    m_pendingValues()
 {
     //This is how often we will push back points to SignalData in milliseconds
     m_samplingThread.setInterval( 20.0 );
@@ -25,7 +30,7 @@ void SensorData::append( QPointF const& sample )
     m_mutex.lock();
     m_pendingValues.push_back( sample );
 
-    const bool isLocked = m_lock.tryLockForWrite();
+    bool const isLocked = m_lock.tryLockForWrite();
     if( isLocked )
     {
         m_values.insert(
@@ -52,18 +57,35 @@ void SensorData::clearStaleValues( double minimum )
 {
     m_lock.lockForWrite();
 
-    std::deque< QPointF >::iterator itr = m_values.begin();
+    std::deque< QPointF >::const_iterator itr = m_values.begin();
     for( ; itr != m_values.end(); )
     {
-        double timeVal = itr->x();
-        ++itr;
-        if( timeVal < minimum )
+        double const time = (*itr).x();
+        if( time < minimum )
         {
-            m_values.pop_front();
+            itr = m_values.erase( itr );
+        }
+        else
+        {
+            break;
         }
     }
 
     m_lock.unlock();
+}
+////////////////////////////////////////////////////////////////////////////////
+unsigned int const& SensorData::GetNumPaintedPoints() const
+{
+    return m_paintedPoints;
+}
+////////////////////////////////////////////////////////////////////////////////
+unsigned int SensorData::GetNumPoints()
+{
+    m_lock.lockForRead();
+    unsigned int const numPoints = size();
+    m_lock.unlock();
+
+    return numPoints;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorData::lock()
@@ -74,6 +96,11 @@ void SensorData::lock()
 QPointF SensorData::sample( size_t i ) const
 {
     return QPointF( m_values.at( i ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorData::SetNumPaintedPoints( unsigned int const& numPoints )
+{
+    m_paintedPoints = numPoints;
 }
 ////////////////////////////////////////////////////////////////////////////////
 size_t SensorData::size() const

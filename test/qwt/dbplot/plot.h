@@ -40,9 +40,13 @@ protected:
     ///
     virtual void timerEvent( QTimerEvent* timerEvent );
 
+private Q_SLOTS:
+    ///
+    void showCurve( QwtPlotItem*, bool on );
+
 private:
     ///
-    void updateCurve();
+    void updateCurves();
 
     ///
     void incrementInterval();
@@ -51,16 +55,13 @@ private:
     int m_timerId;
 
     ///
-    int m_paintedPoints;
-
-    ///
     QwtInterval m_interval;
 
     ///
     QwtPlotMarker* m_marker;
 
     ///
-    QwtPlotCurve* m_curve;
+    std::vector< QwtPlotCurve* > m_curves;
 
     ///
     QwtSystemClock m_clock;
