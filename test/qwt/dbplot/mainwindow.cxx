@@ -13,14 +13,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 MainWindow::MainWindow( QWidget* parent )
     :
-    QWidget( parent )
+    QWidget( parent ),
+    d_plot( new Plot( this ) )
 {
-    //Seconds
-    const double intervalLength = 15.0;
-
-    d_plot = new Plot( this );
-    d_plot->setIntervalLength( intervalLength );
-
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->addWidget( d_plot, 10 );
 
@@ -34,6 +29,11 @@ MainWindow::MainWindow( QWidget* parent )
         SIGNAL( valueChanged( double ) ),
         d_plot,
         SLOT( setIntervalLength( double ) ) );
+    connect(
+        &window,
+        SIGNAL( signalIntervalChanged( double ) ),
+        &samplingThread,
+        SLOT( setInterval( double ) ) );
     */
 }
 ////////////////////////////////////////////////////////////////////////////////

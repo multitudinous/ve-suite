@@ -10,12 +10,14 @@ SensorData::SensorData()
     :
     m_samplingThread( this )
 {
-    ;
+    //This is how often we will push back points to SignalData in milliseconds
+    m_samplingThread.setInterval( 20.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SensorData::~SensorData()
 {
-    ;
+    m_samplingThread.stop();
+    m_samplingThread.wait( 1000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorData::append( QPointF const& sample )
@@ -39,6 +41,11 @@ void SensorData::append( QPointF const& sample )
 QRectF SensorData::boundingRect() const
 {
     return QRectF();
+}
+////////////////////////////////////////////////////////////////////////////////
+SamplingThread& SensorData::GetSamplingThread()
+{
+    return m_samplingThread;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorData::clearStaleValues( double minimum )

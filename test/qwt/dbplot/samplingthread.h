@@ -5,6 +5,9 @@
 // --- QWT Includes --- //
 #include <qwt_sampling_thread.h>
 
+// --- DB Plot Includes --- //
+class SensorData;
+
 class SamplingThread : public QwtSamplingThread
 {
     ///
@@ -12,7 +15,7 @@ class SamplingThread : public QwtSamplingThread
 
 public:
     ///
-    SamplingThread( QObject* parent = NULL );
+    SamplingThread( SensorData* sensorData, QObject* parent = NULL );
 
     ///
     virtual ~SamplingThread();
@@ -26,6 +29,9 @@ protected:
 private:
     ///
     double value( double timeStamp ) const;
+
+    ///
+    SensorData* m_sensorData;
 
 };
 

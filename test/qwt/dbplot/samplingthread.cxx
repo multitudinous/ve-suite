@@ -4,16 +4,17 @@
 
 // --- DB Plot Includes --- //
 #include "samplingthread.h"
-#include "signaldata.h"
+#include "SensorData.h"
 
 // --- STL Includes --- //
 #include <math.h>
 #include <iostream>
 
 ////////////////////////////////////////////////////////////////////////////////
-SamplingThread::SamplingThread( QObject* parent )
+SamplingThread::SamplingThread( SensorData* sensorData, QObject* parent )
     :
-    QwtSamplingThread( parent )
+    QwtSamplingThread( parent ),
+    m_sensorData( sensorData )
 {
     ;
 }
@@ -31,7 +32,7 @@ void SamplingThread::sample( double elapsed )
     if( 1 )
     {
         const QPointF s( elapsed, value( elapsed ) );
-        SignalData::instance().append( s );
+        m_sensorData->append( s );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

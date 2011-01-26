@@ -24,10 +24,10 @@ public:
     SensorData();
 
     ///
-    SensorData( SensorData const& );
+    SensorData( SensorData const& sensorData );
 
     ///
-    SensorData &operator=( SensorData const& );
+    SensorData &operator=( SensorData const& sensorData );
 
     ///
     virtual ~SensorData();
@@ -40,6 +40,9 @@ public:
 
     ///
     void clearStaleValues( double minimum );
+
+    ///
+    SamplingThread& GetSamplingThread();
 
     ///
     void lock();

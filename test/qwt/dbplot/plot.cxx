@@ -22,8 +22,7 @@
 
 // --- DB Plot Includes --- //
 #include "plot.h"
-#include "curvedata.h"
-#include "signaldata.h"
+#include "SensorData.h"
 
 // --- STL Includes --- //
 #include <iostream>
@@ -34,6 +33,7 @@ Plot::Plot( QWidget* parent )
     QwtPlot( parent ),
     m_timerId( -1 ),
     m_paintedPoints( 0 ),
+    //Seconds
     m_interval( 0.0, 10.0 ),
     m_marker( new QwtPlotMarker() ),
     m_curve( new QwtPlotCurve() ),
@@ -84,7 +84,7 @@ Plot::Plot( QWidget* parent )
     m_curve->setPen( QPen( Qt::green ) );
     m_curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
     m_curve->setPaintAttribute( QwtPlotCurve::ClipPolygons, false );
-    m_curve->setData( new CurveData() );
+    m_curve->setData( new SensorData() );
     m_curve->attach( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,6 +95,11 @@ Plot::~Plot()
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::start()
 {
+    //Start the sensor data sampling thread first
+    SensorData* sensorData = static_cast< SensorData* >( m_curve->data() );
+    SamplingThread& samplingThread = sensorData->GetSamplingThread();
+    samplingThread.start();
+
     //Need QwtSystemClock to handle sampling measurements
     //It is more accurate than QTime
     m_clock.start();
@@ -105,13 +110,13 @@ void Plot::start()
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::replot()
 {
-    CurveData* data = static_cast< CurveData* >( m_curve->data() );
-    data->values().lock();
+    SensorData* sensorData = static_cast< SensorData* >( m_curve->data() );
+    sensorData->lock();
 
     QwtPlot::replot();
-    m_paintedPoints = data->size();
+    m_paintedPoints = sensorData->size();
 
-    data->values().unlock();
+    sensorData->unlock();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::setIntervalLength( double interval )
@@ -128,19 +133,19 @@ void Plot::setIntervalLength( double interval )
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::updateCurve()
 {
-    CurveData* data = static_cast< CurveData* >( m_curve->data() );
-    data->values().lock();
+    SensorData* sensorData = static_cast< SensorData* >( m_curve->data() );
+    sensorData->lock();
 
-    int const numPoints = m_curve->data()->size();
+    int const numPoints = sensorData->size();
     if( numPoints > m_paintedPoints )
     {
         m_directPainter->drawSeries(
             m_curve, m_paintedPoints - 1, numPoints - 1 );
-        //m_marker->setXValue( data->values().value( numPoints - 1 ).x() );
+        //m_marker->setXValue( sensorData->value( numPoints - 1 ).x() );
         m_paintedPoints = numPoints;
     }
 
-    data->values().unlock();
+    sensorData->unlock();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::incrementInterval()
@@ -149,9 +154,9 @@ void Plot::incrementInterval()
     m_interval = QwtInterval(
         m_interval.maxValue(), m_interval.maxValue() + m_interval.width() );
 
-    CurveData* data = static_cast< CurveData* >( m_curve->data() );
+    SensorData* sensorData = static_cast< SensorData* >( m_curve->data() );
     //Clear values from previous interval
-    data->values().clearStaleValues( m_interval.minValue() );
+    sensorData->clearStaleValues( m_interval.minValue() );
 
     //To avoid, that the grid is jumping, we disable
     //the autocalculation of the ticks and shift them
