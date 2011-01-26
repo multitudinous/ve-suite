@@ -19,7 +19,10 @@ sources = sca_util.getSourcesRecursive( pj( openDir ) )
     #ui += env.qt_uic( source )
 
 moc = []
-mocsources = [ pj( buildSrcDir, 'cpuplot.h' ) ]
+mocsources = [ pj( buildSrcDir, 'mainwindow.h' ),
+               pj( buildSrcDir, 'plot.h' ),
+               pj( buildSrcDir, 'samplingthread.h' ) ]
+
 for x in mocsources:
     moc += env.qt_moc( x )
 
