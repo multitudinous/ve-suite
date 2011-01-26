@@ -78,7 +78,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
         if( std::string( argv[i] ) == std::string( "-VESRTT" ) )
         {
             enableRTT = true;
-            std::cout << "Enabling RTT"<< std::endl;
+            std::cout << "|\tEnabling RTT"<< std::endl;
             break;
         }
         else if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
@@ -87,10 +87,6 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
             desktopWidth = atoi( argv[ i + 1 ] );
             desktopHeight = atoi( argv[ i + 2 ] );
             desktopMode = true;
-            //EnvironmentHandler::instance()->
-            //SetDesktopSize( atoi( argv[ i + 1 ] ), atoi( argv[ i + 2 ] ) );
-            //ves::xplorer::scenegraph::SceneManager::instance()->
-            //SetDesktopMode( true );
         }
     }
 
@@ -111,6 +107,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     //off to jccl::ConfigManager.
     if( (desktopWidth > 0) && (desktopHeight > 0) && desktopMode )
     {
+        vpr::System::msleep( 50 );  // 2 thenth-second delay
         cfdDisplaySettings* displaySettings = new cfdDisplaySettings();
 
         std::cout << 

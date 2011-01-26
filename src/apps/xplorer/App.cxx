@@ -459,7 +459,7 @@ void App::SetWrapper( VjObsWrapper* input )
 ////////////////////////////////////////////////////////////////////////////////
 void App::initScene()
 {
-    vprDEBUG( vesDBG, 0 ) << "App::initScene" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|App::initScene" << std::endl << vprDEBUG_FLUSH;
     //Initialize all the XML objects
     XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new XMLCreator() );
     XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new shader::ShaderCreator() );
@@ -529,8 +529,6 @@ void App::initScene()
         {
             EnvironmentHandler::instance()->
                 SetDesktopSize( atoi( argv[ i + 1 ] ), atoi( argv[ i + 2 ] ) );
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                SetDesktopMode( true );
         }
         else if( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
         {
