@@ -91,7 +91,7 @@ double QwtHighResolutionClock::restart()
 
 double QwtHighResolutionClock::elapsed() const
 {
-    return msecsTo( mach_absolute_time(), d_timeStamp );
+    return msecsTo( d_timeStamp, mach_absolute_time() );
 }
 
 bool QwtHighResolutionClock::isNull() const
@@ -102,7 +102,7 @@ bool QwtHighResolutionClock::isNull() const
 double QwtHighResolutionClock::msecsTo(
     uint64_t from, uint64_t to )
 {
-    const uint64_t difference = from - to;
+    const uint64_t difference = to - from;
 
     static double conversion = 0.0;
     if ( conversion == 0.0 )
