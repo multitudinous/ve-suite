@@ -79,7 +79,6 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
         {
             enableRTT = true;
             std::cout << "|\tEnabling RTT"<< std::endl;
-            break;
         }
         else if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
            ( argc > i + 2 ) )
