@@ -335,7 +335,7 @@ void CharacterNavigation::ProcessMousePress( gadget::Keys buttonKey, int xPos, i
         }
         
         //No modifier key
-        if( buttonState&0 )
+        if( buttonState == 0 )
         {
             if( m_characterController.IsEnabled() )
             {
@@ -435,7 +435,7 @@ void CharacterNavigation::ProcessMouseMove( int xPos, int yPos, int zPos, int bu
     dy /= windowHeight;
     
     //Left mouse button
-    if( buttonState&gadget::BUTTON1_MASK )
+    if( buttonState&(gadget::BUTTON1_MASK|0) )
     {
         //No modifier key
         //if( mKeyNone )

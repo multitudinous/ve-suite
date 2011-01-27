@@ -343,7 +343,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         {
             return;
         }        
-        
+        //std::cout<< "process move" << std::endl;
+
         //int buttonMask = mouseEvt->getState();
         //if( buttonMask&gadget::BUTTON1_MASK )
         {

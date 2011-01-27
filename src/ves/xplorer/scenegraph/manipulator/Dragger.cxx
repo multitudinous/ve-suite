@@ -255,7 +255,6 @@ bool Dragger::Connect( osg::Transform* activeAssociation )
 
     //Store the active association
     m_activeAssociation = activeAssociation;
-
     m_associationSet.insert( m_activeAssociation );
 
     return true;
@@ -455,6 +454,7 @@ void Dragger::ComputeAssociationMatrices()
 
         osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
         osg::Matrixd worldToLocal = osg::Matrixd::inverse( localToWorld );
+
         m_associationMatricesMap[ *itr ] =
             std::make_pair( localToWorld, worldToLocal );
     }
@@ -593,7 +593,7 @@ void Dragger::UpdateAssociations()
             scenegraph::DCS* tempDCS = static_cast< scenegraph::DCS* >( pat );
             if( tempDCS )
             {
-                UpdateConductorData( tempDCS );
+                //UpdateConductorData( tempDCS );
             }
 
             continue;
@@ -603,7 +603,7 @@ void Dragger::UpdateAssociations()
         osg::MatrixTransform* mt = transform->asMatrixTransform();
         if( mt )
         {
-            const osg::Matrix& currentMatrix = mt->getMatrix();
+            //const osg::Matrix& currentMatrix = mt->getMatrix();
             if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
             {
                 ;

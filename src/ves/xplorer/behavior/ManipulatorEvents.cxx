@@ -159,10 +159,12 @@ bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int
         }
     }
         
-    if( buttonKey == gadget::MBUTTON1 )
+    //if( buttonKey == gadget::MBUTTON1 )
     {
+    //bool test = buttonState&0x000;
+    //std::cout << buttonState << " " << test << std::endl;
         //No modifier key
-        if( buttonState&0 )
+        if( buttonState == 0 )
         {
             if( m_manipulatorManager.IsEnabled() )
             {
@@ -194,10 +196,10 @@ bool ManipulatorEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, i
     m_currX = xPos;
     m_currY = yPos;*/
 
-    switch( buttonKey )
+    //switch( buttonKey )
     {
         //Left mouse button
-        case gadget::MBUTTON1:
+        //case gadget::MBUTTON1:
         {
             if( m_manipulatorManager.IsEnabled() )
             {
@@ -211,9 +213,9 @@ bool ManipulatorEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, i
                 }
             }
             
-            break;
+            //break;
         }
-        default:
+        //default:
         {
             ;
         }
@@ -273,6 +275,7 @@ void ManipulatorEvents::UpdateSelectionLine()
 ////////////////////////////////////////////////////////////////////////////////
 void ManipulatorEvents::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
+    //std::cout << "set the start and end point" << std::endl;
     m_startPoint = startPoint;
     m_endPoint = endPoint;
 }
