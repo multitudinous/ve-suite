@@ -120,19 +120,19 @@ Navigation::Navigation()
 {    
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
                       eventmanager::BooleanPropagationCombiner, &Navigation::ProcessNavigation,
-                      m_connections, any_SignalType, normal_Priority );
+                      m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
                      eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
-                     m_connections, any_SignalType, normal_Priority );
+                     m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ),
                      eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
-                     m_connections, any_SignalType, normal_Priority );
+                     m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ),
                      eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
-                     m_connections, any_SignalType, normal_Priority );
+                     m_connections, any_SignalType, lowest_Priority );
     
     CONNECTSIGNALS_1( "MainWindow.JumpSignal", void( const std::string ), &Navigation::SetCenterPointJumpMode,
                      m_connections, any_SignalType, normal_Priority );

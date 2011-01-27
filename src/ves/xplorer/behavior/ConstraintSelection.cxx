@@ -37,11 +37,7 @@
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/Model.h>
 
-#include <ves/xplorer/plugin/PluginBase.h>
-
 #include <ves/xplorer/network/GraphicalPluginManager.h>
-
-#include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
@@ -58,16 +54,8 @@
 
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
-#include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
-//#include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
-#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 #include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
-
-#include <ves/xplorer/Debug.h>
-
-#include <ves/open/xml/model/Model.h>
 
 //OSG
 #include <osg/BoundingSphere>
@@ -140,13 +128,11 @@ ConstraintSelection::~ConstraintSelection()
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ConstraintSelection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
-{
-    //m_currX = xPos;
-    //m_currY = yPos;
-    
+{    
     if( buttonState&gadget::KEY_SHIFT )
     {
         CreatePointConstraint();
+        return true;
     }
 
     return false;
@@ -154,19 +140,6 @@ bool ConstraintSelection::RegisterButtonPress( gadget::Keys buttonKey, int xPos,
 ////////////////////////////////////////////////////////////////////////////////
 bool ConstraintSelection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
-    /*if( (xPos > m_currX + 2) || (xPos < m_currX - 2) )
-    {
-        return;
-    }
-
-    if( (yPos > m_currY + 2) || (yPos < m_currY - 2) )
-    {
-        return;
-    }
-
-    m_currX = xPos;
-    m_currY = yPos;*/
-
     //Do not require mod key depending on what the user did
     ClearPointConstraint();
     return false;
@@ -179,10 +152,14 @@ bool ConstraintSelection::ProcessNavigation( int xPos, int yPos, int zPos, int b
         return false;
     }
 
+    //For KBM the shift madifier is used to control if we want selection
     if( buttonState&gadget::KEY_SHIFT )
     {
         UpdatePointConstraint();
+        return true;
     }
+    //For wand input we should do something with multiple button inputs
+    //for example require pressing both button 0 and something else
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -87,13 +87,6 @@ namespace ves
 {
 namespace xplorer
 {
-namespace behavior
-{
-class Selection;
-class Navigation;
-class ConstraintSelection;
-}
-
 namespace device
 {
 
@@ -163,15 +156,6 @@ public:
 private:
     ///Setup the start and end point for a mouse pick 
     void SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
-
-    ///Navigation slot
-    ves::xplorer::behavior::Navigation* m_navigationSlot;
-
-    ///The KBM selection slot
-    ves::xplorer::behavior::Selection* m_selectionSlot;
-    
-    ///Constraint selection
-    ves::xplorer::behavior::ConstraintSelection* m_constraintSelectionSlot;
 
     ///The current X mouse position
     int m_currX;

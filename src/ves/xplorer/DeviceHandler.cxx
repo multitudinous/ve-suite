@@ -56,6 +56,12 @@
 #include <ves/xplorer/event/environment/NavigationDataEventHandler.h>
 
 #include <ves/xplorer/behavior/FrameAll.h>
+#include <ves/xplorer/behavior/CameraEvents.h>
+#include <ves/xplorer/behavior/CharacterNavigation.h>
+#include <ves/xplorer/behavior/ConstraintSelection.h>
+#include <ves/xplorer/behavior/ManipulatorEvents.h>
+#include <ves/xplorer/behavior/Navigation.h>
+#include <ves/xplorer/behavior/Selection.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -79,7 +85,14 @@ DeviceHandler::DeviceHandler()
     mActiveDCS( scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() ),
     mSelectedDCS( NULL ),
     m_deviceBeingProcessed( NULL ),
-    mFrameAll( new ves::xplorer::behavior::FrameAll )
+
+    m_frameAllSlot( new ves::xplorer::behavior::FrameAll ),
+    m_cameraSlot( new ves::xplorer::behavior::CameraEvents() ),
+    m_characterNavSlot( new ves::xplorer::behavior::CharacterNavigation() ),
+    m_constraintSlot( new ves::xplorer::behavior::ConstraintSelection() ),
+    m_manipulatorSlot( new ves::xplorer::behavior::ManipulatorEvents() ),
+    m_navSlot( new ves::xplorer::behavior::Navigation() ),
+    m_selectionSlot( new ves::xplorer::behavior::Selection() )
 {
     //Initialize the group that holds all of the devices
     m_deviceGroup = new osg::Group();

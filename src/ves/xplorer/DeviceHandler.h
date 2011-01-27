@@ -44,6 +44,12 @@
 #include <ves/xplorer/device/Device.h>
 
 #include <ves/xplorer/behavior/FrameAllPtr.h>
+#include <ves/xplorer/behavior/CameraEventsPtr.h>
+#include <ves/xplorer/behavior/CharacterNavigationPtr.h>
+#include <ves/xplorer/behavior/ConstraintSelectionPtr.h>
+#include <ves/xplorer/behavior/ManipulatorEventsPtr.h>
+#include <ves/xplorer/behavior/NavigationPtr.h>
+#include <ves/xplorer/behavior/SelectionPtr.h>
 
 // --- vrJuggler Includes --- //
 #include <vpr/Util/Singleton.h>
@@ -209,8 +215,13 @@ private:
     ///The group node that holds all device graphical representations
     osg::ref_ptr< osg::Group > m_deviceGroup;
 
-    ves::xplorer::behavior::FrameAllSharedPtr mFrameAll;
-
+    ves::xplorer::behavior::FrameAllSharedPtr m_frameAllSlot;
+    ves::xplorer::behavior::CameraEventsPtr m_cameraSlot;
+    ves::xplorer::behavior::CharacterNavigationPtr m_characterNavSlot;
+    ves::xplorer::behavior::ConstraintSelectionPtr m_constraintSlot;
+    ves::xplorer::behavior::ManipulatorEventsPtr m_manipulatorSlot;
+    ves::xplorer::behavior::NavigationPtr m_navSlot;
+    ves::xplorer::behavior::SelectionPtr m_selectionSlot;
 };
 } //end xplorer
 } //end ves

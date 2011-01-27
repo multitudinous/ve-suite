@@ -64,7 +64,7 @@ namespace xplorer
 {
 namespace behavior
 {
-
+////////////////////////////////////////////////////////////////////////////////
 FrameAll::FrameAll()
 {
     mHead.init( "VJHead" );
@@ -72,12 +72,12 @@ FrameAll::FrameAll()
     CONNECTSIGNALS_0( "%FrameAll%", void(), &FrameAll::DoFrameAll,
                       mConnections, any_SignalType, normal_Priority );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 FrameAll::~FrameAll()
 {
     ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void FrameAll::DoFrameAll()
 {
 
@@ -192,7 +192,7 @@ void FrameAll::DoFrameAll()
 //    mCenterPoint->set( center.x(), center.y(), center.z() );
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 }
 }
 }

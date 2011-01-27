@@ -40,10 +40,6 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
 
-#include <ves/xplorer/behavior/Selection.h>
-#include <ves/xplorer/behavior/ConstraintSelection.h>
-#include <ves/xplorer/behavior/Navigation.h>
-
 #include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/network/GraphicalPluginManager.h>
@@ -144,9 +140,6 @@ using namespace ves::xplorer::scenegraph;
 KeyboardMouse::KeyboardMouse()
     :
     Device( KEYBOARD_MOUSE ),
-    m_navigationSlot( new ves::xplorer::behavior::Navigation() ),
-    m_selectionSlot( new ves::xplorer::behavior::Selection() ),
-    m_constraintSelectionSlot( new ves::xplorer::behavior::ConstraintSelection() ),
     m_mouseInsideUI( true )
 {
     //mHead.init( "VJHead" );

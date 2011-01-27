@@ -167,81 +167,15 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
     m_currX = xPos;
     m_currY = yPos;
 
-    //Do not require mod key depending on what the user did
-    //ClearPointConstraint();
-    
-    if( m_characterController.IsEnabled() )
-    {
-        m_characterController.SetCameraRotationSLERP( true );
-    }
-    
-    if( m_cameraManager.IsEnabled() )
-    {
-        UpdateSelectionLine();
-        //If we found a camera
-        if( m_cameraManager.Handle(
-                                   scenegraph::camera::Event::RELEASE,
-                                   *m_lineSegmentIntersector.get() ) )
-        {
-            ProcessSelection();
-            return false;
-        }
-        
-        scenegraph::highlight::HighlightManager& highlightManager =
-        m_sceneManager.GetHighlightManager();
-        if( !highlightManager.IsToggled() )
-        {
-            ProcessSelection();
-            return false;
-        }
-        
-        osgUtil::LineSegmentIntersector::Intersections& intersections =
-        scenegraph::TestForIntersections(
-                                         *m_lineSegmentIntersector.get(),
-                                         *m_sceneManager.GetModelRoot() );
-        
-        //If we found a low level node
-        if( intersections.empty() )
-        {
-            ProcessSelection();
-            return false;
-        }
-        
-        osg::NodePath nodePath = intersections.begin()->nodePath;
-        osg::Node* node = nodePath[ nodePath.size() - 1 ];
-        
-        if( !node )
-        {
-            ProcessSelection();
-            return false;
-        }
-        
-        highlightManager.CreateHighlightCircle( node, nodePath );
-        
-        ProcessSelection();
-        return false;
-    }
-    
-    if( m_manipulatorManager.IsEnabled() )
-    {
-        if( m_manipulatorManager.Handle(
-                                        scenegraph::manipulator::Event::RELEASE ) )
-        {
-            UpdateSelectionLine();
-            ProcessSelection();
-            return false;
-        }
-    }
-    
     //No modifier key
     if( buttonState & gadget::KEY_NONE )
     {
-        return false;
+        //return false;
     }
     //Mod key shift
     else if( buttonState & gadget::KEY_SHIFT )
     {
-        return false;
+        //return false;
     }
     else if( buttonState & gadget::KEY_ALT )
     {
@@ -290,7 +224,7 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         {
             pluginIter->second->GetCFDModel()->RenderTextualDisplay( true );
         }
-        return false;
+        //return false;
     }
 
     UpdateSelectionLine();
@@ -300,16 +234,9 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::UpdateSelectionLine()
 {
-    //std::cout << "update selection line " << std::endl;
-    //osg::Vec3d startPoint, endPoint;
-    //SetStartEndPoint( startPoint, endPoint );
     m_lineSegmentIntersector->reset();
     m_lineSegmentIntersector->setStart( m_startPoint );
     m_lineSegmentIntersector->setEnd( m_endPoint );
-    
-    //Used to debug the selection line
-    //If working correctly, the line should show up as 1 red pixel where picked
-    //DrawLine( startPoint, endPoint );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::ProcessSelection()
@@ -406,15 +333,6 @@ void Selection::ProcessSelection()
     osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
     center = center * localToWorldMatrix;
 
-    if( m_manipulatorManager.IsEnabled() )
-    {
-        //Set the connection between the scene manipulator and the selected dcs
-        scenegraph::manipulator::TransformManipulator* sceneManipulator =
-        m_manipulatorManager.GetSceneManipulator();
-        sceneManipulator->Connect( newSelectedDCS );
-        sceneManipulator->SetPosition( center );
-    }
-        
     //We need to transform center point into camera space
     //In the future the center point will be in world coordinates
     center = center * osg::Matrixd( m_sceneManager.GetNavDCS()->GetMat().mData );
