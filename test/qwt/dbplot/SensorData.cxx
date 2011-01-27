@@ -57,7 +57,7 @@ void SensorData::clearStaleValues( double minimum )
 {
     m_lock.lockForWrite();
 
-    std::deque< QPointF >::const_iterator itr = m_values.begin();
+    std::deque< QPointF >::iterator itr = m_values.begin();
     for( ; itr != m_values.end(); )
     {
         double const time = (*itr).x();
