@@ -344,8 +344,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             return;
         }        
         
-        int buttonMask = mouseEvt->getState();
-        if( buttonMask&gadget::BUTTON1_MASK )
+        //int buttonMask = mouseEvt->getState();
+        //if( buttonMask&gadget::BUTTON1_MASK )
         {
             //Send current Start and end points - needed for constraint selection
             SetStartEndPoint( m_startPoint, m_endPoint );
