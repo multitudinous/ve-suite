@@ -313,7 +313,7 @@ void Selection::ProcessSelection()
     {
         return;
     }
-    
+
     //
     osg::Vec3d center( 0.0, 0.0, 0.0 );
     //If dcs is from a camera object, we want to rotate about local zero point
@@ -332,6 +332,16 @@ void Selection::ProcessSelection()
 
     osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
     center = center * localToWorldMatrix;
+
+    
+    if( m_manipulatorManager.IsEnabled() )
+    {
+        //Set the connection between the scene manipulator and the selected dcs
+        scenegraph::manipulator::TransformManipulator* sceneManipulator =
+            m_manipulatorManager.GetSceneManipulator();
+        sceneManipulator->Connect( newSelectedDCS );
+        sceneManipulator->SetPosition( center );
+    }
 
     //We need to transform center point into camera space
     //In the future the center point will be in world coordinates
