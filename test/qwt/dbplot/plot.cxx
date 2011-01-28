@@ -89,6 +89,7 @@ Plot::Plot( QWidget* parent )
     m_curves.push_back( curve1 );
     showCurve( curve1, true );
 
+    /*
     QwtPlotCurve* curve2 = new QwtPlotCurve( "Red Sensor" );
     curve2->setStyle( QwtPlotCurve::Lines );
     curve2->setPen( QPen( Qt::red ) );
@@ -98,6 +99,7 @@ Plot::Plot( QWidget* parent )
     curve2->attach( this );
     m_curves.push_back( curve2 );
     showCurve( curve2, false );
+    */
 
     connect(
         this,

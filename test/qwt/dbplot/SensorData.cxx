@@ -15,7 +15,7 @@ SensorData::SensorData()
     m_mutex(),
     m_pendingValues()
 {
-    //This is how often we will push back points to SignalData in milliseconds
+    //This is how often we will push back points to SensorData in milliseconds
     m_samplingThread.setInterval( 20.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////

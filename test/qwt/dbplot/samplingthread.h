@@ -8,6 +8,12 @@
 // --- DB Plot Includes --- //
 class SensorData;
 
+// --- Boost Includes --- //
+#include <boost/tokenizer.hpp>
+
+// --- STL Includes --- //
+#include <fstream>
+
 class SamplingThread : public QwtSamplingThread
 {
     ///
@@ -28,10 +34,16 @@ protected:
 
 private:
     ///
-    double value( double timeStamp ) const;
+    typedef boost::tokenizer< boost::escaped_list_separator< char > > Tokenizer;
 
     ///
     SensorData* m_sensorData;
+
+    ///
+    double m_timeValue;
+
+    ///
+    std::ifstream m_infile;
 
 };
 

@@ -6,40 +6,67 @@
 #include "samplingthread.h"
 #include "SensorData.h"
 
+// --- Boost Includes --- //
+#include <boost/program_options.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/concept_check.hpp>
+
 // --- STL Includes --- //
-#include <math.h>
+#include <string>
 #include <iostream>
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////
 SamplingThread::SamplingThread( SensorData* sensorData, QObject* parent )
     :
     QwtSamplingThread( parent ),
-    m_sensorData( sensorData )
+    m_sensorData( sensorData ),
+    m_timeValue( 0.0 )
 {
-    ;
+    m_infile.open( "C:/dev/ve-suite/trunk/test/qwt/dbplot/log_0000.asc" );
+
+    //Ignore first two lines
+    m_infile.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
+    m_infile.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
+
+    //Get the first timestamp
+    std::string time; m_infile >> time;
+    m_timeValue = boost::lexical_cast< double >( time );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SamplingThread::~SamplingThread()
 {
-    ;
+    m_infile.close();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SamplingThread::sample( double elapsed )
 {
     //std::cout << elapsed << std::endl;
-    //This is where we would query the database at some interval and
-    //append points to SignalData
-    const QPointF s( elapsed, value( elapsed ) );
-    m_sensorData->append( s );
-}
-////////////////////////////////////////////////////////////////////////////////
-double SamplingThread::value( double timeStamp ) const
-{
-    const double period = 1.0 / ( rand() % 2 + 1 );
 
-    const double x = fmod( timeStamp, period );
-    const double v = 20.0 * qFastSin( x / period * 2 * M_PI );
+    while( m_timeValue < elapsed )
+    {
+        //Get the sensor
+        m_infile.ignore( 3 );
+        std::string sensor; m_infile >> sensor;
+        std::cout << "Sensor: " << sensor << std::endl;
+        if( sensor == "1A1" )
+        {
+            //Get the desired value
+            QPointF newPoint( m_timeValue, 0.0 );
+            m_infile.ignore( 32 );
+            std::string val1, val2; m_infile >> val1 >> val2;
+            newPoint.setY( 0.1 * boost::lexical_cast< int >( "0x" + val1 + val2 ) );
+            std::cout << "Value: " << newPoint.y() << std::endl;
+            m_sensorData->append( newPoint );
+        }
 
-    return v;
+        //Get the next timestamp
+        m_infile.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
+        std::string time; m_infile >> time;
+        std::cout << "Time: " << time << std::endl;
+        m_timeValue = boost::lexical_cast< double >( time );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
