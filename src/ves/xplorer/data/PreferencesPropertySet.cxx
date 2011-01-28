@@ -34,6 +34,7 @@
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/data/MakeLive.h>
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 
@@ -129,7 +130,7 @@ PreferencesPropertySet::PreferencesPropertySet()
             name, eventmanager::EventManager::unspecified_SignalType );
     }
     ///Signal for GeometryLODScale x
-    {
+    /*{
         std::string name("PreferencesPropertySet");
         name += boost::lexical_cast<std::string>( this );
         name += ".CADSelection";
@@ -137,7 +138,7 @@ PreferencesPropertySet::PreferencesPropertySet()
         eventmanager::EventManager::instance()->RegisterSignal(
             new SignalWrapper< CheckValueSignal_type >( &m_cadSelection ),
             name, eventmanager::EventManager::unspecified_SignalType );
-    }
+    }*/
     ///Signal for GeometryLODScale - not used
     {
         std::string name("PreferencesPropertySet");
@@ -243,9 +244,20 @@ void PreferencesPropertySet::CreateSkeleton()
     AddProperty( "PhysicsDebugger", false, "Physics Debugger" );
     mPropertyMap["PhysicsDebugger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdatePhysicsDebugger, this, _1 ) );
 
-    AddProperty( "CADSelection", false, "CAD Selection" );
-    mPropertyMap["CADSelection"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCADSelection, this, _1 ) );
-
+    {
+        AddProperty( "CADSelection", false, "CAD Selection" );
+        //mPropertyMap["CADSelection"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCADSelection, this, _1 ) );
+        
+        std::vector< PropertyPtr > numberOfPointsLink;
+        numberOfPointsLink.push_back( GetProperty( "CADSelection" ) );
+        
+        MakeLiveBasePtr p( new MakeLiveLinked< bool >(
+                                                      mUUIDString,
+                                                      numberOfPointsLink,
+                                                      "CADSelection" ) );
+        mLiveObjects.push_back( p );
+    }
+    
     AddProperty( "ScriptLogger", false, "Script Logger" );
     mPropertyMap["ScriptLogger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateScriptLogger, this, _1 ) );
 

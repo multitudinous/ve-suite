@@ -69,6 +69,8 @@
 
 #include <ves/open/xml/model/Model.h>
 
+#include <boost/concept_check.hpp>
+
 //OSG
 #include <osg/BoundingSphere>
 #include <osg/Vec3d>
@@ -126,8 +128,16 @@ Selection::Selection()
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
                      m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_3( "KeyboardMouse.KeyRelease_KEY_Z", void(gadget::Keys, int, char), &Selection::ProcessUndoEvent,
-                     m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_Z", 
+        bool( gadget::Keys, int, char ),
+        eventmanager::BooleanPropagationCombiner,
+        &Selection::ProcessUndoEvent, m_connections,
+        keyboard_SignalType, normal_Priority );
+    
+    CONNECTSIGNALS_2( "%CADSelection",
+        void( const std::string&, const std::vector< bool >& ),
+        &Selection::SetCADSelection,
+        m_connections, any_SignalType, normal_Priority );
 
     ///Handle some wand signals
     CONNECTSIGNALS_4( "Wand.ButtonRelease0%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
@@ -154,14 +164,15 @@ bool Selection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos,
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Selection::ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char keyChar )
+bool Selection::ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char keyChar )
 {
     if( !m_cadSelectionMode )
     {
-        return;
+        return false;
     }
 
-    if( (modifierState&gadget::CTRL_MASK) || (modifierState&gadget::KEY_COMMAND) )
+    if( (modifierState&gadget::CTRL_MASK) || 
+       (modifierState&gadget::KEY_COMMAND) )
     {
         if( m_unselectedCADFiles.size() )
         {
@@ -169,6 +180,7 @@ void Selection::ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char
             m_unselectedCADFiles.pop_back();
         }
     }
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
@@ -424,6 +436,12 @@ void Selection::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
     m_startPoint = startPoint;
     m_endPoint = endPoint;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Selection::SetCADSelection( const std::string& uuid, const std::vector< bool >& flags )
+{
+    boost::ignore_unused_variable_warning( uuid );
+    m_cadSelectionMode = flags.at( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

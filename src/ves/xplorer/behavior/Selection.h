@@ -99,7 +99,7 @@ private:
     ///Register button press
     bool RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Process undo events
-    void ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char keyChar );
+    bool ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char keyChar );
     ///Clear the point constraints
     void ClearPointConstraint();
     ///Setup the start and end point for a mouse pick 
@@ -108,7 +108,9 @@ private:
     void UpdateSelectionLine();
     ///Now try and pick the object
     void ProcessSelection();
-
+    ///CAD selection flag
+    void SetCADSelection( const std::string&, const std::vector< bool >& );
+    
     ///Selection start end point line
     osg::Vec3d m_startPoint;
     osg::Vec3d m_endPoint;
