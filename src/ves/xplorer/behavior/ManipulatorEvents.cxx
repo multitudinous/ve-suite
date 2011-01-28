@@ -160,7 +160,7 @@ bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int
     }
         
     //No modifier key
-    std::cout << buttonState << std::endl;
+    //std::cout << buttonState << std::endl;
     //On windows the button state has the button mask or'ed in...
     //This is a bug in VR Juggler
     if( (buttonState == 0) || (buttonState&gadget::BUTTON1_MASK) )

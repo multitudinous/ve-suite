@@ -488,6 +488,13 @@ void Dragger::CreateDefaultShader()
 ////////////////////////////////////////////////////////////////////////////////
 void Dragger::UpdateAssociations()
 {
+    if( m_associationMatricesMap.size() == 0 )
+    {
+        std::cout << "Dragger::UpdateAssociations There is no data for " 
+            << "this dragger to map too." << std::endl;
+        return;
+    }
+
     //Set all associated transforms
     AssociationSet::const_iterator asItr = m_associationSet.begin();
     for( ; asItr != m_associationSet.end(); ++asItr )

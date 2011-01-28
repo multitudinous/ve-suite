@@ -126,6 +126,9 @@ Selection::Selection()
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
                      m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_3( "KeyboardMouse.KeyRelease_KEY_Z", void(gadget::Keys, int, char), &Selection::ProcessUndoEvent,
+                     m_connections, any_SignalType, normal_Priority );
+
     ///Handle some wand signals
     CONNECTSIGNALS_4( "Wand.ButtonRelease0%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
                      m_connections, any_SignalType, normal_Priority );
@@ -151,6 +154,23 @@ bool Selection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos,
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Selection::ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char keyChar )
+{
+    if( !m_cadSelectionMode )
+    {
+        return;
+    }
+
+    if( (modifierState&gadget::CTRL_MASK) || (modifierState&gadget::KEY_COMMAND) )
+    {
+        if( m_unselectedCADFiles.size() )
+        {
+            m_unselectedCADFiles.back()->setNodeMask( 1 );
+            m_unselectedCADFiles.pop_back();
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
 
@@ -173,11 +193,11 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         //return false;
     }
     //Mod key shift
-    else if( buttonState & gadget::KEY_SHIFT )
+    else if( buttonState & gadget::SHIFT_MASK )
     {
         //return false;
     }
-    else if( buttonState & gadget::KEY_ALT )
+    else if( buttonState & gadget::ALT_MASK )
     {
         //OnMouseRelease();
         scenegraph::DCS* infoDCS = DeviceHandler::instance()->GetSelectedDCS();
@@ -284,14 +304,14 @@ void Selection::ProcessSelection()
     }
     
     ///CAD selection code
-    /*if( m_cadSelectionMode )
+    if( m_cadSelectionMode )
     {
         osg::NodePath nodePath = intersections.begin()->nodePath;
         osg::Node* node = nodePath[ nodePath.size() - 1 ];
         node->setNodeMask( 0 );
         m_unselectedCADFiles.push_back( node );
         return;
-    }*/
+    }
     
     //Now find the new selected object
     osg::NodePath nodePath = intersections.begin()->nodePath;

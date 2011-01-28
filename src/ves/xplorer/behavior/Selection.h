@@ -98,6 +98,8 @@ private:
     bool ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Register button press
     bool RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
+    ///Process undo events
+    void ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char keyChar );
     ///Clear the point constraints
     void ClearPointConstraint();
     ///Setup the start and end point for a mouse pick 
@@ -153,6 +155,9 @@ private:
     
     ///Control cad selection
     bool m_cadSelectionMode;
+    
+    ///Keep track fo the cad files that the user has unselected with the wand
+    std::vector< osg::Node* > m_unselectedCADFiles;
 };
 
 }
