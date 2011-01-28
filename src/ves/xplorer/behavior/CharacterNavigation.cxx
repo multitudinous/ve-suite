@@ -435,10 +435,11 @@ void CharacterNavigation::ProcessMouseMove( int xPos, int yPos, int zPos, int bu
     dy /= windowHeight;
     
     //Left mouse button
-    if( buttonState&(gadget::BUTTON1_MASK|0) )
+    if( buttonState&(gadget::BUTTON1_MASK) )
     {
+        //I do not know how to test for no modifier keys here...
         //No modifier key
-        //if( mKeyNone )
+        if( !(buttonState&(gadget::SHIFT_MASK|gadget::CTRL_MASK|gadget::ALT_MASK)) )
         {
             //Rotate just the camera "3rd person view:
             if( m_characterController.IsEnabled() )

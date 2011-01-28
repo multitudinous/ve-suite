@@ -159,25 +159,21 @@ bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int
         }
     }
         
-    //if( buttonKey == gadget::MBUTTON1 )
+    //No modifier key
+    if( buttonState == 0 )
     {
-    //bool test = buttonState&0x000;
-    //std::cout << buttonState << " " << test << std::endl;
-        //No modifier key
-        if( buttonState == 0 )
+        if( m_manipulatorManager.IsEnabled() )
         {
-            if( m_manipulatorManager.IsEnabled() )
+            UpdateSelectionLine();
+            if( m_manipulatorManager.Handle(
+                                            scenegraph::manipulator::Event::PUSH,
+                                            m_lineSegmentIntersector.get() ) )
             {
-                UpdateSelectionLine();
-                if( m_manipulatorManager.Handle(
-                                                scenegraph::manipulator::Event::PUSH,
-                                                m_lineSegmentIntersector.get() ) )
-                {
-                    return true;
-                }
+                return true;
             }
         }
     }
+
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,30 +192,18 @@ bool ManipulatorEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, i
     m_currX = xPos;
     m_currY = yPos;*/
 
-    //switch( buttonKey )
+    if( m_manipulatorManager.IsEnabled() )
     {
-        //Left mouse button
-        //case gadget::MBUTTON1:
+        if( m_manipulatorManager.LeafDraggerIsActive() )
         {
-            if( m_manipulatorManager.IsEnabled() )
+            if( m_manipulatorManager.Handle(
+                                            scenegraph::manipulator::Event::RELEASE ) )
             {
-                if( m_manipulatorManager.LeafDraggerIsActive() )
-                {
-                    if( m_manipulatorManager.Handle(
-                                                    scenegraph::manipulator::Event::RELEASE ) )
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
-            
-            //break;
         }
-        //default:
-        {
-            ;
-        }
-    } //end switch( m_currKey )
+    }
+
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -261,21 +245,13 @@ bool ManipulatorEvents::ProcessMouseMove( int xPos, int yPos, int zPos, int butt
 ////////////////////////////////////////////////////////////////////////////////
 void ManipulatorEvents::UpdateSelectionLine()
 {
-    //std::cout << "update selection line " << std::endl;
-    //osg::Vec3d startPoint, endPoint;
-    //SetStartEndPoint( startPoint, endPoint );
     m_lineSegmentIntersector->reset();
     m_lineSegmentIntersector->setStart( m_startPoint );
     m_lineSegmentIntersector->setEnd( m_endPoint );
-    
-    //Used to debug the selection line
-    //If working correctly, the line should show up as 1 red pixel where picked
-    //DrawLine( startPoint, endPoint );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ManipulatorEvents::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
-    //std::cout << "set the start and end point" << std::endl;
     m_startPoint = startPoint;
     m_endPoint = endPoint;
 }
