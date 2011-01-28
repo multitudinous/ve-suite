@@ -25,7 +25,7 @@ SamplingThread::SamplingThread( SensorData* sensorData, QObject* parent )
     m_sensorData( sensorData ),
     m_timeValue( 0.0 )
 {
-    m_infile.open( "C:/dev/ve-suite/trunk/test/qwt/dbplot/log_0000.asc" );
+    m_infile.open( "/Users/kochjb/dev/ve-suite/trunk/test/qwt/dbplot/log_0000.asc" );
 
     //Ignore first two lines
     m_infile.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
@@ -50,22 +50,20 @@ void SamplingThread::sample( double elapsed )
         //Get the sensor
         m_infile.ignore( 3 );
         std::string sensor; m_infile >> sensor;
-        std::cout << "Sensor: " << sensor << std::endl;
         if( sensor == "1A1" )
         {
             //Get the desired value
             QPointF newPoint( m_timeValue, 0.0 );
             m_infile.ignore( 32 );
-            std::string val1, val2; m_infile >> val1 >> val2;
-            newPoint.setY( 0.1 * boost::lexical_cast< int >( "0x" + val1 + val2 ) );
-            std::cout << "Value: " << newPoint.y() << std::endl;
+            std::string val1, val2; m_infile >> val2 >> val1;
+            long n = std::strtoul( ( val1 + val2 ).c_str(), NULL, 16 );
+            newPoint.setY( 0.1 * n );
             m_sensorData->append( newPoint );
         }
 
         //Get the next timestamp
         m_infile.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
         std::string time; m_infile >> time;
-        std::cout << "Time: " << time << std::endl;
         m_timeValue = boost::lexical_cast< double >( time );
     }
 }
