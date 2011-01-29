@@ -246,7 +246,6 @@ void PreferencesPropertySet::CreateSkeleton()
 
     {
         AddProperty( "CADSelection", false, "CAD Selection" );
-        //mPropertyMap["CADSelection"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCADSelection, this, _1 ) );
         
         std::vector< PropertyPtr > numberOfPointsLink;
         numberOfPointsLink.push_back( GetProperty( "CADSelection" ) );
@@ -263,6 +262,12 @@ void PreferencesPropertySet::CreateSkeleton()
 
     AddProperty( "ScreenAlignedNormals", false, "Screen Aligned Normals" );
     mPropertyMap["ScreenAlignedNormals"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateScreenAlignedNormals, this, _1 ) );
+
+    AddProperty( "DisplayFrameRate", false, "Display Frame Rate" );
+    //mPropertyMap["DisplayFrameRate"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateScreenAlignedNormals, this, _1 ) );
+
+    AddProperty( "DisplayGlobalAxis", false, "Display Global Axis" );
+    //mPropertyMap["DisplayAxis"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateScreenAlignedNormals, this, _1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr property )

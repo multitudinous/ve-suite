@@ -158,19 +158,16 @@ bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int
                                         scenegraph::manipulator::Event::RELEASE );
         }
     }
-        
-    //No modifier key
-    //std::cout << buttonState << std::endl;
-    //On windows the button state has the button mask or'ed in...
-    //This is a bug in VR Juggler
-    if( (buttonState == 0) || (buttonState&gadget::BUTTON1_MASK) )
+
+    if( (buttonState&gadget::BUTTON1_MASK) && 
+       !(buttonState&(gadget::SHIFT_MASK|gadget::CTRL_MASK|gadget::ALT_MASK)) )
     {
         if( m_manipulatorManager.IsEnabled() )
         {
             UpdateSelectionLine();
             if( m_manipulatorManager.Handle(
-                                            scenegraph::manipulator::Event::PUSH,
-                                            m_lineSegmentIntersector.get() ) )
+                scenegraph::manipulator::Event::PUSH,
+                m_lineSegmentIntersector.get() ) )
             {
                 return true;
             }
@@ -200,7 +197,7 @@ bool ManipulatorEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, i
         if( m_manipulatorManager.LeafDraggerIsActive() )
         {
             if( m_manipulatorManager.Handle(
-                                            scenegraph::manipulator::Event::RELEASE ) )
+                scenegraph::manipulator::Event::RELEASE ) )
             {
                 return true;
             }
