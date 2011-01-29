@@ -38,6 +38,7 @@
 #include <Poco/Data/DataException.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/filesystem.hpp>
 
 #include <iostream>
 #include <boost/smart_ptr/shared_array.hpp>
@@ -88,6 +89,7 @@ void DatabaseManager::SetDatabasePath( const std::string& path )
 
     Poco::Data::SQLite::Connector::registerConnector();
     mPool = new Poco::Data::SessionPool( "SQLite", path, 1, 32, 10 );
+    m_path = path;
 }
 
 Poco::Data::SessionPool* DatabaseManager::GetPool()
@@ -189,6 +191,18 @@ void DatabaseManager::ResetAll()
     {
         std::cout << e.displayText() << std::endl;
     }
+}
+
+bool DatabaseManager::SaveAs( const std::string& path )
+{
+    boost::filesystem::path from( m_path );
+    boost::filesystem::path to( path );
+    boost::filesystem::copy_file( from, to, boost::filesystem::copy_option::overwrite_if_exists );
+}
+
+bool DatabaseManager::LoadFrom( const std::string& path )
+{
+
 }
 
 }// namespace data

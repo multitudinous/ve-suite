@@ -53,6 +53,8 @@
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 
+#include <ves/xplorer/data/DatabaseManager.h>
+
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
@@ -406,6 +408,70 @@ void MainWindow::onFileCancelled()
         mFileDialog->close();
         mFileDialog = 0;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionSave_triggered()
+{
+    // Don't allow multiple file dialogs to be opened.
+    if( mFileDialog )
+    {
+        return;
+    }
+
+    mFileDialog = new QFileDialog( 0 );
+    // Ensure that we use Qt's internal file dialog class since native file
+    // dialogs cannot be embedded in a QTabWidget
+    mFileDialog->setOptions( QFileDialog::DontUseNativeDialog | QFileDialog::DontConfirmOverwrite );
+    // Make mFileDialog manage its own lifetime and memory
+    mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
+    mFileDialog->setFileMode( QFileDialog::AnyFile );
+    QStringList filters;
+    filters << "VES Session Files (*.db)"
+            << "All Files (*.*)";
+    mFileDialog->setNameFilters( filters );
+
+    mFileDialog->setAcceptMode( QFileDialog::AcceptSave );
+
+    QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)),
+                      this, SLOT(onFileSaveSelected(const QString &)) );
+    QObject::connect( mFileDialog, SIGNAL(rejected()), this,
+                      SLOT( onFileCancelled() ) );
+
+    ActivateTab( AddTab( mFileDialog, "Save Session" ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::onFileSaveSelected( const QString& fileName )
+{
+    std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
+
+    // Close out the fileDialog tab and kill the file dialog
+    RemoveTab( mFileDialog );
+
+    if ( mFileDialog != 0 )
+    {
+        mFileDialog->close();
+        mFileDialog = 0;
+    }
+
+    std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
+
+    ves::xplorer::data::DatabaseManager::instance()->SaveAs( fileName.toStdString() );
+//    // Now deal with loading the selected file
+//    boost::filesystem::path file( fileName.toStdString() );
+//    std::string extension( boost::filesystem::extension( file ) );
+
+//    if( !extension.compare( ".ves" ) )
+//    {
+//        // It's a ves file, likely with a network
+//        ves::conductor::NetworkLoader loader;
+//        loader.LoadVesFile( file.string() );
+//    }
+//    else
+//    {
+//        // Assume it's a cad file for now
+//        ves::conductor::CADFileLoader loader;
+//        loader.LoadCADFile( file.string() );
+//    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::OnActiveModelChanged( const std::string& modelID )

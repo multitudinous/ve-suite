@@ -123,6 +123,10 @@ public:
     
     void Shutdown();
 
+    bool SaveAs( const std::string& path );
+
+    bool LoadFrom( const std::string& path );
+
 private:
     /// ctor
     DatabaseManager( );
@@ -135,6 +139,9 @@ private:
 
     /// Holds the session pool
     Poco::Data::SessionPool* mPool;
+
+    /// Holds the current db path
+    std::string m_path;
 };
 
 }// namespace data

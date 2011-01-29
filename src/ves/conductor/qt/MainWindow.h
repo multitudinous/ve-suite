@@ -179,6 +179,10 @@ protected Q_SLOTS:
     /// Called when the open file icon of the file operations stack is clicked.
     /// Autoconnected slot
     void on_actionOpen_triggered(); 
+
+    /// Called when the file save icon of the file operations stack is clicked.
+    /// Autoconnected slot.
+    void on_actionSave_triggered();
     
     /// Called when a user selects quit.
     void on_actionQuit_triggered();
@@ -188,6 +192,9 @@ protected Q_SLOTS:
     
     /// Called when the file selection dialog has been cancelled
     void onFileCancelled();
+
+    /// Called when a filename has been chosen for saving.
+    void onFileSaveSelected( const QString& fileName );
     
     /// Called when current tab is changed.
     /// Autoconnected slot

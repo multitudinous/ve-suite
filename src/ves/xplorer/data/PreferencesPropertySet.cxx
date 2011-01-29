@@ -328,56 +328,89 @@ void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr property )
     colors.push_back( b );
     
     m_backgroundColor( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateNavEqualZero( PropertyPtr property )
 {
     m_navZEqual0( boost::any_cast<bool>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateNavGreaterZero( PropertyPtr property )
 {
     m_navZGreater0( boost::any_cast<bool>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateShutdownXplorer( PropertyPtr property )
 {
     m_shutdownXplorer( boost::any_cast<bool>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdatePhysicsDebugger( PropertyPtr property )
 {
     m_physicsDebugger( boost::any_cast<bool>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateCADSelection( PropertyPtr property )
 {
     m_cadSelection( boost::any_cast<bool>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateScriptLogger( PropertyPtr property )
 {
     m_scriptLogger( boost::any_cast<bool>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateScreenAlignedNormals( PropertyPtr property )
 {
     m_screenAlignedNormals( boost::any_cast<bool>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateDraggerScaling( PropertyPtr property )
 {
     m_draggerScaling( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ), boost::any_cast<double>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateNearFarRatio( PropertyPtr property )
 {
     m_nearFarRatio( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ), boost::any_cast<double>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateLODScaling( PropertyPtr property )
 {
     m_lodScaling( boost::any_cast<double>( property->GetValue() ) );
+
+    // All properties here are live; save to db whenever they change.
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 
