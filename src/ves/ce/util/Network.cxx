@@ -101,8 +101,7 @@ int Network::parse( std::string xmlNetwork )
     // now lets create a list of them
     for( size_t i = 0; i < models.size(); ++i )
     {
-        add_module( models.at( i )->GetModelID(),
-                    models.at( i )->GetPluginName() );
+        add_module( models.at( i )->GetModelID() );
         GetModule( i )->SetVEModel( models.at( i ) );
     }
 
@@ -177,7 +176,7 @@ int Network::moduleIdx( int id )
     return -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::add_module( unsigned int m, std::string name )
+void Network::add_module( unsigned int m )
 {
     if( moduleIdx( m ) >= 0 )
     {

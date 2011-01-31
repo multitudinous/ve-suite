@@ -86,6 +86,8 @@ using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView()
+    :
+    GlobalBase()
 {
     ;
 }
@@ -96,6 +98,8 @@ NetworkSystemView::NetworkSystemView( std::string network )
 }
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView( const NetworkSystemView& input )
+    :
+    GlobalBase( input )
 {
     ;
 }
@@ -108,11 +112,10 @@ NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input 
 {
     if( this != &input )
     {
-        ;
+        GlobalBase::operator =( input );
     }
     return *this;
 }
-
 ////////////////////////////////////////////////////////
 osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
 {
@@ -287,8 +290,7 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
             GetNumberOfLinkPoints();
         osg::Vec3Array* vertices = new osg::Vec3Array( numberOfPoints );
         osg::Geometry* linesGeom = new osg::Geometry();
-        //std::cout<<"NP: "<< numberOfPoints<<std::endl;
-        for( size_t j = 0; j < numberOfPoints; j++ )
+        for( size_t j = 0; j < numberOfPoints; ++j )
         {
             std::pair< unsigned int, unsigned int > rawPoint = 
                 veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
@@ -504,8 +506,8 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
     if( tempSystem )
     {
         //Parse out the remaining subsystems
-        int modelCount = tempSystem->GetNumberOfModels();
-        for( size_t j = 0; j < modelCount; j++ )
+        size_t modelCount = tempSystem->GetNumberOfModels();
+        for( size_t j = 0; j < modelCount; ++j )
         {
             if( tempSystem->GetModel( j )->GetSubSystem() )
             {
@@ -522,8 +524,8 @@ void NetworkSystemView::ParseSystem( ves::open::xml::model::SystemPtr system )
     systems[system->GetID()] = system;
 
     //Parse out the subsystems
-    int modelCount = system->GetNumberOfModels();
-    for( size_t j = 0; j < modelCount; j++ )
+    size_t modelCount = system->GetNumberOfModels();
+    for( size_t j = 0; j < modelCount; ++j )
     {
         if( system->GetModel( j )->GetSubSystem() )
         {

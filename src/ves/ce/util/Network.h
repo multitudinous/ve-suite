@@ -62,21 +62,26 @@ public:
     int parse( std::string xmlNetwork );
     ///Get the present network and pass it to vesuite
     std::string GetNetworkString( void );
-
+    ///Return the number of modules
     int nmodules();
-    void add_module( unsigned int, std::string );
 
     ///The module of interest is passed in and the
     /// vector index is returned
     int GetModuleIndex( Module* );
     ///idx is the actual vector index
+    ///\param idx The actual vector index for a module
     Module* GetModule( int idx );
     ///idx is the conductor assigned index. the vector index is returned
+    ///\param idx The Conductor assigned idx
     int moduleIdx( int idx );
 
 protected:
-    std::vector<Connection*> _connections;
-    std::vector<Module*> _module_ptrs;
+    ///add a new module to the network
+    void add_module( unsigned int );
+    ///The list of Connections
+    std::vector< Connection* > _connections;
+    ///The list of module
+    std::vector< Module* > _module_ptrs;
     /// This map should be used in the future. This would allow
     /// easy access to modules from conductor ids.
     std::map< unsigned int, Module* > moduleIDMap;

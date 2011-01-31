@@ -330,7 +330,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     if( tempSystem )
     {
         //Parse out the remaining subsystems
-        int modelCount = tempSystem->GetNumberOfModels();
+        size_t modelCount = tempSystem->GetNumberOfModels();
         for( size_t j = 0; j < modelCount; j++ )
         {
             if( tempSystem->GetModel( j )->GetSubSystem() )
@@ -383,6 +383,11 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
 {
+    if( promptClearXplorer )
+    {
+        ;
+    }
+
     //Erase all the maps
     CleanUp();
 
@@ -446,7 +451,7 @@ void XMLDataBufferEngine::ParseSystem( ves::open::xml::model::SystemPtr system )
     AddSubSystem( system );
 
     //Parse out the subsystems
-    int modelCount = system->GetNumberOfModels();
+    size_t modelCount = system->GetNumberOfModels();
     for( size_t j = 0; j < modelCount; j++ )
     {
         if( system->GetModel( j )->GetSubSystem() )
