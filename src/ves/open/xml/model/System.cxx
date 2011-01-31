@@ -45,7 +45,8 @@ using namespace ves::open::xml::model;
 //Constructor                             //
 ////////////////////////////////////////////////////////////////////////////////
 System::System()
-        : XMLObject()
+    :
+    XMLObject()
 {
     SetObjectType( "System" );
     SetObjectNamespace( "Model" );
@@ -77,6 +78,7 @@ System::System( const System& input )
         mModels.push_back( ModelPtr( new Model( *input.mModels.at( i ) ) ) );
     }
     mParentModel = input.mParentModel;
+    m_dbReference = input.m_dbReference;
 }
 ////////////////////////////////////////////////////////////////////////////////
 System& System::operator=( const System& input )
@@ -93,6 +95,7 @@ System& System::operator=( const System& input )
             mModels.push_back( ModelPtr( new Model( *input.mModels.at( i ) ) ) );
         }
         mParentModel = input.mParentModel;
+        m_dbReference = input.m_dbReference;
     }
     return *this;
 }
@@ -104,6 +107,11 @@ void System::_updateVEElement( const std::string& input )
     SetAttribute( "id", mUuid );
     SetSubElement<ves::open::xml::XMLObjectPtr>( "network", mNetwork );
     SetSubElements( "model", mModels );
+
+    if( !m_dbReference.empty() )
+    {
+        SetSubElement( "dbReference", m_dbReference );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void System::AddNetwork( NetworkPtr inputNetwork )
@@ -165,6 +173,17 @@ void System::SetObjectFromXMLData( DOMNode* element )
             }
         }
     }
+    
+    //get db reference tags
+    {
+        DOMElement* dataValueStringName = 
+            GetSubElement( currentElement, "dbReference", 0 );
+        if( dataValueStringName )
+        {
+            GetDataFromElement( dataValueStringName, m_dbReference );
+            dataValueStringName = 0;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelPtr System::GetModel( size_t i )
@@ -224,5 +243,15 @@ bool System::RemoveModel( ModelPtr model )
     {
         return false;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void System::SetDBReference( const std::string& dbReference )
+{
+    m_dbReference = dbReference;
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::string& System::GetDBReference()
+{
+    return m_dbReference;
 }
 ////////////////////////////////////////////////////////////////////////////////

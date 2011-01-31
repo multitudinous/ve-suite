@@ -157,6 +157,7 @@
         <xs:sequence>
           <xs:element type="veModel" maxOccurs="unbounded" minOccurs="1" name="model"> </xs:element>
           <xs:element type="veNetwork" minOccurs="1" maxOccurs="1" name="network"> </xs:element>
+          <xs:element type="xs:string" minOccurs="1" maxOccurs="1" name="dbReference" use="optional"> </xs:element>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

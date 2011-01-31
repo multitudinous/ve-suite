@@ -110,6 +110,14 @@ public:
     ModelPtr GetParentModel();
     ///Remove the model from the system
     bool RemoveModel( ModelPtr parent );
+    
+    ///Set the DB reference string
+    ///\param dbReference The reference to the DB
+    void SetDBReference( const std::string& dbReference );
+    
+    ///Get the DB reference string
+    ///\return The DB reference
+    const std::string& GetDBReference();
 
 protected:
     ///Internally update the data.
@@ -123,6 +131,8 @@ private:
     std::vector< ModelPtr > mModels;
     ///The model that is above this system
     ModelSharedPtr mParentModel;
+    ///The database refernece string which may be a filename
+    std::string m_dbReference;
 };
 
 }
