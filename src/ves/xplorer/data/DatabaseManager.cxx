@@ -198,11 +198,13 @@ bool DatabaseManager::SaveAs( const std::string& path )
     boost::filesystem::path from( m_path );
     boost::filesystem::path to( path );
     boost::filesystem::copy_file( from, to, boost::filesystem::copy_option::overwrite_if_exists );
+
+    return false;
 }
 
 bool DatabaseManager::LoadFrom( const std::string& path )
 {
-
+    return false;
 }
 
 }// namespace data
