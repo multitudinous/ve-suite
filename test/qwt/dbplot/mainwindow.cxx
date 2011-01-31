@@ -17,7 +17,7 @@ MainWindow::MainWindow( QWidget* parent )
     d_plot( new Plot( this ) )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
-    layout->addWidget( d_plot, 5 );
+    layout->addWidget( d_plot, 10 );
 
     /*
     connect(

@@ -52,7 +52,7 @@ Plot::Plot( QWidget* parent )
     setAxisScale(
         QwtPlot::xBottom, m_interval.minValue(), m_interval.maxValue() );
     setAxisTitle( QwtPlot::yLeft, "Values [unit]" );
-    setAxisScale( QwtPlot::yLeft, 50.0, 200.0 );
+    setAxisScale( QwtPlot::yLeft, 0.0, 200.0 );
 
     //We don't need the cache here
     canvas()->setPaintAttribute( QwtPlotCanvas::PaintCached, false );
@@ -128,7 +128,7 @@ void Plot::start()
     m_clock.start();
     //This is how often the timerEvent gets executed, basically a draw refresh rate
     //So here we tell m_directPainter to draw new points every 20 milliseconds
-    m_timerId = startTimer( 0 );
+    m_timerId = startTimer( 20 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::replot()
