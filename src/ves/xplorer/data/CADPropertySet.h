@@ -35,6 +35,8 @@
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/PropertyPtr.h>
 
+#include <boost/signals2/signal.hpp>
+
 #include <ves/VEConfig.h>
 
 namespace ves
@@ -67,6 +69,12 @@ public:
 private:
     ///Create the skeleton
     void CreateSkeleton();
+    ///Add dynamic analysis data
+    void AddDynamicAnalysisData( PropertyPtr property );
+
+    typedef boost::signals2::signal< void ( std::string const& nodeType, 
+        std::string const& filename, std::string const& nodeID ) > AddAnimationDataSignal_type;
+    AddAnimationDataSignal_type m_animateCAD;
 };
 
 } // namespace data

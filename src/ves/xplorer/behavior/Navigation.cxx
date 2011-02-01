@@ -228,6 +228,8 @@ bool Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
         ProcessNavigation();
         return false;
     }
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::Twist( double dx, double dy )

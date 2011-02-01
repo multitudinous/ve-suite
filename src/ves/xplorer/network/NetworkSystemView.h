@@ -53,11 +53,14 @@ namespace network
 class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public ves::xplorer::GlobalBase
 {
 public:
+    ///Constructor
     NetworkSystemView();
-    NetworkSystemView( std::string );
+    ///Load the network at construction
+    NetworkSystemView( std::string const& );
     NetworkSystemView( const NetworkSystemView& );
-
-    virtual ~NetworkSystemView( void );
+    //Destructor
+    virtual ~NetworkSystemView();
+    ///=operator
     NetworkSystemView& operator=( const NetworkSystemView& );
 
     void UpdateCommand( void )
@@ -65,10 +68,14 @@ public:
         ;
     }
 
-    osg::Group* DrawNetwork( std::string netId );
-    void LoadVESData( std::string xmlNetwork );
+    ///Drw the network
+    osg::Group* DrawNetwork( std::string const& netId );
+    ///Load the network of intrest
+    void LoadVESData( std::string const& xmlNetwork );
+    ///Parse the data in System
     void ParseSystem( ves::open::xml::model::SystemPtr system );
-    std::map< std::string, ves::open::xml::model::SystemPtr > GetSystemsMap( void );
+    ///Get the map for the system
+    std::map< std::string, ves::open::xml::model::SystemPtr > GetSystemsMap();
 
 private:
     std::string network;

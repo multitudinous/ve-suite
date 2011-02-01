@@ -33,6 +33,7 @@
 #include <ves/xplorer/event/cad/CADAnimationEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/Clone.h>
@@ -48,6 +49,9 @@
 
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/Debug.h>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
 
 #include <osg/Node>
 #include <osg/AnimationPath>
@@ -71,7 +75,12 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 CADAnimationEventHandler::CADAnimationEventHandler()
         : ves::xplorer::event::CADEventHandler()
-{}
+{
+    CONNECTSIGNALS_3( "%CADAnimation",
+                     void( std::string const&, std::string const&, std::string const& ),
+                     &CADAnimationEventHandler::CreateAnimatedCAD,
+                     m_connections, any_SignalType, normal_Priority );     
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 CADAnimationEventHandler::CADAnimationEventHandler( const CADAnimationEventHandler& rhs )
         : ves::xplorer::event::CADEventHandler( rhs )
@@ -106,41 +115,13 @@ void CADAnimationEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         DataValuePairPtr dirSel = command->GetDataValuePair( "Direction Info" );
         dirSel->GetData( offDirx );
 
-        CADNodeAnimationPtr newAnim;
-        std::string animationFile;
-        newAnim = boost::dynamic_pointer_cast<CADNodeAnimation>( cadAnim->GetDataXMLObject() );
-        std::string tempFilename = newAnim->GetAnimationFileName();
-        boost::filesystem::path correctedPath( newAnim->GetAnimationFileName(), boost::filesystem::no_check );
-        vprDEBUG( vesDBG, 1 ) << "|\t---" << tempFilename << "---"
-            << correctedPath.native_file_string()
-            << std::endl << vprDEBUG_FLUSH;
-        animationFile = correctedPath.native_file_string();
-
-        _readData( animationFile );
+        const CADNodeAnimationPtr newAnim = boost::static_pointer_cast<CADNodeAnimation>( cadAnim->GetDataXMLObject() );
         
-        ves::xplorer::scenegraph::DCS* animPart = 0;
-
-        if( nodeType->GetDataString() == std::string( "Part" ) )
-        {
-            if( m_cadHandler->PartExists( nodeID->GetDataString() ) )
-            {
-                animPart = m_cadHandler->GetPart( nodeID->GetDataString() )->GetDCS();
-            }
-        }
-        else if( nodeType->GetDataString() == std::string( "Assembly" ) )
-        {
-            if( m_cadHandler->AssemblyExists( nodeID->GetDataString() ) )
-            {
-                animPart = m_cadHandler->GetAssembly( nodeID->GetDataString() );
-            }
-        }
-
-	    osg::ref_ptr< osg::AnimationPathCallback > callBack_obj = new osg::AnimationPathCallback();
-	    callBack_obj->setAnimationPath( createAnimationPath( "seat" ).get() );
-	    animPart->setUpdateCallback( callBack_obj.get() );
-
+        CreateAnimatedCAD( nodeType->GetDataString(), 
+                          newAnim->GetAnimationFileName(), 
+                          nodeID->GetDataString() );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!!Invalid command passed to CADAnimationEH!!" << std::endl;
     }
@@ -274,3 +255,47 @@ osg::ref_ptr< osg::AnimationPath > CADAnimationEventHandler::createAnimationPath
 
    return animationPath;
 }
+////////////////////////////////////////////////////////////////////////////////
+void CADAnimationEventHandler::CreateAnimatedCAD( std::string const& nodeType, 
+    std::string const& filename, std::string const& nodeID )
+{
+    boost::filesystem::path correctedPath( filename, boost::filesystem::no_check );
+    vprDEBUG( vesDBG, 1 ) << "|\t---" << filename << "---"
+        << correctedPath.native_file_string()
+        << std::endl << vprDEBUG_FLUSH;
+    const std::string animationFile = correctedPath.native_file_string();
+    
+    _readData( animationFile );
+    
+    ves::xplorer::scenegraph::DCS* animPart = 0;
+    ves::xplorer::scenegraph::CADEntity* cadPart = 0;
+    
+    if( nodeType == std::string( "Part" ) )
+    {
+        if( m_cadHandler->PartExists( nodeID ) )
+        {
+            animPart = m_cadHandler->GetPart( nodeID )->GetDCS();
+            cadPart = m_cadHandler->GetPart( nodeID );
+            ModelHandler::instance()->RegisterAnimatedCADFile( cadPart );
+        }
+    }
+    else if( nodeType == std::string( "Assembly" ) )
+    {
+        if( m_cadHandler->AssemblyExists( nodeID ) )
+        {
+            animPart = m_cadHandler->GetAssembly( nodeID );
+            //cadPart = m_cadHandler->GetAssembly( nodeID );
+        }
+    }
+    
+    osg::ref_ptr< osg::AnimationPathCallback > callBack_obj = new osg::AnimationPathCallback();
+    callBack_obj->setAnimationPath( createAnimationPath( "seat" ).get() );
+    animPart->setUpdateCallback( callBack_obj.get() );
+    callBack_obj->setPause( true );
+
+    if( cadPart )
+    {
+        ;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

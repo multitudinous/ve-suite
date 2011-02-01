@@ -92,7 +92,7 @@ NetworkSystemView::NetworkSystemView()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-NetworkSystemView::NetworkSystemView( std::string network )
+NetworkSystemView::NetworkSystemView( std::string const& network )
 {
     LoadVESData( network );
 }
@@ -104,7 +104,7 @@ NetworkSystemView::NetworkSystemView( const NetworkSystemView& input )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-NetworkSystemView::~NetworkSystemView( void )
+NetworkSystemView::~NetworkSystemView()
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -116,8 +116,8 @@ NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input 
     }
     return *this;
 }
-////////////////////////////////////////////////////////
-osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
+////////////////////////////////////////////////////////////////////////////////
+osg::Group* NetworkSystemView::DrawNetwork( std::string const& netId )
 {
     SystemPtr mainSystem = systems[netId];
     if( !mainSystem )
@@ -336,7 +336,7 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string netId )
     return worldTranslate.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NetworkSystemView::LoadVESData( std::string xmlNetwork )
+void NetworkSystemView::LoadVESData( std::string const& xmlNetwork )
 {
 
     ves::open::xml::XMLReaderWriter networkWriter;
@@ -516,7 +516,6 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
         }
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void NetworkSystemView::ParseSystem( ves::open::xml::model::SystemPtr system )
 {
@@ -533,9 +532,10 @@ void NetworkSystemView::ParseSystem( ves::open::xml::model::SystemPtr system )
         }
     }
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, ves::open::xml::model::SystemPtr > 
     NetworkSystemView::GetSystemsMap( void )
 {
    return systems;
 }
+////////////////////////////////////////////////////////////////////////////////

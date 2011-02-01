@@ -93,13 +93,13 @@ SwitchXplorerViewEventHandler& SwitchXplorerViewEventHandler::operator=( const S
 {
     if( this != &rhs )
     {
-        SwitchXplorerViewEventHandler::operator=( rhs );
+        EventHandler::operator=( rhs );
     }
 
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
+void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }
@@ -124,12 +124,6 @@ void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
         {
             UpdateNetworkView( command );
             SceneManager::instance()->SetActiveSwitchNode( 2 );
-
-            //centers the network view            
-            device::KeyboardMouse* keyboardMouse =
-                DeviceHandler::instance()->GetDevice(
-                    device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
-            //keyboardMouse->FrameAll();
         }
         else if( viewData == "CHANGE_XPLORER_VIEW_CAD" )
         {

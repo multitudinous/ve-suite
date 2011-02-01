@@ -84,10 +84,6 @@ public:
     ///Constructor
     SwitchXplorerViewEventHandler();
 
-    ///Constructor to pass the network
-    //SwitchXplorerViewEventHandler(ves::open::xmlVE_Model::Network*);
-    SwitchXplorerViewEventHandler( std::string );
-
     ///Copy Constructor
     SwitchXplorerViewEventHandler( const SwitchXplorerViewEventHandler& rhs );
 

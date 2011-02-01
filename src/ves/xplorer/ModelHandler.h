@@ -97,41 +97,47 @@ private:
     //friend class vpr::Singleton< ModelHandler >;
     //ModelHandler(const ModelHandler& o) { ; }
     //ModelHandler& operator=(const ModelHandler& o) { ; }
-    ModelHandler( void );
-    ~ModelHandler( void );
+    ModelHandler();
+    ~ModelHandler();
     vprSingletonHeader( ModelHandler );
 public:
     //void CleanUp( void );
-    void InitScene( void );
-    void PreFrameUpdate( void );
+    void InitScene();
+    void PreFrameUpdate();
     ///This is called in context predraw when there is a valid context available
     void ContextPreDrawUpdate();
 
-    vtkPolyData* GetArrow( void );
+    vtkPolyData* GetArrow();
     Model* GetModel( int );
-    void AddModel( Model* );
-    void RemoveModel( Model* );
-    Model* GetActiveModel( void );
-    void SetActiveModel( const std::string& modelNumber );
-    int GetNumberOfModels( void );
+    ///Add a new model
+    void AddModel( Model* const );
+    ///Remove a model
+    void RemoveModel( Model* const );
+    Model* GetActiveModel();
+    ///Set the active model via uuid
+    void SetActiveModel( std::string const& modelNumber );
+    int GetNumberOfModels();
 
     void ReadNNumberOfDataSets( std::string, std::string );
 
-    ///Get the scalar bar - may not be needed anymore
-    //cfdScalarBarActor* GetScalarBar(void);
     ///Register CAD file with so that other models can copy files if needed
     ///\param tempEntity File to be registered
-    void RegisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity );
+    void RegisterCADFile( ves::xplorer::scenegraph::CADEntity* const tempEntity );
+    ///Register a CAD file for the purposes of controlling animation overlay
+    ///with dynamics data
+    ///\param tempEntity File that is registered for viewing CAD data
+    void RegisterAnimatedCADFile( ves::xplorer::scenegraph::CADEntity* const tempEntity );
     ///Check and see if this cad file is already loaded
     ///\return The found cad file otherwise null
     ///\param filename The file name to grab
-    ves::xplorer::scenegraph::CADEntity* IsCADFileLoaded( std::string filename );
+    ves::xplorer::scenegraph::CADEntity* IsCADFileLoaded( std::string const& filename );
     ///Reset the map holding cad references
     ///\param tempEntity CAD file to try and remove from the map
-    void UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity );
+    void UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* const tempEntity );
     //texture manager access
     ///Should this call be in the texture manager singleton not modelhandler
-    ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet( void );
+    ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet();
+    ///Get whether tbase is enabled
     bool GetVisOption();
 private:
     ///Create the arrow polydata
@@ -157,16 +163,19 @@ private:
     bool m_rescaleCADEntityTextures;
     
     ///The event handler for commands.
-    std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;
+    std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
     ///This map connects filenames to GUIDs so that we can
     ///figure out what CAD files should be copied
-    std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* > m_filenameToCADMap;
+    std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const > m_filenameToCADMap;
+    ///This map connects filenames to CADEntitys that have animation
+    ///data attached so that we can control starting and stopping the animation
+    std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const > m_animationCADMap;
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
 
     typedef boost::signals2::signal<void ( const std::string& )> ActiveModelChangedSignal_type;
     ActiveModelChangedSignal_type mActiveModelChangedSignal;
-
+    ///Slot for initializing CAD
     ves::xplorer::event::cad::CADSlotInitializerPtr m_CADSlotInitializer;
 };
 }

@@ -200,8 +200,22 @@ void CADPropertySet::CreateSkeleton()
     std::string emptyString;
     AddProperty( "NodePath", emptyString, "Not visible in UI"  );
     SetPropertyAttribute( "NodePath", "userVisible", false );
+    
+    AddProperty( "DynamicAnalysisData", std::string("null"), "Multi-body Dynamics Data" );
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
+{
+    std::string fileName = boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );
+    std::string nodeType = "Part";
+    std::string modeID = "";
+    
+    m_animateCAD( nodeType, fileName, modeID );
+    
+    // All properties here are live; save to db whenever they change.
+    //WriteToDatabase();
+}
+////////////////////////////////////////////////////////////////////////////////
 } // namespace data
 } // namespace xplorer
 } // namespace ves

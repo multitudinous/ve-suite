@@ -79,16 +79,25 @@ public:
 
     ///Equal operator
     CADAnimationEventHandler& operator=( const CADAnimationEventHandler& rhs );
-
-    osg::ref_ptr< osg::AnimationPath > createAnimationPath( std::string component );
     
-    std::vector< double > offDirx;
-    std::map< std::string, std::vector< float > > objectOne;
-
+    ///Create animated CAD for the specified data
+    ///\param nodeType Type of ves node
+    ///\param filename Filename for the animation data
+    ///\param nodeID UUID for the node that this data needs to be mapped
+    void CreateAnimatedCAD( std::string const& nodeType, 
+        std::string const& filename, std::string const& nodeID );
+    
 protected:
+    osg::ref_ptr< osg::AnimationPath > createAnimationPath( std::string component );
+    ///Control the direction of travel to zero out a component so that the
+    ///machine remains in place during the animation
+    std::vector< double > offDirx;
+    ///The map of data
+    std::map< std::string, std::vector< float > > objectOne;
     ///Update a transform on the CADNode.
     ///\param command The Command containing the udpated animation.
     void _operateOnNode( ves::open::xml::XMLObjectPtr command );
+    ///Read the animation data from the file
     void _readData( std::string );
 };
 

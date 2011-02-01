@@ -115,7 +115,7 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
-ModelHandler::ModelHandler( void )
+ModelHandler::ModelHandler()
     :
     activeDataset( 0 ),
     activeCommand( ves::open::xml::CommandPtr() ),
@@ -200,7 +200,7 @@ ModelHandler::ModelHandler( void )
     "ModelHandler.ActiveModelChangedSignal");
 }
 ////////////////////////////////////////////////////////////////////////////////
-ModelHandler::~ModelHandler( void )
+ModelHandler::~ModelHandler()
 {
     //vprDEBUG(vesDBG,2) << "ModelHandler destructor"
     //                       << std::endl << vprDEBUG_FLUSH;
@@ -228,8 +228,8 @@ ModelHandler::~ModelHandler( void )
         //   << std::endl << vprDEBUG_FLUSH;
     }
 
-    for( std::map<std::string , ves::xplorer::event::EventHandler*>::iterator itr = _eventHandlers.begin();
-            itr != _eventHandlers.end(); itr++ )
+    for( std::map<std::string , ves::xplorer::event::EventHandler* >::iterator 
+        itr = _eventHandlers.begin(); itr != _eventHandlers.end(); ++itr )
     {
         delete itr->second;
         itr->second = 0;
@@ -246,14 +246,13 @@ ModelHandler::~ModelHandler( void )
 ///////////////////////
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdTextureDataSet* ModelHandler::GetActiveTextureDataSet()
 {
     return _activeTDSet;
 }
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-void ModelHandler::SetActiveModel( const std::string& modelNumber )
+////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::SetActiveModel( std::string const& modelNumber )
 {
     _activeModel = 0;
     
@@ -265,14 +264,12 @@ void ModelHandler::SetActiveModel( const std::string& modelNumber )
                 << modelNumber
                 << " is set." << std::endl << vprDEBUG_FLUSH;
             _activeModel = _modelList.at( i );
-            #ifdef QT_ON
             mActiveModelChangedSignal( modelNumber );
-            #endif
             break;
         }
     }
 }
-/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Model* ModelHandler::GetModel( int i )
 {
     if( _modelList.empty() )
@@ -280,13 +277,13 @@ Model* ModelHandler::GetModel( int i )
     else
         return _modelList.at( i );
 }
-/////////////////////////////////////////////////
-void ModelHandler::AddModel( Model* input )
+////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::AddModel( Model* const input )
 {
     _modelList.push_back( input );
 }
-///////////////////////////////////////////////////////////////
-void ModelHandler::RemoveModel( Model* modelToBeRemoved )
+////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::RemoveModel( Model* const modelToBeRemoved )
 {
     for( std::vector< Model* >::iterator iter = _modelList.begin(); 
         iter != _modelList.end(); )
@@ -308,18 +305,18 @@ void ModelHandler::RemoveModel( Model* modelToBeRemoved )
     vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::RemoveModel "
         << " Model Removal Failed" << std::endl << vprDEBUG_FLUSH;
 }
-/////////////////////////////////////////////////
-Model* ModelHandler::GetActiveModel( void )
+////////////////////////////////////////////////////////////////////////////////
+Model* ModelHandler::GetActiveModel()
 {
     return _activeModel;
 }
-//////////////////////////////////////////////
-int ModelHandler::GetNumberOfModels( void )
+////////////////////////////////////////////////////////////////////////////////
+int ModelHandler::GetNumberOfModels()
 {
     return static_cast< int >( _modelList.size() );
 }
-///////////////////////////////////////////////////
-vtkPolyData* ModelHandler::_GetArrowPolyData( )
+////////////////////////////////////////////////////////////////////////////////
+vtkPolyData* ModelHandler::_GetArrowPolyData()
 {
     //ripped from cfdArrow in the Utilities/arrowCreator directory
     float shaftAngleIncrement = ( 3.14159265 / 1.5 );
@@ -460,8 +457,8 @@ vtkPolyData* ModelHandler::_GetArrowPolyData( )
 
     return arrowPolys;
 }
-///////////////////////////////////////
-void ModelHandler::InitScene( void )
+////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::InitScene()
 {
 
     this->arrow = _GetArrowPolyData();
@@ -472,65 +469,19 @@ void ModelHandler::InitScene( void )
         std::cerr << "Couldn't create arrow polydata!!" << std::endl;
         exit( 1 );
     }
-    //this->arrow->ShallowCopy( tempArrow->GetPolyData());
-
-    for( unsigned int j = 0; j < _modelList.size(); j++ )
-    {
-        for( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfCfdDataSets(); i++ )
-        {
-            std::cout << "|\tLoading data for file "
-                << _modelList.at( j )->GetCfdDataSet( i )->GetFileName()
-                << std::endl;
-            _modelList.at( j )->GetCfdDataSet( i )->LoadData();
-            _modelList.at( j )->GetCfdDataSet( i )->SetArrow( this->arrow );
-            if( _modelList.at( j )->GetCfdDataSet( i )->GetParent() == _modelList.at( j )->GetCfdDataSet( i ) )
-                ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
-                addChild( _modelList.at( j )->GetCfdDataSet( i )->GetDCS() );
-        }
-    }
-
-    // set default active dataset to be the meshed volume
-    if( !_modelList.empty() )
-    {
-        _activeModel = _modelList.at( 0 );
-        if( _modelList.at( 0 )->GetNumberOfCfdDataSets() > 0 )
-        {
-            activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
-            _activeModel->SetActiveDataSet( activeDataset );
-        }
-
-        if( _modelList.at( 0 )->GetNumberOfTextureDataSets() > 0 )
-        {
-            _activeTDSet = _modelList.at( 0 )->GetTextureDataSet( 0 );
-            _activeModel->SetActiveTextureDataSet( _activeTDSet );
-        }
-    }
-
-    if( activeDataset != NULL )
-    {
-        // Fix this later - we need to check and see if this is already
-        // done in DataSet upon initialization
-        // set first scalar active
-        activeDataset->SetActiveScalar( 0 );
-
-        //oldDatasetName.assign( activeDataset->GetFileName() );
-        vprDEBUG( vesDBG, 1 ) << "ModelHandler: Setting active dataset to "
-        << activeDataset->GetFileName() << std::endl << vprDEBUG_FLUSH;//<< " , "
-        //<< oldDatasetName << std::endl << vprDEBUG_FLUSH;
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////
 // PreFrameUpdate - Be sure to set the commandArray before calling this
 // function.
 /////////////////////////////////
-void ModelHandler::PreFrameUpdate( void )
+void ModelHandler::PreFrameUpdate()
 {
     activeCommand = 
         ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
     if( activeCommand )
     {
-        std::map<std::string, ves::xplorer::event::EventHandler*>::iterator 
+        std::map<std::string, ves::xplorer::event::EventHandler* >::const_iterator 
             currentEventHandler = 
                 _eventHandlers.find( activeCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
@@ -549,23 +500,30 @@ bool ModelHandler::GetVisOption()
     return tbased;
 }
 ////////////////////////////////////////////////////////////////////////////////
-vtkPolyData* ModelHandler::GetArrow( void )
+vtkPolyData* ModelHandler::GetArrow()
 {
     return this->arrow;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ModelHandler::RegisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity )
+void ModelHandler::RegisterAnimatedCADFile( ves::xplorer::scenegraph::CADEntity* const tempEntity )
+{
+    m_animationCADMap.insert(
+        std::pair< std::string, ves::xplorer::scenegraph::CADEntity* const >(
+        tempEntity->GetFilename(), tempEntity ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::RegisterCADFile( ves::xplorer::scenegraph::CADEntity* const tempEntity )
 {
     m_filenameToCADMap.insert(
-        std::pair< std::string, ves::xplorer::scenegraph::CADEntity* >(
+        std::pair< std::string, ves::xplorer::scenegraph::CADEntity* const >(
             tempEntity->GetFilename(), tempEntity ) );
     m_rescaleCADEntityTextures = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntity* ModelHandler::IsCADFileLoaded( std::string filename )
+ves::xplorer::scenegraph::CADEntity* ModelHandler::IsCADFileLoaded( std::string const& filename )
 {
-    std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
-    iter = m_filenameToCADMap.find( filename );
+    std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::const_iterator
+        iter = m_filenameToCADMap.find( filename );
     if( iter != m_filenameToCADMap.end() )
     {
         return iter->second;
@@ -573,10 +531,10 @@ ves::xplorer::scenegraph::CADEntity* ModelHandler::IsCADFileLoaded( std::string 
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ModelHandler::UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity )
+void ModelHandler::UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* const tempEntity )
 {
-    std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
-    for( iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
+        iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
     {
         if( iter->second == tempEntity )
         {
@@ -592,8 +550,8 @@ void ModelHandler::ContextPreDrawUpdate()
     {
         vpr::Guard<vpr::Mutex> val_guard( mValueLock );
 
-        std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
-        for( iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
+        for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::const_iterator 
+            iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
         {
             ves::xplorer::scenegraph::util::RescaleTextureVisitor 
                 textureVisitor( iter->second->GetDCS() );
