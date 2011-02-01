@@ -32,6 +32,7 @@
 #define MODULEI_H_
 #include "AspenPlus.h"
 #include "AspenDynamics.h"
+#include "DynSim.h"
 #include <ves/open/moduleS.h>
 #include <ves/open/xml/CommandPtr.h>
 #include "VE_PSI.h"
@@ -72,6 +73,7 @@ protected:
 public:
     AspenPlus* bkp;
     AspenDynamics* dyn;
+    DynSim* dynSim;
   
   void ShowAspen( );  
   void HideAspen( );  
@@ -229,11 +231,20 @@ public:
   void SetLinkParam( ves::open::xml::CommandPtr cmd );
   void addVariable( ves::open::xml::CommandPtr cmd );
   void Monitor( );
+  
+  char* getAllOPCVariables( ves::open::xml::CommandPtr cmd );
+  void UpdateVars( );
+  char* getOPCValues( ves::open::xml::CommandPtr cmd );
+  char* setOPCValues( ves::open::xml::CommandPtr cmd );
+  void connectWithList( ves::open::xml::CommandPtr cmd );
+  void connectToOPC( ves::open::xml::CommandPtr cmd );
+
   bool connected;
 
 private:
   bool bkpFlag;
   bool dynFlag;
+  bool dynSimFlag;
   vpr::Thread* m_thread;
 };
 

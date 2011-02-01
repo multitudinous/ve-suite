@@ -64,6 +64,7 @@ VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog,
     mWorkingDir( dir ),
     dyn(NULL),
     bkp(NULL),
+    dynSim(NULL),
     mQuerying(false)
 {
     /*ves::open::xml::XMLObjectFactory::Instance()->
@@ -103,6 +104,12 @@ VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog,
     mQueryCommandNames.insert( "setParam");
     mQueryCommandNames.insert( "setLinkParam");
     mQueryCommandNames.insert( "addVariable");
+
+    mQueryCommandNames.insert( "getOPCValue");
+    mQueryCommandNames.insert( "getOPCValues");
+    mQueryCommandNames.insert( "setOPCValues");
+    mQueryCommandNames.insert( "connectToOPC");
+    mQueryCommandNames.insert( "getAllOPCVariables");
 
     dynFlag = false;
     bkpFlag = false;
@@ -407,6 +414,8 @@ char * VEPSI_i::Query ( const char * query_str
   ))
 {
     mQuerying = true;
+    AspenLog->SetSel( -1, -1 );
+    AspenLog->ReplaceSel( "Query\r\n" );
     _mutex.acquire();
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
@@ -642,6 +651,44 @@ char * VEPSI_i::Query ( const char * query_str
         _mutex.release();
         return( "NULL" );
     }
+
+    //DynSim
+    else if ( cmdname == "getOPCValues" )
+    {
+        returnValue = getOPCValues( cmd );
+        _mutex.release();
+        mQuerying = false;
+        return returnValue;
+    }
+    else if ( cmdname == "setOPCValues" )
+    {
+        returnValue = setOPCValues( cmd );
+        _mutex.release();
+        mQuerying = false;
+        return returnValue;
+    }
+    else if ( cmdname == "connectToOPC" )
+    {
+        connectToOPC( cmd );
+        _mutex.release();
+        mQuerying = false;
+        return( "NULL" );
+    }
+    else if ( cmdname == "addVariable" )
+    {
+        addVariable( cmd );
+        _mutex.release();
+        mQuerying = false;
+        return( "NULL" );
+    }
+    else if ( cmdname == "getAllOPCVariables" )
+    {
+        returnValue = getAllOPCVariables( cmd );
+        _mutex.release();
+        mQuerying = false;
+        return returnValue;
+    }
+
     else
     {
         mQuerying = false;
@@ -666,6 +713,7 @@ char* VEPSI_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     {
         bkpFlag = true;
         dynFlag = false;
+        dynSimFlag = false;
         filename.resize( filename.size() - 4 );
         bkp = new AspenPlus();
         bkp->SetWorkingDir( mWorkingDir );
@@ -674,9 +722,18 @@ char* VEPSI_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     {
         bkpFlag = false;
         dynFlag = true;
+        dynSimFlag = false;
         filename.resize( filename.size() - 5 );
         dyn = new AspenDynamics();
         dyn->SetWorkingDir( mWorkingDir );
+    }
+    else if( extension.find( "xml" ) != std::string::npos )
+    {
+        bkpFlag = false;
+        dynFlag = false;
+        dynSimFlag = true;
+        filename.resize( filename.size() - 4 );
+        dynSim = new DynSim();
     }
     
     if( bkpFlag )
@@ -772,6 +829,46 @@ char* VEPSI_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         }
         return CORBA::string_dup(network.c_str());
     }
+
+    if( dynSimFlag )
+    {
+        std::string network;
+        if (firsttime)
+        {
+            //make sure bkp file exists
+            std::ifstream xmlFile( ( mWorkingDir + filename + ".xml" ).c_str(),
+                std::ios::binary);
+            if( !xmlFile.is_open() )
+            {
+                //no bkp file
+                AspenLog->SetSel(-1, -1);
+                AspenLog->ReplaceSel("XML File Does NOT exist.\r\n");
+                return CORBA::string_dup( "XMLDNE" );
+            }
+            xmlFile.close();
+
+            //make sure apw file exists
+            std::ifstream s4mFile( ( mWorkingDir + filename + ".s4m" ).c_str(),
+                std::ios::binary);
+            if( !s4mFile.is_open() )
+            {
+                //no apw file
+                AspenLog->SetSel(-1, -1);
+                AspenLog->ReplaceSel("S4M File Does NOT exist.\r\n");
+                return CORBA::string_dup( "S4MDNE" );
+            }
+            s4mFile.close();
+
+            Display->SetWindowText( ( filename ).c_str());
+            //go through bkp parsing procedure
+            network = dynSim->CreateNetwork( filename );
+
+            mFileName = filename;
+            firsttime=false;
+        }
+        return CORBA::string_dup( network.c_str() );
+    }
+
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1246,25 +1343,128 @@ void VEPSI_i::addVariable( ves::open::xml::CommandPtr cmd )
     ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
     std::string var;
     pair->GetData( var );
-    dyn->AddADVariable( var );
+    if( dynFlag )
+    {
+        dyn->AddADVariable( var );
+    }
+    else if( dynSimFlag )
+    {
+        dynSim->AddOPCVariable( var.c_str() );
+    }
 }
-
 ///////////////////////////////////////////////////////////////////////////////
 void VEPSI_i::Monitor(  )
 {
     HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
     while (true)
     {
-        int temp = dyn->NumADVars();
-        bool tempBool = dyn->IsADVarsEmpty();
-        if( !tempBool && dyn && !mQuerying )
+        //Aspen Dynamics
+        if( dynFlag )
         {
-            _mutex.acquire();
-            std::string netPak = dyn->GetADValues( );
-            theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );     
-            _mutex.release();
+            int temp = dyn->NumADVars();
+            bool tempBool = dyn->IsADVarsEmpty();
+            if( !tempBool && dyn && !mQuerying )
+            {
+                _mutex.acquire();
+                std::string netPak = dyn->GetADValues( );
+                theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );     
+                _mutex.release();
+            }
+        }
+
+        //DynSim
+        if( dynSimFlag )
+        {
+            if( connected && !dynSim->IsOPCVarsEmpty()&& !mQuerying && dynSim )
+            {
+                _mutex.acquire();
+                //dynsim->AddOPCVariable( "MY_SWITCH" );
+                std::string netPak = dynSim->GetOPCValues( );
+                theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );            
+                _mutex.release();
+            }
         }
         vpr::System::msleep( 5 );
     }
     CoUninitialize();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void VEPSI_i::UpdateVars( )
+{
+    if( connected )
+    {
+        std::vector< std::pair< std::string, std::string > > vars =
+            dynSim->ReadVars();
+        //std::map< std::string, std::pair< std::string, VARTYPE > > vars =
+        //    dynsim->ReadVars();
+
+        if( !vars.empty() )
+        {
+            //dump results to aspen log
+            for( int i = 0; i < vars.size(); i++)
+            {
+                std::string temp = vars[i].first + " " + vars[i].second +"\n";
+                AspenLog->SetSel(-1, -1);
+                AspenLog->ReplaceSel( temp.c_str() );
+            }
+
+            //dump results to aspen log
+            //std::map< std::string, std::pair< std::string, VARTYPE > >::iterator iter;
+            //for( iter = vars.begin(); iter != vars.end(); ++iter)
+            //{
+            //    std::string temp = iter->first + " " + iter->second.first +"\n";
+            //    AspenLog->SetSel(-1, -1);
+            //    AspenLog->ReplaceSel( temp.c_str() );
+            //}
+        }
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::getOPCValues( ves::open::xml::CommandPtr cmd )
+{
+    std::string netPak = dynSim->GetOPCValues( );
+    return CORBA::string_dup( netPak.c_str( ) );
+}
+///////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::setOPCValues( ves::open::xml::CommandPtr cmd )
+{
+    //read and parse command into map of var name and value
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::vector< std::pair< std::string, std::string > > varsAndValues;
+    for ( size_t i=0; i < num; i++ )
+    {
+        ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        std::pair< std::string, std::string > temp;
+        temp.first = curPair->GetDataName();
+        temp.second = curPair->GetDataString();
+        varsAndValues.push_back( temp );
+    }
+    dynSim->SetOPCValues( varsAndValues );
+    return CORBA::string_dup( "NULL" );
+}
+///////////////////////////////////////////////////////////////////////////////
+void VEPSI_i::connectWithList( ves::open::xml::CommandPtr cmd )
+{
+        //create variable list
+        //ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+        //std::vector< std::string > list;
+        //pair->GetData( list );
+        //dynSim->ConnectWithList( list );
+}
+///////////////////////////////////////////////////////////////////////////////
+void VEPSI_i::connectToOPC( ves::open::xml::CommandPtr cmd )
+{
+    connected = dynSim->ConnectToOPCServer();
+    m_thread = new vpr::Thread( boost::bind( &VEPSI_i::Monitor,
+            this ) );
+    //m_Thread = AfxBeginThread( ThreadFunc, this);
+}
+///////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::getAllOPCVariables( ves::open::xml::CommandPtr cmd )
+{
+    ves::open::xml::DataValuePairPtr curPair = cmd->GetDataValuePair( 0 );
+    std::string modname = curPair->GetDataString( );
+    std::string netPak = dynSim->GetAllOPCVariables( modname.c_str() );
+    return CORBA::string_dup( netPak.c_str( ) );
 }

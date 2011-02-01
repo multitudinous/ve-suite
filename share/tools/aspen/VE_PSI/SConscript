@@ -8,6 +8,7 @@ srcs = Split("""
    VEPSI_i.cxx
    AspenPlus.cxx
    AspenDynamics.cxx
+   DynSim.cxx
    CorbaUnitManager.cxx
    VE_PSI.cxx
    VE_PSIDlg.cxx
@@ -20,6 +21,7 @@ headers = Split("""
    VEPSI_i.h
    AspenPlus.h
    AspenDynamics.h
+   DynSim.h
    CorbaUnitManager.h
    VE_PSI.h
    VE_PSIDlg.h

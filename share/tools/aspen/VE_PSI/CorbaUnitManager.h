@@ -7,6 +7,7 @@
 #include "VE_PSIDlg.h"
 #include "AspenPlus.h"
 #include "AspenDynamics.h"
+#include "DynSim.h"
 #include <vpr/Thread/Thread.h>
 
 class CorbaUnitManager
