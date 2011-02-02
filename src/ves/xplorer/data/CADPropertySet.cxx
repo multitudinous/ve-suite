@@ -229,7 +229,7 @@ void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
     m_animateCAD( nodeType, fileName, modeID );
     
     // All properties here are live; save to db whenever they change.
-    //WriteToDatabase();
+    WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace data
