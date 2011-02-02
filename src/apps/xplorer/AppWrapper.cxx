@@ -83,6 +83,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
         else if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
            ( argc > i + 2 ) )
         {
+            std::cout << "|\tEnabling Desktop Mode" << std::endl;
             desktopWidth = atoi( argv[ i + 1 ] );
             desktopHeight = atoi( argv[ i + 2 ] );
             desktopMode = true;
@@ -106,7 +107,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     //off to jccl::ConfigManager.
     if( (desktopWidth > 0) && (desktopHeight > 0) && desktopMode )
     {
-        vpr::System::msleep( 50 );  // 2 thenth-second delay
+        //vpr::System::msleep( 50 );  // 2 thenth-second delay
         cfdDisplaySettings* displaySettings = new cfdDisplaySettings();
 
         std::cout << 
