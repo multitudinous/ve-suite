@@ -25,5 +25,5 @@ launcherBundle.addFiles( stlFile )
 launcherBundle.addFiles( iveFile )
 launcherBundle.addFiles( vesFile )
 launcherBundle.addFiles( [pj('STORED_FILES','file19.txt'),
-    'torus.osg','groundplane.osg','simpleAnim.txt','stored_viewpts_flythroughs.vel'] )
+    'torus.osg','groundplane.osg','simpleAnim.txt','simpleAnim2.txt','simpleAnim3.txt','stored_viewpts_flythroughs.vel'] )
 

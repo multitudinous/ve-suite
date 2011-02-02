@@ -498,7 +498,7 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 
     // Show visualization tab?
     ves::xplorer::Model* model =
-        ves::xplorer::ModelHandler::instance()->GetActiveModel( );
+        ves::xplorer::ModelHandler::instance()->GetActiveModel();
     //Only if we have datasets
     if( model->GetNumberOfCfdDataSets() > 0 )
     {
@@ -559,17 +559,20 @@ void MainWindow::on_actionStepPhysics_triggered()
 void MainWindow::on_actionPlayPhysics_triggered()
 {
     scenegraph::PhysicsSimulator::instance()->SetIdle( false );
+    ves::xplorer::ModelHandler::instance()->PlayCADAnimations();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionPausePhysics_triggered()
 {
     scenegraph::PhysicsSimulator::instance()->SetIdle( true );
+    ves::xplorer::ModelHandler::instance()->PauseCADAnimations();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionResetPhysics_triggered()
 {
     scenegraph::PhysicsSimulator::instance()->SetIdle( true );
     scenegraph::PhysicsSimulator::instance()->ResetScene();
+    ves::xplorer::ModelHandler::instance()->ResetCADAnimations();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void MainWindow::on_actionDebugPhysics_triggered( bool trigger )

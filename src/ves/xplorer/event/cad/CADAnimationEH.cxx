@@ -158,32 +158,15 @@ bool CADAnimationEventHandler::ReadData( std::string const& animFile )
     std::vector< float > seatPitch;
     std::vector< float > seatYaw;
 
-    std::vector< float > chassisX;
-    std::vector< float > chassisY;
-    std::vector< float > chassisZ;
-    std::vector< float > chassisRoll;
-    std::vector< float > chassisPitch;
-    std::vector< float > chassisYaw;
-
-    std::vector< float > cabX;
-    std::vector< float > cabY;
-    std::vector< float > cabZ;
-    std::vector< float > cabRoll;
-    std::vector< float > cabPitch;
-    std::vector< float > cabYaw;
-
-
-    float tempData[19];
+    float tempData[7];
     std::string testString;
     while ( !inputFile.eof() )
     {
 	    std::getline(inputFile, testString);
         std::istringstream inputStream(testString);
         
-        inputStream>>   tempData[0]>>tempData[1]>>tempData[2]>>tempData[3]>>tempData[4]>>tempData[5]>>
-                        tempData[6]>>tempData[7]>>tempData[8]>>tempData[9]>>tempData[10]>>tempData[11]>>
-                        tempData[12]>>tempData[13]>>tempData[14]>>tempData[15]>>tempData[16]>>tempData[17]>>
-                        tempData[18];
+        inputStream>>tempData[0]>>tempData[1]>>tempData[2]>>tempData[3]>>tempData[4]>>tempData[5]>>
+                        tempData[6];
 
 	    time.push_back( tempData[0] );
 
@@ -193,20 +176,6 @@ bool CADAnimationEventHandler::ReadData( std::string const& animFile )
 	    seatRoll.push_back( tempData[4] * roationConv );
 	    seatPitch.push_back( tempData[5] * roationConv );
 	    seatYaw.push_back( tempData[6] * roationConv );
-
-	    cabX.push_back( tempData[7] * scale * offDirx.at(0) );
-	    cabY.push_back( tempData[8] * scale * offDirx.at(1) );
-	    cabZ.push_back( tempData[9] * scale * offDirx.at(2) );
-	    cabRoll.push_back( tempData[10] * roationConv );
-	    cabPitch.push_back( tempData[11] * roationConv );
-	    cabYaw.push_back( tempData[12] * roationConv );
-
-	    chassisX.push_back( tempData[13] * scale * offDirx.at(0) );
-	    chassisY.push_back( tempData[14] * scale * offDirx.at(1) );
-	    chassisZ.push_back( tempData[15] * scale * offDirx.at(2) );
-	    chassisRoll.push_back( tempData[16] * roationConv );
-	    chassisPitch.push_back( tempData[17] * roationConv );
-	    chassisYaw.push_back( tempData[18] * roationConv );
     }
 
 	objectOne[ "time" ] = time;
