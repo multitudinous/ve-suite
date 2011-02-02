@@ -80,6 +80,10 @@ CADAnimationEventHandler::CADAnimationEventHandler()
                      void( std::string const&, std::string const&, std::string const& ),
                      &CADAnimationEventHandler::CreateAnimatedCAD,
                      m_connections, any_SignalType, normal_Priority );     
+    offDirx.clear();
+    offDirx.push_back( 0 );
+    offDirx.push_back( 1 );
+    offDirx.push_back( 1 );
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADAnimationEventHandler::CADAnimationEventHandler( const CADAnimationEventHandler& rhs )
@@ -113,6 +117,7 @@ void CADAnimationEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         DataValuePairPtr cadAnim = command->GetDataValuePair( "Animation Info" );
 
         DataValuePairPtr dirSel = command->GetDataValuePair( "Direction Info" );
+        offDirx.clear();
         dirSel->GetData( offDirx );
 
         const CADNodeAnimationPtr newAnim = boost::static_pointer_cast<CADNodeAnimation>( cadAnim->GetDataXMLObject() );
@@ -127,18 +132,18 @@ void CADAnimationEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void CADAnimationEventHandler::_readData( std::string animFile )
+bool CADAnimationEventHandler::ReadData( std::string const& animFile )
 {
 	std::ifstream inputFile( animFile.c_str(), std::ios::in ); 
 
     if (!inputFile)
     {
-        std::cout<<"Model reference file "<<animFile.c_str()<<" could not be opened\n"<<std::endl;
-        return;
+        std::cout<<"|\tModel reference file "<<animFile<<" could not be opened."<<std::endl;
+        return false;
     }
     else
     {
-        std::cout << "\nSuccessfully opened "<<animFile.c_str()<<" file\n" <<std::endl;
+        std::cout << "|\tSuccessfully opened "<<animFile<<" file." <<std::endl;
     }
 
     //char temp[1024];
@@ -202,7 +207,6 @@ void CADAnimationEventHandler::_readData( std::string animFile )
 	    chassisRoll.push_back( tempData[16] * roationConv );
 	    chassisPitch.push_back( tempData[17] * roationConv );
 	    chassisYaw.push_back( tempData[18] * roationConv );
-
     }
 
 	objectOne[ "time" ] = time;
@@ -213,12 +217,13 @@ void CADAnimationEventHandler::_readData( std::string animFile )
 	objectOne[ "seatRoll" ] = seatRoll;
 	objectOne[ "seatPitch" ] = seatPitch;
 	objectOne[ "seatYaw" ] = seatYaw;
-
+    
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< osg::AnimationPath > CADAnimationEventHandler::createAnimationPath(std::string component)
+osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string component)
 {
-   osg::ref_ptr<osg::AnimationPath> animationPath=new osg::AnimationPath;
+   osg::AnimationPath* animationPath=new osg::AnimationPath;
    animationPath->setLoopMode(osg::AnimationPath::NO_LOOPING);
 
    std::string x = component + "X";
@@ -240,7 +245,7 @@ osg::ref_ptr< osg::AnimationPath > CADAnimationEventHandler::createAnimationPath
    activeObj = objectOne;
 
    unsigned int numTimeSteps = activeObj[ "time" ].size();
-   for(unsigned int i=0;i< numTimeSteps;i++)
+   for( unsigned int i=0;i< numTimeSteps; ++i )
    {
       trans = osg::Vec3( -activeObj[ x ].at( i ),
                          activeObj[ y ].at( i ),
@@ -252,6 +257,7 @@ osg::ref_ptr< osg::AnimationPath > CADAnimationEventHandler::createAnimationPath
       float time = activeObj[ "time" ].at( i );
       animationPath->insert( time, osg::AnimationPath::ControlPoint(trans,quat,scale) );
    }
+   std::cout << "|\tRead " << numTimeSteps << " timesteps." << std::endl;
 
    return animationPath;
 }
@@ -264,12 +270,24 @@ void CADAnimationEventHandler::CreateAnimatedCAD( std::string const& nodeType,
         << correctedPath.native_file_string()
         << std::endl << vprDEBUG_FLUSH;
     const std::string animationFile = correctedPath.native_file_string();
-    
-    _readData( animationFile );
-    
+
+    if( !ReadData( animationFile ) )
+    {
+        return;
+    }
+
+    m_activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    if( m_activeModel )
+    {
+        m_cadHandler = m_activeModel->GetModelCADHandler();
+    }
+    else
+    {
+        return;
+    }
+
     ves::xplorer::scenegraph::DCS* animPart = 0;
     ves::xplorer::scenegraph::CADEntity* cadPart = 0;
-    
     if( nodeType == std::string( "Part" ) )
     {
         if( m_cadHandler->PartExists( nodeID ) )
@@ -287,9 +305,9 @@ void CADAnimationEventHandler::CreateAnimatedCAD( std::string const& nodeType,
             //cadPart = m_cadHandler->GetAssembly( nodeID );
         }
     }
-    
+
     osg::ref_ptr< osg::AnimationPathCallback > callBack_obj = new osg::AnimationPathCallback();
-    callBack_obj->setAnimationPath( createAnimationPath( "seat" ).get() );
+    callBack_obj->setAnimationPath( createAnimationPath( "seat" ) );
     animPart->setUpdateCallback( callBack_obj.get() );
     callBack_obj->setPause( true );
 

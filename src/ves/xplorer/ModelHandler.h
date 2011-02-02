@@ -139,6 +139,13 @@ public:
     ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet();
     ///Get whether tbase is enabled
     bool GetVisOption();
+    ///Pause the animation paths for any registered CAD files
+    void PauseCADAnimations();
+    ///Play the animation paths for any registered CAD files
+    void PlayCADAnimations();
+    ///Reset the animation paths for any registered CAD files
+    void ResetCADAnimations();
+    
 private:
     ///Create the arrow polydata
     vtkPolyData* _GetArrowPolyData();

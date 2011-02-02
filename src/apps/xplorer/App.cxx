@@ -661,10 +661,14 @@ void App::latePreFrame()
         //don't move above function call
         mFrameStamp->setFrameNumber( _frameNumber );
         mFrameStamp->setReferenceTime( current_time );
-        mFrameStamp->setSimulationTime( current_time );
+        
+        double tempSimTime = mFrameStamp->getSimulationTime();
 
         mFrameDT = current_time - mLastFrameTime;
         mLastFrameTime = current_time;
+        
+        mFrameStamp->setSimulationTime( tempSimTime + mFrameDT );
+
         //This is a frame rate calculation
         deltaTime = current_time - mLastTime;
         if( deltaTime > 1 )

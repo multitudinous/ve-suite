@@ -31,9 +31,12 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/CADPropertySet.h>
-//#include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
 #include <ves/xplorer/data/MakeLive.h>
+#include <ves/xplorer/data/DatabaseManager.h>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
@@ -58,6 +61,17 @@ CADPropertySet::CADPropertySet()
     std::string tag = boost::any_cast<std::string>(GetPropertyValue("NameTag"));
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
 
+    ///Tie up the animation controls
+    {
+        std::string name("CADPropertySet");
+        name += boost::lexical_cast<std::string>( this );
+        name += ".CADAnimation";
+        
+        eventmanager::EventManager::instance()->RegisterSignal(
+            new eventmanager::SignalWrapper< AddAnimationDataSignal_type >( &m_animateCAD ),
+            name, eventmanager::EventManager::unspecified_SignalType );
+    }
+    
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -202,13 +216,15 @@ void CADPropertySet::CreateSkeleton()
     SetPropertyAttribute( "NodePath", "userVisible", false );
     
     AddProperty( "DynamicAnalysisData", std::string("null"), "Multi-body Dynamics Data" );
+    mPropertyMap["DynamicAnalysisData"]->
+        SignalValueChanged.connect( boost::bind( &CADPropertySet::AddDynamicAnalysisData, this, _1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
 {
     std::string fileName = boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );
     std::string nodeType = "Part";
-    std::string modeID = "";
+    std::string modeID = GetUUIDAsString();
     
     m_animateCAD( nodeType, fileName, modeID );
     

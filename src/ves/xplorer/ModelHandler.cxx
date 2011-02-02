@@ -560,3 +560,44 @@ void ModelHandler::ContextPreDrawUpdate()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::PauseCADAnimations()
+{
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
+        iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
+    {
+        osg::AnimationPathCallback* tempPath = dynamic_cast< osg::AnimationPathCallback* >( iter->second->GetDCS()->getUpdateCallback() );
+        if( tempPath )
+        {
+            tempPath->setPause( true );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::PlayCADAnimations()
+{
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
+        iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
+    {
+        osg::AnimationPathCallback* tempPath = dynamic_cast< osg::AnimationPathCallback* >( iter->second->GetDCS()->getUpdateCallback() );
+        if( tempPath )
+        {
+            tempPath->setPause( false );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::ResetCADAnimations()
+{
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
+        iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
+    {
+        osg::AnimationPathCallback* tempPath = dynamic_cast< osg::AnimationPathCallback* >( iter->second->GetDCS()->getUpdateCallback() );
+        if( tempPath )
+        {
+            tempPath->reset();
+            tempPath->setPause( true );
+            tempPath->update( *(static_cast< osg::Node* >( iter->second->GetDCS() )) );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
