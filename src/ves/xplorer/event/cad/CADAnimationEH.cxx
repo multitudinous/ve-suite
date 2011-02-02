@@ -81,7 +81,7 @@ CADAnimationEventHandler::CADAnimationEventHandler()
                      &CADAnimationEventHandler::CreateAnimatedCAD,
                      m_connections, any_SignalType, normal_Priority );     
     offDirx.clear();
-    offDirx.push_back( 0 );
+    offDirx.push_back( 1 );
     offDirx.push_back( 1 );
     offDirx.push_back( 1 );
 }
@@ -187,6 +187,8 @@ bool CADAnimationEventHandler::ReadData( std::string const& animFile )
 	objectOne[ "seatPitch" ] = seatPitch;
 	objectOne[ "seatYaw" ] = seatYaw;
     
+    inputFile.close();
+    
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -220,9 +222,9 @@ osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string co
                          activeObj[ y ].at( i ),
                          activeObj[ z ].at( i ));
       
-      quat = osg::Quat( -activeObj[ roll ].at( i ),  xaxis,
-                        -activeObj[ pitch ].at( i ), yaxis,
-                        activeObj[ yaw ].at( i ),   zaxis );
+      quat = osg::Quat( osg::DegreesToRadians( -activeObj[ roll ].at( i ) ),  xaxis,
+                        osg::DegreesToRadians( -activeObj[ pitch ].at( i ) ), yaxis,
+                        osg::DegreesToRadians(  activeObj[ yaw ].at( i ) ),   zaxis );
       float time = activeObj[ "time" ].at( i );
       animationPath->insert( time, osg::AnimationPath::ControlPoint(trans,quat,scale) );
    }
