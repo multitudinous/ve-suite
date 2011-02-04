@@ -726,6 +726,8 @@ void MainWindow::on_actionCharacterNavigation_triggered( bool triggered )
     scenegraph::CharacterController& characterController =
     scenegraph::SceneManager::instance()->GetCharacterController();
     characterController.Enable( triggered );
+    
+    ui->actionCharacterFlyMode->setEnabled( !triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionCharacterFlyMode_triggered( bool triggered )
@@ -734,5 +736,7 @@ void MainWindow::on_actionCharacterFlyMode_triggered( bool triggered )
     scenegraph::SceneManager::instance()->GetCharacterController();
     
     characterController.EnableFlying( triggered );
+    
+    ui->actionCharacterNavigation->setEnabled( !triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////
