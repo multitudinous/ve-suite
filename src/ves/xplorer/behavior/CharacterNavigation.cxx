@@ -169,6 +169,14 @@ CharacterNavigation::CharacterNavigation()
         eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
         m_connections, any_SignalType, normal_Priority );    
 
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress4%", bool( gadget::Keys, int, int, int ), 
+        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
+        m_connections, any_SignalType, normal_Priority );    
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress5%", bool( gadget::Keys, int, int, int ), 
+        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
+        m_connections, any_SignalType, normal_Priority );    
+    
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ), 
         eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
         m_connections, any_SignalType, normal_Priority );
@@ -178,6 +186,14 @@ CharacterNavigation::CharacterNavigation()
         m_connections, any_SignalType, normal_Priority );
     
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease3%", bool( gadget::Keys, int, int, int ), 
+        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
+        m_connections, any_SignalType, normal_Priority );    
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease4%", bool( gadget::Keys, int, int, int ), 
+        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
+        m_connections, any_SignalType, normal_Priority );    
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease5%", bool( gadget::Keys, int, int, int ), 
         eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
         m_connections, any_SignalType, normal_Priority );    
 }
