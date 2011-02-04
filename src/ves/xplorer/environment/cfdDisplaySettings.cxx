@@ -117,6 +117,9 @@ void cfdDisplaySettings::ProcessCommand()
     }
     else if( commandType.compare( "Juggler_Desktop_Data" ) == 0 )
     {
+        //When VR Juggler starts the configuration it is managed on a separate
+        //thread from the application thread. Therefore we need to wait until
+        //diaply element has been loaded before we try to change it.
         bool waitingForVRJ = true;
         std::vector< jccl::ConfigElementPtr > elements;
         while( waitingForVRJ )
@@ -133,6 +136,8 @@ void cfdDisplaySettings::ProcessCommand()
             vpr::System::msleep( 50 );
         }
         jccl::ConfigManager::instance()->lockActive();
+        //Now we can change the dsiplay now that the default display element
+        //has been loaded.
         DataValuePairPtr desktopData =
             veCommand->GetDataValuePair( "desktop_width" );
         double configXValue = desktopData->GetDataValue();
