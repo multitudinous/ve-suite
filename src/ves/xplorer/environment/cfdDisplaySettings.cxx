@@ -37,6 +37,8 @@
 
 #include <jccl/RTRC/ConfigManager.h>
 
+#include <vpr/System.h>
+
 #include <gmtl/Math.h>
 
 #include <string>
@@ -115,12 +117,22 @@ void cfdDisplaySettings::ProcessCommand()
     }
     else if( commandType.compare( "Juggler_Desktop_Data" ) == 0 )
     {
-        jccl::ConfigManager::instance()->lockActive();
-        // Get current list of display elements
-        jccl::Configuration* oldCfg = jccl::ConfigManager::instance()->getActiveConfig();
+        bool waitingForVRJ = true;
         std::vector< jccl::ConfigElementPtr > elements;
-        oldCfg->getByType( "display_window", elements );
-
+        while( waitingForVRJ )
+        {
+            jccl::ConfigManager::instance()->lockActive();
+            // Get current list of display elements
+            jccl::Configuration* oldCfg = jccl::ConfigManager::instance()->getActiveConfig();
+            oldCfg->getByType( "display_window", elements );
+            if( elements.size() > 0 )
+            {
+                waitingForVRJ = false;
+            }
+            jccl::ConfigManager::instance()->unlockActive();
+            vpr::System::msleep( 50 );
+        }
+        jccl::ConfigManager::instance()->lockActive();
         DataValuePairPtr desktopData =
             veCommand->GetDataValuePair( "desktop_width" );
         double configXValue = desktopData->GetDataValue();
