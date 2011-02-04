@@ -182,7 +182,8 @@ App::App( int argc, char* argv[], bool enableRTT )
     mLastFrame( 0 ),
     mLastTime( 0 ),
     mLastQtLoopTime( 0.0 ),
-    m_logger( Poco::Logger::get( "xplorer.App" ) )
+    m_logger( Poco::Logger::get( "xplorer.App" ) ),
+    m_windowIsOpen( false )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -589,7 +590,7 @@ void App::preFrame()
 #ifndef _DARWIN
     if( !m_uiInitialized )
     {
-        if( jccl::ConfigManager::instance()->isPendingStale() )
+        if( jccl::ConfigManager::instance()->isPendingStale() && m_windowIsOpen )
         {
             preRun();
         }
@@ -878,10 +879,20 @@ void App::contextPreDraw()
 {
     //std::cout << "----------contextPreDraw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::contextPreDraw", 20 );
-
-    if( !(*mViewportsChanged) && (_frameNumber > 3) )
+    //Try to determine when we have a valid context
+    if( !m_windowIsOpen )
     {
-        if( jccl::ConfigManager::instance()->isPendingStale() )
+        //Get the view matrix and the frustum from the draw manager
+        vrj::opengl::DrawManager* glDrawManager =
+            static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
+        const vrj::opengl::UserData* userData = glDrawManager->currentUserData();
+        const vrj::opengl::WindowPtr window = userData->getGlWindow();
+        m_windowIsOpen = window->isOpen();
+    }
+
+    if( !(*mViewportsChanged) )
+    {
+        if( jccl::ConfigManager::instance()->isPendingStale() && m_windowIsOpen )
         {
             vpr::Guard< vpr::Mutex > val_guard( mValueLock );
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
@@ -889,7 +900,7 @@ void App::contextPreDraw()
 
             //if( mRTT )
             {
-                vpr::System::msleep( 200 );  // thenth-second delay
+                //vpr::System::msleep( 200 );  // thenth-second delay
                 //*m_skipDraw = true;
             }
             *mViewportsChanged = true;

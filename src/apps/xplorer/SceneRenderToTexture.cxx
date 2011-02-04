@@ -206,14 +206,14 @@ void SceneRenderToTexture::InitRootGroup()
 
         "void main() \n"
         "{ \n"
-            "gl_FragData[ 0 ] = gl_Color; \n"
-            "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-
-            "if( textureZeroIsBound ) \n"
-            "{ \n"
+        "    gl_FragData[ 0 ] = gl_Color; \n"
+        "    gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+        "\n"
+        "    if( textureZeroIsBound ) \n"
+        "    { \n"
                 //GL_MODULATE
-                "gl_FragData[ 0 ] *= texture2D( tex0, gl_TexCoord[ 0 ].st ); \n"
-            "} \n"
+        "        gl_FragData[ 0 ] *= texture2D( tex0, gl_TexCoord[ 0 ].st ); \n"
+        "    } \n"
         "} \n";
 
         fragmentShader->setType( osg::Shader::FRAGMENT );

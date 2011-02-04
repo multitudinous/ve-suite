@@ -344,6 +344,8 @@ private:
     Poco::Logger& m_logger;
     ves::xplorer::LogStreamPtr m_logStream;
 
+    ///Try to tell when we have a valid context
+    bool m_windowIsOpen;
 };
 } //end xplorer
 } //end ves

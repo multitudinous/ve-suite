@@ -107,7 +107,6 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     //off to jccl::ConfigManager.
     if( (desktopWidth > 0) && (desktopHeight > 0) && desktopMode )
     {
-        //vpr::System::msleep( 50 );  // 2 thenth-second delay
         cfdDisplaySettings* displaySettings = new cfdDisplaySettings();
 
         std::cout << 
