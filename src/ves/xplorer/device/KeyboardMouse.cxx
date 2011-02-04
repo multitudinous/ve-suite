@@ -554,6 +554,11 @@ bool KeyboardMouse::GetMousePickEvent()
 vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     const gadget::InputArea* inputArea )
 {
+    if( !inputArea )
+    {
+        return vrj::DisplayPtr();
+    }
+
     const vrj::opengl::Window* window( NULL );
 #if defined( VPR_OS_Darwin )
     const gadget::InputWindowCocoa* inputWindowCocoa =
