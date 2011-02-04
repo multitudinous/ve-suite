@@ -63,6 +63,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
@@ -161,6 +162,8 @@ MainWindow::MainWindow(QWidget* parent) :
         m_navMenuStack->AddAction( ui->actionBoundingBoxJump );
         m_navMenuStack->AddAction( ui->actionWorldNavigation );
         m_navMenuStack->AddAction( ui->actionObjectNavigation );
+        m_navMenuStack->AddAction( ui->actionCharacterNavigation );
+        m_navMenuStack->AddAction( ui->actionCharacterFlyMode );
         
         eventmanager::EventManager::instance()->RegisterSignal(
            new eventmanager::SignalWrapper< NavJumpSignal_type >( &m_jumpSignal ),
@@ -710,11 +713,26 @@ void MainWindow::on_actionBoundingBoxJump_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionWorldNavigation_triggered()
 {
-    
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionObjectNavigation_triggered()
 {
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionCharacterNavigation_triggered( bool triggered )
+{
+    scenegraph::CharacterController& characterController =
+    scenegraph::SceneManager::instance()->GetCharacterController();
+    characterController.Enable( triggered );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionCharacterFlyMode_triggered( bool triggered )
+{
+    scenegraph::CharacterController& characterController =
+    scenegraph::SceneManager::instance()->GetCharacterController();
     
+    characterController.EnableFlying( triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////

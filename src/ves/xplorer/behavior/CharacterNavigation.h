@@ -96,15 +96,15 @@ public:
 
 private:
     ///Register the key press events
-    void ProcessKeyPressEvent( gadget::Keys, int, char );
+    bool ProcessKeyPressEvent( gadget::Keys, int, char );
     ///Register the key release events
-    void ProcessKeyReleaseEvent( gadget::Keys, int, char );
+    bool ProcessKeyReleaseEvent( gadget::Keys, int, char );
     ///Process the Button release
-    void ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
+    bool ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Register button press
-    void ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
+    bool ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Process moving the constraint
-    void ProcessMouseMove( int xPos, int yPos, int zPos, int buttonState );
+    bool ProcessMouseMove( int xPos, int yPos, int zPos, int buttonState );
 
     ///Selection start end point line
     osg::Vec3d m_startPoint;
@@ -140,6 +140,12 @@ private:
     
     ///The current Y mouse position
     int m_currY;
+    
+    ///The previous X mouse position
+    int m_prevX;
+    
+    ///The previous Y mouse position
+    int m_prevY;
     
     ///The rigid body that has been selected during physics mouse picking
     btRigidBody* m_pickedBody;

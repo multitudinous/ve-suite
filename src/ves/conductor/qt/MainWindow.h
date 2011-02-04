@@ -229,7 +229,15 @@ protected Q_SLOTS:
     /// Autoconnected slot
     void on_actionObjectNavigation_triggered(); 
     
-    Q_SIGNALS:
+    ///Control character navigation
+    /// Autoconnected slot
+    void on_actionCharacterNavigation_triggered( bool triggered ); 
+
+    ///Control character fly mode
+    /// Autoconnected slot
+    void on_actionCharacterFlyMode_triggered( bool triggered ); 
+    
+Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
     /// required for thread safety
     void ActiveModelChanged( std::string modelID );

@@ -475,6 +475,36 @@ QToolButton:hover
     <string>Object Navigation</string>
    </property>
   </action>
+  <action name="actionCharacterNavigation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/CharacterButton.xpm</normaloff>:/xpm/ToolBar/CharacterButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>CharacterNavigation</string>
+   </property>
+   <property name="toolTip">
+    <string>Character Navigation</string>
+   </property>
+  </action>
+  <action name="actionCharacterFlyMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/CharacterFlyButton.xpm</normaloff>:/xpm/ToolBar/CharacterFlyButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>CharacterFlyMode</string>
+   </property>
+   <property name="toolTip">
+    <string>Character Fly Mode</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

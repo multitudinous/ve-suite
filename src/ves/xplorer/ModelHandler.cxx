@@ -202,10 +202,8 @@ ModelHandler::ModelHandler()
 ////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler()
 {
-    //vprDEBUG(vesDBG,2) << "ModelHandler destructor"
-    //                       << std::endl << vprDEBUG_FLUSH;
-
     m_filenameToCADMap.clear();
+    m_animationCADMap.clear();
 
     for( size_t i = 0; i < _modelList.size(); ++i )
     {
@@ -213,39 +211,25 @@ ModelHandler::~ModelHandler()
     }
     _modelList.clear();
 
-    //if ( _scalarBar )
-    //{
-    //   delete _scalarBar;
-    //vprDEBUG(vesDBG,2) << "delete _scalarBar"
-    //   << std::endl << vprDEBUG_FLUSH;
-    //}
-
     if( this->arrow )
     {
         this->arrow->Delete();
         arrow = 0;
-        //vprDEBUG(vesDBG,2) << "this->arrow->Delete()"
-        //   << std::endl << vprDEBUG_FLUSH;
     }
 
-    for( std::map<std::string , ves::xplorer::event::EventHandler* >::iterator 
+    for( std::map< std::string , ves::xplorer::event::EventHandler* >::iterator 
         itr = _eventHandlers.begin(); itr != _eventHandlers.end(); ++itr )
     {
         delete itr->second;
         itr->second = 0;
     }
     _eventHandlers.clear();
-    //vprDEBUG(vesDBG,2) << "ModelHandler end destructor"
-    //   << std::endl << vprDEBUG_FLUSH;
     
     osgDB::Registry::instance( true );
 }
-
 ///////////////////////
 // Helper functions
 ///////////////////////
-/////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 cfdTextureDataSet* ModelHandler::GetActiveTextureDataSet()
 {
@@ -273,9 +257,11 @@ void ModelHandler::SetActiveModel( std::string const& modelNumber )
 Model* ModelHandler::GetModel( int i )
 {
     if( _modelList.empty() )
+    {
         return NULL;
-    else
-        return _modelList.at( i );
+    }
+
+    return _modelList.at( i );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::AddModel( Model* const input )
@@ -542,6 +528,16 @@ void ModelHandler::UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* const
             break;
         }
     }
+    
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
+        iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
+    {
+        if( iter->second == tempEntity )
+        {
+            m_animationCADMap.erase( iter );
+            break;
+        }
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::ContextPreDrawUpdate()

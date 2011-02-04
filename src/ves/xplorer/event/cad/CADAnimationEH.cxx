@@ -109,7 +109,6 @@ void CADAnimationEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-
         CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
 
         DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
@@ -218,13 +217,13 @@ osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string co
    unsigned int numTimeSteps = activeObj[ "time" ].size();
    for( unsigned int i=0;i< numTimeSteps; ++i )
    {
-      trans = osg::Vec3( -activeObj[ x ].at( i ),
+      trans = osg::Vec3( activeObj[ x ].at( i ),
                          activeObj[ y ].at( i ),
                          activeObj[ z ].at( i ));
       
-      quat = osg::Quat( osg::DegreesToRadians( -activeObj[ roll ].at( i ) ),  xaxis,
-                        osg::DegreesToRadians( -activeObj[ pitch ].at( i ) ), yaxis,
-                        osg::DegreesToRadians(  activeObj[ yaw ].at( i ) ),   zaxis );
+      quat = osg::Quat( osg::DegreesToRadians( activeObj[ roll ].at( i ) ),  xaxis,
+                        osg::DegreesToRadians( activeObj[ pitch ].at( i ) ), yaxis,
+                        osg::DegreesToRadians( activeObj[ yaw ].at( i ) ),   zaxis );
       float time = activeObj[ "time" ].at( i );
       animationPath->insert( time, osg::AnimationPath::ControlPoint(trans,quat,scale) );
    }
