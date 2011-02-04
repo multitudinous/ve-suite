@@ -363,6 +363,11 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
 
         break;
     }
+    case gadget::MouseScrollEvent:
+    {
+        //Now we need to pass scroll events along
+        break;
+    }
     default:
     {
         std::cout << "KeyboardMouse event not implemented." << std::endl;
