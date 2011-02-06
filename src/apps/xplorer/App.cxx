@@ -632,6 +632,7 @@ void App::latePreFrame()
             // Stopping kernel
             vrj::Kernel::instance()->stop();
             PhysicsSimulator::instance()->SetIdle( true );
+            return;
         }
         else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
         {
