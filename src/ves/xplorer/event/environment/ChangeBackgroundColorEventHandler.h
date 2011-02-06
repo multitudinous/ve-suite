@@ -71,7 +71,7 @@ public:
     ChangeBackgroundColorEventHandler& operator=( const ChangeBackgroundColorEventHandler& rhs );
 
     ///Update background color
-    void UpdateBackgroundColor( const bool enable, const std::vector< double >& color );
+    void UpdateBackgroundColor( bool const enable, std::vector< double > const& color );
 
 protected:
 };

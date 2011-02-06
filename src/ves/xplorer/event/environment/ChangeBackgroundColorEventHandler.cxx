@@ -62,7 +62,7 @@ ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler()
         : ves::xplorer::event::EventHandler()
 {
     CONNECTSIGNALS_2( "%UsePreferredBackgroundColor",
-                     void ( const bool enable, const std::vector< double >& color ),
+                     void ( bool const enable, std::vector< double > const& color ),
                      &ChangeBackgroundColorEventHandler::UpdateBackgroundColor,
                      m_connections, any_SignalType, normal_Priority );    
 }
@@ -103,7 +103,7 @@ ChangeBackgroundColorEventHandler& ChangeBackgroundColorEventHandler::operator=(
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ChangeBackgroundColorEventHandler::UpdateBackgroundColor( const bool enable, const std::vector< double >& color )
+void ChangeBackgroundColorEventHandler::UpdateBackgroundColor( bool const enable, std::vector< double > const& color )
 {
     ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
     ves::xplorer::EnvironmentHandler::instance()->
