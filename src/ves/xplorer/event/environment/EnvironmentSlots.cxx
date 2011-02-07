@@ -47,7 +47,7 @@ namespace event
 namespace environment
 {
 ////////////////////////////////////////////////////////////////////////////////
-void EnablePhysicsDebugging( bool const enable )
+void EnablePhysicsDebugging( bool const& enable )
 {
     ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetDebuggingOn( enable );
 }
