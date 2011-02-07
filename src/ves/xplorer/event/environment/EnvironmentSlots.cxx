@@ -38,9 +38,21 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+namespace environment
+{
 ////////////////////////////////////////////////////////////////////////////////
-void ves::xplorer::event::environment::EnablePhysicsDebugging( bool const enable )
+void EnablePhysicsDebugging( bool const enable )
 {
     ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetDebuggingOn( enable );
 }
 ////////////////////////////////////////////////////////////////////////////////
+}
+}
+}
+}
