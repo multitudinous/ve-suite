@@ -43,7 +43,9 @@
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
-//#include <ves/xplorer/environment/cfdSoundHandler.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
+
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
@@ -74,6 +76,8 @@
 #include <ves/xplorer/event/environment/PhysicsEventHandler.h>
 #include <ves/xplorer/event/environment/ScreenAlignedNormalsEventHandler.h>
 #include <ves/xplorer/event/environment/CameraPlacementEventHandler.h>
+
+#include <ves/xplorer/event/environment/EnvironmentSlots.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -236,6 +240,10 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "PICTURE_ON_OFF" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
+        
+    CONNECTSIGNALS_STATIC( "%PhysicsDebugger", void( bool const& enable ),
+                     &ves::xplorer::event::environment::EnablePhysicsDebugging,
+                     m_connections, any_SignalType, normal_Priority );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()

@@ -30,62 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VE_XPLORER_EVENT_HANDLER_H
-#define VE_XPLORER_EVENT_HANDLER_H
 
-#include <ves/VEConfig.h>
-#include <ves/xplorer/event/EventHandlerPtr.h>
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/event/environment/EnvironmentSlots.h>
 
-#include <ves/xplorer/GlobalBasePtr.h>
+//#include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/open/xml/XMLObjectPtr.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
-
-namespace ves
+////////////////////////////////////////////////////////////////////////////////
+void ves::xplorer::event::environment::EnablePhysicsDebugging( bool const enable )
 {
-namespace xplorer
-{
-namespace event
-{
-/*!\file EventHandler.h
- * EventHandler API
- * \class EventHandler
- * Base class for event handling.
- * \namespace ves::xplorer::event
- * Namespace for ve-event handlers.
- */
-class VE_XPLORER_EXPORTS EventHandler
-{
-public:
-    ///Constructor
-    EventHandler()
-    {
-        ;
-    }
-
-    ///Destructor
-    virtual ~EventHandler()
-    {
-        ;
-    }
-
-    ///The call to handle the event
-    ///\param objectToProcess The xml Object to process
-    virtual void Execute( const ves::open::xml::XMLObjectPtr& objectToProcess 
-                                    = ves::open::xml::XMLObjectPtr() ) = 0;
-
-    ///\param baseObject The GlobalBase object to apply the command to.
-    virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject = 0 ) = 0;
-protected:
-    ///The variable of the global base object to operate on
-    ves::xplorer::GlobalBase* _baseObject;
-    /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
-};
-
+    ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetDebuggingOn( enable );
 }
-}
-}
-
-#endif// VE_EVENT_HANDLER_H
+////////////////////////////////////////////////////////////////////////////////

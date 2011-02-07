@@ -45,6 +45,8 @@
 
 #include <ves/xplorer/event/data/SeedPoints.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 // --- VTK Includes --- //
 class vtkPolyData;
 
@@ -220,9 +222,12 @@ private:
 
     double m_lodScale;///<Global geometry LOD scale
     float framerate;///<Frame rate.
-    std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;///<The event handler for commands.
-
-    osg::ref_ptr<osgEphemeris::EphemerisModel> m_ephemerisModel;///<The model containing ephemeris data
+    ///The event handler for commands.
+    std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
+    ///The model containing ephemeris data
+    osg::ref_ptr<osgEphemeris::EphemerisModel> m_ephemerisModel;
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 }
 }
