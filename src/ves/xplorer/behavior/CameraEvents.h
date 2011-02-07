@@ -96,7 +96,7 @@ public:
 
 private:
     ///Process the Button release
-    void ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
+    bool ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Register button press
     bool ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Process moving the constraint

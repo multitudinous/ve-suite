@@ -107,16 +107,16 @@ CameraEvents::CameraEvents()
         eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseMove,
         m_connections, any_SignalType, highest_Priority );
     
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress1%", void( gadget::Keys, int, int, int ), 
-        &CameraEvents::ProcessMousePress,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ), 
+        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
         m_connections, any_SignalType, highest_Priority );
     
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress2%", void( gadget::Keys, int, int, int ), 
-        &CameraEvents::ProcessMousePress,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ), 
+        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
         m_connections, any_SignalType, highest_Priority );
     
-    CONNECTSIGNALS_4( "KeyboardMouse.ButtonPress3%", void( gadget::Keys, int, int, int ), 
-        &CameraEvents::ProcessMousePress,
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ), 
+        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
         m_connections, any_SignalType, highest_Priority );    
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ), 
@@ -145,10 +145,11 @@ CameraEvents::~CameraEvents()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+bool CameraEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {        
     m_currX = xPos;
     m_currY = yPos;
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
