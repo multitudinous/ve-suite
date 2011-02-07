@@ -208,7 +208,7 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
     }
     ves::xplorer::data::PropertySetPtr nullPtr;
 
-    if( (index == -1) || (index > m_ids.size()) )
+    if( (index == -1) || (index > int(m_ids.size()) ) )
     {
         // If null selection was made, we want to remove any visible PropertySet
         mFeatureBrowser->ParsePropertySet( nullPtr );

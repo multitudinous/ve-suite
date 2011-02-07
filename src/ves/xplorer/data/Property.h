@@ -124,11 +124,11 @@ public:
 
     ///
     /// Destructor
-    virtual ~Property( );
+    virtual ~Property();
 
     ///
     /// Returns the main value associated with this property
-    boost::any GetValue( ) const;
+    boost::any GetValue() const;
 
     ///
     /// Set the main value.
@@ -163,7 +163,7 @@ public:
 
     ///
     /// Returns a list of all attribute names owned by this property
-    const PSVectorOfStrings& GetAttributeList( ) const;
+    const PSVectorOfStrings& GetAttributeList() const;
 
     ///
     /// Returns true if this property has an attribute named attributeName
@@ -186,7 +186,7 @@ public:
     /// Returns whether this property is enabled. If the property is enabled,
     /// its main value can be changed through calls to SetValue. If it is not
     /// enabled, no changes are allowed to the main value via SetValue.
-    bool GetEnabled( ) const;
+    bool GetEnabled() const;
 
     ///
     /// Property emits this signal anytime something attempts to change its value.
@@ -206,17 +206,17 @@ public:
 
     ///
     /// Basic typechecking methods
-    bool IsBool( ) const;
-    bool IsInt( ) const;
-    bool IsFloat( ) const;
-    bool IsDouble( ) const;
-    bool IsString( ) const;
-    bool IsEnum( );
-    bool IsIntVector( ) const;
-    bool IsFloatVector( ) const;
-    bool IsDoubleVector( ) const;
-    bool IsStringVector( ) const;
-    bool IsVectorized( ) const;
+    bool IsBool() const;
+    bool IsInt() const;
+    bool IsFloat() const;
+    bool IsDouble() const;
+    bool IsString() const;
+    bool IsEnum();
+    bool IsIntVector() const;
+    bool IsFloatVector() const;
+    bool IsDoubleVector() const;
+    bool IsStringVector() const;
+    bool IsVectorized() const;
 
     ///
     /// Convenience versions of the typechecking methods
@@ -233,6 +233,15 @@ public:
     bool IsDoubleVector( const boost::any& value ) const;
     bool IsStringVector( const boost::any& value ) const;
     bool IsVectorized( const boost::any& value ) const;
+
+    ///Set the display percision for a double value so that by default 
+    ///the percision is 2 decimal places.
+    ///\param precision The number of decimal places to be shown
+    void SetDisplayPrecision( size_t const& precision );
+    
+    ///Get the display precision for this property if it is a double
+    ///\return The display precision for this property
+    size_t const& GetDisplayPrecision() const;
 
 private:
 
@@ -308,7 +317,11 @@ private:
     /// an enum.
     bool mIsEnum; 
 
+    ///I am not sure what this is.
     mutable PSVectorOfStrings mAttributeList;
+    
+    ///The display precision for this property if it is a double
+    size_t m_displayPrecision;
 };
 
 } // namespace data

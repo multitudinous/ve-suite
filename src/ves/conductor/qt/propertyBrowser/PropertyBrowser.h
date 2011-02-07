@@ -76,11 +76,11 @@ public:
 
     ///
     /// Destructor
-    ~PropertyBrowser( );
+    ~PropertyBrowser();
 
     ///
     /// Returns a list of all QtProperty this browser instance knows about
-    ItemVector* GetItems( );
+    ItemVector* GetItems();
 
     ///
     /// Tell the browser to parse the PropertySet passed as set.
@@ -93,7 +93,7 @@ public:
     /// Tells the browser to request a list of changes (values, enabled state,
     /// min/max, etc.) from the underlying PropertySet and update the UI
     /// accordingly.
-    void Refresh( );
+    void Refresh();
 
     ///
     /// Tells the browser to re-read the entire underlying PropertySet and
@@ -101,31 +101,31 @@ public:
     /// the browser does not ask the PropertySet for a list of things that have
     /// changed; instead it just blindly re-reads the entire set and is
     /// consequently a more costly operation.
-    void RefreshAll( );
+    void RefreshAll();
 
     ///
     /// Returns the manager used for double types
-    QtDoublePropertyManager* GetDoubleManager( );
+    QtDoublePropertyManager* GetDoubleManager();
 
     ///
     /// Returns the manager used for string types
-    QtStringPropertyManager* GetStringManager( );
+    QtStringPropertyManager* GetStringManager();
 
     ///
     /// Returns the manager used for bool types
-    QtBoolPropertyManager* GetBoolManager( );
+    QtBoolPropertyManager* GetBoolManager();
 
     ///
     /// Returns the manager used for enumerated types
-    QtEnumPropertyManager* GetEnumManager( );
+    QtEnumPropertyManager* GetEnumManager();
 
     ///
     /// Returns the manager used for int types
-    QtIntPropertyManager* GetIntManager( );
+    QtIntPropertyManager* GetIntManager();
 
     ///
     /// Returns the manager used for group types
-    QtGroupPropertyManager* GetGroupManager( );
+    QtGroupPropertyManager* GetGroupManager();
 
 
 Q_SIGNALS:
@@ -191,7 +191,7 @@ private:
 
     // Put QtProperty instances into a hierarchical relationship as requested
     // by the name of the underlying Property
-    void _createHierarchy( );
+    void _createHierarchy();
 
     // Helper function to refresh the UI value of a specific Property/QtProperty
     void _refreshItem( int index );

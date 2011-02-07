@@ -602,11 +602,13 @@ void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::PropertyPt
     {
         double castValue = static_cast < double > ( boost::any_cast<float>( value ) );
         mDoubleManager->setValue( item, castValue );
+        mDoubleManager->setDecimals( item, property->GetDisplayPrecision() );
     }
     else if( property->IsDouble() )
     {
         double castValue = boost::any_cast<double>( value );
         mDoubleManager->setValue( item, castValue );
+        mDoubleManager->setDecimals( item, property->GetDisplayPrecision() );
     }
     else if( property->IsString() )
     {
