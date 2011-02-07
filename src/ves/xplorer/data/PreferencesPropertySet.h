@@ -86,8 +86,6 @@ private:
     ///Relay method for passing signals on to xplorer
     void UpdatePhysicsDebugger( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateCADSelection( PropertyPtr property );
-    ///Relay method for passing signals on to xplorer
     void UpdateScriptLogger( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
     void UpdateScreenAlignedNormals( PropertyPtr property );
@@ -112,12 +110,11 @@ private:
     UpdateCheckAndVectorSignal_type m_backgroundColor;
 
     ///Update signal for check box preferences
-    typedef boost::signals2::signal< void ( const bool ) > CheckValueSignal_type;
+    typedef boost::signals2::signal< void ( bool const& ) > CheckValueSignal_type;
     CheckValueSignal_type m_navZEqual0;
     CheckValueSignal_type m_navZGreater0;
     CheckValueSignal_type m_shutdownXplorer;
     CheckValueSignal_type m_physicsDebugger;
-    CheckValueSignal_type m_cadSelection;
     CheckValueSignal_type m_scriptLogger;
     CheckValueSignal_type m_screenAlignedNormals;    
     

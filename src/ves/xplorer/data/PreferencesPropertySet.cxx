@@ -128,16 +128,6 @@ PreferencesPropertySet::PreferencesPropertySet()
             new SignalWrapper< CheckValueSignal_type >( &m_physicsDebugger ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    ///Signal for GeometryLODScale x
-    /*{
-        std::string name("PreferencesPropertySet");
-        name += boost::lexical_cast<std::string>( this );
-        name += ".CADSelection";
-        
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< CheckValueSignal_type >( &m_cadSelection ),
-            name, eventmanager::EventManager::unspecified_SignalType );
-    }*/
     ///Signal for GeometryLODScale - not used
     {
         std::string name("PreferencesPropertySet");
@@ -364,14 +354,6 @@ void PreferencesPropertySet::UpdateShutdownXplorer( PropertyPtr property )
 void PreferencesPropertySet::UpdatePhysicsDebugger( PropertyPtr property )
 {
     m_physicsDebugger( boost::any_cast<bool>( property->GetValue() ) );
-
-    // All properties here are live; save to db whenever they change.
-    WriteToDatabase();
-}
-////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateCADSelection( PropertyPtr property )
-{
-    m_cadSelection( boost::any_cast<bool>( property->GetValue() ) );
 
     // All properties here are live; save to db whenever they change.
     WriteToDatabase();

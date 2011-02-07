@@ -89,12 +89,12 @@ Device::Device( const Device::Type& type )
     m_cameraManager( m_sceneManager.GetCameraManager() )
 {
     CONNECTSIGNALS_1( "%NavigationZEqual0Lock",
-                     void ( const bool enable ),
+                     void( bool const& enable ),
                      &Device::UpdateZEqualZero,
                      m_connections, any_SignalType, normal_Priority );    
     
     CONNECTSIGNALS_1( "%NavigationZGreater0Lock",
-                     void ( const bool enable ),
+                     void( bool const& enable ),
                      &Device::UpdateZGreaterZero,
                      m_connections, any_SignalType, normal_Priority );    
 }
