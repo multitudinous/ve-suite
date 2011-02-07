@@ -56,7 +56,7 @@ DraggerScalingEventHandler::DraggerScalingEventHandler()
     m_activeModel = 0;
 
     CONNECTSIGNALS_2( "%DraggerScaling",
-                     void ( const bool enable, const double draggerScale ),
+                     void ( bool const& enable, double const& draggerScale ),
                      &DraggerScalingEventHandler::UpdateDraggerScaling,
                      m_connections, any_SignalType, normal_Priority );    
 }
@@ -123,7 +123,7 @@ void DraggerScalingEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* 
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DraggerScalingEventHandler::UpdateDraggerScaling( const bool enable, const double draggerScaling )
+void DraggerScalingEventHandler::UpdateDraggerScaling( bool const& enable, double const& draggerScaling )
 {
     scenegraph::SceneManager::instance()->
         GetManipulatorManager().SetDraggerScale( draggerScaling );

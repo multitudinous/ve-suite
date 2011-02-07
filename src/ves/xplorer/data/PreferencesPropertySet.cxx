@@ -180,8 +180,8 @@ void PreferencesPropertySet::CreateSkeleton()
     mPropertyMap["NearFarRatio"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableNearFarRatio, this, _1 ) );
 
     AddProperty( "NearFarRatio_Ratio", 0.000005, "Ratio" );
-    SetPropertyAttribute( "NearFarRatio_Ratio", "minimumValue", 0.00 );
-    SetPropertyAttribute( "NearFarRatio_Ratio", "maximumValue", 1.00 );
+    SetPropertyAttribute( "NearFarRatio_Ratio", "minimumValue", 0.000000 );
+    SetPropertyAttribute( "NearFarRatio_Ratio", "maximumValue", 1.000000 );
     mPropertyMap["NearFarRatio_Ratio"]->SetDisabled();
     mPropertyMap["NearFarRatio_Ratio"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateNearFarRatio, this, _1 ) );
 

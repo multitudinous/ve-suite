@@ -72,7 +72,7 @@ public:
     virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject );
 
     ///Manage the dragger scaling
-    void UpdateDraggerScaling( const bool enable, const double draggerScaling );
+    void UpdateDraggerScaling( bool const& enable, double const& draggerScaling );
 
 protected:
     ves::xplorer::Model* m_activeModel;///<The active cfdModel

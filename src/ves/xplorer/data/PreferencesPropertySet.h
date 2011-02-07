@@ -101,7 +101,7 @@ private:
     void CreateSkeleton();
     
     ///Update signal containing new seed points dimensions
-    typedef boost::signals2::signal< void ( const bool, const double  ) > UpdateCheckAndValueSignal_type;
+    typedef boost::signals2::signal< void ( bool const&, double const& ) > UpdateCheckAndValueSignal_type;
     UpdateCheckAndValueSignal_type m_nearFarRatio;
     UpdateCheckAndValueSignal_type m_draggerScaling;
 
