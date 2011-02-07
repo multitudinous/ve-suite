@@ -183,7 +183,9 @@ App::App( int argc, char* argv[], bool enableRTT )
     mLastTime( 0 ),
     mLastQtLoopTime( 0.0 ),
     m_logger( Poco::Logger::get( "xplorer.App" ) ),
-    m_windowIsOpen( false )
+    m_windowIsOpen( false ),
+    m_nearFarRatio( 0.0005 ),
+    m_frameSetNearFarRatio( 0 )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -223,6 +225,13 @@ App::App( int argc, char* argv[], bool enableRTT )
     _pbuffer = 0;
 #endif
     _frameNumber = 0;
+    
+    /*std::vector< bool* >* tempData = m_setNearFarRatio.getDataVector();
+    for( size_t i = 0; i < tempData->size(); ++i )
+    {
+        *(tempData->at( i )) = false;
+    }*/
+    
     this->argc = argc;
     this->argv = argv;
 
@@ -261,6 +270,10 @@ App::App( int argc, char* argv[], bool enableRTT )
     eventmanager::EventManager::instance()->RegisterSignal(
     new eventmanager::SignalWrapper< latePreFrame_SignalType >( &mLatePreFrame ),
     "App.LatePreFrame");
+    
+    CONNECTSIGNALS_2( "%NearFarRatio", void( bool const&, double const& ),
+                          &ves::xplorer::App::SetNearFarRatio,
+                          m_connections, any_SignalType, normal_Priority );        
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -331,6 +344,9 @@ void App::contextInit()
 
     ( *sceneViewer ) = new_sv;
 
+    ///Initialize the context specific flags
+    //*m_setNearFarRatio = false;
+    
 #ifdef _PBUFFER
     if( !_pbuffer )
     {
@@ -924,20 +940,10 @@ void App::contextPreDraw()
     ///plane. (This gets around the "negative" problem.) The bottom line: The
     ///computed near plane is always at least as big as the computed far multiplied
     ///by OSG's near/far ratio (which defaults to 0.0005).
-    const ves::open::xml::CommandPtr tempCommandPtr = 
-        ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
-
-    if( tempCommandPtr )
+    if( m_frameSetNearFarRatio == _frameNumber )
     {
-        const std::string tempCommandName = 
-            tempCommandPtr->GetCommandName();
-        if( !tempCommandName.compare( "CHANGE_NEAR_FAR_RATIO" ) )
-        {
-            double nearFar;
-            tempCommandPtr->
-                GetDataValuePair( "Near Far Ratio" )->GetData( nearFar );
-            (*sceneViewer)->setNearFarRatio( nearFar );
-        }
+        (*sceneViewer)->setNearFarRatio( m_nearFarRatio );
+        //*m_setNearFarRatio = false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1218,8 +1224,24 @@ void App::runLoop()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void App::UpdateNearFarRatio( const bool enable, const double nearFarRatio )
+void App::SetNearFarRatio( bool const& enable, double const& nearFar )
 {
-    (*sceneViewer)->setNearFarRatio( nearFar );
-}*/
+    /*std::vector< bool* >* tempData = m_setNearFarRatio.getDataVector();
+    std::cout << tempData->size() << std::endl;
+    for( size_t i = 0; i < tempData->size(); ++i )
+    {
+        *(tempData->at( i )) = true;
+        std::cout << " here 2 " << std::endl;
+    }*/
+    m_frameSetNearFarRatio = _frameNumber + 1;
+    
+    if( enable )
+    {
+        m_nearFarRatio = nearFar;
+    }
+    else
+    {
+        m_nearFarRatio = 0.0005;
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////

@@ -40,6 +40,7 @@
 
 #include <ves/xplorer/TextureBasedVizHandlerPtr.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 #include <ves/xplorer/Logging.h>
 
 // ---  VR Juggler Includes --- //
@@ -206,6 +207,9 @@ private:
     /// mouse enters or leaves UI quad
     void UIEnterLeave( bool entered );
 
+    ///Set the near/far slor
+    void SetNearFarRatio( bool const& enable, double const& nearFar );
+    
     ///Update sceneview
     bool svUpdate;
 
@@ -321,10 +325,10 @@ private:
     ///Should be removed since this is a singleton
     ves::xplorer::TextureBasedVizHandler* _tbvHandler;
 
-    ///
+    ///The RTT manager
     ves::xplorer::SceneRenderToTexturePtr mSceneRenderToTexture;
 
-    ///
+    ///The manager of the window stack
     ves::xplorer::SceneGLTransformInfoPtr m_sceneGLTransformInfo;
 
     ///Thread to run the Qt ui
@@ -340,12 +344,20 @@ private:
     /// other objects to sync operations to the draw loop
     typedef boost::signals2::signal< void () > latePreFrame_SignalType;
     latePreFrame_SignalType mLatePreFrame;
-
+    ///Logger
     Poco::Logger& m_logger;
+    ///Logger stream
     ves::xplorer::LogStreamPtr m_logStream;
-
     ///Try to tell when we have a valid context
     bool m_windowIsOpen;
+    ///Tell when the near far ratio is set
+    vrj::opengl::ContextData< bool > m_setNearFarRatio;
+    ///The near far ratio
+    double m_nearFarRatio;
+    ///The framenumber for comparison of setting near far
+    unsigned int m_frameSetNearFarRatio;
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 } //end xplorer
 } //end ves
