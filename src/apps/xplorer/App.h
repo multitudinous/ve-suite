@@ -365,6 +365,8 @@ private:
     vpr::CondVar m_syncCond;
     ///Tell when to process signals    
     bool m_processSignals;
+    
+    bool m_exitApp;
 };
 } //end xplorer
 } //end ves

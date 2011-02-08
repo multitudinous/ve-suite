@@ -186,7 +186,8 @@ App::App( int argc, char* argv[], bool enableRTT )
     m_windowIsOpen( false ),
     m_nearFarRatio( 0.0005 ),
     m_frameSetNearFarRatio( 0 ),
-    m_processSignals( false )
+    m_processSignals( false ),
+    m_exitApp( false )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -284,6 +285,7 @@ App::~App()
 ////////////////////////////////////////////////////////////////////////////////
 void App::exit()
 {
+    m_exitApp = true;
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
     ves::xplorer::data::DatabaseManager::instance()->Shutdown();
@@ -637,8 +639,7 @@ void App::latePreFrame()
 
     if( tempCommandPtr )
     {
-        std::string tempCommandName;
-        tempCommandName = tempCommandPtr->GetCommandName();
+        const std::string tempCommandName = tempCommandPtr->GetCommandName();
         
         //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
         if( tempCommandName == "EXIT_XPLORER" )
@@ -649,6 +650,7 @@ void App::latePreFrame()
             // Stopping kernel
             vrj::Kernel::instance()->stop();
             PhysicsSimulator::instance()->SetIdle( true );
+            m_exitApp = true;
             return;
         }
         else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
@@ -1234,7 +1236,7 @@ void App::preRun()
 ////////////////////////////////////////////////////////////////////////////////
 void App::runLoop()
 {
-    if( m_uiInitialized )
+    if( m_uiInitialized && !m_exitApp )
     {
         bool oneHertzUpdate = ( time_since_start - mLastQtLoopTime ) > 0.9999f;
         if( m_MouseInsideUI || oneHertzUpdate )
