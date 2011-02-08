@@ -420,6 +420,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
         m_debugDrawerGroup.get() );
     m_debugDrawer = new osgbBullet::GLDebugDrawer();
     m_debugDrawerGroup->addChild( m_debugDrawer->getSceneGraph() );
+    m_debugDrawer->setEnabled( false );
     m_debugDrawerGroup->setNodeMask( 0 );
     //CreateGroundPlane();
 
@@ -735,9 +736,8 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
-    mDebugBulletFlag = toggle;
     
-    if( mDebugBulletFlag )
+    if( toggle )
     {
         m_debugDrawerGroup->setNodeMask( 1 );
         mDynamicsWorld->setDebugDrawer( m_debugDrawer );
@@ -747,9 +747,11 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
     else
     {
         mDynamicsWorld->setDebugDrawer( 0 );
-        m_debugDrawer->BeginDraw();
         m_debugDrawerGroup->setNodeMask( 0 );
     }
+    m_debugDrawer->setEnabled( toggle );
+    mDebugBulletFlag = toggle;
+
     SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////

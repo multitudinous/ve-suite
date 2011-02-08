@@ -185,7 +185,8 @@ App::App( int argc, char* argv[], bool enableRTT )
     m_logger( Poco::Logger::get( "xplorer.App" ) ),
     m_windowIsOpen( false ),
     m_nearFarRatio( 0.0005 ),
-    m_frameSetNearFarRatio( 0 )
+    m_frameSetNearFarRatio( 0 ),
+    m_processSignals( false )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -830,6 +831,30 @@ void App::latePreFrame()
     ///we may need to take more care in handling the sync issues between our
     ///UI and the render thread.
     runLoop();
+#else
+    if( m_uiInitialized )
+    {
+        // Get exclusive access
+        /*m_syncCond.acquire();
+        {
+            m_processSignals = true;
+            // Signal that rendering can happen
+            m_syncCond.signal();
+        }
+        m_syncCond.release();
+        
+        m_syncCond.acquire();
+        {
+            // Wait for triggerRender == false
+            while( m_processSignals == true )
+            {
+                m_syncCond.wait();
+            }
+        }
+        m_syncCond.release();*/
+        m_signalLock.release();
+        m_signalLock.acquire();
+    }
 #endif 
     
     ///////////////////////
@@ -1214,12 +1239,19 @@ void App::runLoop()
         bool oneHertzUpdate = ( time_since_start - mLastQtLoopTime ) > 0.9999f;
         if( m_MouseInsideUI || oneHertzUpdate )
         {
+#if defined( _DARWIN )
+            m_signalLock.acquire();
+#endif
             mLastQtLoopTime = time_since_start;
+            std::cout << "process events "<< std::endl << std::flush;
             m_qtApp->processEvents();
             // Just using sendPostedEvents without processEvents does not push mouse
             // and keyboard events through. Using processEvents alone without sendPostedEvents
             // appears to work fine.
             //m_qtApp->sendPostedEvents();
+#if defined( _DARWIN )
+            m_signalLock.release();
+#endif
         }
     }
 }

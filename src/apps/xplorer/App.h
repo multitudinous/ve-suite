@@ -46,6 +46,7 @@
 // ---  VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/CondVar.h>
 
 #include <vrj/Draw/OSG/App.h>
 #include <vrj/Draw/OpenGL/ContextData.h>
@@ -279,6 +280,8 @@ private:
 
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
+    ///A mutex to protect variables accesses
+    vpr::Mutex m_signalLock;
 
     ///File name for screen capture filename
     std::string m_filename;
@@ -358,6 +361,10 @@ private:
     unsigned int m_frameSetNearFarRatio;
     /// Required to be able to connect up to signals.
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    ///Mutex to sync the draw thread with the signal loop
+    vpr::CondVar m_syncCond;
+    ///Tell when to process signals    
+    bool m_processSignals;
 };
 } //end xplorer
 } //end ves
