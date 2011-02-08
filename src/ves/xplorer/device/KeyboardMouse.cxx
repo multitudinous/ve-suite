@@ -567,44 +567,54 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     const vrj::opengl::Window* window( NULL );
 #if defined( VPR_OS_Darwin )
     const gadget::InputWindowCocoa* inputWindowCocoa =
-    dynamic_cast< const gadget::InputWindowCocoa* >( inputArea );
+        dynamic_cast< const gadget::InputWindowCocoa* >( inputArea );
     if( inputWindowCocoa )
     {
         return vrj::DisplayPtr();
     }
     //downcast
     const vrj::opengl::WindowCocoa* windowCocoa =
-    static_cast< const vrj::opengl::WindowCocoa* >( inputArea );
+        static_cast< const vrj::opengl::WindowCocoa* >( inputArea );
     //upcast
     window = static_cast< const vrj::opengl::Window* >( windowCocoa );
 #elif defined( VPR_OS_Windows )
     const gadget::InputWindowWin32* inputWindowWin32 =
-    dynamic_cast< const gadget::InputWindowWin32* >( inputArea );
+        dynamic_cast< const gadget::InputWindowWin32* >( inputArea );
     if( inputWindowWin32 )
     {
         return vrj::DisplayPtr();
     }
     //downcast
     const vrj::opengl::WindowWin32* windowWin32 =
-    static_cast< const vrj::opengl::WindowWin32* >( inputArea );
+        static_cast< const vrj::opengl::WindowWin32* >( inputArea );
     //upcast
     window = dynamic_cast< const vrj::opengl::Window* >( windowWin32 );
 #elif defined( VPR_OS_Linux )
     const gadget::InputWindowXWin* inputWindowXWin =
-    dynamic_cast< const gadget::InputWindowXWin* >( inputArea );
+        dynamic_cast< const gadget::InputWindowXWin* >( inputArea );
     if( inputWindowXWin )
     {
         return vrj::DisplayPtr();
     }
     //downcast
     const vrj::opengl::WindowXWin* windowXWin =
-    static_cast< const vrj::opengl::WindowXWin* >( inputArea );
+        static_cast< const vrj::opengl::WindowXWin* >( inputArea );
     //upcast
     window = dynamic_cast< const vrj::opengl::Window* >( windowXWin );
 #endif
     
     if( window )
     {
+        //With the new VR Juggler function callbacks for event management
+        //the VR Juggler kernel can still process events when the app is 
+        //shutting down and windows are closing. Due to this change we 
+        //need to make sure the window is open and not in the process
+        //of being closed.
+        if( !window->isOpen() )
+        {
+            return vrj::DisplayPtr();
+        }
+        
         return window->getDisplay();
     }
     else
