@@ -1243,7 +1243,6 @@ void App::runLoop()
             m_signalLock.acquire();
 #endif
             mLastQtLoopTime = time_since_start;
-            std::cout << "process events "<< std::endl << std::flush;
             m_qtApp->processEvents();
             // Just using sendPostedEvents without processEvents does not push mouse
             // and keyboard events through. Using processEvents alone without sendPostedEvents
