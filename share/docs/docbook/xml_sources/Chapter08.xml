@@ -151,30 +151,10 @@
     <para>To load a dataset in VE-Suite, right-click on the gray plugin box
     and click on Data Set Config.</para>
 
-    <figure>
-      <title>Loading a dataset in VE-Suite</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/04-datsetconfig-01.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
     <para>Click Add Dataset to create a new dataset and name it, then click
     Open under DataSet Filename and choose your dataset file (in this case,
     <code>prisum.vtk</code>). If you are just loading the PrISUm dataset,
     nothing else needs to be loaded, so click OK to load the dataset.</para>
-
-    <figure>
-      <title>Dataset loader</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/VisDataSetLoader.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
 
     <para>If you need to load more information, you can do so through other
     fields. The Precomputed Data Directory and Surface Data Directory fields
@@ -191,16 +171,6 @@
     geometry data. The Transform button brings up a Transformation window,
     like the one used to transform the geometry data.</para>
 
-    <figure>
-      <title>Transforming the dataset</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/04-CADProperties.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
     <para>The dataset does not need to be adjusted because the geometry
     objects were adjusted to fit it, so the Transform Input Window can be
     closed.</para>
@@ -216,9 +186,8 @@
     <title>Using Visualizations</title>
 
     <para>To use visualizations, go to the File menu in VE-Conductor, click
-    Open, and select the appropriate .ves file. In this case, we will use
-    <code>prisum.ves</code>. You might need to clear the design space by
-    clicking on the New button in VE-Conductor.</para>
+    Open, and select the appropriate .ves file. You might need to clear the
+    design space by clicking on the New button in VE-Conductor.</para>
 
     <para><emphasis role="bold">NOTE:</emphasis> Make sure to save your work
     before clearning the design space.</para>
@@ -231,57 +200,13 @@
       vector planes, isosurfaces, and more.</para>
 
       <para>To bring up the visualization interface, right-click on the plugin
-      to access the menu and select Visualization. This window will
-      appear:</para>
-
-      <figure>
-        <title>Visualization interface</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisDefaultPluginBox.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>Click on the Scalar Contours button (the leftmost icon) to bring
-      up the Scalar Contours interface.</para>
-
-      <figure>
-        <title>Click on the Scalar Contours button</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisClickScalarContours.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
+      to access the menu and select Visualization to open the Visualization
+      window. Click on the Scalar Contours button to bring up the Scalar
+      Contours interface.</para>
 
       <para>Notice that the plane's orientation and position can be set from
       this window. For now, set the Direction to Y and the plane's position to
       50 and click Add Plane.</para>
-
-      <figure>
-        <title>Set the plane's orientation and position</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisScalarContours02.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>This should appear on the screen:</para>
-
-      <figure>
-        <title>Contour planes visualization</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisScalarContoursCropped04.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
 
       <para>Once you are done looking at the contour planes, they can be
       removed by clicking Clear All on the Visualization interface. This will
@@ -292,71 +217,76 @@
       <title>Vector Planes</title>
 
       <para>Showing vector planes is almost exactly like showing scalar
-      planes. First, open the Visualization interface again by right-clicking
-      on the plugin and selecting Visualization. This time, click on the
-      Vector button (second from the left) top open the Vector Contour
-      window.</para>
-
-      <figure>
-        <title>Click on the Vectors button</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisVectors.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
+      planes. In the Visualization interface, click on the Vector button top
+      open the Vector Contour window.</para>
 
       <para>The Vector Contour window is very similar to the Scalar Contour
       window. This time, set the Direction to z and the plane's position to 20
-      and click Add Plane. This should appear on the screen:</para>
-
-      <figure>
-        <title>Vectors visualization</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisVectorsCropped02.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
+      and click Add Plane.</para>
 
       <para>As with scalar planes, the vector plane can be removed by clicking
       Clear All on the Visualization interface.</para>
     </section>
 
     <section>
+      <title>Streamlines</title>
+
+      <para>To show streamlines, click the Streamlines button in the
+      Visualization interface. Set the integration direction and enable GPU
+      tools if necessary.</para>
+
+      <para>Click the Seed Points button to set seed point controls (X bounds,
+      Y bounds, and Z bounds; X-Plane, Y-Plane, and Z-Plane). Click Close when
+      you are finished setting seed point controls.</para>
+
+      <para>Click the Advanced... button to set further controls, including:
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Propogation Time</para>
+        </listitem>
+
+        <listitem>
+          <para>Integration Step size</para>
+        </listitem>
+
+        <listitem>
+          <para>Sphere/Arrow/Particle Size</para>
+        </listitem>
+
+        <listitem>
+          <para>Line Diameter</para>
+        </listitem>
+
+        <listitem>
+          <para>Fade Time</para>
+        </listitem>
+
+        <listitem>
+          <para>Animation Speed</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>You can also use the checkboxes to use the last seed point, stream
+      arrows or ribbon, or animate particles. Click Close when you are
+      finished setting the advanced controls.</para>
+
+      <para>When you are finished making the appropriate settings, click the
+      Compute Streamline button, or click Close to go back to the
+      Visualization interface.</para>
+    </section>
+
+    <section>
       <title>Isosurfaces</title>
 
-      <para>To generate an isosurface, go back to the Visualization interface
-      (right-click on the plugin and select Visualization). Before the
-      Isosurfaces window can be opened, a scalar or vector must be chosen.
-      Choose scalars under Scalars and click the Isosurfaces button (third
-      from the right) to open the Isosurfaces window.</para>
-
-      <figure>
-        <title>Click on the Isosurfaces button</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisIsosurfaces.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
+      <para>To generate an isosurface, go back to the Visualization interface.
+      Before the Isosurfaces window can be opened, a scalar or vector must be
+      chosen. Choose scalars under Scalars and click the Isosurfaces button to
+      open the Isosurfaces window.</para>
 
       <para>The Isosurfaces window has only one setting. Set the Isosurfaces
-      pressure to 50 and click the Compute Isosurface button. This should
-      appear on your screen:</para>
-
-      <figure>
-        <title>Isosurfaces visualization</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisIsosurfacesCropped02.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
+      pressure to 50 and click the Compute Isosurface button.</para>
 
       <para>Exit Visualization and examine the isosurface by using the mouse
       or the Navigation pane. Once you are done, reenter Visualization and
@@ -371,58 +301,17 @@
       Visualization interface. Click the Texture Based button on the top icon
       bar.</para>
 
-      <figure>
-        <title>Click on the Texture Based button</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisTextureBased.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
       <para>The Texture-Based Tools window will open. Select the Scalars icon
       to open the Scalar Tools window.</para>
-
-      <figure>
-        <title>Scalar Tools dialog box</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisScalarToolsWindow01.jpg"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
 
       <para>At this point, the screen should be blank, even though a contour
       plane was just on the screen. Once the user selects a scalar, its
       texture-based image should appear on the viewscreen. The scalar range
       can be adjusted so that certain parts of it are visible.</para>
 
-      <figure>
-        <title>Texture-based scalar visualization</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisTextureScalArrange02.jpg"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
       <para>The Enable Isosurface box can also be checked to select a specific
       isosurface within a scalar range. <emphasis role="bold">NOTE:</emphasis>
       The Advanced... button is currently disabled.</para>
-
-      <figure>
-        <title>A specific isosurface can be selected within a scalar
-        range</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VistTxtureIsosurface03.gif"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
 
       <para>If time-step data is available, its movement can be controlled
       using the Transient button in the Texture-Based Tools window. From the
@@ -476,43 +365,13 @@
       vector to use for the polydata. Click the Polydata button on the far
       right side of the button menu to bring up the polydata menu.</para>
 
-      <figure>
-        <title>Click on the Polydata button</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisPolydata.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
       <para>Once the Polydata window is up, click the Update button to display
       the surface.</para>
-
-      <figure>
-        <title>Polydata visualization</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisPolydataregular.jpg"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
 
       <para>Users can also choose to warp the surface, which stretches the
       surface based on its data values, similar to elevating a contour map to
       see how the terrain looks in three dimensions. Toggle the scale factor
       to choose how much the surface is stretched.</para>
-
-      <figure>
-        <title>Users can warp the surface based on its data values</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/VisPolydatawarped.jpg"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
 
       <para>Finally, the advanced button allows users to choose which scalar
       to use to color it, as in the isosurfaces window.</para>

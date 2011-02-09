@@ -115,19 +115,17 @@ xmlFiles.remove( srcs[ 0 ] )
 
 env.Depends( srcs, xmlFiles )
 env.Depends( resolvedSrcs, srcs)
+env.Depends( resolvedSrcs, xmlFiles)
 ##Build the docs.
 env.xmlResolve(srcs)
 
-#env.Depends( foedSrcs, resolvedSrcs)
+env.Depends( foedSrcs, resolvedSrcs)
 env.fo(resolvedSrcs)
 
-#env.Depends( htmlTargets, resolvedSrcs)
 env.html(target = htmlTargets, source = resolvedSrcs)
 
-#env.Depends( htmlChunkTargets, resolvedSrcs)
 env.htmlChunk(target = htmlChunkTargets, source = resolvedSrcs)
 
-#env.Depends( pdfTargets, foedSrcs)
 env.pdf(target = pdfTargets, source = foedSrcs)
 
 # now install everything
