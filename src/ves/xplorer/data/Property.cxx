@@ -47,8 +47,7 @@ Property::Property( boost::any value, bool enabled )
     mEnabled( enabled ),
     mHasMinimum( false ),
     mHasMaximum( false ),
-    mIsEnum( false ),
-    m_displayPrecision( 2 )
+    mIsEnum( false )
 {
     ;
 }
@@ -409,16 +408,6 @@ bool Property::IsVectorized( const boost::any& value ) const
     {
         return false;
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Property::SetDisplayPrecision( size_t const& precision )
-{
-    m_displayPrecision = precision;
-}
-////////////////////////////////////////////////////////////////////////////////
-size_t const& Property::GetDisplayPrecision() const
-{
-    return m_displayPrecision;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Property::_cacheDoubleValue( double* store, boost::any value )

@@ -184,7 +184,8 @@ void PreferencesPropertySet::CreateSkeleton()
     SetPropertyAttribute( "NearFarRatio_Ratio", "maximumValue", 1.000000 );
     mPropertyMap["NearFarRatio_Ratio"]->SetDisabled();
     mPropertyMap["NearFarRatio_Ratio"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateNearFarRatio, this, _1 ) );
-    mPropertyMap["NearFarRatio_Ratio"]->SetDisplayPrecision( 8 );
+    //mPropertyMap["NearFarRatio_Ratio"]->SetDisplayPrecision( 8 );
+    SetPropertyAttribute( "NearFarRatio_Ratio", "DisplayPrecision", 8 );
 
     ///Dargger Scaling
     AddProperty( "DraggerScaling", false, "Enable Dragger Scaling" );

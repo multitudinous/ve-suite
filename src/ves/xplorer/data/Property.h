@@ -237,11 +237,11 @@ public:
     ///Set the display percision for a double value so that by default 
     ///the percision is 2 decimal places.
     ///\param precision The number of decimal places to be shown
-    void SetDisplayPrecision( size_t const& precision );
+    //void SetDisplayPrecision( size_t const& precision );
     
     ///Get the display precision for this property if it is a double
     ///\return The display precision for this property
-    size_t const& GetDisplayPrecision() const;
+    //size_t const& GetDisplayPrecision() const;
 
 private:
 
@@ -317,11 +317,11 @@ private:
     /// an enum.
     bool mIsEnum; 
 
-    ///I am not sure what this is.
+    /// Is used to return a reference to a list of all available attributes
+    /// for this property. Mutable so the method GetAttributeList() can be
+    /// const, since conceptually it is. This list is only used for this single
+    /// purpose, and is only updated when GetAttributeList is called.
     mutable PSVectorOfStrings mAttributeList;
-    
-    ///The display precision for this property if it is a double
-    size_t m_displayPrecision;
 };
 
 } // namespace data
