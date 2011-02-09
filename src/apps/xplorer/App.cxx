@@ -286,7 +286,10 @@ App::~App()
 void App::exit()
 {
     m_exitApp = true;
-    m_signalLock.release();
+    if( m_signalLock.test() )
+    {
+        m_signalLock.release();
+    }
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
     ves::xplorer::data::DatabaseManager::instance()->Shutdown();
@@ -586,7 +589,6 @@ void App::initScene()
     m_UIManager->Initialize( getScene() );
 
     //Start up the UI thread
-    //std::cout << "Starting UI thread" << std::endl;
     //m_qtUIThread = new vpr::Thread( boost::bind( &App::LoadUI, this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -855,12 +857,10 @@ void App::latePreFrame()
             }
         }
         m_syncCond.release();*/
-        //std::cout << "process events 1 " << std::endl << std::flush;
         m_signalLock.release();
         vprDEBUG( vesDBG, 3 ) << "|\tApp::latePreFrame process signals"
             << std::endl << vprDEBUG_FLUSH;
         m_signalLock.acquire();
-        //std::cout << "process events 3 " << std::endl << std::flush;
     }
 #endif 
     

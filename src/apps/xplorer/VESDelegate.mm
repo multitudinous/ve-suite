@@ -63,18 +63,14 @@
     {
         m_app->runLoop();
 
-        //if( m_app->AcquireQtLock() )
+        NSEvent* event = [NSApp nextEventMatchingMask:NSAnyEventMask
+                                      untilDate:[NSDate distantFuture]
+                                         inMode:NSDefaultRunLoopMode
+                                        dequeue:YES];
+        //If it is not a qt event...send it normally
+        if( ![NSApp qt_sendEvent:event] )
         {
-            NSEvent* event = [NSApp nextEventMatchingMask:NSAnyEventMask
-                                          untilDate:[NSDate distantFuture]
-                                             inMode:NSDefaultRunLoopMode
-                                            dequeue:YES];
-            //If it is not a qt event...send it normally
-            if( ![NSApp qt_sendEvent:event] )
-            {
-            //std::cout << "here 1 " << std::endl << std::flush;
-                [NSApp sendEvent:event];
-            }
+            [NSApp sendEvent:event];
         }
     }
 
