@@ -59,6 +59,7 @@ class App;
 {
    ves::xplorer::App* m_app;
 }
+   -(BOOL) ves_sendEvent:( NSEvent* ) event;
    
    -(void) preRun;
   

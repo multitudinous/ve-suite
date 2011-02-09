@@ -38,12 +38,19 @@
 #import "VESDelegate.h"
 #import "App.h"
 
+#include <iostream>
+
 //NSString* VRJMaxRecentFiles = @"VRJMaxRecentFiles";
 //NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
+//enum {
+//    QtCocoaEventSubTypeWakeup       = SHRT_MAX,
+//    QtCocoaEventSubTypePostMessage  = SHRT_MAX-1
+//};
 
 //To surpress a Cocoa compile warning
 @interface NSApplication ()
 - (BOOL)qt_sendEvent:(NSEvent *)event;
+- (void)qt_sendPostedMessage:(NSEvent *)event;
 @end
 
 @implementation VESDelegate
@@ -56,17 +63,43 @@
     {
         m_app->runLoop();
 
-        NSEvent* event = [NSApp nextEventMatchingMask:NSAnyEventMask
+        //if( m_app->AcquireQtLock() )
+        {
+            NSEvent* event = [NSApp nextEventMatchingMask:NSAnyEventMask
                                           untilDate:[NSDate distantFuture]
                                              inMode:NSDefaultRunLoopMode
                                             dequeue:YES];
-        
-        if (![NSApp qt_sendEvent:event])
-            [NSApp sendEvent:event];
+            //If it is not a qt event...send it normally
+            if( ![NSApp qt_sendEvent:event] )
+            {
+            //std::cout << "here 1 " << std::endl << std::flush;
+                [NSApp sendEvent:event];
+            }
+        }
     }
 
     -(void) setApp:(ves::xplorer::App*) app
     {
         m_app = app;
+    }
+
+    -(BOOL) ves_sendEvent:( NSEvent* ) event
+    {
+        /*if ([event type] == NSApplicationDefined) 
+        {
+            std::cout << [event subtype] << " " << QtCocoaEventSubTypePostMessage << std::endl << std::flush;
+            switch ([event subtype]) {
+                case QtCocoaEventSubTypePostMessage:
+                    //if( m_app->AcquireQtLock() )
+                    {
+                        [NSApp qt_sendPostedMessage:event];
+                        //m_app->ReleaseQtLock();
+                    }
+                    return true;
+                default:
+                    break;
+            }
+        }*/
+        return false;
     }
 @end

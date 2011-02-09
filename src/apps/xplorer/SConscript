@@ -8,10 +8,22 @@ Import( 'minerva_options tao_options boost_options vrjuggler_options osgal_optio
 Import( 'ApplyBulletVars bullet_options osgbulletplus_options osgbullet_options bdfx_options poco_options' )
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'xplorer') )
+buildSrcDir = pj('#',buildDir,'src', 'apps', 'xplorer')
+
 srcs = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
 env = ves_pkg.getEnv().Clone()
+
+#moc the key eater class
+source = [pj(buildSrcDir,'KeyPressEater.h')]
+srcs1 = env.qt_moc(source)
+#now link it into the xplorer dependency chain
+openDir = os.path.abspath( pj(RootDir,buildDir,'src', 'apps', 'xplorer') )
+cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), srcs1)
+srcs += cppSources1
+
+# now continue on with all of the normal stuff
 env.Append( LIBS = [ 'ves_open_xml',
                      'ves_builder_dataloader',
                      'ves_builder_translator_base',

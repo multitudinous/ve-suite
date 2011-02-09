@@ -60,7 +60,6 @@
 // --- Boost Includes --- //
 #include <boost/signals2/signal.hpp>
 
-
 // --- Poco Includes --- //
 #include <Poco/Logger.h>
 
@@ -200,6 +199,12 @@ public:
     
     ///Calls the Qt event loop
     void runLoop();
+    
+    ///Acquire qt lock
+    bool AcquireQtLock();
+    
+    ///Release qt lock
+    void ReleaseQtLock();
     
 protected:
 

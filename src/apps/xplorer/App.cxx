@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 // --- VE-Suite Includes --- //
 #include "App.h"
 #include "VjObsWrapper.h"
 #include "SceneRenderToTexture.h"
 #include "SceneGLTransformInfo.h"
+#include "KeyPressEater.h"
 
 #include <ves/xplorer/TextureBasedVizHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
@@ -275,7 +275,7 @@ App::App( int argc, char* argv[], bool enableRTT )
     
     CONNECTSIGNALS_2( "%NearFarRatio", void( bool const&, double const& ),
                           &ves::xplorer::App::SetNearFarRatio,
-                          m_connections, any_SignalType, normal_Priority );        
+                          m_connections, any_SignalType, normal_Priority );  
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -286,6 +286,7 @@ App::~App()
 void App::exit()
 {
     m_exitApp = true;
+    m_signalLock.release();
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
     ves::xplorer::data::DatabaseManager::instance()->Shutdown();
@@ -854,8 +855,12 @@ void App::latePreFrame()
             }
         }
         m_syncCond.release();*/
+        //std::cout << "process events 1 " << std::endl << std::flush;
         m_signalLock.release();
+        vprDEBUG( vesDBG, 3 ) << "|\tApp::latePreFrame process signals"
+            << std::endl << vprDEBUG_FLUSH;
         m_signalLock.acquire();
+        //std::cout << "process events 3 " << std::endl << std::flush;
     }
 #endif 
     
@@ -1183,7 +1188,10 @@ void App::LoadUI()
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware(true);
     QApplication::setAttribute(Qt::AA_MacPluginApplication);
-    m_qtApp = new QApplication ( argc, argv, 1 );
+    //VESKeyPressEater* keyPressEater = new VESKeyPressEater( 0 );
+
+    m_qtApp = new QApplication( argc, argv, 1 );
+    //m_qtApp->installEventFilter( keyPressEater );
 
 #ifdef VES_QT_RENDER_DEBUG
     QPushButton*  button = new QPushButton("Test");
@@ -1241,18 +1249,12 @@ void App::runLoop()
         bool oneHertzUpdate = ( time_since_start - mLastQtLoopTime ) > 0.9999f;
         if( m_MouseInsideUI || oneHertzUpdate )
         {
-#if defined( _DARWIN )
-            m_signalLock.acquire();
-#endif
             mLastQtLoopTime = time_since_start;
             m_qtApp->processEvents();
             // Just using sendPostedEvents without processEvents does not push mouse
             // and keyboard events through. Using processEvents alone without sendPostedEvents
             // appears to work fine.
             //m_qtApp->sendPostedEvents();
-#if defined( _DARWIN )
-            m_signalLock.release();
-#endif
         }
     }
 }
@@ -1276,5 +1278,27 @@ void App::SetNearFarRatio( bool const& enable, double const& nearFar )
     {
         m_nearFarRatio = 0.0005;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+bool App::AcquireQtLock()
+{
+    /*if( m_uiInitialized && !m_exitApp )
+    {
+        //bool oneHertzUpdate = ( time_since_start - mLastQtLoopTime ) > 0.9999f;
+        //if( m_MouseInsideUI || oneHertzUpdate )
+        {
+            m_signalLock.acquire();
+            return true;
+        }
+    }*/
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void App::ReleaseQtLock()
+{
+    /*if( m_uiInitialized && !m_exitApp )
+    {
+        m_signalLock.release();
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
