@@ -395,7 +395,7 @@ bdfx_options = fp_option.FlagPollBasedOption("backdropFX",
 if GetPlatform() != 'darwin':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
       "QtCore QtDesigner QtGui QtOpenGL QtScript QtSvg QtXml",
-      "4.0", False, True, helpText=None, compileTest=True,
+      "4.0", True, True, helpText=None, compileTest=True,
       headerToCheck="QtCore/qglobal.h")
    opts.AddOption( qt_options )
    Export('qt_options')
