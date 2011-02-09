@@ -41,6 +41,8 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 
+#include <ves/xplorer/Debug.h>
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -458,11 +460,13 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     bool currentIdle = GetIdle();
     SetIdle( true );
 #endif
-
+    vprDEBUG( vesDBG, 3 ) << "|\tPhysicsSimulator::UpdatePhysics " 
+        << std::endl << vprDEBUG_FLUSH;
+    mDebugBulletFlag = m_debugDrawer->getEnabled();
+    
     if( mDebugBulletFlag )
     {
-        static_cast< osgbBullet::GLDebugDrawer* >(
-            mDynamicsWorld->getDebugDrawer() )->BeginDraw();
+        m_debugDrawer->BeginDraw();
     }
 
     //Now update the simulation by all bullet objects new positions
@@ -508,13 +512,14 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     if( mDebugBulletFlag )
     {
         mDynamicsWorld->debugDrawWorld();
-        dynamic_cast< osgbBullet::GLDebugDrawer* >(
-            mDynamicsWorld->getDebugDrawer() )->EndDraw();
+        m_debugDrawer->EndDraw();
     }
 
 #if MULTITHREADED_OSGBULLET
     SetIdle( currentIdle );
 #endif
+    vprDEBUG( vesDBG, 3 ) << "|\tEnd PhysicsSimulator::UpdatePhysics " 
+        << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::StepSimulation()
@@ -736,7 +741,10 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
-    
+    //std::cout << "here 5 " << std::endl << std::flush;
+    //mDebugBulletFlag = toggle;
+    m_debugDrawer->setEnabled( toggle );
+
     if( toggle )
     {
         m_debugDrawerGroup->setNodeMask( 1 );
@@ -746,11 +754,12 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
     }
     else
     {
+        //std::cout << "here 1 " << std::endl << std::flush;
         mDynamicsWorld->setDebugDrawer( 0 );
+        //std::cout << "here 2 " << std::endl << std::flush;
         m_debugDrawerGroup->setNodeMask( 0 );
+        //std::cout << "here 3 " << std::endl << std::flush;
     }
-    m_debugDrawer->setEnabled( toggle );
-    mDebugBulletFlag = toggle;
 
     SetIdle( currentIdle );
 }
