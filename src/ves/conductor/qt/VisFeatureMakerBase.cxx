@@ -170,7 +170,7 @@ void VisFeatureMakerBase::SendUpdatedSettingsToXplorer( ves::open::xml::CommandP
         newCommand->AddDataValuePair( subDialogSettings );
     }
     newCommand->SetCommandName( m_commandName );
-
+    newCommand->SetID( set.GetUUIDAsString() );
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( newCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////

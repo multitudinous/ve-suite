@@ -565,11 +565,12 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
 
     // Check to see if any of the objectss need updated before we
     // create actors
-    if( ModelHandler::instance()->GetActiveModel() && activeObject )
     {
         activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
         activeObject->SetVECommand( CommandManager::instance()->GetXMLCommand() );
         activeObject->UpdateCommand();
+        activeObject->SetUUID( CommandManager::instance()->GetXMLCommand()->GetID() );
+
         ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootTransparent();
     }
 
@@ -580,10 +581,11 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
 
     //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS = 
+        ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
 
     // add active dataset DCS to scene graph if not already there...
-    vprDEBUG( vesDBG, 1 ) << "|\tSetting DCS to activeDCS = "
+    vprDEBUG( vesDBG, 2 ) << "|\tSetting DCS to activeDCS = "
         << activeDataSetDCS.get()
         << std::endl << vprDEBUG_FLUSH;
     //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
@@ -591,7 +593,6 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
     activeObject->SetCursorType( NONE );//EnvironmentHandler::instance()->GetCursor()->GetCursorID() );
     activeObject->SetUpdateFlag( false );
-
     //call back over to ssvishandler to set the flags
     SteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
     SteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );

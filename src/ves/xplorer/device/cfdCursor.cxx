@@ -808,7 +808,6 @@ void cfdCursor::SetActiveDataSet( ves::xplorer::DataSet* input )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::ProcessCommand()
 {
-    bool flag = false;
     std::string commandType;
     if( veCommand )
     {
@@ -891,7 +890,7 @@ void cfdCursor::ProcessCommand()
 
             if( this->cursorId != NONE && this->cursorId != SPHERE )
             {
-                this->SetPlaneReso(( int )commandIds.at( 1 ) );
+                this->SetPlaneReso( int( commandIds.at( 1 ) ) );
 
                 if( this->activeDataSetDCS.valid() )
                 {

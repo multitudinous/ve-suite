@@ -62,7 +62,7 @@ PolydataSurfaceEventHandler::PolydataSurfaceEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 PolydataSurfaceEventHandler::PolydataSurfaceEventHandler( const PolydataSurfaceEventHandler& rhs )
         :
-        ves::xplorer::event::EventHandler()
+        ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -72,7 +72,7 @@ PolydataSurfaceEventHandler::~PolydataSurfaceEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PolydataSurfaceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void PolydataSurfaceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }

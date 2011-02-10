@@ -94,20 +94,20 @@ public:
 
     ///Set parent node to add "graphics node" to
     ///\param input
-    void SetParentNode( ves::xplorer::scenegraph::DCS* input );
+    void SetParentNode( ves::xplorer::scenegraph::DCS* const input );
 
     ///node the parent node will be added to
     ///\param input
-    void SetWorldNode( ves::xplorer::scenegraph::DCS* input );
+    void SetWorldNode( ves::xplorer::scenegraph::DCS* const input );
 
     ///set model pointer to be able to grab
     ///transient info and the switch node
     ///\param input
-    void SetActiveModel( Model* input );
+    void SetActiveModel( Model* const input );
 
     ///Set the dataset used for this viz options
     ///\param dataset The dataset for this viz object
-    void SetDataSet( ves::xplorer::DataSet* dataset );
+    void SetDataSet( ves::xplorer::DataSet* const dataset );
 
     ///Get dataset for this viz option
     ves::xplorer::DataSet* GetDataSet();
@@ -120,7 +120,7 @@ public:
     void SetTypeOfViz( VizType );
 
     ///Set geodes for classic and trans viz objects
-    void SetGeodes( ves::xplorer::cfdObjects* input );
+    void SetGeodes( ves::xplorer::cfdObjects* const input );
 
     ///Return parent node for a this object
     ves::xplorer::scenegraph::DCS* GetParentNode();
@@ -131,6 +131,12 @@ public:
     ///Used to enable the animated streamlines
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes();
 
+    ///Set the uui for the current feature
+    void SetUUID( std::string const& uuid );
+    
+    ///Set the uui for the current feature
+    std::string const& GetUUID() const;
+        
 protected:
     ///SceneGraph Geode
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;
@@ -144,6 +150,8 @@ protected:
     ves::xplorer::Model* model;///<Xplorer cfd model.
     ///The dataset used for this viz option
     ves::xplorer::DataSet* m_dataset;
+    ///The uuid for the current feature
+    std::string m_uuid;
 };
 }
 }

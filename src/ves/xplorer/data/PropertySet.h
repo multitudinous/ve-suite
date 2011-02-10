@@ -105,7 +105,7 @@ public:
     ///
     /// Returns true if this property set owns a property with name propertyName,
     /// false if not.
-    virtual bool PropertyExists( const std::string& propertyName ) const;
+    virtual bool PropertyExists( std::string const& propertyName ) const;
 
     ///
     /// Returns a vector containing the identifying names of all properties
@@ -115,53 +115,53 @@ public:
 
     ///
     /// Returns a pointer to the property identified by propertyName
-    virtual PropertyPtr GetProperty( const std::string& propertyName ) const;
+    virtual PropertyPtr GetProperty( std::string const& propertyName ) const;
 
     ///
     /// Returns the boost::any main value of the property identified by
     /// propertyName
-    virtual boost::any GetPropertyValue( const std::string& propertyName ) const;
+    virtual boost::any GetPropertyValue( std::string const& propertyName ) const;
 
     ///
     /// Returns a vector containing the identifying names of all attributes
     /// owned by property propertyName
-    virtual const PSVectorOfStrings& GetPropertyAttributeList( const std::string&
+    virtual const PSVectorOfStrings& GetPropertyAttributeList( std::string const&
                                                             propertyName );
 
     ///
     /// Returns boost::any value of the property attribute identified by
     /// attributeName and owned by property propertyName
-    virtual boost::any GetPropertyAttribute( const std::string& propertyName,
-                                             const std::string& attributeName );
+    virtual boost::any GetPropertyAttribute( std::string const& propertyName,
+                                             std::string const& attributeName );
 
     ///
     /// Returns true if the property with name propertyName is currently enabled.
-    virtual bool GetPropertyEnabled( const std::string& propertyName ) const;
+    virtual bool GetPropertyEnabled( std::string const& propertyName ) const;
 
     ///
     /// Sets the main value of the property indentified by propertyName to value.
-    virtual bool SetPropertyValue( const std::string& propertyName,
+    virtual bool SetPropertyValue( std::string const& propertyName,
                                    boost::any value );
 
     ///
     /// Sets the property attribute given by attributeName of the property
     /// propertyName to value.
-    virtual void SetPropertyAttribute( const std::string& propertyName,
-                                       const std::string& attributeName,
+    virtual void SetPropertyAttribute( std::string const& propertyName,
+                                       std::string const& attributeName,
                                        boost::any value );
 
     ///
     /// Sets the enabled status of the property identified by propertyName.
     /// If the second argument is true, the property is enabled. If the second
     /// argument is false, the property is disabled.
-    virtual void SetPropertyEnabled( const std::string& propertyName,
+    virtual void SetPropertyEnabled( std::string const& propertyName,
                                      bool enabled );
 
     ///
     /// Returns a list containing names of properties that have undergone a
     /// state change of some sort due to the most recent operation on a
     /// property in this set.
-    virtual const PSVectorOfStrings& GetChanges();
+    virtual PSVectorOfStrings const& GetChanges();
 
     ///
     /// Clears the internal list of all property changes that have occurred
@@ -172,18 +172,18 @@ public:
     ///
     /// Sets the name of the table this property set tries to read from
     /// and write to.
-    virtual void SetTableName( const std::string& TableName );
+    virtual void SetTableName( std::string const& TableName );
 
     ///
     /// Returns the name of the table this property set reads from and writes
     /// to.
-    virtual const std::string& GetTableName() const;
+    virtual std::string const& GetTableName() const;
 
     ///
     /// Sets the record ID for this property. This should generally be used only
     /// to identify this property set before asking it to read data with a 
     /// matching record ID from the database.
-    virtual void SetRecordID( long unsigned int id );
+    virtual void SetRecordID( const long unsigned int id );
 
     ///
     /// Returns the record ID of this property set. The record ID is how this
@@ -191,16 +191,20 @@ public:
     /// database.
     virtual unsigned int GetRecordID() const;
 
-    virtual void SetUUID( const std::string& uuid );
-    virtual void SetUUID( boost::uuids::uuid& uuid );
-    virtual const boost::uuids::uuid& GetUUID() const;
-    virtual std::string GetUUIDAsString() const;
+    ///Set the UUID for this PropertySet via a string
+    virtual void SetUUID( std::string const& uuid );
+    ///Set the UUID for this PropertySet via a boost::uuid
+    virtual void SetUUID( boost::uuids::uuid const& uuid );
+    ///Get the UUID for this PropertySet as a boost::uuid
+    virtual boost::uuids::uuid const& GetUUID() const;
+    ///Get the UUID for this PropertySet as a string
+    virtual std::string const& GetUUIDAsString() const;
 
     virtual bool LoadFromDatabase();
-    virtual bool LoadFromDatabase( Poco::Data::Session* session );
-    virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName );
+    virtual bool LoadFromDatabase( Poco::Data::Session* const session );
+    virtual bool LoadFromDatabase( Poco::Data::Session* const session, const std::string& TableName );
     //virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName, Poco::UInt32 ID );
-    virtual bool LoadFromDatabase( Poco::Data::Session* session, const std::string& TableName, const std::string& UUID );
+    virtual bool LoadFromDatabase( Poco::Data::Session* const session, const std::string& TableName, const std::string& UUID );
 
     virtual bool LoadFromDatabase( const std::string& DatabaseName );
     virtual bool LoadFromDatabase( const std::string& DatabaseName, const std::string& TableName );
@@ -212,15 +216,15 @@ public:
     virtual bool LoadByKey( const std::string& DatabaseName, const std::string& KeyName, boost::any KeyValue );
 
     virtual bool WriteToDatabase();
-    virtual bool WriteToDatabase( Poco::Data::Session* session );
-    virtual bool WriteToDatabase( Poco::Data::Session* session, const std::string& TableName );
-    virtual bool WriteToDatabase( Poco::Data::Session* session, const std::string& TableName, Poco::Data::Statement& statement );
+    virtual bool WriteToDatabase( Poco::Data::Session* const session );
+    virtual bool WriteToDatabase( Poco::Data::Session* const session, const std::string& TableName );
+    virtual bool WriteToDatabase( Poco::Data::Session* const session, const std::string& TableName, Poco::Data::Statement& statement );
     virtual bool WriteToDatabase( const std::string& DatabaseName );
     virtual bool WriteToDatabase( const std::string& DatabaseName, const std::string& TableName );
 
     virtual bool DeleteFromDatabase();
-    virtual bool DeleteFromDatabase( Poco::Data::Session* session );
-    virtual bool DeleteFromDatabase( Poco::Data::Session* session, const std::string& TableName );
+    virtual bool DeleteFromDatabase( Poco::Data::Session* const session );
+    virtual bool DeleteFromDatabase( Poco::Data::Session* const session, const std::string& TableName );
     virtual bool DeleteFromDatabase( const std::string& DatabaseName );
     virtual bool DeleteFromDatabase( const std::string& DatabaseName, const std::string& TableName );
 

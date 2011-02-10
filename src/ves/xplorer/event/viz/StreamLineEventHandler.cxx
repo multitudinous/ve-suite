@@ -61,7 +61,7 @@ StreamLineEventHandler::StreamLineEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 StreamLineEventHandler::StreamLineEventHandler( const StreamLineEventHandler& rhs )
         :
-        ves::xplorer::event::EventHandler()
+        ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -71,7 +71,7 @@ StreamLineEventHandler::~StreamLineEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamLineEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void StreamLineEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }
@@ -104,9 +104,9 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
     {
         double size;
         sizeDVP->GetData( size );
-        float range = 2.5f;
+        //float range = 2.5f;
         int diameter = static_cast< int >( size );
-        float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 1.0f * 0.001f;
+        //float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 1.0f * 0.001f;
 
         // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
         // note that multiplying by 0.005 is the same as dividing by 200, or the range
@@ -177,7 +177,7 @@ StreamLineEventHandler& StreamLineEventHandler::operator=( const StreamLineEvent
 ////////////////////////////////////////////////////////////////////////////////
 void StreamLineEventHandler::UpdateGeodeUniform( 
     const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject, 
-    ves::open::xml::DataValuePairPtr dvp, 
+    ves::open::xml::DataValuePairPtr, 
     const std::string& uniformName, double valueFactor )
 {
     unsigned int numdraw = 0.0;
@@ -204,3 +204,4 @@ void StreamLineEventHandler::UpdateGeodeUniform(
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////

@@ -61,7 +61,7 @@ VectorEventHandler::VectorEventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 VectorEventHandler::VectorEventHandler( const VectorEventHandler& rhs )
         :
-        ves::xplorer::event::EventHandler()
+        ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -71,7 +71,7 @@ VectorEventHandler::~VectorEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void VectorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }
@@ -120,7 +120,7 @@ VectorEventHandler& VectorEventHandler::operator=( const VectorEventHandler& rhs
 ////////////////////////////////////////////////////////////////////////////////
 void VectorEventHandler::UpdateGeodeUniform( 
     const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject, 
-    ves::open::xml::DataValuePairPtr dvp, 
+    ves::open::xml::DataValuePairPtr, 
     const std::string& uniformName, double valueFactor )
 {
     unsigned int numdraw = 0.0;

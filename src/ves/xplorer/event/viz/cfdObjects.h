@@ -194,6 +194,12 @@ public:
     ///Get gpu tools active
     bool IsGPUTools();
 
+    ///Set the uui for the current feature
+    void SetUUID( std::string const& uuid );
+
+    ///Set the uui for the current feature
+    std::string const& GetUUID() const;
+
 protected:
     vtkPolyData* ComputeVolumeFlux( vtkPolyData* inputPD );
 
@@ -222,6 +228,9 @@ protected:
     bool m_gpuTools;
     ///Used to control wether SURF tools are used
     std::string m_surfDataset;
+    ///The uuid for the current feature
+    std::string m_uuid;
+
 private:
 };
 }

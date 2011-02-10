@@ -69,7 +69,7 @@ void ContourFeatureMaker::Update( const::std::string& recordUUID )
     // to be deleted, moved, etc. We will just create a new one
     xplorer::data::ContourPlanePropertySet contourSet;
     contourSet.SetUUID( recordUUID );
-    contourSet.LoadFromDatabase(  );
+    contourSet.LoadFromDatabase();
     AddPlane( static_cast < xplorer::data::PropertySet& > ( contourSet ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

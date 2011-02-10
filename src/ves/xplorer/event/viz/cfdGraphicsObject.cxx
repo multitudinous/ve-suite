@@ -69,8 +69,13 @@ cfdGraphicsObject::~cfdGraphicsObject()
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdGraphicsObject::cfdGraphicsObject( const cfdGraphicsObject& input )
+    :
+    parentNode( input.parentNode ),
+    worldNode( input.worldNode ),
+    type( input.type ),
+    model( input.model ),
+    m_dataset( input.m_dataset )
 {
-    ;// do nothing yet
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdGraphicsObject& cfdGraphicsObject::operator=( const cfdGraphicsObject& input )
@@ -83,17 +88,17 @@ cfdGraphicsObject& cfdGraphicsObject::operator=( const cfdGraphicsObject& input 
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::SetParentNode( ves::xplorer::scenegraph::DCS* input )
+void cfdGraphicsObject::SetParentNode( ves::xplorer::scenegraph::DCS* const input )
 {
     parentNode = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::SetWorldNode( ves::xplorer::scenegraph::DCS* input )
+void cfdGraphicsObject::SetWorldNode( ves::xplorer::scenegraph::DCS* const input )
 {
     worldNode = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::SetDataSet( ves::xplorer::DataSet* dataset )
+void cfdGraphicsObject::SetDataSet( ves::xplorer::DataSet* const dataset )
 {
     m_dataset = dataset;
 }
@@ -201,8 +206,10 @@ void cfdGraphicsObject::SetTypeOfViz( VizType x )
     type = x;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* input )
+void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* const input )
 {
+    SetUUID( input->GetUUID() );
+
     bool isStreamLine = false;
     if( dynamic_cast< ves::xplorer::cfdStreamers* >( input ) )
     {
@@ -240,7 +247,7 @@ ves::xplorer::scenegraph::DCS* cfdGraphicsObject::GetParentNode()
     return parentNode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::SetActiveModel( Model* input )
+void cfdGraphicsObject::SetActiveModel( Model* const input )
 {
     model = input;
 }
@@ -472,5 +479,15 @@ void cfdGraphicsObject::RemoveGeodeFromDCS()
 std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > cfdGraphicsObject::GetGeodes()
 {
     return geodes;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdGraphicsObject::SetUUID( std::string const& uuid )
+{
+    m_uuid = uuid;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string const& cfdGraphicsObject::GetUUID() const
+{
+    return m_uuid;
 }
 ////////////////////////////////////////////////////////////////////////////////

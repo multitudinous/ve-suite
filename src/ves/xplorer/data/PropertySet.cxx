@@ -83,7 +83,7 @@ PropertySet::~PropertySet()
     mPropertyMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PropertySet::AddProperty( const std::string& propertyName,
+void PropertySet::AddProperty( std::string const& propertyName,
                                boost::any value,
                                std::string uiLabel )
 {
@@ -107,8 +107,7 @@ void PropertySet::AddProperty( const std::string& propertyName,
     _connectChanges( property );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::PropertyExists( const std::string& propertyName ) const
+bool PropertySet::PropertyExists( std::string const& propertyName ) const
 {
     bool result = false;
 
@@ -120,14 +119,12 @@ bool PropertySet::PropertyExists( const std::string& propertyName ) const
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 const PropertySet::PSVectorOfStrings& PropertySet::GetPropertyList()
 {
     return mPropertyList;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-PropertyPtr PropertySet::GetProperty( const std::string& propertyName ) const
+PropertyPtr PropertySet::GetProperty( std::string const& propertyName ) const
 {
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
@@ -138,8 +135,7 @@ PropertyPtr PropertySet::GetProperty( const std::string& propertyName ) const
     return PropertyPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-boost::any PropertySet::GetPropertyValue( const std::string& propertyName ) const
+boost::any PropertySet::GetPropertyValue( std::string const& propertyName ) const
 {
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
@@ -152,8 +148,7 @@ boost::any PropertySet::GetPropertyValue( const std::string& propertyName ) cons
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-const PropertySet::PSVectorOfStrings& PropertySet::GetPropertyAttributeList( const std::string&
+const PropertySet::PSVectorOfStrings& PropertySet::GetPropertyAttributeList( std::string const&
                                                                              propertyName
                                                                              )
 {
@@ -169,9 +164,8 @@ const PropertySet::PSVectorOfStrings& PropertySet::GetPropertyAttributeList( con
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-boost::any PropertySet::GetPropertyAttribute( const std::string& propertyName,
-                                              const std::string& attributeName )
+boost::any PropertySet::GetPropertyAttribute( std::string const& propertyName,
+                                              std::string const& attributeName )
 {
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
@@ -184,7 +178,7 @@ boost::any PropertySet::GetPropertyAttribute( const std::string& propertyName,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::GetPropertyEnabled( const std::string& propertyName ) const
+bool PropertySet::GetPropertyEnabled( std::string const& propertyName ) const
 {
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
@@ -197,7 +191,7 @@ bool PropertySet::GetPropertyEnabled( const std::string& propertyName ) const
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::SetPropertyValue( const std::string& propertyName,
+bool PropertySet::SetPropertyValue( std::string const& propertyName,
                                     boost::any value )
 {
     bool result = false;
@@ -210,8 +204,8 @@ bool PropertySet::SetPropertyValue( const std::string& propertyName,
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PropertySet::SetPropertyAttribute( const std::string& propertyName,
-                                        const std::string& attributeName,
+void PropertySet::SetPropertyAttribute( std::string const& propertyName,
+                                        std::string const& attributeName,
                                         boost::any value )
 {
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
@@ -221,7 +215,7 @@ void PropertySet::SetPropertyAttribute( const std::string& propertyName,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PropertySet::SetPropertyEnabled( const std::string& propertyName,
+void PropertySet::SetPropertyEnabled( std::string const& propertyName,
                                       bool enabled )
 {
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
@@ -251,30 +245,27 @@ void PropertySet::ClearAccumulatedChanges()
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void PropertySet::SetTableName( const std::string& TableName )
+void PropertySet::SetTableName( std::string const& TableName )
 {
     mTableName = TableName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-const std::string& PropertySet::GetTableName() const
+std::string const& PropertySet::GetTableName() const
 {
     return mTableName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void PropertySet::SetRecordID( long unsigned int id )
+void PropertySet::SetRecordID( const long unsigned int id )
 {
     mID = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 unsigned int PropertySet::GetRecordID() const
 {
     return mID;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool PropertySet::DeleteFromDatabase()
 {
     Poco::Data::Session session( ves::xplorer::data::DatabaseManager::
@@ -283,13 +274,12 @@ bool PropertySet::DeleteFromDatabase()
     return retval;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::DeleteFromDatabase( const std::string& DatabaseName )
+bool PropertySet::DeleteFromDatabase( std::string const& DatabaseName )
 {
     return DeleteFromDatabase( DatabaseName, mTableName );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::DeleteFromDatabase( const std::string& DatabaseName, const std::string& TableName )
+bool PropertySet::DeleteFromDatabase( std::string const& DatabaseName, std::string const& TableName )
 {
     bool returnValue = false;
 
@@ -316,14 +306,12 @@ bool PropertySet::DeleteFromDatabase( const std::string& DatabaseName, const std
     return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::DeleteFromDatabase( Poco::Data::Session* session )
+bool PropertySet::DeleteFromDatabase( Poco::Data::Session* const session )
 {
     return DeleteFromDatabase( session, mTableName );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::DeleteFromDatabase( Poco::Data::Session* session, const std::string& TableName )
+bool PropertySet::DeleteFromDatabase( Poco::Data::Session* const session, std::string const& TableName )
 {
     bool returnValue = false;
 
@@ -350,7 +338,6 @@ bool PropertySet::DeleteFromDatabase( Poco::Data::Session* session, const std::s
     return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 bool PropertySet::LoadFromDatabase()
 {
     Poco::Data::Session session( ves::xplorer::data::DatabaseManager::
@@ -359,23 +346,20 @@ bool PropertySet::LoadFromDatabase()
     return retval;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::LoadFromDatabase( const std::string& DatabaseName )
+bool PropertySet::LoadFromDatabase( std::string const& DatabaseName )
 {
     return LoadFromDatabase( DatabaseName, mTableName, /*mID*/ mUUIDString );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::LoadFromDatabase( const std::string& DatabaseName,
-                                    const std::string& TableName )
+bool PropertySet::LoadFromDatabase( std::string const& DatabaseName,
+                                    std::string const& TableName )
 {
     return LoadFromDatabase( DatabaseName, TableName, /*mID*/ mUUIDString );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::LoadFromDatabase( const std::string& DatabaseName,
-                                    const std::string& TableName,
-                                    const std::string& UUID )
+bool PropertySet::LoadFromDatabase( std::string const& DatabaseName,
+                                    std::string const& TableName,
+                                    std::string const& UUID )
 {
     bool returnValue = false;
 
@@ -402,23 +386,20 @@ bool PropertySet::LoadFromDatabase( const std::string& DatabaseName,
     return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::LoadFromDatabase( Poco::Data::Session* session )
+bool PropertySet::LoadFromDatabase( Poco::Data::Session* const session )
 {
     return LoadFromDatabase( session, mTableName, /*mID*/ mUUIDString );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
-                                    const std::string& TableName )
+bool PropertySet::LoadFromDatabase( Poco::Data::Session* const session,
+                                    std::string const& TableName )
 {
     return LoadFromDatabase( session, TableName, /*mID*/ mUUIDString );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
-                                    const std::string& TableName,
-                                    const std::string& UUID )
+bool PropertySet::LoadFromDatabase( Poco::Data::Session* const session,
+                                    std::string const& TableName,
+                                    std::string const& UUID )
 {
     if( !session )
     {
@@ -579,8 +560,7 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* session,
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::LoadByKey( const std::string& KeyName, boost::any KeyValue )
+bool PropertySet::LoadByKey( std::string const& KeyName, boost::any KeyValue )
 {
     Poco::Data::Session session( ves::xplorer::data::DatabaseManager::
                                  instance()->GetPool()->get() );
@@ -588,8 +568,7 @@ bool PropertySet::LoadByKey( const std::string& KeyName, boost::any KeyValue )
     return retval;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-bool PropertySet::LoadByKey( Poco::Data::Session* session, const std::string& KeyName, boost::any KeyValue )
+bool PropertySet::LoadByKey( Poco::Data::Session* const session, std::string const& KeyName, boost::any KeyValue )
 {
     bool returnVal = false;
 
@@ -637,7 +616,7 @@ bool PropertySet::LoadByKey( Poco::Data::Session* session, const std::string& Ke
     return returnVal;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::LoadByKey( const std::string& DatabaseName, const std::string& KeyName, boost::any KeyValue )
+bool PropertySet::LoadByKey( std::string const& DatabaseName, std::string const& KeyName, boost::any KeyValue )
 {
     bool returnValue = false;
     try
@@ -669,14 +648,14 @@ bool PropertySet::WriteToDatabase()
     return retval;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::WriteToDatabase( const std::string& DatabaseName )
+bool PropertySet::WriteToDatabase( std::string const& DatabaseName )
 {
     bool returnValue = WriteToDatabase( DatabaseName, mTableName );
     return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::WriteToDatabase( const std::string& DatabaseName,
-                                   const std::string& TableName )
+bool PropertySet::WriteToDatabase( std::string const& DatabaseName,
+                                   std::string const& TableName )
 {
     bool returnValue = false;
 
@@ -703,20 +682,20 @@ bool PropertySet::WriteToDatabase( const std::string& DatabaseName,
     return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::WriteToDatabase( Poco::Data::Session* session )
+bool PropertySet::WriteToDatabase( Poco::Data::Session* const session )
 {
     bool returnValue = WriteToDatabase( session, mTableName );
     return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::WriteToDatabase( Poco::Data::Session* session,
-                                   const std::string& TableName )
+bool PropertySet::WriteToDatabase( Poco::Data::Session* const session,
+                                   std::string const& TableName )
 {
     Poco::Data::Statement statement( ( *session ) );
     return WriteToDatabase( session, TableName, statement );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::string& TableName, Poco::Data::Statement& statement )
+bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::string const& TableName, Poco::Data::Statement& statement )
 {
     // We can write from the base class because table column names correspond
     // to property names.
@@ -1143,7 +1122,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* session, const std::stri
     return returnVal;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::_tableExists( Poco::Data::Session* session, const std::string& TableName )
+bool PropertySet::_tableExists( Poco::Data::Session* const session, std::string const& TableName )
 {
     bool tableExists = false;
 
@@ -1247,7 +1226,7 @@ std::string PropertySet::_buildColumnHeaderString()
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PropertySet::_containsIllegalCharacter( const std::string& value )
+bool PropertySet::_containsIllegalCharacter( std::string const& value )
 {
     size_t position = value.find_first_not_of(
                                                "1234567890_aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ" );
@@ -1331,14 +1310,14 @@ unsigned int PropertySet::GetBoostAnyVectorSize( const boost::any& value )
     return size;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PropertySet::SetUUID( const std::string& uuid )
+void PropertySet::SetUUID( std::string const& uuid )
 {
     mUUIDString = uuid;
     boost::uuids::string_generator gen;
     mUUID = gen( uuid );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PropertySet::SetUUID( boost::uuids::uuid& uuid )
+void PropertySet::SetUUID( boost::uuids::uuid const& uuid )
 {
     mUUID = uuid;
 
@@ -1347,17 +1326,16 @@ void PropertySet::SetUUID( boost::uuids::uuid& uuid )
     mUUIDString = ss.str();
 }
 ////////////////////////////////////////////////////////////////////////////////
-const boost::uuids::uuid& PropertySet::GetUUID() const
+boost::uuids::uuid const& PropertySet::GetUUID() const
 {
     return mUUID;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string PropertySet::GetUUIDAsString() const
+std::string const& PropertySet::GetUUIDAsString() const
 {
     return mUUIDString;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 }
 }
 }

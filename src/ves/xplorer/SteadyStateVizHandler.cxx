@@ -80,6 +80,7 @@
 #include <vpr/System.h>
 
 #include <boost/bind.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 
 // --- VTK Includes --- //
 #include <vtkDataSet.h>
@@ -237,19 +238,19 @@ void SteadyStateVizHandler::PreFrameUpdate()
     //Check any virtual objects need to be updated
     if( actorsAreReady && transientActors )
     {
-        vprDEBUG( vesDBG, 3 ) << "|\tUpdating Objects"
+        vprDEBUG( vesDBG, 3 ) << "|\tUpdating Viz Feature"
             << std::endl << vprDEBUG_FLUSH;
 
-        cfdObjects* tempVisObject = m_visObjectQueue.front();
+        cfdObjects* const tempVisObject = m_visObjectQueue.front();
         if( tempVisObject->GetUpdateFlag() )
         {
             //Set the update flag in steadystate viz handler
             //now update the vis object
             ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->SetVal( 0 );
-            vprDEBUG( vesDBG, 2 ) << "|\tCreating Objects"
+            vprDEBUG( vesDBG, 2 ) << "|\tCreating Viz Feature"
                 << std::endl << vprDEBUG_FLUSH;
             // if object needs updated then already have a graphics object
-            cfdGraphicsObject* temp = new cfdGraphicsObject();
+            cfdGraphicsObject* const temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             temp->SetParentNode( tempVisObject->GetActiveDataSet()->GetDCS() );
             temp->SetDataSet( tempVisObject->GetActiveDataSet() );
@@ -259,8 +260,8 @@ void SteadyStateVizHandler::PreFrameUpdate()
             temp->AddGraphicsObjectToSceneGraph();
 
             //Search map for other object types with the same type as this one
-            std::multimap< int, cfdGraphicsObject* >::iterator pos;
-            for( pos = graphicsObjects.lower_bound( tempVisObject->GetObjectType() );
+            /*for( std::multimap< int, cfdGraphicsObject* >::iterator 
+                pos = graphicsObjects.lower_bound( tempVisObject->GetObjectType() );
                     pos != graphicsObjects.upper_bound( tempVisObject->GetObjectType() ); )
             {
                 //and see if they have the same parent node
@@ -276,11 +277,18 @@ void SteadyStateVizHandler::PreFrameUpdate()
                 {
                     ++pos;
                 }
-            }
+            }*/
             graphicsObjects.insert( std::make_pair( tempVisObject->GetObjectType(), temp ) );
-            graphics_objects_map::value_type p = std::make_pair( vpr::GUID(vpr::GUID::generateTag), temp );
+            graphics_objects_map::value_type p = std::make_pair( vpr::GUID( temp->GetUUID() ), temp );
             m_graphicsObjectMap.insert( p );
-            
+            /*std::cout << temp->GetUUID() << " " << p.first.toString() << std::endl;
+            std::string vprUUID = p.first.toString();
+            boost::algorithm::to_lower( vprUUID );
+            if( temp->GetUUID() != vprUUID )
+            {
+                std::cout << "We have a UUID mismatch " << std::endl;
+            }*/
+    
             // Resetting these variables is very important
             tempVisObject->SetUpdateFlag( false );
             tempVisObject->ClearGeodes();
@@ -325,7 +333,7 @@ void SteadyStateVizHandler::CreateActorThread()
         {
             if( _activeObject != NULL )
             {
-                vprDEBUG( vesDBG, 0 ) << "|\tUpdating cfdObject..."
+                vprDEBUG( vesDBG, 0 ) << "|\tUpdating Graphics Data..."
                     << std::endl << vprDEBUG_FLUSH;
 
                 {
@@ -337,7 +345,7 @@ void SteadyStateVizHandler::CreateActorThread()
 
                 _activeObject = NULL;
                 computeActorsAndGeodes = false;
-                vprDEBUG( vesDBG, 0 ) << "|\tDone updating cfdObject"
+                vprDEBUG( vesDBG, 0 ) << "|\tDone updating Graphics Data"
                     << std::endl << std::endl << vprDEBUG_FLUSH;
             }
         }
