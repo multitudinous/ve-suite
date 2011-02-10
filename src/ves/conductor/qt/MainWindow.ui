@@ -48,7 +48,7 @@ QToolButton:hover
      <number>2</number>
     </property>
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="ves::conductor::ExtendedTabWidget" name="tabWidget">
       <property name="tabPosition">
        <enum>QTabWidget::North</enum>
       </property>
@@ -74,7 +74,7 @@ QToolButton:hover
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -105,22 +105,6 @@ QToolButton:hover
     <addaction name="actionZoomAll"/>
     <addaction name="actionFind"/>
    </widget>
-   <widget class="QMenu" name="menu_Connection">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>&amp;Connection</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuE_xecution">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>E&amp;xecution</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menu_VE_Xplorer">
     <property name="title">
      <string>&amp;VE-Xplorer</string>
@@ -140,10 +124,16 @@ QToolButton:hover
      <string>&amp;Help</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionShowPluginsTab"/>
+    <addaction name="actionShowPreferencesTab"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
-   <addaction name="menu_Connection"/>
-   <addaction name="menuE_xecution"/>
+   <addaction name="menu_View"/>
    <addaction name="menu_VE_Xplorer"/>
    <addaction name="menu_Help"/>
   </widget>
@@ -505,8 +495,43 @@ QToolButton:hover
     <string>Character Fly Mode</string>
    </property>
   </action>
+  <action name="actionShowPluginsTab">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/Plug2.png</normaloff>:/xpm/ToolBar/Plug2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Plugins</string>
+   </property>
+  </action>
+  <action name="actionShowPreferencesTab">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/Preferences.png</normaloff>:/xpm/ToolBar/Preferences.png</iconset>
+   </property>
+   <property name="text">
+    <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionViewStack">
+   <property name="icon">
+    <iconset resource="propertyBrowser/icons.qrc">
+     <normaloff>:/xpm/ToolBar/Tabs.png</normaloff>:/xpm/ToolBar/Tabs.png</iconset>
+   </property>
+   <property name="text">
+    <string>View</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ves::conductor::ExtendedTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>ves/conductor/qt/ExtendedTabWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="propertyBrowser/icons.qrc"/>
  </resources>

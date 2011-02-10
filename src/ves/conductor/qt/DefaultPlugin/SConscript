@@ -1,0 +1,106 @@
+##Builds defaultplugin
+import os, sys, string
+import SConsAddons.Util as sca_util
+import glob
+pj = os.path.join
+
+Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
+Import('tao_options xerces_options')
+Import('bullet_options osgbullet_options')
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt', 'DefaultPlugin') )
+buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt', 'DefaultPlugin')
+
+lib_env = ves_pkg.getEnv().Clone()
+
+##### Moc section must come before uic section to prevent issues with undefined
+##### symbols and vtables
+### moc files
+
+
+source = [pj(buildSrcDir,'DefaultPlugin_UIDialog.h')]
+cppSources = lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'DefaultPlugin.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'DefaultPluginFactory.h')]
+cppSources += lib_env.qt_moc(source)
+
+
+###
+
+### rcc files
+source = [pj(buildSrcDir,'DefaultPluginIcons.qrc')]
+cppSources += lib_env.qt_rcc(source)
+###
+
+### uic files
+source = [pj(buildSrcDir,'DefaultPlugin_UIDialog.ui')]
+cppHeaders = lib_env.qt_uic(source)
+####
+
+lib_env.Depends( cppSources, cppHeaders)
+
+openDir = os.path.abspath( pj(RootDir,buildDir,'src','ves','conductor','qt', 'DefaultPlugin') )
+cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)
+cppHeaders1 = map(lambda s: pj(openDir, '%s' ) %(s), cppHeaders)
+    
+headers = cppHeaders1
+#eaders += sca_util.getHeadersRecursive( srcDir )
+sources = cppSources1
+sources += sca_util.getSourcesRecursive( srcDir )
+
+lib_env.Append(LIBS = ['ves_xplorer',
+                       'ves_xplorer_data',
+                       'ves_xplorer_eventmanager'
+                       #,
+                       #'QtSolutions_PropertyBrowser-2.5'
+                      ])
+lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'xplorer'),
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager')
+                           #,
+                           #pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src')
+                         ])
+
+if GetPlatform() != 'darwin':
+    Import('qt_options')
+    qt_options.apply(lib_env)
+    lib_env.AppendUnique( CPPDEFINES = ['QT_ON','QT_QTPROPERTYBROWSER_IMPORT'] )
+else:
+    import qt46
+    qt46.applyQtBuildFlags(lib_env)
+
+if GetPlatform() == 'win32':
+    lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
+
+#disable profiling by default
+if lib_env['VPRProfile'] == 'no':
+   lib_env.AppendUnique( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
+
+osg_options.apply( lib_env )
+vpr_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
+poco_options.apply( lib_env )
+	
+lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_DEFAULTPLUGIN_LIBRARY'])
+lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
+lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external') ] )
+
+#create a bundle instead of a shared library
+if GetPlatform() == 'darwin':
+   lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'
+   lib_env['SHLIBSUFFIX'] = '.bundle'
+   
+#Required on Linux to force linker to export all symbols in plugin
+#lib_env['SHLINKFLAGS'] = '--export-dynamic $LINKFLAGS'
+
+lib_env.AppendUnique( CPPDEFINES = ['QT_PLUGIN'] )
+
+lib = ves_pkg.createSharedLibrary('ves_defaultplugin_qtui', lib_env,
+                                               installPrefix = pj('bin','Plugins','UI'))
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'ves', 'conductor','qt', 'DefaultPlugin'))
+lib.build()

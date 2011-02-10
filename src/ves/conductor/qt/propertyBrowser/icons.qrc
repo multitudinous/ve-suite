@@ -36,5 +36,8 @@
     <file>../../xpm/ToolBar/StopButton.xpm</file>
     <file>../../xpm/ToolBar/UnselectButton.xpm</file>
     <file>../../xpm/ToolBar/WorldNavigationButton.xpm</file>
+    <file>../../xpm/ToolBar/Plug2.png</file>
+    <file>../../xpm/ToolBar/Preferences.png</file>
+    <file>../../xpm/ToolBar/Tabs.png</file>
   </qresource>
 </RCC>

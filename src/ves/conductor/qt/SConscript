@@ -9,6 +9,8 @@ Import('minerva_options')
 Import('tao_options xerces_options')
 Import('bullet_options osgbullet_options')
 
+SConscript( 'DefaultPlugin/SConscript' )
+
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
 
@@ -30,10 +32,19 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'PreferencesTab.h')]
 cppSources += lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'plugin','PluginSelectionTab.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'plugin','UIPluginBase.h')]
+cppSources += lib_env.qt_moc(source)
+
 source = [pj(buildSrcDir,'MainWindow.h')]
 cppSources += lib_env.qt_moc(source)
 
 source = [pj(buildSrcDir,'UIElementQt.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'ExtendedTabWidget.h')]
 cppSources += lib_env.qt_moc(source)
 
 source = [pj(buildSrcDir,'propertyBrowser','PropertyBrowser.h')]
@@ -61,10 +72,16 @@ cppHeaders += lib_env.qt_uic(source)
 source = [pj(buildSrcDir,'PreferencesTab.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
+source = [pj(buildSrcDir,'plugin','PluginSelectionTab.ui')]
+cppHeaders += lib_env.qt_uic(source)
+
 source = [pj(buildSrcDir,'MainWindow.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
 source = [pj(buildSrcDir,'propertyBrowser','Visualization.ui')]
+cppHeaders += lib_env.qt_uic(source)
+
+source = [pj(buildSrcDir,'plugin','PluginPorts.ui')]
 cppHeaders += lib_env.qt_uic(source)
 ####
 
@@ -78,6 +95,21 @@ headers = cppHeaders1
 #eaders += sca_util.getHeadersRecursive( srcDir )
 sources = cppSources1
 sources += sca_util.getSourcesRecursive( srcDir )
+
+###
+# Remove everything in DefaultPlugin subdir from sources and headers
+dpSources = sca_util.getSourcesRecursive( os.path.abspath( 
+                            pj(RootDir, 'src', 'ves', 'conductor', 'qt', 'DefaultPlugin') ) )
+for x in dpSources:
+    index = sources.index( pj('DefaultPlugin', x) )
+    sources.pop(index)
+
+#dpHeaders = sca_util.getHeadersRecursive( os.path.abspath( 
+#                            pj(RootDir, 'src', 'ves', 'conductor', 'qt', 'DefaultPlugin') ) )
+#for x in dpHeaders:
+#    index = headers.index( pj('DefaultPlugin', x) )
+#    headers.pop(index)
+###
 
 lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_xplorer',

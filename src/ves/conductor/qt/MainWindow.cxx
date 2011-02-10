@@ -36,6 +36,9 @@
 #include "MainWindow.h"
 
 #include <QtGui/QPaintEvent>
+#include <QtGui/QToolButton>
+
+#include <ves/conductor/qt/ExtendedTabWidget.h>
 
 #include <ves/conductor/qt/ui_MainWindow.h>
 
@@ -45,6 +48,7 @@
 #include <ves/conductor/qt/IconStack.h>
 #include <ves/conductor/qt/TreeTab.h>
 #include <ves/conductor/qt/PreferencesTab.h>
+#include <ves/conductor/qt/plugin/PluginSelectionTab.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -102,7 +106,8 @@ MainWindow::MainWindow(QWidget* parent) :
     mActiveTab( "" ),
     mVisualizationTab( 0 ),
     mLayersTree ( 0 ),
-    m_preferencesTab( 0 )
+    m_preferencesTab( 0 ),
+    m_pluginsTab( 0 )
 {
     ui->setupUi(this);
         
@@ -169,14 +174,23 @@ MainWindow::MainWindow(QWidget* parent) :
            new eventmanager::SignalWrapper< NavJumpSignal_type >( &m_jumpSignal ),
            "MainWindow.JumpSignal" );
     }
+
+    {
+        ui->mainToolBar->addAction( ui->actionViewStack );
+        m_viewMenuStack = new IconStack( ui->mainToolBar->
+            widgetForAction( ui->actionViewStack ), this );
+        m_viewMenuStack->AddAction( ui->actionShowPreferencesTab );
+        m_viewMenuStack->AddAction( ui->actionShowPluginsTab );
+    }
         
     // Make sure there is no statusbar on this widget.
-    setStatusBar(0);
+    //setStatusBar(0);
     
     // Create set of default dialogs that can be added as tabs
     mVisualizationTab = new ves::conductor::Visualization( 0 );
     mScenegraphTreeTab = new ves::conductor::TreeTab( 0 );
     m_preferencesTab = new ves::conductor::PreferencesTab( 0 );
+    m_pluginsTab = new ves::conductor::PluginSelectionTab( this, 0 );
 
     // Connect queued signals for all slots connected via EventManager to ensure
     // that widgets can be altered during slot execution. All EventManager slots
@@ -459,22 +473,6 @@ void MainWindow::onFileSaveSelected( const QString& fileName )
     std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
 
     ves::xplorer::data::DatabaseManager::instance()->SaveAs( fileName.toStdString() );
-//    // Now deal with loading the selected file
-//    boost::filesystem::path file( fileName.toStdString() );
-//    std::string extension( boost::filesystem::extension( file ) );
-
-//    if( !extension.compare( ".ves" ) )
-//    {
-//        // It's a ves file, likely with a network
-//        ves::conductor::NetworkLoader loader;
-//        loader.LoadVesFile( file.string() );
-//    }
-//    else
-//    {
-//        // Assume it's a cad file for now
-//        ves::conductor::CADFileLoader loader;
-//        loader.LoadCADFile( file.string() );
-//    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::OnActiveModelChanged( const std::string& modelID )
@@ -498,6 +496,8 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 
     //Put the preferences tab first
     AddTab( m_preferencesTab, "Preferences" );
+
+    //AddTab( m_pluginsTab, "Plugins" );
 
     // Show visualization tab?
     ves::xplorer::Model* model =
@@ -740,3 +740,31 @@ void MainWindow::on_actionCharacterFlyMode_triggered( bool triggered )
     ui->actionCharacterNavigation->setEnabled( !triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionViewStack_triggered( )
+{
+    if( m_viewMenuStack->isVisible() )
+    {
+        m_viewMenuStack->hide();
+    }
+    else
+    {
+        m_viewMenuStack->Show();
+    }
+}
+
+void MainWindow::on_actionShowPluginsTab_triggered()
+{
+    int index = AddTab( m_pluginsTab, "Plugins" );
+
+    // Coming soon...
+//    QToolButton* tb = new QToolButton;
+//    tb->setText( "x" );
+//    tb->setAutoRaise( true );
+//    ui->tabWidget->SetTabButton( index, tb );
+    ActivateTab( index );
+}
+
+void MainWindow::on_actionShowPreferencesTab_triggered()
+{
+    ActivateTab( AddTab( m_preferencesTab,"Preferences" ) );
+}

@@ -53,6 +53,7 @@ namespace conductor
 class PreferencesTab;
 class TreeTab;
 class IconStack;
+class PluginSelectionTab;
 
 namespace qt 
 { 
@@ -236,6 +237,12 @@ protected Q_SLOTS:
     ///Control character fly mode
     /// Autoconnected slot
     void on_actionCharacterFlyMode_triggered( bool triggered ); 
+
+    void on_actionViewStack_triggered( );
+
+    void on_actionShowPluginsTab_triggered();
+
+    void on_actionShowPreferencesTab_triggered();
     
 Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
@@ -267,6 +274,8 @@ private:
     ves::conductor::IconStack* m_manipulatorMenuStack;
     ///Nav menu stack
     ves::conductor::IconStack* m_navMenuStack;
+    ///View menu stack
+    ves::conductor::IconStack* m_viewMenuStack;
     ///Tree tab
     ves::conductor::TreeTab* mScenegraphTreeTab;
     ///The map of tabs
@@ -285,6 +294,8 @@ private:
     
     ///The PreferencesTab pointer
     ves::conductor::PreferencesTab* m_preferencesTab;
+
+    ves::conductor::PluginSelectionTab* m_pluginsTab;
     
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
