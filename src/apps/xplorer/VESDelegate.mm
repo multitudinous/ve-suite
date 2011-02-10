@@ -67,6 +67,10 @@
                                       untilDate:[NSDate distantFuture]
                                          inMode:NSDefaultRunLoopMode
                                         dequeue:YES];
+        //For more information on the code below please see the qt source:
+        //http://google.com/codesearch/p?hl=en#yTMZqbVYb-M/src/gui/kernel/qcocoaapplication_mac.mm&q=qt_sendEvent&sa=N&cd=14&ct=rc
+        //http://google.com/codesearch/p?hl=en#pcZOP4ePwcM/trunk/Ogitor/qt-src-4.7.1/src/gui/kernel/qcocoaapplication_mac.mm&q=qt_sendEvent&d=3
+        //qcocoaaplication_mac.mm
         //If it is not a qt event...send it normally
         if( ![NSApp qt_sendEvent:event] )
         {
@@ -79,9 +83,9 @@
         m_app = app;
     }
 
-    -(BOOL) ves_sendEvent:( NSEvent* ) event
+    /*-(BOOL) ves_sendEvent:( NSEvent* ) event
     {
-        /*if ([event type] == NSApplicationDefined) 
+        if ([event type] == NSApplicationDefined) 
         {
             std::cout << [event subtype] << " " << QtCocoaEventSubTypePostMessage << std::endl << std::flush;
             switch ([event subtype]) {
@@ -95,7 +99,7 @@
                 default:
                     break;
             }
-        }*/
+        }
         return false;
-    }
+    }*/
 @end
