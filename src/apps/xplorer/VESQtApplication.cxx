@@ -1,17 +1,55 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2011 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "VESQtApplication.h"
 #include <iostream>
 #include <QtCore/QEvent>
 #include <QtGui/QKeyEvent>
 
+namespace ves
+{
+namespace xplorer
+{
+////////////////////////////////////////////////////////////////////////////////
 VESQtApplication::VESQtApplication(int & argc, char ** argv, ves::xplorer::App* app ):
     QApplication(argc, argv),
     m_app( app )
 {
     ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool VESQtApplication::notify(QObject* obj, QEvent* event)
 {
+    //Look for the various event types in qcoreevent.h
     if( event->type() == QEvent::Paint )
     {
         bool temp = QApplication::notify( obj, event );
@@ -29,7 +67,6 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
         return ProcessEvent( obj, event );
     }*/
     
-    //Look for the various event types in qcoreevent.h
     if( event->type() == QEvent::KeyPress )
     {
         return ProcessEvent( obj, event );
@@ -90,57 +127,11 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
     
     //return ProcessEvent( obj, event );
     
-    bool temp = QApplication::notify( obj, event );
-    return temp;
-    
-    //if( m_signalLock.try_lock() )
-    {
-        // Process anything in the queue
-        /*while( !m_queue.empty() )
-        {
-            std::pair<QObject*, QEvent*> rePair = m_queue.front();
-            (rePair->first)->event( rePair->second );
-            m_queue.pop;
-        }*/
-
-        // Now process this latest event
-        std::cout << "Sending an event to receiver " << obj << std::endl << std::flush;
-        obj->event(event);
-        //m_signalLock.release();
-
-        return true;
-    }
-    //else
-    {
-        // Add recv and evt to queue
-        // std::pair<QObject*, QEvent*> rePair(recv, evt);
-        // m_queue.push(rePair);
-        return true;
-    }
+    return QApplication::notify( obj, event );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool VESQtApplication::ProcessEvent( QObject *obj, QEvent *event)
 {
-    /*if( m_app->AcquireQtLock() )
-    {
-        while( !m_queue.empty() )
-        {
-            std::pair<QObject*, QEvent*> rePair = m_queue.front();
-            QApplication::notify( rePair.first, rePair.second );
-            m_queue.pop();
-        }       
-        m_app->ReleaseQtLock();
-        return true;
-    }
-    else
-    {
-        // Add recv and evt to queue
-        std::pair<QObject*, QEvent*> rePair( obj, event);
-        m_queue.push(rePair);
-        return true;
-    }*/
-
-    //std::cout << " first " << event->type() << " " << m_queue.size() << std::endl << std::flush;
     std::pair<QObject*, QEvent*> rePair( obj, event);
     m_queue.push(rePair);
 
@@ -148,37 +139,18 @@ bool VESQtApplication::ProcessEvent( QObject *obj, QEvent *event)
     {
         m_app->AcquireQtLock();
     }
-    /*else
-    {
-        // Add recv and evt to queue
-        std::pair<QObject*, QEvent*> rePair( obj, event);
-        m_queue.push(rePair);
-    }*/
 
-    // Add recv and evt to queue
-    //std::pair<QObject*, QEvent*> rePair( obj, event);
-    //m_queue.push(rePair);
-    //std::pair<QObject*, QEvent*> rePair1 = m_queue.back();
-    /*try
-    {
-        m_app->AcquireQtLock();
-    }
-    catch( ... )
-    {
-        std::cout << " exception " << std::endl << std::flush;
-    }*/
     bool temp = QApplication::notify( obj, event );
 
     if( m_queue.size() == 1 )
     {
         m_app->ReleaseQtLock();
     }
-    //else
-    {
-        m_queue.pop();
-    }
+    
+    m_queue.pop();
 
-    //m_app->ReleaseQtLock();
-    //std::cout << " consumed " << temp << std::endl << std::flush;
     return temp;   
+}
+////////////////////////////////////////////////////////////////////////////////
+}
 }

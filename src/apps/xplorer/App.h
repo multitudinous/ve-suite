@@ -96,14 +96,12 @@ class cfdPBufferManager;
 } //end volume
 
 /*!\file App.h
- * App API
- */
-
-/*!\class ves::xplorer::App
- *
- * Signals emitted:
+ * \class ves::xplorer::App
+ *  App API
+ *  Signals emitted:
  *      "App.LatePreFrame" -- allows sync to draw loop
  */
+
 class App : public vrj::osg::App
 {
 public:
@@ -206,6 +204,7 @@ public:
     ///Release qt lock
     void ReleaseQtLock();
     
+    ///Test whether the Qt mutex can be locked
     bool Test();
 
 protected:
@@ -369,10 +368,10 @@ private:
     /// Required to be able to connect up to signals.
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
     ///Mutex to sync the draw thread with the signal loop
-    vpr::CondVar m_syncCond;
+    //vpr::CondVar m_syncCond;
     ///Tell when to process signals    
     bool m_processSignals;
-    
+    ///Are we exiting yet
     bool m_exitApp;
 };
 } //end xplorer

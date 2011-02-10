@@ -1193,7 +1193,7 @@ void App::LoadUI()
 #if !defined( _DARWIN )
     m_qtApp = new QApplication( argc, argv, 1 );
 #else
-    m_qtApp = new VESQtApplication( argc, argv, this );
+    m_qtApp = new ves::xplorer::VESQtApplication( argc, argv, this );
 #endif
 
 #ifdef VES_QT_RENDER_DEBUG
@@ -1223,7 +1223,7 @@ void App::LoadUI()
         display->getOriginAndSize( originX, originY, width, height );
     }
     std::cout << "|\tWindow value: " << width << " " 
-        << height << std::endl;
+        << height << std::endl << std::flush;
     
     m_UIManager->SetRectangle( 0, width, 0, height );
     element->SetInitialImageWidthAndHeight( 600, height );
