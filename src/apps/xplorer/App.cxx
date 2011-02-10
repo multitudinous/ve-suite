@@ -36,6 +36,7 @@
 #include "SceneRenderToTexture.h"
 #include "SceneGLTransformInfo.h"
 #include "KeyPressEater.h"
+#include "VESQtApplication.h"
 
 #include <ves/xplorer/TextureBasedVizHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
@@ -1188,10 +1189,12 @@ void App::LoadUI()
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware(true);
     QApplication::setAttribute(Qt::AA_MacPluginApplication);
-    //VESKeyPressEater* keyPressEater = new VESKeyPressEater( 0 );
-
+    
+#if !defined( _DARWIN )
     m_qtApp = new QApplication( argc, argv, 1 );
-    //m_qtApp->installEventFilter( keyPressEater );
+#else
+    m_qtApp = new VESQtApplication( argc, argv, this );
+#endif
 
 #ifdef VES_QT_RENDER_DEBUG
     QPushButton*  button = new QPushButton("Test");
@@ -1250,11 +1253,13 @@ void App::runLoop()
         if( m_MouseInsideUI || oneHertzUpdate )
         {
             mLastQtLoopTime = time_since_start;
-            m_qtApp->processEvents();
+            //On mac this call reposts to cocoa
+            m_qtApp->processEvents();// QEventLoop::DeferredDeletion );
             // Just using sendPostedEvents without processEvents does not push mouse
             // and keyboard events through. Using processEvents alone without sendPostedEvents
             // appears to work fine.
-            //m_qtApp->sendPostedEvents();
+            //m_qtApp->sendPostedEvents(0, QEvent::DeferredDelete);
+            //m_qtApp->sendPostedEvents(0, 0);
         }
     }
 }
@@ -1282,23 +1287,29 @@ void App::SetNearFarRatio( bool const& enable, double const& nearFar )
 ////////////////////////////////////////////////////////////////////////////////
 bool App::AcquireQtLock()
 {
-    /*if( m_uiInitialized && !m_exitApp )
+    if( m_uiInitialized && !m_exitApp )
     {
-        //bool oneHertzUpdate = ( time_since_start - mLastQtLoopTime ) > 0.9999f;
-        //if( m_MouseInsideUI || oneHertzUpdate )
-        {
-            m_signalLock.acquire();
-            return true;
-        }
-    }*/
+        //return m_signalLock.tryAcquire();
+        m_signalLock.acquire();
+        return true;
+    }
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::ReleaseQtLock()
 {
-    /*if( m_uiInitialized && !m_exitApp )
+    if( m_uiInitialized && !m_exitApp )
     {
         m_signalLock.release();
-    }*/
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+bool App::Test()
+{
+    if( m_uiInitialized && !m_exitApp )
+    {
+        return m_signalLock.test();
+    }
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////

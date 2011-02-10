@@ -206,6 +206,8 @@ public:
     ///Release qt lock
     void ReleaseQtLock();
     
+    bool Test();
+
 protected:
 
 private:
