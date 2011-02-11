@@ -48,6 +48,7 @@
 
 
 #include <QtCore/QPluginLoader>
+#include <QtCore/QProcessEnvironment>
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
 #include <QtGui/QIcon>
@@ -65,12 +66,23 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
 {
     ui->setupUi(this);
 
+//    QString pluginDir = QProcessEnvironment::systemEnvironment().value ( "CONDUCTOR_PLUGINS_DIR" );
+//    std::cout << "$CONDUCTOR_PLUGINS_DIR = " << pluginDir.toStdString() << std::endl << std::flush;
+
     QDir pluginsPath = qApp->applicationDirPath();
     pluginsPath.cd("Plugins/UI");
+
+    std::cout << "Searching for plugins in " << pluginsPath.canonicalPath().toStdString() << std::endl << std::flush;
 
     // Walk through all files in Plugins/UI directory
     QStringList files = pluginsPath.entryList(QDir::Files);
     QStringList::iterator iter = files.begin();
+    if( iter == files.end() )
+    {
+        std::cout << "No plugins found." << std::endl << std::flush;
+    }
+
+
     while( iter != files.end() )
     {
         QString fileName = (*iter);
