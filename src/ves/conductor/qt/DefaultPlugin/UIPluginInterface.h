@@ -36,7 +36,6 @@ UIPlugin API
 */
 
 
-#include <ves/VEConfig.h>
 #include <vector>
 #include <string>
 
@@ -88,9 +87,6 @@ public:
 
     ///Deletes all widgets associated with this plugin (eg. UIWidget, ResultWidget)
     virtual void DeleteWidgets() = 0;
-
-    // EPRI TAG
-    //FinancialDialog* financial_dlg;
 
 };
 

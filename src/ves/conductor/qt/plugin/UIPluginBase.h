@@ -40,7 +40,6 @@ UIPlugin API
 #define QT_NO_KEYWORDS
 
 #include <ves/VEConfig.h>
-//#include <ves/conductor/Network.h>
 #include <ves/open/xml/model/PortPtr.h>
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
@@ -76,7 +75,7 @@ namespace conductor
 {
 
 
-class UIPluginBase: public QObject
+class VE_GUIPLUGINS_EXPORTS UIPluginBase: public QObject
 {
     Q_OBJECT
 public:
