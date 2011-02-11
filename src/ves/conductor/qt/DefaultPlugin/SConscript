@@ -5,8 +5,8 @@ import glob
 pj = os.path.join
 
 Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
-Import('tao_options xerces_options')
-Import('bullet_options osgbullet_options')
+Import('tao_options xerces_options osgworks_options osgbulletplus_options')
+Import('bullet_options osgbullet_options osgal_options vtk_options bdfx_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt', 'DefaultPlugin') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt', 'DefaultPlugin')
@@ -83,7 +83,16 @@ osg_options.apply( lib_env )
 vpr_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 poco_options.apply( lib_env )
-	
+vtk_options.apply( lib_env )
+osgworks_options.apply( lib_env )
+osgbullet_options.apply( lib_env )
+osgbulletplus_options.apply( lib_env )
+bdfx_options.apply( lib_env )
+
+if osgal_options.isAvailable():
+   osgal_options.apply( lib_env )
+   lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_DEFAULTPLUGIN_LIBRARY'])
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external') ] )

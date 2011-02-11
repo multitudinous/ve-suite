@@ -47,12 +47,10 @@ namespace Ui
 class Visualization;
 }
 /*!\file Visualization.h
- Visualization Qt Window
- */
-/*!\class ves::conductor::Visualization
+ * Visualization Qt Window
+ * \class ves::conductor::Visualization
  * This class manages the Visualization Qt window.
- */
-/*!\namespace ves::conductor
+ * \namespace ves::conductor
  * UI Namespace
  */
 
@@ -66,7 +64,9 @@ class Visualization : public QDialog
 {
     Q_OBJECT
 public:
-    Visualization( QWidget* parent = 0 );
+    ///Constructor
+    Visualization( QWidget* parent = 0 );\
+    ///Destructor
     ~Visualization();
 
 protected:
@@ -86,11 +86,13 @@ protected Q_SLOTS:
 
 private:
     Ui::Visualization* m_ui;
+    ///The property browser widget for all vis features
     PropertyBrowser* mFeatureBrowser;
-
+    ///The current property set being worked with on the vis pane
     ves::xplorer::data::PropertySetPtr mTempSet;
+    ///Not sure about this one
     bool mIgnoreIndexChange;
-
+    ///A vector if ids for something
     std::vector< std::string > m_ids;
 };
 

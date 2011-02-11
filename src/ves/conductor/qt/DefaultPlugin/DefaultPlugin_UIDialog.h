@@ -33,7 +33,7 @@
 #ifndef DEFAULTPLUGIN_UIDIALOG_H
 #define DEFAULTPLUGIN_UIDIALOG_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 namespace Ui {
     class DefaultPlugin_UIDialog;
