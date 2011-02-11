@@ -422,7 +422,41 @@ float DataSet::GetTimeStep()
 ////////////////////////////////////////////////////////////////////////////////
 vtkLookupTable * DataSet::GetLookupTable()
 {
+    if( greyscaleFlag )
+    {
+        SetGreyscale();
+    }
+    else
+    {
+        SetColorscale();
+    }
     return this->lut;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::SetGreyscale()
+{
+    this->lut->SetHueRange( 0.0f , 0.0f );
+    this->lut->SetSaturationRange( 0.0f , 0.0f );
+    this->lut->SetValueRange( 0.2f , 1.0f );
+    this->lut->Build();
+}
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::SetColorscale()
+{
+    this->lut->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
+    this->lut->SetSaturationRange( 0.0f , 1.0f );
+    this->lut->SetValueRange( 0.0f , 1.0f );
+    this->lut->Build();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool DataSet::GetGreyscaleFlag()
+{
+    return this->greyscaleFlag;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::SetGreyscaleFlag( bool flag )
+{
+    this->greyscaleFlag = flag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 vtkUnstructuredGrid * DataSet::GetUnsData()

@@ -181,6 +181,8 @@ void ContourPlanePropertySet::CreateSkeleton()
     SetPropertyAttribute( "Advanced_ContourType", "enumValues", enumValues );
 
     AddProperty( "Advanced_WarpOption", false, "Warp Option" );
+
+    AddProperty( "Advanced_Greyscale", 1.0, "Greyscale" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::UpdateScalarDataOptions( PropertyPtr property )

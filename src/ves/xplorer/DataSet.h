@@ -186,7 +186,12 @@ public:
     float GetTimeStep();
 
     // Get the vtk look up table.
+    // Lookuptable will be either blue to red or greyscale based on state of greyscaleFlag.
     vtkLookupTable* GetLookupTable();
+
+    // Get/Set greyscaleFlag for the lookuptable.
+    void SetGreyscaleFlag( bool flag );
+    bool GetGreyscaleFlag();
 
     // Get the single piece original data.
     vtkUnstructuredGrid* GetUnsData();
@@ -351,6 +356,11 @@ private:
     ///\param tempDataObject The data set to initialize
     void InitializeVTKDataObject( vtkDataObject* tempDataObject );
     
+    ///Sets the lookuptable to greyscale.
+    void SetGreyscale();
+    ///Sets the lookuptable to a blue to red scale.
+    void SetColorscale();
+
     ///Model pointer to the model that is holding this dataset
     ves::xplorer::Model* m_tempModel;
     
@@ -380,6 +390,8 @@ private:
     float maxTime;           // Maximum time of integration for streamline.
 
     float timeStep;          // Time step for streamline integration.
+
+    bool greyscaleFlag;         // Flag for whether lookuptable being returned is in greyscale or blue to red.
 
     ///Lookup table.
     vtkLookupTable* lut;
