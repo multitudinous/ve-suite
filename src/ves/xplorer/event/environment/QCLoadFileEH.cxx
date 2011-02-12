@@ -66,7 +66,7 @@ QuatCamLoadFileEventHandler::operator=( const QuatCamLoadFileEventHandler& rhs )
     return *this;
 }
 ///////////////////////////////////////////////////////////////
-void QuatCamLoadFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
+void QuatCamLoadFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {}
 /////////////////////////////////////////////////////////////////////////////////////
 void QuatCamLoadFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )

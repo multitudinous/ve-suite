@@ -88,7 +88,7 @@ ClearVisObjectsEventHandler& ClearVisObjectsEventHandler::operator=( const Clear
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ClearVisObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
+void ClearVisObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }
