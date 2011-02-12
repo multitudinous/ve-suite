@@ -69,7 +69,7 @@ ChangeWorkingDirectoryEventHandler::ChangeWorkingDirectoryEventHandler( const Ch
 ChangeWorkingDirectoryEventHandler::~ChangeWorkingDirectoryEventHandler()
 {}
 ///////////////////////////////////////////////////////////////////////////
-void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {}
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //

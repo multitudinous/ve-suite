@@ -76,7 +76,7 @@ DisplayEventHandler::~DisplayEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayEventHandler::SetGlobalBaseObject(
-    ves::xplorer::GlobalBase* modelHandler )
+    ves::xplorer::GlobalBase* )
 {
     ;
 }

@@ -77,7 +77,7 @@ ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler( const Chan
 ChangeBackgroundColorEventHandler::~ChangeBackgroundColorEventHandler()
 {}
 ////////////////////////////////////////////////////////////////////////////////
-void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 ///Exectute the event                                                        //

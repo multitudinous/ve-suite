@@ -85,7 +85,7 @@ PhysicsEventHandler& PhysicsEventHandler::operator=(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsEventHandler::SetGlobalBaseObject(
-    ves::xplorer::GlobalBase* modelHandler )
+    ves::xplorer::GlobalBase* )
 {
     ;
 }
