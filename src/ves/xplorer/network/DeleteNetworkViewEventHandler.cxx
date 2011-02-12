@@ -88,12 +88,13 @@ DeleteNetworkViewEventHandler& DeleteNetworkViewEventHandler::operator=( const D
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeleteNetworkViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
+void DeleteNetworkViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void DeleteNetworkViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
+void DeleteNetworkViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& )
 {
     GraphicalPluginManager::instance()->DeleteNetworkSystemView();
 }
+//////////////////////////////////////////////////////////////////////////
