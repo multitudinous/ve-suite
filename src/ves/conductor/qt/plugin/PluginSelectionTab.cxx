@@ -46,7 +46,6 @@
 #include <iostream>
 #include <sstream>
 
-
 #include <QtCore/QPluginLoader>
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QDir>
@@ -58,7 +57,7 @@ namespace ves
 {
 namespace conductor
 {
-
+////////////////////////////////////////////////////////////////////////////////
 PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent ) :
     QWidget(parent),
     ui(new Ui::PluginSelectionTab),
@@ -66,20 +65,41 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
 {
     ui->setupUi(this);
 
-//    QString pluginDir = QProcessEnvironment::systemEnvironment().value ( "CONDUCTOR_PLUGINS_DIR" );
-//    std::cout << "$CONDUCTOR_PLUGINS_DIR = " << pluginDir.toStdString() << std::endl << std::flush;
+    QString qPluginDir = 
+        QProcessEnvironment::systemEnvironment().value ( "CONDUCTOR_PLUGINS_DIR" );
+    std::string pluginsDir;
+    if( qPluginDir.toStdString().empty() )
+    {
+        std::cout << "|\tCONDUCTOR_PLUGINS_DIR is not defined." 
+            << std::endl << std::flush;
+        qPluginDir = 
+            QProcessEnvironment::systemEnvironment().value ( "XPLORER_PLUGINS_DIR" );
+        pluginsDir = qPluginDir.toStdString() + "/../../conductor/plugins";
+        std::cout << "|\tUsing " << pluginsDir << " instead." 
+            << std::endl << std::flush;
+    }
+    else
+    {
+        std::cout << "|\tCONDUCTOR_PLUGINS_DIR = " 
+            << qPluginDir.toStdString() << std::endl << std::flush;
+        pluginsDir = qPluginDir.toStdString();
+    }
 
-    QDir pluginsPath = qApp->applicationDirPath();
-    pluginsPath.cd("Plugins/UI");
-
-    std::cout << "Searching for plugins in " << pluginsPath.canonicalPath().toStdString() << std::endl << std::flush;
+    //QDir pluginsPath = qApp->applicationDirPath();
+    //pluginsPath.cd("conductor/plugins");
+    QString tempDir( pluginsDir.c_str() );
+    QDir pluginsPath( tempDir );
+    
+    std::cout << "|\tConductor is searching for plugins in " 
+        << pluginsPath.canonicalPath().toStdString() << std::endl << std::flush;
 
     // Walk through all files in Plugins/UI directory
     QStringList files = pluginsPath.entryList(QDir::Files);
     QStringList::iterator iter = files.begin();
     if( iter == files.end() )
     {
-        std::cout << "No plugins found." << std::endl << std::flush;
+        std::cout << "|\tConductor found no plugins." 
+            << std::endl << std::flush;
     }
 
 
@@ -88,7 +108,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
         QString fileName = (*iter);
         QPluginLoader loader;
         loader.setFileName( pluginsPath.absoluteFilePath(fileName) );
-        std::cout << "Checking whether " << fileName.toStdString()
+        std::cout << "|\tChecking whether " << fileName.toStdString()
                 << " is a plugin...";
         if( loader.load() )
         {
@@ -101,7 +121,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
                 UIPluginFactory* factory = qobject_cast< UIPluginFactory* >(plugin);
                 if( factory )
                 {
-                    std::cout << "Successfully loaded plugin " << fileName.toStdString()
+                    std::cout << "|\tConductor successfully loaded plugin " << fileName.toStdString()
                             << " containing plugin: " << factory->GetFactoryName() << "-- "
                             << factory->GetDescription() << std::endl << std::flush;
                     QString name;
@@ -114,7 +134,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
                 }
                 else
                 {
-                    std::cout << "Failed to cast plugin " << fileName.toStdString() <<
+                    std::cout << "|\tFailed to cast plugin " << fileName.toStdString() <<
                             " as a UIPluginFactory." << std::endl << std::flush;
                 }
             }
@@ -130,12 +150,12 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
         ++iter;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 PluginSelectionTab::~PluginSelectionTab()
 {
     delete ui;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
@@ -147,12 +167,12 @@ void PluginSelectionTab::changeEvent(QEvent *e)
         break;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_addPluginButton_clicked()
 {
     InstantiatePlugin( ui->m_availablePlugins->currentItem() );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
 {
     if( item )
@@ -199,7 +219,7 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item )
 {
     // Check whether we've already composed a widget and tab for this item to
@@ -247,12 +267,12 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
         m_itemWidgetMap[item] = tempWidget;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_availablePlugins_itemDoubleClicked( QListWidgetItem* item )
 {
     InstantiatePlugin( item );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_instantiatedPlugins_itemChanged ( QListWidgetItem * item )
 {   
     std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
@@ -267,7 +287,7 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemChanged ( QListWidgetItem 
                 m_mainWindow->AddTab( m_itemWidgetMap[ item ], interface->GetName() ) );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_removePluginButton_clicked()
 {
     QListWidgetItem* item = ui->m_instantiatedPlugins->currentItem();
@@ -296,6 +316,6 @@ void PluginSelectionTab::on_m_removePluginButton_clicked()
         delete ui->m_instantiatedPlugins->takeItem( ui->m_instantiatedPlugins->row( item ) );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 }
 }
