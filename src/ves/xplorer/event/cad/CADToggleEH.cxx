@@ -82,7 +82,7 @@ void CADToggleEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
     DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
     
-    bool toggleFlag;
+    bool toggleFlag = false;
     if( toggleValue->GetDataString() == "ON" )
     {
         toggleFlag = true;

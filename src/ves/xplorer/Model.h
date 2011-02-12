@@ -258,28 +258,23 @@ private:
 
     typedef std::vector<ves::xplorer::volume::cfdTextureDataSet*> TextureDataSetList;
     TextureDataSetList mTextureDataSets;
+    ///The active texture dataset
     ves::xplorer::volume::cfdTextureDataSet* _activeTextureDataSet;
 
+    ///Model dataset
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
-
+    ///Active dataset
     DataSet* activeDataSet;
+    ///Way hold hack node...there definitely is a better way
     ves::xplorer::scenegraph::Clone* mirrorNode;
+    ///Way hold hack node...there definitely is a better way
     osg::ref_ptr< ves::xplorer::scenegraph::Group > mirrorGroupNode;
 
     //the information for following three variables should be transfered from cfdApp
     ModelTypeIndex mModelType;
     Operation2Model mActiveOperation2Model;
-
-    bool mUpdateModelFlag;
-    bool mMoveOldGeomDataSets;
-    bool mMoveOldVTKDataSets;
-
-    /*std::string rootCADNodeID;///<ID for root CAD node id*/
+    ///The xml model id for this model
     std::string modelID;
-
-
-    //std::map<std::string, cfdSound> _availableSounds;///<The available sounds for this model.
-    std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
 
     ///The CADHandler for this model.
     ves::xplorer::ModelCADHandler* m_cadHandler;

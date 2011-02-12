@@ -61,7 +61,6 @@
 
 #include <osg/StateSet>
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
-using namespace ves::xplorer::volume;
 
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
@@ -96,6 +95,7 @@ using namespace ves::xplorer::volume;
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
+using namespace ves::xplorer::volume;
 
 namespace ves
 {
@@ -103,17 +103,15 @@ namespace xplorer
 {
 Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
     :
-    m_datasetHandler( 0 ),
-    m_cadHandler( 0 ),
-    activeDataSet( 0 ),
+    loadDataTh( 0 ),
     mirrorDataFlag( false ),
-    _activeTextureDataSet( 0 )
+    _activeTextureDataSet( 0 ),
+    _worldDCS( worldDCS ),
+    activeDataSet( 0 ),
+    mirrorNode( 0 ),
+    m_cadHandler( new ves::xplorer::ModelCADHandler( _worldDCS.get() ) ),
+    m_datasetHandler( 0 )
 {
-    vprDEBUG( vesDBG, 1 ) << "|\tNew Model ! "
-        << std::endl << vprDEBUG_FLUSH;
-
-    _worldDCS = worldDCS;
-    m_cadHandler = new ves::xplorer::ModelCADHandler( _worldDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Model::~Model()

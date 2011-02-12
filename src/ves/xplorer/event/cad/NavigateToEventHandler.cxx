@@ -104,7 +104,7 @@ NavigateToEventHandler& NavigateToEventHandler::operator=( const NavigateToEvent
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NavigateToEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
+void NavigateToEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }

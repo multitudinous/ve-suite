@@ -217,9 +217,9 @@ osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string co
    unsigned int numTimeSteps = activeObj[ "time" ].size();
    for( unsigned int i=0;i< numTimeSteps; ++i )
    {
-      trans = osg::Vec3( activeObj[ x ].at( i ),
-                         activeObj[ y ].at( i ),
-                         activeObj[ z ].at( i ));
+      trans = osg::Vec3( activeObj[ x ].at( i ) *25.4,
+                         activeObj[ y ].at( i ) *25.4,
+                         activeObj[ z ].at( i ) *25.4);
       
       quat = osg::Quat( osg::DegreesToRadians( activeObj[ roll ].at( i ) ),  xaxis,
                         osg::DegreesToRadians( activeObj[ pitch ].at( i ) ), yaxis,
