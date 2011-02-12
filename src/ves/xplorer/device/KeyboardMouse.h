@@ -157,13 +157,16 @@ private:
     ///Setup the start and end point for a mouse pick 
     void SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
 
+    ///Handle VR Juggler kernal signals 
+    void HandleSignal( const int signum );
+    
     ///The current X mouse position
     int m_currX;
     
     ///The current Y mouse position
     int m_currY;
 
-    ///
+    ///The current matrix stack for the context
     scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;    
 
     ///Determine if the mouse is inside the UI
@@ -173,6 +176,9 @@ private:
     osg::Vec3d m_startPoint;
     ///Selection ray end point
     osg::Vec3d m_endPoint;
+    
+    //The signal handler to hand off to VR Juggler
+    //vrj::Kernel::signal_callback_t m_signalHandler;
 
     /// signal for generating the start and end point for selection and other
     ///interaction tools.

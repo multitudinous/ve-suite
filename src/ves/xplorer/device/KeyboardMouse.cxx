@@ -89,6 +89,7 @@
 
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
+#include <vrj/Kernel/Kernel.h>
 
 #include <vrj/Draw/OpenGL/Window.h>
 
@@ -140,7 +141,7 @@ using namespace ves::xplorer::scenegraph;
 KeyboardMouse::KeyboardMouse()
     :
     Device( KEYBOARD_MOUSE ),
-    m_mouseInsideUI( true )
+    m_mouseInsideUI( false )
 {
     //mHead.init( "VJHead" );
 
@@ -170,8 +171,12 @@ KeyboardMouse::KeyboardMouse()
     RegisterButtonSignals();
     RegisterKeySignals();
     
-    CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &KeyboardMouse::UIEnterLeave,
-                    m_connections, highest_Priority );
+    //CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &KeyboardMouse::UIEnterLeave,
+    //                m_connections, highest_Priority );
+    
+    //Setup the ability to catch shutdowns
+    //m_signalHandler = boost::bind(&KeyboardMouse::HandleSignal, this, _1);
+    vrj::Kernel::instance()->addHandlerPreCallback( boost::bind(&KeyboardMouse::HandleSignal, this, _1) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -196,8 +201,22 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
 {
+    if( m_mouseInsideUI )
+    {
+        return;
+    }
+
     const gadget::EventType eventType = event->type();
     
+    if( eventType == gadget::KeyPressEvent )
+    {
+        if( boost::static_pointer_cast< gadget::KeyEvent >( event )->getKey() == gadget::KEY_ESC )
+        {
+            m_mouseInsideUI = true;
+            return;
+        }
+    }
+
     //Get the current display from the input area
     gadget::InputArea& inputArea = event->getSource();
     vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
@@ -211,9 +230,6 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         {
             return;
         }
-        /*vprDEBUG( vesDBG, 4 )
-            << "|\tKeyboardMouse::onKeyboardMouseEvent::KeyPressEvent"
-            << std::endl << vprDEBUG_FLUSH;*/
 
         const gadget::KeyEventPtr keyEvt =
             boost::static_pointer_cast< gadget::KeyEvent >( event );
@@ -243,9 +259,6 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         {
             return;
         }
-        /*vprDEBUG( vesDBG, 4 )
-            << "|\tKeyboardMouse::onKeyboardMouseEvent::KeyReleaseEvent"
-            << std::endl << vprDEBUG_FLUSH;*/
 
         const gadget::KeyEventPtr keyEvt =
             boost::static_pointer_cast< gadget::KeyEvent >( event );
@@ -302,10 +315,6 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     case gadget::MouseButtonReleaseEvent:
     {
-        /*vprDEBUG( vesDBG, 4 )
-            << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonReleaseEvent"
-            << std::endl << vprDEBUG_FLUSH;*/
-
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
@@ -343,7 +352,6 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         {
             return;
         }        
-        //std::cout<< "process move" << std::endl;
 
         //int buttonMask = mouseEvt->getState();
         //if( buttonMask&gadget::BUTTON1_MASK )
@@ -370,7 +378,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     default:
     {
-        std::cout << "KeyboardMouse event not implemented." << std::endl;
+        std::cout << "KeyboardMouse event not implemented." 
+            << std::endl << std::flush;
     }
     }
 }
@@ -701,3 +710,9 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoi
     //std::cout << "endPoint: " << endPoint << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::HandleSignal( const int signum )
+{
+    std::cout << " signal number " << signum << std::endl << std::flush;
+}
+////////////////////////////////////////////////////////////////////////////////
+
