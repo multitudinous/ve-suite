@@ -85,7 +85,7 @@ TogglePluginsEventHandler& TogglePluginsEventHandler::operator=( const TogglePlu
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TogglePluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
+void TogglePluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }

@@ -72,7 +72,7 @@ UnselectObjectsEventHandler::~UnselectObjectsEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnselectObjectsEventHandler::SetGlobalBaseObject(
-    ves::xplorer::GlobalBase* modelHandler )
+    ves::xplorer::GlobalBase* )
 {
     ;
 }
