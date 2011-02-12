@@ -77,7 +77,7 @@ ViewEventHandler::~ViewEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void ViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }
@@ -96,9 +96,9 @@ void ViewEventHandler::Execute(
 
     std::string view;
     viewDVP->GetData( view );
-    device::KeyboardMouse* keyboardMouse =
-        DeviceHandler::instance()->GetDevice(
-            device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
+    //device::KeyboardMouse* keyboardMouse =
+    //    DeviceHandler::instance()->GetDevice(
+    //        device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
     if( view == "Frame All" )
     {
         //keyboardMouse->FrameAll();
