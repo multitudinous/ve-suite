@@ -201,13 +201,15 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
 {
+#if defined( VPR_OS_Darwin )
     if( m_mouseInsideUI )
     {
         return;
     }
-
+#endif
     const gadget::EventType eventType = event->type();
     
+#if defined( VPR_OS_Darwin )
     if( eventType == gadget::KeyPressEvent )
     {
         if( boost::static_pointer_cast< gadget::KeyEvent >( event )->getKey() == gadget::KEY_ESC )
@@ -216,6 +218,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             return;
         }
     }
+#endif
 
     //Get the current display from the input area
     gadget::InputArea& inputArea = event->getSource();
