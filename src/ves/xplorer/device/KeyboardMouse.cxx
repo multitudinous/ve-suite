@@ -141,10 +141,8 @@ using namespace ves::xplorer::scenegraph;
 KeyboardMouse::KeyboardMouse()
     :
     Device( KEYBOARD_MOUSE ),
-    m_mouseInsideUI( false )
+    m_exit( false )
 {
-    //mHead.init( "VJHead" );
-
     // Connect to Juggler's new event handling interface
     m_mouseDoubleClickEventInterface.setClickTime(300);
     m_mouseDoubleClickEventInterface.init("VJKeyboard");
@@ -171,12 +169,14 @@ KeyboardMouse::KeyboardMouse()
     RegisterButtonSignals();
     RegisterKeySignals();
     
-    //CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &KeyboardMouse::UIEnterLeave,
-    //                m_connections, highest_Priority );
+    CONNECTSIGNALS_1( "%Exit", void( bool const& ),
+                     &KeyboardMouse::Exit,
+                     m_connections, any_SignalType, normal_Priority );  
     
     //Setup the ability to catch shutdowns
     //m_signalHandler = boost::bind(&KeyboardMouse::HandleSignal, this, _1);
-    vrj::Kernel::instance()->addHandlerPreCallback( boost::bind(&KeyboardMouse::HandleSignal, this, _1) );
+    //vrj::Kernel::instance()->
+    //    addHandlerPreCallback( boost::bind(&KeyboardMouse::HandleSignal, this, _1) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -189,37 +189,25 @@ KeyboardMouse* KeyboardMouse::AsKeyboardMouse()
     return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::UIEnterLeave( bool insideUI )
+void KeyboardMouse::Exit( bool const& exit )
 {
-    m_mouseInsideUI = insideUI;
+    m_exit = exit;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
+void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr )
 {
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
 {
-#if defined( VPR_OS_Darwin )
-    if( m_mouseInsideUI )
+    if( m_exit )
     {
         return;
     }
-#endif
+
     const gadget::EventType eventType = event->type();
     
-#if defined( VPR_OS_Darwin )
-    if( eventType == gadget::KeyPressEvent )
-    {
-        if( boost::static_pointer_cast< gadget::KeyEvent >( event )->getKey() == gadget::KEY_ESC )
-        {
-            m_mouseInsideUI = true;
-            return;
-        }
-    }
-#endif
-
     //Get the current display from the input area
     gadget::InputArea& inputArea = event->getSource();
     vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
@@ -528,44 +516,9 @@ void KeyboardMouse::RegisterKeySignals()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > values )
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SkyCam()
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ResetTransforms()
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::UpdateSelectionLine()
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
 gadget::KeyboardMousePtr KeyboardMouse::GetKeyboardMouseVRJDevice()
 {
     return mKeyboardMousePtr;
-}
-////////////////////////////////////////////////////////////////////////////////
-osgUtil::LineSegmentIntersector* KeyboardMouse::GetLineSegmentIntersector()
-{
-    return 0;
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetProcessSelection( bool processSelection )
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-bool KeyboardMouse::GetMousePickEvent()
-{
-    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(

@@ -353,6 +353,9 @@ private:
     /// other objects to sync operations to the draw loop
     typedef boost::signals2::signal< void () > latePreFrame_SignalType;
     latePreFrame_SignalType mLatePreFrame;
+
+    typedef boost::signals2::signal< void( bool const& ) > exit_SignalType;
+    exit_SignalType m_exitSignal;
     ///Logger
     Poco::Logger& m_logger;
     ///Logger stream

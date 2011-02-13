@@ -274,6 +274,10 @@ App::App( int argc, char* argv[], bool enableRTT )
     new eventmanager::SignalWrapper< latePreFrame_SignalType >( &mLatePreFrame ),
     "App.LatePreFrame");
     
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< exit_SignalType >( &m_exitSignal ),
+        "App.Exit");
+    
     CONNECTSIGNALS_2( "%NearFarRatio", void( bool const&, double const& ),
                           &ves::xplorer::App::SetNearFarRatio,
                           m_connections, any_SignalType, normal_Priority );  
@@ -287,6 +291,8 @@ App::~App()
 void App::exit()
 {
     m_exitApp = true;
+    m_exitSignal(m_exitApp);
+    
     if( m_signalLock.test() )
     {
         m_signalLock.release();
@@ -1260,6 +1266,10 @@ void App::runLoop()
             // appears to work fine.
             //m_qtApp->sendPostedEvents(0, QEvent::DeferredDelete);
             //m_qtApp->sendPostedEvents(0, 0);
+        }
+        else
+        {
+            vpr::Thread::yield();
         }
     }
 }

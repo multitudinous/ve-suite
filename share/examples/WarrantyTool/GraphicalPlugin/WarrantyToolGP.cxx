@@ -153,10 +153,10 @@ void WarrantyToolGP::PreFrameUpdate()
     }
 
     //If the mouse made a pick event
-    if( !m_keyboard->GetMousePickEvent() )
+    /*if( !m_keyboard->GetMousePickEvent() )
     {
         return;
-    }
+    }*/
 
 
     //If we had keyboard input then try and highlight the cad
@@ -336,7 +336,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                     std::cout << "Did not find graphics node for " << mLoadedPartNumbers.at( i ) << std::endl;
                 }
             }*/
-            m_keyboard->SetProcessSelection( false );
+            //m_keyboard->SetProcessSelection( false );
             CreateTextTextures();
         }
         else if( dvpName == "SET_ACTIVE_TABLES" )
@@ -972,7 +972,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 void WarrantyToolGP::RemoveSelfFromSG()
 {
     PluginBase::RemoveSelfFromSG();
-    m_keyboard->SetProcessSelection( true );
+    //m_keyboard->SetProcessSelection( true );
     try
     {
         Poco::Data::SQLite::Connector::unregisterConnector();
@@ -1058,8 +1058,8 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         return false;
     }
 
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
-        m_keyboard->GetLineSegmentIntersector();
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment;// = 
+    //    m_keyboard->GetLineSegmentIntersector();
 
     osgUtil::IntersectionVisitor intersectionVisitor( intersectorSegment.get() );
 
@@ -1350,8 +1350,8 @@ void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
 void WarrantyToolGP::PickTextTextures()
 {
     //Get the intersection visitor from keyboard mouse or the wand
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
-    m_keyboard->GetLineSegmentIntersector();
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment;// = 
+    //    m_keyboard->GetLineSegmentIntersector();
     
     osgUtil::IntersectionVisitor intersectionVisitor(
                                                      intersectorSegment.get() );

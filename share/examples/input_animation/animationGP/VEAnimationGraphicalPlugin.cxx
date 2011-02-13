@@ -266,10 +266,10 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
     if( m_keyboard )
     {
         //If the mouse made a pick event
-        if( !m_keyboard->GetMousePickEvent() )
+        /*if( !m_keyboard->GetMousePickEvent() )
         {
             return;
-        }
+        }*/
 
         //If we had keyboard input then try and highlight the cad
         //bool pickedParts = false;
@@ -396,8 +396,8 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
 void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
 {
 
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment = 
-        m_keyboard->GetLineSegmentIntersector();
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment;// = 
+    //    m_keyboard->GetLineSegmentIntersector();
 
     osgUtil::IntersectionVisitor intersectionVisitor( intersectorSegment.get() );
 

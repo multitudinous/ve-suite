@@ -115,37 +115,11 @@ public:
     ///Processes keyboard events
     virtual void ProcessEvents( ves::open::xml::CommandPtr command );
 
-    ///Sets the screen corner values
-    ///\param values A map of strings to doubles
-    void SetScreenCornerValues( std::map< std::string, double > values );
-
-    ///Fit the world bounding volume into the viewing frustum
-    void SkyCam();
-
-    ///Resets the scene to original position
-    void ResetTransforms();
-
-    ///Update the start and end points for the line
-    void UpdateSelectionLine();
-
     ///Get raw vrjuggler keyboardmouse ptr
     ///\return
     gadget::KeyboardMousePtr GetKeyboardMouseVRJDevice();
 
-    ///Get the line segment intersector
-    ///\pre UpdateSelectionLine must be called first
-    ///\return Returns the osg class that manages the line interesection tests
-    osgUtil::LineSegmentIntersector* GetLineSegmentIntersector();
-
-    ///Set wether the keyboardmouse device should select things
-    ///\param processSelection
-    void SetProcessSelection( bool processSelection );
-
-    ///
-    ///\return
-    bool GetMousePickEvent();
-
-    ///Get the current display based on the VR Juggler InputArea
+     ///Get the current display based on the VR Juggler InputArea
     ///\return The display where this event occurred
     vrj::DisplayPtr const GetCurrentDisplay( const gadget::InputArea* inputArea );
 
@@ -170,7 +144,7 @@ private:
     scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;    
 
     ///Determine if the mouse is inside the UI
-    bool m_mouseInsideUI;
+    bool m_exit;
     
     ///Selection ray start point
     osg::Vec3d m_startPoint;
@@ -237,7 +211,7 @@ private:
     void RegisterButtonSignals();
 
     ///Slot to determine if the mouse is inside the UI
-    void UIEnterLeave( bool insideUI );
+    void Exit( bool const& exit );
 
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)

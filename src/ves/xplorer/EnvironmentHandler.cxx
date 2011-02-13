@@ -381,14 +381,6 @@ void EnvironmentHandler::InitScene()
     std::cout 
         << "| Initializing.................................... Heads Up Display |" << std::endl;
     mHeadsUpDisplay = new ves::xplorer::scenegraph::HeadsUpDisplay( screenDims );
-
-    device::KeyboardMouse* keyboardMouse =
-        DeviceHandler::instance()->GetDevice(
-            device::Device::KEYBOARD_MOUSE )->AsKeyboardMouse();
-    //keyboardMouse->SetWindowValues( screenDims.first, screenDims.second );
-    keyboardMouse->SetScreenCornerValues(
-        displaySettings->GetScreenCornerValues() );
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device
