@@ -31,6 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #define QT_NO_KEYWORDS
+
+#include <QtGui/QScrollBar>
 #include <ves/conductor/qt/ui_TreeTab.h>
 
 #include <ves/conductor/qt/TreeTab.h>
@@ -138,8 +140,18 @@ void TreeTab::PopulateWithRoot( osg::Node* root )
 ////////////////////////////////////////////////////////////////////////////////
 QModelIndex TreeTab::OpenToAndSelect( osg::NodePath& nodepath, bool highlight )
 {
+    ui->mTreeView->collapseAll();
+
     // Get the modelindex associated with this nodepath
     QModelIndex result( osgQtTree::openToAndSelect( ui->mTreeView, mModel, nodepath ) );
+
+    // Scroll horizontally to the maximum. Since this comes after a call to
+    // collapseAll, followed by a call to openToAndSelect, which expands to the
+    // selected item, the view should be in minimally expanded
+    // state, meaning scrolling horizontally all the way will make the current
+    // item visible horizontally.
+    int max = ui->mTreeView->horizontalScrollBar()->maximum();
+    ui->mTreeView->horizontalScrollBar()->setValue( max );
 
     Select( result, highlight );
     return result;
