@@ -44,15 +44,8 @@ namespace ves
 {
 namespace conductor
 {
-/*!\file VisFeatureMakerBase.h
- *
- */
-
 /*!\class ves::conductor::VisFeatureMakerBase
- *
- */
-
-/*!\namespace ves::conductor
+ * \file VisFeatureMakerBase.h
  *
  */
 class VisFeatureMakerBase
