@@ -35,6 +35,7 @@
 
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/PropertyPtr.h>
+#include <ves/xplorer/data/VizBasePropertySet.h>
 
 #include <ves/VEConfig.h>
 
@@ -47,17 +48,11 @@ namespace xplorer
 namespace data
 {
 /*!\file StreamlinePropertySet.h
+ * \class ves::xplorer::data::StreamlinePropertySet
+ * \namespace ves::xplorer::data
  *
  */
-
-/*!\class ves::xplorer::data::StreamlinePropertySet
- *
- */
-
-/*!\namespace ves::xplorer::data
- *
- */
-class VE_DATA_EXPORTS StreamlinePropertySet : public PropertySet
+class VE_DATA_EXPORTS StreamlinePropertySet : public VizBasePropertySet
 {
 public:
     ///Constructor
@@ -67,25 +62,12 @@ public:
     ///Destructor
     virtual ~StreamlinePropertySet();
 
-private:
-    ///Update method
-    void UpdateModeOptions( PropertyPtr property );
-    ///Validate method
-    bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
-    ///Update method
-    void UpdateScalarDataOptions( PropertyPtr property );
-    ///Update method
-    void UpdateScalarDataRange( PropertyPtr property );
-    ///Update method
-    void UpdateVectorDataOptions( PropertyPtr property );
-
+protected:
     ///Slot connected to the value change of  display seed points
     ///\param property The bool value for the seed point display flag
     void UpdateSeedPointDisplay( PropertyPtr property );
-
-private:
     ///Create the skeleton
-    void CreateSkeleton();
+    virtual void CreateSkeleton();
 
     ///Update signal to control turning off and on seed points
     typedef boost::signals2::signal< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;

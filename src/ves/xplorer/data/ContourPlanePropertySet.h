@@ -35,6 +35,7 @@
 
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/PropertyPtr.h>
+#include <ves/xplorer/data/VizBasePropertySet.h>
 
 #include <ves/VEConfig.h>
 
@@ -45,17 +46,11 @@ namespace xplorer
 namespace data
 {
 /*!\file ContourPlanePropertySet.h
+ * \class ves::xplorer::data::ContourPlanePropertySet
+ * \namespace ves::xplorer::data
  *
  */
-
-/*!\class ves::xplorer::data::ContourPlanePropertySet
- *
- */
-
-/*!\namespace ves::xplorer::data
- *
- */
-class VE_DATA_EXPORTS ContourPlanePropertySet : public PropertySet
+class VE_DATA_EXPORTS ContourPlanePropertySet : public VizBasePropertySet
 {
 public:
     ///Constructor
@@ -65,21 +60,9 @@ public:
     ///Destructor
     virtual ~ContourPlanePropertySet();
 
-private:
-    ///Update method
-    void UpdateModeOptions( PropertyPtr property );
-    ///Validate method
-    bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
-    ///Update method
-    void UpdateScalarDataOptions( PropertyPtr property );
-    ///Update method
-    void UpdateScalarDataRange( PropertyPtr property );
-    ///Update method
-    void UpdateVectorDataOptions( PropertyPtr property );
-
-private:
+protected:
     ///Create the skeleton
-    void CreateSkeleton();
+    virtual void CreateSkeleton();
 };
 
 } // namespace data

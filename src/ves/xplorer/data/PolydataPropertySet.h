@@ -35,6 +35,7 @@
 
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/PropertyPtr.h>
+#include <ves/xplorer/data/VizBasePropertySet.h>
 
 #include <ves/VEConfig.h>
 
@@ -45,17 +46,11 @@ namespace xplorer
 namespace data
 {
 /*!\file PolydataPropertySet.h
+ * \class ves::xplorer::data::PolydataPropertySet
+ * \namespace ves::xplorer::data
  *
  */
-
-/*!\class ves::xplorer::data::PolydataPropertySet
- *
- */
-
-/*!\namespace ves::xplorer::data
- *
- */
-class VE_DATA_EXPORTS PolydataPropertySet : public PropertySet
+class VE_DATA_EXPORTS PolydataPropertySet : public VizBasePropertySet
 {
 public:
     ///Constructor
@@ -65,25 +60,13 @@ public:
     ///Destructor
     virtual ~PolydataPropertySet();
 
-private:
-    ///Update method
-    void UpdateModeOptions( PropertyPtr property );
-    ///Validate method
-    bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
+protected:
     ///Validate method
     bool ValidateColorByScalarMinMax( PropertyPtr property, boost::any value );
-    ///Update method
-    void UpdateScalarDataOptions( PropertyPtr property );
-    ///Update method
-    void UpdateScalarDataRange( PropertyPtr property );
     ///Update the color by scalar
     void UpdateColorByScalarDataRange( PropertyPtr property );
-    ///Update method
-    void UpdateVectorDataOptions( PropertyPtr property );
-
-private:
     ///Create the skeleton
-    void CreateSkeleton();
+    virtual void CreateSkeleton();
 };
 
 } // namespace data

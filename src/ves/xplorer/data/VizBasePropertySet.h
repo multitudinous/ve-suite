@@ -30,13 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VES_XPLORER_DATA_VECTORPLANEPROPERTYSET_H
-#define VES_XPLORER_DATA_VECTORPLANEPROPERTYSET_H
+#ifndef VES_XPLORER_DATA_VIZBASEPROPERTYSET_H
+#define VES_XPLORER_DATA_VIZBASEPROPERTYSET_H
 
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/PropertyPtr.h>
-
-#include <ves/xplorer/data/VizBasePropertySet.h>
 
 #include <ves/VEConfig.h>
 
@@ -46,29 +44,53 @@ namespace xplorer
 {
 namespace data
 {
-/*!\file VectorPlanePropertySet.h
- * \class ves::xplorer::data::VectorPlanePropertySet
+/*!\file VizBasePropertySet.h
+ * \class ves::xplorer::data::VizBasePropertySet
  * \namespace ves::xplorer::data
  *
  */
-class VE_DATA_EXPORTS VectorPlanePropertySet : public VizBasePropertySet
+class VE_DATA_EXPORTS VizBasePropertySet : public PropertySet
 {
 public:
     ///Constructor
-    VectorPlanePropertySet();
+    VizBasePropertySet();
     ///Copy Contructor
-    VectorPlanePropertySet( const VectorPlanePropertySet& orig );
+    VizBasePropertySet( const VizBasePropertySet& orig );
     ///Destructor
-    virtual ~VectorPlanePropertySet();
+    virtual ~VizBasePropertySet();
+
+    ///Update method
+    void UpdateModeOptions( PropertyPtr property );
+    ///Validate method
+    bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
+    ///Update method
+    void UpdateScalarDataOptions( PropertyPtr property );
+    ///Update method
+    void UpdateScalarDataRange( PropertyPtr property );
+    ///Update method
+    void UpdateVectorDataOptions( PropertyPtr property );
 
 protected:
-    ///Create the skeleton
-    virtual void CreateSkeleton();
+    ///Registration of this property set for a child case
+    ///\param tableName The table to be registered
+    ///\post The PropertySet can now populate this table or read this table
+    void RegisterPropertySet( std::string const& tableName );
+    ///Create the skeleton for populating this PropertSet
+    virtual void CreateSkeleton(){;}
+    ///Delete this PropertySet from the DB. We override this from PropertySet.
+    ///\param session The DB sesion holding this data
+    ///\param TableName The TableName we are deleting
+    virtual bool DeleteFromDatabase( Poco::Data::Session* const session, std::string const& TableName );
 
+    ///Signal to generate deleting a viz feature
+    typedef boost::signals2::signal< void ( std::string const& ) > DeleteVizFeatureSignal_type;
+    ///The delete viz signal
+    DeleteVizFeatureSignal_type m_deleteVizSignal;
+    
 private:
 };
 } // namespace data
 } // namespace xplorer
 } // namespace ves
 
-#endif	/* _VECTORPLANEPROPERTYSET_H */
+#endif	/* VES_XPLORER_DATA_VIZBASEPROPERTYSET_H */

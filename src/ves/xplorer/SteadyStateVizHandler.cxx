@@ -72,6 +72,9 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SlotWrapper.h>
+
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
@@ -108,7 +111,9 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     lastSource( 0 ),
     cursor( 0 ),
     useLastSource( false ),
-    transientActors( true )
+    transientActors( true ),
+    m_logger( Poco::Logger::get("xplorer.SteadyStateVizHandler") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     vjTh[ 0 ] = 0;
 
@@ -128,6 +133,11 @@ SteadyStateVizHandler::SteadyStateVizHandler()
         new ves::xplorer::event::PolydataSurfaceEventHandler();
     _eventHandlers[ std::string( "LIVE_VECTOR_UPDATE" )] =
         new ves::xplorer::event::VectorEventHandler();
+    
+    CONNECTSIGNALS_1( "%DeleteVizFeature",
+                     void( std::string const& activModelID ),
+                     &SteadyStateVizHandler::DeleteVizFeature,
+                     m_connections, any_SignalType, normal_Priority );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::~SteadyStateVizHandler()
@@ -152,6 +162,33 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
     delete vjTh[ 0 ];
     
     vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SteadyStateVizHandler::DeleteVizFeature( std::string const& featureUUID )
+{
+    LOG_DEBUG( "DeleteVizFeature = " << featureUUID );
+    graphics_objects_map::iterator hashIter = m_graphicsObjectMap.find( vpr::GUID( featureUUID ) );
+    if( hashIter != m_graphicsObjectMap.end() )
+    {
+        m_graphicsObjectMap.erase( hashIter );
+    }
+    else
+    {
+        LOG_WARNING( "DeleteVizFeature: Unable to find relevant viz feature." );
+    }
+    
+    for( std::multimap< int, cfdGraphicsObject* >::iterator 
+        itr = graphicsObjects.begin();
+        itr != graphicsObjects.end(); ++itr )
+    {
+        if( itr->second->GetUUID() == featureUUID )
+        {
+            itr->second->RemoveGeodeFromDCS();
+            delete itr->second;
+            graphicsObjects.erase( itr );
+            break;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool SteadyStateVizHandler::TransientGeodesIsBusy()
@@ -197,7 +234,7 @@ void SteadyStateVizHandler::SetActorsAreReady( bool actorsReady )
 void SteadyStateVizHandler::ClearVisObjects()
 {
     vprDEBUG( vesDBG, 2 ) << "|\tClear All Graphics Objects From Scene Graph"
-    << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
 
     for( std::multimap< int, cfdGraphicsObject* >::iterator 
         pos = graphicsObjects.begin(); pos != graphicsObjects.end(); ++pos )
@@ -278,6 +315,11 @@ void SteadyStateVizHandler::PreFrameUpdate()
                     ++pos;
                 }
             }*/
+            
+            //First check to see if we are updating a feature or if this is
+            //a brand new feature
+            DeleteVizFeature( temp->GetUUID() );
+            
             graphicsObjects.insert( std::make_pair( tempVisObject->GetObjectType(), temp ) );
             graphics_objects_map::value_type p = std::make_pair( vpr::GUID( temp->GetUUID() ), temp );
             m_graphicsObjectMap.insert( p );

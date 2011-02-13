@@ -91,12 +91,8 @@ namespace device
 {
 
 /*!\file KeyboardMouse.h
- *
- */
-/*!\class ves::xplorer::device::KeyboardMouse
- *
- */
-/*!\namespace ves::xplorer::device
+ * \class ves::xplorer::device::KeyboardMouse
+ * \namespace ves::xplorer::device
  *
  */
 class VE_XPLORER_EXPORTS KeyboardMouse : public Device

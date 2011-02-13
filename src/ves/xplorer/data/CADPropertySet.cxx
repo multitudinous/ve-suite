@@ -105,7 +105,10 @@ void CADPropertySet::CreateSkeleton()
     AddProperty( "Transform_Translation_X", 0.0, "x" );
     AddProperty( "Transform_Translation_Y", 0.0, "y" );
     AddProperty( "Transform_Translation_Z", 0.0, "z" );
-
+    SetPropertyAttribute( "Transform_Translation_X", "DisplayPrecision", 4 );
+    SetPropertyAttribute( "Transform_Translation_Y", "DisplayPrecision", 4 );
+    SetPropertyAttribute( "Transform_Translation_Z", "DisplayPrecision", 4 );
+    
     AddProperty( "Transform_Rotation", boost::any(), "Rotation" );
     SetPropertyAttribute( "Transform_Rotation", "isUIGroupOnly", true );
 
@@ -119,6 +122,9 @@ void CADPropertySet::CreateSkeleton()
     AddProperty( "Transform_Scale_X", 0.0, "x" );
     AddProperty( "Transform_Scale_Y", 0.0, "y" );
     AddProperty( "Transform_Scale_Z", 0.0, "z" );
+    SetPropertyAttribute( "Transform_Scale_X", "DisplayPrecision", 6 );
+    SetPropertyAttribute( "Transform_Scale_Y", "DisplayPrecision", 6 );
+    SetPropertyAttribute( "Transform_Scale_Z", "DisplayPrecision", 6 );
 
     // Link up all the transform properties so that a single signal named
     // "TransformCADNode" is fired whenever any of the values changes.

@@ -391,7 +391,7 @@ private:
 
     float timeStep;          // Time step for streamline integration.
 
-    bool greyscaleFlag;         // Flag for whether lookuptable being returned is in greyscale or blue to red.
+    bool m_greyscaleFlag;         // Flag for whether lookuptable being returned is in greyscale or blue to red.
 
     ///Lookup table.
     vtkLookupTable* lut;

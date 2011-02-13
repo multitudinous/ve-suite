@@ -46,17 +46,14 @@ PolydataPropertySet::PolydataPropertySet()
 {
     mTableName = "Polydata";
 
-    std::string prependTag( mTableName );
-    prependTag.append(" ");
-    std::string tag = boost::any_cast<std::string>(GetPropertyValue("NameTag"));
-    SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
+    RegisterPropertySet( mTableName );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PolydataPropertySet::PolydataPropertySet( const PolydataPropertySet& orig )
     :
-    PropertySet( orig )
+    VizBasePropertySet( orig )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +71,7 @@ void PolydataPropertySet::CreateSkeleton()
     // Dummy value to ensure this gets set up as an enum
     enumValues.push_back( "Select Scalar Data" );
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateScalarDataOptions, this, _1 ) );
+    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataOptions, this, _1 ) );
 
     AddProperty( "DataSet_ScalarRange", boost::any(), "Scalar Range" );
     SetPropertyAttribute( "DataSet_ScalarRange", "isUIGroupOnly", true );
@@ -86,15 +83,15 @@ void PolydataPropertySet::CreateSkeleton()
     AddProperty( "DataSet_ScalarRange_Max", 1.0, "Max" );
     mPropertyMap["DataSet_ScalarRange_Max"]->SetDisabled();
 
-    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateScalarDataRange, this, _1 ) );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &PolydataPropertySet::ValidateScalarMinMax, this, _1, _2 ) );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &PolydataPropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
+    mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
 
     AddProperty( "DataSet_VectorData", 0, "Vector Data" );
     enumValues.clear();
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateVectorDataOptions, this, _1 ) );
+    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
     
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
@@ -147,67 +144,6 @@ void PolydataPropertySet::CreateSkeleton()
     AddProperty( "TwoSidedLighting", false, "Two Sided Lighting" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PolydataPropertySet::UpdateScalarDataOptions( PropertyPtr property )
-{
-    boost::ignore_unused_variable_warning( property );
-
-    PSVectorOfStrings enumValues;
-    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
-    std::cout << " UpdateScalarDataOptions " << selectedDataset << std::endl;
-    DatasetPropertySet dataset;
-    dataset.LoadByKey( "Filename", selectedDataset );
-    enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "ScalarNames" ) );
-    if( enumValues.empty() )
-    {
-        enumValues.push_back( "No scalars loaded" );
-    }
-    std::cout << enumValues.size() << std::endl;
-    SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
-    
-    SetPropertyAttribute( "ColorByScalar", "enumValues", enumValues );
-
-    PropertyPtr nullPtr;
-    UpdateScalarDataRange( nullPtr );
-    UpdateVectorDataOptions( nullPtr );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PolydataPropertySet::UpdateScalarDataRange( PropertyPtr property )
-{
-    boost::ignore_unused_variable_warning( property );
-    
-    mPropertyMap["DataSet_ScalarRange_Min"]->SetEnabled();
-    mPropertyMap["DataSet_ScalarRange_Max"]->SetEnabled();
-
-    // Load the current Dataset and get the list of min and max values for its scalars
-    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
-    DatasetPropertySet dataset;
-    dataset.LoadByKey( "Filename", selectedDataset );
-    std::vector<double> mins = boost::any_cast< std::vector<double> >( dataset.GetPropertyValue( "ScalarMins" ) );
-    std::vector<double> maxes = boost::any_cast< std::vector<double> >( dataset.GetPropertyValue( "ScalarMaxes" ) );
-
-    // DataSet_ScalarData is an exact copy of the ScalarNames property of the Dataset,
-    // so its number in the enum will be the same as the index into the min and max
-    // lists
-    int index = boost::any_cast<int>( GetPropertyValue( "DataSet_ScalarData" ) );
-
-    if( ( !mins.empty() ) && ( !maxes.empty() ) )
-    {
-        double min = mins.at( index );
-        double max = maxes.at( index );
-
-        // Update the upper and lower bounds of Min and Max first so that
-        // boundary values will be allowed!
-        SetPropertyAttribute( "DataSet_ScalarRange_Min", "minimumValue", min );
-        SetPropertyAttribute( "DataSet_ScalarRange_Min", "maximumValue", max );
-        SetPropertyAttribute( "DataSet_ScalarRange_Max", "minimumValue", min );
-        SetPropertyAttribute( "DataSet_ScalarRange_Max", "maximumValue", max );
-
-        // Set min and max to the lower and upper boundary values, respectively
-        SetPropertyValue( "DataSet_ScalarRange_Min", min );
-        SetPropertyValue( "DataSet_ScalarRange_Max", max );
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 void PolydataPropertySet::UpdateColorByScalarDataRange( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
@@ -242,71 +178,6 @@ void PolydataPropertySet::UpdateColorByScalarDataRange( PropertyPtr property )
         // Set min and max to the lower and upper boundary values, respectively
         SetPropertyValue( "ColorByScalar_ScalarRange_Min", min );
         SetPropertyValue( "ColorByScalar_ScalarRange_Max", max );
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void PolydataPropertySet::UpdateVectorDataOptions( PropertyPtr property )
-{
-    boost::ignore_unused_variable_warning( property );
-
-    PSVectorOfStrings enumValues;
-    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
-    std::cout << " UpdateVectorDataOptions " << selectedDataset << std::endl;
-    DatasetPropertySet dataset;
-    dataset.LoadByKey( "Filename", selectedDataset );
-    enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "VectorNames" ) );
-    if( enumValues.empty() )
-    {
-        enumValues.push_back( "No vectors loaded" );
-    }
-    std::cout << enumValues.size() << std::endl;
-    SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PolydataPropertySet::UpdateModeOptions( PropertyPtr property )
-{
-    // Make sure the main value is an int as it should be
-    if( property->IsInt() )
-    {
-        int value = boost::any_cast<int>( property->GetValue() );
-        if( value == 0 ) // "Specify a Single Plane"
-        {
-            mPropertyMap["Mode_UseNearestPrecomputedPlane"]->SetEnabled();
-            mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetDisabled();
-        }
-        else
-        {
-            mPropertyMap["Mode_UseNearestPrecomputedPlane"]->SetDisabled();
-            mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetEnabled();
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-bool PolydataPropertySet::ValidateScalarMinMax( PropertyPtr property, boost::any value )
-{
-    PropertyPtr min = mPropertyMap["DataSet_ScalarRange_Min"];
-    PropertyPtr max = mPropertyMap["DataSet_ScalarRange_Max"];
-
-    double castMin, castMax;
-
-    if( property == min )
-    {
-        castMin = boost::any_cast<double>( value );
-        castMax = boost::any_cast<double>( max->GetValue() );
-    }
-    else
-    {
-        castMin = boost::any_cast<double>( min->GetValue() );
-        castMax = boost::any_cast<double>( value );
-    }
-
-    if( castMin < castMax )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

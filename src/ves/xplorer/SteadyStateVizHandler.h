@@ -48,6 +48,10 @@
 
 #include <ves/open/xml/CommandPtr.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
+#include <ves/xplorer/Logging.h>
+
 // --- Juggler Includes --- //
 #include <vrj/vrjParam.h>
 
@@ -167,6 +171,9 @@ public:
     ///\param type The type
     std::vector< cfdGraphicsObject* > GetGraphicsObjectsOfType( cfdGeodeEnum type );
 
+    ///Delete the viz feature
+    void DeleteVizFeature( std::string const& featureUUID );
+
 private:
     //Common objects for all functions
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
@@ -206,6 +213,13 @@ private:
     ///The mp of graphics objects with unique ids to be tied to the ui
     typedef std::tr1::unordered_map<vpr::GUID, cfdGraphicsObject*, vpr::GUID::hash> graphics_objects_map;
     graphics_objects_map m_graphicsObjectMap;
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
+
 };
 }
 }
