@@ -122,6 +122,7 @@ DataSet::DataSet( )
     stepLength( 0.0 ),
     maxTime( 1000 ),
     timeStep( 1 ),
+    m_greyscaleFlag( false ),
     lut( vtkLookupTable::New() ),
     m_dataSet( 0 ),
     mDataReader( 0 ),
@@ -326,35 +327,35 @@ void DataSet::SetUserRange( double userRange[2] )
     << userRange[0] << " : " << userRange[1]
     << std::endl << vprDEBUG_FLUSH;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetUserRange( double userMin, double userMax )
 {
     this->definedRange[0] = userMin;
     this->definedRange[1] = userMax;
     this->SetDisplayedScalarRange( this->activeScalar, this->definedRange );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::GetUserRange( double userRange[2] )
 {
     this->GetUserRange( userRange[0], userRange[1] );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::GetUserRange( double &userMin, double &userMax )
 {
     userMin = this->definedRange[0];
     userMax = this->definedRange[1];
 }
-
+////////////////////////////////////////////////////////////////////////////////
 double * DataSet::GetUserRange()
 {
     return this->definedRange;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetLength( float len )
 {
     this->bbDiagonal = len;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 /*void DataSet::GetLength( float &len )
 {
    len = this->bbDiagonal;
@@ -422,7 +423,7 @@ float DataSet::GetTimeStep()
 ////////////////////////////////////////////////////////////////////////////////
 vtkLookupTable * DataSet::GetLookupTable()
 {
-    if( greyscaleFlag )
+    if( m_greyscaleFlag )
     {
         SetGreyscale();
     }
@@ -435,28 +436,32 @@ vtkLookupTable * DataSet::GetLookupTable()
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetGreyscale()
 {
+    this->lut->SetNumberOfColors( 256 );            //default is 256
     this->lut->SetHueRange( 0.0f , 0.0f );
     this->lut->SetSaturationRange( 0.0f , 0.0f );
     this->lut->SetValueRange( 0.2f , 1.0f );
+    this->lut->SetTableRange( this->definedRange );
     this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetColorscale()
 {
+    this->lut->SetNumberOfColors( 256 );            //default is 256
     this->lut->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
     this->lut->SetSaturationRange( 0.0f , 1.0f );
     this->lut->SetValueRange( 0.0f , 1.0f );
+    this->lut->SetTableRange( this->definedRange );
     this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool DataSet::GetGreyscaleFlag()
 {
-    return this->greyscaleFlag;
+    return m_greyscaleFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetGreyscaleFlag( bool flag )
 {
-    this->greyscaleFlag = flag;
+    m_greyscaleFlag = flag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 vtkUnstructuredGrid * DataSet::GetUnsData()
@@ -902,12 +907,6 @@ void DataSet::SetActiveScalar( const std::string& tempActiveScalar )
     this->timeStep = this->bbDiagonal / this->definedRange[1];
     vprDEBUG( vesDBG, 1 ) << "|\t\tSetActiveScalar: timeStep = "
     << this->timeStep << std::endl << vprDEBUG_FLUSH;
-
-    // set up the vtkLookupTable
-    this->lut->SetNumberOfColors( 256 );            //default is 256
-    this->lut->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
-    this->lut->SetTableRange( this->definedRange );
-    this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetActiveScalar( int scalar )
@@ -1199,11 +1198,6 @@ void DataSet::ResetScalarBarRange( double min, double max )
         << std::endl << vprDEBUG_FLUSH;
 
     this->SetUserRange( newPrettyRange );
-
-    // Update vtkLookupTable
-    double* tempRange1 = GetUserRange();
-    this->lut->SetTableRange( tempRange1 );
-    this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetFileName( const std::string& newName )
