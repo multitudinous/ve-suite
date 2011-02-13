@@ -1,5 +1,9 @@
 <RCC>
   <qresource>
+    <file>../../xpm/CPT/NextCameraButton.xpm</file>
+    <file>../../xpm/CPT/NextMarkerButton.xpm</file>
+    <file>../../xpm/CPT/PrevCameraButton.xpm</file>
+    <file>../../xpm/CPT/PrevMarkerButton.xpm</file>
     <file>../../xpm/ToolBar/BBCenterPointJumpButton.xpm</file>
     <file>images/add.png</file>
     <file>images/configure.png</file>
