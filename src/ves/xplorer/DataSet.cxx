@@ -439,9 +439,9 @@ void DataSet::SetGreyscale()
     this->lut->SetNumberOfColors( 256 );            //default is 256
     this->lut->SetHueRange( 0.0f , 0.0f );
     this->lut->SetSaturationRange( 0.0f , 0.0f );
-    this->lut->SetValueRange( 0.2f , 1.0f );
+    //this->lut->SetValueRange( 0.2f , 1.0f );
     this->lut->SetTableRange( this->definedRange );
-    this->lut->Build();
+    this->lut->ForceBuild();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetColorscale()
@@ -449,9 +449,9 @@ void DataSet::SetColorscale()
     this->lut->SetNumberOfColors( 256 );            //default is 256
     this->lut->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
     this->lut->SetSaturationRange( 0.0f , 1.0f );
-    this->lut->SetValueRange( 0.0f , 1.0f );
+    //this->lut->SetValueRange( 0.0f , 1.0f );
     this->lut->SetTableRange( this->definedRange );
-    this->lut->Build();
+    this->lut->ForceBuild();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool DataSet::GetGreyscaleFlag()
