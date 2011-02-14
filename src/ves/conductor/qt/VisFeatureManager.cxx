@@ -78,31 +78,31 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
 
     if( featureName == "Contours" )
     {
-        LOG_DEBUG( "CreateNewFeature: Creating new ContourPlanePropertySet" );
+        LOG_INFO( "CreateNewFeature: Creating new ContourPlanePropertySet" );
         set = PropertySetPtr( new ContourPlanePropertySet() );
     }
     else if( featureName == "Vectors" )
     {
-        LOG_DEBUG( "CreateNewFeature: Creating new VectorPlanePropertySet" );
+        LOG_INFO( "CreateNewFeature: Creating new VectorPlanePropertySet" );
         set = PropertySetPtr( new VectorPlanePropertySet() );
     }
     else if( featureName == "Streamlines" )
     {
-        LOG_DEBUG( "CreateNewFeature: Creating new StreamlinesPropertySet" );
+        LOG_INFO( "CreateNewFeature: Creating new StreamlinesPropertySet" );
         set = PropertySetPtr( new StreamlinePropertySet() );
     }
     else if( featureName == "Isosurfaces" )
     {
-        LOG_DEBUG( "CreateNewFeature: Creating new IsoSurfacesPropertySet" );
+        LOG_INFO( "CreateNewFeature: Creating new IsoSurfacesPropertySet" );
         set = PropertySetPtr( new IsosurfacePropertySet() );
     }
     else if( featureName == "Texture-based" )
     {
-        LOG_DEBUG( "CreateNewFeature: Creating new TextureBasedPropertySet" );
+        LOG_INFO( "CreateNewFeature: Creating new TextureBasedPropertySet" );
     }
     else if( featureName == "Polydata" )
     {
-        LOG_DEBUG( "CreateNewFeature: Creating new PolydataPropertySet" );
+        LOG_INFO( "CreateNewFeature: Creating new PolydataPropertySet" );
         set = PropertySetPtr( new PolydataPropertySet() );
     }
 
@@ -118,31 +118,31 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, const std
 
     if( featureName == "Contours" )
     {
-        LOG_DEBUG( "UpdateFeature: Updating ContourFeatureMaker" );
+        LOG_INFO( "UpdateFeature: Updating ContourFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new ContourFeatureMaker() );
     }
     else if( featureName == "Vectors" )
     {
-        LOG_DEBUG( "UpdateFeature: Updating VectorFeatureMaker" );
+        LOG_INFO( "UpdateFeature: Updating VectorFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new VectorFeatureMaker() );
     }
     else if( featureName == "Streamlines" )
     {
-        LOG_DEBUG( "UpdateFeature: Updating StreamlineFeatureMaker" );
+        LOG_INFO( "UpdateFeature: Updating StreamlineFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new StreamlineFeatureMaker() );
     }
     else if( featureName == "Isosurfaces" )
     {
-        LOG_DEBUG( "UpdateFeature: Updating IsosurfaceFeatureMaker" );
+        LOG_INFO( "UpdateFeature: Updating IsosurfaceFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new IsosurfaceFeatureMaker() );
     }
     else if( featureName == "Texture-based" )
     {
-        LOG_DEBUG( "UpdateFeature: Updating TextureBasedFeatureMaker" );
+        LOG_INFO( "UpdateFeature: Updating TextureBasedFeatureMaker" );
     }
     else if( featureName == "Polydata" )
     {
-        LOG_DEBUG( "UpdateFeature: Updating PolydataFeatureMaker" );
+        LOG_INFO( "UpdateFeature: Updating PolydataFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new PolydataFeatureMaker() );
     }
 

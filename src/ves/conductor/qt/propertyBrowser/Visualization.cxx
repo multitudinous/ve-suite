@@ -62,13 +62,14 @@ Visualization::Visualization( QWidget* parent )
     m_ui->setupUi( this );
 
     mFeatureBrowser = new PropertyBrowser( this );
-
+    LOG_TRACE( "ctor" );
     // Force FeatureIDSelector to update itself based on the database.
     //UpdateFeatureIDSelectorChoices();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Visualization::~Visualization()
 {
+    LOG_TRACE( "dtor" );
     delete m_ui;
     delete mFeatureBrowser;
 }
