@@ -35,6 +35,8 @@
 
 #include <ves/xplorer/data/PropertySetPtr.h>
 
+#include <ves/xplorer/Logging.h>
+
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -62,14 +64,8 @@ namespace ves
 namespace conductor
 {
 /*!\file VisFeatureManager.h
- *
- */
-
-/*!\class ves::conductor::VisFeatureManager
- *
- */
-
-/*!\namespace ves::conductor
+ * \class ves::conductor::VisFeatureManager
+ * \namespace ves::conductor
  *
  */
     
@@ -111,7 +107,11 @@ private:
     
     ///Map to hold a mapping between feature names and table names
     std::map< std::string, std::string > m_featureNameToTableName;
-
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
+    
 };
 } // namespace conductor
 } // namespace ves

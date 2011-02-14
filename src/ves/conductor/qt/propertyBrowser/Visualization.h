@@ -39,6 +39,8 @@
 
 #include <ves/xplorer/data/PropertySetPtr.h>
 
+#include <ves/xplorer/Logging.h>
+
 #include <map>
 
 // Forward declarations
@@ -94,6 +96,10 @@ private:
     bool mIgnoreIndexChange;
     ///A vector if ids for something
     std::vector< std::string > m_ids;
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 } // namespace conductor

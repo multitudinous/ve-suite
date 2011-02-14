@@ -55,7 +55,9 @@ Visualization::Visualization( QWidget* parent )
     :
     QDialog( parent ),
     m_ui( new Ui::Visualization ),
-    mIgnoreIndexChange(false)
+    mIgnoreIndexChange(false),
+    m_logger( Poco::Logger::get("conductor.Visualization") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     m_ui->setupUi( this );
 
@@ -126,6 +128,7 @@ void Visualization::on_NewFeatureButton_clicked()
     // which by definition corresponds to the "new" one
     UpdateFeatureIDSelectorChoices();
     m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
+    LOG_DEBUG( "on_NewFeatureButton_clicked" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_DeleteFeatureButton_clicked()
@@ -138,6 +141,7 @@ void Visualization::on_DeleteFeatureButton_clicked()
         mTempSet = nullPtr;
         UpdateFeatureIDSelectorChoices();
         m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
+        LOG_DEBUG( "on_DeleteFeatureButton_clicked" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -55,11 +55,12 @@ namespace ves
 namespace conductor
 {
 
-#define _print( text ) std::cout << text << std::endl << std::flush
-
 vprSingletonImp( VisFeatureManager );
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureManager::VisFeatureManager()
+    :
+    m_logger( Poco::Logger::get("conductor.VisFeatureManager") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     ;
 }
@@ -77,31 +78,31 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
 
     if( featureName == "Contours" )
     {
-        _print( "|\tCreating new ContourPlanePropertySet" );
+        LOG_DEBUG( "CreateNewFeature: Creating new ContourPlanePropertySet" );
         set = PropertySetPtr( new ContourPlanePropertySet() );
     }
     else if( featureName == "Vectors" )
     {
-        _print( "|\tCreating new VectorPlanePropertySet" );
+        LOG_DEBUG( "CreateNewFeature: Creating new VectorPlanePropertySet" );
         set = PropertySetPtr( new VectorPlanePropertySet() );
     }
     else if( featureName == "Streamlines" )
     {
-        _print( "|\tCreating new StreamlinesPropertySet" );
+        LOG_DEBUG( "CreateNewFeature: Creating new StreamlinesPropertySet" );
         set = PropertySetPtr( new StreamlinePropertySet() );
     }
     else if( featureName == "Isosurfaces" )
     {
-        _print( "|\tCreating new IsoSurfacesPropertySet" );
+        LOG_DEBUG( "CreateNewFeature: Creating new IsoSurfacesPropertySet" );
         set = PropertySetPtr( new IsosurfacePropertySet() );
     }
     else if( featureName == "Texture-based" )
     {
-        _print( "Would be creating new TextureBasedPropertySet..." );
+        LOG_DEBUG( "CreateNewFeature: Creating new TextureBasedPropertySet" );
     }
     else if( featureName == "Polydata" )
     {
-        _print( "|\tCreating new PolydataPropertySet" );
+        LOG_DEBUG( "CreateNewFeature: Creating new PolydataPropertySet" );
         set = PropertySetPtr( new PolydataPropertySet() );
     }
 
@@ -117,31 +118,31 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, const std
 
     if( featureName == "Contours" )
     {
-        _print( "|\tUpdating ContourFeatureMaker" );
+        LOG_DEBUG( "UpdateFeature: Updating ContourFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new ContourFeatureMaker() );
     }
     else if( featureName == "Vectors" )
     {
-        _print( "|\tUpdating VectorFeatureMaker" );
+        LOG_DEBUG( "UpdateFeature: Updating VectorFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new VectorFeatureMaker() );
     }
     else if( featureName == "Streamlines" )
     {
-        _print( "|\tUpdating StreamlineFeatureMaker" );
+        LOG_DEBUG( "UpdateFeature: Updating StreamlineFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new StreamlineFeatureMaker() );
     }
     else if( featureName == "Isosurfaces" )
     {
-        _print( "|\tUpdating IsosurfaceFeatureMaker" );
+        LOG_DEBUG( "UpdateFeature: Updating IsosurfaceFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new IsosurfaceFeatureMaker() );
     }
     else if( featureName == "Texture-based" )
     {
-        _print( "Would be updating TextureBasedFeatureMaker..." );
+        LOG_DEBUG( "UpdateFeature: Updating TextureBasedFeatureMaker" );
     }
     else if( featureName == "Polydata" )
     {
-        _print( "|\tUpdating PolydataFeatureMaker" );
+        LOG_DEBUG( "UpdateFeature: Updating PolydataFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new PolydataFeatureMaker() );
     }
 
@@ -173,11 +174,13 @@ VisFeatureManager::GetNameIDPairsForFeature( const std::string& featureName )
             nameIDPairs.push_back( tempPair );
         }
 
+        LOG_DEBUG( "GetNameIDPairsForFeature: For " + featureName );
         return nameIDPairs;
     }
 
-    std::cout << "We do not have a " << featureName 
-        << " vis feature registered yet." << std::endl;
+    LOG_WARNING( "GetNameIDPairsForFeature: We do not have a " + 
+                featureName + " vis feature registered yet." );
+
     return nameIDPairs;
 }
 ////////////////////////////////////////////////////////////////////////////////
