@@ -436,10 +436,10 @@ vtkLookupTable * DataSet::GetLookupTable()
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetGreyscale()
 {
-    this->lut->SetNumberOfColors( 256 );            //default is 256
+    this->lut->SetNumberOfColors( 402 );            //default is 256
     this->lut->SetHueRange( 0.0f , 0.0f );
     this->lut->SetSaturationRange( 0.0f , 0.0f );
-    //this->lut->SetValueRange( 0.2f , 1.0f );
+    this->lut->SetValueRange( 0.2f , 1.0f );
     this->lut->SetTableRange( this->definedRange );
     this->lut->ForceBuild();
 }
@@ -448,8 +448,12 @@ void DataSet::SetColorscale()
 {
     this->lut->SetNumberOfColors( 256 );            //default is 256
     this->lut->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
-    this->lut->SetSaturationRange( 0.0f , 1.0f );
-    //this->lut->SetValueRange( 0.0f , 1.0f );
+    this->lut->SetSaturationRange( 1.0f , 1.0f );
+    //double* temp = this->lut->GetSaturationRange();
+    //std::cout << temp[ 0 ] << " " << temp[ 1 ] << std::endl;
+    this->lut->SetValueRange( 1.0f , 1.0f );
+    //temp = this->lut->GetValueRange();
+    //std::cout << temp[ 0 ] << " " << temp[ 1 ] << std::endl;
     this->lut->SetTableRange( this->definedRange );
     this->lut->ForceBuild();
 }
