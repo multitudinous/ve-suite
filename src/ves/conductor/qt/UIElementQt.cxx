@@ -422,8 +422,8 @@ void UIElementQt::SetWidget( QWidget* widget )
     // tab-focus feedback and odd cursor behavior on Qt 4.6.x. Unfortunately,
     // doing the activate on the scene causes comboboxes in the property browser
     // to stop showing choices on pulldown. Ugh.
-        QEvent ev( QEvent::WindowActivate );
-        QApplication::sendEvent( mGraphicsScene, &ev );
+        //QEvent ev( QEvent::WindowActivate );
+        //QApplication::sendEvent( mGraphicsScene, &ev );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::ResizeCanvas( int width, int height )
