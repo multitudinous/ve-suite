@@ -36,6 +36,7 @@
 
 /**
  * MoveFrame provides a derived QFrame which supports a (mouse) pressed signal
+ * and a doubleClicked signal
  */
 
 class MoveFrame : public QFrame
@@ -45,9 +46,11 @@ public:
     explicit MoveFrame(QWidget *parent = 0);
 
 protected:
-    void mousePressEvent ( QMouseEvent* event );
+    virtual void mousePressEvent ( QMouseEvent* event );
+    virtual void mouseDoubleClickEvent ( QMouseEvent* event );
 
 Q_SIGNALS:
     void pressed();
+    void doubleClicked();
 
 };
