@@ -56,6 +56,7 @@
 #include <QtCore/QMutexLocker>
 #include <QtGui/QApplication>
 #include <ves/conductor/qt/UIManager.h>
+#include <QtGui/QContextMenuEvent>
 
 #ifdef VES_QT_RENDER_DEBUG
 #define _debug(text) std::cout << "UIElementQt::" << text << std::endl << std::flush
@@ -155,25 +156,37 @@ void UIElementQt::Initialize()
         qRegisterMetaType<gadget::Keys>();
         //qRegisterMetaType<wchar_t>();
 
-        QObject::connect( this, SIGNAL( PutButtonPressEvent( gadget::Keys, int, int, int ) ),
-                          this, SLOT( _buttonPressEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
+        QObject::connect( this,
+                          SIGNAL( PutButtonPressEvent( gadget::Keys, int, int, int ) ),
+                          this,
+                          SLOT( _buttonPressEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutButtonReleaseEvent( gadget::Keys, int, int, int ) ),
-                          this, SLOT( _buttonReleaseEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
+        QObject::connect( this,
+                          SIGNAL( PutButtonReleaseEvent( gadget::Keys, int, int, int ) ),
+                          this,
+                          SLOT( _buttonReleaseEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutDoubleClickEvent( gadget::Keys, int, int, int ) ),
-                          this, SLOT( _doubleClickEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
+        QObject::connect( this,
+                          SIGNAL( PutDoubleClickEvent( gadget::Keys, int, int, int ) ),
+                          this,
+                          SLOT( _doubleClickEvent( gadget::Keys, int, int, int ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutMouseMoveEvent( int, int, int, int ) ),
-                          this, SLOT( _mouseMoveEvent( int, int, int, int ) ), Qt::QueuedConnection );
+        QObject::connect( this,
+                          SIGNAL( PutMouseMoveEvent( int, int, int, int ) ),
+                          this,
+                          SLOT( _mouseMoveEvent( int, int, int, int ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutKeyPressEvent( gadget::Keys, int, char ) ),
-                          this, SLOT( _keyPressEvent( gadget::Keys, int, char ) ), Qt::QueuedConnection );
+        QObject::connect( this,
+                          SIGNAL( PutKeyPressEvent( gadget::Keys, int, char ) ),
+                          this,
+                          SLOT( _keyPressEvent( gadget::Keys, int, char ) ), Qt::QueuedConnection );
         //QObject::connect( this, SIGNAL( PutKeyPressEvent( gadget::Keys, int, QString ) ),
         //                 this, SLOT( _keyPressEvent( gadget::Keys, int, QString ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int, char ) ),
-                          this, SLOT( _keyReleaseEvent( gadget::Keys, int, char ) ), Qt::QueuedConnection );
+        QObject::connect( this,
+                          SIGNAL( PutKeyReleaseEvent( gadget::Keys, int, char ) ),
+                          this,
+                          SLOT( _keyReleaseEvent( gadget::Keys, int, char ) ), Qt::QueuedConnection );
         //QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int, QString ) ),
         //                 this, SLOT( _keyReleaseEvent( gadget::Keys, int, QString ) ), Qt::QueuedConnection );
 
@@ -183,10 +196,21 @@ void UIElementQt::Initialize()
         QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( _render() ) );
         mTimer->start( 30 );
 
-        QObject::connect( mQTitlebar->OpacitySlider, SIGNAL( valueChanged( int ) ), this, SLOT( _onOpacitySliderValueChanged( int ) ) );
-        QObject::connect( mQTitlebar->HideButton, SIGNAL( clicked() ), this, SLOT( _onHideButtonClicked() ) );
-        QObject::connect( mQTitlebar->MinimizeButton, SIGNAL( clicked() ), this, SLOT( _onMinimizeButtonClicked() ) );
-        QObject::connect( mQTitlebar->TitleFrame, SIGNAL( pressed() ), this, SLOT( _onTitlebarPressed() ) );
+        QObject::connect( mQTitlebar->OpacitySlider,
+                          SIGNAL( valueChanged( int ) ), this,
+                          SLOT( _onOpacitySliderValueChanged( int ) ) );
+        QObject::connect( mQTitlebar->HideButton,
+                          SIGNAL( clicked() ), this,
+                          SLOT( _onHideButtonClicked() ) );
+        QObject::connect( mQTitlebar->MinimizeButton,
+                          SIGNAL( clicked() ), this,
+                          SLOT( _onMinimizeButtonClicked() ) );
+        QObject::connect( mQTitlebar->TitleFrame,
+                          SIGNAL( pressed() ), this,
+                          SLOT( _onTitlebarPressed() ) );
+        QObject::connect( mQTitlebar->TitleFrame,
+                          SIGNAL( doubleClicked() ), this,
+                          SLOT( _onMinimizeButtonClicked() ) );
 
         mInitialized = true;
     }
@@ -398,8 +422,8 @@ void UIElementQt::SetWidget( QWidget* widget )
     // tab-focus feedback and odd cursor behavior on Qt 4.6.x. Unfortunately,
     // doing the activate on the scene causes comboboxes in the property browser
     // to stop showing choices on pulldown. Ugh.
-    //    QEvent ev( QEvent::WindowActivate );
-    //    QApplication::sendEvent( mGraphicsScene, &ev );
+        QEvent ev( QEvent::WindowActivate );
+        QApplication::sendEvent( mGraphicsScene, &ev );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::ResizeCanvas( int width, int height )
@@ -606,6 +630,18 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
         QMouseEvent e( QEvent::MouseButtonPress, position, globalPos, qbutton,
                     buttons, modifiers );
         qt_sendSpontaneousEvent( this->viewport(), &e );
+
+        // Send a context menu event when the right mouse button is pressed.
+        // Ideally, we would test whether there is a popup window open before
+        // sending the mousepress event above, and test again before sending
+        // this event. If the same (or none ) popup is not open in both cases,
+        // this contextMenuEvent shouldn't be sent.
+        if( qbutton == Qt::RightButton )
+        {
+            QContextMenuEvent e( QContextMenuEvent::Mouse, position,
+                               globalPos, modifiers );
+            qt_sendSpontaneousEvent( this->viewport(), &e );
+        }
     }
     else
     {
@@ -649,15 +685,15 @@ void UIElementQt::_keyReleaseEvent( gadget::Keys key, int modifierMask, char uni
 ////////////////////////////////////////////////////////////////////////////////
 Qt::MouseButton UIElementQt::_extractButton( gadget::Keys button )
 {
-    if( button & gadget::MBUTTON1 )
+    if( button == gadget::MBUTTON1 )
     {
         return Qt::LeftButton;
     }
-    else if( button & gadget::MBUTTON2 )
+    else if( button == gadget::MBUTTON2 )
     {
         return Qt::MidButton;
     }
-    else if( button & gadget::MBUTTON3 )
+    else if( button == gadget::MBUTTON3 )
     {
         return Qt::RightButton;
     }
@@ -884,5 +920,6 @@ void UIElementQt::_onOpacitySliderValueChanged( int opacity )
     ves::conductor::UIManager::instance()->SetOpacity( opacity/100.0f );
 }
 ////////////////////////////////////////////////////////////////////////////////
+
 } // namespace conductor
 } // namespace ves
