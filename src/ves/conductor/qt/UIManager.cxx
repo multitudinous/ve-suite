@@ -374,7 +374,7 @@ void UIManager::Initialize( osg::Group* parentNode )
     mInitialized = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event )
+/*bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event )
 {
     // Ignore events if we're not initialized
     if( !mInitialized )
@@ -461,7 +461,7 @@ bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEve
         }
     }
     return true;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_insertNodesToAdd()
 {

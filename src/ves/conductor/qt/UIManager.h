@@ -170,7 +170,7 @@ public:
     void Initialize( osg::Group* parentNode );
 
     ///Propagates mouse and keyboard events to elements
-    bool SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
+    //bool SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
 
     /// Receives mouse move events connected via EventManager
     /// state = modifier mask OR'd with button mask
