@@ -57,6 +57,7 @@
 #include <QtGui/QFocusEvent>
 #include <QtGui/QStyle>
 #include <QtGui/QPalette>
+#include <QtGui/QComboBox>
 
 #if QT_VERSION >= 0x040400
 QT_BEGIN_NAMESPACE
@@ -388,6 +389,11 @@ QSize QtPropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option,
 bool QtPropertyEditorDelegate::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::FocusOut) {
+        // Focus out events don't play well with comboboxes when using QGraphicsProxyWidget
+        // to do embedded widgets (for, eg., off-screen-rendering)
+        if( qobject_cast<QComboBox*>(object) )
+            return true;
+            
         QFocusEvent *fe = static_cast<QFocusEvent *>(event);
         if (fe->reason() == Qt::ActiveWindowFocusReason)
             return false;

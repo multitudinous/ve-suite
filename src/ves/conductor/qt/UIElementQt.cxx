@@ -419,11 +419,10 @@ void UIElementQt::SetWidget( QWidget* widget )
 #endif
 
     // Force the scene to activate. Failure to do this results in lack of
-    // tab-focus feedback and odd cursor behavior on Qt 4.6.x. Unfortunately,
-    // doing the activate on the scene causes comboboxes in the property browser
-    // to stop showing choices on pulldown. Ugh.
-        //QEvent ev( QEvent::WindowActivate );
-        //QApplication::sendEvent( mGraphicsScene, &ev );
+    // tab-focus feedback, odd cursor behavior, and no popup menus on Qt 4.6
+    // and above.
+    QEvent ev( QEvent::WindowActivate );
+    QApplication::sendEvent( mGraphicsScene, &ev );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::ResizeCanvas( int width, int height )
