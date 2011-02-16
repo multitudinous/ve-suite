@@ -53,6 +53,8 @@
 #include <ves/xplorer/command/CommandManager.h>
 
 #include <ves/open/xml/Command.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/model/Model.h>
 
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
@@ -412,7 +414,14 @@ void MainWindow::onFileOpenSelected( QString fileName )
     {
         // Assume it's a cad file for now
         ves::conductor::CADFileLoader loader;
-        loader.LoadCADFile( file.string() );
+        std::string parentID;
+        if( ves::xplorer::ModelHandler::instance()->GetActiveModel() )
+        {
+            parentID = ves::xplorer::ModelHandler::instance()->
+                       GetActiveModel()->GetModelData()->AddGeometry()->GetID();
+        }
+        loader.LoadCADFile( file.string(), parentID );
+
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
