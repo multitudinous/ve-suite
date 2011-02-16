@@ -521,6 +521,11 @@ void UIManager::_hideAll()
 {
     mUIGroup->setAllChildrenOff();
     mHide = false;
+
+    // Make mouse/keyboard monopolizing state consistent with no UI
+    mMouseInsideUI = false;
+    mUIEnterLeaveSignal( false );
+    _monopolizeInput( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_showAll()
@@ -584,19 +589,24 @@ void UIManager::EmbedAll()
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
 {
-    // Walk through every quad we own and see if the point lies on it
+    // Walk through every visible quad we own and see if the point lies on it
     osg::Vec4 quadPos;
     std::map< UIElement*, osg::Vec4 >::iterator map_iterator = mElementPositionsOrtho2D.begin();
     while( map_iterator != mElementPositionsOrtho2D.end() )
     {
-        quadPos = map_iterator->second;
-        /*std::cout << "Testing (" << x << ", " << y << ") against ("
-                << quadPos.x() << ", " << quadPos.y() << ", " << quadPos.z()
-                << ", " << quadPos.w() << ")\n";*/
-        if( ( x >= quadPos.x() ) && ( x <= quadPos.y() ) &&
-                ( y >= quadPos.z() ) && ( y <= quadPos.w() ) )
+        // If the quad isn't visible, treat it as though the pointer can't be
+        // over it
+        if( map_iterator->first->IsVisible() )
         {
-            return true;
+            quadPos = map_iterator->second;
+            /*std::cout << "Testing (" << x << ", " << y << ") against ("
+                    << quadPos.x() << ", " << quadPos.y() << ", " << quadPos.z()
+                    << ", " << quadPos.w() << ")\n";*/
+            if( ( x >= quadPos.x() ) && ( x <= quadPos.y() ) &&
+                    ( y >= quadPos.z() ) && ( y <= quadPos.w() ) )
+            {
+                return true;
+            }
         }
         ++map_iterator;
     }
@@ -642,6 +652,15 @@ void UIManager::_doMinimize()
                 _doMinMaxElement( map_iterator->second, true );
             }
         }
+    }
+
+    // Make mouse/keyboard monopolizing state consistent with this element's
+    // disappearance
+    if( !Ortho2DTestPointerCoordinates( mCurrentXPointer, mCurrentYPointer ) )
+    {
+        mMouseInsideUI = false;
+        mUIEnterLeaveSignal( false );
+        _monopolizeInput( false );
     }
 
     mMinimize = false;
@@ -764,6 +783,15 @@ void UIManager::HideElement( UIElement* element )
 {
     // Simple hide. May want to add animation later
     element->SetVisible( false );
+
+    // Make mouse/keyboard monopolizing state consistent with this element's
+    // disappearance
+    if( !Ortho2DTestPointerCoordinates( mCurrentXPointer, mCurrentYPointer ) )
+    {
+        mMouseInsideUI = false;
+        mUIEnterLeaveSignal( false );
+        _monopolizeInput( false );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::ShowElement( UIElement* element )
