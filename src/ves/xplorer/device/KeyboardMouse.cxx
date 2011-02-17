@@ -163,6 +163,10 @@ KeyboardMouse::KeyboardMouse()
         "KeyboardMouse.DoubleClick", eventmanager::EventManager::button_SignalType );
 
     evm->RegisterSignal(
+        new SignalWrapper< ScrollSignal_type >( &m_scroll ),
+        "KeyboardMouse.Scroll", eventmanager::EventManager::input_SignalType );
+
+    evm->RegisterSignal(
         new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
         "KeyboardMouse.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
     
@@ -364,7 +368,11 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     case gadget::MouseScrollEvent:
     {
-        //Now we need to pass scroll events along
+        const gadget::MouseEventPtr mouseEvt =
+            boost::static_pointer_cast< gadget::MouseEvent >( event );
+
+        m_scroll( mouseEvt->getScrollDeltaX(), mouseEvt->getScrollDeltaY(),
+                  mouseEvt->getX(), mouseEvt->getY(), mouseEvt->getState() );
         break;
     }
     default:

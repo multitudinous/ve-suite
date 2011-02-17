@@ -209,6 +209,12 @@ private:
     ///Slot to determine if the mouse is inside the UI
     void Exit( bool const& exit );
 
+    /// Scroll signal type
+    /// Params are: deltaX, deltaY, x, y, state (modifier mask OR'd with button mask)
+    typedef boost::signals2::signal< bool ( int, int, int, int, int ),
+        eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
+    ScrollSignal_type m_scroll;
+
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal< bool ( gadget::Keys, int, int, int ),
