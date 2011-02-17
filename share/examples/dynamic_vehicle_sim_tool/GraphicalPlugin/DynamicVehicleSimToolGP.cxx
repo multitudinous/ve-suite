@@ -452,7 +452,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             dvp1->GetData( sipY );
             dvp1 = m_currentCommand->GetDataValuePair( "SIP Z" );
             dvp1->GetData( sipZ );
-            m_sip.set( sipX, sipY, sipZ );
+            m_sip.set( -sipX, -sipY, -sipZ );
         }
         else
         {
@@ -967,21 +967,28 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     
     gmtl::Point3d measuredSIPCentroid;
     measuredSIPCentroid.set( 
-        (sipOffSetFrontBird[ 0 ] + sipOffSetLeftRearBird[ 0 ] + sipOffSetRightRearBird[ 0 ])/3.0, 
-        (sipOffSetFrontBird[ 1 ] + sipOffSetLeftRearBird[ 1 ] + sipOffSetRightRearBird[ 1 ])/3.0,
-        (sipOffSetFrontBird[ 2 ] + sipOffSetLeftRearBird[ 2 ] + sipOffSetRightRearBird[ 2 ])/3.0 );
+        -1.0 * (sipOffSetFrontBird[ 0 ] + sipOffSetLeftRearBird[ 0 ] + sipOffSetRightRearBird[ 0 ])/3.0, 
+        -1.0 * (sipOffSetFrontBird[ 1 ] + sipOffSetLeftRearBird[ 1 ] + sipOffSetRightRearBird[ 1 ])/3.0,
+        -1.0 * (sipOffSetFrontBird[ 2 ] + sipOffSetLeftRearBird[ 2 ] + sipOffSetRightRearBird[ 2 ])/3.0 );
 
+    std::cout << "bird data " << measuredSIPCentroid << std::endl << std::flush;
     gmtl::Matrix44d measuredSIPCentroidMat = 
         gmtl::makeTrans< gmtl::Matrix44d >( measuredSIPCentroid );
     
     gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
     //Now we convert the sip matrix back through the transform mat to move it 
     //to the VR Juggler coord
-#ifndef DVST_TEST
-    gmtl::Matrix44d registerMat = sipLoc * transMat * measuredSIPCentroidMat;
-    gmtl::invert( registerMat );
+    //std::cout << transMat << std::endl;
+    //std::cout << m_sip << std::endl;
 
-    m_initialNavMatrix = registerMat;
+#ifndef DVST_TEST
+    gmtl::Matrix44d registerMat = transMat * measuredSIPCentroidMat;
+    //registerMat = registerMat * sipLoc;
+    gmtl::invert( registerMat );
+    std::cout << "reg matrix " << registerMat << std::endl << std::flush;
+    m_initialNavMatrix = registerMat * sipLoc;
+    std::cout << "init nav matrix " << m_initialNavMatrix << std::endl << std::flush;
+
 #else
     gmtl::AxisAngled viewCorrection( gmtl::Math::deg2Rad( 90.0 ), 0, 0, 1 );
     gmtl::Matrix44d myMat = gmtl::makeRot< gmtl::Matrix44d >( viewCorrection );
