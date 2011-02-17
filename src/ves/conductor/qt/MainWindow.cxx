@@ -365,8 +365,9 @@ void MainWindow::on_actionOpen_triggered()
     mFileDialog->setOptions( QFileDialog::DontUseNativeDialog );
     // Make mFileDialog manage its own lifetime and memory
     mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
-    mFileDialog->setFileMode( QFileDialog::ExistingFile );
+    mFileDialog->setFileMode( QFileDialog::ExistingFiles );
     QStringList filters;
+
     filters << "All Supported Files (*.ves *.osg *.ive *.stl *.wrl *.iv *.obj *.pfb *.flt *.dxf *.3ds)"
             << "VES Files (*.ves)"
             << "OSG files (*.osg *.ive)"
@@ -381,15 +382,51 @@ void MainWindow::on_actionOpen_triggered()
     //mFileDialog->setNameFilter(tr("VES Files (*.ves)"));
     mFileDialog->setNameFilters( filters );
     
-    QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)), 
-                      this, SLOT(onFileOpenSelected(QString)) );
+    QObject::connect( mFileDialog, SIGNAL(filesSelected(const QStringList &)),
+                      this, SLOT(onFileOpenSelected(const QStringList&)) );
     QObject::connect( mFileDialog, SIGNAL(rejected()), this,
                       SLOT( onFileCancelled() ) );
+    connect( mFileDialog, SIGNAL(filterSelected ( const QString& )),
+                      this, SLOT(OnOpenFileFilterSelected( const QString& )));
+    connect( mFileDialog, SIGNAL(currentChanged(const QString&)),
+                      this, SLOT(OnCurrentChanged(const QString&)));
                       
     ActivateTab( AddTab( mFileDialog, "Open File" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::onFileOpenSelected( QString fileName )
+void MainWindow::OnCurrentChanged ( const QString& path )
+{
+    // Determine the file extension. If it is ".ves", force single selection.
+    // Otherwise, allow multiple selection.
+    if( path.endsWith( ".ves", Qt::CaseInsensitive ) )
+    {
+        // Unselect any other files by selecting only the .ves file
+        mFileDialog->selectFile(path);
+        mFileDialog->setFileMode( QFileDialog::ExistingFile );
+    }
+    else
+    {
+        mFileDialog->setFileMode( QFileDialog::ExistingFiles );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::OnOpenFileFilterSelected ( const QString& filter )
+{
+    if( filter == "VES Files (*.ves)" )
+    {
+        // Force single selection
+        mFileDialog->setFileMode( QFileDialog::ExistingFile );
+    }
+    else
+    {
+        // Allow multiple selection
+        mFileDialog->setFileMode( QFileDialog::ExistingFiles );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::onFileOpenSelected( const QStringList& fileNames )
 {
     // Close out the fileDialog tab and kill the file dialog
     RemoveTab( mFileDialog );
@@ -400,28 +437,32 @@ void MainWindow::onFileOpenSelected( QString fileName )
         mFileDialog = 0;
     }
 
-    // Now deal with loading the selected file
-    boost::filesystem::path file( fileName.toStdString() );
-    std::string extension( boost::filesystem::extension( file ) );
-    
-    if( !extension.compare( ".ves" ) )
+    // Now deal with loading the selected files
+    for( int index = 0; index < fileNames.size(); index++ )
     {
-        // It's a ves file, likely with a network
-        ves::conductor::NetworkLoader loader;
-        loader.LoadVesFile( file.string() );
-    }
-    else
-    {
-        // Assume it's a cad file for now
-        ves::conductor::CADFileLoader loader;
-        std::string parentID;
-        if( ves::xplorer::ModelHandler::instance()->GetActiveModel() )
-        {
-            parentID = ves::xplorer::ModelHandler::instance()->
-                       GetActiveModel()->GetModelData()->AddGeometry()->GetID();
-        }
-        loader.LoadCADFile( file.string(), parentID );
+        QString fileName = fileNames.at(index);
+        boost::filesystem::path file( fileName.toStdString() );
+        std::string extension( boost::filesystem::extension( file ) );
 
+        if( !extension.compare( ".ves" ) )
+        {
+            // It's a ves file, likely with a network
+            ves::conductor::NetworkLoader loader;
+            loader.LoadVesFile( file.string() );
+        }
+        else
+        {
+            // Assume it's a cad file for now
+            ves::conductor::CADFileLoader loader;
+            std::string parentID;
+            if( ves::xplorer::ModelHandler::instance()->GetActiveModel() )
+            {
+                parentID = ves::xplorer::ModelHandler::instance()->
+                           GetActiveModel()->GetModelData()->AddGeometry()->GetID();
+            }
+            loader.LoadCADFile( file.string(), parentID );
+
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

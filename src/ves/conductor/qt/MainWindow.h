@@ -187,9 +187,19 @@ protected Q_SLOTS:
     
     /// Called when a user selects quit.
     void on_actionQuit_triggered();
+
+    /// Called when user selects a filter in the open file tab. This gives
+    /// us the opportunity to allow or disallow multiple selection based on
+    /// file type.
+    void OnOpenFileFilterSelected ( const QString& filter );
+
+    /// Called when user clicks a filename in file open tab. This lets us
+    /// allow or disallow multiple selection based on the extension of the
+    /// selected file.
+    void OnCurrentChanged ( const QString& path );
     
     /// Called when a valid file selection is made via the file open dialog.
-    void onFileOpenSelected( QString fileName );
+    void onFileOpenSelected( const QStringList& fileNames );
     
     /// Called when the file selection dialog has been cancelled
     void onFileCancelled();
