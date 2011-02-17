@@ -971,32 +971,29 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
         -1.0 * (sipOffSetFrontBird[ 1 ] + sipOffSetLeftRearBird[ 1 ] + sipOffSetRightRearBird[ 1 ])/3.0,
         -1.0 * (sipOffSetFrontBird[ 2 ] + sipOffSetLeftRearBird[ 2 ] + sipOffSetRightRearBird[ 2 ])/3.0 );
 
-    std::cout << "bird data " << measuredSIPCentroid << std::endl << std::flush;
+    std::cout << "Bird data " << measuredSIPCentroid << std::endl << std::flush;
     gmtl::Matrix44d measuredSIPCentroidMat = 
         gmtl::makeTrans< gmtl::Matrix44d >( measuredSIPCentroid );
     
     gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
     //Now we convert the sip matrix back through the transform mat to move it 
     //to the VR Juggler coord
-    //std::cout << transMat << std::endl;
+    std::cout << "Bird coord " << std::endl << transMat << std::endl << std::flush;
     //std::cout << m_sip << std::endl;
 
-#ifndef DVST_TEST
+//#ifndef DVST_TEST
     gmtl::Matrix44d registerMat = transMat * measuredSIPCentroidMat;
-    //registerMat = registerMat * sipLoc;
-    gmtl::invert( registerMat );
-    std::cout << "reg matrix " << registerMat << std::endl << std::flush;
+    std::cout << "Reg matrix " << std::endl << registerMat << std::endl << std::flush;
     m_initialNavMatrix = registerMat * sipLoc;
-    std::cout << "init nav matrix " << m_initialNavMatrix << std::endl << std::flush;
-
-#else
+    std::cout << "Init nav matrix " << std::endl << m_initialNavMatrix << std::endl << std::flush;
+/*#else
     gmtl::AxisAngled viewCorrection( gmtl::Math::deg2Rad( 90.0 ), 0, 0, 1 );
     gmtl::Matrix44d myMat = gmtl::makeRot< gmtl::Matrix44d >( viewCorrection );
     gmtl::Matrix44d registerMat = transMat * measuredSIPCentroidMat;
-    gmtl::invert( registerMat );
+    //gmtl::invert( registerMat );
 
     m_initialNavMatrix = registerMat * myMat;
-#endif
+#endif*/
     //std::cout << m_initialNavMatrix << std::endl;
     ///Now apply the nave matrix to update the view
     mSceneManager->GetNavDCS()->SetMat( m_initialNavMatrix );
