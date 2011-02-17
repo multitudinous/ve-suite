@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
-
+#include <ves/VEConfig.h>
 #include <QtGui/QGraphicsView>
 
 namespace ves
@@ -41,7 +41,7 @@ namespace conductor
 
 /// This class exists only to sink scroll events sent directly to the
 /// GraphicsView object to prevent odd scrolling of the entire GraphicsView
-class NonScrollGraphicsView : public QGraphicsView
+class VE_CONDUCTOR_QTUI_EXPORTS NonScrollGraphicsView : public QGraphicsView
 {
     Q_OBJECT
 public:
