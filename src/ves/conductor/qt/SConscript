@@ -47,6 +47,9 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'ExtendedTabWidget.h')]
 cppSources += lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'NonScrollGraphicsView.h')]
+cppSources += lib_env.qt_moc(source)
+
 source = [pj(buildSrcDir,'propertyBrowser','PropertyBrowser.h')]
 cppSources += lib_env.qt_moc(source)
 

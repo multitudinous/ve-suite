@@ -36,6 +36,7 @@
 
 // Base class header
 #include <ves/conductor/qt/UIElement.h>
+#include <ves/conductor/qt/NonScrollGraphicsView.h>
 #include <ves/VEConfig.h>
 
 #include <QtCore/QObject>
@@ -64,7 +65,7 @@ namespace conductor
 /// texture. This class also propagates mouse and keyboard events down into the
 /// widget so that it behaves as though it is being displayed on-screen.
 
-class VE_CONDUCTOR_QTUI_EXPORTS UIElementQt : public QGraphicsView, public UIElement
+class VE_CONDUCTOR_QTUI_EXPORTS UIElementQt : public NonScrollGraphicsView, public UIElement
 {
     Q_OBJECT
 

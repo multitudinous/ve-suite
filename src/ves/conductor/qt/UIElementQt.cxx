@@ -85,7 +85,7 @@ namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
 UIElementQt::UIElementQt( QWidget *parent ) :
-QGraphicsView( parent ),
+NonScrollGraphicsView( parent ),
 UIElement(),
 mWidget( 0 ),
 mImage( 0 ),
@@ -703,7 +703,7 @@ void UIElementQt::_scrollEvent( int deltaX, int deltaY, int x, int y, int state 
         orient = Qt::Vertical;
         delta = deltaY;
     }
-    QWheelEvent e( position, globalPos, delta * 15, buttons, modifiers, orient );
+    QWheelEvent e( position, globalPos, delta * 120, buttons, modifiers, orient );
     qt_sendSpontaneousEvent( this->viewport(), &e );
 }
 ////////////////////////////////////////////////////////////////////////////////
