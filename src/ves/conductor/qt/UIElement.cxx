@@ -239,6 +239,16 @@ void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char un
     boost::ignore_unused_variable_warning( unicode );
     std::cerr << "UIElement::SendKeyReleaseEvent If you see this we have problems." << std::endl;
 }
+void UIElement::SendScrollEvent( int deltaX, int deltaY, int x, int y, int state )
+{
+    boost::ignore_unused_variable_warning( deltaX );
+    boost::ignore_unused_variable_warning( deltaY );
+    boost::ignore_unused_variable_warning( x );
+    boost::ignore_unused_variable_warning( y );
+    boost::ignore_unused_variable_warning( state );
+    std::cerr << "UIElement::SendScrollEvent If you see this we have problems." << std::endl;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char* UIElement::RenderElementToImage()
 {

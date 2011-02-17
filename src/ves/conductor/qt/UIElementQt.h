@@ -86,6 +86,7 @@ public:
     virtual void SendMouseMoveEvent( int x, int y, int z, int state );
     virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask, char unicode );
     virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode );
+    virtual void SendScrollEvent( int deltaX, int deltaY, int x, int y, int state );
 
     virtual unsigned char* RenderElementToImage();
     virtual bool IsDirty();
@@ -160,6 +161,7 @@ protected Q_SLOTS:
     void _mouseMoveEvent( int x, int y, int z, int state );
     void _keyPressEvent( gadget::Keys key, int modifierMask, char unicode );
     void _keyReleaseEvent( gadget::Keys key, int modifierMask, char unicode );
+    void _scrollEvent( int deltaX, int deltaY, int x, int y, int state );
 
     void _onHideButtonClicked();
     void _onMinimizeButtonClicked();
@@ -176,6 +178,7 @@ protected Q_SLOTS:
     void PutMouseMoveEvent( int x, int y, int z, int state );
     void PutKeyPressEvent( gadget::Keys key, int modifierMask, char unicode );
     void PutKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode );
+    void PutScrollEvent( int deltaX, int deltaY, int x, int y, int state );
 
 
 };

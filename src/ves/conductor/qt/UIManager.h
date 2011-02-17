@@ -172,6 +172,9 @@ public:
     ///Propagates mouse and keyboard events to elements
     //bool SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
 
+    /// Receives mouse scroll events
+    bool MouseScrollEvent( int deltaX, int deltaY, int x, int y, int state );
+
     /// Receives mouse move events connected via EventManager
     /// state = modifier mask OR'd with button mask
     bool MouseMoveEvent( int x, int y, int z, int state );

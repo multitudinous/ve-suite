@@ -136,6 +136,11 @@ UIManager::UIManager() :
                       &UIManager::KeyReleaseEvent, mInputConnections,
                       keyboard_SignalType, highest_Priority );
 
+    CONNECTSIGNALS_5_COMBINER( "%Mouse.Scroll%", bool ( int, int, int, int, int ),
+                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                      &UIManager::MouseScrollEvent, mInputConnections,
+                      input_SignalType, highest_Priority );
+
     // Force input signal monopoly to agree with default state of mMouseInsideUI
     _monopolizeInput( mMouseInsideUI );
 }
@@ -921,6 +926,53 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool UIManager::MouseScrollEvent( int deltaX, int deltaY, int x, int y, int state )
+{
+    if( !_okayToSendEvent() )
+    {
+        return false;
+    }
+
+    // Store off coordinates and deltas
+    mDxPointer = x - mCurrentXPointer;
+    mDyPointer = y - mCurrentYPointer;
+    mCurrentXPointer = x;
+    mCurrentYPointer = y;
+
+    if( !Ortho2DTestPointerCoordinates( x, y ) )
+    {
+        return false;
+    }
+
+    // TODO: his iterates over all elements. We should instead just find the match
+    // from Ortho2DTestPointerCoordinates and send to it.
+    ElementMap_type::iterator map_iterator;
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
+            ++map_iterator )
+    {
+        UIElement* element = map_iterator->second;
+
+        bool visible = element->IsVisible();
+        bool minimized = element->IsMinimized();
+
+        // Only send events if element is visible and not minimzed
+        if( ( visible ) && ( !minimized ) )
+        {
+            // Translate mouse coordinates to window coordinates
+            // TODO: This may be done better by using the element's entire UIMatrix
+            // so that mouse events can be mapped to scaled (but not minimized) windows.
+            osg::Vec3 trans = element->GetUIMatrix().getTrans();
+            x = x - trans.x();
+            y = y - trans.y();
+            // Flip y mouse coordinate to origin GUI expects
+            y = static_cast < double > ( mTop ) - y;
+            element->SendScrollEvent( deltaX, deltaY, x, y, state );
+        }
+    }
+
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
 {
     if( !_okayToSendEvent() )
@@ -992,7 +1044,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
 
     return false;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
 {
     if( !_okayToSendEvent() )

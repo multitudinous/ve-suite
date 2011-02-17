@@ -57,6 +57,7 @@
 #include <QtGui/QApplication>
 #include <ves/conductor/qt/UIManager.h>
 #include <QtGui/QContextMenuEvent>
+#include <QtGui/QWheelEvent>
 
 #ifdef VES_QT_RENDER_DEBUG
 #define _debug(text) std::cout << "UIElementQt::" << text << std::endl << std::flush
@@ -189,6 +190,10 @@ void UIElementQt::Initialize()
                           SLOT( _keyReleaseEvent( gadget::Keys, int, char ) ), Qt::QueuedConnection );
         //QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int, QString ) ),
         //                 this, SLOT( _keyReleaseEvent( gadget::Keys, int, QString ) ), Qt::QueuedConnection );
+        QObject::connect( this,
+                          SIGNAL( PutScrollEvent( int, int, int, int, int) ),
+                          this,
+                          SLOT( _scrollEvent( int, int, int, int, int) ), Qt::QueuedConnection);
 
         // Start up the timer that causes repaints at a set interval -- assuming
         // thread is given execution sometime during this interval.
@@ -295,6 +300,11 @@ void UIElementQt::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char 
     //QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
     Q_EMIT PutKeyReleaseEvent( key, modifierMask, unicode );
 }
+void UIElementQt::SendScrollEvent( int deltaX, int deltaY, int x, int y, int state )
+{
+    Q_EMIT PutScrollEvent( deltaX, deltaY, x, y, state );
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char* UIElementQt::RenderElementToImage()
 {
@@ -635,18 +645,25 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
         // sending the mousepress event above, and test again before sending
         // this event. If the same (or none ) popup is not open in both cases,
         // this contextMenuEvent shouldn't be sent.
-        if( qbutton == Qt::RightButton )
-        {
-            QContextMenuEvent e( QContextMenuEvent::Mouse, position,
-                               globalPos, modifiers );
-            qt_sendSpontaneousEvent( this->viewport(), &e );
-        }
+//        if( qbutton == Qt::RightButton )
+//        {
+//            QContextMenuEvent e( QContextMenuEvent::Mouse, position,
+//                               globalPos, modifiers );
+//            qt_sendSpontaneousEvent( this->viewport(), &e );
+//        }
     }
     else
     {
         QMouseEvent e( QEvent::MouseButtonRelease, position, globalPos, qbutton,
                     buttons, modifiers );
         qt_sendSpontaneousEvent( this->viewport(), &e );
+
+        if( qbutton == Qt::RightButton )
+        {
+            QContextMenuEvent e( QContextMenuEvent::Mouse, position,
+                               globalPos, modifiers );
+            qt_sendSpontaneousEvent( this->viewport(), &e );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -662,6 +679,31 @@ void UIElementQt::_mouseMoveEvent( int x, int y, int z, int state )
     QMouseEvent e( QEvent::MouseMove, position, globalPos, Qt::NoButton,
                     buttons, modifiers );
 
+    qt_sendSpontaneousEvent( this->viewport(), &e );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::_scrollEvent( int deltaX, int deltaY, int x, int y, int state )
+{
+    Qt::MouseButtons buttons = _extractButtons( state );
+    Qt::KeyboardModifiers modifiers = _extractModifiers( state );
+
+    QPoint position( x, y );
+
+    QPoint globalPos = this->viewport()->mapToGlobal( position );
+
+    Qt::Orientation orient;
+    int delta;
+    if( deltaX != 0 )
+    {
+        orient = Qt::Horizontal;
+        delta = deltaX;
+    }
+    else
+    {
+        orient = Qt::Vertical;
+        delta = deltaY;
+    }
+    QWheelEvent e( position, globalPos, delta * 15, buttons, modifiers, orient );
     qt_sendSpontaneousEvent( this->viewport(), &e );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -130,6 +130,7 @@ public:
     virtual void SendMouseMoveEvent( int x, int y, int z, int state );
     virtual void SendKeyPressEvent( gadget::Keys key, int modifierMask, char unicode );
     virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode );
+    virtual void SendScrollEvent( int deltaX, int deltaY, int x, int y, int state );
 ////////////////////////////////////////////////////////////////////////////////
 /// Tell this element to render to an image and return a pointer to the data.
 ///
