@@ -46,7 +46,13 @@
 // --- VR Juggler Includes --- //
 #include <gmtl/Matrix.h>
 
-// --- C/C++ Libraries --- //
+// --- BackdropFX Includes --- //
+namespace backdropFX
+{
+class RTTViewport;
+}
+
+// --- STL Includes --- //
 #include <string>
 
 namespace ves
@@ -102,6 +108,9 @@ public:
 
     ///
     int const& GetViewportHeight() const;
+
+    ///This can't be const because osg::Camera::setViewport modifies it
+    backdropFX::RTTViewport& GetBdfxRTTViewport() const;
 
     ///
     //int const& GetWindowOriginX() const;
@@ -182,16 +191,16 @@ public:
     osg::Matrixd const& GetWindowMatrixOSG() const;
 
     ///
-    const gmtl::Matrix44d GetVPWMatrix() const;
+    gmtl::Matrix44d const GetVPWMatrix() const;
 
     ///
-    const osg::Matrixd GetVPWMatrixOSG() const;
+    osg::Matrixd const GetVPWMatrixOSG() const;
 
     ///
-    const gmtl::Matrix44d GetCenterVPWMatrix() const;
+    gmtl::Matrix44d const GetCenterVPWMatrix() const;
 
     ///
-    const osg::Matrixd GetCenterVPWMatrixOSG() const;
+    osg::Matrixd const GetCenterVPWMatrixOSG() const;
 
     ///
     void UpdateFrustumValues(
@@ -244,6 +253,9 @@ private:
 
     ///
     int m_viewportHeight;
+
+    ///
+    osg::ref_ptr< backdropFX::RTTViewport > m_bdfxRTTViewport;
 
     ///
     //int m_windowOriginX;

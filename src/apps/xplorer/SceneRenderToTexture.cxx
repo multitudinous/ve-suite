@@ -118,71 +118,71 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
 {
     /// When m_enableRTT is true we will use our old RTT and post processing 
     /// pipeline. When it is false we will use bdfx.
-	if( m_enableRTT )
-	{
-		osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
-			new osgDB::ReaderWriter::Options( "vertex" );
-		osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
-			new osgDB::ReaderWriter::Options( "fragment" );
+    if( m_enableRTT )
+    {
+        osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
+            new osgDB::ReaderWriter::Options( "vertex" );
+        osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
+            new osgDB::ReaderWriter::Options( "fragment" );
 
-		try
-		{
-			m_1dxVP = osgDB::readShaderFile(
-				"glsl/gauss_convolution_1Dx_vp.glsl", vertexOptions.get() );
-			m_1dxFP = osgDB::readShaderFile(
-				"glsl/gauss_convolution_1Dx_fp.glsl", fragmentOptions.get() );
-		}
-		catch( ... )
-		{
-			std::cerr << "Could not load shader files!" << std::endl;
-		}
+        try
+        {
+            m_1dxVP = osgDB::readShaderFile(
+                "glsl/gauss_convolution_1Dx_vp.glsl", vertexOptions.get() );
+            m_1dxFP = osgDB::readShaderFile(
+                "glsl/gauss_convolution_1Dx_fp.glsl", fragmentOptions.get() );
+        }
+        catch( ... )
+        {
+            std::cerr << "Could not load shader files!" << std::endl;
+        }
 
-		try
-		{
-			m_1dyVP = osgDB::readShaderFile(
-				"glsl/gauss_convolution_1Dy_vp.glsl", vertexOptions.get() );
-			m_1dyFP = osgDB::readShaderFile(
-				"glsl/gauss_convolution_1Dy_fp.glsl", fragmentOptions.get() );
-		}
-		catch( ... )
-		{
-			std::cerr << "Could not load shader files!" << std::endl;
-		}
+        try
+        {
+            m_1dyVP = osgDB::readShaderFile(
+                "glsl/gauss_convolution_1Dy_vp.glsl", vertexOptions.get() );
+            m_1dyFP = osgDB::readShaderFile(
+                "glsl/gauss_convolution_1Dy_fp.glsl", fragmentOptions.get() );
+        }
+        catch( ... )
+        {
+            std::cerr << "Could not load shader files!" << std::endl;
+        }
 
-		try
-		{
-			m_finalShader =
-				osgDB::readShaderFile( "glsl/final_fp.glsl", fragmentOptions.get() );
-		}
-		catch( ... )
-		{
-			std::cerr << "Could not load shader files!" << std::endl;
-		}
+        try
+        {
+            m_finalShader =
+                osgDB::readShaderFile( "glsl/final_fp.glsl", fragmentOptions.get() );
+        }
+        catch( ... )
+        {
+            std::cerr << "Could not load shader files!" << std::endl;
+        }
 
         //
         InitRootGroup();
-	}
-	else
-	{
+    }
+    else
+    {
         //The order of initialization matters substantially for dbfx
 
-		//backdropFX::SkyDome& skyDome =
-		//	backdropFX::Manager::instance()->getSkyDome();
-		//skyDome.setSunScale( 2.0 );
-		//skyDome.setMoonScale( 2.0 );
+        //backdropFX::SkyDome& skyDome =
+        //    backdropFX::Manager::instance()->getSkyDome();
+        //skyDome.setSunScale( 2.0 );
+        //skyDome.setMoonScale( 2.0 );
 
 
-		backdropFX::DepthPartition& depthPartition =
-			backdropFX::Manager::instance()->getDepthPartition();
-		depthPartition.setNumPartitions( 1 );
+        backdropFX::DepthPartition& depthPartition =
+            backdropFX::Manager::instance()->getDepthPartition();
+        depthPartition.setNumPartitions( 1 );
 
-		//Add root group to backdropFX::Manager
-		backdropFX::Manager::instance()->setSceneData( m_rootGroup.get() );
-		backdropFX::Manager::instance()->rebuild( 0 );//backdropFX::Manager::depthPeel );
+        //Add root group to backdropFX::Manager
+        backdropFX::Manager::instance()->setSceneData( m_rootGroup.get() );
+        backdropFX::Manager::instance()->rebuild( 0 );//backdropFX::Manager::depthPeel );
         
         //
         InitRootGroup();
-	}
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
@@ -192,7 +192,7 @@ SceneRenderToTexture::~SceneRenderToTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitRootGroup()
 {
-	scenegraph::SceneManager::instance()->SetRootNode( m_rootGroup.get() );
+    scenegraph::SceneManager::instance()->SetRootNode( m_rootGroup.get() );
 
     //If we are in rtt mode, set the main shader
     if( m_enableRTT )
@@ -251,7 +251,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
             new osgwTools::ScreenCapture( "test_image", ".png", true );
         return;
     }
-	*/
+    */
 
     //Get window and viewport information
     vrj::opengl::DrawManager* glDrawManager =
@@ -291,43 +291,43 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
     //
     InitRTTCamera( svCamera, viewportDimensions );
 
-	if( m_enableRTT )
-	{
-		//
-		svCamera->addChild( CreateClearColorQuad( numViewports ) );
+    if( m_enableRTT )
+    {
+        //
+        svCamera->addChild( CreateClearColorQuad( numViewports ) );
 
-		//
-		svCamera->addChild( m_rootGroup.get() );
+        //
+        svCamera->addChild( m_rootGroup.get() );
 
-		//
-		(*m_postProcessCamera) = CreatePostProcessCamera();
+        //
+        (*m_postProcessCamera) = CreatePostProcessCamera();
 
-		//
-		(*m_postProcessCamera)->addChild(
-			CreatePostProcessPipeline( svCamera, viewportDimensions ) );
+        //
+        (*m_postProcessCamera)->addChild(
+            CreatePostProcessPipeline( svCamera, viewportDimensions ) );
 
-		//Add the post process pipeline to the sv camera
-		svCamera->addChild( (*m_postProcessCamera).get() );
-	}
-	else
-	{
+        //Add the post process pipeline to the sv camera
+        svCamera->addChild( (*m_postProcessCamera).get() );
+    }
+    else
+    {
         backdropFX::ShaderModuleVisitor smv;
         smv.setAttachMain( false );
         //Only set to "true" if using outside the backdropFX::Manager
         smv.setAttachTransform( false );
         smv.setSupportSunLighting( false );
         m_rootGroup->accept( smv );
-		//
-		backdropFX::Manager::instance()->setTextureWidthHeight(
-			viewportDimensions.first, viewportDimensions.second );
+        //
+        backdropFX::Manager::instance()->setTextureWidthHeight(
+            viewportDimensions.first, viewportDimensions.second );
 
-		//Add managed root to each SceneView
-		svCamera->addChild(
-			backdropFX::Manager::instance()->getManagedRoot() );
-            
+        //Add managed root to each SceneView
+        svCamera->addChild(
+            backdropFX::Manager::instance()->getManagedRoot() );
+
         backdropFX::RebuildShaderModules rsm;
         backdropFX::Manager::instance()->getManagedRoot()->accept( rsm );
-	}
+    }
 
     //Make sure that existing scene graph objects are
     //allocated with thread safe ref/unref
@@ -354,82 +354,82 @@ void SceneRenderToTexture::InitRTTCamera(
     rttCamera->setClearColor( osg::Vec4( 0.0, 1.0, 0.0, 0.0 ) );
     rttCamera->setClearStencil( 0 );
 
-	if( m_enableRTT )
-	{
+    if( m_enableRTT )
+    {
 #ifdef VES_USE_MSMRT_CALLBACK
-		//Post-draw callback on root camera handles resolving
-		//multisampling for the MRT case
-		MSMRTCallback* msmrt = new MSMRTCallback( rttCamera );
-		rttCamera->setPostDrawCallback( msmrt );
+        //Post-draw callback on root camera handles resolving
+        //multisampling for the MRT case
+        MSMRTCallback* msmrt = new MSMRTCallback( rttCamera );
+        rttCamera->setPostDrawCallback( msmrt );
 #endif
 
-		rttCamera->setRenderTargetImplementation(
-			osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
-		rttCamera->setComputeNearFarMode(
-			osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-		//Viewport cannot be outside the buffer (texture)
-		rttCamera->setViewport(
-			0, 0, viewportDimensions.first, viewportDimensions.second );
+        rttCamera->setRenderTargetImplementation(
+            osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
+        rttCamera->setComputeNearFarMode(
+            osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+        //Viewport cannot be outside the buffer (texture)
+        rttCamera->setViewport(
+            0, 0, viewportDimensions.first, viewportDimensions.second );
 
-		//Set up the color map
-		//Most GPUs prefer the BGRA format
-		//http://www.opengl.org/wiki/Common_Mistakes
-		osg::ref_ptr< osg::Texture2D > colorMap = CreateViewportTexture(
-			GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
-			osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
-			viewportDimensions );
+        //Set up the color map
+        //Most GPUs prefer the BGRA format
+        //http://www.opengl.org/wiki/Common_Mistakes
+        osg::ref_ptr< osg::Texture2D > colorMap = CreateViewportTexture(
+            GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
+            osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+            viewportDimensions );
 
-		//Set up the glow map
-		osg::ref_ptr< osg::Texture2D > glowMap = CreateViewportTexture(
-			GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
-			osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
-			viewportDimensions );
+        //Set up the glow map
+        osg::ref_ptr< osg::Texture2D > glowMap = CreateViewportTexture(
+            GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
+            osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+            viewportDimensions );
 
-		//Attach a texture and use it as the render target
-		//If you set one buffer to multisample, they all get set to multisample
-		//see RenderStage.cpp
-		int maxSamples( 0 );
+        //Attach a texture and use it as the render target
+        //If you set one buffer to multisample, they all get set to multisample
+        //see RenderStage.cpp
+        int maxSamples( 0 );
 #ifdef VES_USE_MULTISAMPLING
-		glGetIntegerv( GL_MAX_SAMPLES_EXT, &maxSamples );
-		if( maxSamples > 4 )
-		{
-			maxSamples = 4;
-		}
+        glGetIntegerv( GL_MAX_SAMPLES_EXT, &maxSamples );
+        if( maxSamples > 4 )
+        {
+            maxSamples = 4;
+        }
 #endif
 
-		rttCamera->attach(
-			osg::Camera::COLOR_BUFFER0, colorMap.get(),
-			0, 0, false, maxSamples, maxSamples );
-		rttCamera->attach(
-			osg::Camera::COLOR_BUFFER1, glowMap.get(),
-			0, 0, false, maxSamples, maxSamples );
-		//Use interleaved depth/stencil renderbuffer
-		rttCamera->attach(
-			osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, GL_DEPTH_STENCIL_EXT );
+        rttCamera->attach(
+            osg::Camera::COLOR_BUFFER0, colorMap.get(),
+            0, 0, false, maxSamples, maxSamples );
+        rttCamera->attach(
+            osg::Camera::COLOR_BUFFER1, glowMap.get(),
+            0, 0, false, maxSamples, maxSamples );
+        //Use interleaved depth/stencil renderbuffer
+        rttCamera->attach(
+            osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, GL_DEPTH_STENCIL_EXT );
 
-		//Set up the depth buffer
-		//osg::ref_ptr< osg::Texture2D > depthMap = CreateViewportTexture(
-			//GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
-			//osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
-			//viewportDimensions );
+        //Set up the depth buffer
+        //osg::ref_ptr< osg::Texture2D > depthMap = CreateViewportTexture(
+            //GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
+            //osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
+            //viewportDimensions );
 
-		//Set up interleaved depth/stencil buffer
-		//osg::ref_ptr< osg::Texture2D > depthStencilMap = CreateViewportTexture(
-			//GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
-			//osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
-			//viewportDimensions );
+        //Set up interleaved depth/stencil buffer
+        //osg::ref_ptr< osg::Texture2D > depthStencilMap = CreateViewportTexture(
+            //GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
+            //osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
+            //viewportDimensions );
 
-		//osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
-		//clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
-		//rttCamera->addChild( clearNode.get() );
-	}
-	else
-	{
+        //osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
+        //clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
+        //rttCamera->addChild( clearNode.get() );
+    }
+    else
+    {
         ///With depth partitioning enabled this should be set to: 
         ///DO_NOT_COMPUTE_NEAR_FAR
-		rttCamera->setComputeNearFarMode(
-			osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
-	}
+        rttCamera->setComputeNearFarMode(
+            osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Camera* SceneRenderToTexture::CreatePostProcessCamera()

@@ -122,6 +122,7 @@
 #include <backdropFX/LocationData.h>
 #include <backdropFX/ShaderModule.h>
 #include <backdropFX/ShaderModuleVisitor.h>
+#include <backdropFX/RTTViewport.h>
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Generate.h>
@@ -1079,9 +1080,7 @@ void App::draw()
         }
         else
         {
-            sv->setViewport(
-                glTI->GetViewportOriginX(), glTI->GetViewportOriginY(),
-                glTI->GetViewportWidth(), glTI->GetViewportHeight() );
+            sv->setViewport( &( glTI->GetBdfxRTTViewport() ) );
         }
     }
     else

@@ -515,18 +515,18 @@ void SceneManager::_createLogo()
     //Add the logo model
     osg::ref_ptr< osg::Node > vesuiteNode =
         osgDB::readNodeFile( "logo/ve-suite.ive" );
-	if( !m_isRTTOn )
-	{
-		backdropFX::ShaderModuleVisitor smv;
-		smv.setAddDefaults( false );
-		vesuiteNode->accept( smv );
-	}
-	mLogoNode->addChild( vesuiteNode.get() );
-	if( !m_isRTTOn )
-	{
-		//backdropFX::RebuildShaderModules rsm;
-		//mRootNode->accept( rsm );
-	}
+    if( !m_isRTTOn )
+    {
+        backdropFX::ShaderModuleVisitor smv;
+        smv.setAddDefaults( false );
+        vesuiteNode->accept( smv );
+    }
+    mLogoNode->addChild( vesuiteNode.get() );
+    if( !m_isRTTOn )
+    {
+        backdropFX::RebuildShaderModules rsm;
+        backdropFX::Manager::instance()->getManagedRoot()->accept( rsm );
+    }
     /*
     std::string vsName = osgDB::findDataFile( "phong.vs" );
     std::string fsName = osgDB::findDataFile( "phong.fs" );
@@ -573,7 +573,7 @@ void SceneManager::LatePreFrameUpdate()
         m_globalViewMatrixOSG.set( m_globalViewMatrix.mData );
         
         gmtl::invert( m_invertedGlobalViewMatrix, m_globalViewMatrix );
-        m_invertedGlobalViewMatrixOSG.set( m_globalViewMatrix.mData );     
+        m_invertedGlobalViewMatrixOSG.set( m_globalViewMatrix.mData );
     }
     else
     {

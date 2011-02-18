@@ -34,11 +34,14 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
-// --- C/C++ Libraries --- //
-#include <iostream>
-
 // --- VR Juggler Includes --- //
 #include <gmtl/Generate.h>
+
+// --- BackdropFX Includes --- //
+#include <backdropFX/RTTViewport.h>
+
+// --- STL Includes --- //
+#include <iostream>
 
 using namespace ves::xplorer::scenegraph;
 
@@ -51,6 +54,7 @@ GLTransformInfo::GLTransformInfo( bool const& inStereo )
     m_viewportOriginY( 0 ),
     m_viewportWidth( 0 ),
     m_viewportHeight( 0 ),
+    m_bdfxRTTViewport( new backdropFX::RTTViewport( 0, 0, 0, 0 ) ),
 
     //m_windowOriginX( windowOriginX ),
     //m_windowOriginY( windowOriginY ),
@@ -87,6 +91,7 @@ GLTransformInfo::GLTransformInfo( GLTransformInfo const& glTransformInfo )
     m_viewportOriginY( glTransformInfo.m_viewportOriginY ),
     m_viewportWidth( glTransformInfo.m_viewportWidth ),
     m_viewportHeight( glTransformInfo.m_viewportHeight ),
+    m_bdfxRTTViewport( glTransformInfo.m_bdfxRTTViewport.get() ),
 
     //m_windowOriginX( glTransformInfo.m_windowOriginX ),
     //m_windowOriginY( glTransformInfo.m_windowOriginY ),
@@ -139,6 +144,11 @@ int const& GLTransformInfo::GetViewportWidth() const
 int const& GLTransformInfo::GetViewportHeight() const
 {
     return m_viewportHeight;
+}
+////////////////////////////////////////////////////////////////////////////////
+backdropFX::RTTViewport& GLTransformInfo::GetBdfxRTTViewport() const
+{
+    return *( m_bdfxRTTViewport.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -278,7 +288,7 @@ osg::Matrixd const& GLTransformInfo::GetWindowMatrixOSG() const
     return m_windowMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d GLTransformInfo::GetVPWMatrix() const
+gmtl::Matrix44d const GLTransformInfo::GetVPWMatrix() const
 {
     if( m_inStereo )
     {
@@ -290,7 +300,7 @@ const gmtl::Matrix44d GLTransformInfo::GetVPWMatrix() const
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd GLTransformInfo::GetVPWMatrixOSG() const
+osg::Matrixd const GLTransformInfo::GetVPWMatrixOSG() const
 {
     if( m_inStereo )
     {
@@ -302,12 +312,12 @@ const osg::Matrixd GLTransformInfo::GetVPWMatrixOSG() const
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const gmtl::Matrix44d GLTransformInfo::GetCenterVPWMatrix() const
+gmtl::Matrix44d const GLTransformInfo::GetCenterVPWMatrix() const
 {
     return m_windowMatrix * m_projectionMatrix * m_centerViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const osg::Matrixd GLTransformInfo::GetCenterVPWMatrixOSG() const
+osg::Matrixd const GLTransformInfo::GetCenterVPWMatrixOSG() const
 {
     return m_centerViewMatrixOSG * m_projectionMatrixOSG * m_windowMatrixOSG;
 }
@@ -359,6 +369,9 @@ void GLTransformInfo::UpdateViewportValues(
     m_viewportOriginY = viewportOriginY;
     m_viewportWidth = viewportWidth;
     m_viewportHeight = viewportHeight;
+    m_bdfxRTTViewport->setViewport(
+        m_viewportOriginX, m_viewportOriginY,
+        m_viewportWidth, m_viewportHeight );
 
     UpdateWindowMatrix();
 }

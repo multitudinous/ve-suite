@@ -576,13 +576,13 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         }
     }
 
-	//Create shader modules emulating ffp
-	if( !scenegraph::SceneManager::instance()->IsRTTOn() )
-	{
-		backdropFX::ShaderModuleVisitor smv;
-		smv.setAddDefaults( false );
-		mCadNode->accept( smv );
-	}
+    //Create shader modules emulating ffp
+    if( !scenegraph::SceneManager::instance()->IsRTTOn() )
+    {
+        backdropFX::ShaderModuleVisitor smv;
+        smv.setAddDefaults( false );
+        mCadNode->accept( smv );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::
