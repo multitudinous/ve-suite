@@ -8,37 +8,28 @@
 // --- DB Plot Includes --- //
 class SensorData;
 
-// --- Boost Includes --- //
-#include <boost/tokenizer.hpp>
-
 // --- STL Includes --- //
 #include <fstream>
 
-class SamplingThread : public QwtSamplingThread
+class CANMessageParser : public QwtSamplingThread
 {
     ///
     Q_OBJECT
 
 public:
     ///
-    SamplingThread( SensorData* sensorData, QObject* parent = NULL );
+    CANMessageParser( QObject* parent = NULL );
 
     ///
-    virtual ~SamplingThread();
+    virtual ~CANMessageParser();
 
-//public Q_SLOTS:
+//Q_SIGNALS:
 
 protected:
     ///
     virtual void sample( double elapsed );
 
 private:
-    ///
-    typedef boost::tokenizer< boost::escaped_list_separator< char > > Tokenizer;
-
-    ///
-    SensorData* m_sensorData;
-
     ///
     double m_timeValue;
 

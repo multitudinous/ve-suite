@@ -9,43 +9,54 @@
 // --- DB Plot Includes --- //
 #include "mainwindow.h"
 #include "plot.h"
+#include "WheelBox.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 MainWindow::MainWindow( QWidget* parent )
     :
     QWidget( parent ),
-    d_plot( new Plot( this ) )
+    m_plot( NULL ),
+    m_timerWheel( NULL ),
+    m_intervalWheel( NULL )
 {
-    QHBoxLayout* layout = new QHBoxLayout( this );
-    layout->addWidget( d_plot, 10 );
+    //seconds
+    double const intervalLength = 10.0;
 
-    /*
+    m_plot = new Plot( this );
+    m_plot->setIntervalLength( intervalLength );
+
+    m_intervalWheel = new WheelBox( "Displayed [s]", 1.0, 100.0, 1.0, this );
+    m_intervalWheel->setValue( intervalLength );
+
+    m_timerWheel = new WheelBox( "Sample Interval [ms]", 0.1, 50.0, 0.1, this );
+    m_timerWheel->setValue( 10.0 );
+
+    QHBoxLayout* vLayout1 = new QHBoxLayout();
+    vLayout1->addWidget( m_intervalWheel );
+    vLayout1->addWidget( m_timerWheel );
+
+    QVBoxLayout* layout = new QVBoxLayout( this );
+    layout->addWidget( m_plot, 10 );
+    layout->addLayout( vLayout1 );
+
     connect(
-        d_timerWheel,
+        m_timerWheel,
         SIGNAL( valueChanged( double ) ),
         SIGNAL( signalIntervalChanged( double ) ) );
     connect(
-        d_intervalWheel,
+        m_intervalWheel,
         SIGNAL( valueChanged( double ) ),
-        d_plot,
+        m_plot,
         SLOT( setIntervalLength( double ) ) );
-    connect(
-        &window,
-        SIGNAL( signalIntervalChanged( double ) ),
-        &samplingThread,
-        SLOT( setInterval( double ) ) );
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::start()
 {
-    d_plot->start();
+    m_plot->start();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
 double MainWindow::signalInterval() const
 {
-    return d_timerWheel->value();
+    return m_timerWheel->value();
 }
-*/
 ////////////////////////////////////////////////////////////////////////////////

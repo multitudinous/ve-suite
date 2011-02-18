@@ -6,23 +6,20 @@
 #include <iostream>
 
 ////////////////////////////////////////////////////////////////////////////////
-SensorData::SensorData()
+SensorData::SensorData( std::string const& sensorStr )
     :
     m_paintedPoints( 0 ),
-    m_samplingThread( this ),
     m_lock(),
     m_values(),
     m_mutex(),
     m_pendingValues()
 {
-    //This is how often we will push back points to SensorData in milliseconds
-    m_samplingThread.setInterval( 20.0 );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 SensorData::~SensorData()
 {
-    m_samplingThread.stop();
-    m_samplingThread.wait( 1000 );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorData::append( QPointF const& sample )
@@ -46,11 +43,6 @@ void SensorData::append( QPointF const& sample )
 QRectF SensorData::boundingRect() const
 {
     return QRectF();
-}
-////////////////////////////////////////////////////////////////////////////////
-SamplingThread& SensorData::GetSamplingThread()
-{
-    return m_samplingThread;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorData::clearStaleValues( double minimum )

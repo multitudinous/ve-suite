@@ -22,7 +22,8 @@ sources = sca_util.getSourcesRecursive( pj( openDir ) )
 moc = []
 mocsources = [ pj( buildSrcDir, 'mainwindow.h' ),
                pj( buildSrcDir, 'plot.h' ),
-               pj( buildSrcDir, 'samplingthread.h' ) ]
+               pj( buildSrcDir, 'CANMessageParser.h' ),
+               pj( buildSrcDir, 'WheelBox.h' ) ]
 
 for x in mocsources:
     moc += env.qt_moc( x )

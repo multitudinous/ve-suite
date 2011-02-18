@@ -41,17 +41,17 @@ Plot::Plot( QWidget* parent )
 {
     setAutoReplot( false );
     //setCanvasBackground( Qt::black );
-    setTitle( "Sensor Data" );
+    setTitle( "BG 480-E" );
     plotLayout()->setAlignCanvasToScales( true );
 
     QwtLegend* legend = new QwtLegend();
     legend->setItemMode( QwtLegend::CheckableItem );
     insertLegend( legend, QwtPlot::RightLegend );
 
-    setAxisTitle( QwtPlot::xBottom, "Time [h:m:s]" );
+    setAxisTitle( QwtPlot::xBottom, "Time [s]" );
     setAxisScale(
         QwtPlot::xBottom, m_interval.minValue(), m_interval.maxValue() );
-    setAxisTitle( QwtPlot::yLeft, "Values [unit]" );
+    setAxisTitle( QwtPlot::yLeft, "Value [A]" );
     setAxisScale( QwtPlot::yLeft, 0.0, 200.0 );
 
     //We don't need the cache here
@@ -79,27 +79,25 @@ Plot::Plot( QWidget* parent )
     m_marker->setLinePen( QPen( Qt::gray, 1, Qt::SolidLine ) );
     //m_marker->attach( this );
 
-    QwtPlotCurve* curve1 = new QwtPlotCurve( "Green Sensor" );
+    QwtPlotCurve* curve1 = new QwtPlotCurve( "UM Motor Current" );
     curve1->setStyle( QwtPlotCurve::Lines );
     curve1->setPen( QPen( Qt::green ) );
     curve1->setRenderHint( QwtPlotItem::RenderAntialiased, true );
     curve1->setPaintAttribute( QwtPlotCurve::ClipPolygons, false );
-    curve1->setData( new SensorData() );
+    curve1->setData( new SensorData( "1A1" ) );
     curve1->attach( this );
     m_curves.push_back( curve1 );
     showCurve( curve1, true );
 
-    /*
-    QwtPlotCurve* curve2 = new QwtPlotCurve( "Red Sensor" );
+    QwtPlotCurve* curve2 = new QwtPlotCurve( "LM Motor Current" );
     curve2->setStyle( QwtPlotCurve::Lines );
     curve2->setPen( QPen( Qt::red ) );
     curve2->setRenderHint( QwtPlotItem::RenderAntialiased, true );
     curve2->setPaintAttribute( QwtPlotCurve::ClipPolygons, false );
-    curve2->setData( new SensorData() );
+    curve2->setData( new SensorData( "1A2" ) );
     curve2->attach( this );
     m_curves.push_back( curve2 );
     showCurve( curve2, false );
-    */
 
     connect(
         this,
@@ -118,17 +116,17 @@ void Plot::start()
     std::vector< QwtPlotCurve* >::iterator itr = m_curves.begin();
     for( ; itr != m_curves.end(); ++itr )
     {
-        SensorData* sensorData = static_cast< SensorData* >( (*itr)->data() );
-        SamplingThread& samplingThread = sensorData->GetSamplingThread();
-        samplingThread.start();
+        //SensorData* sensorData = static_cast< SensorData* >( (*itr)->data() );
+        //SamplingThread& samplingThread = sensorData->GetSamplingThread();
+        //samplingThread.start();
     }
 
     //Need QwtSystemClock to handle sampling measurements
     //It is more accurate than QTime
     m_clock.start();
     //This is how often the timerEvent gets executed, basically a draw refresh rate
-    //So here we tell m_directPainter to draw new points every 20 milliseconds
-    m_timerId = startTimer( 20 );
+    //So here we tell m_directPainter to draw new points every 10 milliseconds
+    m_timerId = startTimer( 10 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Plot::replot()

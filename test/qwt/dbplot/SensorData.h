@@ -10,9 +10,6 @@
 // --- QWT Includes --- //
 #include <qwt_series_data.h>
 
-// --- DB Plot Includes --- //
-#include "samplingthread.h"
-
 // --- STL Includes --- //
 #include <vector>
 #include <deque>
@@ -21,7 +18,7 @@ class SensorData : public QwtSeriesData< QPointF >
 {
 public:
     ///
-    SensorData();
+    SensorData( std::string const& sensorStr );
 
     ///
     SensorData( SensorData const& sensorData );
@@ -48,9 +45,6 @@ public:
     unsigned int GetNumPoints();
 
     ///
-    SamplingThread& GetSamplingThread();
-
-    ///
     void lock();
 
     ///
@@ -73,9 +67,6 @@ protected:
 private:
     ///
     unsigned int m_paintedPoints;
-
-    ///
-    SamplingThread m_samplingThread;
 
     ///Protecting values
     QReadWriteLock m_lock;

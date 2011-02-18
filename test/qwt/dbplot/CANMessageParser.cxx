@@ -1,10 +1,10 @@
 
-// --- QWT Includes --- //
-#include <qwt_math.h>
-
 // --- DB Plot Includes --- //
-#include "samplingthread.h"
+#include "CANMessageParser.h"
 #include "SensorData.h"
+
+// --- QWT Includes --- //
+//#include <qwt_math.h>
 
 // --- Boost Includes --- //
 #include <boost/program_options.hpp>
@@ -19,10 +19,9 @@
 #include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////
-SamplingThread::SamplingThread( SensorData* sensorData, QObject* parent )
+CANMessageParser::CANMessageParser( QObject* parent )
     :
     QwtSamplingThread( parent ),
-    m_sensorData( sensorData ),
     m_timeValue( 0.0 )
 {
     m_infile.open( "C:/dev/ve-suite/trunk/test/qwt/dbplot/log_0000.asc" );
@@ -32,7 +31,7 @@ SamplingThread::SamplingThread( SensorData* sensorData, QObject* parent )
     m_infile.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
 }
 ////////////////////////////////////////////////////////////////////////////////
-SamplingThread::~SamplingThread()
+CANMessageParser::~CANMessageParser()
 {
     if( m_infile.is_open() )
     {
@@ -40,7 +39,7 @@ SamplingThread::~SamplingThread()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SamplingThread::sample( double elapsed )
+void CANMessageParser::sample( double elapsed )
 {
     static bool fileParsed( false );
     while( m_timeValue < elapsed && !fileParsed )
@@ -52,13 +51,13 @@ void SamplingThread::sample( double elapsed )
         //Get the sensor
         m_infile.ignore( 3 );
         std::string sensor; m_infile >> sensor;
-        if( sensor == "1A1" )
+        //if( sensor == m_sensorStr )
         {
             //Get the desired value
             m_infile.ignore( 32 );
             std::string val1, val2; m_infile >> val2 >> val1;
             long n = std::strtoul( ( val1 + val2 ).c_str(), NULL, 16 );
-            m_sensorData->append( QPointF( m_timeValue, 0.1 * n ) );
+            //m_sensorData->append( QPointF( m_timeValue, 0.1 * n ) );
         }
 
         //Move to the next line

@@ -7,6 +7,7 @@
 
 // --- DB Plot Includes --- //
 class Plot;
+class WheelBox;
 
 class MainWindow : public QWidget
 {
@@ -21,15 +22,21 @@ public:
     void start();
 
     ///
-    //double signalInterval() const;
+    double signalInterval() const;
 
 Q_SIGNALS:
     ///
-    //void signalIntervalChanged( double );
+    void signalIntervalChanged( double );
 
 private:
     ///
-    Plot* d_plot;
+    Plot* m_plot;
+
+    ///
+    WheelBox* m_timerWheel;
+
+    ///
+    WheelBox* m_intervalWheel;
 
 };
 
