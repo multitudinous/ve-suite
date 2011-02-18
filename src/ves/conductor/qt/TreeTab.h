@@ -91,6 +91,11 @@ protected:
 
     void Select( const QModelIndex& index, bool highlight );
 
+    /// Syncs db with current transform info read from DCS. This is done
+    /// right after a CADPropertySet is read from the db but before its
+    /// live properties are enabled.
+    void SyncTransformFromDCS();
+
 protected Q_SLOTS:
     /// Called when user changes selection in tree.
     /// This function looks up the scenegraph to find a valid DCS and then

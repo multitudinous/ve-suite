@@ -89,11 +89,7 @@ CADPropertySet::~CADPropertySet()
 void CADPropertySet::CreateSkeleton()
 {
     AddProperty( "Visible", true, "Visible" );
-    MakeLiveBasePtr p;
-    p = MakeLiveBasePtr(new MakeLive<bool>( mUUIDString,
-                                                 GetProperty("Visible"),
-                                                 "ToggleCADNode" ));
-    mLiveObjects.push_back(p);
+
 
     AddProperty( "Transform", boost::any(), "Transform" );
     SetPropertyAttribute( "Transform", "isUIGroupOnly", true );
@@ -126,23 +122,7 @@ void CADPropertySet::CreateSkeleton()
     SetPropertyAttribute( "Transform_Scale_Y", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Z", "DisplayPrecision", 6 );
 
-    // Link up all the transform properties so that a single signal named
-    // "TransformCADNode" is fired whenever any of the values changes.
-    std::vector< PropertyPtr > transformLink;
-    transformLink.push_back( GetProperty( "Transform_Translation_X" ) );
-    transformLink.push_back( GetProperty( "Transform_Translation_Y" ) );
-    transformLink.push_back( GetProperty( "Transform_Translation_Z" ) );
-    transformLink.push_back( GetProperty( "Transform_Rotation_X" ) );
-    transformLink.push_back( GetProperty( "Transform_Rotation_Y" ) );
-    transformLink.push_back( GetProperty( "Transform_Rotation_Z" ) );
-    transformLink.push_back( GetProperty( "Transform_Scale_X" ) );
-    transformLink.push_back( GetProperty( "Transform_Scale_Y" ) );
-    transformLink.push_back( GetProperty( "Transform_Scale_Z" ) );
-    p = MakeLiveBasePtr(new MakeLiveLinked< double >(
-            mUUIDString,
-            transformLink,
-            "TransformCADNode"));
-    mLiveObjects.push_back(p);
+
 
     AddProperty( "Transform_Scale_Uniform", false, "Uniform Scaling" );
 
@@ -206,10 +186,7 @@ void CADPropertySet::CreateSkeleton()
     AddProperty( "Opacity", 1.0, "Opacity" );
     SetPropertyAttribute( "Opacity", "minimumValue", 0.0 );
     SetPropertyAttribute( "Opacity", "maximumValue", 1.0 );
-    p = MakeLiveBasePtr(new MakeLive<double>( mUUIDString,
-                                                 GetProperty("Opacity"),
-                                                 "SetOpacityOnCADNode" ));
-    mLiveObjects.push_back(p);
+
 
     AddProperty( "TransparencyFlag", false, "Make translucent when viz is active" );
 
@@ -237,6 +214,53 @@ void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
     // All properties here are live; save to db whenever they change.
     WriteToDatabase();
 }
+////////////////////////////////////////////////////////////////////////////////
+void CADPropertySet::EnableLiveProperties( bool live )
+{
+    if( !live )
+    {
+        // Clearing list will allow live objs to go out of scope and autodelete
+        mLiveObjects.clear();
+        return;
+    }
+    else if( !mLiveObjects.empty() )
+    {
+        // Properties are already live
+        return;
+    }
+    else
+    {
+        MakeLiveBasePtr p;
+        p = MakeLiveBasePtr(new MakeLive<bool>( mUUIDString,
+                                                     GetProperty("Visible"),
+                                                     "ToggleCADNode" ));
+        mLiveObjects.push_back(p);
+
+        // Link up all the transform properties so that a single signal named
+        // "TransformCADNode" is fired whenever any of the values changes.
+        std::vector< PropertyPtr > transformLink;
+        transformLink.push_back( GetProperty( "Transform_Translation_X" ) );
+        transformLink.push_back( GetProperty( "Transform_Translation_Y" ) );
+        transformLink.push_back( GetProperty( "Transform_Translation_Z" ) );
+        transformLink.push_back( GetProperty( "Transform_Rotation_X" ) );
+        transformLink.push_back( GetProperty( "Transform_Rotation_Y" ) );
+        transformLink.push_back( GetProperty( "Transform_Rotation_Z" ) );
+        transformLink.push_back( GetProperty( "Transform_Scale_X" ) );
+        transformLink.push_back( GetProperty( "Transform_Scale_Y" ) );
+        transformLink.push_back( GetProperty( "Transform_Scale_Z" ) );
+        p = MakeLiveBasePtr(new MakeLiveLinked< double >(
+                mUUIDString,
+                transformLink,
+                "TransformCADNode"));
+        mLiveObjects.push_back(p);
+
+        p = MakeLiveBasePtr(new MakeLive<double>( mUUIDString,
+                                                     GetProperty("Opacity"),
+                                                     "SetOpacityOnCADNode" ));
+        mLiveObjects.push_back(p);
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace data
 } // namespace xplorer

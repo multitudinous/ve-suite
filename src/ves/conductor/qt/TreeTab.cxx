@@ -50,6 +50,7 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/open/xml/cad/CADNode.h>
 
@@ -245,8 +246,47 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     ui->cadPropertyBrowser->RefreshContents();
     ui->cadPropertyBrowser->show();
 
+    // Load properties from db
     mActiveSet->LoadFromDatabase();
+    // Update transform properties to agree with the current state of the
+    // associated DCS
+    SyncTransformFromDCS();
+    // Turn on live updates
+    static_cast<ves::xplorer::data::CADPropertySet*>(mActiveSet.get())->
+            EnableLiveProperties( true );
+
     mBrowser->RefreshAll();
+}
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::SyncTransformFromDCS()
+{
+    if( !mActiveSet.get() )
+    {
+        return;
+    }
+
+    ves::xplorer::Model* model = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    ves::xplorer::ModelCADHandler* mch = model->GetModelCADHandler();
+    if( mch->PartExists( mActiveSet->GetUUIDAsString() ) )
+    {
+        ves::xplorer::scenegraph::CADEntity* cad = mch->GetPart( mActiveSet->GetUUIDAsString() );
+        ves::xplorer::scenegraph::DCS* dcs = cad->GetDCS();
+
+        double* trans = dcs->GetVETranslationArray();
+        mActiveSet->SetPropertyValue( "Transform_Translation_X", trans[0] );
+        mActiveSet->SetPropertyValue( "Transform_Translation_Y", trans[1] );
+        mActiveSet->SetPropertyValue( "Transform_Translation_Z", trans[2] );
+
+        double* rot = dcs->GetRotationArray();
+        mActiveSet->SetPropertyValue( "Transform_Rotation_X", rot[0] );
+        mActiveSet->SetPropertyValue( "Transform_Rotation_Y", rot[1] );
+        mActiveSet->SetPropertyValue( "Transform_Rotation_Z", rot[2] );
+
+        double* scale = dcs->GetScaleArray();
+        mActiveSet->SetPropertyValue( "Transform_Scale_X", scale[0] );
+        mActiveSet->SetPropertyValue( "Transform_Scale_Y", scale[1] );
+        mActiveSet->SetPropertyValue( "Transform_Scale_Z", scale[2] );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

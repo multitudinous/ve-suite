@@ -66,6 +66,10 @@ public:
     ///Destructor
     virtual ~CADPropertySet();
 
+    /// Toggles whether this set's live properties are actually enabled as
+    /// live properties.
+    void EnableLiveProperties( bool live );
+
 private:
     ///Create the skeleton
     void CreateSkeleton();
