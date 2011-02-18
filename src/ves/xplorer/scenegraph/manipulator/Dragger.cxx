@@ -491,7 +491,7 @@ void Dragger::UpdateAssociations()
     if( m_associationMatricesMap.size() == 0 )
     {
         std::cout << "Dragger::UpdateAssociations There is no data for " 
-            << "this dragger to map too." << std::endl;
+            << "this dragger to map to." << std::endl;
         return;
     }
 
