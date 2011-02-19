@@ -572,15 +572,15 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
         double sipVal = 0.0;
         ves::open::xml::DataValuePairPtr sipValDVP = toolCommand->GetDataValuePair( "SIP X" );
         sipValDVP->GetData( sipVal );
-        m_sipLocX->ChangeValue( wxString::Format( "%f", sipVal ) );
+        m_sipLocX->ChangeValue( wxString::Format( _("%f"), sipVal ) );
 
         sipValDVP = toolCommand->GetDataValuePair( "SIP Y" );
         sipValDVP->GetData( sipVal );
-        m_sipLocY->ChangeValue( wxString::Format( "%f", sipVal ) );
+        m_sipLocY->ChangeValue( wxString::Format( _("%f"), sipVal ) );
 
         sipValDVP = toolCommand->GetDataValuePair( "SIP Z" );
         sipValDVP->GetData( sipVal );
-        m_sipLocZ->ChangeValue( wxString::Format( "%f", sipVal ) );
+        m_sipLocZ->ChangeValue( wxString::Format( _("%f"), sipVal ) );
     }
 
     toolCommand = tempModel->GetInput( "Geometry Data Map" );
