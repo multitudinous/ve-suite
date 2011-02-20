@@ -318,13 +318,9 @@ function pkg_bdfx()
       -DBDFX_BUILD_PROTOS=ON \
       -DBDFX_BUILD_TESTS=ON \
       -DBDFX_PROFILE_ENABLE=OFF \
-      -DBulletInstallType="Alternate Install Location" \
       -DOSGInstallType="Alternate Install Location" \
-      -DBulletInstallLocation=${BULLET_INSTALL_DIR} \
       -DOSGInstallLocation=${OSG_INSTALL_DIR} \
       -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include \
-      -DOSGBULLET_ROOT=${OSGBULLET_INSTALL_DIR} \
-      -DOSGBULLETPLUS_ROOT=${OSGBULLETPLUS_INSTALL_DIR} \
       -DOSGEPHEMERIS_ROOT=${OSGEPHEMERIS_INSTALL_DIR} \
       -DBoost_INCLUDE_DIR=${BOOST_INSTALL_DIR}/include;
   fi
@@ -332,8 +328,9 @@ function pkg_bdfx()
     cd ${BACKDROPFX_BUILD_DIR};
     rm -rf ${BACKDROPFX_INSTALL_DIR}/*;
     make install -j${args[4]};
-    #To do: Move flagpoll files to lib directory
-    #cp ${VES_SRC_DIR}/dist/ ${BACKDROPFX_INSTALL_DIR}/lib/flagpoll;
+    mkdir ${BACKDROPFX_INSTALL_DIR}/lib/flagpoll;
+    cp ${VES_SRC_DIR}/dist/linux/fpc_deps_files/backdropfx.fpc \
+       ${BACKDROPFX_INSTALL_DIR}/lib/flagpoll/backdropfx.fpc;
   fi
   #To do: Create dmg installer for package
   if [ ${args[5]} == "d" ]; then echo "DMG package installer not working yet for bdfx!"; fi
@@ -493,6 +490,7 @@ function pkg_osg()
       -DCMAKE_BUILD_TYPE=RelWithDebInfo \
       -DCMAKE_INSTALL_PREFIX=${OSG_INSTALL_DIR} \
       -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+      -DOSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX=imageio \
       -DOSG_WINDOWING_SYSTEM=Cocoa;
   fi
   if [ ${args[3]} == "b" ]; then
