@@ -369,7 +369,7 @@ void GLTransformInfo::UpdateViewportValues(
     m_viewportOriginY = viewportOriginY;
     m_viewportWidth = viewportWidth;
     m_viewportHeight = viewportHeight;
-    m_bdfxRTTViewport->setViewport(
+    m_bdfxRTTViewport->setRTTViewport(
         m_viewportOriginX, m_viewportOriginY,
         m_viewportWidth, m_viewportHeight );
 
