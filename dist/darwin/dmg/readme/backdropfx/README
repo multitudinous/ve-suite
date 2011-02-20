@@ -10,12 +10,9 @@ Build Arguments:
     BDFX_BUILD_PROTOS to OFF
     BDFX_BUILD_TESTS to OFF
     BDFX_PROFILE_ENABLE to OFF
-    BulletInstallType to Alternate Install Location
     OSGInstallType to Alternate Install Location
-    BulletInstallLocation to ${BULLET_INSTALL_DIR}
     OSGInstallLocation to ${OSG_INSTALL_DIR}
-    OSGBULLET_ROOT to ${OSGBULLET_INSTALL_DIR}
-    OSGBULLETPLUS_ROOT to ${OSGBULLETPLUS_INSTALL_DIR}
+    OSGWORKS_INCLUDE_DIR to ${OSGWORKS_INSTALL_DIR}/include
     OSGEPHEMERIS_ROOT to ${OSGEPHEMERIS_INSTALL_DIR}
     Boost_INCLUDE_DIR to ${BOOST_INSTALL_DIR}/include
   make install
