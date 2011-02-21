@@ -30,10 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#define QT_NO_KEYWORDS
-#include <ves/conductor/qt/ui_PreferencesTab.h>
-
 #include <ves/conductor/qt/PreferencesTab.h>
+
+#include <ves/conductor/qt/ui_PreferencesTab.h>
 
 #include <ves/xplorer/data/PreferencesPropertySet.h>
 

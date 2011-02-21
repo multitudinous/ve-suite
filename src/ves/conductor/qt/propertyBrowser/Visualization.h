@@ -41,7 +41,8 @@
 
 #include <ves/xplorer/Logging.h>
 
-#include <map>
+#include <vector>
+#include <string>
 
 // Forward declarations
 namespace Ui

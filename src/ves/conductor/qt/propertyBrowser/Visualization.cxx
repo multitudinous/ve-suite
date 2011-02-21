@@ -30,13 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#define QT_NO_KEYWORDS
-// THIS HEADER MUST COME FIRST
-// Header dynamically generated during build process by uic.
-#include <ves/conductor/qt/propertyBrowser/ui_Visualization.h>
-
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+
+#include <ves/conductor/qt/propertyBrowser/ui_Visualization.h>
 
 #include <ves/conductor/qt/VisFeatureManager.h>
 

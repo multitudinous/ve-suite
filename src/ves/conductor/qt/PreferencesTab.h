@@ -34,12 +34,12 @@
 #pragma once
 
 #define QT_NO_KEYWORDS
+#include <ves/xplorer/data/PropertySetPtr.h>
 
 #include <QtGui/QWidget>
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QModelIndex>
 
-#include <ves/xplorer/data/PropertySetPtr.h>
 
 namespace Ui {
     class PreferencesTab;
