@@ -30,17 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#define QT_NO_KEYWORDS
-
-#include <QtGui/QScrollBar>
-#include <ves/conductor/qt/ui_TreeTab.h>
-
 #include <ves/conductor/qt/TreeTab.h>
+
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
 
 #include <osgQtTree/osgQtTree.h>
 #include <osgQtTree/treemodel.h>
 #include <osgQtTree/osgTreeItem.h>
+
+#include <QtGui/QScrollBar>
+
+#include <ves/conductor/qt/ui_TreeTab.h>
 
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/scenegraph/DCS.h>
