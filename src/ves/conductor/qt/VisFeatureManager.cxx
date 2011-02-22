@@ -33,23 +33,6 @@
 #include <ves/conductor/qt/VisFeatureManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
-#include <ves/conductor/qt/VisFeatureMakerBase.h>
-///Contours
-#include <ves/xplorer/data/ContourPlanePropertySet.h>
-#include <ves/conductor/qt/ContourFeatureMaker.h>
-///Vectors
-#include <ves/xplorer/data/VectorPlanePropertySet.h>
-#include <ves/conductor/qt/VectorFeatureMaker.h>
-///Streamlines
-#include <ves/xplorer/data/StreamlinePropertySet.h>
-#include <ves/conductor/qt/StreamlineFeatureMaker.h>
-///Isosurfaces
-#include <ves/xplorer/data/IsosurfacePropertySet.h>
-#include <ves/conductor/qt/IsosurfaceFeatureMaker.h>
-///Polydata
-#include <ves/xplorer/data/PolydataPropertySet.h>
-#include <ves/conductor/qt/PolydataFeatureMaker.h>
-
 namespace ves
 {
 namespace conductor
@@ -111,7 +94,7 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
     return set;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VisFeatureManager::UpdateFeature( const std::string& featureName, const std::string& UUID )
+/*void VisFeatureManager::UpdateFeature( const std::string& featureName, const std::string& UUID )
 {
     using namespace ves::conductor;
     VisFeatureMakerBasePtr feature;
@@ -147,7 +130,7 @@ void VisFeatureManager::UpdateFeature( const std::string& featureName, const std
     }
 
     feature->Update( UUID );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< std::pair< std::string, std::string > >
 VisFeatureManager::GetNameIDPairsForFeature( const std::string& featureName )

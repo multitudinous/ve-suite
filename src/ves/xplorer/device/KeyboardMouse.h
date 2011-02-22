@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #ifndef VES_XPLORER_DEVICE_KEYBOARDMOUSE_H
 #define VES_XPLORER_DEVICE_KEYBOARDMOUSE_H
 

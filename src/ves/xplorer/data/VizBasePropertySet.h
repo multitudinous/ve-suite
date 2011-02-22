@@ -34,7 +34,8 @@
 #define VES_XPLORER_DATA_VIZBASEPROPERTYSET_H
 
 #include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 #include <ves/VEConfig.h>
 
@@ -82,10 +83,18 @@ protected:
     ///\param TableName The TableName we are deleting
     virtual bool DeleteFromDatabase( Poco::Data::Session* const session, std::string const& TableName );
 
+    ///Write this PropertySet to the DB. We override this from PropertySet
+    ///\param session The DB sesion holding this data
+    ///\param TableName The TableName we are deleting
+    ///\param statement The POCO write statement with params
+    virtual bool WriteToDatabase( Poco::Data::Session* const session, std::string const& TableName, Poco::Data::Statement& statement );
+
     ///Signal to generate deleting a viz feature
-    typedef boost::signals2::signal< void ( std::string const& ) > DeleteVizFeatureSignal_type;
+    //typedef boost::signals2::signal< void ( std::string const& ) > DeleteVizFeatureSignal_type;
     ///The delete viz signal
-    DeleteVizFeatureSignal_type m_deleteVizSignal;
+    ves::util::StringSignal_type m_deleteVizSignal;
+    ///The add viz signal
+    ves::util::StringSignal_type m_addVizSignal;
     
 private:
 };

@@ -84,14 +84,14 @@ void Visualization::changeEvent( QEvent* e )
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_WritePropertiesButton_clicked()
 {
-    LOG_DEBUG( "on_WritePropertiesButton_clicked" );
-    if( mTempSet.get() )
+    if( mTempSet )
     {
+        LOG_DEBUG( "on_WritePropertiesButton_clicked" );
         mTempSet->WriteToDatabase();
-        const std::string featureName = 
-            m_ui->FeaturesList->currentItem()->text().toStdString();
-        VisFeatureManager::instance()->
-            UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
+        //const std::string featureName = 
+        //    m_ui->FeaturesList->currentItem()->text().toStdString();
+        //VisFeatureManager::instance()->
+        //    UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
 
         // Save off the list index so we can re-select this one after updating
         int lastKnownIndex = m_ui->FeatureIDSelector->currentIndex();
@@ -103,11 +103,11 @@ void Visualization::on_WritePropertiesButton_clicked()
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_RefreshPropertiesButton_clicked()
 {
-    LOG_DEBUG( "on_RefreshPropertiesButton_clicked" );
     if( mTempSet )
     {
         mTempSet->LoadFromDatabase();
         mFeatureBrowser->RefreshAll();
+        LOG_DEBUG( "on_RefreshPropertiesButton_clicked" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +130,6 @@ void Visualization::on_NewFeatureButton_clicked()
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_DeleteFeatureButton_clicked()
 {
-    LOG_DEBUG( "on_DeleteFeatureButton_clicked" );
     if( mTempSet )
     {
         mTempSet->DeleteFromDatabase();
@@ -139,6 +138,7 @@ void Visualization::on_DeleteFeatureButton_clicked()
         mTempSet = nullPtr;
         UpdateFeatureIDSelectorChoices();
         m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
+        LOG_DEBUG( "on_DeleteFeatureButton_clicked" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

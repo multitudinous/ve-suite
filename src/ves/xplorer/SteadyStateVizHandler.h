@@ -174,6 +174,9 @@ public:
     ///Delete the viz feature
     void DeleteVizFeature( std::string const& featureUUID );
 
+    ///Add the viz feature
+    void AddVizFeature( std::string const& featureUUID );
+
 private:
     //Common objects for all functions
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;

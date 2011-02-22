@@ -92,6 +92,24 @@
 #include <vtkCompositeDataPipeline.h>
 #include <vtkAlgorithm.h>
 
+/*
+#include <ves/conductor/qt/VisFeatureMakerBase.h>
+///Contours
+#include <ves/xplorer/data/ContourPlanePropertySet.h>
+#include <ves/conductor/qt/ContourFeatureMaker.h>
+///Vectors
+#include <ves/xplorer/data/VectorPlanePropertySet.h>
+#include <ves/conductor/qt/VectorFeatureMaker.h>
+///Streamlines
+#include <ves/xplorer/data/StreamlinePropertySet.h>
+#include <ves/conductor/qt/StreamlineFeatureMaker.h>
+///Isosurfaces
+#include <ves/xplorer/data/IsosurfacePropertySet.h>
+#include <ves/conductor/qt/IsosurfaceFeatureMaker.h>
+///Polydata
+#include <ves/xplorer/data/PolydataPropertySet.h>
+#include <ves/conductor/qt/PolydataFeatureMaker.h>
+*/
 vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 1 );
 
 using namespace ves::xplorer::command;
@@ -137,6 +155,11 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     CONNECTSIGNALS_1( "%DeleteVizFeature",
                      void( std::string const& activModelID ),
                      &SteadyStateVizHandler::DeleteVizFeature,
+                     m_connections, any_SignalType, normal_Priority );    
+
+    CONNECTSIGNALS_1( "%AddVizFeature",
+                     void( std::string const& activModelID ),
+                     &SteadyStateVizHandler::AddVizFeature,
                      m_connections, any_SignalType, normal_Priority );    
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -189,6 +212,67 @@ void SteadyStateVizHandler::DeleteVizFeature( std::string const& featureUUID )
             break;
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID )
+{
+    LOG_DEBUG( "AddVizFeature = " << featureUUID );
+    /*graphics_objects_map::iterator hashIter = m_graphicsObjectMap.find( vpr::GUID( featureUUID ) );
+    if( hashIter != m_graphicsObjectMap.end() )
+    {
+        m_graphicsObjectMap.erase( hashIter );
+    }
+    else
+    {
+        LOG_WARNING( "DeleteVizFeature: Unable to find relevant viz feature." );
+    }
+    
+    for( std::multimap< int, cfdGraphicsObject* >::iterator 
+        itr = graphicsObjects.begin();
+        itr != graphicsObjects.end(); ++itr )
+    {
+        if( itr->second->GetUUID() == featureUUID )
+        {
+            itr->second->RemoveGeodeFromDCS();
+            delete itr->second;
+            graphicsObjects.erase( itr );
+            break;
+        }
+    }*/
+    /*using namespace ves::conductor;
+    VisFeatureMakerBasePtr feature;
+    
+    if( featureName == "Contours" )
+    {
+        LOG_INFO( "UpdateFeature: Updating ContourFeatureMaker" );
+        feature = VisFeatureMakerBasePtr( new ContourFeatureMaker() );
+    }
+    else if( featureName == "Vectors" )
+    {
+        LOG_INFO( "UpdateFeature: Updating VectorFeatureMaker" );
+        feature = VisFeatureMakerBasePtr( new VectorFeatureMaker() );
+    }
+    else if( featureName == "Streamlines" )
+    {
+        LOG_INFO( "UpdateFeature: Updating StreamlineFeatureMaker" );
+        feature = VisFeatureMakerBasePtr( new StreamlineFeatureMaker() );
+    }
+    else if( featureName == "Isosurfaces" )
+    {
+        LOG_INFO( "UpdateFeature: Updating IsosurfaceFeatureMaker" );
+        feature = VisFeatureMakerBasePtr( new IsosurfaceFeatureMaker() );
+    }
+    else if( featureName == "Texture-based" )
+    {
+        LOG_INFO( "UpdateFeature: Updating TextureBasedFeatureMaker" );
+    }
+    else if( featureName == "Polydata" )
+    {
+        LOG_INFO( "UpdateFeature: Updating PolydataFeatureMaker" );
+        feature = VisFeatureMakerBasePtr( new PolydataFeatureMaker() );
+    }
+    
+    feature->Update( UUID );  */  
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool SteadyStateVizHandler::TransientGeodesIsBusy()

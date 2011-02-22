@@ -215,6 +215,7 @@ public:
     virtual bool LoadByKey( Poco::Data::Session* session, const std::string& KeyName, boost::any KeyValue );
     virtual bool LoadByKey( const std::string& DatabaseName, const std::string& KeyName, boost::any KeyValue );
 
+    ///A series of methods to write a current PropertySet to the db
     virtual bool WriteToDatabase();
     virtual bool WriteToDatabase( Poco::Data::Session* const session );
     virtual bool WriteToDatabase( Poco::Data::Session* const session, const std::string& TableName );
@@ -222,6 +223,7 @@ public:
     virtual bool WriteToDatabase( const std::string& DatabaseName );
     virtual bool WriteToDatabase( const std::string& DatabaseName, const std::string& TableName );
 
+    ///A series of methods to delete the current PropertySet from the DB
     virtual bool DeleteFromDatabase();
     virtual bool DeleteFromDatabase( Poco::Data::Session* const session );
     virtual bool DeleteFromDatabase( Poco::Data::Session* const session, const std::string& TableName );
