@@ -68,10 +68,10 @@ using namespace ves::xplorer;
 //#define VES_QT_RENDER_DEBUG 1
 #ifndef VES_QT_RENDER_DEBUG
 int main( int argc, char* argv[] )
-{    
-    Poco::Logger& m_logger( Poco::Logger::get( "xplorer" ) );
-    LogStreamPtr m_logStream;
-    m_logStream = LogStreamPtr( new Poco::LogStream( m_logger ) );
+{
+    //Create a root logger that contains the output channels, pattern formatters,
+    //etc. This also lets us easily create an xplorer child, conductor child, etc.
+    Poco::Logger& rootLogger( Poco::Logger::get("") );
     Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
     fileChannel->setProperty( "path", "xplorerRunLog.log" );
 
@@ -81,10 +81,14 @@ int main( int argc, char* argv[] )
     formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%l) %s: %t\n");
     Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel);
 
-    m_logger.setChannel( formattingChannel );
+    rootLogger.setChannel( formattingChannel );
     // Default log level will log messages with priorities error, critical, and
     // fatal. Command line option parsed later may adjust this up or down.
-    m_logger.setLevel( Poco::Message::PRIO_ERROR );
+    rootLogger.setLevel( Poco::Message::PRIO_ERROR );
+
+    Poco::Logger& m_logger( Poco::Logger::get( "xplorer" ) );
+    LogStreamPtr m_logStream;
+    m_logStream = LogStreamPtr( new Poco::LogStream( m_logger ) );
 
     LOG_FATAL( "########## VE-Xplorer Version "
                << VES_MAJOR_VERSION << "."
@@ -234,8 +238,8 @@ int main( int argc, char* argv[] )
 
         }
 
-        LOG_FATAL( "Changing log level to: " << priority );
-        m_logger.setLevel( priority );
+        LOG_FATAL( "Changing root log level to: " << priority );
+        rootLogger.setLevel( priority );
     }
 
     ///Bool options evidently cannot be counted because they always return true

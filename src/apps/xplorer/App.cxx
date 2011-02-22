@@ -1185,6 +1185,7 @@ void App::update()
 ////////////////////////////////////////////////////////////////////////////////
 void App::LoadUI()
 {
+    Poco::Logger& conductorLoggerInit = Poco::Logger::get( "conductor" );
     vprDEBUG( vesDBG, 2 ) << "|\tApp LoadUI" << std::endl << vprDEBUG_FLUSH;
 
     //Request connection to UIManager.EnterLeaveUI signal
