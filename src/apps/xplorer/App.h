@@ -69,8 +69,6 @@ namespace osg
 {
 class Group;
 class FrameStamp;
-class Light;
-class LightSource;
 }
 
 namespace osgUtil
@@ -307,15 +305,6 @@ private:
     ///Framestamp
     osg::ref_ptr< osg::FrameStamp > mFrameStamp;
 
-    ///Light for the scene
-    osg::ref_ptr< osg::Light > light_0;
-
-    ///Light source for the scene
-    osg::ref_ptr< osg::LightSource > light_source_0;
-
-    ///Light model for the scene
-    osg::ref_ptr< osg::LightModel > light_model_0;
-
     ///User nav position for camera
     gmtl::Matrix44d mNavPosition;
 
@@ -372,10 +361,11 @@ private:
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
     ///Mutex to sync the draw thread with the signal loop
     //vpr::CondVar m_syncCond;
-    ///Tell when to process signals    
+    ///Tell when to process signals
     bool m_processSignals;
     ///Are we exiting yet
     bool m_exitApp;
+
 };
 } //end xplorer
 } //end ves

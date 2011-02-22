@@ -53,6 +53,9 @@ namespace osg
 class Group;
 class Geode;
 class Camera;
+class Light;
+class LightSource;
+class LightModel;
 }
 
 namespace osgUtil
@@ -108,6 +111,9 @@ public:
 
     ///Initialized
     void InitializeRTT();
+
+    ///
+    osg::Light* GetLight0() const;
 
     ///Get the root node for all children in the scene to be added to
     ///\return The root osg::Group node
@@ -178,6 +184,9 @@ private:
     osg::Geode* CreateRTTQuad( osg::Texture2D* texture );
 
     ///
+    void SetupDefaultLighting();
+
+    ///
     bool m_enableRTT;
 
     ///
@@ -203,6 +212,15 @@ private:
 
     ///
     vrj::opengl::ContextData< osg::ref_ptr< osg::Camera > > m_postProcessCamera;
+
+    ///Light for the scene
+    osg::ref_ptr< osg::Light > m_light0;
+
+    ///Light source for the scene
+    osg::ref_ptr< osg::LightSource > m_lightSource0;
+
+    ///Light model for the scene
+    osg::ref_ptr< osg::LightModel > m_lightModel0;
 
 };
 } //end xplorer

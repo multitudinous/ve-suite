@@ -71,6 +71,9 @@
 #include <osg/Depth>
 #include <osg/ClearNode>
 #include <osg/FrameBufferObject>
+#include <osg/Light>
+#include <osg/LightSource>
+#include <osg/LightModel>
 
 #include <osgDB/WriteFile>
 #include <osgDB/ReaderWriter>
@@ -114,7 +117,10 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
     m_1dxFP( NULL ),
     m_1dyVP( NULL ),
     m_1dyFP( NULL ),
-    m_finalShader( NULL )
+    m_finalShader( NULL ),
+    m_light0( new osg::Light() ),
+    m_lightSource0( new osg::LightSource() ),
+    m_lightModel0( new osg::LightModel() )
 {
     /// When m_enableRTT is true we will use our old RTT and post processing 
     /// pipeline. When it is false we will use bdfx.
@@ -241,8 +247,40 @@ void SceneRenderToTexture::InitRootGroup()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::SetupDefaultLighting()
+{
+    m_light0->setLightNum( 0 );
+    m_light0->setAmbient( osg::Vec4d( 0.36862, 0.36842, 0.36842, 1.0 ) );
+    m_light0->setDiffuse( osg::Vec4d( 0.88627, 0.88500, 0.88500, 1.0 ) );
+    m_light0->setSpecular( osg::Vec4d( 0.49019, 0.48872, 0.48872, 1.0 ) );
+    //We are in openGL space
+    m_light0->setPosition( osg::Vec4d( 0.0, 10000.0, 10000.0, 0.0 ) );
+    //m_light0->setDirection( osg::Vec3d( 0.0, 1.0, -1.0 ) );
+
+    m_lightSource0->setLight( m_light0.get() );
+    m_lightSource0->setLocalStateSetModes( osg::StateAttribute::ON );
+    //See the opengl docs on the difference between ABSOLUTE and RELATIVE
+    m_lightSource0->setReferenceFrame( osg::LightSource::RELATIVE_RF );
+
+    m_lightModel0->setAmbientIntensity( osg::Vec4( 0.1, 0.1, 0.1, 1.0 ) );
+    //Get correct specular lighting across pipes
+    //See http://www.ds.arch.tue.nl/General/Staff/Joran/osg/osg_specular_problem.htm
+    m_lightModel0->setLocalViewer( true );
+
+    osg::ref_ptr< osg::StateSet > lightStateSet =
+        m_rootGroup->getOrCreateStateSet();
+    lightStateSet->setAssociatedModes( m_light0.get(), osg::StateAttribute::ON );
+    lightStateSet->setMode( GL_LIGHTING, osg::StateAttribute::ON );
+    lightStateSet->setAttributeAndModes(
+        m_lightModel0.get(), osg::StateAttribute::ON );
+    m_rootGroup->addChild( m_lightSource0.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
 {
+    //Setup our lighting now
+    SetupDefaultLighting();
+
     /*
     if( !scenegraph::SceneManager::instance()->IsRTTOn() )
     {
@@ -829,6 +867,11 @@ osg::Geode* SceneRenderToTexture::CreateRTTQuad( osg::Texture2D* texture )
 #endif
 
     return rttQuad;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Light* SceneRenderToTexture::GetLight0() const
+{
+    return m_light0.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* SceneRenderToTexture::GetRootGroup() const

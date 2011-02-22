@@ -201,41 +201,20 @@ App::App( int argc, char* argv[], bool enableRTT )
     mFrameStamp->setReferenceTime( 0.0 );
     mFrameStamp->setFrameNumber( 0 );
 
-    light_0 = new osg::Light();
-    light_source_0 = new osg::LightSource();
-    light_model_0 = new osg::LightModel();
-
-    light_0->setLightNum( 0 );
-    light_0->setAmbient( osg::Vec4d( 0.36862, 0.36842, 0.36842, 1.0 ) );
-    light_0->setDiffuse( osg::Vec4d( 0.88627, 0.88500, 0.88500, 1.0 ) );
-    light_0->setSpecular( osg::Vec4d( 0.49019, 0.48872, 0.48872, 1.0 ) );
-    //We are in openGL space
-    light_0->setPosition( osg::Vec4d( 0.0, 10000.0, 10000.0, 0.0 ) );
-    //light_0->setDirection( osg::Vec3d( 0.0, 1.0, -1.0 ) );
-
-    light_source_0->setLight( light_0.get() );
-    light_source_0->setLocalStateSetModes( osg::StateAttribute::ON );
-    // See the opengl docs on what the difference 
-    // is between ABSOLUTE and RELATIVE
-    light_source_0->setReferenceFrame( osg::LightSource::RELATIVE_RF );
-
-    light_model_0->setAmbientIntensity( osg::Vec4( 0.1, 0.1, 0.1, 1.0 ) );
-    // get correct specular lighting across pipes
-    // see http://www.ds.arch.tue.nl/General/Staff/Joran/osg/osg_specular_problem.htm
-    light_model_0->setLocalViewer( true );
-
     _tbvHandler = 0;
 #ifdef _PBUFFER
     _pbuffer = 0;
 #endif
     _frameNumber = 0;
-    
-    /*std::vector< bool* >* tempData = m_setNearFarRatio.getDataVector();
+
+    /*
+    std::vector< bool* >* tempData = m_setNearFarRatio.getDataVector();
     for( size_t i = 0; i < tempData->size(); ++i )
     {
         *(tempData->at( i )) = false;
-    }*/
-    
+    }
+    */
+
     this->argc = argc;
     this->argv = argv;
 
@@ -274,11 +253,11 @@ App::App( int argc, char* argv[], bool enableRTT )
     eventmanager::EventManager::instance()->RegisterSignal(
     new eventmanager::SignalWrapper< latePreFrame_SignalType >( &mLatePreFrame ),
     "App.LatePreFrame");
-    
+
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< exit_SignalType >( &m_exitSignal ),
         "App.Exit");
-    
+
     CONNECTSIGNALS_2( "%NearFarRatio", void( bool const&, double const& ),
                           &ves::xplorer::App::SetNearFarRatio,
                           m_connections, any_SignalType, normal_Priority );  
@@ -293,7 +272,7 @@ void App::exit()
 {
     m_exitApp = true;
     m_exitSignal(m_exitApp);
-    
+
     if( m_signalLock.test() )
     {
         m_signalLock.release();
@@ -310,11 +289,11 @@ void App::exit()
 #endif
     ves::xplorer::network::GraphicalPluginManager::instance()->UnRegisterExecutive();
 
-	if( !mRTT )
-	{
-    	//Cleanup backdropFX
-    	backdropFX::Manager::instance( true );
-	}
+    if( !mRTT )
+    {
+        //Cleanup backdropFX
+        backdropFX::Manager::instance( true );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* App::getScene()
@@ -531,25 +510,13 @@ void App::initScene()
     SceneManager::instance()->ViewLogo( true );
     SceneManager::instance()->SetFrameStamp( mFrameStamp.get() );
 
-    //Setup the light
-    osg::ref_ptr< osg::StateSet > lightStateSet = 
-        getScene()->getOrCreateStateSet();
-    lightStateSet->setAssociatedModes( light_0.get(), osg::StateAttribute::ON );
-
-    lightStateSet->setMode( GL_LIGHTING, osg::StateAttribute::ON );
-
-    lightStateSet->setAttributeAndModes(
-        light_model_0.get(), osg::StateAttribute::ON );
-
-    getScene()->addChild( light_source_0.get() );
-
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->InitScene();
 
     //Initialize DeviceHandler
     DeviceHandler::instance()->Initialize();
     //Tell the scenemanager about the devices
-    SceneManager::instance()->SetDeviceHandlerGroup( 
+    SceneManager::instance()->SetDeviceHandlerGroup(
         DeviceHandler::instance()->GetDeviceGroup() );
 
     // navigation and cursor
@@ -731,7 +698,7 @@ void App::latePreFrame()
                 stats.print( mStatsStream );
                 vprDEBUG( vesDBG, 3 ) << mStatsStream.str() << std::endl 
                     << vprDEBUG_FLUSH;
-            }        
+            }
         }
 
         ///This came from OSG/src/osgViewer/Viewer.cpp line 541
@@ -774,14 +741,35 @@ void App::latePreFrame()
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame SceneManager", 20 );
-        ves::xplorer::scenegraph::SceneManager::instance()->LatePreFrameUpdate();
-        gmtl::Matrix44d tempNavMatrix = 
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                GetInvertedNavMatrix();
+        scenegraph::SceneManager::instance()->LatePreFrameUpdate();
+        //Need to figure out why osg::LightSource::ABSOLUTE_RF
+        //does not work in a multi-context environment
+        //jbkoch - Since in the CAVE each view is 90 degrees apart,
+        //we do not want the light position relative to those matrix stacks,
+        //we want it relative to the camera matrix
+        gmtl::Matrix44d tempNavMatrix =
+            scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
         gmtl::Vec4d tempVec( 0.0, -10000.0, 10000.0, 0.0 );
         tempVec = tempNavMatrix * tempVec;
-        light_0->setPosition( 
-            osg::Vec4d( tempVec[ 0 ], tempVec[ 1 ], tempVec[ 2 ], 0 ) );
+        osg::Vec4d position( tempVec[ 0 ], tempVec[ 1 ], tempVec[ 2 ], 0.0 );
+        mSceneRenderToTexture->GetLight0()->setPosition( position );
+        //Sneaky way to set uniform defined in
+        //backdropFX::ShaderModuleVisitor::setDefaults()
+        //Access to these types of uniforms needs to be discussed with Paul
+        if( !mRTT )
+        {
+            osg::StateSet* stateset =
+                mSceneRenderToTexture->GetRootGroup()->getStateSet();
+            if( stateset )
+            {
+                osg::Uniform* uniform =
+                    stateset->getUniform( "bdfx_lightSource[0].position" );
+                if( uniform )
+                {
+                    uniform->set( position );
+                }
+            }
+        }
     }
     ///////////////////////
     {
