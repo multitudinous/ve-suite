@@ -93,6 +93,9 @@ void Visualization::on_WritePropertiesButton_clicked()
         //VisFeatureManager::instance()->
         //    UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
 
+        ves::xplorer::data::PropertySetPtr nullPtr;
+        mTempSet = nullPtr;
+
         // Save off the list index so we can re-select this one after updating
         int lastKnownIndex = m_ui->FeatureIDSelector->currentIndex();
         // Update the choices in case user changed the Name Tag of a feature
