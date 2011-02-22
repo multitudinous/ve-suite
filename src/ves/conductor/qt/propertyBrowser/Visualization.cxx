@@ -60,8 +60,6 @@ Visualization::Visualization( QWidget* parent )
 
     mFeatureBrowser = new PropertyBrowser( this );
     LOG_TRACE( "ctor" );
-    // Force FeatureIDSelector to update itself based on the database.
-    //UpdateFeatureIDSelectorChoices();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Visualization::~Visualization()
@@ -86,20 +84,26 @@ void Visualization::changeEvent( QEvent* e )
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_WritePropertiesButton_clicked()
 {
-    if( mTempSet )
+    LOG_DEBUG( "on_WritePropertiesButton_clicked" );
+    if( mTempSet.get() )
     {
         mTempSet->WriteToDatabase();
         const std::string featureName = 
             m_ui->FeaturesList->currentItem()->text().toStdString();
         VisFeatureManager::instance()->
             UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
+
+        // Save off the list index so we can re-select this one after updating
+        int lastKnownIndex = m_ui->FeatureIDSelector->currentIndex();
         // Update the choices in case user changed the Name Tag of a feature
         UpdateFeatureIDSelectorChoices();
+        m_ui->FeatureIDSelector->setCurrentIndex( lastKnownIndex );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_RefreshPropertiesButton_clicked()
 {
+    LOG_DEBUG( "on_RefreshPropertiesButton_clicked" );
     if( mTempSet )
     {
         mTempSet->LoadFromDatabase();
@@ -109,28 +113,24 @@ void Visualization::on_RefreshPropertiesButton_clicked()
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_NewFeatureButton_clicked()
 {
-    // We create a stub property set of the correct type and write it out to
-    // the database to ensure it is given a unique record id. The call to
-    // UpdateFeatureIDSelectorChoices will cause this new record to be
-    // discovered and loaded as the active property set.
+    // We create a stub property set of the correct type. The call to
+    // UpdateFeatureIDSelectorChoices will cause this new set to be
+    // discovered and loaded in the browser.
+    LOG_DEBUG( "on_NewFeatureButton_clicked" );
 
     QString featureName = m_ui->FeaturesList->currentItem()->text();
     mTempSet = VisFeatureManager::instance()->
             CreateNewFeature( featureName.toStdString() );
-    if( mTempSet )
-    {
-        mTempSet->WriteToDatabase();
-    }
 
     // Re-read available feature IDs from database, and select the last one added,
-    // which by definition corresponds to the "new" one
+    // which corresponds to the "new" one
     UpdateFeatureIDSelectorChoices();
     m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
-    LOG_DEBUG( "on_NewFeatureButton_clicked" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_DeleteFeatureButton_clicked()
 {
+    LOG_DEBUG( "on_DeleteFeatureButton_clicked" );
     if( mTempSet )
     {
         mTempSet->DeleteFromDatabase();
@@ -139,39 +139,26 @@ void Visualization::on_DeleteFeatureButton_clicked()
         mTempSet = nullPtr;
         UpdateFeatureIDSelectorChoices();
         m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
-        LOG_DEBUG( "on_DeleteFeatureButton_clicked" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_FeaturesList_currentTextChanged( const QString& currentText )
 {
-    boost::ignore_unused_variable_warning( currentText );
+    LOG_DEBUG( "on_FeaturesList_currentTextChanged: " << currentText.toStdString() );
+    ves::xplorer::data::PropertySetPtr nullPtr;
+    mTempSet = nullPtr;
     UpdateFeatureIDSelectorChoices();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::UpdateFeatureIDSelectorChoices()
 {
-    // The problem with this block is that it assumes the featureName has not
-    // changed -- and it may actually have changed. If the featureName has changed,
-    // we don't want to do any fancy ignoring of stuff.
-//    // If there are already ids loaded, we set a temporary flag so that after
-//    // the call to FeatureIDSelector->clear() we can tell
-//    // on_FeatureIDSelector_currentIndexChanged to ignore the index change
-//    // that is triggered by the call to addItems. We only want it to load a
-//    // property set after we explicitly call setCurrentIndex.
-//    bool tIgnore = false;
-//    if( m_ui->FeatureIDSelector->count() > 1 )
-//    {
-//        tIgnore = true;
-//    }
-
-    // Remove all entries from feature id selection combobox
+    LOG_TRACE( "UpdateFeatureIDSelectorChoices" );
+    // Remove all entries from feature id selection combobox. This will cause
+    // a call to on_FeatureIDSelector_currentIndexChanged with index -1.
     m_ui->FeatureIDSelector->clear();
 
     // Drop all entries from uuid list
     m_ids.clear();
-
-//    mIgnoreIndexChange = tIgnore;
 
     // Get all available IDs for current feature type
     QString featureName = m_ui->FeaturesList->currentItem()->text();
@@ -181,14 +168,23 @@ void Visualization::UpdateFeatureIDSelectorChoices()
 
     // Get Name Tag for each feature and add these as choices
     QStringList nameList;
-    //QString qCurrentID;
     QString qCurrentName;
     std::string tempName;
     std::string tempID;
+    bool tempInList = false;
     for( size_t index = 0; index < nameIDPairs.size(); ++index )
     {
         tempName = nameIDPairs.at( index ).first;
         tempID = nameIDPairs.at( index ).second;
+
+        // Check whether this entry refers to the set currently being edited
+        if( mTempSet.get() )
+        {
+            if( mTempSet->GetUUIDAsString() == tempID  )
+            {
+                tempInList = true;
+            }
+        }
 
         qCurrentName = qCurrentName.fromStdString( tempName );
         m_ids.push_back( tempID );
@@ -196,13 +192,22 @@ void Visualization::UpdateFeatureIDSelectorChoices()
         nameList.append( qCurrentName );
     }
 
-    m_ui->FeatureIDSelector->addItems( nameList );
+    // If there an unsaved set being edited that isn't in the list, add it:
+    if( mTempSet.get() && !tempInList )
+    {
+        LOG_TRACE( "UpdateFeatureIDSelectorChoices: adding temporary set to selection list" );
+        qCurrentName = "Unsaved ";
+        qCurrentName.append( m_ui->FeaturesList->currentItem()->text() );
+        m_ids.push_back( mTempSet->GetUUIDAsString() );
+        nameList.append( qCurrentName );
+    }
 
-    //m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
+    m_ui->FeatureIDSelector->addItems( nameList );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
 {
+    LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged " << index );
     if(mIgnoreIndexChange)
     {
         mIgnoreIndexChange = false;
@@ -213,11 +218,26 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
     if( (index == -1) || (index > int(m_ids.size()) ) )
     {
         // If null selection was made, we want to remove any visible PropertySet
+        LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Removing any visible PropertySet" );
         mFeatureBrowser->ParsePropertySet( nullPtr );
-        mTempSet = nullPtr;
+    }
+    else if( (mTempSet != nullPtr) &&
+             (mTempSet->GetUUIDAsString() == m_ids.at(index) ) )
+    {
+        // The selection hasn't actually changed -- user has selected the same
+        // set from the dropdown, or we are dealing with a non-save temp set
+        LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Reparsing existing tempSet" );
+        mFeatureBrowser->ParsePropertySet( mTempSet );
+        m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
+        m_ui->vfpb->RefreshContents();
+        m_ui->vfpb->show();
+        mFeatureBrowser->RefreshAll();
+
     }
     else
     {
+        // The selection has actually changed
+        LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Loading PropertySet from database" );
         mTempSet = nullPtr;
         QString featureName = m_ui->FeaturesList->currentItem()->text();
         mTempSet = VisFeatureManager::instance()->
@@ -234,12 +254,9 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
             m_ui->vfpb->RefreshContents();
             m_ui->vfpb->show();
             // No need to load before parsing, since values in browser are not
-            // set during parsing. They're only set by signals from the property
-            // set when things changed, which loading will do. But this doesn't
-            // work until after parsing is complete.
-            //mTempSet->SetRecordID( text.toInt() );
+            // set during parsing but by signals from the property set when
+            // values change, which loading will do.
             mTempSet->SetUUID( m_ids.at( index ) );
-            //mTempSet->SetUUID( text.toStdString() );
             mTempSet->LoadFromDatabase();
             mFeatureBrowser->RefreshAll();
         }

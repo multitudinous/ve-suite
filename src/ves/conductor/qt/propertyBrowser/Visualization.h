@@ -74,6 +74,22 @@ public:
 
 protected:
     void changeEvent( QEvent* e );
+
+    /** Updates the feature choices in the dropdown box.
+      * Important side effects (that may not be obvious): Clears the list
+      * associated with the dropdown box, which emits a signal that its current
+      * selection has been changed to -1 (null selection). Adds items to the list
+      * based on database and (possible) presence of an unsaved PropertySet; the
+      * dropdown auto-selects the first item (index 0) when these items are added,
+      * causing it to emit its selection changed signal. Note that at this point
+      * we have still not explicitly changed the selection -- this stuff happens
+      * automatically and causes the construction and destruction of PropertySets
+      * each time.
+      *
+      * It is highly reccomended that any internal methods that call this
+      * explicitly set the current index afterwards, since the above behavior is
+      * internal to Qt and might change.
+      **/
     void UpdateFeatureIDSelectorChoices();
 
 protected Q_SLOTS:
