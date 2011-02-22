@@ -33,6 +33,17 @@
 #include <ves/conductor/qt/VisFeatureManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
+///Contours
+#include <ves/xplorer/data/ContourPlanePropertySet.h>
+///Vectors
+#include <ves/xplorer/data/VectorPlanePropertySet.h>
+///Streamlines
+#include <ves/xplorer/data/StreamlinePropertySet.h>
+///Isosurfaces
+#include <ves/xplorer/data/IsosurfacePropertySet.h>
+///Polydata
+#include <ves/xplorer/data/PolydataPropertySet.h>
+
 namespace ves
 {
 namespace conductor
