@@ -39,14 +39,8 @@ namespace ves
 namespace conductor
 {
 /*!\file PolydataFeatureMaker.h
- *
- */
-
-/*!\class ves::conductor::PolydataFeatureMaker
- *
- */
-
-/*!\namespace ves::conductor
+ * \class ves::conductor::PolydataFeatureMaker
+ * \namespace ves::conductor
  *
  */
 class PolydataFeatureMaker : public VisFeatureMakerBase

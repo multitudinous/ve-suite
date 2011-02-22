@@ -39,14 +39,8 @@ namespace ves
 namespace conductor
 {
 /*!\file IsosurfaceFeatureMaker.h
- *
- */
-
-/*!\class ves::conductor::IsosurfaceFeatureMaker
- *
- */
-
-/*!\namespace ves::conductor
+ * \class ves::conductor::IsosurfaceFeatureMaker
+ * \namespace ves::conductor
  *
  */
 class IsosurfaceFeatureMaker : public VisFeatureMakerBase
