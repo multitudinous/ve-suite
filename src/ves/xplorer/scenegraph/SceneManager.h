@@ -48,7 +48,6 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/ClearNode>
 #include <osg/FrameStamp>
 #include <osg/Matrix>
 
@@ -350,9 +349,6 @@ private:
     ///Sound file to play as background audio for VE-Suite
     Sound* m_sound;
 #endif
-
-    ///Clear node to control the background color
-    osg::ref_ptr< osg::ClearNode > m_clrNode;
 
     ///
     osg::ref_ptr< osg::Uniform > m_clearColorUniform;

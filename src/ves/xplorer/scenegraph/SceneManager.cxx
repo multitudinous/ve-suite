@@ -109,7 +109,6 @@ SceneManager::SceneManager()
 #ifdef VE_SOUND
     m_sound( NULL ),
 #endif
-    m_clrNode( NULL ),
     m_clearColorUniform(
         new osg::Uniform( "clearColor", osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) ) ),
     mFrameStamp( NULL ),
@@ -332,11 +331,6 @@ void SceneManager::InitScene()
     //Setup network nav switch
     mNavSwitch->addChild( new ves::xplorer::scenegraph::DCS() );
 
-    m_clrNode = new osg::ClearNode();
-    m_clrNode->setRequiresClear( true );
-    m_clrNode->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
-    m_clrNode->setName( "Clear Node - Control ClearColor" );
-
     //Create the switch for our logo
     _createLogo();
 
@@ -349,8 +343,7 @@ void SceneManager::InitScene()
     mLogoSwitch->addChild( mLogoNode.get() );
     mLogoSwitch->addChild( mNetworkDCS.get() );
 
-    mRootNode->addChild( m_clrNode.get() );
-    m_clrNode->addChild( mLogoSwitch.get() );
+    mRootNode->addChild( mLogoSwitch.get() );
     //Add the m_navDCS here because the nav matrix is pulled out
     //App.cxx and applied to the view matrix
     mRootNode->addChild( mNavSwitch.get() );
@@ -629,7 +622,6 @@ DCS* SceneManager::GetActiveNavSwitchNode() const
 void SceneManager::SetBackgroundColor( std::vector< double > color )
 {
     osg::Vec4 clearColor( color.at( 0 ), color.at( 1 ), color.at( 2 ), 0.0 );
-    m_clrNode->setClearColor( clearColor );
     m_clearColorUniform->set( clearColor );
 }
 ////////////////////////////////////////////////////////////////////////////////

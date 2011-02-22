@@ -69,7 +69,6 @@
 #include <osg/Group>
 #include <osg/Camera>
 #include <osg/Depth>
-#include <osg/ClearNode>
 #include <osg/FrameBufferObject>
 #include <osg/Light>
 #include <osg/LightSource>
@@ -390,7 +389,6 @@ void SceneRenderToTexture::InitRTTCamera(
     //Clear color quad will clear color and depth buffers for us
     rttCamera->setClearMask( 0 );
     rttCamera->setClearColor( osg::Vec4( 0.0, 1.0, 0.0, 0.0 ) );
-    rttCamera->setClearStencil( 0 );
 
     if( m_enableRTT )
     {
@@ -456,10 +454,6 @@ void SceneRenderToTexture::InitRTTCamera(
             //GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
             //osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
             //viewportDimensions );
-
-        //osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
-        //clearNode->setClearMask( GL_STENCIL_BUFFER_BIT );
-        //rttCamera->addChild( clearNode.get() );
     }
     else
     {
@@ -745,8 +739,9 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     program->setName( "VS Quad Program" );
 
     //Don't write to the depth buffer
-    //osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    //depth->setWriteMask( false );
+    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    depth->setWriteMask( true );
+    depth->setFunction( osg::Depth::ALWAYS );
 
     //Set stateset for quad
     osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
@@ -761,9 +756,9 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     stateset->setAttributeAndModes(
         program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    //stateset->setAttributeAndModes(
-        //depth.get(),
-        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setAttributeAndModes(
+        depth.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->addUniform(
         &scenegraph::SceneManager::instance()->GetClearColorUniform() );
 
