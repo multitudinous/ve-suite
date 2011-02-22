@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/conductor/qt/VisFeatureMakerBase.h>
+#include <ves/xplorer/event/viz/VisFeatureMakerBase.h>
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
 

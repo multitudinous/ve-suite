@@ -35,7 +35,7 @@
 
 #include <boost/signals2/signal.hpp>
 
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+//#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
 
 namespace ves
 {

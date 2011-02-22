@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-#include <ves/conductor/qt/VisFeatureMakerBase.h>
+#include <ves/xplorer/event/viz/VisFeatureMakerBase.h>
 
 namespace ves
 {

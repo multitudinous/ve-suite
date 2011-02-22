@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/conductor/qt/StreamlineFeatureMaker.h>
+#include <ves/xplorer/event/viz/StreamlineFeatureMaker.h>
 
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/StreamlinePropertySet.h>

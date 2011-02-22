@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/conductor/qt/VectorFeatureMaker.h>
+#include <ves/xplorer/event/viz/VectorFeatureMaker.h>
 
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/VectorPlanePropertySet.h>

@@ -36,7 +36,7 @@
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 
-#include <ves/conductor/qt/VisFeatureMakerBasePtr.h>
+#include <ves/xplorer/event/viz/VisFeatureMakerBasePtr.h>
 
 #include <string>
 
