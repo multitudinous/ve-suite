@@ -64,6 +64,7 @@
 // --- BackdropFX Includes --- //
 #include <backdropFX/Version.h>
 #include <backdropFX/Manager.h>
+#include <backdropFX/DepthPartition.h>
 #include <backdropFX/ShaderModule.h>
 #include <backdropFX/ShaderModuleVisitor.h>
 
@@ -622,7 +623,16 @@ DCS* SceneManager::GetActiveNavSwitchNode() const
 void SceneManager::SetBackgroundColor( std::vector< double > color )
 {
     osg::Vec4 clearColor( color.at( 0 ), color.at( 1 ), color.at( 2 ), 0.0 );
-    m_clearColorUniform->set( clearColor );
+    if( m_isRTTOn )
+    {
+        m_clearColorUniform->set( clearColor );
+    }
+    else
+    {
+        backdropFX::DepthPartition& dp =
+            backdropFX::Manager::instance()->getDepthPartition();
+        dp.setClearColor( clearColor );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Shutdown()
