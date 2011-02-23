@@ -216,6 +216,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
         if( m_characterController.IsEnabled() )
         {
             m_characterController.StrafeLeft( true );
+            return true;
         }
         
         break;
@@ -225,6 +226,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
         if( m_characterController.IsEnabled() )
         {
             m_characterController.StepBackward( true );
+            return true;
         }
         
         break;
@@ -234,6 +236,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
         if( m_characterController.IsEnabled() )
         {
             m_characterController.StepForward( true );
+            return true;
         }
         
         break;
@@ -243,6 +246,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
         if( m_characterController.IsEnabled() )
         {
             m_characterController.StrafeRight( true );
+            return true;
         }
         
         break;
@@ -292,6 +296,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
         if( m_characterController.IsEnabled() )
         {
             m_characterController.StrafeLeft( false );
+            return true;
         }
         
         break;
@@ -301,6 +306,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
         if( m_characterController.IsEnabled() )
         {
             m_characterController.StepBackward( false );
+            return true;
         }
         
         break;
@@ -310,6 +316,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
         if( m_characterController.IsEnabled() )
         {
             m_characterController.StrafeRight( false );
+            return true;
         }
         
         break;
@@ -319,6 +326,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
         if( m_characterController.IsEnabled() )
         {
             m_characterController.StepForward( false );
+            return true;
         }
         
         break;
