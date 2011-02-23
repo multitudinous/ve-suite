@@ -94,7 +94,7 @@ protected:
     ///The delete viz signal
     ves::util::StringSignal_type m_deleteVizSignal;
     ///The add viz signal
-    ves::util::StringSignal_type m_addVizSignal;
+    ves::util::TwoStringSignal_type m_addVizSignal;
     
 private:
 };

@@ -152,8 +152,8 @@ SteadyStateVizHandler::SteadyStateVizHandler()
                      &SteadyStateVizHandler::DeleteVizFeature,
                      m_connections, any_SignalType, normal_Priority );    
 
-    CONNECTSIGNALS_1( "%AddVizFeature",
-                     void( std::string const& activModelID ),
+    CONNECTSIGNALS_2( "%AddVizFeature",
+                     void( std::string const& activModelID, std::string const& tableName ),
                      &SteadyStateVizHandler::AddVizFeature,
                      m_connections, any_SignalType, normal_Priority );    
 }
@@ -209,9 +209,9 @@ void SteadyStateVizHandler::DeleteVizFeature( std::string const& featureUUID )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID )
+void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID, std::string const& tableName )
 {
-    LOG_DEBUG( "AddVizFeature = " << featureUUID );
+    LOG_DEBUG( "AddVizFeature = " << featureUUID << " " << tableName );
     /*graphics_objects_map::iterator hashIter = m_graphicsObjectMap.find( vpr::GUID( featureUUID ) );
     if( hashIter != m_graphicsObjectMap.end() )
     {
@@ -234,45 +234,40 @@ void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID )
             break;
         }
     }*/
-    xplorer::data::PropertySet tempSet;
-    tempSet.SetUUID( featureUUID );
-    tempSet.LoadFromDatabase();
-    std::string featureName = tempSet.GetTableName();
-    //std::cout << " feature name " << featureName << std::endl;
     using namespace ves::conductor;
     VisFeatureMakerBasePtr feature;
     
-    if( featureName == "Contours" )
+    if( tableName == "ContourPlane" )
     {
         LOG_INFO( "UpdateFeature: Updating ContourFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new ContourFeatureMaker() );
     }
-    else if( featureName == "Vectors" )
+    else if( tableName == "VectorPlane" )
     {
         LOG_INFO( "UpdateFeature: Updating VectorFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new VectorFeatureMaker() );
     }
-    else if( featureName == "Streamlines" )
+    else if( tableName == "Streamline" )
     {
         LOG_INFO( "UpdateFeature: Updating StreamlineFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new StreamlineFeatureMaker() );
     }
-    else if( featureName == "Isosurfaces" )
+    else if( tableName == "Isosurfaces" )
     {
         LOG_INFO( "UpdateFeature: Updating IsosurfaceFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new IsosurfaceFeatureMaker() );
     }
-    else if( featureName == "Texture-based" )
+    else if( tableName == "Texture-based" )
     {
         LOG_INFO( "UpdateFeature: Updating TextureBasedFeatureMaker" );
     }
-    else if( featureName == "Polydata" )
+    else if( tableName == "Polydata" )
     {
         LOG_INFO( "UpdateFeature: Updating PolydataFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new PolydataFeatureMaker() );
     }
     
-    //feature->Update( featureUUID );
+    feature->Update( featureUUID );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool SteadyStateVizHandler::TransientGeodesIsBusy()

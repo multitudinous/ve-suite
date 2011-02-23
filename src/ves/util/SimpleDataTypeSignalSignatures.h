@@ -43,6 +43,7 @@ namespace util
 {
     ///Signal for a String
     typedef boost::signals2::signal< void ( std::string const& ) > StringSignal_type;
+    typedef boost::signals2::signal< void ( std::string const&, std::string const& ) > TwoStringSignal_type;
 
     ///Signal for a bool
     typedef boost::signals2::signal< void ( bool const& ) > BoolSignal_type;

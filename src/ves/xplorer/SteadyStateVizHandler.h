@@ -175,7 +175,7 @@ public:
     void DeleteVizFeature( std::string const& featureUUID );
 
     ///Add the viz feature
-    void AddVizFeature( std::string const& featureUUID );
+    void AddVizFeature( std::string const& featureUUID, std::string const& tableName );
 
 private:
     //Common objects for all functions

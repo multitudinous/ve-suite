@@ -62,7 +62,7 @@ VizBasePropertySet::VizBasePropertySet()
         std::string signalName = "VizBasePropertySet" + 
             boost::lexical_cast<std::string>( this ) + ".AddVizFeature";
         evm->RegisterSignal(
-            new SignalWrapper< ves::util::StringSignal_type >( &m_addVizSignal ),
+            new SignalWrapper< ves::util::TwoStringSignal_type >( &m_addVizSignal ),
             signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
     }
 }
@@ -100,7 +100,7 @@ bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
 {
     bool temp = PropertySet::WriteToDatabase( session, TableName, statement );
     
-    m_addVizSignal( GetUUIDAsString() );
+    m_addVizSignal( GetUUIDAsString(), TableName );
     ///Send the signal to xplorer to tell it to add the viz feature
     return temp;
 }
