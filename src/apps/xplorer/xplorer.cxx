@@ -240,6 +240,9 @@ int main( int argc, char* argv[] )
 
         LOG_FATAL( "Changing root log level to: " << priority );
         rootLogger.setLevel( priority );
+        // Need to set the level explicitly on m_logger since it was init'd
+        // before root's level was changed.
+        m_logger.setLevel( priority );
     }
 
     ///Bool options evidently cannot be counted because they always return true
