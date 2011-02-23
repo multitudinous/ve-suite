@@ -105,7 +105,9 @@ private:
     bool ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Process moving the constraint
     bool ProcessMouseMove( int xPos, int yPos, int zPos, int buttonState );
-
+    ///Process moving the constraint
+    bool ProcessMouseScroll( int deltaX, int deltaY, int x, int y, int buttonState );
+    
     ///Selection start end point line
     osg::Vec3d m_startPoint;
     osg::Vec3d m_endPoint;

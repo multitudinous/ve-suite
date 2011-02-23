@@ -157,6 +157,10 @@ CharacterNavigation::CharacterNavigation()
         eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseMove,
         m_connections, any_SignalType, normal_Priority );
     
+    CONNECTSIGNALS_5_COMBINER( "KeyboardMouse.Scroll", bool( int, int, int, int, int ), 
+        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseScroll,
+        m_connections, any_SignalType, normal_Priority );
+    
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ), 
         eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
         m_connections, any_SignalType, normal_Priority );
@@ -405,26 +409,6 @@ bool CharacterNavigation::ProcessMousePress( gadget::Keys buttonKey, int xPos, i
 
         break;
     }
-    //Scroll wheel up
-    case gadget::MBUTTON4:
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.Zoom( true );
-        }
-        
-        break;
-    }
-    //Scroll wheel down
-    if( buttonState&gadget::MBUTTON5 )
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.Zoom( false );
-        }
-        
-        return false;
-    }
     default:
     {
         ;
@@ -514,6 +498,31 @@ bool CharacterNavigation::ProcessMouseMove( int xPos, int yPos, int zPos, int bu
         }
 
         return false;
+    }
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool CharacterNavigation::ProcessMouseScroll( int deltaX, int deltaY, int x, int y, int buttonState )
+{
+    //Scroll wheel up
+    //case gadget::MBUTTON4:
+    if( deltaX > 0 )
+    {
+        if( m_characterController.IsEnabled() )
+        {
+            m_characterController.Zoom( true );
+            return true;
+        }
+    }
+    //Scroll wheel down
+    //if( buttonState&gadget::MBUTTON5 )
+    else if( deltaX < 0 )
+    {
+        if( m_characterController.IsEnabled() )
+        {
+            m_characterController.Zoom( false );
+            return true;
+        }
     }
     return false;
 }
