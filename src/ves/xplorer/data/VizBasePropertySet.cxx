@@ -99,7 +99,6 @@ bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
     std::string const& TableName, Poco::Data::Statement& statement )
 {
     bool temp = PropertySet::WriteToDatabase( session, TableName, statement );
-    
     m_addVizSignal( GetUUIDAsString(), TableName );
     ///Send the signal to xplorer to tell it to add the viz feature
     return temp;

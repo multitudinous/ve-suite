@@ -266,7 +266,6 @@ App::App( int argc, char* argv[], bool enableRTT )
 App::~App()
 {
     LOG_INFO( "Quitting App" );
-    ves::xplorer::eventmanager::EventManager::instance()->Shutdown();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::exit()

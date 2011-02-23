@@ -66,6 +66,7 @@ VectorFeatureMaker::~VectorFeatureMaker()
 ////////////////////////////////////////////////////////////////////////////////
 void VectorFeatureMaker::Update( const::std::string& recordUUID )
 {
+std::cout << " update " << std::endl;
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
     xplorer::data::VectorPlanePropertySet vectorSet;

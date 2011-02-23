@@ -37,6 +37,9 @@
 #include "VjObsWrapper.h"
 
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
@@ -146,6 +149,8 @@ AppWrapper::~AppWrapper()
     delete m_vjObsWrapper;
     m_vjObsWrapper = NULL;
     m_jugglerIsRunning = false;
+    
+    ves::xplorer::eventmanager::EventManager::instance()->Shutdown();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool AppWrapper::JugglerIsRunning()

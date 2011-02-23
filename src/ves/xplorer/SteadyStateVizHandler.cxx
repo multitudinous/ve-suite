@@ -211,7 +211,7 @@ void SteadyStateVizHandler::DeleteVizFeature( std::string const& featureUUID )
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID, std::string const& tableName )
 {
-    LOG_DEBUG( "AddVizFeature = " << featureUUID << " " << tableName );
+    LOG_INFO( "AddVizFeature = " << featureUUID << " " << tableName );
     /*graphics_objects_map::iterator hashIter = m_graphicsObjectMap.find( vpr::GUID( featureUUID ) );
     if( hashIter != m_graphicsObjectMap.end() )
     {
@@ -236,7 +236,6 @@ void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID, std::
     }*/
     using namespace ves::conductor;
     VisFeatureMakerBasePtr feature;
-    
     if( tableName == "ContourPlane" )
     {
         LOG_INFO( "UpdateFeature: Updating ContourFeatureMaker" );

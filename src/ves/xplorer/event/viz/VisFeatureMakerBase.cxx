@@ -91,7 +91,32 @@ void VisFeatureMakerBase::UpdateAdvancedSettings( ves::xplorer::data::PropertySe
 ////////////////////////////////////////////////////////////////////////////////
 void VisFeatureMakerBase::UpdateBaseInformation( xplorer::data::PropertySet& set )
 {
+    m_vistabBaseInformation.clear();
+    m_commandName.clear();
+    ///This is the default. Other dialogs actions will set the command name to the specific value if they are launched
+    m_commandName = "VISUALIZATION_SETTINGS";
 
+    ves::open::xml::DataValuePairPtr activeScalar( new ves::open::xml::DataValuePair() );
+    activeScalar->SetDataType( "STRING" );
+    activeScalar->SetDataName( std::string( "Active Scalar" ) );
+    activeScalar->SetDataString( boost::any_cast<std::string >
+    ( set.GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) ) );
+    m_vistabBaseInformation.push_back( activeScalar );
+
+    ves::open::xml::DataValuePairPtr activeVector( new ves::open::xml::DataValuePair() );
+    activeVector->SetDataType( "STRING" );
+    activeVector->SetDataName( std::string( "Active Vector" ) );
+    activeVector->SetDataString( boost::any_cast<std::string >
+    ( set.GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) ) );
+    m_vistabBaseInformation.push_back( activeVector );
+
+    ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair() );
+    activeDataset->SetDataType( "STRING" );
+    activeDataset->SetDataName( std::string( "Active Dataset" ) );
+    activeDataset->SetDataString( boost::any_cast<std::string >
+    ( set.GetPropertyAttribute( "DataSet", "enumCurrentString" ) ) );
+    m_vistabBaseInformation.push_back( activeDataset );
+    
     ves::open::xml::DataValuePairPtr scalarMin( new ves::open::xml::DataValuePair() );
     double minimumValue = boost::any_cast<double>( set.GetPropertyValue( "DataSet_ScalarRange_Min" ) );
     scalarMin->SetData( "Scalar Min", minimumValue );
