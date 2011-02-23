@@ -68,6 +68,14 @@ protected:
     ///Called by the update function
     void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand, ves::xplorer::data::PropertySet& set );
 
+    void Execute( xplorer::data::PropertySet& set );
+
+    void SetActiveVector( xplorer::data::PropertySet& set );
+
+    void SetActiveScalarAndRange( xplorer::data::PropertySet& set );
+
+    bool SetActiveDataSet( xplorer::data::PropertySet& set );
+    
     ///The name of the command to send back
     std::string m_commandName;
     ///The advanced settings.

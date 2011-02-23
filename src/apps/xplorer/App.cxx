@@ -280,6 +280,7 @@ void App::exit()
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
     ves::xplorer::data::DatabaseManager::instance()->Shutdown();
+    ves::xplorer::eventmanager::EventManager::instance()->Shutdown();
     std::cout << "|\tApp is now exiting." << std::endl;
     m_vjobsWrapper->Cleanup();
     GraphicalPluginManager::instance()->UnloadPlugins();

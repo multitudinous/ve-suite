@@ -76,7 +76,15 @@ void DatabaseManager::Shutdown()
         //This must be deleted from the thread that it was created from
         delete mPool;
     }
-    Poco::Data::SQLite::Connector::unregisterConnector();
+
+    try
+    {
+        Poco::Data::SQLite::Connector::unregisterConnector();
+    }
+    catch( ... )
+    {
+        ;
+    }
 }
 
 void DatabaseManager::SetDatabasePath( const std::string& path )

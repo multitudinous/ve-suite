@@ -92,24 +92,19 @@
 #include <vtkCompositeDataPipeline.h>
 #include <vtkAlgorithm.h>
 
-/*
-#include <ves/conductor/qt/VisFeatureMakerBase.h>
+
+#include <ves/xplorer/event/viz/VisFeatureMakerBase.h>
 ///Contours
-#include <ves/xplorer/data/ContourPlanePropertySet.h>
-#include <ves/conductor/qt/ContourFeatureMaker.h>
+#include <ves/xplorer/event/viz/ContourFeatureMaker.h>
 ///Vectors
-#include <ves/xplorer/data/VectorPlanePropertySet.h>
-#include <ves/conductor/qt/VectorFeatureMaker.h>
+#include <ves/xplorer/event/viz/VectorFeatureMaker.h>
 ///Streamlines
-#include <ves/xplorer/data/StreamlinePropertySet.h>
-#include <ves/conductor/qt/StreamlineFeatureMaker.h>
+#include <ves/xplorer/event/viz/StreamlineFeatureMaker.h>
 ///Isosurfaces
-#include <ves/xplorer/data/IsosurfacePropertySet.h>
-#include <ves/conductor/qt/IsosurfaceFeatureMaker.h>
+#include <ves/xplorer/event/viz/IsosurfaceFeatureMaker.h>
 ///Polydata
-#include <ves/xplorer/data/PolydataPropertySet.h>
-#include <ves/conductor/qt/PolydataFeatureMaker.h>
-*/
+#include <ves/xplorer/event/viz/PolydataFeatureMaker.h>
+
 vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 1 );
 
 using namespace ves::xplorer::command;
@@ -239,7 +234,12 @@ void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID )
             break;
         }
     }*/
-    /*using namespace ves::conductor;
+    xplorer::data::PropertySet tempSet;
+    tempSet.SetUUID( featureUUID );
+    tempSet.LoadFromDatabase();
+    std::string featureName = tempSet.GetTableName();
+    //std::cout << " feature name " << featureName << std::endl;
+    using namespace ves::conductor;
     VisFeatureMakerBasePtr feature;
     
     if( featureName == "Contours" )
@@ -272,7 +272,7 @@ void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID )
         feature = VisFeatureMakerBasePtr( new PolydataFeatureMaker() );
     }
     
-    feature->Update( UUID );  */  
+    //feature->Update( featureUUID );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool SteadyStateVizHandler::TransientGeodesIsBusy()

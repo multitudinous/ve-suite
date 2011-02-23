@@ -428,6 +428,9 @@ public:
                          SignalType sigType = any_SignalType,
                          int priority = normal_Priority );
 
+    ///Close down the db
+    void Shutdown();
+
 private:
     
     /// Constructor

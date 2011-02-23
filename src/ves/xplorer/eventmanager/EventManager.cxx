@@ -77,8 +77,6 @@ EventManager::~EventManager()
 {
     LOG_TRACE( "dtor" );
 
-    Poco::Data::SQLite::Connector::unregisterConnector();
-
     // Delete all our signals
     {
         std::map<std::string, SignalWrapperBase*>::const_iterator iter = mSignals.begin();
@@ -101,6 +99,18 @@ EventManager::~EventManager()
             delete ( iter->second );
             ++iter;
         }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void EventManager::Shutdown()
+{
+    try
+    {
+        Poco::Data::SQLite::Connector::unregisterConnector();
+    }
+    catch( ... )
+    {
+        ;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
