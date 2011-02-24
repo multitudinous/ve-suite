@@ -61,10 +61,10 @@ typedef ves::util::ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
 #define LOG_INFO( msg ) _LOG_CALL( information, msg )
 
 
-// DEBUG and TRACE log messages will only be compiled in when VES_DEBUG or _LOGGING_DEBUG
+// DEBUG and TRACE log messages will only be compiled in when VES_DEBUG
 // is defined. This allows the liberal use of DEBUG and TRACE messages to
 // track down difficult bugs without affecting performace of production builds.
-// _LOGGING_DEBUG can either define via SCons for the entire build or can be
+// VES_DEBUG can either be defined via SCons for the entire build or can be
 // individually defined in a single class before the include statement for
 // this file.
 #if defined(VES_DEBUG)

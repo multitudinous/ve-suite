@@ -606,6 +606,10 @@ if not SConsAddons.Util.hasHelpFlag():
     # Hardcode building Qt tools
     baseEnv[ 'MakeQtSupport' ] = 'yes'
 
+    # setup the debug flag for logging in ves
+    if tempArchWinEnv['default_debug_level'] == EnvironmentBuilder.EXTENSIVE or tempArchWinEnv['default_debug_level'] == EnvironmentBuilder.MAXIMUM:
+        baseEnv.AppendUnique( CPPDEFINES = ['VES_DEBUG'] )
+
     # setup initial windows build environment before the options are processed
     if GetPlatform() == 'win32':
         #print "Visual Studio Versions Available %s" %baseEnv[ 'MSVS' ]['VERSIONS']
