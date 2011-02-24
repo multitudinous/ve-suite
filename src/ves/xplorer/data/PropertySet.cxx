@@ -83,6 +83,11 @@ PropertySet::~PropertySet()
     mPropertyMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
+PropertySetPtr PropertySet::CreateNew()
+{
+    return PropertySetPtr( new PropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
 void PropertySet::AddProperty( std::string const& propertyName,
                                boost::any value,
                                std::string uiLabel )

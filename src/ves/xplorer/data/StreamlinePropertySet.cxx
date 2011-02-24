@@ -99,6 +99,11 @@ StreamlinePropertySet::~StreamlinePropertySet()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+PropertySetPtr StreamlinePropertySet::CreateNew()
+{
+    return PropertySetPtr( new StreamlinePropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
 void StreamlinePropertySet::CreateSkeleton()
 {
     AddProperty( "DataSet", 0, "Data Set" );

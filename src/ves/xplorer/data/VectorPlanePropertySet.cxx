@@ -63,6 +63,11 @@ VectorPlanePropertySet::~VectorPlanePropertySet()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+PropertySetPtr VectorPlanePropertySet::CreateNew()
+{
+    return PropertySetPtr( new VectorPlanePropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
 void VectorPlanePropertySet::CreateSkeleton()
 {
     AddProperty( "DataSet", 0, "Data Set" );

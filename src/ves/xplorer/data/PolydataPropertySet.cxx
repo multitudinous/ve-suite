@@ -62,6 +62,11 @@ PolydataPropertySet::~PolydataPropertySet()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+PropertySetPtr PolydataPropertySet::CreateNew()
+{
+    return PropertySetPtr( new PolydataPropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
 void PolydataPropertySet::CreateSkeleton()
 {
     AddProperty( "DataSet", 0, "Data Set" );

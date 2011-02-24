@@ -36,6 +36,7 @@
 #include <ves/xplorer/data/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
@@ -76,7 +77,7 @@ public:
      * Factory function to create feature property sets by name. If you add a new
      * feature type, add a new branch to the big if/else statement in this method.
      *
-     * @param featureName Unique name associated with the class to create. This
+     * @param featureType Unique name associated with the class to create. This
      * will generally be a human-readable name rather than directly a class name; eg.
      * passing "Contours" will create an instance of ContourPlanePropertySet.
      *
@@ -86,12 +87,11 @@ public:
      * the returned pointer will be a null pointer. The caller is expected to
      * manage the lifetime of the created object.
      **/
-    ves::xplorer::data::PropertySetPtr CreateNewFeature( const std::string& featureName );
+    ves::xplorer::data::PropertySetPtr CreateNewFeature( const std::string& featureType );
 
-    //void UpdateFeature( const std::string& featureName, const std::string& UUID );
 
     std::vector< std::pair< std::string, std::string > >
-        GetNameIDPairsForFeature( const std::string& featureName );
+        GetNameIDPairsForFeature( const std::string& featureType );
 
 private:
 
@@ -104,13 +104,23 @@ private:
 
     ///Singleton declarations
     vprSingletonHeader( VisFeatureManager );
+
+    ///Reloads all viz features from the database. This slot is connected to
+    ///"DatabaseManager.ResyncFromDatabase"
+    void ResyncFromDatabase();
     
     ///Map to hold a mapping between feature names and table names
     std::map< std::string, std::string > m_featureNameToTableName;
+
+    std::map< std::string, ves::xplorer::data::PropertySetPtr > m_featureTypeToSetPtrMap;
+
     ///Logger reference
     Poco::Logger& m_logger;
     ///Actual stream for this class
     ves::xplorer::LogStreamPtr m_logStream;
+
+    ///Manages slot connections
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
     
 };
 } // namespace conductor

@@ -61,6 +61,9 @@ public:
     ///Destructor
     virtual ~VectorPlanePropertySet();
 
+    /// Factory ctor
+    virtual PropertySetPtr CreateNew();
+
 protected:
     ///Create the skeleton
     virtual void CreateSkeleton();

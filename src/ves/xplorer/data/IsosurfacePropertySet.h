@@ -60,6 +60,9 @@ public:
     ///Destructor
     virtual ~IsosurfacePropertySet();
 
+    /// Factory ctor
+    virtual PropertySetPtr CreateNew();
+
 protected:
     ///Validate method
     bool ValidateColorByScalarMinMax( PropertyPtr property, boost::any value );

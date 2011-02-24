@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/VisFeatureManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
 
 ///Contours
 #include <ves/xplorer/data/ContourPlanePropertySet.h>
@@ -56,7 +57,22 @@ VisFeatureManager::VisFeatureManager()
     m_logger( Poco::Logger::get("conductor.VisFeatureManager") ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
-    ;
+    CONNECTSIGNALS_0( "%DatabaseManager.ResyncFromDatabase%", void(),
+                      &VisFeatureManager::ResyncFromDatabase,
+                      m_connections, any_SignalType, high_Priority );
+
+    using namespace ves::xplorer::data;
+
+    // ADD ANY NEW VIZ FEATURE TYPES HERE OR THE UI WILL NOT BE ABLE TO DISPLAY
+    // THEM!
+    m_featureTypeToSetPtrMap["Contours"] = PropertySetPtr( new ContourPlanePropertySet() );
+    m_featureTypeToSetPtrMap["Vectors"] = PropertySetPtr( new VectorPlanePropertySet() );
+    m_featureTypeToSetPtrMap["Streamlines"] = PropertySetPtr( new StreamlinePropertySet() );
+    m_featureTypeToSetPtrMap["Isosurfaces"] = PropertySetPtr( new IsosurfacePropertySet() );
+    m_featureTypeToSetPtrMap["Polydata"] = PropertySetPtr( new PolydataPropertySet() );
+
+    // Need to add this one in once we get a class for it!
+    m_featureTypeToSetPtrMap["Texture-based"] = PropertySetPtr( );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureManager::~VisFeatureManager()
@@ -64,99 +80,62 @@ VisFeatureManager::~VisFeatureManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const std::string& featureName )
+ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const std::string& featureType )
 {
     using namespace ves::xplorer::data;
 
-    PropertySetPtr set;
-
-    if( featureName == "Contours" )
+    // Attempt to find featureType in the map that was set up in the ctor.
+    // If found, call the factory method of the associated ProertySet to get a
+    // new set of that type.
+    std::map< std::string, PropertySetPtr >::const_iterator iter =
+            m_featureTypeToSetPtrMap.find( featureType );
+    if( iter != m_featureTypeToSetPtrMap.end() )
     {
-        LOG_INFO( "CreateNewFeature: Creating new ContourPlanePropertySet" );
-        set = PropertySetPtr( new ContourPlanePropertySet() );
+        return iter->second->CreateNew();
     }
-    else if( featureName == "Vectors" )
+    else
     {
-        LOG_INFO( "CreateNewFeature: Creating new VectorPlanePropertySet" );
-        set = PropertySetPtr( new VectorPlanePropertySet() );
+        return PropertySetPtr();
     }
-    else if( featureName == "Streamlines" )
-    {
-        LOG_INFO( "CreateNewFeature: Creating new StreamlinesPropertySet" );
-        set = PropertySetPtr( new StreamlinePropertySet() );
-    }
-    else if( featureName == "Isosurfaces" )
-    {
-        LOG_INFO( "CreateNewFeature: Creating new IsoSurfacesPropertySet" );
-        set = PropertySetPtr( new IsosurfacePropertySet() );
-    }
-    else if( featureName == "Texture-based" )
-    {
-        LOG_INFO( "CreateNewFeature: Creating new TextureBasedPropertySet" );
-    }
-    else if( featureName == "Polydata" )
-    {
-        LOG_INFO( "CreateNewFeature: Creating new PolydataPropertySet" );
-        set = PropertySetPtr( new PolydataPropertySet() );
-    }
-
-    m_featureNameToTableName[ featureName ] = set->GetTableName();
-
-    return set;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void VisFeatureManager::UpdateFeature( const std::string& featureName, const std::string& UUID )
+void VisFeatureManager::ResyncFromDatabase()
 {
-    using namespace ves::conductor;
-    VisFeatureMakerBasePtr feature;
+    using namespace ves::xplorer::data;
+    std::vector<std::string> ids;
+    PropertySetPtr set;
 
-    if( featureName == "Contours" )
+    std::map< std::string, PropertySetPtr >::const_iterator iter =
+            m_featureTypeToSetPtrMap.begin();
+    while( iter != m_featureTypeToSetPtrMap.end() )
     {
-        LOG_INFO( "UpdateFeature: Updating ContourFeatureMaker" );
-        feature = VisFeatureMakerBasePtr( new ContourFeatureMaker() );
+        set = iter->second->CreateNew();
+        ids = DatabaseManager::instance()->GetStringVector( set->GetTableName(), "uuid" );
+        for( size_t index = 0; index < ids.size(); ++index )
+        {
+            set->SetUUID( ids.at( index ) );
+            set->LoadFromDatabase();
+            // The write operation causes the feature to be added to the scene
+            set->WriteToDatabase();
+        }
+        ++iter;
     }
-    else if( featureName == "Vectors" )
-    {
-        LOG_INFO( "UpdateFeature: Updating VectorFeatureMaker" );
-        feature = VisFeatureMakerBasePtr( new VectorFeatureMaker() );
-    }
-    else if( featureName == "Streamlines" )
-    {
-        LOG_INFO( "UpdateFeature: Updating StreamlineFeatureMaker" );
-        feature = VisFeatureMakerBasePtr( new StreamlineFeatureMaker() );
-    }
-    else if( featureName == "Isosurfaces" )
-    {
-        LOG_INFO( "UpdateFeature: Updating IsosurfaceFeatureMaker" );
-        feature = VisFeatureMakerBasePtr( new IsosurfaceFeatureMaker() );
-    }
-    else if( featureName == "Texture-based" )
-    {
-        LOG_INFO( "UpdateFeature: Updating TextureBasedFeatureMaker" );
-    }
-    else if( featureName == "Polydata" )
-    {
-        LOG_INFO( "UpdateFeature: Updating PolydataFeatureMaker" );
-        feature = VisFeatureMakerBasePtr( new PolydataFeatureMaker() );
-    }
-
-    feature->Update( UUID );
-}*/
+}
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< std::pair< std::string, std::string > >
-VisFeatureManager::GetNameIDPairsForFeature( const std::string& featureName )
+VisFeatureManager::GetNameIDPairsForFeature( const std::string& featureType )
 {
     std::vector< std::pair< std::string, std::string > > nameIDPairs;
     std::vector<std::string> ids;
     std::vector<std::string> names;
     using namespace ves::xplorer::data;
 
-    std::map<std::string, std::string>::const_iterator iter = 
-        m_featureNameToTableName.find( featureName );
-    if( iter != m_featureNameToTableName.end() )
+    std::map< std::string, PropertySetPtr >::const_iterator iter =
+            m_featureTypeToSetPtrMap.find( featureType );
+    if( iter != m_featureTypeToSetPtrMap.end() )
     {
-        ids = DatabaseManager::instance()->GetStringVector( iter->second, "uuid" );
-        names = DatabaseManager::instance()->GetStringVector( iter->second, "NameTag" );
+        ids = DatabaseManager::instance()->GetStringVector( iter->second->GetTableName(), "uuid" );
+        names = DatabaseManager::instance()->GetStringVector( iter->second->GetTableName(), "NameTag" );
 
         // Pair up the names and IDs
         std::pair< std::string, std::string > tempPair;
@@ -168,12 +147,12 @@ VisFeatureManager::GetNameIDPairsForFeature( const std::string& featureName )
             nameIDPairs.push_back( tempPair );
         }
 
-        LOG_DEBUG( "GetNameIDPairsForFeature: For " + featureName );
+        LOG_DEBUG( "GetNameIDPairsForFeature: For " + featureType );
         return nameIDPairs;
     }
 
     LOG_WARNING( "GetNameIDPairsForFeature: We do not have a " + 
-                featureName + " vis feature registered yet." );
+                featureType + " vis feature registered yet." );
 
     return nameIDPairs;
 }

@@ -61,6 +61,11 @@ IsosurfacePropertySet::~IsosurfacePropertySet()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+PropertySetPtr IsosurfacePropertySet::CreateNew()
+{
+    return PropertySetPtr( new IsosurfacePropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
 void IsosurfacePropertySet::CreateSkeleton()
 {
     AddProperty( "DataSet", 0, "Data Set" );

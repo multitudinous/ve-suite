@@ -60,6 +60,9 @@ public:
     ///Destructor
     virtual ~ContourPlanePropertySet();
 
+    /// Factory ctor
+    virtual PropertySetPtr CreateNew();
+
 protected:
     ///Create the skeleton
     virtual void CreateSkeleton();

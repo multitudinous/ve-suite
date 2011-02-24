@@ -61,6 +61,11 @@ ContourPlanePropertySet::~ContourPlanePropertySet()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+PropertySetPtr ContourPlanePropertySet::CreateNew()
+{
+    return PropertySetPtr( new ContourPlanePropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::CreateSkeleton()
 {
     AddProperty( "DataSet", 0, "Data Set" );

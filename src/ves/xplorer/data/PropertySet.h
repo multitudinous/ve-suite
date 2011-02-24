@@ -96,6 +96,10 @@ public:
     /// Destructor
     virtual ~PropertySet();
 
+    /// Method to allow factory creation. Derived classes should override this
+    /// to return an object of the derived type wrapped in a PropertySetPtr.
+    virtual PropertySetPtr CreateNew();
+
     ///
     /// Add a new property named propertyName with main value value to this set
     virtual void AddProperty( const std::string& propertyName,
