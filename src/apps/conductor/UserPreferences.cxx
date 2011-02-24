@@ -675,3 +675,51 @@ void UserPreferences::OnCADSelectionEvent( wxCommandEvent& event )
         SetCommand( "ENABLE_DEVICE", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::SendStoredValues()
+{
+    if( preferenceMap[ "CAD Selection" ] )
+    {
+        unsigned int trueVal = 1;
+        // Create the command and data value pairs
+        DataValuePairPtr dataValuePair( new DataValuePair() );
+        dataValuePair->SetData( "CAD Selection Mode", trueVal );
+        CommandPtr veCommand( new Command() );
+        veCommand->SetCommandName( std::string( "ENABLE_DEVICE" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        
+        CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+        
+        UserPreferencesDataBuffer::instance()->
+            SetCommand( "ENABLE_DEVICE", veCommand );
+    }
+
+    if( preferenceMap[ "Dragger Scaling" ] )
+    {
+        // Create the command and data value pairs
+        DataValuePairPtr dataValuePair( new DataValuePair() );
+        dataValuePair->SetData( "Dragger Scaling Toggle Value", m_draggerScalingValue );
+        CommandPtr veCommand( new Command() );
+        veCommand->SetCommandName( std::string( "DRAGGER_SCALING_VALUE" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        
+        CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+        
+        UserPreferencesDataBuffer::instance()->
+            SetCommand( "DRAGGER_SCALING_VALUE", veCommand );   
+    }
+
+    if( preferenceMap[ "Set Near-Far Ratio" ] )
+    {
+        // Create the command and data value pairs
+        DataValuePairPtr dataValuePair( new DataValuePair() );
+        dataValuePair->SetData( std::string( "Near Far Ratio" ), m_nearFar );
+        CommandPtr veCommand( new Command() );
+        veCommand->SetCommandName( std::string( "CHANGE_NEAR_FAR_RATIO" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        
+        CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+        
+        UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_NEAR_FAR_RATIO", veCommand ); 
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

@@ -324,22 +324,28 @@ AppFrame::AppFrame( wxWindow* parent, wxWindowID id, const wxString& title )
         LaunchNavigationPane( event );
     }
 
+    //Setup the default background color
     if( preferences->GetMode( "Use Preferred Background Color" ) )
     {
         xplorerColor = preferences->GetBackgroundColor();
     }
 
-    DataValuePairPtr dataValuePair( new DataValuePair() );
-    dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
-    CommandPtr veCommand( new Command() );
-    veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
-    veCommand->AddDataValuePair( dataValuePair );
-    ///Set the command on the buffer first so that a strong ptr is
-    ///referencing the memory
-    UserPreferencesDataBuffer::instance()->SetCommand(
-        "CHANGE_BACKGROUND_COLOR", veCommand );
+    {
+        DataValuePairPtr dataValuePair( new DataValuePair() );
+        dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
+        CommandPtr veCommand( new Command() );
+        veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        ///Set the command on the buffer first so that a strong ptr is
+        ///referencing the memory
+        UserPreferencesDataBuffer::instance()->SetCommand(
+            "CHANGE_BACKGROUND_COLOR", veCommand );
 
-    CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+        CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+    }
+
+    //Send the rest of the preferences
+    preferences->SendStoredValues();
 
     //Try and load network from server if one is already present
     std::string nw_str = CORBAServiceList::instance()->GetNetwork();

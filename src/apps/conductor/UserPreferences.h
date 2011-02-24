@@ -141,7 +141,8 @@ public:
     void OnCADSelectionEvent( wxCommandEvent& event );
     ///Should we show tooltips?
     static bool ShowToolTips();
-
+    ///Send the stored values for the preferences
+    void SendStoredValues();
     ///Returns the chosen background color
     std::vector< double > GetBackgroundColor( void );
 
