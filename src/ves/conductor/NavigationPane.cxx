@@ -664,8 +664,11 @@ void NavigationPane::UpdateNavigationData( void )
     rotationStepSize->SetValue( tempData );
     navPreferenceData->GetDataValuePair( "ROTATE_ABOUT_HEAD" )->GetData( tempData );
     headRotationChk->SetValue( tempData );
-    navPreferenceData->GetDataValuePair( "Z_GREATER_THAN_ZERO" )->GetData( tempData );
-    subZeroChk->SetValue( tempData );
+    if( navPreferenceData->GetDataValuePair( "Z_GREATER_THAN_ZERO" ) )
+    {
+        navPreferenceData->GetDataValuePair( "Z_GREATER_THAN_ZERO" )->GetData( tempData );
+        subZeroChk->SetValue( tempData );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateXplorerData( void )
