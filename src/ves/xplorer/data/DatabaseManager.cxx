@@ -203,11 +203,19 @@ void DatabaseManager::ResetAll()
 
 bool DatabaseManager::SaveAs( const std::string& path )
 {
-    boost::filesystem::path from( m_path );
-    boost::filesystem::path to( path );
-    boost::filesystem::copy_file( from, to, boost::filesystem::copy_option::overwrite_if_exists );
+    try
+    {
+        boost::filesystem::path from( m_path );
+        boost::filesystem::path to( path );
+        boost::filesystem::copy_file( from, to, boost::filesystem::copy_option::overwrite_if_exists );
 
-    return false;
+        return true;
+    }
+    catch( std::exception& e )
+    {
+        std::cerr << e.what() << std::endl << std::flush;
+        return false;
+    }
 }
 
 bool DatabaseManager::LoadFrom( const std::string& path )
