@@ -73,12 +73,19 @@ int main( int argc, char* argv[] )
     //etc. This also lets us easily create an xplorer child, conductor child, etc.
     Poco::Logger& rootLogger( Poco::Logger::get("") );
     Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
-    fileChannel->setProperty( "path", "xplorerRunLog.log" );
+    std::string logPath;
+#if defined(_MSC_VER)
+    logPath = "C:/Temp/";
+#else
+    logPath = "/var/tmp/";
+#endif
+    logPath.append( "vesuite.log" );
+    fileChannel->setProperty( "path", logPath );
 
     // Format the logged output as
     // time_with_microseconds [thread number] (priority) source message extra_crlf
     Poco::PatternFormatter* formatter = new Poco::PatternFormatter;
-    formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%l) %s: %t\n");
+    formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%l) %s: %t");
     Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel);
 
     rootLogger.setChannel( formattingChannel );
