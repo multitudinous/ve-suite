@@ -78,23 +78,24 @@ private:
     ///Relay method for passing signals on to xplorer
     void UpdateBackgroundColor( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateNavEqualZero( PropertyPtr property );
+    //void UpdateNavEqualZero( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateNavGreaterZero( PropertyPtr property );
+    //void UpdateNavGreaterZero( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateShutdownXplorer( PropertyPtr property );
+    //void UpdateShutdownXplorer( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdatePhysicsDebugger( PropertyPtr property );
+    //void UpdatePhysicsDebugger( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateScriptLogger( PropertyPtr property );
+    //void UpdateScriptLogger( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateScreenAlignedNormals( PropertyPtr property );
+    //void UpdateScreenAlignedNormals( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
     void UpdateDraggerScaling( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
     void UpdateNearFarRatio( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateLODScaling( PropertyPtr property );
+    //void UpdateLODScaling( PropertyPtr property );
+    void SaveChanges( PropertyPtr property );
     
 private:
     ///Create the skeleton
@@ -110,17 +111,17 @@ private:
     UpdateCheckAndVectorSignal_type m_backgroundColor;
 
     ///Update signal for check box preferences
-    typedef boost::signals2::signal< void ( bool const& ) > CheckValueSignal_type;
-    CheckValueSignal_type m_navZEqual0;
-    CheckValueSignal_type m_navZGreater0;
-    CheckValueSignal_type m_shutdownXplorer;
-    CheckValueSignal_type m_physicsDebugger;
-    CheckValueSignal_type m_scriptLogger;
-    CheckValueSignal_type m_screenAlignedNormals;    
+//    typedef boost::signals2::signal< void ( bool const& ) > CheckValueSignal_type;
+//    CheckValueSignal_type m_navZEqual0;
+//    CheckValueSignal_type m_navZGreater0;
+//    CheckValueSignal_type m_shutdownXplorer;
+//    CheckValueSignal_type m_physicsDebugger;
+//    CheckValueSignal_type m_scriptLogger;
+//    CheckValueSignal_type m_screenAlignedNormals;
     
     ///Update signal for check box preferences
-    typedef boost::signals2::signal< void ( const double ) > DoubleValueSignal_type;
-    DoubleValueSignal_type m_lodScaling;
+//    typedef boost::signals2::signal< void ( const double ) > DoubleValueSignal_type;
+//    DoubleValueSignal_type m_lodScaling;
 };
 } // namespace data
 } // namespace xplorer
