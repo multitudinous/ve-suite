@@ -85,6 +85,9 @@ void DatabaseManager::Shutdown()
     {
         ;
     }
+
+    //Remove working db file
+    boost::filesystem::remove( m_path );
 }
 
 void DatabaseManager::SetDatabasePath( const std::string& path )

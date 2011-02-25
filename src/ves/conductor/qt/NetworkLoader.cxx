@@ -109,9 +109,11 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 
     // A change in the working dir also requires that we connect to the db file
     // in the new working dir and reset it.
-    std::string newDBPath = newWorkingDir;
-    newDBPath += "/ves.db";
-    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( newDBPath );
+    // UPDATE 2011-02-25: Moving to unified dir for db, so no path change for
+    // db here. Still reset it since we're loading a new .ves.
+//    std::string newDBPath = newWorkingDir;
+//    newDBPath += "/ves.db";
+//    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( newDBPath );
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
     
     // TODO: This code needs a thorough cleanup since it is mostly ripped from

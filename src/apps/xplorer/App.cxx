@@ -192,7 +192,7 @@ App::App( int argc, char* argv[], bool enableRTT )
     m_exitApp( false )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
-    LOG_INFO( "Starting App" );
+    LOG_INFO("Starting App");
 
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -246,7 +246,14 @@ App::App( int argc, char* argv[], bool enableRTT )
 
     //Set the current database file and clear it out in case it contains data
     //from a previous session
-    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( "ves.db" );
+    std::string dbPath;
+#if defined(_MSC_VER)
+    dbPath = "C:/Temp/";
+#else
+    dbPath = "/var/tmp/";
+#endif
+    dbPath.append( "ves.db" );
+    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( dbPath );
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 
     // Register signal(s) with EventManager
