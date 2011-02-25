@@ -90,6 +90,8 @@ public:
     ///Set integration setp length
     void SetIntegrationStepLength( int );
 
+    void UpdatePropertySet();
+
 private:
     ///Create seed points to be used by streamline algorithms
     void CreateSeedPoints();

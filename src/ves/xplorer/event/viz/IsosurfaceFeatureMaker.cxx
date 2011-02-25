@@ -48,7 +48,7 @@ using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
 IsosurfaceFeatureMaker::IsosurfaceFeatureMaker()
 {
-    ;
+    m_commandName = "UPDATE_ISOSURFACE_SETTINGS";
 }
 ////////////////////////////////////////////////////////////////////////////////
 IsosurfaceFeatureMaker::IsosurfaceFeatureMaker( const IsosurfaceFeatureMaker& orig )
@@ -67,10 +67,11 @@ void IsosurfaceFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::IsosurfacePropertySet isosurfaceSet;
-    isosurfaceSet.SetUUID( recordUUID );
-    isosurfaceSet.LoadFromDatabase();
-    AddPlane( static_cast < xplorer::data::PropertySet& > ( isosurfaceSet ) );
+    xplorer::data::PropertySetPtr ptr = xplorer::data::PropertySetPtr( new xplorer::data::IsosurfacePropertySet() );
+    ptr->SetUUID( recordUUID );
+    ptr->LoadFromDatabase();
+    //AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
+    Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IsosurfaceFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )

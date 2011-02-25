@@ -48,7 +48,7 @@ using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
 ContourFeatureMaker::ContourFeatureMaker()
 {
-    ;
+    m_commandName = "UPDATE_SCALAR_SETTINGS";
 }
 ////////////////////////////////////////////////////////////////////////////////
 ContourFeatureMaker::ContourFeatureMaker( const ContourFeatureMaker& orig )
@@ -67,10 +67,11 @@ void ContourFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::ContourPlanePropertySet contourSet;
-    contourSet.SetUUID( recordUUID );
-    contourSet.LoadFromDatabase();
-    AddPlane( static_cast < xplorer::data::PropertySet& > ( contourSet ) );
+    xplorer::data::PropertySetPtr ptr = xplorer::data::PropertySetPtr( new xplorer::data::ContourPlanePropertySet() );
+    ptr->SetUUID( recordUUID );
+    ptr->LoadFromDatabase();
+    //AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
+    Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ContourFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )

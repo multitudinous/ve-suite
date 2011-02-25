@@ -40,6 +40,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <ves/xplorer/data/PropertySet.h>
+
 #include <cmath>
 
 #include <ves/xplorer/Debug.h>
@@ -61,8 +63,7 @@
 #include <vtkXMLPolyDataWriter.h>
 
 using namespace ves::xplorer;
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////////////////////////////////////////////////////////
 // this class requires that the dataset has a vector field.
 cfdVectorBase::cfdVectorBase()
@@ -119,6 +120,8 @@ cfdVectorBase::~cfdVectorBase()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::UpdateCommand()
 {
+    UpdatePropertySet();
+    return;
     //Call base method - currently does nothing
     cfdObjects::UpdateCommand();
 
@@ -216,7 +219,6 @@ void cfdVectorBase::UpdateCommand()
 	{
     	activeModelDVP->GetData( m_surfDataset );
 	}
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetVectorScale( float x )
@@ -538,5 +540,79 @@ void cfdVectorBase::CreateArbSurface()
     }
     
     surfProbe->Delete();
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdVectorBase::UpdatePropertySet()
+{
+    //Extract the integration direction
+    std::string dataMapping = boost::any_cast<std::string > ( m_propertySet->GetPropertyAttribute( "DataMapping", "enumCurrentString" ) );
+    
+    vprDEBUG( vesDBG, 0 ) 
+        << "|\tSelect scalar or volume flux for contour display: " << dataMapping
+        << std::endl << vprDEBUG_FLUSH;
+    
+    if( !dataMapping.compare( "Map Scalar Data" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE SCALARS"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        m_selectDataMapping = 0;
+    }
+    else if( !dataMapping.compare( "Map Volume Flux Data" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE VOLUME FLUX"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        m_selectDataMapping = 1;
+    }
+    
+    //Extract the plane position
+    SetRequestedValue( boost::any_cast<double>( m_propertySet->GetPropertyValue( "PlaneLocation" ) ) );
+    
+    std::string planeOption;
+    if( boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Mode_UseNearestPrecomputedPlane" ) ) )
+    {
+        planeOption = "Use Nearest Precomputed Plane";
+    }
+    else if( boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Mode_CyclePrecomputedSurfaces" ) ) )
+    {
+        planeOption = "Cycle Precomputed Surfaces";
+    }
+
+    if( planeOption == "Use Nearest Precomputed Plane" )
+    {
+        SetPreCalcFlag( true );
+    }
+    else
+    {
+        SetPreCalcFlag( false );
+    }
+    
+    //Extract the advanced settings from the commands
+    std::vector< double > tempData;
+    tempData.push_back( boost::any_cast<double>
+                       ( m_propertySet->GetPropertyValue( "Advanced_VectorThreshold_Min" ) ) );
+    tempData.push_back( boost::any_cast<double>
+                       ( m_propertySet->GetPropertyValue( "Advanced_VectorThreshold_Max" ) ) );
+    SetThreshHoldPercentages( static_cast< int >( tempData.at( 0 ) ),
+                             static_cast< int >( tempData.at( 1 ) ) );
+    UpdateThreshHoldValues();
+    
+    SetVectorScale( static_cast< float >( boost::any_cast<double>
+                                         ( m_propertySet->GetPropertyValue( "Advanced_VectorScale" ) ) ) );
+    
+    SetVectorRatioFactor( static_cast< int >( boost::any_cast<double>
+                                             ( m_propertySet->GetPropertyValue( "Advanced_VectorRatio" ) ) ) );
+    
+    SetScaleByVectorFlag( static_cast< int >( boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_ScaleByVectorMagnitude" ) ) ) );
+      
+    m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
+
+	//Extract the surface flag
+    /*activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
+    if( activeModelDVP )
+	{
+    	activeModelDVP->GetData( m_surfDataset );
+	}*/
 }
 ////////////////////////////////////////////////////////////////////////////////

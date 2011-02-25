@@ -78,6 +78,8 @@ public:
     ///Override the cfdObjects function
     virtual void UpdateCommand( void );
 
+    void UpdatePropertySet();
+    
 private:
     double convertPercentage( const int percentage );
 

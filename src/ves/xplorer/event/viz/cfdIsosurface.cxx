@@ -37,6 +37,8 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
 
+#include <ves/xplorer/data/PropertySet.h>
+
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
@@ -232,6 +234,9 @@ double cfdIsosurface::convertPercentage( const int percentage )
 ///////////////////////////////////////////////////////////////////////////
 void cfdIsosurface::UpdateCommand()
 {
+    UpdatePropertySet();
+    return;
+    
     //Call base method - currently does nothing
     cfdObjects::UpdateCommand();
 
@@ -270,3 +275,40 @@ void cfdIsosurface::UpdateCommand()
         dataSet->SetActiveScalar( activeTempScalar );
     }
 }
+///////////////////////////////////////////////////////////////////////////
+void cfdIsosurface::UpdatePropertySet()
+{    
+    //Extract the isosurface value
+    double planePosition = boost::any_cast<double>( m_propertySet->GetPropertyValue( "IsosurfaceValue" ) );
+    SetRequestedValue( static_cast< int >( planePosition ) );
+    
+    colorByScalar = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) );
+    
+    minValue = boost::any_cast<double>( m_propertySet->GetPropertyValue( "ColorByScalar_ScalarRange_Min" ) );
+    
+    maxValue = boost::any_cast<double>( m_propertySet->GetPropertyValue( "ColorByScalar_ScalarRange_Max" ) );
+
+    DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+    if( !colorByScalar.empty() )
+    {
+        unsigned int activeTempScalar = dataSet->GetActiveScalar();
+        dataSet->SetActiveScalar( colorByScalar );
+        DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+        if( scalarBar )
+        {
+            scalarBar->AddScalarBarToGroup();
+        }
+        dataSet->SetActiveScalar( activeTempScalar );
+    }
+
+    /*ves::open::xml::DataValuePairPtr nearestPrecomputed( new ves::open::xml::DataValuePair() );
+    nearestPrecomputed->SetData( "Use Nearest Precomputed", static_cast<unsigned int>( 0 ) );
+    m_contourInformation.push_back( nearestPrecomputed );
+    
+    ves::open::xml::DataValuePairPtr gpuTools( new ves::open::xml::DataValuePair() );
+    gpuTools->SetDataBool( "Use GPU Tools", boost::any_cast<bool>
+                          ( set.GetPropertyValue( "UseGPUTools" ) ) );
+    m_contourInformation.push_back( gpuTools );*/
+    
+}
+///////////////////////////////////////////////////////////////////////////

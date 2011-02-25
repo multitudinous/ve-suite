@@ -64,6 +64,8 @@
 #include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
+#include <ves/xplorer/event/viz/ParticleAnimation.h>
+
 #include <ves/xplorer/event/viz/CreateVisObjectEventHandler.h>
 #include <ves/xplorer/event/viz/ClearVisObjectsEventHandler.h>
 #include <ves/xplorer/event/viz/StreamLineEventHandler.h>
@@ -108,6 +110,7 @@
 vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 1 );
 
 using namespace ves::xplorer::command;
+using namespace ves::xplorer::event::viz;
 
 namespace ves
 {
@@ -147,6 +150,10 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     _eventHandlers[ std::string( "LIVE_VECTOR_UPDATE" )] =
         new ves::xplorer::event::VectorEventHandler();
     
+    ///Create ciz object factory
+    CreateVizObjectMap();
+    
+    ///Setup slots
     CONNECTSIGNALS_1( "%DeleteVizFeature",
                      void( std::string const& activModelID ),
                      &SteadyStateVizHandler::DeleteVizFeature,
@@ -160,6 +167,13 @@ SteadyStateVizHandler::SteadyStateVizHandler()
 ////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::~SteadyStateVizHandler()
 {
+    for( VisObjectConstIter iter = m_visObjectMap.begin(); 
+        iter != m_visObjectMap.end(); ++iter  )
+    {
+        delete iter->second;
+    }
+    m_visObjectMap.clear();
+
     runIntraParallelThread = false;
 
     std::map< std::string, ves::xplorer::event::EventHandler* >::iterator pos;
@@ -443,7 +457,7 @@ void SteadyStateVizHandler::CreateActorThread()
     {
         if( runIntraParallelThread )
         {
-            vpr::System::msleep( 100 );  // thenth-second delay
+            vpr::System::msleep( 100 );
         }
 
         // Basically waiting for work here
@@ -472,46 +486,343 @@ void SteadyStateVizHandler::CreateActorThread()
     } // End of While loop
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void SteadyStateVizHandler::streamers()
+void SteadyStateVizHandler::CreateVizObjectMap()
 {
-    vprDEBUG( vesDBG, 1 ) << "In streamers" << std::endl << vprDEBUG_FLUSH;
-    if( cursor->GetCursorID() == NONE )
-    {
-        _activeObject = NULL;
-        return;
-    }
-
-    if( cursor->GetCursorID() == CUBE )
-    {
-        _activeObject->SetBoxSize( cur_box );
-    }
-
-    if( !useLastSource )
-    {
-        vprDEBUG( vesDBG, 1 ) << "creating fresh streamlines"
-        << std::endl << vprDEBUG_FLUSH;
-        if( lastSource != NULL )
-        {
-            lastSource->Delete();
-        }
-
-        lastSource = vtkPolyData::New();
-        lastSource->DeepCopy( cursor->GetSourcePoints() );
-
-        _activeObject->SetSourcePoints( lastSource );
-    }
-    else
-    {
-        vprDEBUG( vesDBG, 1 ) << "using transformed last source"
-        << std::endl << vprDEBUG_FLUSH;
-
-        _activeObject->SetSourcePoints( lastSource );
-    }
-
-    _activeObject->Update();
-    //_activeObject = NULL;
-}*/
+    // Initialize all the vis objects from ssvishandler
+    //
+    std::cout << "| Initializing Viz Methods......................................... |" << std::endl;
+    
+    // Initiate the isosurface.
+    //
+    std::pair< std::string, std::pair< std::string, std::string > > objectType;
+    objectType = std::make_pair( 
+                                std::string( "UPDATE_ISOSURFACE_SETTINGS" ), std::make_pair( "", "" ) );
+    cfdIsosurface* isosurface = new cfdIsosurface( 10 );
+    isosurface->SetObjectType( ISOSURFACE );
+    m_visObjectMap[ objectType ] = isosurface;
+    
+    //
+    // Initiate the interactive contour.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "wand" );
+    objectType.second.second = std::string( "Single" );
+    cfdContour* contour = new cfdContour();
+    contour->SetObjectType( CONTOUR );
+    m_visObjectMap[ objectType ] = contour;
+    
+    //
+    // Initiate the interactive momentum.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "wand" );
+    objectType.second.second = std::string( "Single-warp" );
+    cfdMomentum* momentum = new cfdMomentum();
+    momentum->SetObjectType( MOMENTUM );
+    m_visObjectMap[ objectType ] = momentum;
+    
+    //
+    // Initiate the interactive vector.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "wand" );
+    objectType.second.second = std::string( "Single" );
+    cfdVector* vector = new cfdVector();
+    vector->SetObjectType( VECTOR );
+    m_visObjectMap[ objectType ] = vector;
+    
+    //
+    // Initiate the preset x contour.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "x" );
+    objectType.second.second = std::string( "Single" );
+    cfdPresetContour* x_contour = new cfdPresetContour( 0, 10 );
+    x_contour->SetObjectType( X_CONTOUR );
+    m_visObjectMap[ objectType ] = x_contour;
+    
+    //
+    // Initiate the preset y contour.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "y" );
+    objectType.second.second = std::string( "Single" );
+    cfdPresetContour* y_contour = new cfdPresetContour( 1, 10 );
+    y_contour->SetObjectType( Y_CONTOUR );
+    m_visObjectMap[ objectType ] = y_contour;
+    
+    //
+    // Initiate the preset z contour.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "z" );
+    objectType.second.second = std::string( "Single" );
+    cfdPresetContour* z_contour = new cfdPresetContour( 2, 10 );
+    z_contour->SetObjectType( Z_CONTOUR );
+    m_visObjectMap[ objectType ] = z_contour;
+    
+    //
+    // Initiate the surface contour.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "By Surface" );
+    objectType.second.second = std::string( "Single" );
+    ves::xplorer::cfdPresetContour* surface_contour = 
+    new cfdPresetContour( 2, 10 );
+    surface_contour->SetObjectType( BY_SURFACE );
+    m_visObjectMap[ objectType ] = surface_contour;
+    
+    //
+    // Initiate the preset x momentum.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "x" );
+    objectType.second.second = std::string( "Single-warp" );
+    // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
+    cfdPresetMomentum* x_momentum = new cfdPresetMomentum( 0, 10 );
+    x_momentum->SetObjectType( X_MOMENTUM );
+    m_visObjectMap[ objectType ] = x_momentum;
+    
+    //
+    // Initiate the preset y momentum.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "y" );
+    objectType.second.second = std::string( "Single-warp" );
+    // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
+    cfdPresetMomentum* y_momentum = new cfdPresetMomentum( 1, 10 );
+    y_momentum->SetObjectType( Y_MOMENTUM );
+    m_visObjectMap[ objectType ] = y_momentum;
+    
+    //
+    // Initiate the preset z momentum.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "z" );
+    objectType.second.second = std::string( "Single-warp" );
+    // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
+    cfdPresetMomentum* z_momentum = new cfdPresetMomentum( 2, 10 );
+    z_momentum->SetObjectType( Z_MOMENTUM );
+    m_visObjectMap[ objectType ] = z_momentum;
+    
+    //
+    // Initiate the preset x vector.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "x" );
+    objectType.second.second = std::string( "Single" );
+    cfdPresetVector* x_vector = new cfdPresetVector( 0, 10 );
+    x_vector->SetObjectType( X_VECTOR );
+    m_visObjectMap[ objectType ] = x_vector;
+    
+    //
+    // Initiate the preset y vector.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "y" );
+    objectType.second.second = std::string( "Single" );
+    cfdPresetVector* y_vector = new cfdPresetVector( 1, 10 );
+    y_vector->SetObjectType( Y_VECTOR );
+    m_visObjectMap[ objectType ] = y_vector;
+    
+    //
+    // Initiate the preset z vector.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "z" );
+    objectType.second.second = std::string( "Single" );
+    cfdPresetVector* tempVector = new cfdPresetVector( 2, 10 );
+    tempVector->SetObjectType( Z_VECTOR );
+    m_visObjectMap[ objectType ] = tempVector;
+    
+    //
+    // Initiate the preset z vector.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "All" );
+    objectType.second.second = std::string( "Single" );
+    cfdPresetVector* z_vector = new cfdPresetVector( 3, 10 );
+    z_vector->SetObjectType( Z_VECTOR );
+    m_visObjectMap[ objectType ] = z_vector;
+    
+    //
+    // Initiate the surface vector.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "By Surface" );
+    objectType.second.second = std::string( "Single" );
+    ves::xplorer::cfdPresetVector* surface_vector = 
+    new cfdPresetVector( 2, 10 );
+    surface_vector->SetObjectType( BY_SURFACE );
+    m_visObjectMap[ objectType ] = surface_vector;
+    
+    //
+    // Initiate the preset x contour lines.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "x" );
+    objectType.second.second = std::string( "Multiple" );
+    cfdContours* x_contours = new cfdContours( 0 );
+    x_contours->SetObjectType( X_CONTOURS );
+    m_visObjectMap[ objectType ] = x_contours;
+    
+    //
+    // Initiate the preset y contour lines.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "y" );
+    objectType.second.second = std::string( "Multiple" );
+    cfdContours* y_contours = new cfdContours( 1 );
+    y_contours->SetObjectType( Y_CONTOURS );
+    m_visObjectMap[ objectType ] = y_contours;
+    
+    //
+    // Initiate the preset z contour lines.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "z" );
+    objectType.second.second = std::string( "Multiple" );
+    cfdContours* z_contours = new cfdContours( 2 );
+    z_contours->SetObjectType( Z_CONTOURS );
+    m_visObjectMap[ objectType ] = z_contours;
+    
+    //
+    // Initiate the preset x momentums.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "x" );
+    objectType.second.second = std::string( "Multiple-warp" );
+    cfdMomentums* x_momentums = new cfdMomentums( 0 );
+    x_momentums->SetObjectType( X_MOMENTUMS );
+    m_visObjectMap[ objectType ] = x_momentums;
+    
+    //
+    // Initiate the preset y momentums.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "y" );
+    objectType.second.second = std::string( "Multiple-warp" );
+    cfdMomentums* y_momentums = new cfdMomentums( 1 );
+    y_momentums->SetObjectType( Y_MOMENTUMS );
+    m_visObjectMap[ objectType ] = y_momentums;
+    
+    //
+    // Initiate the preset z momentums.
+    //
+    objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
+    objectType.second.first = std::string( "z" );
+    objectType.second.second = std::string( "Multiple-warp" );
+    cfdMomentums* z_momentums = new cfdMomentums( 2 );
+    z_momentums->SetObjectType( Z_MOMENTUMS );
+    m_visObjectMap[ objectType ] = z_momentums;
+    
+    //
+    // Initiate the preset x vectors.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "x" );
+    objectType.second.second = std::string( "Multiple" );
+    cfdVectors* x_vectors = new cfdVectors( 0 );
+    x_vectors->SetObjectType( X_VECTORS );
+    m_visObjectMap[ objectType ] = x_vectors;
+    
+    //
+    // Initiate the preset y vectors.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "y" );
+    objectType.second.second = std::string( "Multiple" );
+    cfdVectors* y_vectors = new cfdVectors( 1 );
+    y_vectors->SetObjectType( Y_VECTORS );
+    m_visObjectMap[ objectType ] = y_vectors;
+    
+    //
+    // Initiate the preset z vectors.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "z" );
+    objectType.second.second = std::string( "Multiple" );
+    cfdVectors* z_vectors = new cfdVectors( 2 );
+    z_vectors->SetObjectType( Z_VECTORS );
+    m_visObjectMap[ objectType ] = z_vectors;
+    
+    //
+    // Initiate the streamlines.
+    //
+    objectType.first = std::string( "UPDATE_STREAMLINE_SETTINGS" );
+    objectType.second.first = std::string( "" );
+    objectType.second.second = std::string( "" );
+    cfdStreamers* streamlines = new cfdStreamers();
+    streamlines->SetObjectType( STREAMLINES );
+    m_visObjectMap[ objectType ] = streamlines;
+    
+    //
+    // Initiate the animated streamers.
+    //
+    objectType.first = std::string( "UPDATE_STREAMLINE_SETTINGS" );
+    objectType.second.first = std::string( "animated" );
+    objectType.second.second = std::string( "" );
+    cfdAnimatedStreamlineCone* animStreamer = new cfdAnimatedStreamlineCone();
+    animStreamer->SetObjectType( ANIMATED_STREAMLINES );
+    animStreamer->SetStreamlineSource( streamlines );
+    m_visObjectMap[ objectType ] = animStreamer;
+    
+    //
+    // Initiate the animated Images.
+    //
+    //std::cout << "| 39.b Initializing............................. Animated Images |" << std::endl;
+    //animImg = new cfdAnimatedImage( _param.c_str() );
+    //animImg->SetObjectType( ANIMATED_IMAGES );
+    //dataList.push_back( animImg);
+    
+    //
+    // Initiate the PolyData File
+    //
+    /*objectType.first = std::string( "UPDATE_PARTICLE_SETTINGS" );
+     objectType.second.first = std::string( "" );
+     objectType.second.second = std::string( "" );
+     cfdPolyData* particles = new cfdPolyData();
+     particles->SetObjectType( PARTICLES );
+     m_visObjectMap[ objectType ] = particles;*/
+    
+    objectType.first = std::string( "UPDATE_POLYDATA_SETTINGS" );
+    objectType.second.first = std::string( "" );
+    objectType.second.second = std::string( "" );
+    cfdPolyData* surface = new cfdPolyData();
+    surface->SetObjectType( POLYDATA );
+    m_visObjectMap[ objectType ] = surface;
+    
+    
+    objectType.first = std::string( "UPDATE_POLYDATA_SETTINGS" );
+    objectType.second.first = std::string( "PARTICLE_VIZ" );
+    objectType.second.second = std::string( "" );
+    ParticleAnimation* particleAnim = new ParticleAnimation();
+    particleAnim->SetObjectType( PARTICLE_TRANSIENT );
+    m_visObjectMap[ objectType ] = particleAnim;
+    
+    //
+    // Initiate PIV data from INEL
+    //
+    //std::cout << "| 42. Initializing.................................... Bitmap Image |" << std::endl;
+    /*cfdImage* image = new cfdImage( _param );
+     image->SetObjectType( IMAGE_EX );
+     dataList.push_back( image ); */
+    
+    std::cout << "| Finished Initializing Viz Methods................................ |" << std::endl;
+}
 ////////////////////////////////////////////////////////////////////////////////
-
+cfdObjects* SteadyStateVizHandler::GetVizObject( VizKeyPair const& vizKey )
+{
+    VisObjectConstIter iter = m_visObjectMap.find( vizKey );
+    if( iter == m_visObjectMap.end() )
+    {
+        std::cerr << "ERROR: selected vis option is not in the GetVizObject. " << std::endl;
+        return 0;
+    }
+    return iter->second;
+    //ves::xplorer::cfdObjects* activeObject = 0;
+    //activeObject = iter->second;
+}
+////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves

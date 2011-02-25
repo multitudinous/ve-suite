@@ -95,6 +95,9 @@ public:
     void SetVectorScale( float );
     float GetVectorScale();
 
+    ///Update the property set
+    void UpdatePropertySet();
+
 protected:
     void CreateArbSurface();
     

@@ -128,6 +128,11 @@ private:
     ///????
     vprSingletonHeader( SteadyStateVizHandler );
 
+    ///Typdef
+    typedef std::pair< std::string, std::pair< std::string, std::string > > VizKeyPair;
+    
+    typedef std::map< VizKeyPair, ves::xplorer::cfdObjects* >::const_iterator VisObjectConstIter;
+    
 public:
     ///Destructor functions since destructors don't get called yet
     //void CleanUp();
@@ -177,6 +182,13 @@ public:
     ///Add the viz feature
     void AddVizFeature( std::string const& featureUUID, std::string const& tableName );
 
+    ///Create the map of viz objects
+    void CreateVizObjectMap();
+
+    ///Get the active object from the map
+    ///\param vizKey The key to a specific viz object
+    cfdObjects* GetVizObject( VizKeyPair const& vizKey );
+
 private:
     //Common objects for all functions
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
@@ -222,6 +234,8 @@ private:
     Poco::Logger& m_logger;
     ///Actual stream for this class
     ves::xplorer::LogStreamPtr m_logStream;
+    ///The container for all of the cfdObjects
+    std::map< std::pair< std::string, std::pair< std::string, std::string > > , ves::xplorer::cfdObjects* > m_visObjectMap;    
 
 };
 }

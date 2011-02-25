@@ -99,6 +99,9 @@ public:
     ///Create the Arb surface
     void CreateArbSurface();
 
+    ///Update the feature with the property set
+    void UpdatePropertySet();
+
 protected:
     vtkPolyDataMapper* mapper;///<mapper.
     vtkContourFilter*    cfilter;///<Contour filter.

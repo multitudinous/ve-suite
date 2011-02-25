@@ -49,11 +49,10 @@ namespace xplorer
 {
 class cfdStreamers;
 /*!\file cfdAnimatedStreamlineCone.h
-cfdAnimatedStreamlineCone API
-*/
-/*!\class ves::xplorer::cfdAnimatedStreamlineCone
-*
-*/
+ *   cfdAnimatedStreamlineCone API
+ * \class ves::xplorer::cfdAnimatedStreamlineCone
+ *
+ */
 class VE_XPLORER_EXPORTS cfdAnimatedStreamlineCone : public cfdObjects
 {
 public:
@@ -67,7 +66,7 @@ public:
     
     ///Set the Polydata Source
     ///\param polySource
-    void SetPolyDataSource( vtkPolyData * polySource );
+    void SetPolyDataSource( vtkPolyData* polySource );
 
     ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand();

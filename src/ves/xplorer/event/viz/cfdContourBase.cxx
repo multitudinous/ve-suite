@@ -41,6 +41,8 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 
+#include <ves/xplorer/data/PropertySet.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -243,6 +245,9 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::UpdateCommand()
 {
+    UpdatePropertySet();
+    return;
+
     //Call base method - currently does nothing
     cfdObjects::UpdateCommand();
 
@@ -523,5 +528,102 @@ void cfdContourBase::CreateArbSurface()
     	lut1->Delete();
 	}
     surfProbe->Delete();
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdContourBase::UpdatePropertySet()
+{
+    std::string dataMapping = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "DataMapping", "enumCurrentString" ) );
+    
+    vprDEBUG( vesDBG, 0 ) 
+    << "|\tSelect scalar or volume flux for contour display: "
+    << dataMapping << std::endl << vprDEBUG_FLUSH;
+    
+    if( !dataMapping.compare( "Map Scalar Data" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tVisualize Scalars"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        SelectDataMapping( 0 );
+    }
+    else if( !dataMapping.compare( "Map Volume Flux Data" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tVisualize Volume Flux"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        SelectDataMapping( 1 );
+    }
+    
+    //Extract the plane position
+    double planePosition = boost::any_cast<double>( m_propertySet->GetPropertyValue( "PlaneLocation" ) );
+    SetRequestedValue( planePosition );
+    
+    // Use Nearest or Cycle Precomputed
+    std::string planeOption;
+    if( boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Mode_UseNearestPrecomputedPlane" ) ) )
+    {
+        planeOption = "Use Nearest Precomputed Plane";
+    }
+    else if( boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Mode_CyclePrecomputedSurfaces" ) ) )
+    {
+        planeOption = "Cycle Precomputed Surfaces";
+    }
+    
+    if( planeOption == "Use Nearest Precomputed Plane" )
+    {
+        SetPreCalcFlag( true );
+    }
+    else
+    {
+        SetPreCalcFlag( false );
+    }
+    
+    // set the opacity
+    double opacity = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_Opacity" ) );
+    contourOpacity = opacity * 0.01f;
+    
+    // set the warped contour scale
+    double contourScale = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_WarpedContourScale" ) );
+    double v[2];
+    GetActiveDataSet()->GetUserRange( v );
+    //double scale = contourScale;
+    warpedContourScale = ( contourScale / 5.0 ) * 2.0f / ( float )( v[1] - v[0] );
+    vprDEBUG( vesDBG, 0 ) << "|\tWarped Contour Scale "
+    << warpedContourScale << " : " << v[1] << " - " << v[0]
+    << std::endl << vprDEBUG_FLUSH;
+    
+    // Set the lod values
+    double lod = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_ContourLOD" ) );
+    double realLOD = lod * 0.01f;
+    vprDEBUG( vesDBG, 0 ) << "|\tCHANGE_CONTOUR_SETTINGS LOD Settings: " 
+    << lod << " : " << realLOD
+    << std::endl << vprDEBUG_FLUSH;
+    this->deci->SetTargetReduction( realLOD );
+    
+    std::string contourType = 
+    boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "Advanced_ContourType", "enumCurrentString" ) );
+    if( contourType == "Graduated" )
+    {
+        SetFillType( 0 );
+    }
+    else if( contourType == "Banded" )
+    {
+        SetFillType( 1 );
+    }
+    else if( contourType == "Lined" )
+    {
+        SetFillType( 2 );
+    }
+    
+	//Extract the surface flag
+    /*activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
+     if( activeModelDVP )
+     {
+     activeModelDVP->GetData( m_surfDataset );
+     }*/
+    
+    if( m_propertySet->PropertyExists( "UseGPUTools" ) )
+    {
+        ;//unsigned int checkBox = boost::any_cast<bool>( set.GetPropertyValue( "UseGPUTools" ) );
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////

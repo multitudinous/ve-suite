@@ -42,6 +42,7 @@
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/event/viz/cfdObjects.h>
 
@@ -75,7 +76,7 @@ VisFeatureMakerBase::~VisFeatureMakerBase()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::Update( const::std::string& recordUUID )
+void VisFeatureMakerBase::Update( const std::string& recordUUID )
 {
     boost::ignore_unused_variable_warning( recordUUID );
     // Does nothing, but don't want pure virtual f'n so that this class *can*
@@ -181,7 +182,7 @@ void VisFeatureMakerBase::SendUpdatedSettingsToXplorer( ves::open::xml::CommandP
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( newCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::Execute( xplorer::data::PropertySet& set )
+void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
 {
     //Sleep here while we wait for the ss viz handler to finish computing the
     //last request from the user
@@ -190,7 +191,7 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySet& set )
     //    vpr::System::msleep( 500 );  // half-second delay
     //}
     
-    // Set the active dataset
+    // Set the active datasetm_propertySet->
     if( !SetActiveDataSet( set ) )
     {
         return;
@@ -200,104 +201,92 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySet& set )
     // set the active vector
     SetActiveVector( set );
     // Get the active object
-    /*ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-    ves::open::xml::DataValuePairPtr scalarDVP = command->GetDataValuePair( "Scalar Bar State" );
-    ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
     
-    std::string direction;
-    ves::open::xml::DataValuePairPtr directionDVP = objectCommand->GetDataValuePair( "Direction" );
-    if( directionDVP )
-    {
-        directionDVP->GetData( direction );
-    }
-    
+    std::string direction = boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction", "enumCurrentString" ) );
+        
+    int mode = boost::any_cast<int>( set->GetPropertyValue( "Mode" ) );
     std::string planes;
-    ves::open::xml::DataValuePairPtr planesDVP = objectCommand->GetDataValuePair( "Number of Planes" );
-    if( planesDVP )
+    if( mode == 0 )
     {
-        planesDVP->GetData( planes );
+        planes = "Single";
+    }
+    else if( mode == 1 )
+    {
+        planes = "Multiple";
     }
     
     std::string advanced;
-    ves::open::xml::DataValuePairPtr advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
-    if( advancedDVP )
+    if( set->PropertyExists( "Advanced_WarpOption" ) )
     {
-        ves::open::xml::CommandPtr advancedCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  advancedDVP->GetDataXMLObject() );
-        unsigned int warpOption = 0;
-        advancedCommand->GetDataValuePair( "Warp Option" )->GetData( warpOption );
-        if( warpOption )
+        if( boost::any_cast<bool>( set->GetPropertyValue( "Advanced_WarpOption" ) ) )
+        {
             advanced = "-warp";
+        }
     }
     
     //Create the key for a specific object
     std::pair< std::string, std::pair< std::string, std::string > > commandType;
-    commandType = std::make_pair( std::string( objectCommand->GetCommandName() ),
+    commandType = std::make_pair( std::string( m_commandName ),
                                  std::make_pair( direction, planes + advanced ) );
-    
-    // set the xml command to the cfdObject
-    VisObjectConstIter iter = visObjectMap.find( commandType );
-    if( iter == visObjectMap.end() )
-    {
-        std::cerr << "ERROR: selected vis option is not in the VisFeatureMakerBase. " << std::endl;
-        return;
-    }
-    
-    ves::xplorer::cfdObjects* activeObject = 0;
-    activeObject = iter->second;
+    ves::xplorer::cfdObjects* activeObject = SteadyStateVizHandler::instance()->GetVizObject( commandType );
+    std::cout << direction << " " << std::string( planes + advanced ) << std::endl;
     if( activeObject == 0 )
     {
         std::cerr << "ERROR: selected vis option is not in the VisFeatureMakerBase. " << std::endl;
         return;
     }
-    
-    unsigned int scalarBarState = 0;
-    if( scalarDVP )
-    {
-        scalarDVP->GetData( scalarBarState );
-        ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetDataSetScalarState( scalarBarState );
-    }
+
+    //Need to wire this up to the UI
+    //ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->
+    //    SetDataSetScalarState( boost::any_cast<bool>( set->GetPropertyValue( "ScalarBar" ) ) );
     
     // Check to see if any of the objectss need updated before we
     // create actors
     {
         activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-        activeObject->SetVECommand( CommandManager::instance()->GetXMLCommand() );
+        
+        //activeObject->SetVECommand( CommandManager::instance()->GetXMLCommand() );
+        //activeObject->UpdateCommand();
+        //xplorer::data::PropertySetWeakPtr tempPtr = xplorer::data::PropertySetWeakPtr( &set );
+        activeObject->SetPropertySet( set );
+        std::cout << " here 1 " << std::endl;
         activeObject->UpdateCommand();
-        activeObject->SetUUID( CommandManager::instance()->GetXMLCommand()->GetID() );
+        std::cout << " here 2 " << std::endl;
+
+        activeObject->SetUUID( set->GetUUIDAsString() );
         
         ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootTransparent();
     }
-    
+
     // get the active vis object
-    vprDEBUG( vesDBG, 1 ) << "|\tSetting viz object " << activeObject->GetObjectType()
-    << " to _activeObject"
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tSetting viz object " 
+        << activeObject->GetObjectType()
+        << " to _activeObject" << std::endl << vprDEBUG_FLUSH;
     
     //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
     
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS = 
-    ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
+        ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
     
     // add active dataset DCS to scene graph if not already there...
     vprDEBUG( vesDBG, 2 ) << "|\tSetting DCS to activeDCS = "
-    << activeDataSetDCS.get()
-    << std::endl << vprDEBUG_FLUSH;
+        << activeDataSetDCS.get()
+        << std::endl << vprDEBUG_FLUSH;
     //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
     //this->activeObject->SetNormal( EnvironmentHandler::instance()->GetNavigate()->GetDirection() );
     //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
     activeObject->SetCursorType( NONE );//EnvironmentHandler::instance()->GetCursor()->GetCursorID() );
-    activeObject->SetUpdateFlag( false );*/
+    activeObject->SetUpdateFlag( false );
     //call back over to ssvishandler to set the flags
-    //SteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
+    SteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
     SteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
     SteadyStateVizHandler::instance()->SetActorsAreReady( true );
 }
 //////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::SetActiveVector( xplorer::data::PropertySet& set )
+void VisFeatureMakerBase::SetActiveVector( xplorer::data::PropertySetPtr set )
 {
     std::string activeVector;
-    activeVector = boost::any_cast<std::string >( set.GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) );
+    activeVector = boost::any_cast<std::string >( set->GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) );
     
     if( !activeVector.empty() )
     {
@@ -320,12 +309,12 @@ void VisFeatureMakerBase::SetActiveVector( xplorer::data::PropertySet& set )
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::SetActiveScalarAndRange( xplorer::data::PropertySet& set )
+void VisFeatureMakerBase::SetActiveScalarAndRange( xplorer::data::PropertySetPtr set )
 {    
-    std::string activeScalarName = boost::any_cast<std::string >( set.GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
+    std::string activeScalarName = boost::any_cast<std::string >( set->GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
         
-    double scalarMin = boost::any_cast<double>( set.GetPropertyValue( "DataSet_ScalarRange_Min" ) );
-    double scalarMax = boost::any_cast<double>( set.GetPropertyValue( "DataSet_ScalarRange_Max" ) );
+    double scalarMin = boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Min" ) );
+    double scalarMax = boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Max" ) );
     
     vprDEBUG( vesDBG, 1 ) << "|\tVisFeatureMakerBase::SetActiveScalarAndRange Set the scalar and range "
     << ", scalar = " << activeScalarName
@@ -342,9 +331,9 @@ void VisFeatureMakerBase::SetActiveScalarAndRange( xplorer::data::PropertySet& s
     activeDataset->GetParent()->ResetScalarBarRange( scalarMin, scalarMax );
 }
 //////////////////////////////////////////////////////////////////
-bool VisFeatureMakerBase::SetActiveDataSet( xplorer::data::PropertySet& set )
+bool VisFeatureMakerBase::SetActiveDataSet( xplorer::data::PropertySetPtr set )
 {
-    std::string dataSetName = boost::any_cast<std::string >( set.GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    std::string dataSetName = boost::any_cast<std::string >( set->GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
     //Need to set the active datasetname and get the position of the dataset
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );

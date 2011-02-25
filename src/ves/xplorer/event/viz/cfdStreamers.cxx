@@ -38,6 +38,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <ves/xplorer/data/PropertySet.h>
+
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 #include <vtkDataSet.h>
@@ -125,13 +127,13 @@ void cfdStreamers::Update()
     }
 
     vprDEBUG( vesDBG, 0 ) << "|   cfdStreamers::Update, origin = "
-    << origin[ 0 ] << " : "
-    << origin[ 1 ] << " : "
-    << origin[ 2 ] << std::endl
-    << " Prop Time : " << propagationTime
-    << " Integration Step Length : " << integrationStepLength
-    << " Integration Direction : " << integrationDirection
-    << std::endl << vprDEBUG_FLUSH;
+        << origin[ 0 ] << " : "
+        << origin[ 1 ] << " : "
+        << origin[ 2 ] << std::endl
+        << " Prop Time : " << propagationTime
+        << " Integration Step Length : " << integrationStepLength
+        << " Integration Direction : " << integrationDirection
+        << std::endl << vprDEBUG_FLUSH;
 
     //tubeFilter->SetRadius( lineDiameter );
     //tubeFilter->SetNumberOfSides( 3 );
@@ -463,6 +465,9 @@ void cfdStreamers::SetIntegrationStepLength( int value )
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::UpdateCommand()
 {
+    UpdatePropertySet();
+    return;
+
     //Call base method - currently does nothing
     cfdObjects::UpdateCommand();
 
@@ -726,4 +731,113 @@ void cfdStreamers::CreateArbSurface()
     seedPoints = vtkPolyData::New();
     seedPoints->SetPoints( points );
 }
-//////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+void cfdStreamers::UpdatePropertySet()
+{    
+    //Extract the integration direction
+    std::string intDirection = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "IntegrationDirection", "enumCurrentString" ) );
+    
+    vprDEBUG( vesDBG, 0 ) << "|\tStreamline settings"
+    << std::endl << vprDEBUG_FLUSH;
+    
+    if( !intDirection.compare( "backward" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tBACKWARD_INTEGRATION"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        SetIntegrationDirection( 2 );
+    }
+    else if( !intDirection.compare( "forward" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tFORWARD_INTEGRATION"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        SetIntegrationDirection( 1 );
+    }
+    else if( !intDirection.compare( "both directions" ) )
+    {
+        vprDEBUG( vesDBG, 0 ) << "|\t\tTWO_DIRECTION_INTEGRATION"
+        << std::endl << vprDEBUG_FLUSH;
+        
+        SetIntegrationDirection( 0 );
+    }
+
+    /////////////////////
+    m_streamRibbons = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseStreamRibbons" ) );
+    vprDEBUG( vesDBG, 0 ) << "|\t\tUse Stream Ribbons\t" << m_streamRibbons
+        << std::endl << vprDEBUG_FLUSH;
+
+    /////////////////////
+    streamArrows = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseStreamArrows" ) );
+    vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_ARROW\t" << streamArrows
+        << std::endl << vprDEBUG_FLUSH;
+    
+    /////////////////////
+    SetIntegrationStepLength( static_cast< int >( boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_IntegrationStepSize" ) ) ) );
+    
+    /////////////////////
+    SetPropagationTime( boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_PropogationTime" ) ) );
+    
+    /////////////////////
+    double streamDiamter = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_Diameter" ) );
+    vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_DIAMETER\t"
+        << streamDiamter << std::endl << vprDEBUG_FLUSH;
+    // diameter is obtained from gui, -100 < vectorScale < 100
+    // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
+    // convert range to -2.5 < x < 2.5, and compute the exponent...
+    float range = 2.5f;
+    int diameter = static_cast< int >( streamDiamter );
+    float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 1.0f * 0.001f;
+    
+    // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
+    // note that multiplying by 0.005 is the same as dividing by 200, or the range
+    lineDiameter = ( diameter + 110 ) * 0.005 *  20;
+    particleDiameter = lineDiameter;
+    
+    vprDEBUG( vesDBG, 1 ) << "|\t\tNew Streamline Diameter : "
+        << lineDiameter << std::endl << vprDEBUG_FLUSH;
+    
+    /////////////////////
+    arrowDiameter = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_SphereArrowParticleSize" ) );
+    arrowDiameter = localLineDiameter * 60.0f * arrowDiameter;
+    vprDEBUG( vesDBG, 1 ) << "|\t\tNew Arrow Diameter : "
+        << arrowDiameter << std::endl << vprDEBUG_FLUSH;
+
+    ////////////////////
+    //Set the number of seed points in each direction and get the %BB info
+    //Extract the advanced settings from the commands
+    xMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_XMax" ) );
+    xMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_XMin" ) );
+    
+    yMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_YMax" ) );
+    yMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_YMin" ) );
+    
+    zMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_ZMax" ) );
+    zMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_ZMin" ) );
+
+    xValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInX" ) );
+    yValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInY" ) );
+    zValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInZ" ) );
+    
+    /////////////////////   
+    m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
+    
+    //Extract the surface flag
+    //activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
+    bool hasSurface = false;
+    /*if( activeModelDVP )
+	{
+        hasSurface = true;
+    	activeModelDVP->GetData( m_surfDataset );
+	}*/
+	/////////////////////
+    if( !hasSurface )
+    {
+        CreateSeedPoints();
+    }
+    else
+    { 
+        CreateArbSurface();
+    }
+}
+///////////////////////////////////////////////////////////////////////////

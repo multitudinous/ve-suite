@@ -77,6 +77,8 @@ public:
     ///Gets particle scale.
     float GetParticleScale();
 
+    void UpdatePropertySet();
+
 private:
     ///Sphere scaling.
     float GetSphereScaleFactor();

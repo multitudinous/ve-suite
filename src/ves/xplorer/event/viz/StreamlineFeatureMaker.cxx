@@ -49,7 +49,7 @@ using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
 StreamlineFeatureMaker::StreamlineFeatureMaker()
 {
-    ;
+    m_commandName = "UPDATE_STREAMLINE_SETTINGS";
 }
 ////////////////////////////////////////////////////////////////////////////////
 StreamlineFeatureMaker::StreamlineFeatureMaker( const StreamlineFeatureMaker& orig )
@@ -68,10 +68,11 @@ void StreamlineFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::StreamlinePropertySet streamlineSet;
-    streamlineSet.SetUUID( recordUUID );
-    streamlineSet.LoadFromDatabase();
-    AddPlane( static_cast < xplorer::data::PropertySet& > ( streamlineSet ) );
+    xplorer::data::PropertySetPtr ptr = xplorer::data::PropertySetPtr( new xplorer::data::StreamlinePropertySet() );
+    ptr->SetUUID( recordUUID );
+    ptr->LoadFromDatabase();
+    //AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
+    Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StreamlineFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )

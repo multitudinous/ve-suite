@@ -49,7 +49,7 @@ using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
 VectorFeatureMaker::VectorFeatureMaker()
 {
-    ;
+    m_commandName = "UPDATE_VECTOR_SETTINGS";
 }
 ////////////////////////////////////////////////////////////////////////////////
 VectorFeatureMaker::VectorFeatureMaker( const VectorFeatureMaker& orig )
@@ -66,13 +66,13 @@ VectorFeatureMaker::~VectorFeatureMaker()
 ////////////////////////////////////////////////////////////////////////////////
 void VectorFeatureMaker::Update( const::std::string& recordUUID )
 {
-std::cout << " update " << std::endl;
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::VectorPlanePropertySet vectorSet;
-    vectorSet.SetUUID( recordUUID );
-    vectorSet.LoadFromDatabase();
-    AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
+    xplorer::data::PropertySetPtr ptr = xplorer::data::PropertySetPtr( new xplorer::data::VectorPlanePropertySet() );
+    ptr->SetUUID( recordUUID );
+    ptr->LoadFromDatabase();
+    //AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
+    Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VectorFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )

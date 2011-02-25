@@ -38,6 +38,8 @@
 #include <ves/xplorer/DataSetPtr.h>
 #include <ves/xplorer/scenegraph/Geode.h>
 
+#include <ves/xplorer/data/PropertySetPtr.h>
+
 #include <vector>
 
 // VTK Classes
@@ -81,7 +83,7 @@ public:
     ///update the actor
     virtual void Update() = 0;
 
-///Update the actors in the object
+    ///Update the actors in the object
     void UpdateActors();
 
     ///Create a vtkPolyData based on the input vtkPolyDataAlgorithm\n
@@ -200,19 +202,24 @@ public:
     ///Set the uui for the current feature
     std::string const& GetUUID() const;
 
+    ///Set the property set for this feature
+    void SetPropertySet( ves::xplorer::data::PropertySetPtr set );
+
 protected:
     vtkPolyData* ComputeVolumeFlux( vtkPolyData* inputPD );
-
-    DataSet* activeDataSet;///<active dataset.
-
-    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<geode vector.
-    vtkPolyData* pointSource;///<point source for vtk polydata.
-
+    ///active dataset.
+    DataSet* activeDataSet;
+    ///The current property set
+    ves::xplorer::data::PropertySetPtr m_propertySet;
+    ///geode vector.
+    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;
+    ///point source for vtk polydata.
+    vtkPolyData* pointSource;
     ///vtkMultiGroupGeometryFilter
     vtkCompositeDataGeometryFilter* m_multiGroupGeomFilter;
     ///vtkGeometryFilter
     vtkGeometryFilter* m_geometryFilter;
-
+    
     bool updateFlag;///<flag for updating.
     int vtkToPFDebug;///<debugging for performer (may not be needed).
     int objectType;///<sets object type.

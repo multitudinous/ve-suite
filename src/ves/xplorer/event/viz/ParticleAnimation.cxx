@@ -34,25 +34,11 @@
 #include <ves/xplorer/event/viz/OSGParticleStage.h>
 
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-#include <vtkTubeFilter.h>
-#include <vtkCellTypes.h>
-#include <vtkLookupTable.h>
-#include <vtkPolyData.h>
-#include <vtkActor.h>
-#include <vtkPolyDataMapper.h>
-#include <vtkProperty.h>
-#include <vtkWarpVector.h>
-
-// following is for vertex-based sphere glyphs
-#include <vtkGlyph3D.h>
-#include <vtkSphereSource.h>
-#include <vtkPointData.h>
-#include <vtkPolyDataNormals.h>
+#include <ves/xplorer/data/PropertySet.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -60,33 +46,20 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::event::viz;
 
+////////////////////////////////////////////////////////////////////////////////
 ParticleAnimation::ParticleAnimation()
 {
-    this->map = vtkPolyDataMapper::New();
-    this->map->SetColorModeToMapScalars();
-    warper = vtkWarpVector::New();
     warpSurface = false;
     warpedContourScale = 1.0f;
 
     _particleOption = 0;
     _particleScale = 1;
-    //this->map->ScalarVisibilityOff();
-    /*
-       this->actor->GetProperty()->SetColor( 1.0f, 1.0f, 1.0f );
-       this->actor->GetProperty()->SetAmbient( 0.2f );
-       this->actor->GetProperty()->SetDiffuse( 0.8f );
-       this->actor->GetProperty()->SetSpecular( 0.3f );
-       this->actor->GetProperty()->SetSpecularPower( 20.0f );
-       this->actor->GetProperty()->SetOpacity( this->op );
-    */
 }
-
+////////////////////////////////////////////////////////////////////////////////
 ParticleAnimation::~ParticleAnimation()
 {
-    this->map->Delete();
-    warper->Delete();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void ParticleAnimation::Update()
 {
     if( GetActiveDataSet() == NULL )
@@ -122,26 +95,26 @@ void ParticleAnimation::SetParticleOption( unsigned int option )
 {
     _particleOption = option;
 }
-//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int ParticleAnimation::GetParticleOption()
 {
     return _particleOption;
 }
-//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ParticleAnimation::SetParticleScale( float x )
 {
     _particleScale = x;
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 float ParticleAnimation::GetParticleScale()
 {
     return _particleScale;
 }
-/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ParticleAnimation::UpdateCommand()
 {
-//   cfdObjects::UpdateCommand();
-//   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
+    UpdatePropertySet();
+    return;
 
     //Call base method - currently does nothing
     cfdObjects::UpdateCommand();
@@ -179,7 +152,7 @@ void ParticleAnimation::UpdateCommand()
     activeModelDVP->GetData( gpuTools );
     m_gpuTools = gpuTools;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 float ParticleAnimation::GetSphereScaleFactor()
 {
     // this->GetParticleScale() is obtained from gui, -100 < sphereScale < 100
@@ -204,4 +177,21 @@ float ParticleAnimation::GetSphereScaleFactor()
 
     return scaleFactor;
 }
+////////////////////////////////////////////////////////////////////////////////
+void ParticleAnimation::UpdatePropertySet()
+{   
+    //Extract the isosurface value
+    warpedContourScale = 
+        boost::any_cast<double>( m_propertySet->GetPropertyValue( "WarpedScaleFactor" ) );
+    
+    colorByScalar = 
+        boost::any_cast< std::string >( m_propertySet->GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) );
+    
+    warpSurface = 
+        boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseWarpedSurface" ) );
+    
+    m_gpuTools = 
+        boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
+}
+////////////////////////////////////////////////////////////////////////////////
 

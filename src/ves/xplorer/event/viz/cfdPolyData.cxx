@@ -39,6 +39,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <ves/xplorer/data/PropertySet.h>
+
 #include <vtkTubeFilter.h>
 #include <vtkCellTypes.h>
 #include <vtkLookupTable.h>
@@ -331,9 +333,8 @@ float cfdPolyData::GetParticleScale()
 /////////////////////////////////
 void cfdPolyData::UpdateCommand()
 {
-//   cfdObjects::UpdateCommand();
-//   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
-
+    UpdatePropertySet();
+    return;
     //Call base method - currently does nothing
     cfdObjects::UpdateCommand();
 
@@ -370,7 +371,7 @@ void cfdPolyData::UpdateCommand()
     activeModelDVP->GetData( gpuTools );
     m_gpuTools = gpuTools;
 }
-
+///////////////////////////////////////////////////////////////////////////
 float cfdPolyData::GetSphereScaleFactor()
 {
     // this->GetParticleScale() is obtained from gui, -100 < sphereScale < 100
@@ -391,4 +392,16 @@ float cfdPolyData::GetSphereScaleFactor()
 
     return scaleFactor;
 }
+///////////////////////////////////////////////////////////////////////////
+void cfdPolyData::UpdatePropertySet()
+{
+    //Extract the isosurface value
+    warpedContourScale = boost::any_cast<double>( m_propertySet->GetPropertyValue( "WarpedScaleFactor" ) );
 
+    colorByScalar = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) );
+    
+    warpSurface = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseWarpedSurface" ) );
+
+    m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
+}
+///////////////////////////////////////////////////////////////////////////

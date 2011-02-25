@@ -183,6 +183,6 @@ void ContourPlanePropertySet::CreateSkeleton()
 
     AddProperty( "Advanced_WarpOption", false, "Warp Option" );
 
-    AddProperty( "Advanced_Greyscale", 1.0, "Greyscale" );
+    AddProperty( "Advanced_Greyscale", false, "Greyscale" );
 }
 ////////////////////////////////////////////////////////////////////////////////

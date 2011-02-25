@@ -34,9 +34,6 @@
 
 #include <ves/xplorer/event/viz/cfdObjects.h>
 
-class vtkPolyDataMapper;
-class vtkWarpVector;
-
 namespace ves
 {
 namespace xplorer
@@ -46,23 +43,21 @@ namespace event
 namespace viz        
 {
 /*!\file ParticleAnimation.h
-ParticleAnimation API
-*/
-/*!\class ves::xplorer::event::viz::ParticleAnimation
-*
-*/
+ *  ParticleAnimation API
+ * \class ves::xplorer::event::viz::ParticleAnimation
+ *
+ */
 class VE_XPLORER_EXPORTS ParticleAnimation : public cfdObjects
 {
 public:
     ///Constructor.
-    ///\param op_val Set to 1.0.
     ParticleAnimation();
 
     ///Destructor.
     virtual ~ParticleAnimation();
 
     ///Update.
-    virtual void Update( void );
+    virtual void Update();
 
     ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
     virtual void UpdateCommand();
@@ -81,20 +76,20 @@ public:
     ///Gets particle scale.
     float GetParticleScale();
 
+    void UpdatePropertySet();
+    
 private:
     ///Sphere scaling.
     float GetSphereScaleFactor();
     ///String to hold color by scalar.
     std::string colorByScalar;
-    ///Map for vtk.
-    vtkPolyDataMapper *map;
-    ///Warper for vtk.
-    vtkWarpVector* warper;
-    bool warpSurface;///Test for warped surface.
-    double warpedContourScale;///<warped contour scale value
+    ///Test for warped surface.
+    bool warpSurface;
+    ///<warped contour scale value
+    double warpedContourScale;
 
     ///point cloud or variably sized spheres.
-    unsigned int  _particleOption;
+    unsigned int _particleOption;
     ///particle scale.
     float _particleScale;
 };

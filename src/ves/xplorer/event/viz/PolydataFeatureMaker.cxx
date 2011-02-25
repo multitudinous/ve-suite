@@ -48,7 +48,7 @@ using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
 PolydataFeatureMaker::PolydataFeatureMaker()
 {
-    ;
+    m_commandName = "UPDATE_POLYDATA_SETTINGS";
 }
 ////////////////////////////////////////////////////////////////////////////////
 PolydataFeatureMaker::PolydataFeatureMaker( const PolydataFeatureMaker& orig )
@@ -67,10 +67,11 @@ void PolydataFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::PolydataPropertySet polydataSet;
-    polydataSet.SetUUID( recordUUID );
-    polydataSet.LoadFromDatabase();
-    AddPlane( static_cast < xplorer::data::PropertySet& > ( polydataSet ) );
+    xplorer::data::PropertySetPtr ptr = xplorer::data::PropertySetPtr( new xplorer::data::PolydataPropertySet() );
+    ptr->SetUUID( recordUUID );
+    ptr->LoadFromDatabase();
+    //AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
+    Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PolydataFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )
