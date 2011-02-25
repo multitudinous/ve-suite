@@ -80,6 +80,7 @@ int main( int argc, char* argv[] )
     logPath = "/var/tmp/";
 #endif
     logPath.append( "vesuite.log" );
+    boost::filesystem::remove( logPath );
     fileChannel->setProperty( "path", logPath );
 
     // Format the logged output as
