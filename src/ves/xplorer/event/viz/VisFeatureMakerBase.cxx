@@ -229,7 +229,6 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     commandType = std::make_pair( std::string( m_commandName ),
                                  std::make_pair( direction, planes + advanced ) );
     ves::xplorer::cfdObjects* activeObject = SteadyStateVizHandler::instance()->GetVizObject( commandType );
-    std::cout << direction << " " << std::string( planes + advanced ) << std::endl;
     if( activeObject == 0 )
     {
         std::cerr << "ERROR: selected vis option is not in the VisFeatureMakerBase. " << std::endl;
@@ -249,9 +248,7 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
         //activeObject->UpdateCommand();
         //xplorer::data::PropertySetWeakPtr tempPtr = xplorer::data::PropertySetWeakPtr( &set );
         activeObject->SetPropertySet( set );
-        std::cout << " here 1 " << std::endl;
         activeObject->UpdateCommand();
-        std::cout << " here 2 " << std::endl;
 
         activeObject->SetUUID( set->GetUUIDAsString() );
         
