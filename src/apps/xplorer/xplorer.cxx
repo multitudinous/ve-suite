@@ -418,6 +418,10 @@ int main( int argc, char* argv[] )
         std::cerr << "Caught CORBA::Exception." << std::endl
             << ex._info().c_str() << std::endl ;
     }
+    catch( vpr::Exception& e )
+    {
+        std::cerr << e.what() << std::endl << std::flush;
+    }
     catch( std::exception& e )
     {
         std::cerr << "VE-Xplorer Init: Caught unknown exception." << std::endl

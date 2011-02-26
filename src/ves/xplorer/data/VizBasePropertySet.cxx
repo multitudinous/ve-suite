@@ -34,6 +34,8 @@
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
 
+#include <ves/util/Exception.h>
+
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
 
@@ -222,7 +224,7 @@ bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
 void VizBasePropertySet::UpdateScalarDataOptions( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
-
+    VES_BEGIN_TRY
     PSVectorOfStrings enumValues;
     const std::string selectedDataset = boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
     DatasetPropertySet dataset;
@@ -242,6 +244,7 @@ void VizBasePropertySet::UpdateScalarDataOptions( PropertyPtr property )
     PropertyPtr nullPtr;
     UpdateScalarDataRange( nullPtr );
     UpdateVectorDataOptions( nullPtr );
+    VES_END_TRY( "An error occured with setting the selected scalar" )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VizBasePropertySet::UpdateScalarDataRange( PropertyPtr property )
