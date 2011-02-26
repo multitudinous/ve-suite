@@ -39,8 +39,6 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
-//#include <QtGui/QMessageBox>
-
 #include <boost/any.hpp>
 
 using namespace ves::conductor;
@@ -125,12 +123,9 @@ void IsosurfaceFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     {
         SendUpdatedSettingsToXplorer( newCommand, set );
     }
-    catch ( ... )
+    catch( ... )
     {
-        //QMessageBox msg;
-        //msg.setText( "Invalid Parent" );
-        //msg.setIcon( QMessageBox::Information );
-        //msg.exec();
+        ;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

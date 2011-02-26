@@ -1996,7 +1996,6 @@ void DataSet::SetTransientDataSetsList( std::vector< DataSet* >& tempTransientDa
     m_transientDataSets = tempTransientData;
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef QT_ON
 void DataSet::WriteDatabaseEntry()
 {
     xplorer::data::DatasetPropertySet set;
@@ -2015,7 +2014,7 @@ void DataSet::WriteDatabaseEntry()
 
     std::vector< double > ScalarMins;
     std::vector< double > ScalarMaxes;
-    for( int index = 0; index < GetNumberOfScalars(); index++ )
+    for( int index = 0; index < GetNumberOfScalars(); ++index )
     {
         double* range = GetActualScalarRange( index );
         ScalarMins.push_back( range[0] );
@@ -2024,9 +2023,10 @@ void DataSet::WriteDatabaseEntry()
     set.SetPropertyValue( "ScalarMins", ScalarMins );
     set.SetPropertyValue( "ScalarMaxes", ScalarMaxes );
     
+    Print();
+    
     set.WriteToDatabase();
 }
-#endif //QT_ON
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::LoadTemporalDataSet( vtkDataObject* temporalDataSet )
 {
@@ -2185,9 +2185,7 @@ void DataSet::InitializeVTKDataObject( vtkDataObject* tempDataObject )
     //dataset.
     CreateCompositeDataSets();
     
-#ifdef QT_ON
     WriteDatabaseEntry();
-#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer

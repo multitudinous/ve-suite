@@ -276,8 +276,8 @@ void VizBasePropertySet::UpdateScalarDataRange( PropertyPtr property )
         SetPropertyAttribute( "DataSet_ScalarRange_Max", "maximumValue", max );
 
         // Set min and max to the lower and upper boundary values, respectively
-        SetPropertyValue( "DataSet_ScalarRange_Min", min );
-        SetPropertyValue( "DataSet_ScalarRange_Max", max );
+        bool success = SetPropertyValue( "DataSet_ScalarRange_Min", min + 0.00001 );
+        success = SetPropertyValue( "DataSet_ScalarRange_Max", max - 0.00001 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
