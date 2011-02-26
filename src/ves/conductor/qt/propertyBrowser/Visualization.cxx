@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#define VES_DEBUG
 #include <ves/conductor/qt/propertyBrowser/Visualization.h>
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
 
@@ -93,8 +94,7 @@ void Visualization::on_WritePropertiesButton_clicked()
         //VisFeatureManager::instance()->
         //    UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
 
-        ves::xplorer::data::PropertySetPtr nullPtr;
-        mTempSet = nullPtr;
+        mTempSet = ves::xplorer::data::PropertySetPtr();
 
         // Save off the list index so we can re-select this one after updating
         int lastKnownIndex = m_ui->FeatureIDSelector->currentIndex();
@@ -216,54 +216,37 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
         mIgnoreIndexChange = false;
         return;
     }
-    ves::xplorer::data::PropertySetPtr nullPtr;
 
+    // Index of -1 is set by Qt when the list associated with this widget is
+    // cleared. Index > size should only occur if code is faulty elsewhere
+    // in this class. In either case we want to ensure nothing is visible in the
+    // browser.
     if( (index == -1) || (index > int(m_ids.size()) ) )
     {
-        // If null selection was made, we want to remove any visible PropertySet
         LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Removing any visible PropertySet" );
-        mFeatureBrowser->ParsePropertySet( nullPtr );
+        mFeatureBrowser->ParsePropertySet( ves::xplorer::data::PropertySetPtr() );
+        return;
     }
-    else if( (mTempSet != nullPtr) &&
-             (mTempSet->GetUUIDAsString() == m_ids.at(index) ) )
+
+    LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Loading PropertySet" );
+    QString featureName = m_ui->FeaturesList->currentItem()->text();
+    mTempSet = VisFeatureManager::instance()->
+            CreateNewFeature( featureName.toStdString() );
+
+    if( mTempSet )
     {
-        // The selection hasn't actually changed -- user has selected the same
-        // set from the dropdown, or we are dealing with a non-save temp set
-        LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Reparsing existing tempSet" );
+        mTempSet->SetUUID( m_ids.at( index ) );
+        mTempSet->LoadFromDatabase();
         mFeatureBrowser->ParsePropertySet( mTempSet );
+
+        // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
+        // to take the Qt-ized data from a PropertyBrowser such as
+        // mFeatureBrowser and display it in the GUI.
         m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
         m_ui->vfpb->RefreshContents();
         m_ui->vfpb->show();
-        mFeatureBrowser->RefreshAll();
-
     }
-    else
-    {
-        // The selection has actually changed
-        LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Loading PropertySet from database" );
-        mTempSet = nullPtr;
-        QString featureName = m_ui->FeaturesList->currentItem()->text();
-        mTempSet = VisFeatureManager::instance()->
-                CreateNewFeature( featureName.toStdString() );
 
-        if( mTempSet )
-        {
-            mFeatureBrowser->ParsePropertySet( mTempSet );
-
-            // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
-            // to take the Qt-ized data from a PropertyBrowser such as
-            // mFeatureBrowser and display it in the GUI.
-            m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
-            m_ui->vfpb->RefreshContents();
-            m_ui->vfpb->show();
-            // No need to load before parsing, since values in browser are not
-            // set during parsing but by signals from the property set when
-            // values change, which loading will do.
-            mTempSet->SetUUID( m_ids.at( index ) );
-            mTempSet->LoadFromDatabase();
-            mFeatureBrowser->RefreshAll();
-        }
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }// namespace conductor
