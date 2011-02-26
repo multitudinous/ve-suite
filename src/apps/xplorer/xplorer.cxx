@@ -98,11 +98,16 @@ int main( int argc, char* argv[] )
     LogStreamPtr m_logStream;
     m_logStream = LogStreamPtr( new Poco::LogStream( m_logger ) );
 
-    LOG_FATAL( "########## VE-Xplorer Version "
-               << VES_MAJOR_VERSION << "."
-               << VES_MINOR_VERSION << "."
-               << VES_PATCH_VERSION << "."
-               << SVN_VES_REVISION );
+    LOG_FATAL( 
+        "|-----------------------------------------------------------------|"
+        << std::endl
+        << "|\tVE-Xplorer Version "
+        << VES_MAJOR_VERSION << "."
+        << VES_MINOR_VERSION << "."
+        << VES_PATCH_VERSION << "."
+        << SVN_VES_REVISION << std::endl
+        << "|-----------------------------------------------------------------|"
+        << std::endl );
 
     std::cout
         << "|-----------------------------------------------------------------|"
@@ -416,7 +421,9 @@ int main( int argc, char* argv[] )
     catch( std::exception& e )
     {
         std::cerr << "VE-Xplorer Init: Caught unknown exception." << std::endl
-            << e.what() << std::endl;
+            << e.what() << std::endl
+            << vpr::System::getCallStack() << std::endl << std::flush;
+
         for( int i = 1; i < argc; ++i )
         {
             std::cerr << "argv[ " << i << " ] = " << argv[ i ] << std::endl;
@@ -428,7 +435,6 @@ int main( int argc, char* argv[] )
     }
 
     LOG_FATAL( "Exiting VE-Xplorer" );
-
     return 0;
 }
 #else

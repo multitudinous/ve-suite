@@ -62,11 +62,17 @@ namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureMakerBase::VisFeatureMakerBase()
+    :
+    m_logger( Poco::Logger::get("xplorer.VisFeatureMakerBase") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureMakerBase::VisFeatureMakerBase( const VisFeatureMakerBase& orig )
+    :
+    m_logger( Poco::Logger::get("xplorer.VisFeatureMakerBase") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     boost::ignore_unused_variable_warning( orig );
 }
@@ -238,7 +244,7 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     ves::xplorer::cfdObjects* activeObject = SteadyStateVizHandler::instance()->GetVizObject( commandType );
     if( activeObject == 0 )
     {
-        std::cerr << "ERROR: selected vis option is not in the VisFeatureMakerBase. " << std::endl;
+        LOG_WARNING( "Selected vis option is not in the VisFeatureMakerBase." );
         return;
     }
 
@@ -263,9 +269,9 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     }
 
     // get the active vis object
-    vprDEBUG( vesDBG, 1 ) << "|\tSetting viz object " 
-        << activeObject->GetObjectType()
-        << " to _activeObject" << std::endl << vprDEBUG_FLUSH;
+    LOG_INFO( "Setting viz object " 
+                << activeObject->GetObjectType()
+                << " to _activeObject." );
     
     //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
     
@@ -273,9 +279,9 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
         ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
     
     // add active dataset DCS to scene graph if not already there...
-    vprDEBUG( vesDBG, 2 ) << "|\tSetting DCS to activeDCS = "
-        << activeDataSetDCS.get()
-        << std::endl << vprDEBUG_FLUSH;
+    LOG_INFO( "Setting DCS to activeDCS = "
+             << activeDataSetDCS.get() );
+    
     //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
     //this->activeObject->SetNormal( EnvironmentHandler::instance()->GetNavigate()->GetDirection() );
     //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
@@ -289,15 +295,13 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
 //////////////////////////////////////////////////////////////////
 void VisFeatureMakerBase::SetActiveVector( xplorer::data::PropertySetPtr set )
 {
-    std::string activeVector;
-    activeVector = boost::any_cast<std::string >( set->GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) );
+    const std::string activeVector = 
+        boost::any_cast<std::string >( set->
+        GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) );
     
     if( !activeVector.empty() )
     {
-        //activeModelDVP->GetData( activeVector );
-        
-        vprDEBUG( vesDBG, 1 ) << "|\tVisFeatureMakerBase::SetActiveVector Setting Active Vector = " << activeVector
-        << std::endl << vprDEBUG_FLUSH;
+        LOG_INFO( "VisFeatureMakerBase::SetActiveVector Setting Active Vector = " << activeVector );
         
         Model* activeModel = ModelHandler::instance()->GetActiveModel();
         DataSet* activeDataset = activeModel->GetActiveDataSet();

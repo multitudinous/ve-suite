@@ -224,7 +224,7 @@ void VizBasePropertySet::UpdateScalarDataOptions( PropertyPtr property )
     boost::ignore_unused_variable_warning( property );
 
     PSVectorOfStrings enumValues;
-    const std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    const std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSets", "enumCurrentString" ) );
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
     enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "ScalarNames" ) );

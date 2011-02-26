@@ -33,10 +33,13 @@
 #pragma once
 
 #include <ves/xplorer/data/PropertySet.h>
+
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 
 #include <ves/xplorer/event/viz/VisFeatureMakerBasePtr.h>
+
+#include <ves/xplorer/Logging.h>
 
 #include <string>
 
@@ -82,6 +85,10 @@ protected:
     std::vector<ves::open::xml::DataValuePairPtr> m_advancedSettings;
     ///The basic information from the vistab
     std::vector<ves::open::xml::DataValuePairPtr> m_vistabBaseInformation;
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;    
     
 private:
 

@@ -226,28 +226,7 @@ void SteadyStateVizHandler::DeleteVizFeature( std::string const& featureUUID )
 void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID, std::string const& tableName )
 {
     LOG_INFO( "AddVizFeature = " << featureUUID << " " << tableName );
-    /*graphics_objects_map::iterator hashIter = m_graphicsObjectMap.find( vpr::GUID( featureUUID ) );
-    if( hashIter != m_graphicsObjectMap.end() )
-    {
-        m_graphicsObjectMap.erase( hashIter );
-    }
-    else
-    {
-        LOG_WARNING( "DeleteVizFeature: Unable to find relevant viz feature." );
-    }
-    
-    for( std::multimap< int, cfdGraphicsObject* >::iterator 
-        itr = graphicsObjects.begin();
-        itr != graphicsObjects.end(); ++itr )
-    {
-        if( itr->second->GetUUID() == featureUUID )
-        {
-            itr->second->RemoveGeodeFromDCS();
-            delete itr->second;
-            graphicsObjects.erase( itr );
-            break;
-        }
-    }*/
+
     using namespace ves::conductor;
     VisFeatureMakerBasePtr feature;
     if( tableName == "ContourPlane" )
@@ -816,12 +795,10 @@ cfdObjects* SteadyStateVizHandler::GetVizObject( VizKeyPair const& vizKey )
     VisObjectConstIter iter = m_visObjectMap.find( vizKey );
     if( iter == m_visObjectMap.end() )
     {
-        std::cerr << "ERROR: selected vis option is not in the GetVizObject. " << std::endl;
+        LOG_WARNING( "Selected vis option is not in the GetVizObject." );
         return 0;
     }
     return iter->second;
-    //ves::xplorer::cfdObjects* activeObject = 0;
-    //activeObject = iter->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
