@@ -287,6 +287,9 @@ void PropertyBrowser::_refreshItem( int index )
     double max = 0.0;
     _extractMinMaxValues( property, &min, &max, &hasMin, &hasMax );
 
+    // Update value
+    _setItemValue( item, property );
+
     // Do type-specific extra operations such as setting min/max
     if( property->IsEnum() )
     {
@@ -351,9 +354,6 @@ void PropertyBrowser::_refreshItem( int index )
         double step = 0.01;
         mDoubleManager->setSingleStep( item, step );
     }
-
-    // Update value
-    _setItemValue( item, property );
 
     // Update enabled state
     item->setEnabled( property->GetEnabled() );
