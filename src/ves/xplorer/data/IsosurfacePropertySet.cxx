@@ -63,7 +63,7 @@ IsosurfacePropertySet::~IsosurfacePropertySet()
 ////////////////////////////////////////////////////////////////////////////////
 PropertySetPtr IsosurfacePropertySet::CreateNew()
 {
-    return PropertySetPtr( new IsosurfacePropertySet );
+    return PropertySetPtr( new IsosurfacePropertySet() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IsosurfacePropertySet::CreateSkeleton()
@@ -109,11 +109,6 @@ void IsosurfacePropertySet::CreateSkeleton()
     }
 
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
-    // Now that DataSet has choices loaded, force an update on the available
-    // scalar and vector data
-    PropertyPtr nullPtr;
-    UpdateScalarDataOptions( nullPtr );
-    //UpdateVectorDataOptions( nullPtr );
 
     AddProperty( "ColorByScalar", 0, "Color By Scalar" );
     enumValues.clear();
@@ -139,6 +134,12 @@ void IsosurfacePropertySet::CreateSkeleton()
     SetPropertyAttribute( "IsosurfaceValue", "maximumValue", 100.0 );
     
     AddProperty( "UseGPUTools", false, "Use GPU Tools" );
+
+    // Now that DataSet has choices loaded, force an update on the available
+    // scalar and vector data
+    PropertyPtr nullPtr;
+    UpdateScalarDataOptions( nullPtr );
+    //UpdateVectorDataOptions( nullPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IsosurfacePropertySet::UpdateColorByScalarDataRange( PropertyPtr property )
