@@ -265,7 +265,7 @@ void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID, std::
         LOG_INFO( "UpdateFeature: Updating StreamlineFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new StreamlineFeatureMaker() );
     }
-    else if( tableName == "Isosurfaces" )
+    else if( tableName == "Isosurface" )
     {
         LOG_INFO( "UpdateFeature: Updating IsosurfaceFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new IsosurfaceFeatureMaker() );

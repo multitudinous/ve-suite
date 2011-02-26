@@ -202,17 +202,24 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     SetActiveVector( set );
     // Get the active object
     
-    std::string direction = boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction", "enumCurrentString" ) );
-        
-    int mode = boost::any_cast<int>( set->GetPropertyValue( "Mode" ) );
-    std::string planes;
-    if( mode == 0 )
+    std::string direction;
+    if( set->PropertyExists( "Direction" ) )
     {
-        planes = "Single";
+        direction = boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction", "enumCurrentString" ) );
     }
-    else if( mode == 1 )
+        
+    std::string planes;
+    if( set->PropertyExists( "Mode" ) )
     {
-        planes = "Multiple";
+        int mode = boost::any_cast<int>( set->GetPropertyValue( "Mode" ) );
+        if( mode == 0 )
+        {
+            planes = "Single";
+        }
+        else if( mode == 1 )
+        {
+            planes = "Multiple";
+        }
     }
     
     std::string advanced;
