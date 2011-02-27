@@ -236,8 +236,9 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
     if( mTempSet )
     {
         mTempSet->SetUUID( m_ids.at( index ) );
-        mTempSet->LoadFromDatabase();
         mFeatureBrowser->ParsePropertySet( mTempSet );
+        mTempSet->LoadFromDatabase();
+        mFeatureBrowser->RefreshAll();
 
         // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
         // to take the Qt-ized data from a PropertyBrowser such as

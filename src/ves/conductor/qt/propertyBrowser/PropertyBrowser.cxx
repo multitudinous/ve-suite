@@ -30,15 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#define VES_DEBUG
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
 
 #include <iostream>
+#include <cmath>
 
 using namespace ves::conductor;
 using namespace ves::xplorer::data;
 using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
-PropertyBrowser::PropertyBrowser( QObject* parent ) : QObject( parent )
+PropertyBrowser::PropertyBrowser( QObject* parent ) :
+    QObject( parent ),
+    m_ignoreValueChanges( false ),
+    m_logger( Poco::Logger::get("conductor.PropertyBrowser") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     // Create a standard set of property managers
     mDoubleManager = new QtDoublePropertyManager( this );
@@ -125,6 +131,7 @@ PropertyBrowser::ItemVector* PropertyBrowser::GetItems()
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
 {
+    LOG_TRACE( "ParsePropertySet" );
     using xplorer::data::PropertySet;
     using xplorer::data::Property;
 
@@ -260,6 +267,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::RefreshAll()
 {
+    LOG_TRACE( "RefreshAll" );
     int max = static_cast < int > ( mProperties.size() );
     for( int index = 0; index < max; index++ )
     {
@@ -269,6 +277,8 @@ void PropertyBrowser::RefreshAll()
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::_refreshItem( int index )
 {
+    // This log message is usually too verbose to be useful
+    //LOG_TRACE( "_refreshItem " << index );
     if( index >= static_cast < int > ( mItems.size() ) )
     {
         // We haven't set this item up yet!
@@ -287,8 +297,12 @@ void PropertyBrowser::_refreshItem( int index )
     double max = 0.0;
     _extractMinMaxValues( property, &min, &max, &hasMin, &hasMax );
 
-    // Update value
-    _setItemValue( item, property );
+    LOG_TRACE( "Refreshing " << boost::any_cast<std::string>(property->GetAttribute("nameInSet")) );
+
+    // Block signals from all Qt...Manager instances so that altering range
+    // or other non-value settings of an item does not trigger a value change.
+    //_blockManagerSignals( true );
+    m_ignoreValueChanges = true;
 
     // Do type-specific extra operations such as setting min/max
     if( property->IsEnum() )
@@ -316,8 +330,8 @@ void PropertyBrowser::_refreshItem( int index )
         {
             mIntManager->setMaximum( item, static_cast < int > ( max ) );
         }
-        int currentMin = mIntManager->minimum( item );
-        int currentMax = mIntManager->maximum( item );
+        //int currentMin = mIntManager->minimum( item );
+        //int currentMax = mIntManager->maximum( item );
         //int step = static_cast < int > ( ( currentMax - currentMin ) / 100.0 );
         int step = 1;
         mIntManager->setSingleStep( item, step );
@@ -332,10 +346,17 @@ void PropertyBrowser::_refreshItem( int index )
         {
             mDoubleManager->setMaximum( item, max );
         }
-        double currentMin = mDoubleManager->minimum( item );
-        double currentMax = mDoubleManager->maximum( item );
-        //double step = ( currentMax - currentMin ) / 100.0;
-        double step = 0.01;
+
+        int precision = 2;
+        if( property->AttributeExists("DisplayPrecision") )
+        {
+            precision = boost::any_cast<int>( property->GetAttribute( "DisplayPrecision" ) );
+        }
+        mDoubleManager->setDecimals( item, precision );
+
+        // Pressing arrow keys or spinner arrows should change the values in
+        // the least significant figure.
+        double step = std::pow( 10, -1 * precision );
         mDoubleManager->setSingleStep( item, step );
     }
     else if( property->IsDouble() )
@@ -348,12 +369,27 @@ void PropertyBrowser::_refreshItem( int index )
         {
             mDoubleManager->setMaximum( item, max );
         }
-        double currentMin = mDoubleManager->minimum( item );
-        double currentMax = mDoubleManager->maximum( item );
-        //double step = ( currentMax - currentMin ) / 100.0;
-        double step = 0.01;
+
+        int precision = 2;
+        if( property->AttributeExists("DisplayPrecision") )
+        {
+            precision = boost::any_cast<int>( property->GetAttribute( "DisplayPrecision" ) );
+        }
+        mDoubleManager->setDecimals( item, precision );
+
+        // Pressing arrow keys or spinner arrows should change the values in
+        // the least significant figure.
+        double step = std::pow( 10, -1 * precision );
         mDoubleManager->setSingleStep( item, step );
     }
+
+    // Unblock value changed signals from managers. Failure to do this will
+    // cause the value set below in _setItemValue to never show up in the browser.
+    //_blockManagerSignals( false );
+    m_ignoreValueChanges = false;
+
+    // Update value
+    _setItemValue( item, property );
 
     // Update enabled state
     item->setEnabled( property->GetEnabled() );
@@ -401,6 +437,7 @@ void PropertyBrowser::_extractMinMaxValues( xplorer::data::PropertyPtr property,
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::_createHierarchy()
 {
+    LOG_TRACE( "_createHierarchy" );
     xplorer::data::PropertyPtr property;
     int index;
     int max = static_cast < int > ( mProperties.size() );
@@ -450,22 +487,46 @@ void PropertyBrowser::_createHierarchy()
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::BoolValueChanged( QtProperty* item, bool value )
 {
+    if( m_ignoreValueChanges )
+    {
+        return;
+    }
+
+    LOG_TRACE( "BoolValueChanged" );
     _setPropertyValue( item, value );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::IntValueChanged( QtProperty* item, int value )
 {
+    if( m_ignoreValueChanges )
+    {
+        return;
+    }
+
+    LOG_TRACE( "IntValueChanged" );
     _setPropertyValue( item, value );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::StringValueChanged( QtProperty* item, const QString & value )
 {
+    if( m_ignoreValueChanges )
+    {
+        return;
+    }
+
+    LOG_TRACE( "StringValueChanged" );
     std::string castValue = value.toStdString();
     _setPropertyValue( item, castValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
 {
+    if( m_ignoreValueChanges )
+    {
+        return;
+    }
+
+    LOG_TRACE( "DoubleValueChanged: " << value );
     int index = _getItemIndex( item );
     if( index > 0 )
     {
@@ -484,6 +545,7 @@ void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::Refresh()
 {
+    LOG_TRACE( "Refresh" );
     // Request list of changed properties from set
     xplorer::data::PropertySet::PSVectorOfStrings changes = mSet->GetChanges();
     xplorer::data::PropertySet::PSVectorOfStrings::iterator iterator;
@@ -581,49 +643,43 @@ int PropertyBrowser::_getItemIndex( QtProperty* item )
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::PropertyPtr property )
 {
+    //LOG_TRACE( "_setItemValue" );
     boost::any value = property->GetValue();
 
     if( property->IsBool() )
     {
         bool castValue = boost::any_cast<bool>( value );
+        LOG_TRACE( "_setItemValue: " << castValue );
         mBooleanManager->setValue( item, castValue );
     }
     else if( property->IsEnum() )
     {
         int castValue = boost::any_cast<int>( value );
+        LOG_TRACE( "_setItemValue: " << castValue );
         mEnumManager->setValue( item, castValue );
     }
     else if( property->IsInt() )
     {
         int castValue = boost::any_cast<int>( value );
+        LOG_TRACE( "_setItemValue: " << castValue );
         mIntManager->setValue( item, castValue );
     }
     else if( property->IsFloat() )
     {
         double castValue = static_cast < double > ( boost::any_cast<float>( value ) );
+        LOG_TRACE( "_setItemValue: " << castValue );
         mDoubleManager->setValue( item, castValue );
-
-        int precision = 2;
-        if( property->AttributeExists("DisplayPrecision") )
-        {
-            precision = boost::any_cast<int>( property->GetAttribute( "DisplayPrecision" ) );
-        }
-        mDoubleManager->setDecimals( item, precision );
     }
     else if( property->IsDouble() )
     {
         double castValue = boost::any_cast<double>( value );
+        LOG_TRACE( "_setItemValue: " << castValue );
         mDoubleManager->setValue( item, castValue );
-        int precision = 2;
-        if( property->AttributeExists("DisplayPrecision") )
-        {
-            precision = boost::any_cast<int>( property->GetAttribute( "DisplayPrecision" ) );
-        }
-        mDoubleManager->setDecimals( item, precision );
     }
     else if( property->IsString() )
     {
         std::string castValue = boost::any_cast<std::string > ( value );
+        LOG_TRACE( "_setItemValue: " << castValue );
         QString qCastValue = QString::fromStdString( castValue );
         mStringManager->setValue( item, qCastValue );
     }
@@ -632,6 +688,7 @@ void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::PropertyPt
 void PropertyBrowser::_setPropertyValue( QtProperty* item, boost::any value )
 {
     int index = _getItemIndex( item );
+    LOG_TRACE( "_setPropertyValue: index " << index << "(" << item->propertyName().toStdString() << ")"  );
 
     if( index > -1 )
     {
@@ -648,3 +705,4 @@ void PropertyBrowser::_setPropertyValue( QtProperty* item, boost::any value )
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////

@@ -44,6 +44,7 @@
 
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/Property.h>
+#include <ves/xplorer/Logging.h>
 
 namespace ves
 {
@@ -178,23 +179,42 @@ private:
     int _getItemIndex( QtProperty* item );
     int _getPropertyIndexByName( std::string name );
 
-    // Set the underlying Property to the value of the QtProperty
+    /// Set the underlying Property to the value of the QtProperty
     void _setPropertyValue( QtProperty* item, boost::any value );
 
-    // Set the QtProperty to the value of the underlying Property
+    /// Set the QtProperty to the value of the underlying Property
     void _setItemValue( QtProperty* item, ves::xplorer::data::PropertyPtr property );
 
-    // Helper function to do the dirty work of finding out if a Property has
-    // min and max values
+    /// Helper function to do the dirty work of finding out if a Property has
+    /// min and max values
     void _extractMinMaxValues( xplorer::data::PropertyPtr property, double* min,
                                double* max, bool* hasMin, bool* hasMax );
 
-    // Put QtProperty instances into a hierarchical relationship as requested
-    // by the name of the underlying Property
+    /// Put QtProperty instances into a hierarchical relationship as requested
+    /// by the name of the underlying Property
     void _createHierarchy();
 
-    // Helper function to refresh the UI value of a specific Property/QtProperty
+    /// Helper function to refresh the UI value of a specific Property/QtProperty
     void _refreshItem( int index );
+
+    /** When this is true, changes to values in the browser are not pushed down
+      * to the underlying PropertySet.
+      *
+      * This is needed when doing operations on
+      * browser items that have automatic side-effects that alter the item's
+      * value. (Eg. Changing the range of a numeric item automatically forces
+      * the value to the closest min/max if it happens to be outside of the range
+      * when the range is changed. We don't want to push this value down into the
+      * PropertySet because the PropertySet has already done this sort of operation
+      * on its values, and may have changed the value to something other than the
+      * closest min/max.)
+      **/
+    bool m_ignoreValueChanges;
+
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Log stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 } // namespace conductor
