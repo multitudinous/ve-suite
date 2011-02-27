@@ -33,8 +33,9 @@
 #define VES_DEBUG
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
 
+#include <gmtl/Math.h>
+
 #include <iostream>
-#include <cmath>
 
 using namespace ves::conductor;
 using namespace ves::xplorer::data;
@@ -356,7 +357,7 @@ void PropertyBrowser::_refreshItem( int index )
 
         // Pressing arrow keys or spinner arrows should change the values in
         // the least significant figure.
-        double step = std::pow( 10, -1 * precision );
+        double step = gmtl::Math::pow( double(10), double(-1 * precision) );
         mDoubleManager->setSingleStep( item, step );
     }
     else if( property->IsDouble() )
@@ -379,7 +380,7 @@ void PropertyBrowser::_refreshItem( int index )
 
         // Pressing arrow keys or spinner arrows should change the values in
         // the least significant figure.
-        double step = std::pow( 10, -1 * precision );
+        double step = gmtl::Math::pow( double(10), double(-1 * precision) );
         mDoubleManager->setSingleStep( item, step );
     }
 
