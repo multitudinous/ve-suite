@@ -127,9 +127,9 @@ void cfdStreamers::Update()
     }
 
     vprDEBUG( vesDBG, 0 ) << "|   cfdStreamers::Update, origin = "
-        << origin[ 0 ] << " : "
-        << origin[ 1 ] << " : "
-        << origin[ 2 ] << std::endl
+        //<< origin[ 0 ] << " : "
+        //<< origin[ 1 ] << " : "
+        //<< origin[ 2 ] << std::endl
         << " Prop Time : " << propagationTime
         << " Integration Step Length : " << integrationStepLength
         << " Integration Direction : " << integrationDirection

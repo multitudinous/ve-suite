@@ -167,11 +167,11 @@ void StreamlinePropertySet::CreateSkeleton()
     SetPropertyAttribute( "SeedPoints", "setExpanded", true );
     AddProperty( "SeedPoints_DisplaySeedPoints", false, "Display Seed Points" );
     mPropertyMap["SeedPoints_DisplaySeedPoints"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateSeedPointDisplay, this, _1 ) );
-    AddProperty( "SeedPoints_NumberOfPointsInX", 2, "Number of Points in X" );
+    AddProperty( "SeedPoints_NumberOfPointsInX", 5, "Number of Points in X" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInX", "minimumValue",   0 );
-    AddProperty( "SeedPoints_NumberOfPointsInY", 2, "Number of Points in Y" );
+    AddProperty( "SeedPoints_NumberOfPointsInY", 5, "Number of Points in Y" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInY", "minimumValue",   0 );
-    AddProperty( "SeedPoints_NumberOfPointsInZ", 2, "Number of Points in Z" );
+    AddProperty( "SeedPoints_NumberOfPointsInZ", 1, "Number of Points in Z" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInZ", "minimumValue",   0 );
 
     // Link the three NumberOfPointsIn... properties together and have them
@@ -226,19 +226,25 @@ void StreamlinePropertySet::CreateSkeleton()
     enumValues.push_back( "none" );
     SetPropertyAttribute( "CursortType", "enumValues", enumValues );
     
-    AddProperty( "StreamlineSize", 0.5, "Streamline Size" );
-    AddProperty( "NumberOfPointsPerPlane", 2.0, "Number of Points Per Plane" );
+    //AddProperty( "StreamlineSize", 0.5, "Streamline Size" );
+    //AddProperty( "NumberOfPointsPerPlane", 2.0, "Number of Points Per Plane" );
 
     ///Advanced settings
     AddProperty( "Advanced", boost::any(), "Advanced" );
     SetPropertyAttribute( "Advanced", "isUIGroupOnly", true );
     AddProperty( "Advanced_PropogationTime", 100.0, "Propogation Time" );
-    AddProperty( "Advanced_IntegrationStepSize", 100.0f, "Integration Step Size" );
-    AddProperty( "Advanced_Diameter", 100.0f, "Diameter" );
-    AddProperty( "Advanced_SphereArrowParticleSize", 100.0f, "Sphere/Arrow/Particle Size" );
+    SetPropertyAttribute( "Advanced_PropogationTime", "minimumValue", 1.0 );
+    SetPropertyAttribute( "Advanced_PropogationTime", "maximumValue", 100.0 );
+    AddProperty( "Advanced_IntegrationStepSize", 1000.0f, "Integration Step Size" );
+    SetPropertyAttribute( "Advanced_IntegrationStepSize", "minimumValue", 1.0 );
+    SetPropertyAttribute( "Advanced_IntegrationStepSize", "maximumValue", 5000.0 );
+    AddProperty( "Advanced_Diameter", -80.0f, "Diameter" );
+    SetPropertyAttribute( "Advanced_Diameter", "minimumValue", -100.0 );
+    SetPropertyAttribute( "Advanced_Diameter", "maximumValue", 100.0 );
+    AddProperty( "Advanced_SphereArrowParticleSize", 5.0f, "Sphere/Arrow/Particle Size" );
+    SetPropertyAttribute( "Advanced_VectorThreshold", "minimumValue", 1.0 );
+    SetPropertyAttribute( "Advanced_VectorThreshold", "maximumValue", 50.0 );
     
-    //SetPropertyAttribute( "Advanced_VectorThreshold", "minimumValue", 0.0 );
-    //SetPropertyAttribute( "Advanced_VectorThreshold", "maximumValue", 1.0 );
     /*
     AddProperty( "Advanced_VectorScale", 200.0, "Vector Scale" );
     SetPropertyAttribute( "Advanced_VectorScale", "minimumValue",   1.0 );
