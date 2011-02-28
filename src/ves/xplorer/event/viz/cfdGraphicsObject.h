@@ -129,7 +129,7 @@ public:
     void RemoveGeodeFromDCS();
 
     ///Used to enable the animated streamlines
-    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes();
+    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >& GetGeodes();
 
     ///Set the uui for the current feature
     void SetUUID( std::string const& uuid );

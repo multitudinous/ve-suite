@@ -476,7 +476,7 @@ void cfdGraphicsObject::RemoveGeodeFromDCS()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > cfdGraphicsObject::GetGeodes()
+std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >& cfdGraphicsObject::GetGeodes()
 {
     return geodes;
 }

@@ -163,6 +163,11 @@ SteadyStateVizHandler::SteadyStateVizHandler()
                      void( std::string const& activModelID, std::string const& tableName ),
                      &SteadyStateVizHandler::AddVizFeature,
                      m_connections, any_SignalType, normal_Priority );    
+                     
+    CONNECTSIGNALS_2( "%HideVizFeature",
+                     void( std::string const&, std::vector< bool > const& ),
+                     &SteadyStateVizHandler::HideVizFeature,
+                     m_connections, any_SignalType, normal_Priority );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::~SteadyStateVizHandler()
@@ -194,6 +199,22 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
     delete vjTh[ 0 ];
     
     vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SteadyStateVizHandler::HideVizFeature( const std::string& uuid, const std::vector< bool >& onOff )
+{
+    LOG_DEBUG( "HideVizFeature = " << uuid );
+    graphics_objects_map::iterator hashIter = m_graphicsObjectMap.find( vpr::GUID( uuid ) );
+    if( hashIter != m_graphicsObjectMap.end() )
+    {
+        std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >& geode = 
+            hashIter->second->GetGeodes();
+        geode.back().get()->setNodeMask( !onOff.at( 0 ) );
+    }
+    else
+    {
+        LOG_WARNING( "HideVizFeature: Unable to find relevant viz feature." );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::DeleteVizFeature( std::string const& featureUUID )

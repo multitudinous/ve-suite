@@ -68,6 +68,18 @@ PropertySetPtr IsosurfacePropertySet::CreateNew()
 ////////////////////////////////////////////////////////////////////////////////
 void IsosurfacePropertySet::CreateSkeleton()
 {
+    {
+        AddProperty( "Hide", false, "Toggle Viz Off" );
+        const std::string slotName = 
+        boost::lexical_cast<std::string>( this ) +".HideVizFeature";
+        std::vector< PropertyPtr > dataLink;
+        dataLink.push_back( GetProperty( "Hide" ) );
+        MakeLiveBasePtr p( 
+                          new MakeLiveLinked< bool >( mUUIDString, dataLink,
+                                                                  slotName ) );
+        mLiveObjects.push_back( p );
+    }
+    
     AddProperty( "DataSet", 0, "Data Set" );
     PSVectorOfStrings enumValues;
 

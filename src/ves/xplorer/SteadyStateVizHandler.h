@@ -182,6 +182,9 @@ public:
     ///Add the viz feature
     void AddVizFeature( std::string const& featureUUID, std::string const& tableName );
 
+    ///Hide a given viz feature
+    void HideVizFeature( const std::string& uuid, const std::vector< bool >& onOff );
+    
     ///Create the map of viz objects
     void CreateVizObjectMap();
 
