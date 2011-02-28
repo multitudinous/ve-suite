@@ -120,16 +120,13 @@ void cfdStreamers::Update()
 {
     if( seedPoints == NULL )
     {
-        vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update, No Cursor Type Selected"
+        vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update : No Cursor Type Selected"
         << std::endl << vprDEBUG_FLUSH;
 
         return;
     }
 
-    vprDEBUG( vesDBG, 0 ) << "|   cfdStreamers::Update, origin = "
-        //<< origin[ 0 ] << " : "
-        //<< origin[ 1 ] << " : "
-        //<< origin[ 2 ] << std::endl
+    vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update : "
         << " Prop Time : " << propagationTime
         << " Integration Step Length : " << integrationStepLength
         << " Integration Direction : " << integrationDirection
