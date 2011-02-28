@@ -56,10 +56,9 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler::SeedPointDimensionsEventHandler()
     :
-    EventHandler()
+    EventHandler(),
+    _activeModel( 0 )
 {
-    _activeModel = 0;
-
     CONNECTSIGNALS_2( "%UpdateSeedPointDimensions",
                       void ( const std::string&, const std::vector< int >& ),
                       &SeedPointDimensionsEventHandler::UpdateDimensions,
