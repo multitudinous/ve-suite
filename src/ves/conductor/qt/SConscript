@@ -86,6 +86,9 @@ cppHeaders += lib_env.qt_uic(source)
 
 source = [pj(buildSrcDir,'plugin','PluginPorts.ui')]
 cppHeaders += lib_env.qt_uic(source)
+
+source = [pj(buildSrcDir,'CameraPlacementTool.ui')]
+cppHeaders += lib_env.qt_uic(source)
 ####
 
 lib_env.Depends( cppSources, cppHeaders)
