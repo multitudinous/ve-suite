@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#define VES_DEBUG
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
 
 #include <gmtl/Math.h>
