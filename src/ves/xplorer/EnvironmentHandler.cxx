@@ -229,6 +229,8 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "PICTURE_ON_OFF" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
+    _eventHandlers[ "CHANGE_IMAGE_DIRECTORY" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()

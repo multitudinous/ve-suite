@@ -69,6 +69,8 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
     :
     EventHandler()
 {
+    ///REmember that any new event handlers need to be added
+    ///to EnvironmentHandler too.
     mCommandNameToInt[ "ADD_CAMERA_OBJECT" ] =
         ADD_CAMERA_OBJECT;
     mCommandNameToInt[ "SELECT_CAMERA_OBJECT" ] =
@@ -172,7 +174,7 @@ void CameraPlacementEventHandler::Execute(
         return;
     }
 
-    //Set the active cameraObject once the manager is created
+    //Set the active cameraObject once the command->GetCommandName()manager is created
      int commandName =
          mCommandNameToInt.find( command->GetCommandName() )->second;
 

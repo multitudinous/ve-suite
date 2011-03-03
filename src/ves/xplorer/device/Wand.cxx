@@ -419,7 +419,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         
             if( cameraManager.IsPictureMode() )
             {
-                std::string tempDir( "" );
+                std::string tempDir;
                 cameraManager.WriteActiveCameraImageFile( tempDir );
                 return;
             }
