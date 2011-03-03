@@ -151,7 +151,10 @@
 #include <QtCore/QDir>
 
 //// --- Boost includes --- //
+#define BOOST_FILESYSTEM_VERSION 3
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/version.hpp>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -247,12 +250,25 @@ App::App( int argc, char* argv[], bool enableRTT )
     //Set the current database file and clear it out in case it contains data
     //from a previous session
     std::string dbPath;
-#if defined(_MSC_VER)
-    dbPath = "C:/Temp/";
+#if (BOOST_VERSION >= 104400) && (BOOST_FILESYSTEM_VERSION == 3)
+    dbPath = boost::filesystem::temp_directory_path().string();
+    dbPath.append("/ves-");
+    dbPath.append( std::string( std::getenv("LOGNAME") ) );
+    dbPath.append( "/" );
+    // Create ves-LOGNAME subdir if needed
+    boost::filesystem::path p(dbPath);
+    if( !boost::filesystem::exists(p) )
+    {
+        boost::filesystem::create_directory(p);
+    }
 #else
-    dbPath = "/var/tmp/";
-#endif
-    dbPath.append( "ves.db" );
+#if defined(_MSC_VER)
+    dbPath = "C:/Temp";
+#else
+    dbPath = "/tmp";
+#endif // _MSC_VER
+#endif // BOOST_VERSION
+    dbPath.append( "/ves.db" );
     ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( dbPath );
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 

@@ -54,11 +54,17 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
+// Force bfs version 3 if it's available
+#if BOOST_VERSION >= 104400
+#define BOOST_FILESYSTEM_VERSION 3
+#endif
 
 //// --- Poco includes --- //
-#include <Poco/SimpleFileChannel.h>
+//#include <Poco/SimpleFileChannel.h>
 #include <Poco/FormattingChannel.h>
 #include <Poco/PatternFormatter.h>
+#include <Poco/FileChannel.h>
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
@@ -72,22 +78,42 @@ int main( int argc, char* argv[] )
     //Create a root logger that contains the output channels, pattern formatters,
     //etc. This also lets us easily create an xplorer child, conductor child, etc.
     Poco::Logger& rootLogger( Poco::Logger::get("") );
-    Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
+    //Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
+    Poco::FileChannel* fileChannel = new Poco::FileChannel;
     std::string logPath;
 #if defined(_MSC_VER)
-    logPath = "C:/Temp/";
+#if (BOOST_VERSION >= 104400) && (BOOST_FILESYSTEM_VERSION == 3)
+    logPath = boost::filesystem::temp_directory_path().string();
 #else
-    logPath = "/var/tmp/";
-#endif
+    logPath = "C:/Temp/";
+#endif // BOOST_VERSION
+#else
+    // Standard log path for POSIX
+    logPath = "/var/tmp/ves-";
+    logPath.append( std::string( std::getenv("LOGNAME") ) );
+    logPath.append( "/" );
+    // Create ves-LOGNAME subdir if needed
+#if (BOOST_VERSION >= 104400) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path p(logPath);
+    if( !boost::filesystem::exists(p) )
+    {
+        boost::filesystem::create_directory(p);
+    }
+#endif // BOOST_VERSION
+
+#endif // _MSC_VERSION
     logPath.append( "vesuite.log" );
-    boost::filesystem::remove( logPath );
+    //boost::filesystem::remove( logPath );
     fileChannel->setProperty( "path", logPath );
+    fileChannel->setProperty( "rotation", "2M" );
+    fileChannel->setProperty( "archive", "number" );
+    fileChannel->setProperty( "purgeCount", "5" );
 
     // Format the logged output as
     // time_with_microseconds [thread number] (priority) source message extra_crlf
     Poco::PatternFormatter* formatter = new Poco::PatternFormatter;
     formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%l) %s: %t");
-    Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel);
+    Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel );
 
     rootLogger.setChannel( formattingChannel );
     // Default log level will log messages with priorities error, critical, and
