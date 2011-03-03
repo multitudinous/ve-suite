@@ -40,6 +40,9 @@ int main( int argc, char* argv[] )
     
     dds_desc.add_options()("write_dds_files", po::bool_switch(), 
         "Write the DDS files out after they have been flipped. This overwrites the original files.");
+
+    dds_desc.add_options()("do_not_store_textures_in_ive", po::bool_switch(), 
+                           "Do not write the textures out in the ive file.");
     
     dds_desc.add_options()("write_single_file", po::value< std::string >(), 
                                "Write single ive file and this is the file name.");
@@ -70,6 +73,26 @@ int main( int argc, char* argv[] )
         singleFile = true;
     }
 
+    bool writeDDSFiles = false;
+    if( vm.count("write_dds_files") > 0 )
+    {
+        writeDDSFiles = true;
+    }
+    
+    bool storeTextureRefs = false;
+    if( vm.count("do_not_store_textures_in_ive") > 0 )
+    {
+        storeTextureRefs = true;
+    }
+    
+    //Used to control if images are written into the ive file.
+    osg::ref_ptr< osgDB::ReaderWriter::Options > noImgOpt = new osgDB::ReaderWriter::Options();
+    //write ive file back out
+    //but without including the image files in the ive:
+    if( storeTextureRefs )
+    {
+        noImgOpt->setOptionString( "noTexturesInIVEFile" );
+    }
     // At init time:
     // Set global dds options.
     //osg::ref_ptr< osgDB::ReaderWriter::Options > opt = new osgDB::ReaderWriter::Options();
@@ -106,20 +129,16 @@ int main( int argc, char* argv[] )
         }
         //Replace TGA textures with DDS textures
         {
-            ves::xplorer::scenegraph::util::SwapTexture ddsTextureSwap( tgaFile.get() );
+            ves::xplorer::scenegraph::util::SwapTexture ddsTextureSwap( tgaFile.get(), writeDDSFiles );
         }
-        //write ive file back out
-        // But without including the image files in the ive:
-        //osg::ref_ptr< osgDB::ReaderWriter::Options > noImgOpt = new osgDB::ReaderWriter::Options();
-        //noImgOpt->setOptionString( "noTexturesInIVEFile" );
         //std::string olfFileName = iveFiles.at( i );
         //boost::filesystem::path oldFileName( iveFiles.at( i ), boost::filesystem::no_check );
         if( !singleFile )
         {
             oldFileName = osgDB::getNameLessExtension( iveFiles.at( i ) );
             oldFileName = oldFileName + "_dds.ive";
-            bool success = osgDB::writeNodeFile( *(tgaFile.get()), oldFileName );
-            std::cout << "New file " << oldFileName << std::endl;
+            bool success = osgDB::writeNodeFile( *(tgaFile.get()), oldFileName, noImgOpt );
+            std::cout << "New file " << oldFileName << " " << success << std::endl;
         }
         else
         {
@@ -149,8 +168,8 @@ int main( int argc, char* argv[] )
                                osgUtil::Optimizer::MERGE_GEODES |
                                osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
         }
-        bool success = osgDB::writeNodeFile( *(singleGroup.get()), singleIVEFile );
-        std::cout << "New file " << singleIVEFile << std::endl;
+        bool success = osgDB::writeNodeFile( *(singleGroup.get()), singleIVEFile, noImgOpt );
+        std::cout << "New file " << singleIVEFile << " " << success << std::endl;
     }
     return 0;
 }

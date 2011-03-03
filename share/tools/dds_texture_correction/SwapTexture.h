@@ -54,7 +54,7 @@ namespace util
 class  SwapTexture : public osg::NodeVisitor
 {
 public:
-    SwapTexture( osg::Node* osg_node );
+    SwapTexture( osg::Node* osg_node, bool writeDDSFile = false );
     virtual ~SwapTexture();
 
     virtual void apply( osg::Node& node );
@@ -62,6 +62,7 @@ public:
 
 private:
     void CheckStateSet( osg::StateSet* stateSet );
+    bool m_writeDDSFile;
 };
 }
 }

@@ -41,6 +41,7 @@
 
 #include <osgDB/ReadFile>
 #include <osgDB/ReaderWriter>
+#include <osgDB/WriteFile>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -50,9 +51,10 @@
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-SwapTexture::SwapTexture( osg::Node* osg_node )
+SwapTexture::SwapTexture( osg::Node* osg_node, bool writeDDSFile )
         :
-        NodeVisitor( TRAVERSE_ALL_CHILDREN )
+        NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+        m_writeDDSFile( writeDDSFile )
 {
     //This enables the visitor to traverse "off" nodes
     setNodeMaskOverride( 1 );
@@ -96,6 +98,7 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
     osg::ref_ptr< osgDB::ReaderWriter::Options > opt = 
         new osgDB::ReaderWriter::Options();
     opt->setOptionString( "dds_flip" );
+    ///Only do this if we want to affect thigns globally. We use it below instead.
     //osgDB::Registry::instance()->setOptions( opt );
     osg::ref_ptr< osg::Image > tgaImage;
     std::string fileName;
@@ -131,7 +134,10 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
                         tex2D->setImage( ddsImage.get() );
                         //Write it back out if we do not want to include the image 
                         //file in the ive file
-                        //osgDB::writeImageFile( *(ddsImage.get), newFileName.string() );
+                        if( m_writeDDSFile )
+                        {
+                            osgDB::writeImageFile( *(ddsImage.get()), newFileName.string() );
+                        }
                     }
                 }
             }
