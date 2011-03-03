@@ -56,7 +56,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/version.hpp>
 // Force bfs version 3 if it's available
-#if BOOST_VERSION >= 104400
+#if BOOST_VERSION >= 104600
 #define BOOST_FILESYSTEM_VERSION 3
 #endif
 
@@ -82,7 +82,7 @@ int main( int argc, char* argv[] )
     Poco::FileChannel* fileChannel = new Poco::FileChannel;
     std::string logPath;
 #if defined(_MSC_VER)
-#if (BOOST_VERSION >= 104400) && (BOOST_FILESYSTEM_VERSION == 3)
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
     logPath = boost::filesystem::temp_directory_path().string();
 #else
     logPath = "C:/Temp/";
@@ -93,7 +93,7 @@ int main( int argc, char* argv[] )
     logPath.append( std::string( std::getenv("LOGNAME") ) );
     logPath.append( "/" );
     // Create ves-LOGNAME subdir if needed
-#if (BOOST_VERSION >= 104400) && (BOOST_FILESYSTEM_VERSION == 3)
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
     boost::filesystem::path p(logPath);
     if( !boost::filesystem::exists(p) )
     {

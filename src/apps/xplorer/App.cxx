@@ -250,7 +250,7 @@ App::App( int argc, char* argv[], bool enableRTT )
     //Set the current database file and clear it out in case it contains data
     //from a previous session
     std::string dbPath;
-#if (BOOST_VERSION >= 104400) && (BOOST_FILESYSTEM_VERSION == 3)
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
     dbPath = boost::filesystem::temp_directory_path().string();
     dbPath.append("/ves-");
     dbPath.append( std::string( std::getenv("LOGNAME") ) );
