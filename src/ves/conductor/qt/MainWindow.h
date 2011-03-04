@@ -253,6 +253,10 @@ protected Q_SLOTS:
     void on_actionShowPluginsTab_triggered();
 
     void on_actionShowPreferencesTab_triggered();
+
+    // Temporary test functions
+    void on_actionTest_Load_triggered();
+    void onLoadDB( const QString& path );
     
 Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
@@ -311,6 +315,8 @@ private:
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal< void ( const std::string ) > NavJumpSignal_type;
     NavJumpSignal_type m_jumpSignal;  
+
+    boost::signals2::signal< void () > m_resyncFromDB;
 };
     
 }

@@ -42,13 +42,14 @@
 
 #include <ves/conductor/qt/ui_MainWindow.h>
 
-#include <ves/conductor/qt/propertyBrowser/Visualization.h>
+#include <ves/conductor/qt/Visualization.h>
 #include <ves/conductor/qt/NetworkLoader.h>
 #include <ves/conductor/qt/CADFileLoader.h>
 #include <ves/conductor/qt/IconStack.h>
 #include <ves/conductor/qt/TreeTab.h>
 #include <ves/conductor/qt/PreferencesTab.h>
 #include <ves/conductor/qt/plugin/PluginSelectionTab.h>
+#include <ves/conductor/qt/VisFeatureManager.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -818,3 +819,52 @@ void MainWindow::on_actionShowPreferencesTab_triggered()
 {
     ActivateTab( AddTab( m_preferencesTab,"Preferences" ) );
 }
+
+void MainWindow::on_actionTest_Load_triggered()
+{
+    // Don't allow multiple file dialogs to be opened.
+    if( mFileDialog )
+    {
+        return;
+    }
+
+    mFileDialog = new QFileDialog( 0 );
+    // Ensure that we use Qt's internal file dialog class since native file
+    // dialogs cannot be embedded in a QTabWidget
+    mFileDialog->setOptions( QFileDialog::DontUseNativeDialog );
+    // Make mFileDialog manage its own lifetime and memory
+    mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
+    mFileDialog->setFileMode( QFileDialog::ExistingFiles );
+    QStringList filters;
+
+    filters << "Database Files (*.db)"
+            << "All Files (*.*)";
+    mFileDialog->setNameFilters( filters );
+
+    QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)),
+                      this, SLOT(onLoadDB(const QString&)) );
+    QObject::connect( mFileDialog, SIGNAL(rejected()), this,
+                      SLOT( onFileCancelled() ) );
+
+    ActivateTab( AddTab( mFileDialog, "Load database" ) );
+}
+
+void MainWindow::onLoadDB( const QString& path )
+{
+    std::cout << "onLoadDB" << std::endl << std::flush;
+    // Close out the fileDialog tab and kill the file dialog
+    RemoveTab( mFileDialog );
+
+    if ( mFileDialog != 0 )
+    {
+        mFileDialog->close();
+        mFileDialog = 0;
+    }
+
+    // Ensure that visfeaturemanager gets started since it needs to connect to
+    // the signal fired by DatabaseManager::LoadFrom
+    ves::conductor::VisFeatureManager::instance();
+
+    ves::xplorer::data::DatabaseManager::instance()->LoadFrom( path.toStdString() );
+}
+

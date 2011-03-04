@@ -91,6 +91,7 @@ QToolButton:hover
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
+    <addaction name="actionTest_Load"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
@@ -153,7 +154,7 @@ QToolButton:hover
   </widget>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/NewDocumentButton.xpm</normaloff>:/xpm/ToolBar/NewDocumentButton.xpm</iconset>
    </property>
    <property name="text">
@@ -165,7 +166,7 @@ QToolButton:hover
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/OpenButton.xpm</normaloff>:/xpm/ToolBar/OpenButton.xpm</iconset>
    </property>
    <property name="text">
@@ -179,7 +180,7 @@ QToolButton:hover
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/SaveButton.xpm</normaloff>:/xpm/ToolBar/SaveButton.xpm</iconset>
    </property>
    <property name="text">
@@ -219,7 +220,7 @@ QToolButton:hover
   </action>
   <action name="actionFile">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/NewDocumentButton.xpm</normaloff>:/xpm/ToolBar/NewDocumentButton.xpm</iconset>
    </property>
    <property name="text">
@@ -254,7 +255,7 @@ QToolButton:hover
   </action>
   <action name="actionStepPhysics">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/StepButton.xpm</normaloff>:/xpm/ToolBar/StepButton.xpm</iconset>
    </property>
    <property name="text">
@@ -269,7 +270,7 @@ QToolButton:hover
   </action>
   <action name="actionPlayPhysics">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/PlayButton.xpm</normaloff>:/xpm/ToolBar/PlayButton.xpm</iconset>
    </property>
    <property name="text">
@@ -278,7 +279,7 @@ QToolButton:hover
   </action>
   <action name="actionResetPhysics">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/ResetButton.xpm</normaloff>:/xpm/ToolBar/ResetButton.xpm</iconset>
    </property>
    <property name="text">
@@ -287,7 +288,7 @@ QToolButton:hover
   </action>
   <action name="actionPausePhysics">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/PauseButton.xpm</normaloff>:/xpm/ToolBar/PauseButton.xpm</iconset>
    </property>
    <property name="text">
@@ -296,7 +297,7 @@ QToolButton:hover
   </action>
   <action name="actionPhysicsStack">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/PhysicsButton.xpm</normaloff>:/xpm/ToolBar/PhysicsButton.xpm</iconset>
    </property>
    <property name="text">
@@ -308,7 +309,7 @@ QToolButton:hover
   </action>
   <action name="actionManipulatorStack">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</iconset>
    </property>
    <property name="text">
@@ -320,7 +321,7 @@ QToolButton:hover
   </action>
   <action name="actionScaleManipulator">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/ManipulatorScaleButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorScaleButton.xpm</iconset>
    </property>
    <property name="text">
@@ -332,7 +333,7 @@ QToolButton:hover
   </action>
   <action name="actionTranslateManipulator">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/ManipulatorTranslateButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorTranslateButton.xpm</iconset>
    </property>
    <property name="text">
@@ -344,7 +345,7 @@ QToolButton:hover
   </action>
   <action name="actionRotateManipulator">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/ManipulatorRotateButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorRotateButton.xpm</iconset>
    </property>
    <property name="text">
@@ -356,7 +357,7 @@ QToolButton:hover
   </action>
   <action name="actionComboManipulator">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/ManipulatorComboButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorComboButton.xpm</iconset>
    </property>
    <property name="text">
@@ -371,7 +372,7 @@ QToolButton:hover
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</normaloff>:/xpm/ToolBar/ManipulatorButton.xpm</iconset>
    </property>
    <property name="text">
@@ -383,7 +384,7 @@ QToolButton:hover
   </action>
   <action name="actionSmallJump">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/SmallCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/SmallCenterPointJumpButton.xpm</iconset>
    </property>
    <property name="text">
@@ -395,7 +396,7 @@ QToolButton:hover
   </action>
   <action name="actionMediumJump">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/MediumCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/MediumCenterPointJumpButton.xpm</iconset>
    </property>
    <property name="text">
@@ -407,7 +408,7 @@ QToolButton:hover
   </action>
   <action name="actionLargeJump">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/LargeCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/LargeCenterPointJumpButton.xpm</iconset>
    </property>
    <property name="text">
@@ -419,7 +420,7 @@ QToolButton:hover
   </action>
   <action name="actionBoundingBoxJump">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/BBCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/BBCenterPointJumpButton.xpm</iconset>
    </property>
    <property name="text">
@@ -431,7 +432,7 @@ QToolButton:hover
   </action>
   <action name="actionNavigationStack">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/WorldNavigationButton.xpm</normaloff>:/xpm/ToolBar/WorldNavigationButton.xpm</iconset>
    </property>
    <property name="text">
@@ -443,7 +444,7 @@ QToolButton:hover
   </action>
   <action name="actionWorldNavigation">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/WorldNavigationButton.xpm</normaloff>:/xpm/ToolBar/WorldNavigationButton.xpm</iconset>
    </property>
    <property name="text">
@@ -455,7 +456,7 @@ QToolButton:hover
   </action>
   <action name="actionObjectNavigation">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/ObjectNavigationButton.xpm</normaloff>:/xpm/ToolBar/ObjectNavigationButton.xpm</iconset>
    </property>
    <property name="text">
@@ -470,7 +471,7 @@ QToolButton:hover
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/CharacterButton.xpm</normaloff>:/xpm/ToolBar/CharacterButton.xpm</iconset>
    </property>
    <property name="text">
@@ -485,7 +486,7 @@ QToolButton:hover
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
+    <iconset resource="icons.qrc">
      <normaloff>:/xpm/ToolBar/CharacterFlyButton.xpm</normaloff>:/xpm/ToolBar/CharacterFlyButton.xpm</iconset>
    </property>
    <property name="text">
@@ -497,8 +498,8 @@ QToolButton:hover
   </action>
   <action name="actionShowPluginsTab">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
-     <normaloff>:/xpm/ToolBar/Plug2.png</normaloff>:/xpm/ToolBar/Plug2.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/xpm/ToolBar/PluginsButton.jpg</normaloff>:/xpm/ToolBar/PluginsButton.jpg</iconset>
    </property>
    <property name="text">
     <string>Plugins</string>
@@ -506,8 +507,8 @@ QToolButton:hover
   </action>
   <action name="actionShowPreferencesTab">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
-     <normaloff>:/xpm/ToolBar/Preferences.png</normaloff>:/xpm/ToolBar/Preferences.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/xpm/ToolBar/SettingsButton.jpg</normaloff>:/xpm/ToolBar/SettingsButton.jpg</iconset>
    </property>
    <property name="text">
     <string>Preferences</string>
@@ -515,11 +516,16 @@ QToolButton:hover
   </action>
   <action name="actionViewStack">
    <property name="icon">
-    <iconset resource="propertyBrowser/icons.qrc">
-     <normaloff>:/xpm/ToolBar/Tabs.png</normaloff>:/xpm/ToolBar/Tabs.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/xpm/ToolBar/TabsButton.jpg</normaloff>:/xpm/ToolBar/TabsButton.jpg</iconset>
    </property>
    <property name="text">
     <string>View</string>
+   </property>
+  </action>
+  <action name="actionTest_Load">
+   <property name="text">
+    <string>Test Load...</string>
    </property>
   </action>
  </widget>
@@ -533,7 +539,7 @@ QToolButton:hover
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="propertyBrowser/icons.qrc"/>
+  <include location="icons.qrc"/>
  </resources>
  <connections/>
 </ui>

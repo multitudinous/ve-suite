@@ -53,7 +53,7 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'propertyBrowser','PropertyBrowser.h')]
 cppSources += lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'propertyBrowser','Visualization.h')]
+source = [pj(buildSrcDir,'Visualization.h')]
 cppSources += lib_env.qt_moc(source)
 
 source = [pj(buildSrcDir,'propertyBrowser','GenericPropertyBrowser.h')]
@@ -61,7 +61,7 @@ cppSources += lib_env.qt_moc(source)
 ###
 
 ### rcc files
-source = [pj(buildSrcDir,'propertyBrowser','icons.qrc')]
+source = [pj(buildSrcDir,'icons.qrc')]
 cppSources += lib_env.qt_rcc(source)
 ###
 
@@ -81,7 +81,7 @@ cppHeaders += lib_env.qt_uic(source)
 source = [pj(buildSrcDir,'MainWindow.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
-source = [pj(buildSrcDir,'propertyBrowser','Visualization.ui')]
+source = [pj(buildSrcDir,'Visualization.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
 source = [pj(buildSrcDir,'plugin','PluginPorts.ui')]
