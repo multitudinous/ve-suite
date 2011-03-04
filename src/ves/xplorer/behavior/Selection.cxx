@@ -328,6 +328,8 @@ void Selection::ProcessSelection()
     //Now find the new selected object
     osg::NodePath nodePath = intersections.begin()->nodePath;
     osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
+    // FindVESObject alters nodePath. Keep a copy of this altered version here.
+    osg::NodePath nodePathCopy( nodePath );
     if( !vesObject )
     {
         vprDEBUG( vesDBG, 1 )
@@ -412,7 +414,8 @@ void Selection::ProcessSelection()
     // FindVESObject
     osg::NodePath np = intersections.begin()->nodePath;
     ///Send the data back to the ui for the expanding tree
-    m_objectPickedSignal( np );
+    //m_objectPickedSignal( np );
+    m_objectPickedSignal( nodePathCopy );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::ClearPointConstraint()
