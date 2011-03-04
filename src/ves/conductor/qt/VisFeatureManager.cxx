@@ -57,7 +57,7 @@ VisFeatureManager::VisFeatureManager()
     m_logger( Poco::Logger::get("conductor.VisFeatureManager") ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
-    CONNECTSIGNALS_0( "%DatabaseManager.ResyncFromDatabase%", void(),
+    CONNECTSIGNALS_0( "%ResyncFromDatabase", void(),
                       &VisFeatureManager::ResyncFromDatabase,
                       m_connections, any_SignalType, high_Priority );
 
@@ -72,7 +72,7 @@ VisFeatureManager::VisFeatureManager()
     m_featureTypeToSetPtrMap["Polydata"] = PropertySetPtr( new PolydataPropertySet() );
 
     // Need to add this one in once we get a class for it!
-    m_featureTypeToSetPtrMap["Texture-based"] = PropertySetPtr( );
+    //m_featureTypeToSetPtrMap["Texture-based"] = PropertySetPtr( );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureManager::~VisFeatureManager()
@@ -103,20 +103,23 @@ void VisFeatureManager::ResyncFromDatabase()
 {
     using namespace ves::xplorer::data;
     std::vector<std::string> ids;
-    PropertySetPtr set;
+    PropertySetPtr propSet;
 
     std::map< std::string, PropertySetPtr >::const_iterator iter =
             m_featureTypeToSetPtrMap.begin();
     while( iter != m_featureTypeToSetPtrMap.end() )
     {
-        set = iter->second->CreateNew();
-        ids = DatabaseManager::instance()->GetStringVector( set->GetTableName(), "uuid" );
-        for( size_t index = 0; index < ids.size(); ++index )
+        propSet = iter->second->CreateNew();
+        if( propSet.get() )
         {
-            set->SetUUID( ids.at( index ) );
-            set->LoadFromDatabase();
-            // The write operation causes the feature to be added to the scene
-            set->WriteToDatabase();
+            ids = DatabaseManager::instance()->GetStringVector( propSet->GetTableName(), "uuid" );
+            for( size_t index = 0; index < ids.size(); ++index )
+            {
+                propSet->SetUUID( ids.at( index ) );
+                propSet->LoadFromDatabase();
+                // The write operation causes the feature to be added to the scene
+                propSet->WriteToDatabase();
+            }
         }
         ++iter;
     }

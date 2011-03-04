@@ -30,6 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 // --- Poco includes --- //
 #include <Poco/Data/SessionPool.h>
 #include <Poco/Data/SQLite/Connector.h>
@@ -43,7 +46,7 @@
 #include <iostream>
 #include <boost/smart_ptr/shared_array.hpp>
 
-#include "DatabaseManager.h"
+//#include "DatabaseManager.h"
 
 namespace ves
 {
@@ -54,19 +57,21 @@ namespace data
 
 vprSingletonImp( DatabaseManager );
 //vprSingletonImpLifetime( DatabaseManager, 0 );
-
+////////////////////////////////////////////////////////////////////////////////
 DatabaseManager::DatabaseManager()
     :
     mPool( 0 )
 {
-    ;
+    eventmanager::EventManager::instance()->RegisterSignal(
+            new eventmanager::SignalWrapper< boost::signals2::signal< void() > >( &m_resyncFromDatabase ),
+       "DatabaseManager.ResyncFromDatabase" );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 DatabaseManager::~DatabaseManager()
 {
     ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::Shutdown()
 {
     if( mPool )
@@ -75,8 +80,8 @@ void DatabaseManager::Shutdown()
         //    << " Number of dead Poco::Sessions " << mPool->dead() << std::endl;
         //This must be deleted from the thread that it was created from
         delete mPool;
+        mPool = 0;
     }
-
     try
     {
         Poco::Data::SQLite::Connector::unregisterConnector();
@@ -85,16 +90,16 @@ void DatabaseManager::Shutdown()
     {
         ;
     }
-
     //Remove working db file
     boost::filesystem::remove( m_path );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::SetDatabasePath( const std::string& path )
 {
     if( mPool )
     {
         delete mPool;
+        mPool = 0;
         Poco::Data::SQLite::Connector::unregisterConnector();
     }
 
@@ -102,12 +107,12 @@ void DatabaseManager::SetDatabasePath( const std::string& path )
     mPool = new Poco::Data::SessionPool( "SQLite", path, 1, 32, 10 );
     m_path = path;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Poco::Data::SessionPool* DatabaseManager::GetPool()
 {
     return mPool;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > DatabaseManager::GetStringVector( const std::string& tableName, const std::string& columnName, const std::string& searchCriteria, bool distinct )
 {
     std::vector< std::string > returnValue;
@@ -152,7 +157,7 @@ std::vector< std::string > DatabaseManager::GetStringVector( const std::string& 
 
     return returnValue;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::TableExists( const std::string& tableName )
 {
     bool exists = false;
@@ -170,7 +175,7 @@ bool DatabaseManager::TableExists( const std::string& tableName )
     }
     return exists;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::ResetAll()
 {
     Poco::Data::Session session( mPool->get() );
@@ -203,7 +208,7 @@ void DatabaseManager::ResetAll()
         std::cout << e.displayText() << std::endl;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::SaveAs( const std::string& path )
 {
     try
@@ -220,12 +225,38 @@ bool DatabaseManager::SaveAs( const std::string& path )
         return false;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::LoadFrom( const std::string& path )
 {
-    return false;
-}
+    // Order of events:
+    // 1. Shutdown db, so we release everything.
+    // 2. Copy the db file given in path over top of working db.
+    // 3. Reconnect to working db.
+    // 4. Emit ResyncFromDatabase signal so listeners know their data may have
+    //    changed.
 
+    Shutdown();
+
+    try
+    {
+        boost::filesystem::path from( path );
+        boost::filesystem::path to( m_path );
+        boost::filesystem::copy_file( from, to, boost::filesystem::copy_option::overwrite_if_exists );
+
+        //return true;
+    }
+    catch( std::exception& e )
+    {
+        std::cerr << e.what() << std::endl << std::flush;
+        return false;
+    }
+    SetDatabasePath( m_path );
+
+    m_resyncFromDatabase();
+
+    return true;
+}
+////////////////////////////////////////////////////////////////////////////////
 }// namespace data
 }// namespace xplorer
 }// namespace ves

@@ -37,6 +37,7 @@
 
 // --- Boost includes --- //
 #include <boost/noncopyable.hpp>
+#include <boost/signals2/signal.hpp>
 
 // --- C++ headers --- //
 #include <string>
@@ -142,6 +143,10 @@ private:
 
     /// Holds the current db path
     std::string m_path;
+
+    /// Signal registered as "DatabaseManager.ResyncFromDatabase" that is
+    /// emitted during calls to LoadFrom.
+    boost::signals2::signal< void() > m_resyncFromDatabase;
 };
 
 }// namespace data
