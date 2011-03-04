@@ -87,9 +87,14 @@ public:
     ///                   the full name of the signal. The full name will contain
     ///                   a unique identifier to differentiate different
     ///                   instances of the same propertyset.
-    MakeLive( std::string& uuid, PropertyPtr property, const std::string& signalName ):
+    /// @param passUUID If true, emitted signal will contain the uuid passed in
+    ///                 ctor in addition to the value of the property. If false
+    ///                 the uuid is omitted in both the signal signature as
+    ///                 well as signal emission. Default: true.
+    MakeLive( std::string& uuid, PropertyPtr property, const std::string& signalName, bool passUUID = true ):
         MakeLiveBase(),
-        m_UUID(uuid)
+        m_UUID(uuid),
+        m_passUUID( passUUID )
     {
         m_SignalName = boost::lexical_cast<std::string>( this );
         m_SignalName.append( "." );
@@ -97,7 +102,14 @@ public:
 
         using ves::xplorer::eventmanager::EventManager;
         using ves::xplorer::eventmanager::SignalWrapper;
-        EventManager::instance()->RegisterSignal( new SignalWrapper<m_Signal_Type>( &m_Signal ), m_SignalName );
+        if( m_passUUID )
+        {
+            EventManager::instance()->RegisterSignal( new SignalWrapper<m_Signal_Type>( &m_Signal ), m_SignalName );
+        }
+        else
+        {
+            EventManager::instance()->RegisterSignal( new SignalWrapper<m_SignalNoUUID_Type>( &m_SignalNoUUID ), m_SignalName );
+        }
         property->SignalValueChanged.connect( boost::bind( &MakeLive<T>::ValueChangedSlot, this, _1 )  );
     }
 
@@ -109,7 +121,14 @@ public:
             if( !bval.empty() )
             {
                 T value = boost::any_cast<T>( bval );
-                m_Signal( m_UUID, value );
+                if( m_passUUID )
+                {
+                    m_Signal( m_UUID, value );
+                }
+                else
+                {
+                    m_SignalNoUUID( value );
+                }
             }
         }
         catch(...)
@@ -122,8 +141,11 @@ public:
 private:
     typedef boost::signals2::signal< void( const std::string&, T ) > m_Signal_Type;
     m_Signal_Type m_Signal;
+    typedef boost::signals2::signal< void( T ) > m_SignalNoUUID_Type;
+    m_SignalNoUUID_Type m_SignalNoUUID;
     std::string m_SignalName;
     std::string& m_UUID;
+    bool m_passUUID;
 
 };
 

@@ -106,7 +106,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["GeometryLODScale"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< double >( mUUIDString,
                                                    mPropertyMap["GeometryLODScale"],
-                                                   "PreferencesPropertySet.GeometryLODScale"));
+                                                   "PreferencesPropertySet.GeometryLODScale",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
 
@@ -176,7 +177,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["NavigationZEqual0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
                                                    mPropertyMap["NavigationZEqual0Lock"],
-                                                   "PreferencesPropertySet.NavigationZEqual0Lock"));
+                                                   "PreferencesPropertySet.NavigationZEqual0Lock",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
 
@@ -185,7 +187,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["NavigationZGreater0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
                                                    mPropertyMap["NavigationZGreater0Lock"],
-                                                   "PreferencesPropertySet.NavigationZGreater0Lock"));
+                                                   "PreferencesPropertySet.NavigationZGreater0Lock",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
 
@@ -194,7 +197,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["ShutDownXplorerOption"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
                                                    mPropertyMap["ShutDownXplorerOption"],
-                                                   "PreferencesPropertySet.ShutDownXplorerOption"));
+                                                   "PreferencesPropertySet.ShutDownXplorerOption",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
 
@@ -203,7 +207,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["PhysicsDebugger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
                                                    mPropertyMap["PhysicsDebugger"],
-                                                   "PreferencesPropertySet.PhysicsDebugger"));
+                                                   "PreferencesPropertySet.PhysicsDebugger",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
 
@@ -212,7 +217,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["CADSelection"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
                                                    mPropertyMap["CADSelection"],
-                                                   "PreferencesPropertySet.CADSelection"));
+                                                   "PreferencesPropertySet.CADSelection",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
     
@@ -221,7 +227,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["ScriptLogger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
                                                    mPropertyMap["ScriptLogger"],
-                                                   "PreferencesPropertySet.ScriptLogger"));
+                                                   "PreferencesPropertySet.ScriptLogger",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
 
@@ -230,7 +237,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["ScreenAlignedNormals"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
                                                    mPropertyMap["ScreenAlignedNormals"],
-                                                   "PreferencesPropertySet.ScreenAlignedNormals"));
+                                                   "PreferencesPropertySet.ScreenAlignedNormals",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
 
@@ -239,7 +247,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["DisplayFrameRate"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
                                                    mPropertyMap["DisplayFrameRate"],
-                                                   "PreferencesPropertySet.DisplayFrameRate"));
+                                                   "PreferencesPropertySet.DisplayFrameRate",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
 
@@ -248,7 +257,8 @@ void PreferencesPropertySet::CreateSkeleton()
         mPropertyMap["DisplayGlobalAxis"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
                                                    mPropertyMap["DisplayGlobalAxis"],
-                                                   "PreferencesPropertySet.DisplayGlobalAxis"));
+                                                   "PreferencesPropertySet.DisplayGlobalAxis",
+                                                   false ));
         mLiveObjects.push_back( p );
     }
 }
