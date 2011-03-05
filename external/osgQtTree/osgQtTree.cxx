@@ -114,10 +114,17 @@ findItemIndex( TreeModel* tree, const osg::NodePath& nodepath )
 QModelIndex
 openToAndSelect( QTreeView* view, TreeModel* model, const osg::NodePath& nodepath )
 {
+    view->clearSelection();
+    
+    // Deal with empty nodepath
+    if( nodepath == osg::NodePath() )
+    {
+        return QModelIndex();
+    }
+    
     QModelIndex index( findItemIndex( model, nodepath) );
     if( index.isValid() )
     {
-        view->clearSelection();
         view->setCurrentIndex( index );
         view->scrollTo( index );
     }
