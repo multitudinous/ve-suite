@@ -184,12 +184,16 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     }
 
     // Get the node associated with this QModelIndex
-    osgQtTree::osgTreeItem* item = static_cast< osgQtTree::osgTreeItem* >( index.internalPointer() );
-    osg::Node* node = item->GetNode();
+    osg::Node* node = 0;
+    if( index != QModelIndex() )
+    {
+        osgQtTree::osgTreeItem* item = static_cast< osgQtTree::osgTreeItem* >( index.internalPointer() );
+        node = item->GetNode();
+    }
 
-    // Walk up the graph until we find a valid DCS
+    // See if this node has a VE_XML_ID
     bool found = false;
-    while( !found )
+    if( node )
     {
         osg::Node::DescriptionList descList = node->getDescriptions();
         for( size_t i = 0; i < descList.size(); ++i )
@@ -197,17 +201,6 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
             if( descList.at( i ) == "VE_XML_ID" )
             {
                 found = true;
-            }
-        }
-        if( !found )
-        {
-            if( node->getNumParents() != 0 )
-            {
-                node = node->getParent( 0 );
-            }
-            else
-            {
-                break;
             }
         }
     }

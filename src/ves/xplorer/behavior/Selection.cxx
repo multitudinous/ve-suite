@@ -285,6 +285,11 @@ void Selection::ProcessSelection()
         vprDEBUG( vesDBG, 1 )
         << "|\tKeyboardMouse::ProcessHit No object selected"
         << std::endl << vprDEBUG_FLUSH;
+
+        // Tell everyone else we have a null selection. nullPath must be l-value
+        // since signal passes it by reference
+        osg::NodePath nullPath;
+        m_objectPickedSignal( nullPath );
         
         return;
     }
