@@ -120,12 +120,32 @@ public:
      */
     bool TableExists( const std::string& tableName );
 
+    /**
+     * Dumps all data in the database.
+     */
     void ResetAll();
     
+    /**
+      * Attempts clean shutdown of database connections and deletes the
+      * working db file.
+      */
     void Shutdown();
 
+    /**
+      * Saves the current working db out to file specified in @c path. This is
+      * done as a filesystem operation, not a database copy operation.
+      * @param path The path to the database file to save out.
+      */
     bool SaveAs( const std::string& path );
 
+    /**
+      * Clobbers the working db and reloads settings from the database specified
+      * in @c path. The db specified in path is file-copied over the working db.
+      * No database connection is made to the file specified in @c path, and no
+      * data in that file is ever touched. This is purely a filesystem copy
+      * operation.
+      * @param path Path to the database file from which data should be reloaded.
+      */
     bool LoadFrom( const std::string& path );
 
 private:
