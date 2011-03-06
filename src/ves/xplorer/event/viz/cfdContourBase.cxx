@@ -85,30 +85,32 @@ cfdContourBase::cfdContourBase()
     : 
     cfdObjects(),
     mapper( vtkPolyDataMapper::New() ),
+    cfilter( vtkContourFilter::New() ),
+    bfilter( vtkBandedPolyDataContourFilter::New() ),
     deci( vtkDecimatePro::New() ),
+    tris( vtkTriangleFilter::New() ),
+    strip( vtkStripper::New() ),
     normals( vtkPolyDataNormals::New() ),
     mC2p( vtkCellDataToPointData::New() ),
-    cuttingPlane( 0 )
+    cuttingPlane( 0 ),
+    warpedContourScale( 0.0f ),
+    contourOpacity( 1.0f ),
+    contourLOD( 1 )
 {
-    cfilter = vtkContourFilter::New();              // for contourlines
-    bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
     // turn clipping on to avoid unnecessary value generations with
     // vtkBandedPolyDataContourFilter::GenerateValues().
     bfilter->ClippingOn();
-    tris = vtkTriangleFilter::New();
-    strip = vtkStripper::New();
-
-    warpedContourScale = 0.0f;
-    contourOpacity = 1.0f;
-    contourLOD = 1;
-    cuttingPlane = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdContourBase::cfdContourBase( cfdContourBase const& src )
     :
     cfdObjects( src ),
     mapper( vtkPolyDataMapper::New() ),
+    cfilter( vtkContourFilter::New() ),
+    bfilter( vtkBandedPolyDataContourFilter::New() ),
     deci( vtkDecimatePro::New() ),
+    tris( vtkTriangleFilter::New() ),
+    strip( vtkStripper::New() ),
     normals( vtkPolyDataNormals::New() ),
     mC2p( vtkCellDataToPointData::New() ),
     cuttingPlane( 0 ),
@@ -120,13 +122,9 @@ cfdContourBase::cfdContourBase( cfdContourBase const& src )
     xyz( src.xyz ),
     numSteps( src.numSteps )
 {
-    cfilter = vtkContourFilter::New();              // for contourlines
-    bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
     // turn clipping on to avoid unnecessary value generations with
     // vtkBandedPolyDataContourFilter::GenerateValues().
     bfilter->ClippingOn();
-    tris = vtkTriangleFilter::New();
-    strip = vtkStripper::New();
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdContourBase::~cfdContourBase()

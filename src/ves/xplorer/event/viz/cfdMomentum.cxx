@@ -145,7 +145,7 @@ cfdMomentum::~cfdMomentum()
 
     this->warper->Delete();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdMomentum::Update( void )
 {
     if( this->cursorType == ARROW )
