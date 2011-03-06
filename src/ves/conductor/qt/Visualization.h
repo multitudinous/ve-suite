@@ -40,6 +40,7 @@
 #include <ves/xplorer/data/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 #include <vector>
 #include <string>
@@ -104,6 +105,7 @@ protected Q_SLOTS:
 
 
 private:
+    void ResyncFromDatabaseSlot();
     Ui::Visualization* m_ui;
     ///The property browser widget for all vis features
     PropertyBrowser* mFeatureBrowser;
@@ -117,6 +119,8 @@ private:
     Poco::Logger& m_logger;
     ///Actual stream for this class
     ves::xplorer::LogStreamPtr m_logStream;
+    ///Required to connect to EventManagered signals
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 
 } // namespace conductor

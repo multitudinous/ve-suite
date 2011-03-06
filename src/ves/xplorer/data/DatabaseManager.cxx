@@ -144,7 +144,7 @@ std::vector< std::string > DatabaseManager::GetStringVector( const std::string& 
         Poco::Data::RecordSet recordset( statement );
         if( recordset.rowCount() != 0 )
         {
-            for( int rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
+            for( size_t rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
             {
                 returnValue.push_back( recordset.value( 0, rowIndex ).convert<std::string > () );
             }
@@ -192,7 +192,7 @@ void DatabaseManager::ResetAll()
         {
             // Wrap operations into a single transaction for speed
             session.begin();
-            for( int rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
+            for( size_t rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
             {
                 std::string tableName = recordset.value( 0, rowIndex ).convert< std::string > ();
                 if( tableName != "sqlite_sequence" )
@@ -207,6 +207,9 @@ void DatabaseManager::ResetAll()
     {
         std::cout << e.displayText() << std::endl;
     }
+
+    // Give everyone else a chance to alter their state to agree with a reset.
+    m_resyncFromDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::SaveAs( const std::string& path )

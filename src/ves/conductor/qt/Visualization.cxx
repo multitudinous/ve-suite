@@ -37,6 +37,8 @@
 
 #include <ves/conductor/qt/VisFeatureManager.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 #include <QtCore/qstring.h>
 
 #include <iostream>
@@ -59,6 +61,11 @@ Visualization::Visualization( QWidget* parent )
     m_ui->setupUi( this );
 
     mFeatureBrowser = new PropertyBrowser( this );
+
+    CONNECTSIGNALS_0( "%ResyncFromDatabase", void(),
+                      &Visualization::ResyncFromDatabaseSlot,
+                      m_connections, any_SignalType, lowest_Priority );
+
     LOG_TRACE( "ctor" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -247,6 +254,12 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
         m_ui->vfpb->show();
     }
 
+}
+////////////////////////////////////////////////////////////////////////////////
+void Visualization::ResyncFromDatabaseSlot()
+{
+    mTempSet = ves::xplorer::data::PropertySetPtr();
+    UpdateFeatureIDSelectorChoices();
 }
 ////////////////////////////////////////////////////////////////////////////////
 }// namespace conductor
