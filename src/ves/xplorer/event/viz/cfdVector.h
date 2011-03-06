@@ -51,26 +51,32 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdVector.h
-cfdVector API
-*/
-/*!\class ves::xplorer::cfdVector
-* A class to takes input data set(s) and generates a
-* cutting planes of vector profile based on the position
-* and direction selected. Update member function will update
-* the position and direction as each "Update" being called.
-*/
+ * cfdVector API
+ * \class ves::xplorer::cfdVector
+ * A class to takes input data set(s) and generates a
+ * cutting planes of vector profile based on the position
+ * and direction selected. Update member function will update
+ * the position and direction as each "Update" being called.
+ */
 class VE_XPLORER_EXPORTS cfdVector : public cfdVectorBase
 {
 public:
     // Initialize the VTK objects and pipeline.
     ///Constructor
-    cfdVector( );
-///Destructor
-    virtual ~cfdVector( );
+    cfdVector();
+    
+    ///Copy constructor
+    cfdVector( cfdVector const& src );
+
+    ///Destructor
+    virtual ~cfdVector();
 
     /* Update the position, x, and normal direction to cut.
     Output a updated pfGeoSet.  */
     virtual void Update( void );
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
 private:
 

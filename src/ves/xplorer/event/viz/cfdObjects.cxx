@@ -54,15 +54,17 @@ using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 cfdObjects::cfdObjects( void )
     :
+    GlobalBase(),
     activeDataSet( 0 ),
     pointSource( 0 ),
+    m_multiGroupGeomFilter( vtkCompositeDataGeometryFilter::New() ),
+    m_geometryFilter( vtkGeometryFilter::New() ),
     updateFlag( false ),
     vtkToPFDebug( 0 ),
     objectType( 0 ),
     requestedValue( 0 ),
     cursorType( 0 ),
     usePreCalcData( false ),
-    scale( 0 ),
     m_gpuTools( false )
 {
     for( size_t i = 0; i < 3; ++i )
@@ -76,19 +78,37 @@ cfdObjects::cfdObjects( void )
     {
         box_size[ i ] = 0;
     }
-    
-    m_multiGroupGeomFilter = vtkCompositeDataGeometryFilter::New();
-    m_geometryFilter = vtkGeometryFilter::New();
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdObjects::cfdObjects( const cfdObjects& src )
-        : GlobalBase( src )
+    : 
+    GlobalBase( src ),
+    activeDataSet( 0 ),
+    pointSource( src.pointSource ),
+    m_multiGroupGeomFilter( vtkCompositeDataGeometryFilter::New() ),
+    m_geometryFilter( vtkGeometryFilter::New() ),
+    updateFlag( false ),
+    vtkToPFDebug( 0 ),
+    objectType( src.objectType ),
+    requestedValue( src.requestedValue ),
+    cursorType( src.cursorType ),
+    usePreCalcData( false ),
+    m_gpuTools( false )
 {
-    this->objectType = src.objectType;
-    this->pointSource = src.pointSource;
+    for( size_t i = 0; i < 3; ++i )
+    {
+        origin[ i ] = 0;
+        center[ i ] = 0;
+        normal[ i ] = 0;
+    }
+    
+    for( size_t i = 0; i < 6; ++i )
+    {
+        box_size[ i ] = 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdObjects::~cfdObjects( void )
+cfdObjects::~cfdObjects()
 {
     m_multiGroupGeomFilter->Delete();
     m_geometryFilter->Delete();

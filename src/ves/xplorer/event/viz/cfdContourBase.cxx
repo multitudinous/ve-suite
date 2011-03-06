@@ -84,8 +84,11 @@ using namespace ves::xplorer::scenegraph;
 cfdContourBase::cfdContourBase()
     : 
     cfdObjects(),
+    mapper( vtkPolyDataMapper::New() ),
     deci( vtkDecimatePro::New() ),
-    mC2p( vtkCellDataToPointData::New() )
+    normals( vtkPolyDataNormals::New() ),
+    mC2p( vtkCellDataToPointData::New() ),
+    cuttingPlane( 0 )
 {
     cfilter = vtkContourFilter::New();              // for contourlines
     bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
@@ -95,15 +98,35 @@ cfdContourBase::cfdContourBase()
     tris = vtkTriangleFilter::New();
     strip = vtkStripper::New();
 
-    mapper = vtkPolyDataMapper::New();
-    //mapper->SetColorModeToMapScalars();
-    //mapper->ImmediateModeRenderingOn();
-    normals = vtkPolyDataNormals::New();
-
     warpedContourScale = 0.0f;
     contourOpacity = 1.0f;
     contourLOD = 1;
     cuttingPlane = 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdContourBase::cfdContourBase( cfdContourBase const& src )
+    :
+    cfdObjects( src ),
+    mapper( vtkPolyDataMapper::New() ),
+    deci( vtkDecimatePro::New() ),
+    normals( vtkPolyDataNormals::New() ),
+    mC2p( vtkCellDataToPointData::New() ),
+    cuttingPlane( 0 ),
+    m_selectDataMapping( src.m_selectDataMapping ),
+    fillType( src.fillType ),
+    warpedContourScale( src.warpedContourScale ),
+    contourOpacity( src.contourOpacity ),
+    contourLOD( src.contourLOD ),
+    xyz( src.xyz ),
+    numSteps( src.numSteps )
+{
+    cfilter = vtkContourFilter::New();              // for contourlines
+    bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
+    // turn clipping on to avoid unnecessary value generations with
+    // vtkBandedPolyDataContourFilter::GenerateValues().
+    bfilter->ClippingOn();
+    tris = vtkTriangleFilter::New();
+    strip = vtkStripper::New();
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdContourBase::~cfdContourBase()

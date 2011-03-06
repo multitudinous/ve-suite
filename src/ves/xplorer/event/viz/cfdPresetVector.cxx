@@ -69,14 +69,32 @@ using namespace ves::xplorer::scenegraph;
 // this class requires that the dataset has a vector field.
 ////////////////////////////////////////////////////////////////////////////////
 cfdPresetVector::cfdPresetVector( const int xyz, const int numSteps )
+    :
+    cfdVectorBase(),
+    cuttingPlane( 0 )
 {
     this->xyz = xyz;
     this->numSteps = numSteps;
 }
 ////////////////////////////////////////////////////////////////////////////////
+cfdPresetVector::cfdPresetVector( cfdPresetVector const& src )
+    :
+    cfdVectorBase( src ),
+    xyz( src.xyz ),
+    numSteps( src.numSteps ),
+    cuttingPlane( 0 )
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
 cfdPresetVector::~cfdPresetVector()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdPresetVector::CreateCopy()
+{
+    return new cfdPresetVector( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPresetVector::Update( void )

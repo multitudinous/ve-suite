@@ -48,24 +48,30 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdContour.h
-cfdContour API
-*/
-/*!\class ves::xplorer::cfdContour
-*   A class to takes input data set(s) and generates on
-*   cutting planes based on the position and direction
-*   selected. Update member function will be update
-*   the position and direction as each "Update" being called.
-*/
+ * cfdContour API
+ * \class ves::xplorer::cfdContour
+ *   A class to takes input data set(s) and generates on
+ *   cutting planes based on the position and direction
+ *   selected. Update member function will be update
+ *   the position and direction as each "Update" being called.
+ */
 class VE_XPLORER_EXPORTS cfdContour : public cfdContourBase
 {
 public:
     ///Initialize the VTK objects and pipeline.
-    cfdContour( );
+    cfdContour();
+    
+    ///Copy Constructor.
+    cfdContour( cfdContour const& src );
+
     ///Destructor
-    virtual ~cfdContour( );
+    virtual ~cfdContour();
 
     ///Update the position, x, and normal direction to cut.
     virtual void Update( void );
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
 private:
 

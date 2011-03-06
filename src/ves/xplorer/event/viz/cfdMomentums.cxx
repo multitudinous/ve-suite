@@ -50,14 +50,15 @@
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
-
-cfdMomentums::cfdMomentums( const int xyz )
+////////////////////////////////////////////////////////////////////////////////
+cfdMomentums::cfdMomentums( const int xyzTemp )
+    :
+    cfdContourBase()
 {
-    this->xyz = xyz;
+    xyz = xyzTemp;
     this->warper = vtkWarpVector::New();
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 cfdMomentums::~cfdMomentums()
 {
     if( this->warper != NULL )
@@ -66,8 +67,20 @@ cfdMomentums::~cfdMomentums()
         this->warper = NULL;
     }
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
+cfdMomentums::cfdMomentums( cfdMomentums const& src )
+    :
+    cfdContourBase( src ),
+    warper( vtkWarpVector::New() ) 
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdMomentums::CreateCopy()
+{
+    return new cfdMomentums( *this );
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdMomentums::Update( void )
 {
     if( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() == 0 )

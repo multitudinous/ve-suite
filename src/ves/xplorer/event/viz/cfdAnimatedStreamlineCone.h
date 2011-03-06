@@ -58,9 +58,12 @@ class VE_XPLORER_EXPORTS cfdAnimatedStreamlineCone : public cfdObjects
 public:
     ///Base constructor
     cfdAnimatedStreamlineCone( void );
+
+    ///Copy consturctor
+    cfdAnimatedStreamlineCone( cfdAnimatedStreamlineCone const& src );
+
     ///Destructor
     virtual ~cfdAnimatedStreamlineCone();
-
 
     void SetStreamlineSource( cfdStreamers* streamers );
     
@@ -74,6 +77,9 @@ public:
     ///Update
     virtual void Update( void );
 
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
+
 private:
     ///Determine is a streamline is going backwards
     ///\return Return true if streamline is going backwards
@@ -81,7 +87,6 @@ private:
     
     vtkPolyDataMapper *mapper;///<Mapper for vtk polydata
     vtkPolyData *polyData;///<polyData
-    vtkPolyData *polydata;///<polydata
     vtkGlyph3D *glyph;///<glyph
     vtkSphereSource *sphere;///<sphere source
 

@@ -60,21 +60,27 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdContourBase.h
-cfdContourBase API
-*/
-/*!\class ves::xplorer::cfdContourBase
-*
-*/
+ * cfdContourBase API
+ * \class ves::xplorer::cfdContourBase
+ *
+ */
 class VE_XPLORER_EXPORTS cfdContourBase : public cfdObjects
 {
 public:
     ///Constructor
     cfdContourBase();
+
+    ///Copy Constructor.
+    cfdContourBase( cfdContourBase const& src );
+
     ///Destructor
     virtual ~cfdContourBase();
 
     ///update the actor
     virtual void Update( void ) = 0;
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy() = 0;
 
     ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand();

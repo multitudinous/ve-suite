@@ -47,17 +47,18 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdVectorBase.h
-cfdVectorBase API
-*/
-
-/*!\class ves::xplorer::cfdVectorBase
-*
-*/
+ * cfdVectorBase API
+ * class ves::xplorer::cfdVectorBase
+ *
+ */
 class VE_XPLORER_EXPORTS cfdVectorBase : public cfdObjects
 {
 public:
     ///Constructor
     cfdVectorBase();
+
+    ///Copy Constructor.
+    cfdVectorBase( cfdVectorBase const& src );
 
     ///Destructor
     virtual ~cfdVectorBase();
@@ -69,6 +70,9 @@ public:
 
     ///Update the actor
     virtual void Update() = 0;
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy() = 0;
 
     ///Set threshold
     ///\params minThresh and maxThresh, min and max percentage values for threshold

@@ -43,22 +43,27 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdPolyData.h
-cfdPolyData API
-*/
-/*!\class ves::xplorer::cfdPolyData
-*
-*/
+ * cfdPolyData API
+ * \class ves::xplorer::cfdPolyData
+ *
+ */
 class VE_XPLORER_EXPORTS cfdPolyData : public cfdObjects
 {
 public:
     ///Constructor.
     cfdPolyData();
 
+    ///Copy Constructor.
+    cfdPolyData( cfdPolyData const& src );
+        
     ///Destructor.
     virtual ~cfdPolyData();
 
     ///Update.
     virtual void Update( void );
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
     ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
     virtual void UpdateCommand();

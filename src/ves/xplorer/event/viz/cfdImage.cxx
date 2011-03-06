@@ -144,9 +144,19 @@ cfdImage::cfdImage( std::string param )
         << bmpFileName << "\"\n" << vprDEBUG_FLUSH;
     }
 }
-
-// This should work generally with any vtkImageData
-
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdImage::CreateCopy()
+{
+    return new cfdImage( *this );
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdImage::cfdImage( cfdImage const& src )
+    :
+    cfdObjects( src )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 cfdImage::cfdImage( std::string filename, int resx, int resy, int dim, double *origin, double *spacing )
 {
     this->bmpReader = NULL;

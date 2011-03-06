@@ -66,10 +66,16 @@ public:
     ///\param xyx
     ///\param numSteps
     cfdPresetContour( const int xyz, const int numSteps = 10 );
+
+    ///Copy constructor
+    cfdPresetContour( cfdPresetContour const& src );
+
     ///Destructor
     virtual ~cfdPresetContour();
     ///Update
     virtual void Update( void );
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
 private:
 };

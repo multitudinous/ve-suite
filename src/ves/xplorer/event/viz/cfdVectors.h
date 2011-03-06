@@ -41,12 +41,10 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdVectors.h
-cfdVectors API
-*/
-
-/*!\class ves::xplorer::cfdVectors
-*
-*/
+ * cfdVectors API
+ * \class ves::xplorer::cfdVectors
+ *
+ */
 class VE_XPLORER_EXPORTS cfdVectors : public cfdVectorBase
 {
 public:
@@ -54,8 +52,14 @@ public:
     ///Constructor
     cfdVectors( const int xyz );
 
+    ///Copy constructor
+    cfdVectors( cfdVectors const& src );
+
     ///Destructor
     virtual ~cfdVectors();
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
     ///Virtual update function
     virtual void Update( void );

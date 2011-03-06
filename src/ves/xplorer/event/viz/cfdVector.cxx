@@ -57,8 +57,10 @@
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
-
+////////////////////////////////////////////////////////////////////////////////
 cfdVector::cfdVector()
+    :
+    cfdVectorBase()
 {
 #ifdef USE_OMP
     float b[6];
@@ -125,7 +127,21 @@ cfdVector::cfdVector()
     this->filter->SetInput(( vtkDataSet * )this->append->GetOutput() );
 #endif
 }
-
+////////////////////////////////////////////////////////////////////////////////
+cfdVector::cfdVector( cfdVector const& src )
+    :
+    cfdVectorBase( src )
+{
+    // set the plane
+    this->plane = vtkPlane::New();
+    this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
+    this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
+    
+    // set the cut function
+    this->cutter = vtkCutter::New();
+    this->cutter->SetCutFunction( this->plane );
+}
+////////////////////////////////////////////////////////////////////////////////
 cfdVector::~cfdVector()
 {
 #ifdef USE_OMP
@@ -146,7 +162,12 @@ cfdVector::~cfdVector()
     this->cutter = NULL;
 #endif
 }
-
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdVector::CreateCopy()
+{
+    return new cfdVector( *this );
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdVector::Update( void )
 {
     if( this->cursorType == ARROW )
@@ -225,4 +246,5 @@ void cfdVector::Update( void )
     }
     temp->Delete();
 }
+////////////////////////////////////////////////////////////////////////////////
 

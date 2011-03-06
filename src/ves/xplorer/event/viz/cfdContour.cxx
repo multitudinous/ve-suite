@@ -52,9 +52,10 @@
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
-
+////////////////////////////////////////////////////////////////////////////////
 cfdContour::cfdContour()
-        : cfdContourBase()
+    :
+    cfdContourBase()
 {
 #ifdef USE_OMP
     float b[6];
@@ -98,7 +99,26 @@ cfdContour::cfdContour()
 
     //this->filter->ExtentClippingOn();
 }
-
+////////////////////////////////////////////////////////////////////////////////
+cfdContour::cfdContour( cfdContour const& src )
+    :
+    cfdContourBase( src )
+{
+    // set the contour visualization pipeline
+    this->plane = vtkPlane::New();
+    this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
+    this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
+    
+    // set the cut function
+    this->cutter = vtkCutter::New();
+    this->cutter->SetCutFunction( this->plane );
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdContour::CreateCopy()
+{
+    return new cfdContour( *this );
+}
+////////////////////////////////////////////////////////////////////////////////
 cfdContour::~cfdContour()
 {
     //vprDEBUG(vesDBG,2) << "cfdContour destructor"
@@ -115,7 +135,7 @@ cfdContour::~cfdContour()
     this->cutter->Delete();
 #endif
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdContour::Update( void )
 {
     if( this->cursorType == CUBE )

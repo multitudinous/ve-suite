@@ -56,8 +56,25 @@ ParticleAnimation::ParticleAnimation()
     _particleScale = 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
+ParticleAnimation::ParticleAnimation( ParticleAnimation const& src )
+    :
+    cfdObjects( src ),
+    colorByScalar( src.colorByScalar ),
+    warpSurface( src.warpSurface ),
+    warpedContourScale( src.warpedContourScale ),
+    _particleOption( src._particleOption ),
+    _particleScale( src._particleScale )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 ParticleAnimation::~ParticleAnimation()
 {
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* ParticleAnimation::CreateCopy()
+{
+    return new ParticleAnimation( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ParticleAnimation::Update()

@@ -56,19 +56,18 @@
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
+////////////////////////////////////////////////////////////////////////////////
 // this class requires that the dataset has a vector field.
 cfdPresetMomentum::cfdPresetMomentum( const int xyz,
                                       int numSteps )
+    :
+    cfdContourBase()
 {
     this->xyz = xyz;
     this->numSteps = numSteps;
-
-    // set the cut function
-//   this->cutter = vtkCutter::New();
-
     this->warper = vtkWarpVector::New();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdPresetMomentum::~cfdPresetMomentum()
 {
     if( warper )
@@ -77,7 +76,20 @@ cfdPresetMomentum::~cfdPresetMomentum()
         warper = NULL;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
+cfdPresetMomentum::cfdPresetMomentum( cfdPresetMomentum const& src )
+    :
+    cfdContourBase( src ),
+    warper( vtkWarpVector::New() ) 
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdPresetMomentum::CreateCopy()
+{
+    return new cfdPresetMomentum( *this );
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdPresetMomentum::Update( void )
 {
     vprDEBUG( vesDBG, 1 ) << "cfdPresetMomentum::Update, usePreCalcData = "

@@ -50,14 +50,12 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdStreamers.h
-cfdStreamers API
-*/
-
-/*!\class ves::xplorer::cfdStreamers
-*   A class to takes input data set(s) and generates streamlines
-*   based on the active glyph. Update member function will update
-*   the position and direction.
-*/
+ * cfdStreamers API
+ * \class ves::xplorer::cfdStreamers
+ *   A class to takes input data set(s) and generates streamlines
+ *   based on the active glyph. Update member function will update
+ *   the position and direction.
+ */
 class VE_XPLORER_EXPORTS cfdStreamers : public cfdObjects
 {
 public:
@@ -65,6 +63,9 @@ public:
     Glyph(s) are from cfdPlanes's multiple points plane cursor.  */
     ///Constructor
     cfdStreamers();
+
+    ///Copy consturctor
+    cfdStreamers( cfdStreamers const& src );
 
     ///Destructor
     virtual ~cfdStreamers();
@@ -74,6 +75,9 @@ public:
 
     ///Update function to update cfdStreamers
     virtual void Update();
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
     ///Get polydata output
     vtkPolyData* GetStreamersOutput();

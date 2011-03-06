@@ -58,15 +58,29 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
-        : cfdContourBase()
+    :
+    cfdContourBase()
 {
     this->xyz = xyz;
     this->numSteps = numSteps;
-    cuttingPlane = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdPresetContour::~cfdPresetContour()
-{}
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdPresetContour::cfdPresetContour( cfdPresetContour const& src )
+    :
+    cfdContourBase( src )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdPresetContour::CreateCopy()
+{
+    return new cfdPresetContour( *this );
+}
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPresetContour::Update( void )
 {

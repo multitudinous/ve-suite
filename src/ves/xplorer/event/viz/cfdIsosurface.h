@@ -51,13 +51,12 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdIsosurface.h
-cfdIsosurface API
-*/
-/*!\class ves::xplorer::cfdIsosurface
-*   A class that takes input data set(s) and generates an isosurface
-*   based on the value selected.  Update member function will
-*   update the value.
-*/
+ * cfdIsosurface API
+ * \class ves::xplorer::cfdIsosurface
+ *   A class that takes input data set(s) and generates an isosurface
+ *   based on the value selected.  Update member function will
+ *   update the value.
+ */
 class VE_XPLORER_EXPORTS cfdIsosurface : public cfdObjects
 {
 public:
@@ -66,11 +65,17 @@ public:
     ///\param step set to 10
     cfdIsosurface( int step = 10 );
 
+    ///Copy Constructor
+    cfdIsosurface( cfdIsosurface const& src );
+    
     ///Destructor.
     virtual ~cfdIsosurface();
 
     ///Update the isosurface.
     virtual void Update( void );
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
     ///Get the current isosurface value.
     double GetValue();

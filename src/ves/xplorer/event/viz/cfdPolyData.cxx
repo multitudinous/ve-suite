@@ -61,8 +61,10 @@
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::event::viz;
-
+////////////////////////////////////////////////////////////////////////////////
 cfdPolyData::cfdPolyData()
+    :
+    cfdObjects()
 {
     this->map = vtkPolyDataMapper::New();
     this->map->SetColorModeToMapScalars();
@@ -82,13 +84,31 @@ cfdPolyData::cfdPolyData()
        this->actor->GetProperty()->SetOpacity( this->op );
     */
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdPolyData::~cfdPolyData()
 {
     this->map->Delete();
     warper->Delete();
 }
-
+////////////////////////////////////////////////////////////////////////////////
+cfdPolyData::cfdPolyData( cfdPolyData const& src )
+    :
+    cfdObjects( src ),
+    map( vtkPolyDataMapper::New() ),
+    warper( vtkWarpVector::New() ),
+    warpSurface( src.warpSurface ),
+    warpedContourScale( src.warpedContourScale ),
+    _particleOption( src._particleOption ),
+    _particleScale( src._particleScale )
+{
+    map->SetColorModeToMapScalars();
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdPolyData::CreateCopy()
+{
+    return new cfdPolyData( *this );
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdPolyData::Update()
 {
     if( GetActiveDataSet() == NULL )

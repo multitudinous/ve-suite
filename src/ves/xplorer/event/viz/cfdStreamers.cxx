@@ -77,6 +77,11 @@ using namespace ves::xplorer::scenegraph;
 //////////////////////////////////////////////////////////////////////////////////
 cfdStreamers::cfdStreamers()
     :
+    cfdObjects(),
+    streamTracer( vtkStreamTracer::New() ),
+    tubeFilter( vtkTubeFilter::New() ),
+    mapper( vtkPolyDataMapper::New() ),
+    integ( vtkRungeKutta4::New() ),
     seedPoints( 0 ),
     points( 0 ),
     integrationDirection( 0 ),
@@ -97,10 +102,7 @@ cfdStreamers::cfdStreamers()
     yMaxBB( 1 ),
     zMaxBB( 1 )
 {
-    streamTracer = vtkStreamTracer::New();
-    integ = vtkRungeKutta4::New();
-    tubeFilter = vtkTubeFilter::New();
-    mapper = vtkPolyDataMapper::New();
+    ;
 }
 //////////////////////////////////////////////////////////////////////////////////
 cfdStreamers::~cfdStreamers()
@@ -114,6 +116,41 @@ cfdStreamers::~cfdStreamers()
     {
         seedPoints->Delete();
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdStreamers::cfdStreamers( cfdStreamers const& src )
+    :
+    cfdObjects( src ),
+    streamTracer( vtkStreamTracer::New() ),
+    tubeFilter( vtkTubeFilter::New() ),
+    mapper( vtkPolyDataMapper::New() ),
+    integ( vtkRungeKutta4::New() ),
+    seedPoints( 0 ),
+    points( 0 ),
+    integrationDirection( 0 ),
+    streamArrows( 0 ),
+    m_streamRibbons( 0 ),
+    propagationTime( -1 ),
+    integrationStepLength( -1 ),
+    lineDiameter( 1.0f ),
+    arrowDiameter( 1 ),
+    particleDiameter( 1.0f ),
+    xValue( 4 ),
+    yValue( 4 ),
+    zValue( 4 ),
+    xMinBB( 0 ),
+    yMinBB( 0 ),
+    zMinBB( 0 ),
+    xMaxBB( 1 ),
+    yMaxBB( 1 ),
+    zMaxBB( 1 )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdStreamers::CreateCopy()
+{
+    return new cfdStreamers( *this );
 }
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::Update()

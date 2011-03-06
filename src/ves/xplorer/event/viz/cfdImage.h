@@ -60,6 +60,9 @@ public:
     ///\param param
     cfdImage( std::string param );
 
+    ///Copy constructor
+    cfdImage( cfdImage const& src );
+
     ///Fix needed to add the new style read param to this class
     ///takes code out of cfdReadParam to this function
     ///\param filename
@@ -85,6 +88,9 @@ public:
 
     ///Create objects for image.
     void CreateObjects( void );
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
 private:
     int type;///<Direction: 0=X-plane, 1=Y-plane, and 2=Z-plane.

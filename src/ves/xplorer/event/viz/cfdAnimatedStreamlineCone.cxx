@@ -59,22 +59,37 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
     :
+    cfdObjects(),
+    mapper( vtkPolyDataMapper::New() ),
+    polyData( vtkPolyData::New() ),
+    glyph( vtkGlyph3D::New() ),
+    sphere( vtkSphereSource::New() ),
+    particleDiameter( 1.0 ),
     m_streamers( 0 )
 {
-    this->mapper   = vtkPolyDataMapper::New();
-    this->polydata = vtkPolyData::New();
-    this->polyData = vtkPolyData::New();
-    this->glyph    = vtkGlyph3D::New();
-    this->sphere   = vtkSphereSource::New();
-
-    //this->_sequence = new cfdTempAnimation();
-    this->particleDiameter = 1.0f;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( cfdAnimatedStreamlineCone const& src )
+    :
+    cfdObjects( src ),
+    mapper( vtkPolyDataMapper::New() ),
+    polyData( vtkPolyData::New() ),
+    glyph( vtkGlyph3D::New() ),
+    sphere( vtkSphereSource::New() ),
+    particleDiameter( src.particleDiameter ),
+    m_streamers( 0 )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdAnimatedStreamlineCone::CreateCopy()
+{
+    return new cfdAnimatedStreamlineCone( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
 {
     this->mapper->Delete();
-    this->polydata->Delete();
     this->polyData->Delete();
     this->glyph->Delete();
     this->sphere->Delete();
@@ -278,18 +293,19 @@ void cfdAnimatedStreamlineCone::Update( void )
     double decimalRatio = ( double )w / 150.0;
     int ratio = ( int )ceil( decimalRatio );
 
+    vtkPolyData* polydata = vtkPolyData::New();
     for( size_t i = 0; i < w; i += ratio )
     {
         //Make ploydata from the points
         vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: begin loop " << i << std::endl << vprDEBUG_FLUSH;
-        this->polydata->SetPoints( pointsArray[ i ] );
+        polydata->SetPoints( pointsArray[ i ] );
         //polydata->Update();
         //polydata->Print( cout );
 
         //Map spheres to the polydata
         //vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: begin loop1" << std::endl << vprDEBUG_FLUSH;
         glyph->SetSource( this->sphere->GetOutput() );
-        glyph->SetInput( this->polydata );
+        glyph->SetInput( polydata );
         glyph->SetScaleModeToDataScalingOff();
         //glyph->Update();
 
@@ -314,9 +330,10 @@ void cfdAnimatedStreamlineCone::Update( void )
 
         // Reset polydata to its intial state and release all memory
         //polydata->Reset();
-        this->polydata->Initialize();
+        polydata->Initialize();
         //vprDEBUG( vesDBG, 2 ) << "|\t\tcfdAnimatedStreamlineCone:: end loop" << std::endl << vprDEBUG_FLUSH;
     }
+    polydata->Delete();
 
     //vprDEBUG( vesDBG, 1 ) << "|\t\tDeleting Point Array" << std::endl << vprDEBUG_FLUSH;
     for( size_t i = 0; i < maxNpts;  i++ )

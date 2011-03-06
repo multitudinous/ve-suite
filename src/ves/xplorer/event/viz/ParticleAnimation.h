@@ -53,11 +53,17 @@ public:
     ///Constructor.
     ParticleAnimation();
 
+    ///Copy Constructor.
+    ParticleAnimation( ParticleAnimation const& src );
+
     ///Destructor.
     virtual ~ParticleAnimation();
 
     ///Update.
     virtual void Update();
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
     ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
     virtual void UpdateCommand();

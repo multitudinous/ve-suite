@@ -83,6 +83,9 @@ public:
     ///update the actor
     virtual void Update() = 0;
 
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy() = 0;
+    
     ///Update the actors in the object
     void UpdateActors();
 
@@ -230,7 +233,6 @@ protected:
     double center[ 3 ];///<stores center values.
     double normal[ 3 ];///<stores normal values.
     double box_size[ 6 ];///<stores size of box.
-    float scale;///<store scale factor.
     ///Used to control wether GPU tools are used
     bool m_gpuTools;
     ///Used to control wether SURF tools are used

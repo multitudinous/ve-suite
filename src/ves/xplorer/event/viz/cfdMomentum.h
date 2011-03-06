@@ -50,14 +50,13 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdMomentum.h
-cfdMomentum API
-*/
-/*!\class ves::xplorer::cfdMomentum
-*   A class to takes input data set(s) and generates a
-*   cutting planes of momentum profile based on the position
-*   and direction selected. Update member function will be update
-*   the position and direction as each "Update" being called.
-*/
+ * cfdMomentum API
+ * \class ves::xplorer::cfdMomentum
+ *   A class to takes input data set(s) and generates a
+ *   cutting planes of momentum profile based on the position
+ *   and direction selected. Update member function will be update
+ *   the position and direction as each "Update" being called.
+ */
 class VE_XPLORER_EXPORTS cfdMomentum : public cfdContourBase
 {
 public:
@@ -66,9 +65,15 @@ public:
     ///Destructor
     virtual ~cfdMomentum( void );
 
+    ///Copy constructor
+    cfdMomentum( cfdMomentum const& src );
+
     ///Update the position, x, and normal direction to cut.
     ///Output a updated pfGeoSet.
     virtual void Update( void );
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
 private:
 #ifdef USE_OMP

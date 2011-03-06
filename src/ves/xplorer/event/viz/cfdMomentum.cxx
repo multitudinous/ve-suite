@@ -52,7 +52,9 @@
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
-cfdMomentum::cfdMomentum( )
+cfdMomentum::cfdMomentum()
+    :
+    cfdContourBase()
 {
 #ifdef USE_OMP
     float b[6];
@@ -102,7 +104,28 @@ cfdMomentum::cfdMomentum( )
 #endif
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
+cfdMomentum::cfdMomentum( cfdMomentum const& src )
+    :
+    cfdContourBase( src )
+{
+    // set the plane
+    this->plane = vtkPlane::New();
+    this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
+    this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
+    
+    // set the cut function
+    this->cutter = vtkCutter::New();
+    this->cutter->SetCutFunction( this->plane );
+    this->warper = vtkWarpVector::New();
+    this->warper->SetInputConnection( cutter->GetOutputPort() );
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdMomentum::CreateCopy()
+{
+    return new cfdMomentum( *this );
+}
+////////////////////////////////////////////////////////////////////////////////
 cfdMomentum::~cfdMomentum()
 {
     //vprDEBUG(vesDBG,2) << "cfdMomentum destructor"

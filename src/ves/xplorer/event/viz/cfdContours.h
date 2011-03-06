@@ -49,23 +49,27 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdContours.h
-cfdContours API
-*/
-/*!\class ves::xplorer::cfdContours
-*
-*/
+ * cfdContours API
+ * \class ves::xplorer::cfdContours
+ *
+ */
 class VE_XPLORER_EXPORTS cfdContours : public cfdContourBase
 {
 public:
     ///Constructor
     cfdContours( const int xyz );
+    ///Copy constructor
+    cfdContours( cfdContours const& src );
+
     ///Destructor
     virtual ~cfdContours();
     ///Update the event
     virtual void Update( void );
 
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
+
 private:
-    int xyz;///<The value of the contour to display.
 };
 }
 }

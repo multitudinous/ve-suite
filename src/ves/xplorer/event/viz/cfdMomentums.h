@@ -52,14 +52,11 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdMomentums.h
-cfdMomentums API
-*/
-/*!\class ves::xplorer::cfdMomentums
-*   A class that generates warped contour plots on multiple planes of data.
-*/
-//! VTK momentums renderer.
-/*!
-*/
+ * cfdMomentums API
+ * \class ves::xplorer::cfdMomentums
+ *   A class that generates warped contour plots on multiple planes of data.
+ *   VTK momentums renderer.
+ */
 class VE_XPLORER_EXPORTS cfdMomentums : public cfdContourBase
 {
 public:
@@ -67,16 +64,21 @@ public:
     ///from the vtkPolyData generated from cfdPlanes.
     ///\param xyz
     cfdMomentums( const int xyz );
+    
+    ///Copy constructor
+    cfdMomentums( cfdMomentums const& src );
+
     ///Destructor
     virtual ~cfdMomentums( void );
 
     ///Output an updated pfGeoSet.
     virtual void Update( void );
 
-private:
-    int xyz;///<relative locatio
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
-    vtkWarpVector * warper;///<warper used by vtk
+private:
+    vtkWarpVector* warper;///<warper used by vtk
     cfdPlanes* planes;///<planes
 };
 }

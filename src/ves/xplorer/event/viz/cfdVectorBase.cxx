@@ -67,26 +67,44 @@ using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 // this class requires that the dataset has a vector field.
 cfdVectorBase::cfdVectorBase()
+    :
+    cfdObjects(),
+    glyph( vtkGlyph3D::New() ),
+    mapper( vtkPolyDataMapper::New() ),
+    ptmask( vtkMaskPoints::New() ),
+    tris( vtkTriangleFilter::New() ),
+    strip( vtkStripper::New() ),
+    tfilter( vtkThresholdPoints::New() )
 {
-    this->ptmask = vtkMaskPoints::New();
     this->ptmask->RandomModeOn();
 
-    // Using glyph3D to insert arrow to the data sets
-    this->glyph = vtkGlyph3D::New();
-
-    tfilter = vtkThresholdPoints::New();
-    //this->filter = vtkMultiGroupDataGeometryFilter::New();
-    //this->filter->SetInputConnection( this->glyph->GetOutputPort() );
-    //filter->GetOutput()->ReleaseDataFlagOn();
-
-    this->tris = vtkTriangleFilter::New();
-    this->strip = vtkStripper::New();
-
-    this->mapper = vtkPolyDataMapper::New();
-    //this->mapper->SetInputConnection( this->filter->GetOutputPort() );
     this->mapper->SetColorModeToMapScalars();
     mapper->ImmediateModeRenderingOn();
 
+    _vectorScale = 1.0;
+    _vectorThreshHoldMinPercentage = 0;
+    _vectorThreshHoldMaxPercentage = 100;
+    _vectorThreshHoldValues[ 0 ] = 0.0;
+    _vectorThreshHoldValues[ 1 ] = 100.0;
+    _scaleByVector = 0;
+    _vectorRatioFactor = 1;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdVectorBase::cfdVectorBase( cfdVectorBase const& src )
+    :
+    cfdObjects( src ),
+    glyph( vtkGlyph3D::New() ),
+    mapper( vtkPolyDataMapper::New() ),
+    ptmask( vtkMaskPoints::New() ),
+    tris( vtkTriangleFilter::New() ),
+    strip( vtkStripper::New() ),
+    tfilter( vtkThresholdPoints::New() )
+{
+    ptmask->RandomModeOn();
+    
+    mapper->SetColorModeToMapScalars();
+    mapper->ImmediateModeRenderingOn();
+    
     _vectorScale = 1.0;
     _vectorThreshHoldMinPercentage = 0;
     _vectorThreshHoldMaxPercentage = 100;

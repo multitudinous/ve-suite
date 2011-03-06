@@ -120,7 +120,6 @@ namespace xplorer
 ////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::SteadyStateVizHandler()
     :
-    _activeObject( 0 ),
     actorsAreReady( false ),
     computeActorsAndGeodes( false ),
     texturesActive( false ),
@@ -309,8 +308,7 @@ std::vector< cfdGraphicsObject* > SteadyStateVizHandler::GetGraphicsObjectsOfTyp
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::SetActiveVisObject( cfdObjects* tempObject )
 {
-    _activeObject = tempObject;
-    m_visObjectQueue.push( _activeObject );
+    m_visObjectQueue.push( tempObject );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::SetComputeActorsAndGeodes( bool actorsAndGeodes )
@@ -430,6 +428,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
                 << std::endl << vprDEBUG_FLUSH;
 
             m_visObjectQueue.pop();
+            delete tempVisObject;
             if( m_visObjectQueue.empty() )
             {
                 actorsAreReady = false;
@@ -441,6 +440,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
         else if( !computeActorsAndGeodes )
         {
             m_visObjectQueue.pop();
+            delete tempVisObject;
             if( m_visObjectQueue.empty() )
             {
                 actorsAreReady = false;
@@ -465,19 +465,13 @@ void SteadyStateVizHandler::CreateActorThread()
         // Sample every half second
         if( computeActorsAndGeodes )
         {
-            if( _activeObject != NULL )
+            cfdObjects* const tempVisObject = m_visObjectQueue.front();
+            if( tempVisObject != NULL )
             {
                 vprDEBUG( vesDBG, 0 ) << "|\tUpdating Graphics Data..."
                     << std::endl << vprDEBUG_FLUSH;
+                tempVisObject->Update();
 
-                {
-                    // For everything except for the interactive and transient stuff
-                    vprDEBUG( vesDBG, 1 ) << "|\tNon-interactive object." << std::endl << vprDEBUG_FLUSH;
-
-                    _activeObject->Update();
-                }
-
-                _activeObject = NULL;
                 computeActorsAndGeodes = false;
                 vprDEBUG( vesDBG, 0 ) << "|\tDone updating Graphics Data"
                     << std::endl << std::endl << vprDEBUG_FLUSH;
@@ -819,7 +813,7 @@ cfdObjects* SteadyStateVizHandler::GetVizObject( VizKeyPair const& vizKey )
         LOG_WARNING( "Selected vis option is not in the GetVizObject." );
         return 0;
     }
-    return iter->second;
+    return iter->second->CreateCopy();
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer

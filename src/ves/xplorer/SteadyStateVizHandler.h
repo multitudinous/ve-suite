@@ -195,7 +195,6 @@ public:
 private:
     //Common objects for all functions
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
-    cfdObjects* _activeObject;
     ///A queue to stack active objects in to enable commands
     ///to send multiple vis objec requests
     std::queue< cfdObjects* > m_visObjectQueue;

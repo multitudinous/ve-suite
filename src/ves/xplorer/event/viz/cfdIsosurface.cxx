@@ -56,8 +56,10 @@
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
-
+////////////////////////////////////////////////////////////////////////////////
 cfdIsosurface::cfdIsosurface( int numsteps )
+    :
+    cfdObjects()
 {
     this->totalId = numsteps;
     this->value = 0.0f;
@@ -88,7 +90,23 @@ cfdIsosurface::cfdIsosurface( int numsteps )
 
     this->mapper = vtkPolyDataMapper::New();
 }
-
+////////////////////////////////////////////////////////////////////////////////
+cfdIsosurface::cfdIsosurface( cfdIsosurface const& src )
+    :
+    cfdObjects( src ),
+    totalId( src.totalId ),
+    value( src.value ),
+    normals( vtkPolyDataNormals::New() ),
+    mapper( vtkPolyDataMapper::New() ) 
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+cfdObjects* cfdIsosurface::CreateCopy()
+{
+    return new cfdIsosurface( *this );
+}
+////////////////////////////////////////////////////////////////////////////////
 cfdIsosurface::~cfdIsosurface()
 {
 #ifdef USE_OMP
@@ -103,7 +121,7 @@ cfdIsosurface::~cfdIsosurface()
 #endif
     this->mapper->Delete();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdIsosurface::Update()
 {
     //SetActiveVtkPipeline();

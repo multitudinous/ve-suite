@@ -48,14 +48,13 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdPresetVector.h
-cfdPresetVector API
-*/
-/*!\class ves::xplorer::cfdPresetVector
-* A class that takes input data set(s) and generates a
-* cutting plane of vector profile based on the position
-* and direction selected. Update member function will update
-* the plane position and direction.
-*/
+ * cfdPresetVector API
+ * \class ves::xplorer::cfdPresetVector
+ * A class that takes input data set(s) and generates a
+ * cutting plane of vector profile based on the position
+ * and direction selected. Update member function will update
+ * the plane position and direction.
+ */
 class VE_XPLORER_EXPORTS cfdPresetVector : public cfdVectorBase
 {
 public:
@@ -63,10 +62,16 @@ public:
     ///\param xyz
     ///\param numSteps
     cfdPresetVector( const int xyz, const int numSteps = 10 );
+
+    ///Copy constructor
+    cfdPresetVector( cfdPresetVector const& src );
+
     ///Destructor
     virtual ~cfdPresetVector();
     ///Update the preset vectors
     virtual void Update( void );
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
 private:
     int xyz;///<value of location

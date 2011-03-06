@@ -52,14 +52,13 @@ namespace ves
 namespace xplorer
 {
 /*!\file cfdPresetMomentum.h
-cfdPresetMomentum API
-*/
-/*!\class ves::xplorer::cfdPresetMomentum
-*  A class that takes input data set(s) and generates a
-*  cutting plane of momentum profile based on the position
-*  and direction selected. Update member function will update
-*  the plane position and direction.
-*/
+ * cfdPresetMomentum API
+ * \class ves::xplorer::cfdPresetMomentum
+ *  A class that takes input data set(s) and generates a
+ *  cutting plane of momentum profile based on the position
+ *  and direction selected. Update member function will update
+ *  the plane position and direction.
+ */
 class VE_XPLORER_EXPORTS cfdPresetMomentum : public cfdContourBase
 {
 public:
@@ -68,11 +67,18 @@ public:
     ///\param xyz
     ///\param numSteps
     cfdPresetMomentum( const int xyz, int numSteps = 10 );
+
+    ///Copy constructor
+    cfdPresetMomentum( cfdPresetMomentum const& src );
+
     ///Destructor
     virtual ~cfdPresetMomentum( void );
 
     ///Update the position, x, and normal direction to cut. Output a updated pfGeoSet.
     virtual void Update( void );
+
+    ///Create a copy of this object
+    virtual cfdObjects* CreateCopy();
 
 private:
     vtkWarpVector* warper;///<warper.
