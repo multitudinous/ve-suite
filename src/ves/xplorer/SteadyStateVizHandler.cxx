@@ -368,7 +368,8 @@ void SteadyStateVizHandler::PreFrameUpdate()
         vprDEBUG( vesDBG, 3 ) << "|\tUpdating Viz Feature"
             << std::endl << vprDEBUG_FLUSH;
 
-        cfdObjects* const tempVisObject = m_visObjectQueue.front();
+        cfdObjects* tempVisObject = m_visObjectSGQueue.front();
+        m_visObjectSGQueue.pop();
         if( tempVisObject->GetUpdateFlag() )
         {
             //Set the update flag in steadystate viz handler
@@ -427,17 +428,24 @@ void SteadyStateVizHandler::PreFrameUpdate()
             vprDEBUG( vesDBG, 2 ) << "|\tDone Creating Objects"
                 << std::endl << vprDEBUG_FLUSH;
 
-            m_visObjectQueue.pop();
-            delete tempVisObject;
-            if( m_visObjectQueue.empty() )
-            {
-                actorsAreReady = false;
-            }
         }
+        delete tempVisObject;
+        tempVisObject = 0;
         //This means the update flag was not set to true so the update failed
         //on the viz object. This should really be handled with an exception
         //in the viz object or a status enum flag in the viz objects.
-        else if( !computeActorsAndGeodes )
+        /*if( !tempVisObject )
+        {
+            delete tempVisObject;
+            tempVisObject = 0;
+        }*/
+
+        if( m_visObjectSGQueue.empty() )
+        {
+            actorsAreReady = false;
+        }
+        
+        /*else if( !computeActorsAndGeodes )
         {
             m_visObjectQueue.pop();
             delete tempVisObject;
@@ -445,7 +453,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             {
                 actorsAreReady = false;
             }            
-        }
+        }*/
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -455,27 +463,39 @@ void SteadyStateVizHandler::CreateActorThread()
     //This thread is purely for creation of geodes
     while( runIntraParallelThread )
     {
-        if( runIntraParallelThread )
+        while( !computeActorsAndGeodes && runIntraParallelThread )
         {
             vpr::System::msleep( 100 );
+        }
+
+        if( !runIntraParallelThread )
+        {
+            return;
         }
 
         // Basically waiting for work here
         // This is a guard
         // Sample every half second
-        if( computeActorsAndGeodes )
+        if( !m_visObjectQueue.empty() )
         {
             cfdObjects* const tempVisObject = m_visObjectQueue.front();
-            if( tempVisObject != NULL )
+            m_visObjectQueue.pop();
+
+            //if( !tempVisObject->GetUpdateFlag() )
             {
                 vprDEBUG( vesDBG, 0 ) << "|\tUpdating Graphics Data..."
                     << std::endl << vprDEBUG_FLUSH;
                 tempVisObject->Update();
-
-                computeActorsAndGeodes = false;
+                m_visObjectSGQueue.push( tempVisObject );
+                SetActorsAreReady( true );
                 vprDEBUG( vesDBG, 0 ) << "|\tDone updating Graphics Data"
                     << std::endl << std::endl << vprDEBUG_FLUSH;
             }
+        }
+        
+        if( m_visObjectQueue.empty() )
+        {
+            computeActorsAndGeodes = false;
         }
     } // End of While loop
 }

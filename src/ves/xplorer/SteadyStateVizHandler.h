@@ -199,6 +199,9 @@ private:
     ///to send multiple vis objec requests
     std::queue< cfdObjects* > m_visObjectQueue;
     
+    ///THe queue that holds the objects that need to be added to the sg
+    std::queue< cfdObjects* > m_visObjectSGQueue;
+
     //ves::xplorer::scenegraph::cfdTempAnimation* _activeTempAnimation;
 
     //Classes and variables for multithreading.
