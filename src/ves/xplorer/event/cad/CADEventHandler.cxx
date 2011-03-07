@@ -41,6 +41,7 @@
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/UpdateIDOnChildrenVisitor.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
@@ -65,9 +66,11 @@
 #endif
 
 #include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
 #include <iostream>
 
 #include <osg/Node>
+#include <osgwTools/NodePathUtils.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
@@ -320,6 +323,16 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         vprDEBUG( vesDBG, 1 ) << "|\t---" << newPart->GetID()
             << "---" << std::endl << vprDEBUG_FLUSH;
         std::string tempFilename = newPart->GetCADFileName();
+//#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+//        boost::filesystem::path correctedPath( newPart->GetCADFileName() );
+//        vprDEBUG( vesDBG, 1 ) << "|\t---" << tempFilename << "---"
+//            << correctedPath.string()
+//            << std::endl << vprDEBUG_FLUSH;
+//        m_cadHandler->CreatePart( correctedPath.string(),
+//                                  newPart->GetID(),
+//                                  parentID,
+//                                  newPart->GetOcclusionSettings() );
+//#else
         boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
         vprDEBUG( vesDBG, 1 ) << "|\t---" << tempFilename << "---"
             << correctedPath.native_file_string()
@@ -328,6 +341,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                                   newPart->GetID(),
                                   parentID,
                                   newPart->GetOcclusionSettings() );
+//#endif
 
         ves::xplorer::scenegraph::CADEntity* partNode = 
             m_cadHandler->GetPart( newPart->GetID() );
@@ -423,8 +437,13 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         }
         else
         {
+//#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+//            std::cerr << "|\t---ERROR: (CADEventHandler::_addNodeToNode) Unable to load file name: "
+//            << correctedPath.string() << std::endl;
+//#else
             std::cerr << "|\t---ERROR: (CADEventHandler::_addNodeToNode) Unable to load file name: "
             << correctedPath.native_file_string() << std::endl;
+//#endif
         }
     }
 }
@@ -488,6 +507,23 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
 //    }
     newSet.SetPropertyValue( "GPS_Longitude", newPart->GetLongitude() );
     newSet.SetPropertyValue( "GPS_Latitude", newPart->GetLatitude() );
+
+    // Calculate and store the NodePath for this part
+    ves::xplorer::scenegraph::CADEntity* partNode =
+        m_cadHandler->GetPart( newPart->GetID() );
+    if( partNode && partNode->GetNode() )
+    {
+        osg::Node* node = partNode->GetNode()->GetNode();
+        if( node )
+        {
+            osg::NodePathList nodePathList = node->getParentalNodePaths(
+                    ves::xplorer::scenegraph::SceneManager::instance()->
+                        GetRootNode() );
+            osg::NodePath nodePath = nodePathList.at( 0 );
+            std::string pathString = osgwTools::nodePathToString( nodePath );
+            newSet.SetPropertyValue( "NodePath", pathString );
+        }
+    }
 
     newSet.WriteToDatabase();
 }

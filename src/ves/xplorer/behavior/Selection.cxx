@@ -145,7 +145,11 @@ Selection::Selection()
 
     CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
                      m_connections, any_SignalType, normal_Priority );
-        
+
+    CONNECTSIGNALS_1( "%HighlightAndSetManipulators", void( osg::NodePath& ),
+                      &Selection::HighlightAndSetManipulators,
+                     m_connections, any_SignalType, high_Priority );
+
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
         "Selection.ObjectPickedSignal" );
@@ -333,19 +337,29 @@ void Selection::ProcessSelection()
     //Now find the new selected object
     osg::NodePath nodePath = intersections.begin()->nodePath;
     osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
-    // FindVESObject alters nodePath. Keep a copy of this altered version here.
+
+    //HighlightAndSetManipulators alters nodePath, so copy it off first.
     osg::NodePath nodePathCopy( nodePath );
+    HighlightAndSetManipulators( nodePath );
+
+    ///Send the data back to the ui for the expanding tree
+    m_objectPickedSignal( nodePathCopy );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
+{
+    osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
     if( !vesObject )
     {
         vprDEBUG( vesDBG, 1 )
             << "|\tKeyboardMouse::ProcessHit Invalid object selected"
             << std::endl << vprDEBUG_FLUSH;
-    
+
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
             ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
         return;
     }
-    
+
     //Right now we are saying you must have a DCS
     scenegraph::DCS* newSelectedDCS = dynamic_cast< scenegraph::DCS* >( vesObject );
     if( !newSelectedDCS )
@@ -360,7 +374,7 @@ void Selection::ProcessSelection()
     if( newSelectedDCS->getName() != "CameraDCS" )
     {
         center= vesObject->getBound().center();
-        
+
         //Remove local node from nodePath
         nodePath.pop_back();
     }
@@ -372,7 +386,7 @@ void Selection::ProcessSelection()
     osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( nodePath );
     center = center * localToWorldMatrix;
 
-    
+
     if( m_manipulatorManager.IsEnabled() )
     {
         //Set the connection between the scene manipulator and the selected dcs
@@ -387,10 +401,10 @@ void Selection::ProcessSelection()
     center = center * osg::Matrixd( m_sceneManager.GetNavDCS()->GetMat().mData );
     //center = center * m_currentGLTransformInfo->GetViewMatrixOSG();
     m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
-    
+
     //Set the selected DCS
     DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
-    
+
     //Need to do this for multi-pass techniques
     if( m_sceneManager.IsRTTOn() )
     {
@@ -400,7 +414,7 @@ void Selection::ProcessSelection()
     {
         newSelectedDCS->SetTechnique( "Select" );
     }
-    
+
     vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
         << vesObject->getName()
         << std::endl << vprDEBUG_FLUSH;
@@ -410,17 +424,11 @@ void Selection::ProcessSelection()
     vprDEBUG( vesDBG, 1 ) << "|\tObject is part of model "
         << newSelectedDCS->GetModelData()->GetID()
         << std::endl << vprDEBUG_FLUSH;
-    
+
     // Change the active model to the one corresponding to this piece of geometry
     ves::xplorer::ModelHandler::instance()->
         SetActiveModel( newSelectedDCS->GetModelData()->GetID() );
-    
-    // Can't just pass in local variable nodePath because it is altered in call to 
-    // FindVESObject
-    osg::NodePath np = intersections.begin()->nodePath;
-    ///Send the data back to the ui for the expanding tree
-    //m_objectPickedSignal( np );
-    m_objectPickedSignal( nodePathCopy );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::ClearPointConstraint()

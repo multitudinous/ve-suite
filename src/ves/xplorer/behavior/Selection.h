@@ -108,6 +108,8 @@ private:
     void UpdateSelectionLine();
     ///Now try and pick the object
     void ProcessSelection();
+    ///Sets visual selection on object and connects manipulators if active
+    void HighlightAndSetManipulators( osg::NodePath& nodePath );
     ///CAD selection flag
     void SetCADSelection( const std::string&, const std::vector< bool >& );
     

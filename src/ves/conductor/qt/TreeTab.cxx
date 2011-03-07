@@ -51,8 +51,11 @@
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
 
 #include <ves/open/xml/cad/CADNode.h>
+
+#include <osgwTools/NodePathUtils.h>
 
 #include <iostream>
 
@@ -93,6 +96,11 @@ TreeTab::TreeTab(QWidget *parent) :
                      void( osg::NodePath& ),
                      &TreeTab::OnObjectPicked,
                      mConnections, any_SignalType, normal_Priority );
+
+    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
+            new ves::xplorer::eventmanager::SignalWrapper<
+            boost::signals2::signal< void( osg::NodePath& ) > >( &m_highlightAndSetManipulators ),
+        "TreeTab.HighlightAndSetManipulators" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 TreeTab::~TreeTab()
@@ -141,7 +149,11 @@ void TreeTab::PopulateWithRoot( osg::Node* root )
 ////////////////////////////////////////////////////////////////////////////////
 QModelIndex TreeTab::OpenToAndSelect( osg::NodePath& nodepath, bool highlight )
 {
-    ui->mTreeView->collapseAll();
+    //Don't collapse tree if a null selection has been made.
+    if( nodepath != osg::NodePath() )
+    {
+        //ui->mTreeView->collapseAll();
+    }
 
     // Get the modelindex associated with this nodepath
     QModelIndex result( osgQtTree::openToAndSelect( ui->mTreeView, mModel, nodepath ) );
@@ -205,30 +217,16 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
         }
     }
 
-    ves::xplorer::data::PropertySetPtr nullPtr;
-
     if( !found )
     {
         // Clear out the PropertyBrowser widget
+        ves::xplorer::data::PropertySetPtr nullPtr;
         mBrowser->ParsePropertySet( nullPtr );
         mActiveSet = nullPtr;
         return;
     }
 
     ves::xplorer::scenegraph::DCS* newSelectedDCS = static_cast< ves::xplorer::scenegraph::DCS* >( node );
-
-    // highlight will be true if this method was called from the tree widget in
-    // any form, and false if it was called as a side-effect of
-    // ObjectPickedSignal
-    if( highlight )
-    {
-        //Set the selected DCS
-        ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
-        newSelectedDCS->SetTechnique( "Glow" );
-    }
-
-    // Set mActiveSet null to cause previous propertyset to go out of scope
-    mActiveSet = nullPtr;
 
     // Create a CADPropertySet and load it in the browser
     mActiveSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CADPropertySet() );
@@ -249,6 +247,19 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
             EnableLiveProperties( true );
 
     mBrowser->RefreshAll();
+
+    // highlight will be true if this method was called from the tree widget in
+    // any form, and false if it was called as a side-effect of
+    // ObjectPickedSignal
+    if( highlight )
+    {
+        //Set the selected DCS
+        std::string pathString = boost::any_cast< std::string >
+                                 ( mActiveSet->GetPropertyValue( "NodePath" ) );
+        osg::NodePath nodePath = osgwTools::stringToNodePath( pathString,
+             ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode());
+        m_highlightAndSetManipulators( nodePath );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::SyncTransformFromDCS()
@@ -317,8 +328,13 @@ void TreeTab::QueuedOnObjectPicked( osg::NodePath nodePath )
     // selection is made, we should be hooked up to signals for changes to the
     // scenegraph so we can re-read at the appropriate time. The only operation
     // that *should* be done here is OpenToAndSelect.
-    PopulateWithRoot(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+
+    // Don't repopulate on null selection
+    if( nodePath != osg::NodePath() )
+    {
+        PopulateWithRoot(
+            ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+    }
 
     // Open the tree to this node, but don't attempt to highlight the geometry
     // again

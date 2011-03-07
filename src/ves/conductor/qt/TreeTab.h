@@ -44,6 +44,8 @@
 
 #include <osg/Node>
 
+#include <boost/signals2/signal.hpp>
+
 namespace Ui {
     class TreeTab;
 }
@@ -132,6 +134,8 @@ private:
     ves::xplorer::data::PropertySetPtr mActiveSet;
 
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+
+    boost::signals2::signal< void( osg::NodePath& ) > m_highlightAndSetManipulators;
 };
 
 } // namespace conductor
