@@ -6,10 +6,19 @@
 #include <qwt_sampling_thread.h>
 
 // --- DB Plot Includes --- //
+#include "typehandlers/CAN_Signal.h"
+
 class SensorData;
 
+// --- POCO Includes --- //
+#include <Poco/Tuple.h>
+#include <Poco/SharedPtr.h>
+#include <Poco/Data/Common.h>
+
 // --- STL Includes --- //
+#include <map>
 #include <fstream>
+#include <sstream>
 
 class CANMessageParser : public QwtSamplingThread
 {
@@ -35,6 +44,12 @@ private:
 
     ///
     std::ifstream m_infile;
+
+    ///
+    Poco::SharedPtr< Poco::Data::Session > m_canDB;
+
+    typedef std::multimap< std::string, CAN_Signal > CAN_SCHEMA;
+    CAN_SCHEMA m_canSchema;
 
 };
 
