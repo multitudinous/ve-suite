@@ -100,8 +100,10 @@ ManipulatorEvents::ManipulatorEvents()
     m_currX( 0 ),
     m_currY( 0 ),
     m_pickedBody( 0 ),
-    m_pickConstraint( 0 )
+    m_pickConstraint( 0 ),
+    m_logger( Poco::Logger::get("xplorer.behavior.ManipulatorEvents") )
 {                     
+    m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     //Setup connection to mouse events
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ), 
         eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseMove,
@@ -145,7 +147,10 @@ ManipulatorEvents::~ManipulatorEvents()
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
-{        
+{
+    LOG_DEBUG( "ProcessMousePress( " << buttonKey << ", " << xPos << ", "
+               << yPos << ", " << buttonState << " )" );
+
     //m_currX = xPos;
     //m_currY = yPos;
 
@@ -154,17 +159,20 @@ bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int
     {
         if( m_manipulatorManager.LeafDraggerIsActive() )
         {
+            LOG_TRACE( "LeafDraggerIsActive, RELEASEing" );
             m_manipulatorManager.Handle(
                                         scenegraph::manipulator::Event::RELEASE );
         }
     }
 
-    if( (buttonState&gadget::BUTTON1_MASK) && 
+    if( (buttonState&gadget::BUTTON1_MASK) &&
        !(buttonState&(gadget::SHIFT_MASK|gadget::CTRL_MASK|gadget::ALT_MASK)) )
     {
+        LOG_TRACE( "BUTTON1_MASK and not (SHIFT_MASK or CTRL_MASK or ALT_MASK )" );
         if( m_manipulatorManager.IsEnabled() )
         {
             UpdateSelectionLine();
+            LOG_DEBUG( "m_manipulatorManager.IsEnabled, PUSHing" );
             if( m_manipulatorManager.Handle(
                 scenegraph::manipulator::Event::PUSH,
                 m_lineSegmentIntersector.get() ) )
@@ -192,10 +200,12 @@ bool ManipulatorEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, i
     m_currX = xPos;
     m_currY = yPos;*/
 
+    LOG_DEBUG( "ProcessMouseRelease" );
     if( m_manipulatorManager.IsEnabled() )
     {
         if( m_manipulatorManager.LeafDraggerIsActive() )
         {
+            LOG_TRACE( "RELEASEing manipulator" );
             if( m_manipulatorManager.Handle(
                 scenegraph::manipulator::Event::RELEASE ) )
             {
@@ -245,6 +255,7 @@ bool ManipulatorEvents::ProcessMouseMove( int xPos, int yPos, int zPos, int butt
 ////////////////////////////////////////////////////////////////////////////////
 void ManipulatorEvents::UpdateSelectionLine()
 {
+    LOG_TRACE( "UpdateSelectionLine" );
     m_lineSegmentIntersector->reset();
     m_lineSegmentIntersector->setStart( m_startPoint );
     m_lineSegmentIntersector->setEnd( m_endPoint );

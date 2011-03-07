@@ -35,6 +35,7 @@
 #include <ves/VEConfig.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
+#include <ves/xplorer/Logging.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/gadgetParam.h>
@@ -156,6 +157,10 @@ private:
     ///The distance from the head position to the picked btRigidBody point
     ///Used to calculate point to point constraints for physics picking
     double m_prevPhysicsRayPos;    
+
+    /// Logging tools
+    Poco::Logger& m_logger;
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 }
