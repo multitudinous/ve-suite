@@ -10,6 +10,9 @@
 
 class SensorData;
 
+// --- Boost Includes --- //
+#include <boost/signals2/signal.hpp>
+
 // --- POCO Includes --- //
 #include <Poco/Tuple.h>
 #include <Poco/SharedPtr.h>
@@ -48,8 +51,14 @@ private:
     ///
     Poco::SharedPtr< Poco::Data::Session > m_canDB;
 
+    ///
     typedef std::multimap< std::string, CAN_Signal > CAN_SCHEMA;
     CAN_SCHEMA m_canSchema;
+
+    ///Signal for generating the
+    typedef boost::signals2::signal<
+        void ( std::string, std::string, double, std::string ) > SensorSignal;
+    SensorSignal m_sensorSignal;
 
 };
 

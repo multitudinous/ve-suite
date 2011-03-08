@@ -1,4 +1,7 @@
 
+// --- VES Includes --- //
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 // --- QT Includes --- //
 #include <QtGui/qapplication.h>
 
@@ -13,6 +16,8 @@ int main( int argc, char** argv )
 
     MainWindow window;
     window.resize( 800, 600 );
+
+    ves::xplorer::eventmanager::EventManager::instance();
 
     CANMessageParser canThread;
     canThread.setInterval( window.signalInterval() );
@@ -29,6 +34,8 @@ int main( int argc, char** argv )
     window.start();
 
     bool ok = app.exec();
+
+    ves::xplorer::eventmanager::EventManager::instance()->Shutdown();
 
     canThread.stop();
     canThread.wait( 1000 );

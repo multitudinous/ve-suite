@@ -4,7 +4,7 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 
 Import( 'ves_pkg buildDir GetPlatform RootDir' )
-Import( 'boost_options' )
+Import( 'boost_options poco_options' )
 
 openDir = os.path.abspath( pj( RootDir, 'test', 'qwt', 'dbplot' ) )
 buildSrcDir = pj( '#', buildDir, 'test', 'qwt', 'dbplot' )
@@ -33,10 +33,12 @@ sources = map( lambda s: pj( '.', s ), sources )
 sources += moc
 
 boost_options.apply( env )
+poco_options.apply( env )
 
 env.Append( CPPPATH = [ pj( RootDir, 'external', 'qwt-6.0.0-rc5', 'src' ) ] )
-env.Append( LIBS = [ 'qwt' ] )
-env.Append( LIBPATH = [ pj( '#', buildDir, 'external', 'qwt-6.0.0-rc5', 'src' ) ] )
+env.Append( LIBS = [ 'qwt', 'ves_xplorer_eventmanager' ] )
+env.Append( LIBPATH = [ pj( '#', buildDir, 'external', 'qwt-6.0.0-rc5', 'src' ),
+                        pj ( '#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager' ) ] )
 
 if GetPlatform() == 'linux':
     env.Append( CCFLAGS=[ '-fPIC' ] )

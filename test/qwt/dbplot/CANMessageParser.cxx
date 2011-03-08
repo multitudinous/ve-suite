@@ -1,10 +1,7 @@
 
-// --- DB Plot Includes --- //
-#include "CANMessageParser.h"
-#include "SensorData.h"
-
-// --- QWT Includes --- //
-
+// --- VES Includes --- //
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
 
 // --- Boost Includes --- //
 #include <boost/program_options.hpp>
@@ -23,7 +20,13 @@
 #include <iostream>
 #include <vector>
 #include <bitset>
+#include <stdlib.h>
 
+// --- DB Plot Includes --- //
+#include "CANMessageParser.h"
+#include "SensorData.h"
+
+using namespace ves::xplorer;
 using namespace Poco::Data;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,9 +35,16 @@ CANMessageParser::CANMessageParser( QObject* parent )
     QwtSamplingThread( parent ),
     m_timeValue( 0.0 )
 {
+
+    eventmanager::EventManager* evm = eventmanager::EventManager::instance();
+    evm->RegisterSignal(
+        new eventmanager::SignalWrapper< SensorSignal >( &m_sensorSignal ),
+        "CANMessageParser.SensorSignal",
+        eventmanager::EventManager::any_SignalType );
+
     SQLite::Connector::registerConnector();
     std::string filename =
-        "/Users/kochjb/dev/ve-suite/trunk/test/qwt/dbplot/BG480E.db";
+        "C:/dev/ve-suite/trunk/test/qwt/dbplot/BG480E.db";
     m_canDB = new Session( "SQLite", filename );
 
     std::stringstream m_signalQryStr;
@@ -55,7 +65,7 @@ CANMessageParser::CANMessageParser( QObject* parent )
     *( m_canDB.get() ) << m_signalQryStr.str(), into( m_canSchema ), now;
 
     m_infile.open(
-        "/Users/kochjb/dev/ve-suite/trunk/test/qwt/dbplot/log_0000.asc" );
+        "C:/dev/ve-suite/trunk/test/qwt/dbplot/log_0000.asc" );
 
     //Ignore first two lines
     m_infile.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
@@ -88,8 +98,7 @@ void CANMessageParser::sample( double elapsed )
         m_infile >> skip;
         std::string canId;
         m_infile >> canId;
-        if( canId == "1A1" )
-        {
+
         //Remove trailing "x" (hex specifier) from id
         if( canId.length() > 8 )
         {
@@ -108,9 +117,13 @@ void CANMessageParser::sample( double elapsed )
         std::ostringstream bitSS;
         std::copy( byte.begin(), byte.end(),
             std::ostream_iterator< std::string >( bitSS ) );
+
         //std::cout << "Hex: " << bitSS.str() << std::endl;
-        //Don't know if this will work on all platforms, especially windows
+#ifdef WIN32
+        std::bitset< 64 > bits( _strtoui64( bitSS.str().c_str(), NULL, 16 ) );
+#else
         std::bitset< 64 > bits( std::strtoull( bitSS.str().c_str(), NULL, 16 ) );
+#endif
         std::string binStr = bits.to_string();
         //std::cout << "Binary: " << binStr << std::endl;
 
@@ -120,9 +133,8 @@ void CANMessageParser::sample( double elapsed )
         for( ; itr != itp.second; ++itr )
         {
             CAN_Signal const& canSignal = itr->second;
-            //std::cout << "Signal Name: "
-                      //<< canSignal.GetSignalName().convert< std::string >()
-                      //<< std::endl;
+            //std::string signalName = canSignal.GetSignalName();
+            //std::cout << "Signal Name: " << signalName << std::endl;
             unsigned int startBit = canSignal.GetStartBit();
             //std::cout << "Start Bit: " << startBit << std::endl;
             unsigned int length = canSignal.GetLength();
@@ -132,13 +144,15 @@ void CANMessageParser::sample( double elapsed )
             std::string signalBits( binStr.substr( startBit, length ) );
             //std::cout << "Signal Bits: " << signalBits << std::endl;
             boost::dynamic_bitset<> bs( signalBits );
+            //Need to be careful here as ulong might not be large enough
             double value = factor * bs.to_ulong();
-            //std::cout << "Value: " << value << " "
-                      //<< canSignal.GetUnit().convert< std::string >()
-                      //<< std::endl;
+            std::string unit = canSignal.GetUnit();
+            //std::cout << "Value: " << value << " " << unit << std::endl;
 
-            //m_sensorData->append( QPointF( m_timeValue, value ) );
-        }
+            m_sensorSignal(
+                "DBE27489-3F08-48F7-A86A-EF02127A272E", //sensor uuid
+                boost::lexical_cast< std::string >( m_timeValue ), //timestamp
+                value, unit );
         }
 
         //Move to the next line
