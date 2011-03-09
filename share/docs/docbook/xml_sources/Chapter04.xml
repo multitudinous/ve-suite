@@ -29,91 +29,30 @@
     All and other keyboard and mouse commands to change the view (see Chapter
     3.3 for navigation instructions).</para>
 
-    <para><figure>
-        <title>Use the Frame All command to change the view</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/PhysicsSimpleBoxesCropped01.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>For each new file that is loaded in VE-Suite, the physics must
-    be enabled. To do this, right-click on the plugin and click on Enable
+    <para>For each new file that is loaded in VE-Suite, the physics must be
+    enabled. To do this, right-click on the plugin and click on Enable
     Physics.</para>
 
     <para>The physics functionality must also be turned on in VE-Conductor. To
     do this, click on the Physics On/Off button in the VE-Conductor
     toolbar.</para>
 
-    <para><figure>
-        <title>Turn the physics functionality on</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/PhysicsTurnOn.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>In addition to the Physics On/Off button, there are five more
+    <para>In addition to the Physics On/Off button, there are five more
     buttons in the Conductor toolbar that can be used to manipulate a
     visualization. The Start Simulation button starts the simulation.</para>
 
-    <para><figure>
-        <title>Start the simulation</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/PhysicsStartSimulation.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>Clicking the Start Simulation button using the
-    <code>simple_physics_boxes.ves</code> file causes the green object to move
-    to meet the orange object. After running the simulation, this is what you
-    should see:</para>
-
-    <para><figure>
-        <title>Results of physics simulation example</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/PhysicsSimpleBoxesCropped02.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>The toolbar also allows you to view the simulation step by step
+    <para>The toolbar also allows you to view the simulation step by step
     rather than all at once. To view one step of the simulation at a time,
     click the Step Simulation button.</para>
 
-    <para><figure>
-        <title>Simulations can be viewed one step at a time</title>
+    <para>To reset the simulation to its original position, click the Reset
+    Simulation button.</para>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/PhysicsStepSimulation.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>To reset the simulation to its original position, click the
-    Reset Simulation button.</para>
-
-    <para><figure>
-        <title>Reset the simulation to its original position</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/PhysicsResetSimulation.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>When running longer simulations, you might want to pause the
+    <para>When running longer simulations, you might want to pause the
     simulation while it is running. To do so, click the Pause Simulation
     button.</para>
 
-    <para><figure>
-        <title>Pause the simulation</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/PhysicsPauseSimulation.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>The physics capability in VE-Suite also includes a Character
+    <para>The physics capability in VE-Suite also includes a Character
     Controller. To demonstrate the Character Controller, we will use the
     <code>character_demo.ves</code> file (also located in the
     <code>share/vesuite/examples/simple</code> directory).</para>
@@ -121,28 +60,11 @@
     <para>After loading the character_demo.ves file, click on the Character
     Controller button in Conductor.</para>
 
-    <para><figure>
-        <title>Starting the character controller</title>
+    <para>Use the Frame All and other keyboard and mouse commands to change
+    the view (see Chapter 3.3 for navigation instructions).</para>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/PhysicsCharacterController.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>Use the Frame All and other keyboard and mouse commands to
-    change the view (see Chapter 3.3 for navigation instructions). You should
-    see something similar to this on your screen:</para>
-
-    <para><figure>
-        <title>Character controller</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/PhysicsCharacterController02cropped.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>The tables below provide keyboard and mouse commands for
-    interacting with the visualization in character mode.</para>
+    <para>The tables below provide keyboard and mouse commands for interacting
+    with the visualization in character mode.</para>
 
     <para><table>
         <title>Keyboard Commands</title>

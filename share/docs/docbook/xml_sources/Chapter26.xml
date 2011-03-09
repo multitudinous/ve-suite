@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Using Okino's Polytrans Software</title>
+
+  <section>
+    <title>Translating with Modeling in Pro/E</title>
+
+    <section>
+      <title>Assembly-level cuts</title>
+
+      <para>Features added at the assembly level of the model tree that affect
+      parts' appearance do not translate through PolyTrans. This includes
+      cuts, holes, and welds made at the assembly. The following workarounds
+      are available:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Open the affected parts individually and apply the operation
+          necessary to transform the part at the part level</para>
+        </listitem>
+
+        <listitem>
+          <para>Activate the parts and use references in the assembly to cut
+          the parts individually. This method better follows the design intent
+          of the assembly-level operations, but it can cause circular
+          references if it is implemented improperly.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Family tables</title>
+
+      <para>Family tables can be used in Pro/E to define parts with repeated
+      features and to define parts in different locations in the same
+      assembly. This can simplify the creation of a large assembly, but
+      problems can arise when the assembly is translated through
+      PolyTrans.</para>
+
+      <section>
+        <title>Part appearance</title>
+
+        <para>If the appearance if individual parts is dictated by a family
+        table (e.g., a spring's length and compressions are determined by a
+        family table), parts appear in the generic instance in the
+        translation.</para>
+
+        <para>A workaround for this problem is to save a copy to a different
+        location and change the name of every part. This strips the family
+        table information from the parts. A backup of the model does not strip
+        the family tables and will not fix the translation problem.</para>
+      </section>
+
+      <section>
+        <title>Assembly location</title>
+
+        <para>Items can be assembled in location using a family table. This
+        can show two or more locations for an individual item (e.g., a stored
+        location and a use location).</para>
+
+        <para>A workaround for this is to open the instance that will be
+        translated and make a backup of this assembly. If two different
+        locations are desired in the translation, make two different backups,
+        one of each location.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Coloration</title>
+
+      <para>There are two separate issues with coloration:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Items that seem to be colored in Pro/E appear without color in
+          the translation</para>
+        </listitem>
+
+        <listitem>
+          <para>Colors within Pro/E do not appear to match colors within
+          PolyTrans or colors within VE-Suite</para>
+        </listitem>
+      </itemizedlist>
+
+      <section>
+        <title>No colors within VE-Suite (blinding whiteness)</title>
+
+        <para>This is usually a result of coloring at the assembly level. Most
+        models that have this problem do not exhibit whiteness throughout the
+        entire model; they only have a few parts with blinding
+        whiteness.</para>
+
+        <para>To fix this, clear all surfaces at the assembly level after
+        saving any colors that you want from the model. Then create a map-key
+        that colors, saves, and closes a part. After the map-key is created,
+        you can color the model by opening each part and activating the
+        map-key.</para>
+      </section>
+
+      <section>
+        <title>Colors in Pro/E</title>
+
+        <para>Colors in Pro/E do not appear to match the colors within
+        PolyTrans and VE-Suite because the lighting scheme in each program is
+        different. The lighting scheme in Pro/E is relatively easy to change,
+        but there is no known way to save the changes to apply automatically
+        between sessions of Pro/E or to new windows that are opened. Changing
+        the lighting within VE-Suite is much more difficult.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Missing parts</title>
+
+      <para>If you have missing parts in your Pro/E assembly, the following
+      steps should solve the problem.</para>
+
+      <orderedlist>
+        <listitem>
+          <para>On the Hierarchy Optimizer, press the Option...</para>
+        </listitem>
+
+        <listitem>
+          <para>Disable the "Delete hidden objects" checkbox</para>
+        </listitem>
+
+        <listitem>
+          <para>After import, select "Unhide all" from the Edit menu of the
+          "Selector Window" menu. Those items will be on blanked layers
+          according to Granite terminology.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section>
+      <title>Importing hoses and cables</title>
+
+      <para>To import Pro/E hoses or cables, first save the data in the Pro/E
+      neutral format. This format will preserve the hose and cable surfaces so
+      they can be imported into PolyTrans and then into VE-Suite. During the
+      import of the neutral format, choose a fine-grained tessellation so the
+      hoses and cables have a realistic appearance.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Translating with Bentley Software</title>
+
+    <para>The best way to import data from Bentley software is to use the u3d
+    file format. This will preserve the hierarchy in the CAD assembly and
+    preserve the BIM data potentially in the Bentley exported data.</para>
+  </section>
+
+  <section>
+    <title>Translating with AutoCAD Software</title>
+
+    <para>The best file format for working with AutoCAD is the 3D AutoCAD
+    format, or the DWF format. When importing data, uncheck the "import text"
+    option under the Options dialog.</para>
+
+    <para>If you do need text imported from the AutoCAD file, choose to export
+    it as text in the osgPTExporter rather than as 3D data.</para>
+  </section>
+
+  <section>
+    <title>Translating with JT Files</title>
+
+    <para>Always import PMI (Production Manufacturing Information) and use the
+    highest level LOD for most cases. If you need to preserve the CAD
+    hierarchy, do not optimize the hierarchy during import.</para>
+  </section>
+
+  <section>
+    <title>Translating with 3DS/Max Files</title>
+
+    <para>Be sure to regenerate the normals for the model once it is imported.
+    The lights, animations, and other non-polygonal data will not be exported
+    to OSG, so there is no need to be concerned with importing it.</para>
+  </section>
+</chapter>

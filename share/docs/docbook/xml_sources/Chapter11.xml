@@ -6,188 +6,135 @@
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns:db="http://docbook.org/ns/docbook">
-  <title>Building VE-Suite</title>
+  <title>Vehicle Design Review Tools</title>
 
-  <para>Before attempting to build VE-Suite, be sure to build/install the
-  dependencies (see Chapter 14, Dependencies) and set the environment
-  variables (see Chapter 15, Setting the Environment).</para>
-
-  <!-- TODO: Add olinks to Chapter 14, Dependencies and Chapter 15, Setting the Environment -->
+  <para>NOTE: These tools can only be used in a CAVE.</para>
 
   <section>
-    <title>UNIX/Linux Build Instructions</title>
+    <title>Dynamic Vehicle Simulator Tool</title>
 
-    <para>VE-Suite, as well as its dependencies, is currently being bested on
-    a broad range of UNIX/Linux platforms including IRIX 6.5, SuSE, and RedHat
-    Enterprise.</para>
+    <para>The Dynamic Vehicle Simulator Tool is a plugin to VE-Xplorer and
+    VE-Conductor that enables mapping global positioning data to user-selected
+    CAD.</para>
 
-    <para>Set the environment variables (see Chapter 15, Setting the
-    Environment) and source the setup file included with the VE-Suite project:
-    <code>$(VE_SUITE_HOME)/VE_Installer/setup. {.sh,tsh}</code>. Once this
-    file has been properly edited, type <code>gmake</code>. The UNIX build
-    system is based on Doozer, which is included with VR Juggler.</para>
+    <section>
+      <title>Configuring the Simulator</title>
 
-    <!-- TODO: Add olink to Chapter 15, Setting the Environment-->
+      <para>Coming soon</para>
+    </section>
 
-    <para>Supported base configurations available:</para>
+    <section>
+      <title>Configuring the Graphics</title>
 
-    <orderedlist>
-      <listitem>
-        <para><code>tao_osg_dbg</code> - OpenSceneGraph based application
-        supporting released features</para>
-      </listitem>
-
-      <listitem>
-        <para><code>tao_osg_vep_dbg</code> - OpenSceneGraph based application
-        supporting released and new features from current research</para>
-      </listitem>
-    </orderedlist>
-
-    <para>There are also cluster variants of each of the above
-    configurations:</para>
-
-    <orderedlist>
-      <listitem>
-        <para><code>tao_osg_cluster_dbg</code></para>
-      </listitem>
-
-      <listitem>
-        <para><code>tao_osg_vep_cluster_dbg</code></para>
-      </listitem>
-    </orderedlist>
-
-    <para>To change any of the configurations described above, open the setup
-    file and set <code>SCENE_GRAPH</code>, <code>CLUSTER_APP</code>,
-    <code>VE_PATENTED</code> accordingly.</para>
+      <para>Coming Soon</para>
+    </section>
   </section>
 
   <section>
-    <title>Windows Build Instructions</title>
+    <title>Registration Tools</title>
 
-    <para>VE-Suite, as well as its dependencies, is currently built and tested
-    using Visual Studio 7.1(2003).</para>
+    <para>The Registration Tools enable users to position a vehicle buck in a
+    tracked environment for the purpose of registering a digital CAD
+    representation of the vehicle buck to the physical buck.</para>
 
-    <section>
-      <title>Building VE-Suite</title>
+    <para>Information users should know before using the Registration
+    Tools:</para>
 
-      <para>Set the environment variables (see Chapter 15, Setting the
-      Environment) and launch a session of Visual Studio with the VE-Suite
-      project loaded, then run the batch file:</para>
+    <orderedlist>
+      <listitem>
+        <para>The CAD should be pointed forward in the environment. NOTE: This
+        is only applicable if the user is not going to also use the Dynamic
+        Vehicle Simulator Tool.</para>
+      </listitem>
 
-      <!-- TODO: Add olink to Chapter 15, Setting the Environment-->
+      <listitem>
+        <para>The CAD needs to be scaled to feet.</para>
+      </listitem>
 
-      <para><code> $(VE_SUITE_HOME)VE_Installerbuild.bat </code></para>
+      <listitem>
+        <para>The tracking markers only need to be present on the buck during
+        the registration process. Once the buck is registered, the markers can
+        be removed and used for other purposes.</para>
+      </listitem>
 
-      <para>Supported base configurations available:</para>
+      <listitem>
+        <para>The Seat Index Position (SIP) measurement is the distance from
+        the origin of the CAD model to the SIP in the model. The coordinate
+        system for this measurement is Y toward the front of the vehicle, X to
+        the right of the vehicle, and Z to the top of the vehicle. This is
+        typically measured in a CAD package or in a review tool like
+        TeamCenter.</para>
 
-      <orderedlist>
-        <listitem>
-          <para><code>tao_osg_dbg</code> - OpenSceneGraph based application
-          supporting released features</para>
-        </listitem>
+        <para>Example code for the tracking marker configuration file:</para>
 
-        <listitem>
-          <para><code>tao_osg_vep_dbg</code> - OpenSceneGraph based
-          application supporting released and new features from current
-          research</para>
-        </listitem>
-      </orderedlist>
+        <para><code># The measurements are in mm </code></para>
 
-      <para>There are also cluster variants of each of the above
-      configurations:</para>
+        <para><code># The coords are x to the rear, y up, z to the left
+        </code></para>
 
-      <orderedlist>
-        <listitem>
-          <para><code># tao_osg_cluster_dbg</code></para>
-        </listitem>
+        <para><code># The order is Front, Left Rear, Right Rear </code></para>
 
-        <listitem>
-          <para><code># tao_osg_vep_cluster_dbg</code></para>
-        </listitem>
-      </orderedlist>
-    </section>
+        <para><code>VJHead -1048.1 686.8 13.3 </code></para>
 
-    <section>
-      <title>Debugging VE-Xplorer</title>
+        <para><code>VJWand 597.8 792.5 421.4 </code></para>
 
-      <para>To run VE-Xplorer from within the Visual Studio debugger, change
-      the working directory in the Configuration Properties tab to point to
-      the directory where your VE-Suite parameter file is located (for
-      example, change the working directory to
-      <code>$VE_SUITE_HOME)VE_TestSuite)</code>.</para>
-
-      <para>You will also need to pass in your VR Juggler config files as
-      command arguments on the configuration properties tab. With the two
-      projects still open, right-click on the VE_Xplorer project file and
-      select Properties. For simulation mode, add the following to your
-      command arguments section:</para>
-
-      <para><code> $(VJ_BASE_DIR)sharevrjugglerdataconfigFiles sim.base.jconf
-      </code></para>
-
-      <para><code>$(VJ_BASE_DIR)sharevrjugglerdataconfigFiles
-      sim.wand.mixin.jconf </code></para>
-
-      <para>After you enter a parameter file name and the scene loads, double
-      click on <code>$(VE_SUITE_HOME)bin runWinClient.bat</code> to bring up
-      the gui.</para>
-    </section>
+        <para><code>VESPointer 600.9 792.4 -421.4 </code></para>
+      </listitem>
+    </orderedlist>
 
     <section>
-      <title>Running VE-Suite from a CD</title>
+      <title>Using the Registration Tools</title>
 
-      <para>You can build a working version of VE-Suite you can run from a CD
-      by following these instructions:</para>
+      <para>Follow these steps to use the Registration Tools:</para>
 
-      <orderedlist>
-        <listitem>
-          <para>Create a folder to hold the CD's contents. We will call this
-          the CD folder.</para>
-        </listitem>
+      <para><orderedlist>
+          <listitem>
+            <para>Place the tracking markers in the appropriate locations on
+            the vehicle buck.</para>
+          </listitem>
 
-        <listitem>
-          <para>Build VE-Suite and its dependencies. Make sure you build them
-          without library or header files; these optional files will make
-          VE-Suite too large to fit on a CD. Once they are built, copy them to
-          the CD folder.</para>
-        </listitem>
+          <listitem>
+            <para>Update the tracking marker configuration file with the
+            measured data for the location of the tracking markers to the
+            SIP.</para>
+          </listitem>
 
-        <listitem>
-          <para>Add the <code>autorun.inf</code> and <code>VE_icon.ico</code>
-          files (found in the
-          <code>VE_Installer/installer/StandAloneCDreate</code> directory) to
-          the CD folder. (<emphasis role="bold">NOTE:</emphasis> Make sure the
-          path to VE-Launcher listed in <code>autorun.inf</code> matches the
-          path in your version of VE-Suite.)</para>
-        </listitem>
+          <listitem>
+            <para>Update the tracking marker configuration file with the bird
+            locations on the buck as follows:</para>
 
-        <listitem>
-          <para>Add the models you want to include on the CD to the CD folder.
-          We recommend putting them in
-          <code>VE_Suite.1.0.3/share/exampleDatasets</code> with the sample
-          datasets.</para>
-        </listitem>
+            <orderedlist>
+              <listitem>
+                <para>The first listed marker is the front of the buck</para>
+              </listitem>
 
-        <listitem>
-          <para>Write the contents of the CD folder to the CD.</para>
-        </listitem>
-      </orderedlist>
+              <listitem>
+                <para>The second listed marker is the left rear of the
+                buck</para>
+              </listitem>
 
-      <para>Reminders:</para>
+              <listitem>
+                <para>The third listed marker is the right rear of the
+                buck</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
 
-      <itemizedlist>
-        <listitem>
-          <para>Make sure the contents of the CD folder will fit on the CD
-          before you write it</para>
-        </listitem>
+          <listitem>
+            <para>Load the CAD and position and scale it appropriately based
+            on the assumptions listed above.</para>
+          </listitem>
 
-        <listitem>
-          <para>While running VE-Suite from a CD, make sure the dependencies
-          directories and working directory are located on the CD. Otherwise,
-          the program will not run properly. Also, you can only use the
-          <code>.ves</code> (model) files located on the CD itself.</para>
-        </listitem>
-      </itemizedlist>
+          <listitem>
+            <para>Choose the file button and select the tracking marker
+            configuration file.</para>
+          </listitem>
+
+          <listitem>
+            <para>Press the registration button.</para>
+          </listitem>
+        </orderedlist>At this point, the CAD should be aligned with the
+      vehicle buck.</para>
     </section>
   </section>
 </chapter>

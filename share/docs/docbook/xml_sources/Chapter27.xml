@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Running VE-Suite from the Command Line</title>
+
+  <section>
+    <title>Xplorer from the Command Line</title>
+
+    <para>Users who want to customize how Xplorer starts can launch it from
+    the command line. Here is how the command should be set up:</para>
+
+    <para><orderedlist>
+        <listitem>
+          <para><code>ves_xplorer</code> : Executable call. The name may vary,
+          depending on how VE-Suite was built.</para>
+        </listitem>
+
+        <listitem>
+          <para><code>-ORBInitRefNameService=corbaloc:iiop:localhost:1239/NameService</code>
+          : CORBA arguments. Xplorer accepts any CORBA arguments passed to
+          it.</para>
+        </listitem>
+
+        <listitem>
+          <para><code>/home/users/mgroves/VE-Suite1.0.3/RHEL_4/share/stereo_desktop/desktop.jconf</code>
+          : Juggler configuration files. If a file is passed to Xplorer, it is
+          read as a Juggler configuration file.</para>
+        </listitem>
+
+        <listitem>
+          <para><code>-VESDesktop 1280 1024</code> : Two flags can be set for
+          Xplorer:</para>
+
+          <orderedlist>
+            <listitem>
+              <para><code>-VESDesktop [height][width]</code>: Runs Xplorer in
+              Desktop Mode. <code>[height]</code> and <code>[width]</code> are
+              the screen's dimensions.</para>
+            </listitem>
+
+            <listitem>
+              <para><code>-VESCluster [master computer name]:</code> Runs
+              Xplorer in cluster mode. <code>[master computer name]</code>
+              should be the computer name of the master in the graphics
+              cluster.</para>
+            </listitem>
+          </orderedlist>
+        </listitem>
+      </orderedlist>This method of launching Xplorer is only needed in rare
+    cases.</para>
+  </section>
+</chapter>

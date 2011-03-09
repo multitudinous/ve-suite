@@ -79,6 +79,12 @@
       <para>Next, open the geometry tree where the first geometry tree is to
       be moved, right-click the assembly where it is to be moved, then select
       Add Node, then Load VEG file.</para>
+
+      <para>For more information about tranlating CAD data into a format that
+      VE-Suite can read, see Chapter 26, Using Okino's Polytrans
+      Software.</para>
+
+      <!-- TODO: add olink for Chapter 26 -->
     </section>
 
     <section>
@@ -90,16 +96,6 @@
       and select Properties. This will open the CAD Properties window. The
       Transformation dialog is the first tab in the CAD Properties
       window.</para>
-
-      <figure>
-        <title>CAD Properties window</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-transform-dialog.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
 
       <para>When you edit the Transform properties, the scene is updated in
       real time. Once the object's size and placement are satisfactory, click
@@ -134,16 +130,6 @@
       it. To change a material's properties, right-click its name. A menu will
       appear with options to change its lighting, shininess, opacity, and how
       the lighting and material are applied to the object.</para>
-
-      <figure>
-        <title>Applying materials and shaders to geometric objects</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-cadproperties-attributes.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
 
       <para>If you choose Shaders, you will be asked to load a shader .
       Example shaders can be found in the
@@ -235,16 +221,6 @@
       <para>A three-button mouse will enable a user to do every translation
       and rotation within the Xplorer window itself.</para>
 
-      <figure>
-        <title>Rotating a scene</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-3button-nav.gif"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
       <para>To rotate the scene, drag along the screen while holding the left
       button. To rotate along the X- and Z-axes, drag in the center of the
       screen. To rotate along the Y-axis, drag along the border of the
@@ -270,18 +246,8 @@
     <section>
       <title>Navigation Pane</title>
 
-      <para>To open the Navigation Pane, select it from the VE-Xplorer menu.
-      The Navigation Pane looks like this:</para>
-
-      <figure>
-        <title>Navigation Pane</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/03-navpane-02.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
+      <para>To open the Navigation Pane, select it from the VE-Xplorer
+      menu.</para>
 
       <para>Experiment with the movement buttons (the ones with arrows on
       them) to see how they change the scene. Note that they move the camera,
@@ -628,16 +594,6 @@
 
     <para>To store multiple viewpoints and switch between them, use the
     Viewpoints Pane under the VE-Xplorer menu.</para>
-
-    <figure>
-      <title>Viewpoints Pane</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/03-viewpoints-pane.png"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
 
     <para>When the Viewpoints Pane starts, no viewpoints are loaded. As the
     user adds them to the pane, they appear in the Move to a Viewpoint

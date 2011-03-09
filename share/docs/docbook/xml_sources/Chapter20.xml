@@ -6,111 +6,39 @@
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns:db="http://docbook.org/ns/docbook">
-  <title>VE-Suite Beginner's Guide</title>
+  <title>Software Development Tools</title>
 
-  <section>
-    <title>Getting Started</title>
+  <para>subversion</para>
 
-    <para>There are four programs that have to be built and installed to run
-    VE-Suite. Consult Chapter 1, Installation and Setup, for the current
-    version requirements. In order of install they are:</para>
+  <para>svn tortoise</para>
 
-    <!-- TODO: add olink for install chapter -->
+  <para>trac</para>
 
-    <orderedlist>
-      <listitem>
-        <para><link xlink:href="http://www.vrjuggler.org/download.php">VR
-        Juggler</link></para>
-      </listitem>
+  <para>bugzilla</para>
 
-      <listitem>
-        <para><link
-        xlink:href="http://www.openscenegraph.org/projects/osg/wiki/Downloads">OpenSceneGraph
-        (OSG)</link></para>
-      </listitem>
+  <para>phpBB</para>
 
-      <listitem>
-        <para><link
-        xlink:href="http://download.dre.vanderbilt.edu/">Ace+Tao</link></para>
-      </listitem>
+  <para>docbook</para>
 
-      <listitem>
-        <para><link
-        xlink:href="http://www.vtk.org/VTK/resources/software.html">VTK</link></para>
-      </listitem>
-    </orderedlist>
+  <para>visual studio</para>
 
-    <para>We recommend reading the README files before compiling these
-    programs.</para>
+  <para>gnu tools</para>
 
-    <para>Raw code files for UNIX will generally be in the <code>.tar</code>
-    format. A <code>.tar</code> file has to be unpacked after it is
-    downloaded. For help with this process, refer to the instructions in the
-    VR Juggler tutorial "Getting Started". There is a section on
-    <code>.tar</code> files that lists several different possible commands for
-    the command line invocation. The two most common commands are:</para>
+  <para>ddd D</para>
 
-    <itemizedlist>
-      <listitem>
-        <para><code>gunzip filename.tar.gz</code></para>
+  <para>ialogBlocks</para>
 
-        <para><code>tar -xvf filename.tar</code></para>
-      </listitem>
+  <para>Valgrind</para>
 
-      <listitem>
-        <para><code>bunzip2 filename.tar.bz2</code></para>
+  <para>openGL debuggers</para>
 
-        <para><code>tar -xvf filename.tar</code></para>
-      </listitem>
-    </itemizedlist>
+  <para>py2exe</para>
 
-    <para>You might be asked to download into a source folder but actually
-    install the program into a separate folder. There is a special command
-    that is appended to the compile command that will do this:</para>
+  <para>freeze</para>
 
-    <para><code>--prefix=/directory/to/save/to</code></para>
+  <para>inno setup</para>
 
-    <para>The basic compile command itself may be slightly different for
-    various programs.</para>
+  <para>rpm</para>
 
-    <para>Once the TAR file has been downloaded and unpacked, you can find
-    which dependencies are already on your system by using the command
-    <code>rpm -qa | grep -i [package]</code> where <code>package</code> is the
-    program name you are looking for.</para>
-
-    <para>When you encounter a dependency you do not have, you will have to
-    download, unpack, and install it using the same process as for the earlier
-    programs.</para>
-
-    <para>Many installs involve CMAKE, which has its own set of steps.</para>
-
-    <orderedlist>
-      <listitem>
-        <para>Go to the code directory</para>
-      </listitem>
-
-      <listitem>
-        <para>Create a child file</para>
-      </listitem>
-
-      <listitem>
-        <para>Go in to that child file and type <code>ccmake ../</code> to
-        compile the file</para>
-      </listitem>
-
-      <listitem>
-        <para>Type <code>make</code></para>
-      </listitem>
-
-      <listitem>
-        <para>Type <code>make install</code></para>
-      </listitem>
-    </orderedlist>
-
-    <para>Some downloads may not be available as compressed files.
-    Occasionally you will have to download code from an SVN server. There is a
-    continuously updated <link
-    xlink:href="http://svnbook.red-bean.com/">online book</link> that is
-    useful for this.</para>
-  </section>
+  <para>dmg builder</para>
 </chapter>

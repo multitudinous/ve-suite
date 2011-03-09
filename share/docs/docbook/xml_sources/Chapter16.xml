@@ -6,294 +6,257 @@
          xmlns:m="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns:db="http://docbook.org/ns/docbook">
-  <title>Description of the Engines</title>
+  <title>Dependencies</title>
 
-  <para>VE-Suite is composed of three main software engines that coordinate
-  the flow of data from the engineer to the virtual components being designed.
-  The following sections will detail the design of each of these engines and
-  describe how they contribute to the overall framework functionality.</para>
+  <para>The following is a list of links for the VE-Suite dependencies.
+  Dependencies can be downloaded and built by the user from the following
+  links or the pre-compiled binaries can be installed from the download
+  page.</para>
 
-  <figure>
-    <title>VE-Suite's software engines</title>
+  <para><link
+  xlink:href="http://www.openscenegraph.org/projects/osg">OpenSceneGraph
+  (OSG)</link> is used to manage the scenegraph (verson 1.2+)</para>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="images/10-descriptionofengines-01.jpg"></imagedata>
-      </imageobject>
-    </mediaobject>
-  </figure>
+  <para><link
+  xlink:href="http://www.vtk.org/VTK/resources/software.html#interim">VTK</link>
+  is used to render the visualization objects (version 5.0+)</para>
+
+  <para><link xlink:href="http://www.cmake.org/HTML/Index.html">CMake</link>
+  is needed to build the VTK</para>
+
+  <para><link xlink:href="http://sourceforge.net/projects/vrjuggler/files/">VR
+  Juggler</link> is used for management of the virtual environment (version
+  2.0.1+)</para>
+
+  <para>The dependencies are best installed in the following order:</para>
+
+  <orderedlist>
+    <listitem>
+      <para>CMake</para>
+    </listitem>
+
+    <listitem>
+      <para>VR Juggler</para>
+    </listitem>
+
+    <listitem>
+      <para>OpenSceneGraph</para>
+    </listitem>
+
+    <listitem>
+      <para>VTK</para>
+    </listitem>
+  </orderedlist>
+
+  <para><link xlink:href="http://sourceforge.net/projects/vrjuggler/files/">VR
+  Juggler dependencies zip file</link></para>
+
+  <para>VR Juggler has its own set of dependencies if you are building it
+  yourself:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>GMTL 0.4.12+</para>
+    </listitem>
+
+    <listitem>
+      <para>Boost 1.33 1+</para>
+    </listitem>
+
+    <listitem>
+      <para>Cppdom 0.6.6+</para>
+    </listitem>
+
+    <listitem>
+      <para>openAL 0.0.8+</para>
+    </listitem>
+
+    <listitem>
+      <para>omniORB 4.1.0+</para>
+    </listitem>
+
+    <listitem>
+      <para>VRPN 0.7.03+</para>
+    </listitem>
+  </itemizedlist>
+
+  <para><link xlink:href="http://java.sun.com/j2se/1.4.2/download.html">Java 2
+  SDK</link> is needed for Juggler's java-based VRJconfig program.</para>
+
+  <para><link xlink:href="http://www.wxwidgets.org/">wxWidgets</link> is used
+  to compile and run the GUI. (Click "download" on the left side menu to get
+  to the files.) (version 2.6.2+)</para>
+
+  <para><link xlink:href="http://xerces.apache.org/">Xerces</link> is used to
+  read and write XML. (Download <link
+  xlink:href="http://xerces.apache.org/xerces-c/download.cgi">xerces-c-current</link>)
+  (version 2.7.0+)</para>
+
+  <para><link xlink:href="http://download.dre.vanderbilt.edu/">ACE/TAO</link>
+  is used for cross-platform communications. (ACE version 5.5+, TAO version
+  1.5+)</para>
+
+  <para><link xlink:href="http://apr.apache.org/">APR</link> is used to
+  generate the GUIDs. (version 1.2.8)</para>
+
+  <para><link xlink:href="http://opal.sourceforge.net/">OPAL</link> (Open
+  Physics Abstraction Layer) is used as a wrapper to ODE for physics
+  integration. (version 0.4.0)</para>
+
+  <para><link xlink:href="http://sourceforge.net/projects/opende/">ODE</link>
+  (Open Dynamics Engine) is used for physics integration. (version 0.7)</para>
+
+  <para>VE-Launcher was coded using <link
+  xlink:href="http://www.python.org/">Python</link>. It can run in Python2.3
+  or higher. If you are running it from Python, you need to install these
+  extensions for Python as well:</para>
+
+  <para>Windows: VE-Launcher requires these <link
+  xlink:href="http://sourceforge.net/projects/pywin32/files/">Win32</link>
+  extensions if you are running it in Python for Windows.</para>
+
+  <para>VE-Launcher requires <link xlink:href="http://wxpython.org/">wxPython
+  2.6.3.3 </link>if you are running it in Python.</para>
 
   <section>
-    <title>Graphical User Interface (VE-Conductor)</title>
+    <title>Development Dependency Guidelines</title>
 
-    <para>To achieve the goals outlined for the project, a powerful and
-    flexible user interface (UI) was implemented. Key features of the VE-Suite
-    two-dimensional UI (VE-Conductor) are described in the following
-    sections.</para>
+    <para>To avoid dependencies problems during development, we have provided
+    guidelines for using dependencies with VE-Suite. These are the guidelines
+    the main VE-Suite development group follows and are provided as
+    suggestions for other users.</para>
 
-    <figure>
-      <title>Graphical user interface (VE-Conductor)</title>
+    <para>Windows:</para>
 
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/10-conductorTri-02.jpg"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
+    <orderedlist>
+      <listitem>
+        <para>The developer must either download all the installers for a
+        particular windows IDE and OS, or build all the dependencies for
+        VE-Suite themselves.</para>
+      </listitem>
 
-    <section>
-      <title>Multi-Platform Support</title>
+      <listitem>
+        <para>The VE-Suite development team will maintain certain installers
+        for all dependencies so that the external developers will have easier
+        access to the current development tools.</para>
+      </listitem>
 
-      <para>The UI makes use of platform independent libraries to enable the
-      software to run on a wide range of computer hardware and operating
-      systems. These platforms range from UNIX workstations to Pocket PCs and
-      PDAs. This functionality is ideal for the virtual engineering-based
-      system since users will frequently make use of handheld computing
-      devices inside of immersive environments (e.g., cave-like systems at
-      ISU-VRAC and NETL).</para>
+      <listitem>
+        <para>The development libraries will be kept in the native directory
+        structure for a respective library. This ensures that a developer is
+        able to swap libraries as necessary for research purposes without
+        having to change the build system.</para>
+      </listitem>
+    </orderedlist>
 
-      <para>After reviewing a number of different UI libraries, WxWidgets was
-      chosen. WxWidgets is one of the best cross-platform GUI packages
-      available. It is well-maintained, has a large user base, and has ports
-      for Windows, UNIX/X11, UNIX/Motif, OS2, Mac, and GTK. It also has an
-      alpha version of a Windows CE port, which is under active development.
-      This ensures that the user interface will run on all major platforms and
-      even on Pocket PC-based PDAs.</para>
-    </section>
+    <para>Linux:</para>
 
-    <section>
-      <title>Detachable/Location Transparency</title>
+    <orderedlist>
+      <listitem>
+        <para>The developer must either download all of the dependencies'
+        rpms, use their platform's respective package management system, or
+        build all of the dependencies for VE-Suite themselves.</para>
+      </listitem>
 
-      <para>The UI exists independently from the computational engine as a
-      separate CORBA component. This functionality allows the UI to be
-      attached and detached from an active simulation from any compatible
-      computer on the network. As an example, this would allow a user to build
-      and start a simulation and then detach from the computational engine.
-      The user could then go to a different location, re-attach to the
-      simulation, and regain monitoring and control functions.</para>
+      <listitem>
+        <para>The VE-Suite development team will maintain rpm files for all
+        dependencies so that the external developers will have easier access
+        to the current development tools.</para>
+      </listitem>
 
-      <para>To accomplish this functionality a CORBA IDL interface between the
-      UI and the computational engine was defined. This CORBA interface
-      provides all the necessary communication mechanisms between these
-      components. The communication link is bidirectional and handles items
-      such as model parameters passed to the computational engine and receives
-      items such as execution status and results from the computational
-      engine.</para>
-
-      <para>Another advantage of this design is the ability for multiple UIs
-      to be attached to the same computational engine, allowing multiple users
-      to monitor a simulation from different locations. A locking mechanism is
-      used so that only one UI (controller) can change the design and inputs
-      of the simulation. The UI also has the ability to connect to the
-      graphical environment and control what graphical representations are
-      shown for high fidelity data (i.e., contour planes, vector planes,
-      streamlines, iso-surfaces) or for low fidelity data (i.e., gauges
-      showing scalar information about plant performance, costing data, or
-      emissions data).</para>
-    </section>
-
-    <section>
-      <title>Extensibility</title>
-
-      <para>Another important consideration for the UI design is
-      extensibility. The UI is able to dynamically discover, identify, and
-      load UI elements for new component models. This capability keeps the
-      level of difficulty involved in integrating new component models to a
-      minimum since it eliminates the need for modifications to the core
-      interface when new models are added.</para>
-
-      <para>The dynamic discover and load capability is accomplished by
-      loading user developed module UIs from dynamic link libraries (DLL in
-      Windows) or shared libraries (SO lib in Linux/UNIX). A plugin C++ base
-      class defining this UI-module interface is provided to all module
-      developers. Developers can inherit from this class to create their own
-      module UIs and then compile the resulting code into a DLL/shared
-      library. The UI framework’s plug loader code will recognize the new
-      module and bring that into its user-module library. By this mechanism,
-      the core UI can plug in the third-party module-specific UI directly from
-      binaries.</para>
-    </section>
-
-    <section>
-      <title>Unified Control</title>
-
-      <para>Another feature of the UI is unified control for all user
-      interaction. This ensures that the user is not burdened with moving
-      between different UIs to perform operations. There is a single UI with
-      the ability to: 1) construct, specify, execute and monitor simulations;
-      and 2) provide complete control of the three-dimensional virtual
-      environment.</para>
-
-      <para>To provide this functionality, the UI is designed to communicate
-      via CORBA to not only the computational engine, but also to the
-      graphical engine. As was discussed for the UI-to-computational engine
-      link, the use of CORBA with an appropriate IDL provides a flexible,
-      detachable, and platform independent communication mechanism for this
-      link as well.</para>
-
-      <para>The following figure shows the two-dimensional GUI. A list of
-      available modules is maintained in a tree structure on the left side of
-      the window, while the main canvas area shows the current simulation
-      network.</para>
-
-      <figure>
-        <title>Two-dimensional GUI</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="images/10-descriptionofengines-03.jpg"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </figure>
-    </section>
+      <listitem>
+        <para>On Linux platforms, the dependency directory structure will be
+        assumed to be include, bin, lib, and share as is the case for most
+        libraries when the install target is used on a build system.</para>
+      </listitem>
+    </orderedlist>
   </section>
 
   <section>
-    <title>Computational Engine (VE-CE)</title>
+    <title>Building Dependencies on Windows</title>
 
-    <para>The computational engine (VE-CE) is the core of the framework. Its
-    duties are to construct, coordinate, schedule, and monitor plant
-    simulation runs. It is capable of running a simulation containing a
-    multitude of different types of models, each accepting and generating a
-    myriad of data types. The computational engine is able to analyze a plant
-    configuration, determine execution order, marshal system resources to
-    create model instances, and coordinate the flow of data through the
-    simulation framework. Tasks that require specific knowledge about a data
-    type or model are relegated to either a detachable UI or to a specific
-    model, thus keeping the computational engine generalized at a high
-    level.</para>
+    <para>It is best to read the specific installation/build instructions for
+    each dependency before attempting to build. The information provided
+    includes specific details to allow VE-Suite to build/run correctly.</para>
 
-    <para>Important functions that the computational engine controls can be
-    broken down into several pieces for explanation: plant configuration, data
-    handling, error handling, relationship to detachable UI, scheduling, and
-    relationship to models. Each of these is described in detail in the
-    following sections.</para>
+    <para>VE-Suite and its dependencies are currently built and tested using
+    Visual Studio 8.0(2005).</para>
 
-    <figure>
-      <title>Computational engine (VE-CE)</title>
+    <para>You can find the development libraries at <link
+    xlink:href="http://www.vesuite.org/external/deps/non-admin/">http://www.vesuite.org/external/deps/non-admin/</link>.</para>
 
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/10-compengTri-04.jpg"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
+    <para>Notes on installing dependencies:</para>
 
-    <section>
-      <title>Plant Configuration</title>
+    <itemizedlist>
+      <listitem>
+        <para><link
+        xlink:href="http://tortoisesvn.tigris.org/">TortoiseSVN</link> - Used
+        to check out and update VE-Suite from ISU's code repository.</para>
+      </listitem>
 
-      <para>The configuration of the plant, provided by a detachable UI, is
-      the primary data structure used by the computational engine. Nearly all
-      algorithms utilized, such as proper data flow, scheduling, and resource
-      allocation depend on this topology.</para>
-    </section>
+      <listitem>
+        <para>After TortoiseSVN is installed, you can check out the code if
+        you have an account registered with ISU's repository. Create a
+        VE-Suite directory. Right-click on the VE-Suite directory and choose
+        "Checkout..."</para>
+      </listitem>
 
-    <section>
-      <title>Data Handling</title>
+      <listitem>
+        <para>Alternately, if you get the VE-Suite source code as a compressed
+        tarball, some unzip utilities may not maintain the correct directory
+        structure. This can be fixed by unzipping the files on a Unix-based
+        system and then moving the files to the Windows machine.</para>
+      </listitem>
 
-      <para>Since there is an unlimited number of possible models capable of
-      being integrated into the framework (with each model having a different
-      input/output set), the computational engine operates with generalized
-      datatypes. To address this requirement, we have designed the CORBA IDL
-      interfaces between the computational engine and the component models to
-      use mapped string blocks in combination with common dimensions of array
-      data.</para>
-    </section>
-
-    <section>
-      <title>Error Handling</title>
-
-      <para>With the computational engine being the centralized intelligence
-      behind a simulation run, all errors that occur while performing this
-      task (whether originating within its own structure or on an attached
-      model) must be properly handled within the context of this overriding
-      structure. Thus, the computational engine has sophisticated error
-      handling routines and messaging facilities to alert attached users. To
-      fit into the detached UI paradigm, any errors that occur on an attached
-      UI are handled locally.</para>
-    </section>
-
-    <section>
-      <title>Relationship to Detachable UI</title>
-
-      <para>The computational engine is a CORBA server into which a detachable
-      UI client can connect. This detachable UI is where the user is able to
-      create a plant configuration, set model inputs, start and stop execution
-      of simulation, and view simulation results. Once a client-server
-      connection is made, the engine is able to send results, messages,
-      updates, and communications from other attached UIs in real time. The
-      computational engine does not require a connection to a UI during a
-      simulation run. Users can connect/disconnect at will to configure,
-      modify, or monitor the simulation of a given plant configuration.</para>
-    </section>
-
-    <section>
-      <title>Scheduling</title>
-
-      <para>The computational engine makes use of advanced scheduling
-      algorithms. The scheduler, at minimum, will be capable of handling
-      single and embedded feedback loops, iterative solves and, eventually,
-      transient simulation runs.</para>
-    </section>
-
-    <section>
-      <title>Relationship to Models</title>
-
-      <para>The computational engine, with its CORBA interface, is able to
-      connect to the various component models available for a simulation.
-      Information passed through this connection includes inputs (user
-      supplied and stream data), outputs, results, and general messages. The
-      importance of the CORBA interface being used for this purpose is
-      discussed in detail in the Model Integration section below.</para>
-    </section>
+      <listitem>
+        <para>While the default locations for installations will work, we
+        recommend creating a directory in the root (<code>C:</code>) directory
+        to minimize the path lengths and the accompanying potential for typos
+        when configuring environment settings.</para>
+      </listitem>
+    </itemizedlist>
   </section>
 
   <section>
-    <title>Graphical Engine (VE-Xplorer)</title>
+    <title>VE-Suite Component Dependencies</title>
 
-    <para>The graphical engine (VE-Xplorer) provides the core functionality
-    for the virtual engineering aspect of the framework. VE-Xplorer enables
-    the engineering analysis and design process to take place in a virtual
-    environment. For maximum graphical performance on multiple operating
-    systems, it is built upon <link xlink:href="www.vrjuggler.org">VR
-    Juggler</link>, <link xlink:href="www.sgi.com">OpenGL Performer</link>,
-    and <link xlink:href="www.kitware.com">Kitware's Visualization
-    ToolKit</link>. This visual interface, controlled by the UI and the
-    computational engine, is a graphical representation of the simulation
-    under review.</para>
+    <para>If you are installing individual components of VE-Suite on different
+    desktops, it is only necessary to install the dependencies for that
+    specific component. Below is a table listing the individual components and
+    their specific dependencies.</para>
 
-    <para>The graphical engine is generalized to load data not only from
-    comprehensive models, but also from other engineering sources, including
-    results generated from the CMU Vision 21 planner software and other
-    generalized datasets (e.g., experimental data from a test rig). The engine
-    is also being modified to make use of the high level CORBA interface
-    specifications used throughout the software framework. This interface
-    allows the visualization engine to communicate directly with the component
-    models, computational engine, and UI. To communicate with the graphical
-    engine there is an external socket connection that is made between
-    individual component models and the respective graphical objects. This
-    connection allows large high fidelity datasets to be transferred to the
-    graphical environment without interrupting the overall communication
-    network.</para>
+    <table>
+      <title>Component Dependencies</title>
 
-    <para>The graphical engine is also designed to allow graphics objects to
-    be added to the virtual environment just like the objects are added in the
-    GUI. This allows the graphical environment to be a direct representation
-    of the system being designed by the engineer. In much the same way that
-    the GUI auto-discovers the plugins for use by the engineer, the graphical
-    engine also dynamically discovers plugins. Unlike the GUI, the graphical
-    engine is controlled by the network string that is created by the GUI.
-    This represents a significant capability since the graphical engine has no
-    a priori knowledge of the system under interrogation.</para>
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry>Computational Engine</entry>
 
-    <figure>
-      <title>Graphical engine (VE-Xplorer)</title>
+            <entry>ACE/TAO, xerces-c</entry>
+          </row>
 
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/10-xplorerTri-05.jpg"></imagedata>
-        </imageobject>
-      </mediaobject>
-    </figure>
+          <row>
+            <entry>VE-Conductor (GUI)</entry>
+
+            <entry>ACE/TAO, xerces-c, wxWidgets</entry>
+          </row>
+
+          <row>
+            <entry>VE-Xplorer</entry>
+
+            <entry>ACE/TAO, OpenSceneGraph, VTK, VR Juggler</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>Other Requirements</title>
+
+    <para>Computers running VE-Suite must be able to run all of the
+    dependencies listed above. They must also have shader support. VE-Suite
+    will not run properly without shader support.</para>
   </section>
 </chapter>

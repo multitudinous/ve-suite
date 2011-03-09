@@ -192,40 +192,87 @@
     <para><emphasis role="bold">NOTE:</emphasis> Make sure to save your work
     before clearning the design space.</para>
 
+    <para>To bring up the visualization interface, right-click on the plugin
+    to access the menu and select Visualization. The Visualization window will
+    open.</para>
+
     <section>
-      <title>Scalar Planes</title>
+      <title>Scalar Contours</title>
 
-      <para>The visualization interface can be used to show scalar planes.
-      Visualization not only allows access to scalar contours, but also to
-      vector planes, isosurfaces, and more.</para>
+      <para>In the Visualization window, click on the Scalar Contours button
+      to bring up the Contours interface.</para>
 
-      <para>To bring up the visualization interface, right-click on the plugin
-      to access the menu and select Visualization to open the Visualization
-      window. Click on the Scalar Contours button to bring up the Scalar
-      Contours interface.</para>
+      <para>Set the direction (x, y, z, or By Wand) and choose the appropriate
+      settings for Multiple Planes and Single Plane. Set the plane's position
+      either using the text box or the slider.</para>
 
-      <para>Notice that the plane's orientation and position can be set from
-      this window. For now, set the Direction to Y and the plane's position to
-      50 and click Add Plane.</para>
+      <para>Click the Advanced... button to set further controls,
+      including:</para>
 
-      <para>Once you are done looking at the contour planes, they can be
-      removed by clicking Clear All on the Visualization interface. This will
-      clear any Visualization features from VE-Xplorer.</para>
+      <itemizedlist>
+        <listitem>
+          <para>Warped Contour Scale opacity</para>
+        </listitem>
+
+        <listitem>
+          <para>Contour LOD detail level</para>
+        </listitem>
+
+        <listitem>
+          <para>Contour Type</para>
+        </listitem>
+
+        <listitem>
+          <para>Warp Option, if applicable</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Click Close when you are finished setting the advanced
+      controls.</para>
+
+      <para>When you are finished making the appropriate settings, click the
+      Add Plane button, or click Close to go back to the Visualization
+      interface.</para>
     </section>
 
     <section>
-      <title>Vector Planes</title>
+      <title>Vectors</title>
 
-      <para>Showing vector planes is almost exactly like showing scalar
-      planes. In the Visualization interface, click on the Vector button top
-      open the Vector Contour window.</para>
+      <para>In the Visualization window, click the Vectors button to bring up
+      the Vectors interface.</para>
 
-      <para>The Vector Contour window is very similar to the Scalar Contour
-      window. This time, set the Direction to z and the plane's position to 20
-      and click Add Plane.</para>
+      <para>Set the direction (x, y, z, By Wand, or All) and choose the
+      appropriate settings for Multiple Planes and Single Plane. Select Use
+      GPU Tools if applicable. Set the plane's position either using the text
+      box or the slider.</para>
 
-      <para>As with scalar planes, the vector plane can be removed by clicking
-      Clear All on the Visualization interface.</para>
+      <para>Click the Advanced... button to set further controls,
+      including:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Vector Threshold</para>
+        </listitem>
+
+        <listitem>
+          <para>Vector Scale</para>
+        </listitem>
+
+        <listitem>
+          <para>Vector Ratio</para>
+        </listitem>
+
+        <listitem>
+          <para>Scale by Vector Magnitude, if applicable</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Click Close when you are finished setting the advanced
+      controls.</para>
+
+      <para>When you are finished making the appropriate settings, click the
+      Add Plane button, or click Close to go back to the Visualization
+      interface.</para>
     </section>
 
     <section>
@@ -239,8 +286,8 @@
       Y bounds, and Z bounds; X-Plane, Y-Plane, and Z-Plane). Click Close when
       you are finished setting seed point controls.</para>
 
-      <para>Click the Advanced... button to set further controls, including:
-      </para>
+      <para>Click the Advanced... button to set further controls,
+      including:</para>
 
       <itemizedlist>
         <listitem>
@@ -280,101 +327,107 @@
     <section>
       <title>Isosurfaces</title>
 
-      <para>To generate an isosurface, go back to the Visualization interface.
-      Before the Isosurfaces window can be opened, a scalar or vector must be
-      chosen. Choose scalars under Scalars and click the Isosurfaces button to
-      open the Isosurfaces window.</para>
+      <para>To show isosurfaces, click the Isosurfaces button in the
+      Visualization interface. Set the isosurfaces pressure.</para>
 
-      <para>The Isosurfaces window has only one setting. Set the Isosurfaces
-      pressure to 50 and click the Compute Isosurface button.</para>
+      <para>Click the Advanced... button to set further controls,
+      including:</para>
 
-      <para>Exit Visualization and examine the isosurface by using the mouse
-      or the Navigation pane. Once you are done, reenter Visualization and
-      click Clear All.</para>
+      <itemizedlist>
+        <listitem>
+          <para>Scalar to Color Isosurface</para>
+        </listitem>
+
+        <listitem>
+          <para>Scalar Range</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Click Close when you are finished setting the advanced
+      controls.</para>
+
+      <para>When you are finished making the appropriate settings, click the
+      Compute Isosurface button, or click Close to go back to the
+      Visualization interface.</para>
     </section>
 
     <section>
       <title>Texture-Based Datasets</title>
 
-      <para>Texture-based datasets render three-dimensional data without
-      relying on primitive shapes. Texture-based data can be viewed in the
-      Visualization interface. Click the Texture Based button on the top icon
-      bar.</para>
-
-      <para>The Texture-Based Tools window will open. Select the Scalars icon
-      to open the Scalar Tools window.</para>
-
-      <para>At this point, the screen should be blank, even though a contour
-      plane was just on the screen. Once the user selects a scalar, its
-      texture-based image should appear on the viewscreen. The scalar range
-      can be adjusted so that certain parts of it are visible.</para>
-
-      <para>The Enable Isosurface box can also be checked to select a specific
-      isosurface within a scalar range. <emphasis role="bold">NOTE:</emphasis>
-      The Advanced... button is currently disabled.</para>
-
-      <para>If time-step data is available, its movement can be controlled
-      using the Transient button in the Texture-Based Tools window. From the
-      Transient Controls window, you can:</para>
+      <para>Texture-based data can be viewed by clicking the Texture Based
+      button in the Visualization interface. The Texture-Based Tools interface
+      offers the following options:</para>
 
       <itemizedlist>
         <listitem>
-          <para>Play the time steps</para>
+          <para>Scalar Data Tools: In the Scalar Tools window, set the type of
+          scalar, number of slice planes, isosurface, and scalar range. Click
+          Enable Isosurface if applicable and set the range. The Advanced...
+          isosurface button is currently disabled.</para>
         </listitem>
 
         <listitem>
-          <para>Stop the time steps, resetting the data</para>
+          <para>Vector Data Tools: There is currently no data available to use
+          with these tools.</para>
         </listitem>
 
         <listitem>
-          <para>Go Forward or Backward one frame at a time</para>
+          <para>Edit Region of Interest: In the Volume Clipping Bounds
+          interface, set X Bounds, Y Bounds, and Z Bounds.</para>
+        </listitem>
+
+        <listitem>
+          <para>Edit Transfer Functions: In the Transfer Functions interface,
+          set the Base Look-Up Table and select Enable Phong Shading if
+          applicable.</para>
+        </listitem>
+
+        <listitem>
+          <para>Transient: From the Transient Controls interface, you can play
+          or stop the time steps or go forward or backward one frame at a
+          time.</para>
         </listitem>
       </itemizedlist>
 
-      <para>For more information on how to create a texture-based dataset, see
-      the section Creating Texture-Based Datasets in Chapter 13,
-      VE-Builder.</para>
-
-      <para>Dataset in images provided courtesy of the National Energy
-      Technology Laboratory, 2005.</para>
+      <para>Click OK to go back to the Visualization interface.</para>
     </section>
 
     <section>
-      <title>Polydata Surfaces</title>
+      <title>Polydata</title>
 
-      <para>Polydata surfaces allow users to view technical data on the
-      surface of objects, similar to isosurfaces.</para>
+      <para>Polydata can be viewed by clicking on the Polydata button in the
+      Visualization interface. In the Polydata interface, you can:</para>
 
-      <para>To build a polydata surface, use the VTKSurface program under VE's
-      Builder Tools. Run a Builder Shell from VE-Launcher (see Chapter 13) and
-      run <code>makeVTKSurface</code>. This will build a polydata file from
-      the <code>.vt*</code> file you enter. Input your options and wait for
-      the preview window to open. To exit the preview, press the E key on your
-      keyboard. The polydata will be created, usually as
-      <code>outFile.vtk</code>.</para>
+      <itemizedlist>
+        <listitem>
+          <para>Select Use Warped Surface if applicable</para>
+        </listitem>
 
-      <!-- TODO: add olink for Chapter 13-->
+        <listitem>
+          <para>Set the Scale Factor</para>
+        </listitem>
 
-      <para>Start VE-Suite. Navigate into the Data Set Config window to load
-      the datasets, then open the Surface Data Directory option and left-click
-      the polydata file created in the previous step (usually
-      <code>outFile.vtk</code>) to select it and its directory.</para>
+        <listitem>
+          <para>Select Use GPU Tools and Two Sided Lighting if
+          applicable</para>
+        </listitem>
 
-      <para>Submit the job and start visualization. Pull down the Data Set
-      Chooser menu and select the polydata file, then select the scalar and
-      vector to use for the polydata. Click the Polydata button on the far
-      right side of the button menu to bring up the polydata menu.</para>
+        <listitem>
+          <para>Set the level of Scalar Control</para>
+        </listitem>
 
-      <para>Once the Polydata window is up, click the Update button to display
-      the surface.</para>
+        <listitem>
+          <para>Set the Opacity</para>
+        </listitem>
+      </itemizedlist>
 
-      <para>Users can also choose to warp the surface, which stretches the
-      surface based on its data values, similar to elevating a contour map to
-      see how the terrain looks in three dimensions. Toggle the scale factor
-      to choose how much the surface is stretched.</para>
+      <para>Click the Advanced... button to select the scalar to color
+      polydata, and click OK to save your setting or Cancel to go back to the
+      Polydata interface without changing the setting.</para>
 
-      <para>Finally, the advanced button allows users to choose which scalar
-      to use to color it, as in the isosurfaces window.</para>
+      <para>When you are finished making the appropriate settings, click the
+      Update button, or click Close to go back to the Visualization
+      interface.</para>
     </section>
   </section>
 </chapter>

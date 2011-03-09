@@ -102,11 +102,15 @@
   </part>
 
   <part>
-    <title>Developer Information</title>
+    <title>CAVE Tools</title>
 
     <xi:include href="Chapter10.xml" xpointer="element(/1)" />
 
     <xi:include href="Chapter11.xml" xpointer="element(/1)" />
+  </part>
+
+  <part>
+    <title>Developer Information</title>
 
     <xi:include href="Chapter12.xml" xpointer="element(/1)" />
 
@@ -131,14 +135,20 @@
     <xi:include href="Chapter22.xml" xpointer="element(/1)" />
 
     <xi:include href="Chapter23.xml" xpointer="element(/1)" />
+
+    <xi:include href="Chapter24.xml" xpointer="element(/1)" />
+
+    <xi:include href="Chapter25.xml" xpointer="element(/1)" />
   </part>
 
   <part>
     <title>Other Tools</title>
 
-    <xi:include href="Chapter24.xml" xpointer="element(/1)" />
+    <xi:include href="Chapter26.xml" xpointer="element(/1)" />
 
-    <xi:include href="Chapter25.xml" xpointer="element(/1)" />
+    <xi:include href="Chapter27.xml" xpointer="element(/1)" />
+
+    <xi:include href="Chapter28.xml" xpointer="element(/1)" />
   </part>
 
   <xi:include href="AppendixA.xml" xpointer="element(/1)" />
