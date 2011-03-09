@@ -101,9 +101,10 @@ ManipulatorEvents::ManipulatorEvents()
     m_currY( 0 ),
     m_pickedBody( 0 ),
     m_pickConstraint( 0 ),
-    m_logger( Poco::Logger::get("xplorer.behavior.ManipulatorEvents") )
+    m_logger( Poco::Logger::get("xplorer.behavior.ManipulatorEvents") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
+
 {                     
-    m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     //Setup connection to mouse events
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ), 
         eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseMove,

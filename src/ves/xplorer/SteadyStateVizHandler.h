@@ -157,11 +157,6 @@ public:
     ///\param actorsAndGeodes Go create geodes and actors in sshandler
     void SetComputeActorsAndGeodes( bool actorsAndGeodes );
 
-    ///Set the flag to tell sshandler that actors are ready
-    ///- to be used by the addvis eh
-    ///\param actorsReady Bool that tells sshandler to add geodes
-    void SetActorsAreReady( bool actorsReady );
-
     ///Clear all the vis objects from the graphics objects list
     ///right now this must be done in ssvishandler
     ///because the map is a private member of ssvishandler and this is the
@@ -193,6 +188,11 @@ public:
     cfdObjects* GetVizObject( VizKeyPair const& vizKey );
 
 private:
+    ///Set the flag to tell sshandler that actors are ready
+    ///- to be used by the addvis eh
+    ///\param actorsReady Bool that tells sshandler to add geodes
+    void SetActorsAreReady( bool actorsReady );
+    
     //Common objects for all functions
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
     ///A queue to stack active objects in to enable commands
@@ -205,7 +205,7 @@ private:
     //ves::xplorer::scenegraph::cfdTempAnimation* _activeTempAnimation;
 
     //Classes and variables for multithreading.
-    vpr::Thread* vjTh[ 1 ];
+    vpr::Thread* m_vizThread;
 
     bool actorsAreReady;
     bool computeActorsAndGeodes;

@@ -596,7 +596,7 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     //call back over to ssvishandler to set the flags
     SteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
     SteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
-    SteadyStateVizHandler::instance()->SetActorsAreReady( true );
+    //SteadyStateVizHandler::instance()->SetActorsAreReady( true );
 }
 //////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObjectPtr xmlObject )

@@ -120,6 +120,7 @@ namespace xplorer
 ////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::SteadyStateVizHandler()
     :
+    m_vizThread( 0 ),
     actorsAreReady( false ),
     computeActorsAndGeodes( false ),
     texturesActive( false ),
@@ -130,8 +131,6 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     m_logger( Poco::Logger::get("xplorer.SteadyStateVizHandler") ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
-    vjTh[ 0 ] = 0;
-
     vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
     vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
     prototype->Delete();
@@ -189,13 +188,13 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
 
     try
     {
-        vjTh[ 0 ]->join();
+        m_vizThread->join();
     }
     catch ( ... )
     {
         ;//do nothing
     }
-    delete vjTh[ 0 ];
+    delete m_vizThread;
     
     vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
 }
@@ -340,7 +339,7 @@ void SteadyStateVizHandler::InitScene()
     //This set of thread stuff needs to be in ssvizhandler and transvizhandler
     std::cout << "| Initializing............................................. Threads |" << std::endl;
     runIntraParallelThread = true;
-    vjTh[ 0 ] = new vpr::Thread( boost::bind( &SteadyStateVizHandler::CreateActorThread, this ) );
+    m_vizThread = new vpr::Thread( boost::bind( &SteadyStateVizHandler::CreateActorThread, this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::PreFrameUpdate()
