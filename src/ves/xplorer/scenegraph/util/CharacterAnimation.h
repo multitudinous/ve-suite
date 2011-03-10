@@ -23,10 +23,11 @@
 #include <osg/Node>
 #include <osgDB/ReadFile>
 #include <osgAnimation/BasicAnimationManager>
+#include <ves/VEConfig.h>
 
-class CharacterAnimation 
+class VE_SCENEGRAPH_EXPORTS CharacterAnimation 
 {
-private:
+public:
     ///Constructor
     CharacterAnimation();
     ///Destructor
@@ -34,28 +35,28 @@ private:
     
 public:
     ///???
-    static CharacterAnimation& instance() 
+    /*static CharacterAnimation& instance() 
     {
         static CharacterAnimation avmc;
         return avmc;
-    }
+    }*/
 
     ///???
-    static bool setModel(osgAnimation::BasicAnimationManager* model) 
+    bool setModel(osgAnimation::BasicAnimationManager* model) 
     {
-        CharacterAnimation& self = instance();
-        self._model = model;
+        //CharacterAnimation& self = instance();
+        _model = model;
         for( osgAnimation::AnimationList::const_iterator it = 
-            self._model->getAnimationList().begin(); 
-            it != self._model->getAnimationList().end(); ++it )
+            _model->getAnimationList().begin(); 
+            it != _model->getAnimationList().end(); ++it )
         {
-            self._map[(*it)->getName()] = *it;
+            _map[(*it)->getName()] = *it;
         }
 
-        for( osgAnimation::AnimationMap::iterator it = self._map.begin(); 
-            it != self._map.end(); ++it )
+        for( osgAnimation::AnimationMap::iterator it = _map.begin(); 
+            it != _map.end(); ++it )
         {
-            self.m_amv.push_back(it->first);
+            m_amv.push_back(it->first);
         }
 
         return true;
@@ -86,7 +87,7 @@ public:
     const std::vector< std::string >& getAnimationMap() const;
 
     ///???
-    void Register( std::string fileName );
+    osg::Group* Register( std::string const& fileName );
 
 private:
     ///???

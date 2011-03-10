@@ -39,6 +39,8 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
 
+#include <ves/xplorer/scenegraph/util/CharacterAnimation.h>
+
 // --- VRJuggler Includes --- //
 #include <gmtl/Misc/MatrixConvert.h>
 #include <gmtl/Xforms.h>
@@ -189,6 +191,14 @@ void CharacterController::Initialize()
 #endif
     SceneManager::instance()->GetModelRoot()->addChild(
         mMatrixTransform.get() );
+
+    /*InitializeCharacters();
+
+    SceneManager::instance()->GetModelRoot()->
+        addChild( m_fbxCharacter.get() );
+
+    SceneManager::instance()->GetModelRoot()->
+        addChild( m_fbxBackwardCharacter.get() );*/
 
     mMatrixTransform->setUpdateCallback(
         new CharacterTransformCallback( m_ghostObject ) );
@@ -1055,3 +1065,50 @@ void CharacterController::CharacterTransformCallback::operator()(
     traverse( node, nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CharacterController::InitializeCharacters()
+{
+    //Construction_Worker_Walk_Backwards_111-01_v03.osg
+    //Construction_Worker_Walk_Sideways_111-26_Centered_v03.osg
+    //Construction_Worker_Walk_Forwards_35-28_v03.osg
+    std::string fileNames1;
+    fileNames1 = "osg-data/Construction_Worker_Walk_Backwards_111-01_v03.osg";
+    std::string fileNames2;
+    fileNames2 = "osg-data/Construction_Worker_Walk_Forwards_35-28_v03.osg";
+
+    //create switch node
+    mCharacterAnimations = new osg::Switch();
+
+    CharacterAnimation* forwardCharacter = new CharacterAnimation();
+    osg::Group* tempGroup = forwardCharacter->Register( fileNames2 );
+    if( tempGroup )
+    {
+        std::cout << "|\tThese are the animations available for the character:" << std::endl;
+        forwardCharacter->list();
+        forwardCharacter->playByName( "Walk Forwards Animation" );
+    }
+    mCharacterAnimations->addChild( tempGroup );
+
+    CharacterAnimation* backwardCharacter = new CharacterAnimation();
+    tempGroup = backwardCharacter->Register( fileNames1 );
+    if( tempGroup )
+    {
+        std::cout << "|\tThese are the animations available for the character:" << std::endl;
+        backwardCharacter->list();
+        backwardCharacter->playByName( "Walk Backwards Animation" );
+    }
+    mCharacterAnimations->addChild( tempGroup );
+
+    mCharacterAnimations->setSingleChildOn( 0 );
+    mCharacterAnimations->setName( "Character Switch Control" );
+
+    //for scaling if necessary
+    osg::ref_ptr< osg::PositionAttitudeTransform > scaleDown = new osg::PositionAttitudeTransform(); 
+    scaleDown->setName( "Character Scale Transform" );
+    scaleDown->addChild( mCharacterAnimations.get() );
+    //scaleDown->setScale( osg::Vec3d( 0.055, 0.055, 0.055 ) );
+    scaleDown->setAttitude( osg::Quat(
+        osg::DegreesToRadians( 90.0 ), osg::Vec3f( 1.0, 0.0, 0.0 ) ) );
+
+    mMatrixTransform->addChild( scaleDown.get() );
+
+}

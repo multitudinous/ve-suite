@@ -49,10 +49,10 @@ CharacterAnimation::~CharacterAnimation()
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterAnimation::list() 
 {
-    std::cout << "Animation List:" << std::endl;
+    //std::cout << "Animation List:" << std::endl;
     for( osgAnimation::AnimationMap::iterator it = _map.begin(); it != _map.end(); ++it )
     {
-        std::cout << it->first << std::endl;
+        std::cout << "|\t " << it->first << std::endl;
     }
 
     return true;
@@ -62,7 +62,7 @@ bool CharacterAnimation::play()
 {
     if(_focus < m_amv.size()) 
     {
-        std::cout << "Play " << m_amv[_focus] << std::endl;
+        std::cout << "|\tPlay " << m_amv[_focus] << std::endl;
         _model->playAnimation(_map[m_amv[_focus]].get());
         return true;
     }
@@ -74,7 +74,7 @@ bool CharacterAnimation::stop()
 {
     if(_focus < m_amv.size()) 
     {
-        std::cout << "Stop " << m_amv[_focus] << std::endl;
+        std::cout << "|\tStop " << m_amv[_focus] << std::endl;
         _model->stopAnimation(_map[m_amv[_focus]].get());
         return true;
     }
@@ -117,22 +117,28 @@ const std::vector< std::string >& CharacterAnimation::getAnimationMap() const
     return m_amv;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CharacterAnimation::Register( std::string fileName ) 
+osg::Group* CharacterAnimation::Register( std::string const& fileName ) 
 {
-    osg::Group* node = dynamic_cast<osg::Group*>( osgDB::readNodeFile( fileName ) );
-    //dynamic_cast<osgAnimation::AnimationManager*>(osgDB::readNodeFile(psr[1]));
-    if( !node )
+    osg::Group* root = new osg::Group();
+
+    //for( size_t i = 0; i < fileName.size(); ++i )
     {
-        std::cout << "No data loaded" << std::endl;
-        return;
+        osg::Group* node = dynamic_cast<osg::Group*>( osgDB::readNodeFile( fileName ) );
+        //dynamic_cast<osgAnimation::AnimationManager*>(osgDB::readNodeFile(psr[1]));
+        root->addChild( node );
+        if( !node )
+        {
+            std::cout << "No data loaded" << std::endl;
+            return 0;
+        }
     }
 
     // Set our Singleton's model.
     AnimationManagerFinder finder;
-    node->accept(finder);
+    root->accept(finder);
     if( finder._am.valid() ) 
     {
-        node->setUpdateCallback(finder._am.get());
+        root->setUpdateCallback(finder._am.get());
         CharacterAnimation::setModel(finder._am.get());
     }
     else
@@ -140,6 +146,7 @@ void CharacterAnimation::Register( std::string fileName )
         osg::notify(osg::WARN) << "no osgAnimation::AnimationManagerBase found in the subgraph, no animations available" << std::endl;
     }
     
-    node->setNodeMask(0x0001);
+    root->setNodeMask(0x0001);
+    return root;
 }
 ////////////////////////////////////////////////////////////////////////////////

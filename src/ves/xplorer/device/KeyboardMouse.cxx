@@ -69,18 +69,6 @@
 
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-#ifdef QT_ON
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
-
-#include <ves/open/xml/model/Model.h>
-// #include <ves/open/xml/DataValuePair.h>
-// #include <ves/open/xml/Command.h>
-// #include <ves/xplorer/command/CommandManager.h>
-#endif // QT_ON
-
-
-
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
@@ -199,21 +187,6 @@ KeyboardMouse::KeyboardMouse()
 {
     mKeyboardMouse.init( "VJKeyboard" );
     mHead.init( "VJHead" );
-
-#ifdef QT_ON
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< InteractionSignal_type >( &mInteractionSignal ),
-        "KeyboardMouseInteractionSignal",
-        eventmanager::EventManager::input_SignalType);
-
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< HideShowUISignal_type >( &mHideShowUISignal ),
-        "KeyboardMouse.HideShowUISignal");
-        
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &mObjectPickedSignal ),
-        "KeyboardMouse.ObjectPickedSignal" );
-#endif // QT_ON
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -378,52 +351,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
             m_currMouse = mouse_evt->getButton();
             m_keys.set( m_currMouse );
-#ifdef QT_ON
-            eventmanager::InteractionEvent::buttonType button;
-            switch (m_currMouse)
-            {
-                case gadget::MBUTTON1:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-                case gadget::MBUTTON2:
-                {
-                    button = eventmanager::InteractionEvent::button_2;
-                    break;
-                }
-                case gadget::MBUTTON3:
-                {
-                    button = eventmanager::InteractionEvent::button_3;
-                    break;
-                }
-                case gadget::MBUTTON4:
-                {
-                    button = eventmanager::InteractionEvent::button_4;
-                    break;
-                }
-                case gadget::MBUTTON5:
-                {
-                    button = eventmanager::InteractionEvent::button_5;
-                    break;
-                }
-                default:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-            }
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonPress,
-                                0, 0, 0, mouse_evt->getState(), button,
-                                button, 0.0, 0.0,
-                                mouse_evt->getX(), mouse_evt->getY() );
 
-            // Signal returns true if this event should not be propagated on
-            if ( *mInteractionSignal( ie ) )
-            {
-                return;
-            }
-#endif
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
             {
@@ -440,51 +368,7 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
                 boost::static_pointer_cast< gadget::MouseEvent >( event );
             m_currMouse = mouse_evt->getButton();
             m_keys.reset( m_currMouse );
-#ifdef QT_ON
-            eventmanager::InteractionEvent::buttonType button;
-            switch (m_currMouse)
-            {
-                case gadget::MBUTTON1:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-                case gadget::MBUTTON2:
-                {
-                    button = eventmanager::InteractionEvent::button_2;
-                    break;
-                }
-                case gadget::MBUTTON3:
-                {
-                    button = eventmanager::InteractionEvent::button_3;
-                    break;
-                }
-                case gadget::MBUTTON4:
-                {
-                    button = eventmanager::InteractionEvent::button_4;
-                    break;
-                }
-                case gadget::MBUTTON5:
-                {
-                    button = eventmanager::InteractionEvent::button_5;
-                    break;
-                }
-                default:
-                {
-                    button = eventmanager::InteractionEvent::button_1;
-                    break;
-                }
-            }
-            eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::buttonRelease,
-                                0, 0, 0, mouse_evt->getState(), button,
-                                button, 0.0, 0.0,
-                                mouse_evt->getX(), mouse_evt->getY() );
 
-            if( *mInteractionSignal( ie ) )
-            {
-                return;
-            }
-#endif
             //Set the current GLTransfromInfo from the event
             if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
             {
@@ -511,33 +395,10 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr command )
 
             if( !m_keys[ m_currMouse ] )
             {
-#ifdef QT_ON
-                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
-                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
-                                eventmanager::InteractionEvent::button_none, 0.0, 0.0,
-                                m_currX, m_currY );
-
-                if( *mInteractionSignal( ie ) )
-                {
-                    return;
-                }
-#endif
                 OnMouseMotionUp();
             }
             else
             {
-#ifdef QT_ON
-                eventmanager::InteractionEvent ie( eventmanager::InteractionEvent::pointerMotion,
-                                0, 0, 0, mouse_evt->getState(), eventmanager::InteractionEvent::button_none,
-                                eventmanager::InteractionEvent::button_1, 0.0, 0.0,
-                                m_currX, m_currY );
-
-                if( *mInteractionSignal( ie ) )
-                {
-                    return;
-                }
-#endif
-
 #if defined( VPR_OS_Windows )
                 double dx = mouse_evt->getScrollDeltaX();
                 double dy = mouse_evt->getScrollDeltaY();

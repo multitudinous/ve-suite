@@ -9,6 +9,8 @@ fileBundle = ves_pkg.createFileBundle( pj( 'share','vesuite','osg-data' ) )
 
 osgFile = sca_util.getFilesRecursiveByExt( pj( RootDir, 'share', 'osg-data' ), [ '.osg' ] )
 iveFile = sca_util.getFilesRecursiveByExt( pj( RootDir, 'share', 'osg-data' ), [ '.ive' ] )
+jpgFile = sca_util.getFilesRecursiveByExt( pj( RootDir, 'share', 'osg-data' ), [ '.jpg' ] )
 
 fileBundle.addFiles( osgFile )
 fileBundle.addFiles( iveFile )
+fileBundle.addFiles( jpgFile )
