@@ -138,7 +138,7 @@ void CharacterController::Initialize()
 #ifdef VES_USE_ANIMATED_CHARACTER
     //create animated character
     //idle
-    osg::ref_ptr< osg::Node > node =
+    /*osg::ref_ptr< osg::Node > node =
         osgDB::readNodeFile( "osg-data/soccer.idle.osg" );
     //walk forward
     osg::ref_ptr< osg::Node > node1 =
@@ -170,8 +170,10 @@ void CharacterController::Initialize()
     scaleDown->setScale( osg::Vec3d( 0.055, 0.055, 0.055 ) );
     scaleDown->setAttitude( osg::Quat(
         osg::DegreesToRadians( 180.0 ), osg::Vec3f( 0.0, 0.0, 1.0 ) ) );
-
     mMatrixTransform->addChild( scaleDown.get() );
+    */
+    InitializeCharacters();
+
 #else
     //Create graphics mesh representation
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
@@ -191,14 +193,6 @@ void CharacterController::Initialize()
 #endif
     SceneManager::instance()->GetModelRoot()->addChild(
         mMatrixTransform.get() );
-
-    /*InitializeCharacters();
-
-    SceneManager::instance()->GetModelRoot()->
-        addChild( m_fbxCharacter.get() );
-
-    SceneManager::instance()->GetModelRoot()->
-        addChild( m_fbxBackwardCharacter.get() );*/
 
     mMatrixTransform->setUpdateCallback(
         new CharacterTransformCallback( m_ghostObject ) );
@@ -1077,9 +1071,23 @@ void CharacterController::InitializeCharacters()
 
     //create switch node
     mCharacterAnimations = new osg::Switch();
+    mCharacterAnimations->setSingleChildOn( 0 );
+    mCharacterAnimations->setName( "Character Switch Control" );
 
+    //stand still 
+    CharacterAnimation* stillCharacter = new CharacterAnimation();
+    osg::Group* tempGroup = stillCharacter->Register( fileNames2 );
+    if( tempGroup )
+    {
+        std::cout << "|\tThese are the animations available for the character:" << std::endl;
+        stillCharacter->list();
+        //forwardCharacter->playByName( "Walk Forwards Animation" );
+    }
+    mCharacterAnimations->addChild( tempGroup );
+
+    //Walk forward
     CharacterAnimation* forwardCharacter = new CharacterAnimation();
-    osg::Group* tempGroup = forwardCharacter->Register( fileNames2 );
+    tempGroup = forwardCharacter->Register( fileNames2 );
     if( tempGroup )
     {
         std::cout << "|\tThese are the animations available for the character:" << std::endl;
@@ -1088,6 +1096,7 @@ void CharacterController::InitializeCharacters()
     }
     mCharacterAnimations->addChild( tempGroup );
 
+    //Walk backward
     CharacterAnimation* backwardCharacter = new CharacterAnimation();
     tempGroup = backwardCharacter->Register( fileNames1 );
     if( tempGroup )
@@ -1098,6 +1107,28 @@ void CharacterController::InitializeCharacters()
     }
     mCharacterAnimations->addChild( tempGroup );
 
+    //sidestep left
+    CharacterAnimation* leftStepCharacter = new CharacterAnimation();
+    tempGroup = leftStepCharacter->Register( fileNames2 );
+    if( tempGroup )
+    {
+        std::cout << "|\tThese are the animations available for the character:" << std::endl;
+        leftStepCharacter->list();
+        //forwardCharacter->playByName( "Walk Forwards Animation" );
+    }
+    mCharacterAnimations->addChild( tempGroup );
+
+    //sidestep right
+    CharacterAnimation* rightStepCharacter = new CharacterAnimation();
+    tempGroup = rightStepCharacter->Register( fileNames2 );
+    if( tempGroup )
+    {
+        std::cout << "|\tThese are the animations available for the character:" << std::endl;
+        rightStepCharacter->list();
+        //forwardCharacter->playByName( "Walk Forwards Animation" );
+    }
+    mCharacterAnimations->addChild( tempGroup );
+
     mCharacterAnimations->setSingleChildOn( 0 );
     mCharacterAnimations->setName( "Character Switch Control" );
 
@@ -1105,9 +1136,19 @@ void CharacterController::InitializeCharacters()
     osg::ref_ptr< osg::PositionAttitudeTransform > scaleDown = new osg::PositionAttitudeTransform(); 
     scaleDown->setName( "Character Scale Transform" );
     scaleDown->addChild( mCharacterAnimations.get() );
-    //scaleDown->setScale( osg::Vec3d( 0.055, 0.055, 0.055 ) );
+
+    //orients the character in the proper direction
     scaleDown->setAttitude( osg::Quat(
-        osg::DegreesToRadians( 90.0 ), osg::Vec3f( 1.0, 0.0, 0.0 ) ) );
+        //roll
+        osg::DegreesToRadians( 180.0 ), osg::Vec3f( 0.0, 1.0, 0.0 ),
+        //pitch
+        osg::DegreesToRadians( 90.0 ), osg::Vec3f( 1.0, 0.0, 0.0 ),
+        //heading
+        osg::DegreesToRadians( 0.0 ), osg::Vec3f( 0.0, 0.0, 1.0 )) );
+
+    scaleDown->setScale( osg::Vec3d( 1.646, 1.646, 1.646 ) );
+    
+    scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -4.0 ) );
 
     mMatrixTransform->addChild( scaleDown.get() );
 
