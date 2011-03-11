@@ -184,6 +184,7 @@ protected:
 private:
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
     int buttonData[ 6 ]; ///<do not know what this does
+    gadget::DigitalInterface buttonEight;
 
     int cfdIso_value; ///<Value to translate
 

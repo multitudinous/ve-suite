@@ -113,6 +113,7 @@ Wand::Wand()
     digital[ 4 ].init( "VJButton4" );
     // 9 o'clock -- exit streamer while loop
     digital[ 5 ].init( "VJButton5" );
+    buttonEight.init("VJButton8");
 
     m_beamLineSegment = new osgUtil::LineSegmentIntersector(
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
@@ -484,7 +485,17 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             m_characterController.StepForward( false );
         }
     }
-    
+    else if( buttonEight->getData() == gadget::Digital::TOGGLE_ON )
+    {
+            m_buttonPushed = true;
+            world_quat = *mResetAxis;
+            for( unsigned int i = 0; i < 3; ++i )
+            {
+                m_worldTrans[ i ] = -mResetPosition->at( i );
+                //world_quat[ i ] = 0.0f;
+                mCenterPoint->mData[ i ] = 0.0f;
+            }
+    }
     if( 0 )
     {
 #ifdef QT_ON
