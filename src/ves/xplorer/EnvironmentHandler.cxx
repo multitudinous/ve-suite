@@ -234,7 +234,9 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
     _eventHandlers[ "PICTURE_ON_OFF" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
-        
+    _eventHandlers[ "CHANGE_IMAGE_DIRECTORY" ] =
+        new ves::xplorer::event::environment::CameraPlacementEventHandler();
+
     CONNECTSIGNALS_STATIC( "%PhysicsDebugger", void( bool const& enable ),
                      &ves::xplorer::event::environment::EnablePhysicsDebugging,
                      m_connections, any_SignalType, normal_Priority );    

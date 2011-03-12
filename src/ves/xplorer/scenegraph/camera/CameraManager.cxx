@@ -510,7 +510,7 @@ void CameraManager::UpdateConductorData( ves::open::xml::DataValuePairPtr inDvp 
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )
 {
-    if( saveImageDir.empty() )
+    if( !saveImageDir.empty() )
     {
         m_imageDir = saveImageDir;
     }
@@ -533,7 +533,7 @@ void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::WriteActiveCameraImageFile( std::string const& saveImageDir )
 {
-    if( saveImageDir.empty() )
+    if( !saveImageDir.empty() )
     {
         m_imageDir = saveImageDir;
     }

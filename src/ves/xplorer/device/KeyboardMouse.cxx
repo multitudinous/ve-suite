@@ -69,7 +69,6 @@
 
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
 
@@ -77,8 +76,6 @@
 // #include <ves/open/xml/DataValuePair.h>
 // #include <ves/open/xml/Command.h>
 // #include <ves/xplorer/command/CommandManager.h>
-
-
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>

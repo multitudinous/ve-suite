@@ -207,12 +207,12 @@ void cfdAnimatedStreamlineCone::Update( void )
             if( isBackwards )
             {
                 //Is a backward integrated line
-                std::cout << " Use backward" << std::endl;
+                //std::cout << " Use backward" << std::endl;
                 m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( -1, cellId ) );
             }
             else
             {
-                std::cout << " Use forward" << std::endl;
+                //std::cout << " Use forward" << std::endl;
                 m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( cellId, -1 ) );
             }
         }
@@ -351,7 +351,6 @@ void cfdAnimatedStreamlineCone::Update( void )
 void cfdAnimatedStreamlineCone::UpdateCommand()
 {
     cfdObjects::UpdateCommand();
-    std::cerr << "doing nothing in cfdAnimatedStreamlineCone::UpdateCommand()" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool cfdAnimatedStreamlineCone::IsStreamlineBackwards( vtkIdType cellId )

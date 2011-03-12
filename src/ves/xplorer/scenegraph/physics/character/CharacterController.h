@@ -193,6 +193,9 @@ private:
     ///\param center The character vector
     void EyeToCenterRayTest( btVector3& eye, btVector3& center );
 
+    ///Initialize characters
+    void InitializeCharacters();
+
     ///
     ///\param eye
     ///\param center
@@ -347,6 +350,11 @@ private:
     ///
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
     
+    ///Pointer to the FBX root to all of the animations
+    //osg::ref_ptr< osg::Group > m_fbxCharacter;
+    ///Pointer to the FBX root to all of the animations
+    //osg::ref_ptr< osg::Group > m_fbxBackwardCharacter;
+
     ///Type defs to help create samples for the head position when using 
     ///tracking data
     typedef gadget::Position::SampleBuffer_t::buffer_t buffer_type;

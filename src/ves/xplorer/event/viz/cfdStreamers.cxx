@@ -317,6 +317,7 @@ void cfdStreamers::Update()
         {
             append->AddInput( ribbon->GetOutput() );
             ribbon->Delete();
+            ribbon = 0;
         }
         else
         {

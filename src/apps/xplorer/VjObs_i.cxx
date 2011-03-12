@@ -643,6 +643,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
     vprDEBUG( vesDBG, 3 ) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local "
     << mStates.isLocal() << " "
     << vpr::System::getHostname()
+    << " Size of data to process " << this->mStates->clusterXMLCommands.size()
     << std::endl << vprDEBUG_FLUSH;
 
     //Do for all the slaves
