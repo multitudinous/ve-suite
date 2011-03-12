@@ -229,7 +229,7 @@ void CADTreeBuilder::AddPartToGraph(CADNodePtr part, wxTreeItemId parent )
                            0, 1, new TreeNodeData( part ) );
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-void CADTreeBuilder::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder, CADNodePtr node, void* currentParent )
+void CADTreeBuilder::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder, CADNodePtr node, CADAssemblyPtr currentParent )
 {
     CADTreeBuilder* treeGraph = dynamic_cast<CADTreeBuilder*>( treeBuilder );
     if( !treeGraph )
@@ -300,7 +300,7 @@ void CADTreeBuilder::_createImageList()
     _treeCtrl->AssignImageList( images );
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-void CADTreeBuilder::TreeGraphPostCallback::Apply( CADNodeTraverser* treeBuilder, CADNodePtr node, void* currentParent )
+void CADTreeBuilder::TreeGraphPostCallback::Apply( CADNodeTraverser* treeBuilder, CADNodePtr node, CADAssemblyPtr currentParent )
 {
     CADTreeBuilder* treeGraph = dynamic_cast<CADTreeBuilder*>( treeBuilder );
 

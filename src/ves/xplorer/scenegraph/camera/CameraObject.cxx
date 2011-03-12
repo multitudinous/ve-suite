@@ -1079,9 +1079,6 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
            textureRes );
     //m_colorMap->setTextureSize( m_texWidth, m_texHeight );
 
-    m_colorImage->scaleImage( m_texWidth, m_texHeight, 1 );
-    m_colorImage->dirty();
-
     //Do this for easy image capture capability
     m_screenCapCamera = new osg::Camera();
     InitializeCamera( *(m_screenCapCamera.get()) );
@@ -1097,25 +1094,18 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
     m_camera->setProjectionMatrix( tempProj );
 
     ComputeNearFarPlanes( true );
+
+    ///Allocate an image rather than scale it because scaleImage
+    ///makes gl calls which may cause problems on linux
+    m_colorImage->
+        allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
+
+    ///Now attach everything back up
     m_screenCapCamera->
         attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
 
-    //m_screenCapCamera->setViewport( 0, 0, m_texWidth, m_texHeight );
-    //m_camera->setViewport( 0, 0, m_texWidth, m_texHeight );
-    //m_resolutionUpdate = true;
-    //removeChild( m_camera.get() );
-
-    /*osg::Texture2D* tempTex = new osg::Texture2D(  *m_colorMap.get(),  osg::CopyOp::DEEP_COPY_ALL );
-    m_colorMap = tempTex;
-    m_screenCapCamera->
-        attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );*/
-    //m_camera->attach( osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
-    //    0, 0, false, 0, 0 );
-
     m_renderQuad->getStateSet()->setTextureAttributeAndModes(
         0, m_colorMap.get(), osg::StateAttribute::ON );
-    //m_screenCapCamera->attach( osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
-    //    0, 0, false, 0, 0 );
 
     Update();
 }

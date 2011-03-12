@@ -104,7 +104,7 @@ class VE_GUIPLUGINS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNo
         ///\param cadNodeTraverser The CADTreeBuilder that is doing the traversing.
         ///\param node The CADNode that is currently being encountered.
         ///\param currentParent The CADNode that is the parent of the node being encountered.
-        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNodePtr node, void* currentParent = 0 );
+        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNodePtr node, ves::open::xml::cad::CADAssemblyPtr currentParent );
     protected:
     };
 
@@ -128,7 +128,7 @@ class VE_GUIPLUGINS_EXPORTS TreeGraphPostCallback: public CADNodeTraverser::CADN
         ///\param cadNodeTraverser The CADTreeBuilder that is doing the traversing.
         ///\param node The CADNode that is currently being encountered.
         ///\param currentParent The CADNode that is the parent of the node being encountered.
-        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNodePtr node, void* currentParent = 0 );
+        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNodePtr node, ves::open::xml::cad::CADAssemblyPtr currentParent );
     protected:
     };
 

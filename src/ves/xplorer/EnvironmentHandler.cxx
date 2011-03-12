@@ -117,12 +117,6 @@ EnvironmentHandler::EnvironmentHandler()
     displaySettings( 0 ),
     desktopWidth( 0 ),
     desktopHeight( 0 ),
-    _frustumLeft( 0 ),
-    _frustumRight( 0 ),
-    _frustumTop( 0 ),
-    _frustumBottom( 0 ),
-    _frustumNear( 0 ),
-    _frustumFar( 0 ),
     m_lodScale( 0.01 ),
     framerate( 0 )
 {

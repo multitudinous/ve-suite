@@ -1357,7 +1357,27 @@ void CameraPlacementToolUIDialog::OnSaveAllImagesButton(
 void CameraPlacementToolUIDialog::OnImageDirPickerCtrl(
     wxFileDirPickerEvent& WXUNUSED( event ) )
 {
-    ;
+    wxString saveImageDir = m_imageDirPickerCtrl->GetPath();
+    if( saveImageDir == wxEmptyString )
+    {
+        wxMessageDialog msgDialog(
+                                  this,
+                                  wxT( "Please select a directory to save images to." ),
+                                  wxT( "Error" ),
+                                  wxOK );
+        msgDialog.ShowModal();
+        
+        return;
+    }
+    
+    mCommandName = "CHANGE_IMAGE_DIRECTORY";
+    ves::open::xml::DataValuePairSharedPtr dvp(
+        new ves::open::xml::DataValuePair() );
+    dvp->SetData( "saveImageDirectory", ConvertUnicode( saveImageDir.c_str() ) );
+    mInstructions.push_back( dvp );
+    
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnToggleHighlightToolButton(

@@ -213,13 +213,6 @@ private:
     int _windowWidth;///<Window width.
     int _windowHeight;///<Window height.
 
-    float _frustumLeft;///<Left frustum.
-    float _frustumRight;///<Right frustum.
-    float _frustumTop;///<Top frustum.
-    float _frustumBottom;///<Bottom frustum.
-    float _frustumNear;///<Near frustum.
-    float _frustumFar;///<Far frustum.
-
     double m_lodScale;///<Global geometry LOD scale
     float framerate;///<Frame rate.
     ///The event handler for commands.

@@ -657,6 +657,7 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
     }
     
     m_sceneManager.SetCurrentGLTransformInfo( GLTransformInfoPtr() );
+    m_sceneManager.SetCurrentGLTransformInfo( scenegraph::GLTransformInfoPtr() );
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////

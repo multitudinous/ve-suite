@@ -133,6 +133,7 @@ bool transparentEnable( T* nodeOrDrawable, float alpha )
         osg::BlendFunc::ONE_MINUS_CONSTANT_ALPHA );
     stateSet->setAttributeAndModes( bf, modeValue );
     stateSet->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+    stateSet->setNestRenderBins( false );
 
     return( true );
 }
@@ -182,6 +183,7 @@ bool transparentDisable( T* nodeOrDrawable, bool recursive=false )
             stateSet->removeAttribute( osg::StateAttribute::BLENDFUNC );
             stateSet->removeMode( GL_BLEND );
             stateSet->setRenderingHint( osg::StateSet::DEFAULT_BIN );
+            stateSet->setNestRenderBins( true );
         }
     }
     else

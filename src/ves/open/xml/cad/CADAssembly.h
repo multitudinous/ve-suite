@@ -43,12 +43,16 @@
  * CADAssembly API
  */
 
-/*! \class VE_XML::VE_CAD::CADAssembly
+/*! \class ves::open::xml::cad::CADAssembly
  * Class to represent a CAD assembly.
  * It's children can be CADAssemblies, CADParts.
  * There isn't an actual geometry that is represented here but instead
  * this is more of an organization node.
  */
+/*!\namespace ves::open::xml::cad
+ * Contains nodes for creating/managing a CAD hierarchy.
+ */
+
 XERCES_CPP_NAMESPACE_USE
 
 namespace ves
