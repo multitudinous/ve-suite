@@ -8,6 +8,7 @@ srcs = Split("""
    VEPSI_i.cxx
    AspenPlus.cxx
    AspenDynamics.cxx
+   DynSim.cxx
    CorbaUnitManager.cxx
    VE_PSI.cxx
    VE_PSIDlg.cxx
@@ -20,6 +21,7 @@ headers = Split("""
    VEPSI_i.h
    AspenPlus.h
    AspenDynamics.h
+   DynSim.h
    CorbaUnitManager.h
    VE_PSI.h
    VE_PSIDlg.h
@@ -58,6 +60,7 @@ env.Append( CPPPATH = [pj('#', 'src')] )
 env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib')] )
 env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib','aspenplus_2006.5')] )
 env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','AspenDynamicsInterface')] )
+env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','DynSimUnit')] )
 env.Append( CPPPATH = [pj('#', buildDir, 'src', 'ves', 'open')] )
 
 env.Append(LIBPATH = [pj('#', buildDir, 'share','tools','aspen','CASIlib')])

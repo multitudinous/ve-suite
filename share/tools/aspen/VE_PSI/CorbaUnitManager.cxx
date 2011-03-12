@@ -95,7 +95,7 @@ void CorbaUnitManager::RunORB()
         strcpy( argv[ i ], cmdargs.at( i ) );
     }
 
-    std::string UNITNAME = "ASPENUNIT";
+    std::string UNITNAME = "VE-PSI";
     std::cout<<"Unit name is :"<<unitName<<std::endl;
 
     try 
