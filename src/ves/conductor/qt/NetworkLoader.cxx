@@ -193,107 +193,123 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 //         canvas->CreateDefaultNetwork();
 //     }
 //     else
+    //{
+    //Now load the xml data now that we are in the correct directory
+    //canvas->PopulateNetworks( fileName );
+    // RPT: Following line replaces key functionality of canvas->PopulateNetworks
+    XMLDataBufferEngine::instance()->LoadVESData( fileName );
+
+    //create hierarchy page
+    //hierarchyTree->PopulateTree();
+
+    ///This code will be moved in the future. It is Aspen specific code.
+    CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
+    GetCommand( "Aspen_Plus_Preferences" );
+
+    if( aspenBKPFile->GetCommandName() != "NULL" )
     {
-        //Now load the xml data now that we are in the correct directory
-        //canvas->PopulateNetworks( fileName );
-        // RPT: Following line replaces key functionality of canvas->PopulateNetworks
-        XMLDataBufferEngine::instance()->LoadVESData( fileName );
-        
-        //create hierarchy page
-        //hierarchyTree->PopulateTree();
+        DataValuePairPtr bkpPtr =
+        aspenBKPFile->GetDataValuePair( "BKPFileName" );
+        std::string bkpFilename;
+        bkpPtr->GetData( bkpFilename );
+        //OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
 
-        ///This code will be moved in the future. It is Aspen specific code.
-        CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
-            GetCommand( "Aspen_Plus_Preferences" );
-        
-        if( aspenBKPFile->GetCommandName() != "NULL" )
-        {
-            DataValuePairPtr bkpPtr =
-            aspenBKPFile->GetDataValuePair( "BKPFileName" );
-            std::string bkpFilename;
-            bkpPtr->GetData( bkpFilename );
-            //OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
-               
-            //wxFileName bkpFileName;
-            //bkpFileName.SetName( simName );
+        //wxFileName bkpFileName;
+        //bkpFileName.SetName( simName );
 
-            CommandPtr returnState ( new Command() );
-            returnState->SetCommandName( "openSimulation" );
-            DataValuePairPtr data( new DataValuePair() );
-            data->SetData( "AspenPlus", "openSimulation" );
-            returnState->AddDataValuePair( data );
+        CommandPtr returnState ( new Command() );
+        returnState->SetCommandName( "openSimulation" );
+        DataValuePairPtr data( new DataValuePair() );
+        data->SetData( "AspenPlus", "openSimulation" );
+        returnState->AddDataValuePair( data );
 
-            data = DataValuePairPtr( new DataValuePair() );
-            //data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
-            data->SetData( "BKPFileName",  bkpFilename.c_str() );
-            returnState->AddDataValuePair( data );
+        data = DataValuePairPtr( new DataValuePair() );
+        //data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
+        data->SetData( "BKPFileName",  bkpFilename.c_str() );
+        returnState->AddDataValuePair( data );
 
-            std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-            nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-            XMLReaderWriter commandWriter;
-            std::string status = "returnString";
-            commandWriter.UseStandaloneDOMDocumentManager();
-            commandWriter.WriteXMLDocument( nodes, status, "Command" );
-            
-            //Get results
-            //std::string nw_str = serviceList->Query( status );
-            std::string nw_str = 
-                    ves::xplorer::network::GraphicalPluginManager::instance()->
-                        GetCORBAInterface()->QueryCE( status );
-            // We don't need to log anything
-            //Log( nw_str.c_str() );
-            // RPT: What does this variable do? Does not appear to do anything 
-            // based on code in apps/conductor/AppFrame.cxx
-            //AspenSimOpen = true;
-         }
-        
+        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+        nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+        XMLReaderWriter commandWriter;
+        std::string status = "returnString";
+        commandWriter.UseStandaloneDOMDocumentManager();
+        commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+        //Get results
+        //std::string nw_str = serviceList->Query( status );
+        std::string nw_str =
+                ves::xplorer::network::GraphicalPluginManager::instance()->
+                    GetCORBAInterface()->QueryCE( status );
+        // We don't need to log anything
+        //Log( nw_str.c_str() );
+        // RPT: What does this variable do? Does not appear to do anything
+        // based on code in apps/conductor/AppFrame.cxx
+        //AspenSimOpen = true;
+    }
+
 //         wxCommandEvent submitEvent;
 //         SubmitToServer( submitEvent );
-           // RPT: Following block duplicates key code from SubmitToServer
-           {
-                const std::string nw_str = XMLDataBufferEngine::instance()->
-                                SaveVESData( std::string( "returnString" ) );
-                //serviceList->SetNetwork( nw_str ); <-- old conductor
-                //ves::xplorer::network::GraphicalPluginManager::instance()->
-                //              GetCORBAInterface()->SetNetworkString( nw_str );
-                // <-- CORBA version with Qt
-                ves::xplorer::network::GraphicalPluginManager::instance()->
-                        SetCurrentNetwork( nw_str );
-                std::vector< double > xplorerColor;
-                xplorerColor.push_back( 0.0 );
-                xplorerColor.push_back( 0.0 );
-                xplorerColor.push_back( 0.0 );
-                xplorerColor.push_back( 1.0 );
-                DataValuePairPtr dataValuePair( new DataValuePair() );
-                dataValuePair->SetData( std::string( "Load Data" ), xplorerColor );
-                CommandPtr veCommand( new Command() );
-                veCommand->SetCommandName( std::string( "veNetwork Update" ) );
-                veCommand->AddDataValuePair( dataValuePair );
-                ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
-                // RPT: Make the first model in the network active
-                ves::open::xml::model::SystemPtr system = XMLDataBufferEngine::instance()->GetXMLSystemDataObject( XMLDataBufferEngine::instance()->GetTopSystemId( ) );
-                
-                if( system->GetNumberOfModels() != 0 )
-                {
-                    std::string modelID = system->GetModel( 0 )->GetID();
-                    
-                    ves::open::xml::DataValuePairPtr dataValuePair(
-                    new ves::open::xml::DataValuePair() );
-                    dataValuePair->SetData( "CHANGE_ACTIVE_MODEL", modelID );
+// RPT: Following block duplicates key code from SubmitToServer
+//{
+    const std::string nw_str = XMLDataBufferEngine::instance()->
+                    SaveVESData( std::string( "returnString" ) );
+    //serviceList->SetNetwork( nw_str ); <-- old conductor
+    //ves::xplorer::network::GraphicalPluginManager::instance()->
+    //              GetCORBAInterface()->SetNetworkString( nw_str );
+    // <-- CORBA version with Qt
+    ves::xplorer::network::GraphicalPluginManager::instance()->
+            SetCurrentNetwork( nw_str );
+    std::vector< double > xplorerColor;
+    xplorerColor.push_back( 0.0 );
+    xplorerColor.push_back( 0.0 );
+    xplorerColor.push_back( 0.0 );
+    xplorerColor.push_back( 1.0 );
+    DataValuePairPtr dataValuePair( new DataValuePair() );
+    dataValuePair->SetData( std::string( "Load Data" ), xplorerColor );
+    CommandPtr veCommand( new Command() );
+    veCommand->SetCommandName( std::string( "veNetwork Update" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+    // RPT: Make the first model in the network active
+    ves::open::xml::model::SystemPtr system = XMLDataBufferEngine::instance()->GetXMLSystemDataObject( XMLDataBufferEngine::instance()->GetTopSystemId( ) );
 
-                    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-                    veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
-                    veCommand->AddDataValuePair( dataValuePair );
+    if( system->GetNumberOfModels() != 0 )
+    {
+        std::string modelID = system->GetModel( 0 )->GetID();
 
-                    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
-                }
-           }
+        ves::open::xml::DataValuePairPtr dataValuePair(
+        new ves::open::xml::DataValuePair() );
+        dataValuePair->SetData( "CHANGE_ACTIVE_MODEL", modelID );
+
+        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+        veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+
+        ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+    }
+    //If this .ves has an associated .db, load it
+    //We can't do this here because the previous commands to actually load
+    //the model haven't been processed yet, and the resync operation kicked off
+    //here assumes the model exists. To get around this, we set a flag in the UI
+    //when we call into this loader. Then in our handler for ActiveModelChangedSignal
+    //there, we look for this flag. If it's set, we do the equivalent of this
+    //next block of code. It works, but it really puts the logic in the wrong
+    //place.
+//    const std::string& db( system->GetDBReference() );
+//    if( !db.empty() )
+//    {
+//        std::cout << "NetworkLoader db: " << db << std::endl << std::flush;
+//        ves::xplorer::data::DatabaseManager::instance()->LoadFrom( db );
+//    }
+
+
+           //}
 //         
 //         if( recordScenes )
 //         {
 //             recordScenes->_buildPage();
 //         }
-    }
+    //}
 //-!
     
     //Now manage the data that is user specific to this ves file
@@ -392,8 +408,6 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         //dialog->InitalizeFromCommands ( elevationGroupCommand, rasterGroupCommand );
       }
     }
-
-    //newCanvas = false;
 }
 
 } // namespace conductor

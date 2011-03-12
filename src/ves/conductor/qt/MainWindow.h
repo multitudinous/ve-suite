@@ -40,6 +40,8 @@
 
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
+#include <ves/open/xml/model/SystemPtr.h>
+
 #include <ves/VEConfig.h>
 
 #include <string>
@@ -317,6 +319,10 @@ private:
     NavJumpSignal_type m_jumpSignal;  
 
     boost::signals2::signal< void () > m_resyncFromDB;
+
+    void SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::string fileName );
+
+    bool m_dbLoadFlag;
 };
     
 }

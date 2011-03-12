@@ -50,12 +50,15 @@
 #include <ves/conductor/qt/PreferencesTab.h>
 #include <ves/conductor/qt/plugin/PluginSelectionTab.h>
 #include <ves/conductor/qt/VisFeatureManager.h>
+#include <ves/conductor/qt/XMLDataBufferEngine.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/XMLReaderWriter.h>
 
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
@@ -110,7 +113,8 @@ MainWindow::MainWindow(QWidget* parent) :
     mVisualizationTab( 0 ),
     mLayersTree ( 0 ),
     m_preferencesTab( 0 ),
-    m_pluginsTab( 0 )
+    m_pluginsTab( 0 ),
+    m_dbLoadFlag( false )
 {
     ui->setupUi(this);
         
@@ -450,6 +454,10 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
             // It's a ves file, likely with a network
             ves::conductor::NetworkLoader loader;
             loader.LoadVesFile( file.string() );
+            // Set this true to be discovered when active model is changed. That
+            // will allow us to kick off a load from the database once the
+            // system is loaded.
+            m_dbLoadFlag = true;
         }
         else
         {
@@ -494,8 +502,7 @@ void MainWindow::on_actionSave_triggered()
     mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
     mFileDialog->setFileMode( QFileDialog::AnyFile );
     QStringList filters;
-    filters << "VES Session Files (*.db)"
-            << "All Files (*.*)";
+    filters << "VES Files (*.ves)";
     mFileDialog->setNameFilters( filters );
 
     mFileDialog->setAcceptMode( QFileDialog::AcceptSave );
@@ -510,7 +517,7 @@ void MainWindow::on_actionSave_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileSaveSelected( const QString& fileName )
 {
-    std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
+    //std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
 
     // Close out the fileDialog tab and kill the file dialog
     RemoveTab( mFileDialog );
@@ -521,10 +528,46 @@ void MainWindow::onFileSaveSelected( const QString& fileName )
         mFileDialog = 0;
     }
 
-    std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
+    //std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
 
-    ves::xplorer::data::DatabaseManager::instance()->SaveAs( fileName.toStdString() );
+    QString tFileName( fileName );
+    // If the filename ends in ".ves", break that off
+    if ( tFileName.endsWith( ".ves", Qt::CaseInsensitive ) )
+    {
+        tFileName.chop( 4 );
+    }
+    std::string pathName = tFileName.toStdString();
+
+    // Save the database as fileName.db
+    std::string dbFileName = pathName;
+    dbFileName.append( ".db" );
+    ves::xplorer::data::DatabaseManager::instance()->SaveAs( dbFileName );
+
+    // Set the database name in system
+    ves::xplorer::Model* model =
+        ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    ves::open::xml::model::SystemPtr system = model->GetModelData()->GetParentSystem();
+    system->SetDBReference( dbFileName );
+    LOG_DEBUG( "onFileSaveSelected: setting database filename to " << dbFileName );
+
+    // Save off the .ves file
+    std::string vesFileName = pathName;
+    vesFileName.append( ".ves" );
+    //ves::conductor::XMLDataBufferEngine::instance()->SaveVESData( vesFileName );
+    SaveSytemToFile( system, vesFileName );
 }
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::string fileName )
+{
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >(
+                         system, "veSystem" ) );
+
+    ves::open::xml::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.WriteXMLDocument( nodes, fileName, "Network" );
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::OnActiveModelChanged( const std::string& modelID )
 {   
@@ -567,6 +610,17 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 
     // Reactivate the last-known active tab
     ActivateTab( LastKnownActive );
+
+    if( m_dbLoadFlag )
+    {
+        m_dbLoadFlag = false;
+        ves::open::xml::model::SystemPtr system = model->GetModelData()->GetParentSystem();
+        const std::string& db( system->GetDBReference() );
+        if( !db.empty() )
+        {
+            ves::xplorer::data::DatabaseManager::instance()->LoadFrom( db );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef MINERVA_GIS_SUPPORT
