@@ -34,11 +34,16 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
+#include <string>
+#include <fstream>
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
 
+#include <boost/lexical_cast.hpp>
+
+#define TEST_DVST 1
 ///IP Port and ip address ranges for multicast
 ///http://agenda.ictp.trieste.it/agenda_links/smr1335/sockets/node18.html
 ///http://ntrg.cs.tcd.ie/undergrad/4ba2/multicast/antony/example.html
@@ -57,9 +62,9 @@ int main (int argc, char* argv[])
    // Create a socket that is sending to a remote host named in the first
    // argument listening on the port named in the second argument.
    vpr::InetAddr remote_addr;
-   remote_addr.setAddress("225.0.0.37", 12345);
+   remote_addr.setAddress("225.0.0.37", 6339);
    vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
-
+#ifndef TEST_DVST
    try
    {
       sock.open();
@@ -68,13 +73,25 @@ int main (int argc, char* argv[])
       {
          // We only send to one host, so call connect().
          sock.connect();
-
+          std::string buffer2;
          char buffer[40];
          memset(buffer, '\0', sizeof(buffer));
-         strcpy(buffer, "Hi, I'm a client");
+         //strcpy(buffer, "Hi,\0I'm\0a\0client");
 
-         // Write to the server.
-         sock.write(buffer, 40);
+         buffer[ 0 ] = 'H';buffer[ 1 ] = 'i';buffer[ 2 ] = ',';buffer[ 3 ] = '\0';
+          buffer[ 4 ] = 'I';buffer[ 5 ] = '\'';buffer[ 6 ] = 'm';buffer[ 7 ] = ' ';buffer[ 8 ] = '\0';
+          buffer[ 9 ] = 'a';buffer[ 10 ] = '\0';buffer[ 11 ] = ' ';buffer[ 12 ] = 'c';buffer[ 13 ] = 'l';buffer[ 14 ] = 'i';
+          buffer[ 15 ] = 'e';buffer[ 16 ] = 'n';buffer[ 17 ] = 't';buffer[ 18 ] = '\0';
+          int counter = 0;
+          while( true )
+          {
+              // Write to the server.
+              sock.write(buffer, 40);
+              //vpr::System::msleep( 10 );  // thenth-second delay
+              buffer2 = boost::lexical_cast<std::string>( counter );
+              sock.write(buffer2.c_str(), buffer2.size());
+              counter += 1;
+          }
 
          // Read from the server.
          //const vpr::Uint32 bytes = sock.read(buffer, 40);
@@ -95,6 +112,51 @@ int main (int argc, char* argv[])
    {
       std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
    }
-
+#else
+    try
+    {
+        sock.open();
+        
+        try
+        {
+            std::ifstream sampleFile( "test_data_out6.txt" );
+            
+            // We only send to one host, so call connect().
+            sock.connect();
+            //std::string buffer2;
+            char buffer[2048];
+            memset(buffer, '\0', sizeof(buffer));
+            
+            while( true )
+            {
+                sampleFile.getline( buffer, 2047 );
+                
+                //int counter = 0;
+                do
+                {
+                    // Write to the server.
+                    sock.write(buffer, 2047);
+                    sampleFile.getline( buffer, 2047 );
+                    //std::cout << sampleFile.good() << std::endl;
+                    vpr::System::msleep( 50 );
+                }
+                while( !sampleFile.eof() );
+                sampleFile.clear();
+                sampleFile.seekg(0, std::ios::beg);
+            }
+        }
+        catch (vpr::SocketException& ex)
+        {
+            std::cerr << "Caught a socket exception:\n" << ex.what()
+            << std::endl;
+        }
+        
+        sock.close();
+    }
+    catch (vpr::IOException& ex)
+    {
+        std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
+    }
+#endif
    return EXIT_SUCCESS;
 }

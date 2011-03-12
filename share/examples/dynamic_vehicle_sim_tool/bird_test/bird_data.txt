@@ -1,0 +1,4 @@
+Front is the bird used for the head.  Left rear is the bird used for the wand and right glove.  Right rear is the bird used for the left glove and pointer.
+
+Yes, front_front is seat facing from of Flex.  Front_left is seat facing left wall of Flex.
+

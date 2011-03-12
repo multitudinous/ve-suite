@@ -34,17 +34,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
+#include <fstream>
+
 #include <stdlib.h>
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include <boost/lexical_cast.hpp>
 
 int main (int argc, char* argv[])
 {
    int status;
-   vpr::Uint16 port(12345);     // Default listening port
+   vpr::Uint16 port(6339);     // Default listening port
 
    // If a command-line argument was given, use it as the port value instead
    // of the default.
@@ -55,48 +61,93 @@ int main (int argc, char* argv[])
 
    try
    {
-       // Create a datagram socket that will be bound to port.
-      vpr::InetAddr local;
-      local.setPort(port);
+        // Create a datagram socket that will be bound to port.
+        vpr::InetAddr local;
+        local.setPort(port);
 
-      vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
+        vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
 
-      // Bind the socket to the port.
-      sock.open();
-      sock.bind();
+        // Bind the socket to the port.
+        sock.open();
+        sock.bind();
 
-       //Now lets connet to the multicast group
-       // Create a socket that is sending to a remote host named in the first
-       // argument listening on the port named in the second argument.
-       vpr::InetAddr remote_addr;
-       remote_addr.setAddress("225.0.0.37", 12345);
-       //vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
-       //vpr::SocketOptions::Types option = vpr::SocketOptions::AddMember;
-       //vpr::SocketOptions::Data data;
-       //data.mcast_add_member = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
-       vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
-       sock.addMcastMember( data );
-      
-      char recv_buf[40];
-      char send_buf[] = "Hello there!";
+        //Now lets connet to the multicast group
+        // Create a socket that is sending to a remote host named in the first
+        // argument listening on the port named in the second argument.
+        vpr::InetAddr remote_addr;
+        remote_addr.setAddress("225.0.0.37", port);
+        //vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
+        //vpr::SocketOptions::Types option = vpr::SocketOptions::AddMember;
+        //vpr::SocketOptions::Data data;
+        //data.mcast_add_member = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
+        vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
+        sock.addMcastMember( data );
+        typedef std::vector< std::string > split_vector_type;
 
-      // Loop forever reading messages from clients.
-      while ( true )
-      {
+        char recv_buf[2048];
+        memset(recv_buf, '\0', sizeof(recv_buf));
+
+        std::ofstream outputFile( "test_data_out.txt" );
+        // Loop forever reading messages from clients.
+        while ( true )
+        {
          vpr::InetAddr addr;
 
          try
          {
-            // Read a message from a client.
-            const vpr::Uint32 bytes = sock.recvfrom(recv_buf, sizeof(recv_buf),
-                                                    addr);
+             std::vector<char> d2(40);
 
+            // Read a message from a client.
+            vpr::Uint32 bytes = 10;
+            //while( bytes > 0 )
+            {
+              bytes = sock.recvfrom(recv_buf, sizeof(recv_buf),
+                                addr);
+            }
+
+            std::string tempbuff;
+            for( size_t i = 0; i < 2048; ++i )
+            {
+                if( recv_buf[ i ] == '\0' )
+                {
+                    tempbuff.push_back( ' ' );
+                    continue;
+                }
+                //std::cout << recv_buf[ i ] << std::endl;
+                tempbuff.push_back( recv_buf[ i ] );
+            }
+            
+            boost::algorithm::trim( tempbuff );
+            
             // If we read anything, print it and send a response.
-            std::cout << "Read '" << recv_buf << "' (" << bytes
+            std::cout << "Read '" << tempbuff << "' (" << bytes
                       << " bytes) from " << addr.getAddressString()
                       << std::endl;
+             
+             outputFile << tempbuff << std::endl;
+             
+             split_vector_type splitVec;
+             boost::split( splitVec, tempbuff, boost::is_any_of(" "), boost::token_compress_on );
+             double tempDouble = 0;
+             for( size_t i = 0; i < splitVec.size(); ++i )
+             {
+                 //std::cout << "<" << splitVec.at( i ) << "> ";
+                 try
+                 {
+                     tempDouble = boost::lexical_cast<double>( splitVec.at( i ) );
+                     //positionData.push_back( tempDouble );
+                 }
+                 catch( boost::bad_lexical_cast& ex )
+                 {
+                     std::cout << "cannot cast data " << ex.what() << std::endl;
+                 }
+             }
+             //std::cout << std::flush << std::endl;
 
-            //sock.sendto(send_buf, sizeof(send_buf), remote_addr);
+            /*for( size_t i = 0; i < d2.size(); ++i )
+            {
+                std::cout << d2.at( i ) << std::endl;
+            }*/
          }
          catch (vpr::IOException& ex)
          {
@@ -107,7 +158,8 @@ int main (int argc, char* argv[])
       }
 
       sock.close();
-
+       outputFile.close();
+    
       status = EXIT_SUCCESS;
    }
    catch (vpr::SocketException& ex)

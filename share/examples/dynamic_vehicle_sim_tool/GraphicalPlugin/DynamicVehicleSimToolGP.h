@@ -30,23 +30,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
-#ifndef WARRANTY_TOOL_GP_H
-#define WARRANTY_TOOL_GP_H
+#ifndef DYNAMIC_VEHICLE_TOOL_GP_H
+#define DYNAMIC_VEHICLE_TOOL_GP_H
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 
-#include <Poco/Tuple.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/Data/RecordSet.h>
-
 #include <map>
 #include <vector>
 #include <utility>
 #include <string>
+
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Mutex.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Point.h>
 
 namespace ves
 {
@@ -70,17 +71,27 @@ class VE_USER_PLUGIN_EXPORTS DynamicVehicleSimToolGP :
     public ves::xplorer::plugin::PluginBase
 {
 public:
+    ///Constructor
     DynamicVehicleSimToolGP();
+    ///Destructor
     virtual ~DynamicVehicleSimToolGP();
 
+    ///Add all of the data to the scenegraph
     virtual void InitializeNode( osg::Group* veworldDCS );
+    ///Called everything frame
     virtual void PreFrameUpdate();
+    ///Process any commands comming in from conductor
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
+    ///Remove this plugin from xplorer and the sg
     virtual void RemoveSelfFromSG();
+    ///Called after everything is initialized for the plugin
+    virtual void ProcessOnSubmitJob();
 
 protected:
 
 private:
+    ///Reset the scene data
+    void ResetScene();
     ///Thread for grabbing data from sim
     void SimulatorCaptureThread();
     ///
@@ -89,94 +100,80 @@ private:
     void SetupGeometryDataMaps();
     ///
     void SimulatorControlUpdate();
-    
-    ///Create the db for the tool to grab dat from
-    void CreateDB();
-    ///Create the list of textures
-    void CreateTextTextures();
-    ///Strip characters from datafile
-    void StripCharacters( std::string& data, const std::string& character );
-    ///PArse the csv file
-    //void ParseDataFile( const std::string& csvFilename );
-    ///Parse the db file selected by the user
-    void ParseDataBase( const std::string& csvFilename );
-    ///Render the displays
-    void RenderTextualDisplay( bool onOff );
-    ///Create a db query from the ui
-    void CreateDBQuery( ves::open::xml::DataValuePairPtr dvp );
-    ///Strip dollar signs from a string
-    void StripDollarCharacters( std::string& data );
-    ///Replace spaces in a string with under scores
-    void ReplaceSpacesCharacters( std::string& data );
-    ///Find a list of nodes with part number names
-    bool FindPartNodeAndHighlightNode();
-    ///Get the part number from the node name
-    void GetPartNumberFromNodeName( std::string& nodeName );
-    ///Change text textures
-    void PickTextTextures();
-    ///Clear the db of all the user defined tables
-    void ClearDatabaseUserTables();
-    ///Query specifically for the join command
-    void QueryTableAndHighlightParts( const std::string& tableName, 
-                                     osg::Vec3& glowColor );
-    ///Basic user defined custom query
-    void QueryUserDefinedAndHighlightParts( const std::string& queryString );
-    ///Query and highlight for a join query 
-    void QueryInnerJoinAndHighlightParts( const std::string& queryString );
-    ///Query 3 sets of data to create 3 highlighted group of parts
-    void HighlightPartsInJoinedTabled( const std::string& queryString );
-    ///Write out the current query to a file
-    void SaveCurrentQuery( const std::string& filename );
+    ///Set the position data
+    void SetPositionData( std::vector< double >& temp );
+    ///Get the position data
+    void GetPositionData( std::vector< double >& temp );
+    ///
+    void SetSimState( std::string& temp );
+    ///
+    void GetSimState( std::string& temp );
+    ///
+    void SetComputerData( std::string& computerName, std::string& computerPort );
+    ///
+    void GetComputerData( std::string& computerName, std::string& computerPort );
+    ///Registration code
+    void CalculateRegistrationVariables();
+    ///Read bird file
+    void ReadBirdRegistrationFile();
 
-    std::vector< std::string > mPartNumberList;
-    ///PArt numbers loaded from the csv files
-    std::vector< std::string > mLoadedPartNumbers;
-    ///Description of part numbers loaded from csv files
-    std::vector< std::string > mPartNumberDescriptions;
-    
-    std::string m_lastPartNumber;
-    ves::xplorer::scenegraph::CADEntity* cadEntity;
-    ///Adding parts
-    bool mAddingParts;
-    std::map< std::string, std::vector< std::pair< std::string, std::string > > > m_dataMap;
-    osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
-    ves::xplorer::device::KeyboardMouse* m_keyboard;
-    osg::ref_ptr< ves::xplorer::scenegraph::GroupedTextTextures > m_groupedTextTextures;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_textTrans;
-
-    typedef Poco::Tuple< std::string, std::string, int, double, double, double, std::string > Part;
-	typedef std::vector<Part> Assembly;
-    ///All of the currently highlighted parts
-    std::vector< std::string > m_assemblyPartNumbers;
-    ///All of the currently highlighted joined parts
-    std::vector< std::string > m_joinedPartNumbers;
-    ///insert some rows
-	Assembly m_selectedAssembly;
-    ///Command being processed
+    ///Sample thread
+    vpr::Thread* m_sampleThread;
+    ///Position buffer
+    std::vector< double > m_positionBuffer;
+    ///A mutex to protect variables accesses
+    vpr::Mutex mValueLock;
+    ///
+    std::string m_simState;
+    ///
+    std::string m_computerName;
+    ///
+    std::string m_computerPort;
+    ///
     ves::open::xml::CommandPtr m_currentCommand;
-    ///db filename
-    std::string m_dbFilename;
-    ///Root of the CAD models
-    ves::xplorer::scenegraph::DCS* m_cadRootNode;
-    ///Column number for the promise date
-    size_t m_promiseDateColumn;
-    ///Determine if we have a promise date column
-    bool m_hasPromiseDate;
-    //Column number for the part numbers
-    size_t m_partNumberColumn;
-    ///Vector map to be used to create the DB
-    std::map< int, std::vector< std::string > > m_csvDataMap;
-    ///Control mouse selection
-    bool m_mouseSelection;
-    ///Container for the two currently active table names
-    std::pair< std::string, std::string > m_tableNames;
-    ///The current select statement
-    Poco::Data::Statement* m_currentStatement;
-    //Poco::Data::RecordSet m_currentStatement;
+    ///
+    std::string m_birdFilename;
+    ///
+    std::string m_frontBird;
+    ///
+    std::string m_lrBird;
+    ///
+    std::string m_rrBird;
+    ///Stored in sets of three in Front, Left Rear, Right Rear
+    std::vector< double > m_birdData;
+
+    ///Control wether the thread continues to run
+    bool m_runSampleThread;
+    ///Matrix stack containing position data for the geometry
+    std::vector< gmtl::Matrix44d > m_positionStack;
+    ///Matrix stack containing position data for the geometry
+    std::vector< gmtl::Matrix44d > m_initialPositionStack;
+    ///Matrix stack containing position data for the geometry
+    std::vector< gmtl::Matrix44d > m_initialPositionAccumulatedStack;
+    ///Matrix stack containing position data for the geometry
+    std::vector< gmtl::Matrix44d > m_navStack;
+    ///Constrined geom node path
+    osg::NodePath m_constrainedGeomPath;
+    gmtl::Matrix44d m_initialNavMatrix;
+
+    ///vector of names
+    std::vector< std::pair< double, osg::ref_ptr< ves::xplorer::scenegraph::DCS > > > m_animationedNodes;
+    ///cm to feet conversion
+    double cm2ft;
+    ///The constrained geom pointer
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_constrainedGeom;
+    ///The custom scale to apply to the simulator
+    double m_simScale;
+    ///SIP location
+    gmtl::Point3d m_sip;
+    ///Initialize based on ves file
+    bool m_needInitialized;
+    ///Frame count
+    unsigned int m_frameCount;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( DynamicVehicleSimToolGP )
 
 } //end warrantytool
 
-#endif //WARRANTY_TOOL_GP_H
+#endif //DYNAMIC_VEHICLE_TOOL_GP_H
