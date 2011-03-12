@@ -91,7 +91,6 @@ QToolButton:hover
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
-    <addaction name="actionTest_Load"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
@@ -521,11 +520,6 @@ QToolButton:hover
    </property>
    <property name="text">
     <string>View</string>
-   </property>
-  </action>
-  <action name="actionTest_Load">
-   <property name="text">
-    <string>Test Load...</string>
    </property>
   </action>
  </widget>

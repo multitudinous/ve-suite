@@ -42,6 +42,9 @@
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/Model.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -273,6 +276,16 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     // RPT: Make the first model in the network active
     ves::open::xml::model::SystemPtr system = XMLDataBufferEngine::instance()->GetXMLSystemDataObject( XMLDataBufferEngine::instance()->GetTopSystemId( ) );
 
+    // Connect to the ActiveModelChangedSignal. Just below we will send in a command
+    // that will eventually trigger this signal. The slot called looks for a related
+    // database file and tells xplorer to load it up. We can't simply call
+    // DatabaseManager::LoadFrom here because the system and model may not actually
+    // be loaded yet.
+    CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
+                     void ( const std::string& ),
+                     &NetworkLoader::OnActiveModelChanged,
+                     m_connections, normal_Priority );
+
     if( system->GetNumberOfModels() != 0 )
     {
         std::string modelID = system->GetModel( 0 )->GetID();
@@ -287,21 +300,6 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 
         ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
     }
-    //If this .ves has an associated .db, load it
-    //We can't do this here because the previous commands to actually load
-    //the model haven't been processed yet, and the resync operation kicked off
-    //here assumes the model exists. To get around this, we set a flag in the UI
-    //when we call into this loader. Then in our handler for ActiveModelChangedSignal
-    //there, we look for this flag. If it's set, we do the equivalent of this
-    //next block of code. It works, but it really puts the logic in the wrong
-    //place.
-//    const std::string& db( system->GetDBReference() );
-//    if( !db.empty() )
-//    {
-//        std::cout << "NetworkLoader db: " << db << std::endl << std::flush;
-//        ves::xplorer::data::DatabaseManager::instance()->LoadFrom( db );
-//    }
-
 
            //}
 //         
@@ -408,6 +406,21 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         //dialog->InitalizeFromCommands ( elevationGroupCommand, rasterGroupCommand );
       }
     }
+}
+
+void NetworkLoader::OnActiveModelChanged( const std::string& modelID )
+{
+    ves::xplorer::Model* model =
+        ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    ves::open::xml::model::SystemPtr system = model->GetModelData()->GetParentSystem();
+    const std::string& db( system->GetDBReference() );
+    if( !db.empty() )
+    {
+        ves::xplorer::data::DatabaseManager::instance()->LoadFrom( db );
+    }
+
+    //Autodestruct
+    delete this;
 }
 
 } // namespace conductor

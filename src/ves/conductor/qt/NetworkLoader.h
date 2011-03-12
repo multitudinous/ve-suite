@@ -34,6 +34,7 @@
 #pragma once
 
 #include<string>
+#include<ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 namespace ves
 {
@@ -47,16 +48,26 @@ namespace conductor
 **/
 class NetworkLoader 
 {
-    public:
-        NetworkLoader(  );
+public:
+    // This is the replacement constructor for this object. It is not possible
+    // to create an instance on the stack. It must be created on the heap.
+    // Notice the destructor is private too. This oject autodeletes when it is
+    // done processing.
+    static NetworkLoader* createNetworkLoader( )
+                          { return new NetworkLoader; }
+
+    /**
+    * Load the .ves file specified by @c fileName
+    * This function will activate the first model loaded by default.
+    **/
+    void LoadVesFile( const std::string& fileName );
+
+private:
+        NetworkLoader();
         ~NetworkLoader();
-        
-        /** 
-        * Load the .ves file specified by @c fileName
-        * This function will activate the first model loaded by default.
-        **/
-        void LoadVesFile( const std::string& fileName );
-        
+
+        void OnActiveModelChanged( const std::string& modelID );
+        ves::xplorer::eventmanager::ScopedConnectionList m_connections;
         
 };
 

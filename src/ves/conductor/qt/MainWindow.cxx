@@ -113,8 +113,7 @@ MainWindow::MainWindow(QWidget* parent) :
     mVisualizationTab( 0 ),
     mLayersTree ( 0 ),
     m_preferencesTab( 0 ),
-    m_pluginsTab( 0 ),
-    m_dbLoadFlag( false )
+    m_pluginsTab( 0 )
 {
     ui->setupUi(this);
         
@@ -452,12 +451,11 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         if( !extension.compare( ".ves" ) )
         {
             // It's a ves file, likely with a network
-            ves::conductor::NetworkLoader loader;
-            loader.LoadVesFile( file.string() );
-            // Set this true to be discovered when active model is changed. That
-            // will allow us to kick off a load from the database once the
-            // system is loaded.
-            m_dbLoadFlag = true;
+            ves::conductor::NetworkLoader* loader =
+                    ves::conductor::NetworkLoader::createNetworkLoader();
+            loader->LoadVesFile( file.string() );
+            // Destructor for loader is private; object autodeletes when done
+            // processing.
         }
         else
         {
@@ -610,17 +608,6 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 
     // Reactivate the last-known active tab
     ActivateTab( LastKnownActive );
-
-    if( m_dbLoadFlag )
-    {
-        m_dbLoadFlag = false;
-        ves::open::xml::model::SystemPtr system = model->GetModelData()->GetParentSystem();
-        const std::string& db( system->GetDBReference() );
-        if( !db.empty() )
-        {
-            ves::xplorer::data::DatabaseManager::instance()->LoadFrom( db );
-        }
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef MINERVA_GIS_SUPPORT
@@ -873,52 +860,3 @@ void MainWindow::on_actionShowPreferencesTab_triggered()
 {
     ActivateTab( AddTab( m_preferencesTab,"Preferences" ) );
 }
-
-void MainWindow::on_actionTest_Load_triggered()
-{
-    // Don't allow multiple file dialogs to be opened.
-    if( mFileDialog )
-    {
-        return;
-    }
-
-    mFileDialog = new QFileDialog( 0 );
-    // Ensure that we use Qt's internal file dialog class since native file
-    // dialogs cannot be embedded in a QTabWidget
-    mFileDialog->setOptions( QFileDialog::DontUseNativeDialog );
-    // Make mFileDialog manage its own lifetime and memory
-    mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
-    mFileDialog->setFileMode( QFileDialog::ExistingFiles );
-    QStringList filters;
-
-    filters << "Database Files (*.db)"
-            << "All Files (*.*)";
-    mFileDialog->setNameFilters( filters );
-
-    QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)),
-                      this, SLOT(onLoadDB(const QString&)) );
-    QObject::connect( mFileDialog, SIGNAL(rejected()), this,
-                      SLOT( onFileCancelled() ) );
-
-    ActivateTab( AddTab( mFileDialog, "Load database" ) );
-}
-
-void MainWindow::onLoadDB( const QString& path )
-{
-    std::cout << "onLoadDB" << std::endl << std::flush;
-    // Close out the fileDialog tab and kill the file dialog
-    RemoveTab( mFileDialog );
-
-    if ( mFileDialog != 0 )
-    {
-        mFileDialog->close();
-        mFileDialog = 0;
-    }
-
-    // Ensure that visfeaturemanager gets started since it needs to connect to
-    // the signal fired by DatabaseManager::LoadFrom
-    ves::conductor::VisFeatureManager::instance();
-
-    ves::xplorer::data::DatabaseManager::instance()->LoadFrom( path.toStdString() );
-}
-
