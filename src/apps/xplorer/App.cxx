@@ -155,7 +155,7 @@
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/version.hpp>
-
+#include <boost/system/error_code.hpp>
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
 #include <osgAudio/SoundManager.h>
@@ -251,24 +251,41 @@ App::App( int argc, char* argv[], bool enableRTT )
     //from a previous session
     std::string dbPath;
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-    dbPath = boost::filesystem::temp_directory_path().string();
-    dbPath.append("/ves-");
-    dbPath.append( std::string( std::getenv("LOGNAME") ) );
-    dbPath.append( "/" );
-    // Create ves-LOGNAME subdir if needed
-    boost::filesystem::path p(dbPath);
-    if( !boost::filesystem::exists(p) )
+    boost::filesystem::path tempPath;
+    try
     {
-        boost::filesystem::create_directory(p);
+        tempPath = boost::filesystem::temp_directory_path();
     }
+    catch( boost::filesystem::filesystem_error& ec )
+    {
+        std::cout << ec.what() << std::endl;
+    }
+    char* logName = std::getenv("LOGNAME");
+    std::string logNameStr( "ves-" );
+    if( !logName )
+    {
+        logNameStr.append( "debug" );
+    }
+    else
+    {
+        logNameStr.append( logName );
+    }
+    tempPath /= logNameStr;
+    // Create ves-LOGNAME subdir if needed
+    if( !boost::filesystem::exists(tempPath) )
+    {
+        boost::filesystem::create_directory(tempPath);
+    }
+    tempPath /= "ves.db";
+    dbPath = tempPath.string();
 #else
 #if defined(_MSC_VER)
     dbPath = "C:/Temp";
 #else
     dbPath = "/tmp";
 #endif // _MSC_VER
-#endif // BOOST_VERSION
     dbPath.append( "/ves.db" );
+#endif // BOOST_VERSION
     ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( dbPath );
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 
