@@ -119,11 +119,11 @@ std::vector<std::string> GetFilesInDirectory( const std::string dir, const std::
                     if( dir_itr->path().extension() == extension )
                     {
                         std::string pathAndFileName;
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                        pathAndFileName = dir_itr->path().string();
+#else
                         pathAndFileName.assign( dir_path.string() );
                         pathAndFileName.append( "/" );
-#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-                        pathAndFileName.append( dir_itr->path().string() );
-#else
                         pathAndFileName.append( dir_itr->leaf() );
 #endif                   
                         filesInDir.push_back( pathAndFileName );

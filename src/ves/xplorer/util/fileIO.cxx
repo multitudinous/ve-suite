@@ -558,14 +558,14 @@ std::vector<std::string> fileIO::GetFilesInDirectory( std::string dir, std::stri
                 {
                     if( dir_itr->path().extension() == extension )
                     {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                        dir_path = dir_itr->path();
+#else
+                        dir_path /= dir_itr->leaf();
+#endif
                         std::string pathAndFileName;
                         pathAndFileName.assign( dir_path.string() );
-                        pathAndFileName.append( "/" );
-#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-                        pathAndFileName.append( dir_itr->path().string() );
-#else
-                        pathAndFileName.append( dir_itr->leaf() );
-#endif
+
                         filesInDir.push_back( pathAndFileName );
                     }
                 }

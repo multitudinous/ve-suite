@@ -430,12 +430,12 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
                     {
                         std::string pathAndFileName;
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-                        pathAndFileName.assign( dir_path.string().c_str() );
+                        pathAndFileName.assign( filenameString );
 #else
                         pathAndFileName.assign( dir_path.leaf().c_str() );
-#endif
                         pathAndFileName.append( "/" );
                         pathAndFileName.append( filenameString.c_str() );
+#endif
                         vprDEBUG( vesDBG, 0 ) << "|\tsurface file = " << pathAndFileName
                             << std::endl << vprDEBUG_FLUSH;
 
