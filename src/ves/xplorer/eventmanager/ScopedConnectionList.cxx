@@ -45,13 +45,15 @@ struct null_deleter
     void operator()(void*) {}
 };
 
-ScopedConnectionList::ScopedConnectionList( ):
-        this_(this, null_deleter())
+ScopedConnectionList::ScopedConnectionList()
+    :
+    this_(this, null_deleter())
 {
 }
 
-ScopedConnectionList::ScopedConnectionList( const ScopedConnectionList& orig ):
-        this_(this, null_deleter())
+ScopedConnectionList::ScopedConnectionList( const ScopedConnectionList& orig )
+    :
+    this_(this, null_deleter())
 {
 }
 
