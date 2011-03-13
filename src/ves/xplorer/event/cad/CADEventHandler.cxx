@@ -323,16 +323,16 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         vprDEBUG( vesDBG, 1 ) << "|\t---" << newPart->GetID()
             << "---" << std::endl << vprDEBUG_FLUSH;
         std::string tempFilename = newPart->GetCADFileName();
-//#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-//        boost::filesystem::path correctedPath( newPart->GetCADFileName() );
-//        vprDEBUG( vesDBG, 1 ) << "|\t---" << tempFilename << "---"
-//            << correctedPath.string()
-//            << std::endl << vprDEBUG_FLUSH;
-//        m_cadHandler->CreatePart( correctedPath.string(),
-//                                  newPart->GetID(),
-//                                  parentID,
-//                                  newPart->GetOcclusionSettings() );
-//#else
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        boost::filesystem::path correctedPath( newPart->GetCADFileName() );
+        vprDEBUG( vesDBG, 1 ) << "|\t---" << tempFilename << "---"
+            << correctedPath.string()
+            << std::endl << vprDEBUG_FLUSH;
+        m_cadHandler->CreatePart( correctedPath.string(),
+                                  newPart->GetID(),
+                                  parentID,
+                                  newPart->GetOcclusionSettings() );
+#else
         boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
         vprDEBUG( vesDBG, 1 ) << "|\t---" << tempFilename << "---"
             << correctedPath.native_file_string()
@@ -341,7 +341,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                                   newPart->GetID(),
                                   parentID,
                                   newPart->GetOcclusionSettings() );
-//#endif
+#endif
 
         ves::xplorer::scenegraph::CADEntity* partNode = 
             m_cadHandler->GetPart( newPart->GetID() );
@@ -437,13 +437,13 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         }
         else
         {
-//#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-//            std::cerr << "|\t---ERROR: (CADEventHandler::_addNodeToNode) Unable to load file name: "
-//            << correctedPath.string() << std::endl;
-//#else
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+            std::cerr << "|\t---ERROR: (CADEventHandler::_addNodeToNode) Unable to load file name: "
+            << correctedPath.string() << std::endl;
+#else
             std::cerr << "|\t---ERROR: (CADEventHandler::_addNodeToNode) Unable to load file name: "
             << correctedPath.native_file_string() << std::endl;
-//#endif
+#endif
         }
     }
 }

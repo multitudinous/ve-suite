@@ -394,31 +394,48 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
     vprDEBUG( vesDBG, 1 ) << "|\tLoading surface files from "
         << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
 
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path dir_path( precomputedSurfaceDir );
+#else
     boost::filesystem::path dir_path( precomputedSurfaceDir, boost::filesystem::no_check );
-
+#endif
     if( boost::filesystem::is_directory( dir_path ) )
     {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        std::cout << "|\tIn directory: "
+            << dir_path.string() << "\n";
+#else
         std::cout << "|\tIn directory: "
             << dir_path.native_directory_string() << "\n";
+#endif
         boost::filesystem::directory_iterator end_iter;
         for( boost::filesystem::directory_iterator dir_itr( dir_path );
                 dir_itr != end_iter; ++dir_itr )
         {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+            const std::string filenameString = dir_itr->path().string();
+#else
+            const std::string filenameString = dir_itr->leaf();
+#endif
             try
             {
                 if( boost::filesystem::is_directory( *dir_itr ) )
                 {
-                    std::cout << "|\tIs a sub directory " << dir_itr->leaf() << " [directory]\n";
+                    std::cout << "|\tIs a sub directory " << filenameString << " [directory]\n";
                 }
                 else
                 {
-                    std::cout << dir_itr->leaf() << "\n";
-                    if( strstr( dir_itr->leaf().c_str(), ".vtk" ) )
+                    std::cout << filenameString << "\n";
+                    if( strstr( filenameString.c_str(), ".vtk" ) )
                     {
                         std::string pathAndFileName;
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                        pathAndFileName.assign( dir_path.string().c_str() );
+#else
                         pathAndFileName.assign( dir_path.leaf().c_str() );
+#endif
                         pathAndFileName.append( "/" );
-                        pathAndFileName.append( dir_itr->leaf().c_str() );
+                        pathAndFileName.append( filenameString.c_str() );
                         vprDEBUG( vesDBG, 0 ) << "|\tsurface file = " << pathAndFileName
                             << std::endl << vprDEBUG_FLUSH;
 
@@ -443,13 +460,17 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
             }
             catch ( const std::exception & ex )
             {
-                std::cout << dir_itr->leaf() << " " << ex.what() << std::endl;
+                std::cout << filenameString << " " << ex.what() << std::endl;
             }
         }
     }
     else // must be a file
     {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        std::cout << "\nFound: " << dir_path.string() << "\n";
+#else
         std::cout << "\nFound: " << dir_path.native_file_string() << "\n";
+#endif
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

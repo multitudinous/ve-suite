@@ -295,8 +295,13 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                                              boost::filesystem::native ) );
             //std::cout << venDirectory << " "
             //<< fullPathFilename.native_file_string() << std::endl;
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+            tempCADNode =
+                parseOCCNURBSFile( fullPathFilename.string() );
+#else
             tempCADNode =
                 parseOCCNURBSFile( fullPathFilename.native_file_string() );
+#endif
             ///get osg node
         }
         else
@@ -308,7 +313,11 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             std::string fullPath;
             if( boost::filesystem::exists( fullPathFilename ) )
             {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                fullPath = fullPathFilename.string();
+#else
                 fullPath = fullPathFilename.native_file_string();
+#endif
                 //tempCADNode = osgDB::readNodeFile( fullPath );
                 osgbBulletPlus::RestorePhysics restorPhysics;
                 restorPhysics.restore( fullPath, NULL );

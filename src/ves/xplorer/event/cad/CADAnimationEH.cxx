@@ -235,12 +235,19 @@ osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string co
 void CADAnimationEventHandler::CreateAnimatedCAD( std::string const& nodeType, 
     std::string const& filename, std::string const& nodeID )
 {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path correctedPath( filename );
+    vprDEBUG( vesDBG, 1 ) << "|\t---" << filename << "---"
+        << correctedPath.string()
+        << std::endl << vprDEBUG_FLUSH;
+    const std::string animationFile = correctedPath.string();
+#else
     boost::filesystem::path correctedPath( filename, boost::filesystem::no_check );
     vprDEBUG( vesDBG, 1 ) << "|\t---" << filename << "---"
         << correctedPath.native_file_string()
         << std::endl << vprDEBUG_FLUSH;
     const std::string animationFile = correctedPath.native_file_string();
-
+#endif
     if( !ReadData( animationFile ) )
     {
         return;

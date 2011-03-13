@@ -127,8 +127,13 @@ void cfdVEPluginLoader::ScanAndLoad( void )
     //Look for VE-Suite default plugin path
     try
     {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        boost::filesystem::path vesuiteDirPath( 
+            vesuitePath );
+#else
         boost::filesystem::path vesuiteDirPath( 
             vesuitePath, boost::filesystem::no_check );
+#endif
         if( boost::filesystem::is_directory( vesuiteDirPath ) )
         {
             vesuiteHomeDefined = true;
@@ -149,7 +154,11 @@ void cfdVEPluginLoader::ScanAndLoad( void )
     bool customPlugins = false;
     try
     {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        boost::filesystem::path dir_path( libDir );
+#else
         boost::filesystem::path dir_path( libDir, boost::filesystem::no_check );
+#endif
         if( boost::filesystem::is_directory( dir_path ) )
         {
             customPlugins = true;

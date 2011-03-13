@@ -135,8 +135,13 @@ void cfdQuatCamHandler::WriteToFile( std::string fileName )
         return;
     }
 
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path dir_path(
+        quatCamDirName );
+#else
     boost::filesystem::path dir_path(
         quatCamDirName, boost::filesystem::no_check );
+#endif
     try
     {
         if( !boost::filesystem::is_directory( dir_path ) )

@@ -83,8 +83,13 @@ int fileIO::DirectoryExists( std::string dirName )
     //fs::path pathName( dirName.c_str, fs::native );
     if( ! fs::exists( pathName ) )
     {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        std::cout << "\nDirectory not found: "
+        << pathName.string() << std::endl;
+#else
         std::cout << "\nDirectory not found: "
         << pathName.native_file_string() << std::endl;
+#endif
         return 0;
     }
     return 1;
@@ -535,7 +540,11 @@ std::string fileIO::ExtractBaseFileNameFromFullPath( std::string fileName )
 ////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> fileIO::GetFilesInDirectory( std::string dir, std::string extension )
 {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path dir_path( dir.c_str() );
+#else
     boost::filesystem::path dir_path( dir.c_str(), boost::filesystem::no_check );
+#endif
     std::list< std::string > filesInDir;
     try
     {
@@ -552,8 +561,11 @@ std::vector<std::string> fileIO::GetFilesInDirectory( std::string dir, std::stri
                         std::string pathAndFileName;
                         pathAndFileName.assign( dir_path.string() );
                         pathAndFileName.append( "/" );
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                        pathAndFileName.append( dir_itr->path().string() );
+#else
                         pathAndFileName.append( dir_itr->leaf() );
-
+#endif
                         filesInDir.push_back( pathAndFileName );
                     }
                 }

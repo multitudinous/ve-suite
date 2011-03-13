@@ -176,7 +176,11 @@ int main( int argc, char* argv[] )
 ////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> GetFilesInDirectory( std::string dir, std::string extension )
 {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path dir_path( dir.c_str() );
+#else
     boost::filesystem::path dir_path( dir.c_str(), boost::filesystem::no_check );
+#endif
     std::list< std::string > filesInDir;
     std::string fileExt;
     std::string pathAndFileName;
@@ -191,15 +195,22 @@ std::vector<std::string> GetFilesInDirectory( std::string dir, std::string exten
             {
                 try
                 {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                    fileExt = dir_itr->path().extension().string();
+#else
                     fileExt = dir_itr->path().extension();
+#endif
                     boost::algorithm::to_lower( fileExt );
 
                     if( fileExt == extension )
                     {
                         pathAndFileName.assign( dir_path.string() );
                         pathAndFileName.append( "/" );
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                        pathAndFileName.append( dir_itr->path().string() );
+#else
                         pathAndFileName.append( dir_itr->leaf() );
-                        
+#endif
                         filesInDir.push_back( pathAndFileName );
                     }
                 }

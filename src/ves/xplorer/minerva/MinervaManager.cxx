@@ -125,8 +125,13 @@ MinervaManager::MinervaManager()
     bool vesuiteHomeDefined = false;
     try
     {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        boost::filesystem::path minervaDirPath( 
+            minervaDir );
+#else
         boost::filesystem::path minervaDirPath( 
             minervaDir, boost::filesystem::no_check );
+#endif
         if( boost::filesystem::is_directory( minervaDirPath ) )
         {
             vesuiteHomeDefined = true;

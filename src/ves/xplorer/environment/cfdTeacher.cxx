@@ -148,8 +148,11 @@ std::string cfdTeacher::getFileName( int i )
 void cfdTeacher::RecordScene()
 {
     //check if the path to STORED_FILES exists
-    boost::filesystem::path dir_path( this->directory, boost::filesystem::no_check );
-    
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path dir_path( directory );
+#else
+    boost::filesystem::path dir_path( directory, boost::filesystem::no_check );
+#endif
     try
     {
         if( !boost::filesystem::is_directory( dir_path ) )

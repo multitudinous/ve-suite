@@ -210,8 +210,11 @@ void cfdTextureDataSet::CreateTextureManager( std::string textureDescriptionFile
     cfdTextureManager* tm = new cfdTextureManager();
     tm->SetUseShaders( true );
 
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path scalarPath( textureDescriptionFile );
+#else
     boost::filesystem::path scalarPath( textureDescriptionFile, boost::filesystem::no_check );
-    
+#endif
     try
     {
         if( !boost::filesystem::is_directory( scalarPath ) )

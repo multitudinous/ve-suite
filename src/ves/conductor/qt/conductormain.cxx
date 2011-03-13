@@ -96,8 +96,13 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                     base_dir = base_dir.branch_path();
 #endif
 
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                    const std::string base_dir_str =
+                        base_dir.string();
+#else
                     const std::string base_dir_str =
                         base_dir.native_directory_string();
+#endif
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                     _putenv_s("CONDUCTOR_BASE_DIR", base_dir_str.c_str());
@@ -131,8 +136,13 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                 if( NULL == env_dir )
                 {
                     fs::path data_dir(base_dir / "share" / "vesuite" / "conductor");
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                    const std::string data_dir_str =
+                        data_dir.string();
+#else
                     const std::string data_dir_str =
                         data_dir.native_directory_string();
+#endif
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                     _putenv_s("CONDUCTOR_DATA_DIR", data_dir_str.c_str());
@@ -172,8 +182,13 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                     const fs::path lib_subdir(std::string("lib") + bit_suffix);
                     
                     fs::path plugin_dir(base_dir / lib_subdir / "conductor" / "plugins");
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                    const std::string plugin_dir_str =
+                        plugin_dir.string();
+#else
                     const std::string plugin_dir_str =
                         plugin_dir.native_directory_string();
+#endif
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                     _putenv_s("CONDUCTOR_PLUGINS_DIR", plugin_dir_str.c_str());
@@ -287,10 +302,17 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
 
                 if ( found )
                 {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                    setenv("CONDUCTOR_BASE_DIR",
+                           base_dir.string().c_str(), 1);
+                    std::cout << "CONDUCTOR_BASE_DIR=" 
+                        << base_dir.string() << std::endl;
+#else
                     setenv("CONDUCTOR_BASE_DIR",
                            base_dir.native_directory_string().c_str(), 1);
                     std::cout << "CONDUCTOR_BASE_DIR=" 
                         << base_dir.native_directory_string() << std::endl;
+#endif
                 }
             }
             catch (fs::filesystem_error& ex)
@@ -331,6 +353,16 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
 
         // We use the overwrite value of 0 as a way around testing whether the
         // environment variable is already set.
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        setenv("CONDUCTOR_DATA_DIR", 
+            data_dir.string().c_str(), 0);
+        setenv("CONDUCTOR_PLUGINS_DIR",
+            plugin_dir.string().c_str(), 0);
+        std::cout << "CONDUCTOR_DATA_DIR=" 
+            << data_dir.string() << std::endl;
+        std::cout << "CONDUCTOR_PLUGINS_DIR=" 
+            << plugin_dir.string() << std::endl;
+#else
         setenv("CONDUCTOR_DATA_DIR", 
             data_dir.native_directory_string().c_str(), 0);
         setenv("CONDUCTOR_PLUGINS_DIR",
@@ -339,6 +371,7 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
             << data_dir.native_directory_string() << std::endl;
         std::cout << "CONDUCTOR_PLUGINS_DIR=" 
             << plugin_dir.native_directory_string() << std::endl;
+#endif
     }
 }
 #endif  /* defined(WIN32) || defined(WIN64) */

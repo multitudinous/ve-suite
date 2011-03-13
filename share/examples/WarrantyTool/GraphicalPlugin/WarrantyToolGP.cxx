@@ -394,12 +394,19 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     
     std::ifstream infile( csvFilename.c_str() );
     //Get file name string from directory passed in
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path csvFile( csvFilename.c_str() );
+#else
     boost::filesystem::path csvFile( csvFilename.c_str(), 
         boost::filesystem::no_check );
+#endif
     //Set m_dbFilename with the filename of the csv file
     csvFile.replace_extension( ".db" );
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    m_dbFilename = csvFile.filename().string();
+#else
     m_dbFilename = csvFile.filename();
-    
+#endif
     //std::streampos beforeNetwork;
     //beforeNetwork = inFile.tellg();
     
