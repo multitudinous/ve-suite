@@ -276,14 +276,14 @@ void CADAnimationEventHandler::CreateAnimatedCAD( std::string const& nodeType,
         }
     }
 
-    osg::ref_ptr< osg::AnimationPathCallback > callBack_obj = new osg::AnimationPathCallback();
-    callBack_obj->setAnimationPath( createAnimationPath( "seat" ) );
-    animPart->setUpdateCallback( callBack_obj.get() );
-    callBack_obj->setPause( true );
 
     if( cadPart )
     {
-        ;
+        osg::ref_ptr< osg::AnimationPathCallback > callBack_obj = new osg::AnimationPathCallback();
+        callBack_obj->setAnimationPath( createAnimationPath( "seat" ) );
+        animPart->setUpdateCallback( callBack_obj.get() );
+        callBack_obj->setPause( true );
+        std::cout << "|\tRegister animated cad." << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
