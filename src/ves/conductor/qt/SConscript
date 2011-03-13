@@ -5,7 +5,7 @@ import glob
 pj = os.path.join
 
 Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
-Import('minerva_options')
+Import('minerva_options boost_options')
 Import('tao_options xerces_options')
 Import('bullet_options osgbullet_options')
 
@@ -148,7 +148,10 @@ else:
 #lib_env.AppendUnique( CPPDEFINES = ['QT_RENDER_DEBUG'])
 
 if GetPlatform() == 'win32':
-    lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
+    boostVersion = boost_options.getVersion()
+    boostNumber = boostVersion[ 0 ] + (0.01*boostVersion[ 1 ])
+    if boostNumber < 1.46:
+        lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
 
 #disable profiling by default
 if lib_env['VPRProfile'] == 'no':
@@ -162,6 +165,7 @@ xerces_options.apply(lib_env)
 tao_options.apply(lib_env)
 bullet_options.apply(lib_env)
 osgbullet_options.apply(lib_env)
+boost_options.apply( lib_env )
 
 if minerva_options.isAvailable():
 	lib_env.AppendUnique( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
