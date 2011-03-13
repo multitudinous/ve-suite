@@ -126,7 +126,11 @@ CharacterController::CharacterController()
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::~CharacterController()
 {
-    ;
+    for( size_t i = 0; i < m_fbxCharacters.size(); ++i )
+    {
+        delete m_fbxCharacters.at( i );
+    }
+    m_fbxCharacters.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Initialize()
@@ -1076,6 +1080,7 @@ void CharacterController::InitializeCharacters()
 
     //stand still 
     CharacterAnimation* stillCharacter = new CharacterAnimation();
+    m_fbxCharacters.push_back( stillCharacter );
     osg::Group* tempGroup = stillCharacter->Register( fileNames2 );
     if( tempGroup )
     {
@@ -1087,6 +1092,7 @@ void CharacterController::InitializeCharacters()
 
     //Walk forward
     CharacterAnimation* forwardCharacter = new CharacterAnimation();
+    m_fbxCharacters.push_back( forwardCharacter );
     tempGroup = forwardCharacter->Register( fileNames2 );
     if( tempGroup )
     {
@@ -1098,6 +1104,7 @@ void CharacterController::InitializeCharacters()
 
     //Walk backward
     CharacterAnimation* backwardCharacter = new CharacterAnimation();
+    m_fbxCharacters.push_back( backwardCharacter );
     tempGroup = backwardCharacter->Register( fileNames1 );
     if( tempGroup )
     {
@@ -1109,6 +1116,7 @@ void CharacterController::InitializeCharacters()
 
     //sidestep left
     CharacterAnimation* leftStepCharacter = new CharacterAnimation();
+    m_fbxCharacters.push_back( leftStepCharacter );
     tempGroup = leftStepCharacter->Register( fileNames2 );
     if( tempGroup )
     {
@@ -1120,6 +1128,7 @@ void CharacterController::InitializeCharacters()
 
     //sidestep right
     CharacterAnimation* rightStepCharacter = new CharacterAnimation();
+    m_fbxCharacters.push_back( rightStepCharacter );
     tempGroup = rightStepCharacter->Register( fileNames2 );
     if( tempGroup )
     {
