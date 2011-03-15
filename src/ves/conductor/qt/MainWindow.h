@@ -61,7 +61,7 @@ namespace qt
 { 
 namespace minerva 
 { 
-class LayersTree; 
+class StackedWidget; 
 } 
 } 
 } 
@@ -255,7 +255,12 @@ protected Q_SLOTS:
     void on_actionShowPluginsTab_triggered();
 
     void on_actionShowPreferencesTab_triggered();
-    
+
+    // Something in the qt slots mechanism breaks down if these are surrounded by a #ifndef/#endif block.
+	  void on_actionAdd_Planet_triggered ( bool );
+	  void on_actionRemove_Planet_triggered ( bool );
+	  void on_actionConfigure_Layers_triggered ( bool );
+
 Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
     /// required for thread safety
@@ -265,14 +270,6 @@ protected Q_SLOTS:
     /// Slot corresponding to ActiveModelChanged queued signal
     void QueuedOnActiveModelChanged( const std::string& modelID );
 
-#ifdef MINERVA_GIS_SUPPORT
-
-private Q_SLOTS:
-
-	void on_actionAdd_Planet_triggered ( bool );
-	void on_actionRemove_Planet_triggered ( bool );
-	void on_actionConfigure_Layers_triggered ( bool );
-#endif
 private:
     ///Qt window widget
     Ui::MainWindow* ui;
@@ -302,7 +299,7 @@ private:
     QWidget* mVisualizationTab;
 
     ///The layers tree pointer
-    ves::conductor::qt::minerva::LayersTree* mLayersTree;
+    ves::conductor::qt::minerva::StackedWidget* mMinervaStackedWidget;
     
     ///The PreferencesTab pointer
     ves::conductor::PreferencesTab* m_preferencesTab;

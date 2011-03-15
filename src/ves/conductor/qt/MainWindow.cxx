@@ -80,7 +80,7 @@
 
 #ifdef MINERVA_GIS_SUPPORT
 # include <ves/xplorer/minerva/MinervaManager.h>
-# include <ves/conductor/qt/minerva/LayersTree.h>
+# include <ves/conductor/qt/minerva/StackedWidget.h>
 
 #include <Minerva/Core/TileEngine/Body.h>
 #endif
@@ -111,7 +111,7 @@ MainWindow::MainWindow(QWidget* parent) :
     mScenegraphTreeTab( 0 ),
     mActiveTab( "" ),
     mVisualizationTab( 0 ),
-    mLayersTree ( 0 ),
+    mMinervaStackedWidget ( 0 ),
     m_preferencesTab( 0 ),
     m_pluginsTab( 0 )
 {
@@ -220,7 +220,7 @@ MainWindow::~MainWindow()
     delete ui;
 
 #ifdef MINERVA_GIS_SUPPORT
-    delete mLayersTree;
+    delete mMinervaStackedWidget;
 
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 #endif
@@ -615,27 +615,26 @@ void MainWindow::on_actionAdd_Planet_triggered ( bool )
 {
     ves::xplorer::minerva::MinervaManager::instance()->AddEarthToScene();
 
-    if ( mLayersTree )
+    if ( mMinervaStackedWidget )
     {
-        this->RemoveTab ( mLayersTree );
-        delete mLayersTree;
+      this->on_actionRemove_Planet_triggered( false );
     }
 
-    mLayersTree = new ves::conductor::qt::minerva::LayersTree;
-    mLayersTree->buildTree ( ves::xplorer::minerva::MinervaManager::instance()->
+    mMinervaStackedWidget = new ves::conductor::qt::minerva::StackedWidget;
+    mMinervaStackedWidget->setFeature ( ves::xplorer::minerva::MinervaManager::instance()->
         GetTileEngineBody()->container() );
-    ui->tabWidget->setCurrentIndex( AddTab( mLayersTree, "Minerva Layers" ) );
+    ui->tabWidget->setCurrentIndex( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionRemove_Planet_triggered ( bool )
 {
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 
-    if ( mLayersTree )
+    if ( mMinervaStackedWidget )
     {
-        this->RemoveTab ( mLayersTree );
-        delete mLayersTree;
-        mLayersTree = 0x0;
+        this->RemoveTab ( mMinervaStackedWidget );
+        delete mMinervaStackedWidget;
+        mMinervaStackedWidget = 0x0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

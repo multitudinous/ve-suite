@@ -33,31 +33,73 @@
 #ifdef MINERVA_GIS_SUPPORT
 #include <ves/conductor/qt/minerva/LayersTree.h>
 
-#include <Minerva/Qt/Widgets/LayersTree.h>
+#include <Minerva/Qt/Widgets/TreeControl.h>
+#include <Minerva/Qt/Widgets/TreeNode.h>
 
+#include <QtGui/QFileDialog>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QMenu>
+#include <QtGui/QMouseEvent>
+
+#include <boost/shared_ptr.hpp>
+
+#include <iostream>
 
 using namespace ves::conductor::qt::minerva;
 
 LayersTree::LayersTree ( QWidget *parent ) : BaseClass ( parent ),
-  mLayersTree ( 0x0 )
+  mTreeControl ( 0x0 )
 {
-  mLayersTree = new Minerva::QtWidgets::LayersTree;
+    mTreeControl = new Minerva::QtWidgets::TreeControl ( this );
 
-  QVBoxLayout *layout ( new QVBoxLayout );
-  layout->addWidget ( mLayersTree );
+    QVBoxLayout *layout ( new QVBoxLayout );
+    layout->addWidget ( mTreeControl );
 
-  this->setLayout ( layout );
+    this->setContextMenuPolicy ( Qt::CustomContextMenu );
+    QObject::connect ( this, SIGNAL ( customContextMenuRequested ( const QPoint& ) ), this,  SLOT   ( _onContextMenuShow ( const QPoint& ) ) );
+
+    this->setLayout ( layout );
 }
 
 LayersTree::~LayersTree()
 {
-  delete mLayersTree;
-  mLayersTree = 0x0;
+    delete mTreeControl;
+    mTreeControl = 0x0;
 }
 
 void LayersTree::buildTree ( Minerva::Core::Data::Feature * feature )
 {
-  mLayersTree->buildTree ( feature );
+    mTreeControl->buildTree ( feature );
 }
+
+void LayersTree::_onContextMenuShow ( const QPoint& pos )
+{
+    if ( 0x0 == mTreeControl )
+        return;
+  
+    Minerva::QtWidgets::TreeNode *currentItem ( mTreeControl->currentNode() );
+  
+    if ( 0x0 == currentItem )
+        return;
+  
+    Minerva::QtWidgets::TreeNode *parentItem ( currentItem->parent() );
+  
+    Minerva::Core::Data::Feature::RefPtr unknown ( currentItem->node().get() );
+    Minerva::Core::Data::Feature::RefPtr parent ( 0x0 != parentItem ? parentItem->node().get() : 0x0 );
+    bool hasParent ( parent && parent->asContainer() );
+
+    QMenu* menu ( new QMenu ( this ) );
+  
+    QAction* addLayerAction ( new QAction ( QString ( "Add..." ), 0x0 ) );
+    QObject::connect ( addLayerAction, SIGNAL ( triggered (bool) ), this, SLOT ( _addLayer() ) );
+    menu->addAction ( addLayerAction );
+  
+    menu->popup ( mTreeControl->mapToGlobal ( pos ) );
+}
+
+void LayersTree::_addLayer()
+{
+    emit addLayerRequested();
+}
+
 #endif

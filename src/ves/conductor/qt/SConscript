@@ -58,6 +58,23 @@ cppSources += lib_env.qt_moc(source)
 
 source = [pj(buildSrcDir,'propertyBrowser','GenericPropertyBrowser.h')]
 cppSources += lib_env.qt_moc(source)
+
+if minerva_options.isAvailable():
+	source = [pj(buildSrcDir,'minerva/LayersTree.h')]
+	cppSources += lib_env.qt_moc(source)
+	
+	source = [pj(buildSrcDir,'minerva/StackedWidget.h')]
+	cppSources += lib_env.qt_moc(source)
+	
+	source = [pj(buildSrcDir,'minerva/AddLayerWidget.h')]
+	cppSources += lib_env.qt_moc(source)
+	
+	source = [pj(buildSrcDir,'minerva/AddFileSystemWidget.h')]
+	cppSources += lib_env.qt_moc(source)
+	
+	source = [pj(buildSrcDir,'minerva/AddFileSystemStackedWidget.h')]
+	cppSources += lib_env.qt_moc(source)
+	
 ###
 
 ### rcc files
@@ -89,6 +106,10 @@ cppHeaders += lib_env.qt_uic(source)
 
 source = [pj(buildSrcDir,'CameraPlacementTool.ui')]
 cppHeaders += lib_env.qt_uic(source)
+
+if minerva_options.isAvailable():
+	source = [pj(buildSrcDir,'minerva/AddFileSystemWidget.ui')]
+	cppHeaders += lib_env.qt_uic(source)
 ####
 
 lib_env.Depends( cppSources, cppHeaders)

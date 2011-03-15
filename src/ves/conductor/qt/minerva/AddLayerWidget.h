@@ -23,20 +23,19 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
- * Author:        $Author$
- * Id:            $Id$
+ * Date modified: $Date: 2011-01-03 22:17:45 -0600 (Mon, 03 Jan 2011) $
+ * Version:       $Rev: 15339 $
+ * Author:        $Author: mccdo $
+ * Id:            $Id: LayersTree.h 15339 2011-01-04 04:17:45Z mccdo $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef __VES_CONDUCTOR_QT_MINERVA_LAYERS_TREE_H__
-#define __VES_CONDUCTOR_QT_MINERVA_LAYERS_TREE_H__
+#ifndef __VES_CONDUCTOR_QT_MINERVA_ADD_LAYER_WIDGET_H__
+#define __VES_CONDUCTOR_QT_MINERVA_ADD_LAYER_WIDGET_H__
 
 #include <QtGui/QWidget>
 
-namespace Minerva { namespace QtWidgets { class TreeControl; } }
 namespace Minerva { namespace Core { namespace Data { class Feature; } } }
 
 namespace ves {
@@ -44,30 +43,20 @@ namespace conductor {
 namespace qt {
 namespace minerva {
 
-class LayersTree : public QWidget
+class AddLayerWidget : public QWidget
 {
     Q_OBJECT;
 public:
 
     typedef QWidget BaseClass;
 
-    LayersTree ( QWidget *parent = 0x0 );
-    virtual ~LayersTree();
-
-    void buildTree ( Minerva::Core::Data::Feature * feature );
+    AddLayerWidget ( QWidget *parent = 0x0 );
+    virtual ~AddLayerWidget();
 
 Q_SIGNALS:
 
-    void addLayerRequested();
-
-protected Q_SLOTS:
-
-    void _onContextMenuShow ( const QPoint& pos );
-    void _addLayer();
-
-private:
-
-    Minerva::QtWidgets::TreeControl *mTreeControl;
+    void accepted();
+    void rejected();
 
 };
 
@@ -76,4 +65,4 @@ private:
 }
 }
 
-#endif // __VES_CONDUCTOR_QT_MINERVA_LAYERS_TREE_H__
+#endif // __VES_CONDUCTOR_QT_MINERVA_ADD_LAYER_WIDGET_H__
