@@ -51,7 +51,9 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 TextureDataInfo::TextureDataInfo()
-        : _name( " " ), _tm( 0 )
+        : 
+        _name( " " ),
+        _tm( 0 )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 TextureDataInfo::TextureDataInfo( const TextureDataInfo& tdi )
@@ -103,8 +105,12 @@ TextureDataInfo& TextureDataInfo::operator=( const TextureDataInfo& tdi )
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdTextureDataSet::cfdTextureDataSet()
-        : _volVisNode( new cfdVolumeVisualization ), _nScalars( 0 ),
-        _nVectors( 0 ), _activeTM( 0 ), _activeDataType( SCALAR )
+    : 
+    _activeDataType( SCALAR ),
+    _nScalars( 0 ),
+    _nVectors( 0 ),
+    _volVisNode( new cfdVolumeVisualization ), 
+    _activeTM( 0 )
 {
     ;
 }
