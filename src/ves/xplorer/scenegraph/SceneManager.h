@@ -51,6 +51,17 @@
 #include <osg/FrameStamp>
 #include <osg/Matrix>
 
+#ifdef VE_SOUND
+#include <osgAudio/Config.h>
+
+#if defined( ENABLE_SUBSYSTEM_FMOD ) && defined( VPR_OS_Linux )
+namespace FMOD
+{
+class System;
+}
+#endif
+#endif
+
 // --- VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
 
@@ -266,6 +277,11 @@ public:
     ///Get the center point
     gmtl::Point3d& GetCenterPoint();
     
+#if defined( VE_SOUND ) && defined( ENABLE_SUBSYSTEM_FMOD ) && defined( VPR_OS_Linux )
+    ///Configure the System interface of FMOD
+    void  ConfigureFMODSystem( FMOD::System* system );
+#endif
+
 protected:
     ///Create the model for the logo
     void _createLogo();

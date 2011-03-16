@@ -74,6 +74,10 @@
 #include <osgAudio/SoundRoot.h>
 #include <osgAudio/SoundNode.h>
 #include <osgAudio/SoundState.h>
+#   if defined( ENABLE_SUBSYSTEM_FMOD ) && defined( VPR_OS_Linux )
+#   include <fmod.hpp>
+#   include <osgAudio/AudioEnvironment.h>
+#   endif
 #endif //VE_SOUND
 
 // --- VR Juggler Includes --- //
@@ -146,6 +150,25 @@ SceneManager::~SceneManager()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
+#if defined( VE_SOUND ) && defined( ENABLE_SUBSYSTEM_FMOD ) && defined( VPR_OS_Linux )
+///Configure the System interface of FMOD
+void SceneManager::ConfigureFMODSystem( FMOD::System* system )
+{
+    //The channel count that is overwritten for each speaker mode is as follows:
+    //FMOD_SPEAKERMODE_RAW - Channel count is unaffected.
+    //FMOD_SPEAKERMODE_MONO - Channel count is set to 1.
+    //FMOD_SPEAKERMODE_STEREO - Channel count is set to 2.
+    //FMOD_SPEAKERMODE_QUAD - Channel count is set to 4.
+    //FMOD_SPEAKERMODE_SURROUND - Channel count is set to 5.
+    //FMOD_SPEAKERMODE_5POINT1 - Channel count is set to 6.
+    //FMOD_SPEAKERMODE_7POINT1 - Channel count is set to 8.
+    //FMOD_SPEAKERMODE_PROLOGIC - Channel count is set to 2
+	FMOD_RESULT result;
+    result = system->setOutput(FMOD_OUTPUTTYPE_ALSA);
+    result = system->setSpeakerMode(FMOD_SPEAKERMODE_5POINT1);
+}
+#endif
+////////////////////////////////////////////////////////////////////////////////
 void SceneManager::InitScene()
 {
     std::cout << 
@@ -186,6 +209,10 @@ void SceneManager::InitScene()
 #ifdef VE_SOUND
     try
     {
+#if defined( ENABLE_SUBSYSTEM_FMOD ) && defined( VPR_OS_Linux )
+        osgAudio::AudioEnvironment::instance()->
+            setPreSystemInitFunc( &SceneManager::ConfigureFMODSystem );
+#endif
         osgAudio::SoundManager::instance()->init( 16, true );
         osgAudio::SoundManager::instance()->getEnvironment()->
             setDistanceModel( osgAudio::InverseDistance );
