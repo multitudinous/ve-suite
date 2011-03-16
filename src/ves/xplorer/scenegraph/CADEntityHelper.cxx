@@ -119,7 +119,6 @@
 #include <sstream>
 #include <istream>
 #include <string>
-#include <cctype>
 
 using namespace ves::xplorer::scenegraph;
 
