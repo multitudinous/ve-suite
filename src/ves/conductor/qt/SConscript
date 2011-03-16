@@ -4,9 +4,9 @@ import SConsAddons.Util as sca_util
 import glob
 pj = os.path.join
 
-Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
-Import('minerva_options boost_options')
-Import('tao_options xerces_options')
+Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir vpr_options vrjuggler_options GetPlatform')
+Import('minerva_options boost_options osgal_options' )
+Import('tao_options xerces_options osg_options')
 Import('bullet_options osgbullet_options')
 
 SConscript( 'DefaultPlugin/SConscript' )
@@ -181,6 +181,9 @@ if lib_env['VPRProfile'] == 'no':
 osg_options.apply( lib_env )
 vpr_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
+if osgal_options.isAvailable():
+   osgal_options.apply( lib_env )
+   lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 poco_options.apply( lib_env )
 xerces_options.apply(lib_env)
 tao_options.apply(lib_env)
