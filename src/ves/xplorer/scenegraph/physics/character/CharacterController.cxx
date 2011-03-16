@@ -1148,7 +1148,7 @@ void CharacterController::InitializeCharacters()
 
     scaleDown->setScale( osg::Vec3d( 1.646, 1.646, 1.646 ) );
     
-    scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -4.0 ) );
+    scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -4.9 ) );
 
     mMatrixTransform->addChild( scaleDown.get() );
 

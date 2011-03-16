@@ -17,7 +17,9 @@
 */
 
 #include <ves/xplorer/scenegraph/util/CharacterAnimation.h>
-#include "AnimationManagerFinder.h"
+#include <ves/xplorer/scenegraph/util/AnimationManagerFinder.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <iostream>
 #include <osg/io_utils>
@@ -32,6 +34,12 @@
 #include <osgDB/ReadFile>
 #include <osgAnimation/AnimationManagerBase>
 #include <osgAnimation/Bone>
+
+// --- BackdropFX Includes --- //
+#include <backdropFX/Version.h>
+#include <backdropFX/Manager.h>
+#include <backdropFX/ShaderModule.h>
+#include <backdropFX/ShaderModuleVisitor.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 CharacterAnimation::CharacterAnimation()
@@ -131,6 +139,14 @@ osg::Group* CharacterAnimation::Register( std::string const& fileName )
             std::cout << "No data loaded" << std::endl;
             return 0;
         }
+        
+        //Create shader modules emulating ffp
+        if( !ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
+        {
+            backdropFX::ShaderModuleVisitor smv;
+            smv.setAddDefaults( false );
+            root->accept( smv );
+        }        
     }
 
     // Set our Singleton's model.
