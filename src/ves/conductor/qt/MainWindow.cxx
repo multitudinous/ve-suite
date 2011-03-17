@@ -615,26 +615,28 @@ void MainWindow::on_actionAdd_Planet_triggered ( bool )
 {
     ves::xplorer::minerva::MinervaManager::instance()->AddEarthToScene();
 
-    if ( mMinervaStackedWidget )
+    if( mMinervaStackedWidget )
     {
-      this->on_actionRemove_Planet_triggered( false );
+        on_actionRemove_Planet_triggered( false );
     }
 
-    mMinervaStackedWidget = new ves::conductor::qt::minerva::StackedWidget;
-    mMinervaStackedWidget->setFeature ( ves::xplorer::minerva::MinervaManager::instance()->
+    mMinervaStackedWidget = new ves::conductor::qt::minerva::StackedWidget();
+    mMinervaStackedWidget->
+        setFeature( ves::xplorer::minerva::MinervaManager::instance()->
         GetTileEngineBody()->container() );
-    ui->tabWidget->setCurrentIndex( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
+    ui->tabWidget->
+        setCurrentIndex( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionRemove_Planet_triggered ( bool )
 {
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 
-    if ( mMinervaStackedWidget )
+    if( mMinervaStackedWidget )
     {
-        this->RemoveTab ( mMinervaStackedWidget );
+        RemoveTab( mMinervaStackedWidget );
         delete mMinervaStackedWidget;
-        mMinervaStackedWidget = 0x0;
+        mMinervaStackedWidget = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

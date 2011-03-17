@@ -257,9 +257,9 @@ protected Q_SLOTS:
     void on_actionShowPreferencesTab_triggered();
 
     // Something in the qt slots mechanism breaks down if these are surrounded by a #ifndef/#endif block.
-	  void on_actionAdd_Planet_triggered ( bool );
-	  void on_actionRemove_Planet_triggered ( bool );
-	  void on_actionConfigure_Layers_triggered ( bool );
+    void on_actionAdd_Planet_triggered ( bool );
+    void on_actionRemove_Planet_triggered ( bool );
+    void on_actionConfigure_Layers_triggered ( bool );
 
 Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
