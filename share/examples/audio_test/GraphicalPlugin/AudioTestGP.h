@@ -36,9 +36,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
 
-#include <map>
-#include <vector>
-#include <utility>
 #include <string>
 
 namespace osgAudio
