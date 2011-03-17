@@ -642,6 +642,21 @@ void MainWindow::on_actionConfigure_Layers_triggered ( bool )
 {
     ;
 }
+#else
+void MainWindow::on_actionAdd_Planet_triggered ( bool )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionRemove_Planet_triggered ( bool )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionConfigure_Layers_triggered ( bool )
+{
+    ;
+}
 #endif
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionStepPhysics_triggered()
