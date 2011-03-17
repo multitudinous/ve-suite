@@ -2,7 +2,7 @@
 #import os, sys, string
 #pj = os.path.join
 #import SConsAddons.Util as sca_util
-Import( 'poco_options' )
+Import( 'poco_options osgal_options' )
 
 exampleSubdirs = Split("""
     CameraPlacementTool
@@ -27,6 +27,9 @@ exampleSubdirs = Split("""
 
 if poco_options.isAvailable():
     exampleSubdirs.append( 'WarrantyTool' )
+
+if osgal_options.isAvailable():
+    exampleSubdirs.append( 'audio_test' )
 
 ##Run SConscript files in all of those folders.
 for d in exampleSubdirs:
