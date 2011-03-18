@@ -487,12 +487,15 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
                                  nodeScale->GetElement( 2 ) );
     }
 
-    newSet.SetPropertyValue( "Physics_Mass",
-                             newPart->GetMass() );
-    newSet.SetPropertyValue( "Physics_Friction",
-                             newPart->GetFriction() );
-    newSet.SetPropertyValue( "Physics_Restitution",
-                             newPart->GetRestitution() );
+    //if( newPart->HasPhysics() )
+    {
+        newSet.SetPropertyValue( "Physics_Mass",
+                                newPart->GetMass() );
+        newSet.SetPropertyValue( "Physics_Friction",
+                                newPart->GetFriction() );
+        newSet.SetPropertyValue( "Physics_Restitution",
+                                newPart->GetRestitution() );
+    }
 
     newSet.SetPropertyValue( "Culling",
                              newPart->GetOcclusionSettings() );
