@@ -84,7 +84,7 @@ CharacterController::CharacterController()
     mPreviousOccluder( false ),
     mBufferSize( 0 ),
     m_translateType( TranslateType::NONE ),
-    mCameraDistance( 50.0 ),
+    mCameraDistance( 15.0 ),
     mOccludeDistance( 50.0 ),
     mMinCameraDistance( 0.1 ),
     mMaxCameraDistance( 200.0 ),
@@ -108,7 +108,7 @@ CharacterController::CharacterController()
     mTurnSpeed( 7.0 ),
     mWeightModifier( 0.0 ),
     mTotalWeight( 0.0 ),
-    mLookAtOffsetZ( 0.0, 0.0, m_characterHeight * 0.5 ),
+    mLookAtOffsetZ( 0.0, 0.0, (m_characterHeight - 0.5) - 4.4 /*current character offset*/),//m_characterHeight * 0.5 ),
     mCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
     mCameraRotationX( 1.0, 0.0, 0.0, 1.0 ),
     mCameraRotationZ( 0.0, 0.0, 1.0, 1.0 ),
@@ -1146,9 +1146,9 @@ void CharacterController::InitializeCharacters()
         //heading
         osg::DegreesToRadians( 0.0 ), osg::Vec3f( 0.0, 0.0, 1.0 )) );
 
-    scaleDown->setScale( osg::Vec3d( 1.646, 1.646, 1.646 ) );
-    
-    scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -4.9 ) );
+    scaleDown->setScale( osg::Vec3d( 1.058, 1.058, 1.058 ) );
+
+    scaleDown->setPosition( osg::Vec3d( 0.0, -0.5, -4.4 ) );
 
     mMatrixTransform->addChild( scaleDown.get() );
 
