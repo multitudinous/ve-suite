@@ -76,9 +76,16 @@ VEAnimationGraphicalPlugin::VEAnimationGraphicalPlugin()
 {
     m_valveHeight = 0;
     m_valveOnOff = true;
+
+    //DYNSIM
     mObjectName = "DSPlugin"; //name of the sheet
     ///Set the name of the commands we want to capture from the dynsim unit
     mEventHandlerMap[ "OPCData" ] = this;
+
+    //DYNAMICS
+//    mObjectName = "ADPlugin"; //name of the sheet
+    ///Set the name of the commands we want to capture from the dynsim unit
+//    mEventHandlerMap[ "ADData" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VEAnimationGraphicalPlugin::~VEAnimationGraphicalPlugin()
@@ -142,8 +149,8 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     m_valveDCS->addChild( m_rotationDCS.get() );
 
     double rot[3] = { 0.0, 0.0, 90.0 };
-    double pos[3] = {46.8, -79.4, 7.5 };
-    double scale[3] = { 11, 11, 11 };
+    double scale[3] = { 6.56, 6.56, 6.56 };
+    double pos[3] = { 20.75, -51.8, 6.7 };
     m_valveDCS->SetTranslationArray( pos );
     m_valveDCS->SetRotationArray( rot );
 
@@ -173,14 +180,15 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     m_switchDCS->addChild( m_stopTransDCS.get() );
 
     double rot2[3] = { 90.0, 0.0, 0.0 };
-    double pos2[3] = {-32.0, -13.0, 7.0 };
-    double scale2[3] = { 5.4, 5.4, 5.4 };
+    double scale2[3] = { 3.28, 3.28, 3.28 };
+    double pos2[3] = { -30.315, -12.336, 6.35 };
     m_switchDCS->SetTranslationArray( pos2 );
     m_switchDCS->SetRotationArray( rot2 );
     m_switchDCS->SetScaleArray( scale2 );
     m_switchDCS->SetTechnique( "Select" );
 
     mDCS->addChild( m_switchDCS.get() );
+
 
     //mDCS->addChild( m_panelGeometry.get() );
     //mDCS->addChild( m_startTransDCS.get() );
@@ -351,9 +359,11 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
     }*/
 
     if( command->GetDataValuePair("MY_VALVE") )
+    //if( command->GetDataValuePair("CVLENSEL") )
     {
         std::string percent;
         command->GetDataValuePair("MY_VALVE")->GetData( percent );
+        //command->GetDataValuePair("CVLENSEL")->GetData( percent );
         double test = boost::lexical_cast<double>( percent );
         
         m_valveHeight = -0.125 * test;
@@ -369,6 +379,7 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
         
         m_switchOnOff = test;
     }
+
     ////////////////////////////////////////////////////////////////////////////
 
     const std::string commandName = command->GetCommandName();
@@ -498,6 +509,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
             ves::open::xml::DataValuePairPtr
                 inpParams( new ves::open::xml::DataValuePair() );
             inpParams->SetDataName( "MY_VALVE.OP" );
+            //inpParams->SetDataName( "CVLENSEL.Pos" );
             //temp
             if( m_valveOnOff )
             {
