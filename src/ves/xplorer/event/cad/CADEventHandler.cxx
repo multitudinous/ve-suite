@@ -401,11 +401,6 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                     << "|\t---End Part Physics Properties---" 
                     << std::endl << vprDEBUG_FLUSH;
             }
-            //Is the node off or on?
-            //This call must be last after all other properties are processed
-            //so that visitors and other internal osg visitors will
-            //travers the node even if it is turned off
-            partNode->GetDCS()->ToggleDisplay( newPart->GetVisibility() );
 
 #ifdef MINERVA_GIS_SUPPORT
             // Add the part to the MinervaManager so the cad is placed at the right place on the planet if it's added.
@@ -434,6 +429,12 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
 #endif
 
             _writePartToDB( newPart );
+            
+            //Is the node off or on?
+            //This call must be last after all other properties are processed
+            //so that visitors and other internal osg visitors will
+            //travers the node even if it is turned off
+            partNode->GetDCS()->ToggleDisplay( newPart->GetVisibility() );            
         }
         else
         {
