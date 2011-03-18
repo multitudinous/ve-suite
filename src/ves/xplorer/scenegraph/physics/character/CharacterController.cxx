@@ -84,7 +84,7 @@ CharacterController::CharacterController()
     mPreviousOccluder( false ),
     mBufferSize( 0 ),
     m_translateType( TranslateType::NONE ),
-    mCameraDistance( 50.0 ),
+    mCameraDistance( 15.0 ),
     mOccludeDistance( 50.0 ),
     mMinCameraDistance( 0.1 ),
     mMaxCameraDistance( 200.0 ),
@@ -108,7 +108,7 @@ CharacterController::CharacterController()
     mTurnSpeed( 7.0 ),
     mWeightModifier( 0.0 ),
     mTotalWeight( 0.0 ),
-    mLookAtOffsetZ( 0.0, 0.0, m_characterHeight * 0.5 ),
+    mLookAtOffsetZ( 0.0, 0.0, (m_characterHeight - 0.5) - 4.4 /*current character offset*/ ),//m_characterHeight * 0.5 ),
     mCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
     mCameraRotationX( 1.0, 0.0, 0.0, 1.0 ),
     mCameraRotationZ( 0.0, 0.0, 1.0, 1.0 ),
@@ -126,11 +126,7 @@ CharacterController::CharacterController()
 ////////////////////////////////////////////////////////////////////////////////
 CharacterController::~CharacterController()
 {
-    for( size_t i = 0; i < m_fbxCharacters.size(); ++i )
-    {
-        delete m_fbxCharacters.at( i );
-    }
-    m_fbxCharacters.clear();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Initialize()
@@ -1080,7 +1076,6 @@ void CharacterController::InitializeCharacters()
 
     //stand still 
     CharacterAnimation* stillCharacter = new CharacterAnimation();
-    m_fbxCharacters.push_back( stillCharacter );
     osg::Group* tempGroup = stillCharacter->Register( fileNames2 );
     if( tempGroup )
     {
@@ -1092,7 +1087,6 @@ void CharacterController::InitializeCharacters()
 
     //Walk forward
     CharacterAnimation* forwardCharacter = new CharacterAnimation();
-    m_fbxCharacters.push_back( forwardCharacter );
     tempGroup = forwardCharacter->Register( fileNames2 );
     if( tempGroup )
     {
@@ -1104,7 +1098,6 @@ void CharacterController::InitializeCharacters()
 
     //Walk backward
     CharacterAnimation* backwardCharacter = new CharacterAnimation();
-    m_fbxCharacters.push_back( backwardCharacter );
     tempGroup = backwardCharacter->Register( fileNames1 );
     if( tempGroup )
     {
@@ -1116,7 +1109,6 @@ void CharacterController::InitializeCharacters()
 
     //sidestep left
     CharacterAnimation* leftStepCharacter = new CharacterAnimation();
-    m_fbxCharacters.push_back( leftStepCharacter );
     tempGroup = leftStepCharacter->Register( fileNames2 );
     if( tempGroup )
     {
@@ -1128,7 +1120,6 @@ void CharacterController::InitializeCharacters()
 
     //sidestep right
     CharacterAnimation* rightStepCharacter = new CharacterAnimation();
-    m_fbxCharacters.push_back( rightStepCharacter );
     tempGroup = rightStepCharacter->Register( fileNames2 );
     if( tempGroup )
     {
@@ -1155,9 +1146,9 @@ void CharacterController::InitializeCharacters()
         //heading
         osg::DegreesToRadians( 0.0 ), osg::Vec3f( 0.0, 0.0, 1.0 )) );
 
-    scaleDown->setScale( osg::Vec3d( 1.646, 1.646, 1.646 ) );
+    scaleDown->setScale( osg::Vec3d( 1.058, 1.058, 1.058 ) );
     
-    scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -4.0 ) );
+    scaleDown->setPosition( osg::Vec3d( 0.0, -0.5, -4.4 ) );
 
     mMatrixTransform->addChild( scaleDown.get() );
 
