@@ -512,18 +512,15 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
     // Calculate and store the NodePath for this part
     ves::xplorer::scenegraph::CADEntity* partNode =
         m_cadHandler->GetPart( newPart->GetID() );
-    if( partNode && partNode->GetNode() )
+    if( partNode )
     {
         osg::Node* node = partNode->GetNode()->GetNode();
-        if( node )
-        {
-            osg::NodePathList nodePathList = node->getParentalNodePaths(
-                    ves::xplorer::scenegraph::SceneManager::instance()->
-                        GetRootNode() );
-            osg::NodePath nodePath = nodePathList.at( 0 );
-            std::string pathString = osgwTools::nodePathToString( nodePath );
-            newSet.SetPropertyValue( "NodePath", pathString );
-        }
+        osg::NodePathList nodePathList = node->getParentalNodePaths(
+            ves::xplorer::scenegraph::SceneManager::instance()->
+            GetRootNode() );
+        osg::NodePath nodePath = nodePathList.at( 0 );
+        std::string pathString = osgwTools::nodePathToString( nodePath );
+        newSet.SetPropertyValue( "NodePath", pathString );
     }
 
     newSet.WriteToDatabase();
