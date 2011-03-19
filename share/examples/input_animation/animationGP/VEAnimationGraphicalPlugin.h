@@ -87,16 +87,21 @@ private:
     osg::ref_ptr< osg::MatrixTransform > transform_imp;
     osg::ref_ptr< osg::MatrixTransform > transform_tank;
 */
-    //panel geometry
+    ///panel geometry
     osg::ref_ptr< osg::Node > m_startButtonGeometry;
     osg::ref_ptr< osg::Node > m_stopButtonGeometry;
     osg::ref_ptr< osg::Node > m_panelGeometry;
 
-    //valve geometry
+    ///valve geometry
     osg::ref_ptr< osg::Node > m_handwheelGeometry;
     osg::ref_ptr< osg::Node > m_stemGeometry;
     osg::ref_ptr< osg::Node > m_valveGeometry;
 
+    ///Pump geometry
+    osg::ref_ptr< osg::Node > m_pumpGeometry;
+    osg::ref_ptr< osg::Uniform > m_highlightColor;
+
+    ///other vars
     osg::ref_ptr< osg::Switch > m_valueAnimation;
     int mButton;
 
