@@ -28,7 +28,10 @@ public:
         tree_( tree ),
         activeGroup_( NULL ),
         activeChild_( NULL )
-    {}
+    {
+        setTraversalMask( 0xffffffff );
+        setNodeMaskOverride( 0xffffffff );
+    }
 
     virtual void apply( osg::Node& node );
     virtual void apply( osg::Group& group );
