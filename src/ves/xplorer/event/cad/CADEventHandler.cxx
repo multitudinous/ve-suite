@@ -521,10 +521,15 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
         osg::NodePathList nodePathList = node->getParentalNodePaths(
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetRootNode() );
-        osg::NodePath nodePath = nodePathList.at( 0 );
-        std::string pathString = osgwTools::nodePathToString( nodePath );
-        newSet.SetPropertyValue( "NodePath", pathString );
+        if( !nodePathList.empty() )
+        {
+            osg::NodePath nodePath = nodePathList.at( 0 );
+            std::string pathString = osgwTools::nodePathToString( nodePath );
+            newSet.SetPropertyValue( "NodePath", pathString );
+        }
     }
+
+    newSet.SetPropertyValue( "Visibile", newPart->GetVisibility() );
 
     newSet.WriteToDatabase();
 }
