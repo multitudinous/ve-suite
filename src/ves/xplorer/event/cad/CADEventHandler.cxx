@@ -497,8 +497,7 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
                                 newPart->GetRestitution() );
     }
 
-    newSet.SetPropertyValue( "Culling",
-                             newPart->GetOcclusionSettings() );
+    newSet.SetPropertyValue( "Culling", newPart->GetOcclusionSettings() );
 
     // What needs to be tested to turn GPS on/off?
 //    if( ??minerva_gps_condition?? )
@@ -512,11 +511,26 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
     newSet.SetPropertyValue( "GPS_Longitude", newPart->GetLongitude() );
     newSet.SetPropertyValue( "GPS_Latitude", newPart->GetLatitude() );
 
-    // Calculate and store the NodePath for this part
-    ves::xplorer::scenegraph::CADEntity* partNode =
-        m_cadHandler->GetPart( newPart->GetID() );
-    if( partNode )
+    if( newPart->GetNodeType() == "Assembly" )
     {
+        //CADAssemblyPtr newAssembly( boost::dynamic_pointer_cast<CADAssembly>( newPart ) );
+        ves::xplorer::scenegraph::DCS* transform = 
+            m_cadHandler->GetAssembly( newPart->GetID() );
+            
+        osg::NodePathList nodePathList = 
+            transform->getParentalNodePaths(
+            ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+        osg::NodePath nodePath = nodePathList.at( 0 );
+        std::string pathString = osgwTools::nodePathToString( nodePath );
+        newSet.SetPropertyValue( "NodePath", pathString );
+    }
+    else if( newPart->GetNodeType() == "Part" )
+    {
+        //CADPartPtr newPart( boost::dynamic_pointer_cast<CADPart>( activeNode ) );
+            
+        // Calculate and store the NodePath for this part
+        ves::xplorer::scenegraph::CADEntity* partNode =
+            m_cadHandler->GetPart( newPart->GetID() );
         osg::Node* node = partNode->GetNode()->GetNode();
         osg::NodePathList nodePathList = node->getParentalNodePaths(
             ves::xplorer::scenegraph::SceneManager::instance()->
