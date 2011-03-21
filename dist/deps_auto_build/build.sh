@@ -49,7 +49,8 @@ case $ARCH in
 esac
 export ARCH
 
-echo "$PLATFORM $ARCH"
+echo "
+    $PLATFORM $ARCH"
 
 #
 # DEV_BASE_DIR defines the base directory for all development packages.
