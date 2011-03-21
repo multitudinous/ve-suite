@@ -1,7 +1,55 @@
 #!/bin/bash
 
 #
-# DEV_BASE_DIR defines the base directory for all development packages. 
+# Define the platform
+#
+PLATFORM=`uname -s`
+#http://en.wikipedia.org/wiki/Uname
+case $PLATFORM in
+  CYGWIN*)
+    PLATFORM=Windows
+    ;;
+  Darwin)
+    ;;
+  Linux)
+    ;;
+  *)
+    echo "Unrecognized OS: $PLATFORM" >&2
+    kill -SIGINT $$
+    ;;
+esac
+export PLATFORM
+
+#
+# Define the architecture
+#
+[ -z "${ARCH}" ] && ARCH=`uname -m`
+#http://en.wikipedia.org/wiki/Uname
+case $ARCH in
+  i*86)
+    ARCH=32-bit
+    ;;
+  x86)
+    ARCH=32-bit
+    ;;
+  32-bit)
+    ;;
+  x86_64)
+    ARCH=64-bit
+    ;;
+  64-bit)
+    ;;
+  *)
+    echo "Unrecognized Architecture: $ARCH" >&2
+    kill -SIGINT $$
+    ;;
+esac
+export ARCH
+
+echo "$PLATFORM $ARCH"
+
+#
+# DEV_BASE_DIR defines the base directory for all development packages.
 # May be overriden with a shell variable
 [ -z "${DEV_BASE_DIR}" ] && export DEV_BASE_DIR=${HOME}/dev
 
