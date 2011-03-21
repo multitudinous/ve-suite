@@ -8,6 +8,7 @@ PLATFORM=`uname -s`
 case $PLATFORM in
   CYGWIN*)
     PLATFORM=Windows
+    HOME=/cygdrive/c/$USER
     ;;
   Darwin)
     ;;
@@ -50,7 +51,7 @@ esac
 export ARCH
 
 echo "
-    $PLATFORM $ARCH"
+  $PLATFORM $ARCH"
 
 #
 # DEV_BASE_DIR defines the base directory for all development packages.
@@ -74,8 +75,8 @@ MAKE=make
 
 function bye()
 {
-    [ $# -eq 0 ] && usage || echo Exiting: $1 
-    exit 1
+  [ $# -eq 0 ] && usage || echo Exiting: $1 
+  exit 1
 }
 
 function usage()
@@ -100,174 +101,204 @@ function usage()
 
 function e()
 {
-    package=$1
+  package=$1
 
-    if [ ! -e $package ]  ; then echo "Ain't no package $package"; return ; fi 
+  if [ ! -e $package ]; then
+    echo "Ain't no package $package";
+    return;
+  fi
 
-    . $package
+  . $package
 
+  [ -z "${BASE_DIR}" ] && ( echo "BASE_DIR undefined in package $package"; return; )
 
-    [ -z "${BASE_DIR}" ] && (echo "BASE_DIR undefined in package $package"; return)
+  if [ "${check_out_source}" = "yes" ]; then
+    [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
+    [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
 
-    if [ "${check_out_source}" = "yes" ]; then
-        [ -z "${SOURCE_URL}" ] && (echo "SOURCE_URL undefined in package $package"; return)
-        [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && (echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return)
-
-        case ${SOURCE_RETRIEVAL_METHOD} in
-            svn) cd ${DEV_BASE_DIR}; svn co ${SOURCE_URL} ${BASE_DIR}  ;;
-            wget) [ -z "${SOURCE_FORMAT}" ] && (echo "SOURCE_FORMAT undefined in package $package"; return)
-                  cd ${DEV_BASE_DIR}; 
-                  wget ${SOURCE_URL} 
-                  case ${SOURCE_FORMAT} in
-                        tgz) tar xvfz `basename ${SOURCE_URL}` 
-                             rm -f `basename ${SOURCE_URL}`
-                            ;;
-                        bz2) tar xvfj `basename ${SOURCE_URL}`
-                            ;;
-                        *) echo "Source format ${SOURCE_FORMAT} not supported" ;;
-                  esac
-                ;;
-            *) echo "Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported" ;;
+    case ${SOURCE_RETRIEVAL_METHOD} in
+      svn)
+        cd ${DEV_BASE_DIR};
+        svn co ${SOURCE_URL} ${BASE_DIR};
+        ;;
+      wget)
+        [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
+        cd ${DEV_BASE_DIR};
+        wget ${SOURCE_URL}
+        case ${SOURCE_FORMAT} in
+          tgz)
+            tar xvfz `basename ${SOURCE_URL}`;
+            rm -f `basename ${SOURCE_URL}`;
+            ;;
+          bz2)
+            tar xvfj `basename ${SOURCE_URL}`;
+            ;;
+          *)
+            echo "Source format ${SOURCE_FORMAT} not supported";
+            ;;
         esac
-    fi
+        ;;
+      *)
+        echo "Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported";
+        ;;
+    esac
+  fi
 
-    if [ "${update_source}" = "yes" ]; then 
-        [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && (echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return)
-        case ${SOURCE_RETRIEVAL_METHOD} in
-            svn) 
-                if [ -d ${BASE_DIR} ]; then
-                    cd ${BASE_DIR}; svn up 
+  if [ "${update_source}" = "yes" ]; then
+    [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && (echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return)
+    case ${SOURCE_RETRIEVAL_METHOD} in
+      svn)
+        if [ -d ${BASE_DIR} ]; then
+          cd ${BASE_DIR};
+          svn up;
 
-                # Assume that if the base directory does not exist, it has not been checked out
-                # test and perform a checkout 
-                else
-                    echo "${BASE_DIR} non-existent, checking out ...."
-                    [ -z "${SOURCE_URL}" ] && (echo "SOURCE_URL undefined in package $package"; return)
-                    [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && (echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return)
+        # Assume that if the base directory does not exist, it has not been checked out
+        # test and perform a checkout 
+        else
+          echo "${BASE_DIR} non-existent, checking out ...."
+          [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
+          [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
 
-                    case ${SOURCE_RETRIEVAL_METHOD} in
-                        svn) cd ${DEV_BASE_DIR}; svn co ${SOURCE_URL} ;;
-                        wget) 
-                            [ -z "${SOURCE_FORMAT}" ] && (echo "SOURCE_FORMAT undefined in package $package"; return)
-                            cd ${DEV_BASE_DIR}; wget ${SOURCE_URL} 
-                            case ${SOURCE_FORMAT} in
-                                tgz) tar xvfz `basename ${SOURCE_URL}` 
-                                     rm -f `basename ${SOURCE_URL}`
-                                    ;;
-                                *) echo "Source format ${SOURCE_FORMAT} not supported" ;;
-                            esac
-                            ;;
-                        *) echo Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported ;;
-                    esac
+          case ${SOURCE_RETRIEVAL_METHOD} in
+            svn)
+              cd ${DEV_BASE_DIR};
+              svn co ${SOURCE_URL};
+              ;;
+            wget)
+              [ -z "${SOURCE_FORMAT}" ] && (echo "SOURCE_FORMAT undefined in package $package"; return)
+              cd ${DEV_BASE_DIR}; wget ${SOURCE_URL}
+              case ${SOURCE_FORMAT} in
+                tgz)
+                  tar xvfz `basename ${SOURCE_URL}`;
+                  rm -f `basename ${SOURCE_URL}`;
+                  ;;
+                *)
+                  echo "Source format ${SOURCE_FORMAT} not supported";
+                  ;;
+              esac
+              ;;
+            *)
+              echo Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported;
+              ;;
+          esac
+        fi
+        ;;
+      *)
+        echo Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported;
+        ;;
+    esac
+  fi
 
-                fi
-            
-                ;;
-            *) echo Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported ;;
-        esac
-    fi
+  if [ "${prebuild}" = "yes" ] && [ "${SKIP_PREBUILD}" != "yes" ]; then
+    [ -z "${BUILD_DIR}" ] && (echo "BUILD_DIR undefined in package $package"; return)
+    [ -z "${BUILD_METHOD}" ] && (echo "BUILD_METHOD undefined in package $package"; return)
+    [ -z "${SOURCE_DIR}" ] && (echo "SOURCE_DIR undefined in package $package"; return)
+    [ -d ${BUILD_DIR} ] || mkdir -p ${BUILD_DIR}
+    case ${BUILD_METHOD} in
+      cmake)
+        cd ${BUILD_DIR}
+        ${CMAKE} ${CMAKE_PARAMS} ${SOURCE_DIR}
+        ;;
+      autotools)
+        cd ${BUILD_DIR};
+        ${CONFIGURE} ${CONFIGURE_PARAMS};
+        ;;
+      *)
+        echo "Build method ${BUILD_METHOD} unsupported";
+        ;;
+    esac
+  fi
 
+  if [ "${build}" = "yes" ]; then
+    [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
+    [ -z "${BUILD_METHOD}" ] && ( echo "BUILD_METHOD undefined in package $package"; return; )
+    [ -d ${BUILD_DIR} ] || mkdir -p ${BUILD_DIR}
+    [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs"
+    case ${BUILD_METHOD} in
+      cmake)
+        cd ${BUILD_DIR};
+        ${MAKE} ${JCMD} ${BUILD_TARGET};
+        ;;
+      autotools)
+        cd ${BUILD_DIR};
+        ${MAKE} ${JCMD} ${BUILD_TARGET};
+        ;;
+      scons)
+        cd ${BUILD_DIR};
+        ${SCONS} ${BUILD_TARGET} ${JCMD} ${SCONS_PARAMS};
+        ;;
+      *)
+        echo "Build method ${BUILD_METHOD} unsupported"
+        ;;
+    esac
+  fi
 
-    if [ "${prebuild}" = "yes" ] && [ "${SKIP_PREBUILD}" != "yes" ]; then 
-        [ -z "${BUILD_DIR}" ] && (echo "BUILD_DIR undefined in package $package"; return)
-        [ -z "${BUILD_METHOD}" ] && (echo "BUILD_METHOD undefined in package $package"; return)
-        [ -z "${SOURCE_DIR}" ] && (echo "SOURCE_DIR undefined in package $package"; return)
-        [ -d ${BUILD_DIR} ] || mkdir -p ${BUILD_DIR}
-        case ${BUILD_METHOD} in
-             cmake) 
-                cd ${BUILD_DIR}
-                ${CMAKE} ${CMAKE_PARAMS} ${SOURCE_DIR} 
-                ;;
-             autotools) cd ${BUILD_DIR}; ${CONFIGURE} ${CONFIGURE_PARAMS} 
-                ;;
-
-
-             *) echo "Build method ${BUILD_METHOD} unsupported" ;;
-        esac
-    fi
-
-    if [ "${build}" = "yes" ]; then 
-        [ -z "${BUILD_DIR}" ] && (echo "BUILD_DIR undefined in package $package"; return)
-        [ -z "${BUILD_METHOD}" ] && (echo "BUILD_METHOD undefined in package $package"; return)
-        [ -d ${BUILD_DIR} ] || mkdir -p ${BUILD_DIR}
-        [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs"
-        case ${BUILD_METHOD} in
-             cmake) cd ${BUILD_DIR}; ${MAKE} ${JCMD} ${BUILD_TARGET} 
-                    ;;
-
-             autotools) cd ${BUILD_DIR}; ${MAKE} ${JCMD} ${BUILD_TARGET} 
-                    ;;
-
-             scons) cd ${BUILD_DIR}; ${SCONS} ${BUILD_TARGET} ${JCMD} ${SCONS_PARAMS}
-                ;;
-
-             *) echo "Build method ${BUILD_METHOD} unsupported" ;;
-        esac
-    fi
-
-    if [ "${clean_build_dir}" = "yes" ]; then 
-        [ -z "${BUILD_DIR}" ] && (echo "BUILD_DIR undefined in package $package"; return)
-        [ -d ${BUILD_DIR} ] || (echo "${BUILD_DIR} non existent."; return )
-        case ${BUILD_METHOD} in
-             cmake) cd ${BUILD_DIR}; ${MAKE} clean;;
-             autotools) cd ${BUILD_DIR}; ${MAKE} clean;;
-             *) echo "Build method ${BUILD_METHOD} unsupported" ;;
-        esac
-    fi
-
+  if [ "${clean_build_dir}" = "yes" ]; then
+    [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
+    [ -d ${BUILD_DIR} ] || ( echo "${BUILD_DIR} non existent."; return; )
+    case ${BUILD_METHOD} in
+      cmake)
+        cd ${BUILD_DIR};
+        ${MAKE} clean;
+        ;;
+      autotools)
+        cd ${BUILD_DIR};
+        ${MAKE} clean;
+        ;;
+      *)
+        echo "Build method ${BUILD_METHOD} unsupported";
+        ;;
+    esac
+  fi
 }
-
-
 
 while getopts "hkucpbj:dt" opts
 do
-    case $opts in
-      h)
-        usage
-        kill -SIGINT $$
-        ;;
-      k) export check_out_source="yes" ;;
-      u) export update_source="yes" ;;
-      c) export clean_build_dir="yes";;
-      p) export prebuild="yes";;
-      b) export build="yes";;
-      j)
-        if [[ $OPTARG =~ [^1-8] ]] ; then
-          echo "Error: '$OPTARG' not a valid number." >&2;
-          usage;
-          kill -SIGINT $$;
-        fi
-            export multithreading_jobs=$OPTARG
-            export build="yes"  # implied
-        ;;
-#      d)
-#        args[5]="d"
-#        ;;
-#      t)
-#        args[6]="t"
-#        ;;
-      ?)
-        echo "Invalid option: $OPTARG" >&2
-        usage
-        kill -SIGINT $$
-        ;;
-      :)
-        echo "Option $OPTARG requires an argument." >&2
-        usage
-        kill -SIGINT $$
-        ;;
-      *)
-        usage
-        ;;
-    esac
+case $opts in
+  h)
+    usage
+    kill -SIGINT $$
+    ;;
+  k) export check_out_source="yes" ;;
+  u) export update_source="yes" ;;
+  c) export clean_build_dir="yes";;
+  p) export prebuild="yes";;
+  b) export build="yes";;
+  j)
+    if [[ $OPTARG =~ [^1-8] ]] ; then
+      echo "Error: '$OPTARG' not a valid number." >&2;
+      usage;
+      kill -SIGINT $$;
+    fi
+        export multithreading_jobs=$OPTARG
+        export build="yes"  # implied
+    ;;
+  #d)
+    #args[5]="d"
+    #;;
+  #t)
+    #args[6]="t"
+    #;;
+  ?)
+    echo "Invalid option: $OPTARG" >&2
+    usage
+    kill -SIGINT $$
+    ;;
+  :)
+    echo "Option $OPTARG requires an argument." >&2
+    usage
+    kill -SIGINT $$
+    ;;
+  *)
+    usage
+    ;;
+esac
 done
 shift $(($OPTIND - 1))
-
 
 [ -d ${DEV_BASE_DIR} ] || mkdir -p ${DEV_BASE_DIR}
 [ $# -lt 1 ] && bye
 
 for p in $@; do e $p; done
-
 
 exit 0
