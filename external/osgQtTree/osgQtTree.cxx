@@ -41,7 +41,7 @@ PopulateTreeControlWithNodeVisitor::apply( osg::Node& node )
 void
 PopulateTreeControlWithNodeVisitor::apply( osg::Group& group )
 {
-    osgTreeItem* pushgroup;
+    osgTreeItem* pushgroup = 0;
     // first time, initialize root
     if( tree_->GetRoot()->childCount() == 0 )
     {
