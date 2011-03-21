@@ -313,7 +313,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
 
         m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity() );
 
-        _writePartToDB( newAssembly );
+        WritePartToDB( newAssembly );
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
@@ -428,7 +428,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             ves::xplorer::minerva::MinervaManager::instance()->AddModel ( id, modelWrapper.get() );
 #endif
 
-            _writePartToDB( newPart );
+            WritePartToDB( newPart );
             
             //Is the node off or on?
             //This call must be last after all other properties are processed
@@ -449,7 +449,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
+void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
 {
     ves::xplorer::data::CADPropertySet newSet;
     newSet.SetUUID( newPart->GetID() );
@@ -518,7 +518,7 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
         ves::xplorer::scenegraph::DCS* transform = 
             m_cadHandler->GetAssembly( newPart->GetID() );
 
-        pathString = _getNodePathString(
+        pathString = GetNodePathString(
                           scenegraph::SceneManager::instance()->GetRootNode(),
                           transform);
     }
@@ -527,7 +527,7 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
         osg::Node* node = m_cadHandler->
                           GetPart( newPart->GetID() )->GetNode()->GetNode();
 
-        pathString = _getNodePathString(
+        pathString = GetNodePathString(
                       scenegraph::SceneManager::instance()->GetRootNode(),
                       node );
     }
@@ -538,7 +538,7 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
     newSet.WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string CADEventHandler::_getNodePathString( osg::Node* startNode,
+std::string CADEventHandler::GetNodePathString( osg::Node* const startNode,
                                                  osg::Node* endNode )
 {
     // Walk up from end to start

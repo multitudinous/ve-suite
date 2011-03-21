@@ -53,9 +53,8 @@ namespace xplorer
 namespace event
 {
 /*!\file CADEventHandler.h
-  CADEventHandler API
-  */
-/*!\class CADEventHandler
+ * CADEventHandler API
+ * \class CADEventHandler
  * Base class for CADNode event handling.
  */
 class VE_XPLORER_EXPORTS CADEventHandler : public EventHandler
@@ -113,15 +112,18 @@ protected:
 
     /// Set up a database entry for a new CAD part
     /// \param newPart The CADPart to add to the DB
-    void _writePartToDB( ves::open::xml::cad::CADNodePtr newPart );
+    void WritePartToDB( ves::open::xml::cad::CADNodePtr newPart );
 
     /// Calculates the node path from startNode (parent) to endNode (child) and
     /// converts to a string
-    std::string _getNodePathString( osg::Node* startNode, osg::Node* endNode );
+    std::string GetNodePathString( osg::Node* const startNode, osg::Node* endNode );
 
-    ves::xplorer::Model* m_activeModel;///<The active cfdModel;
-    ves::xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
-    ves::open::xml::cad::CADNodePtr m_cadNode;///<The CADNode.
+    ///The active cfdModel
+    ves::xplorer::Model* m_activeModel;
+    ///The ModelCADHandler
+    ves::xplorer::ModelCADHandler* m_cadHandler;
+    ///The CADNode
+    ves::open::xml::cad::CADNodePtr m_cadNode;
 };
 
 }
