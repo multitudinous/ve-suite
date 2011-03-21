@@ -26,7 +26,7 @@ export PLATFORM
 [ -z "${ARCH}" ] && ARCH=`uname -m`
 #http://en.wikipedia.org/wiki/Uname
 case $ARCH in
-  i*86)
+  i[3-6]86)
     ARCH=32-bit
     ;;
   x86)
@@ -35,6 +35,9 @@ case $ARCH in
   32-bit)
     ;;
   x86_64)
+    ARCH=64-bit
+    ;;
+  x64)
     ARCH=64-bit
     ;;
   64-bit)
