@@ -41,6 +41,11 @@
 
 #include <string>
 
+namespace osg
+{
+    class Node;
+}
+
 namespace ves
 {
 namespace xplorer
@@ -109,6 +114,10 @@ protected:
     /// Set up a database entry for a new CAD part
     /// \param newPart The CADPart to add to the DB
     void _writePartToDB( ves::open::xml::cad::CADNodePtr newPart );
+
+    /// Calculates the node path from startNode (parent) to endNode (child) and
+    /// converts to a string
+    std::string _getNodePathString( osg::Node* startNode, osg::Node* endNode );
 
     ves::xplorer::Model* m_activeModel;///<The active cfdModel;
     ves::xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;

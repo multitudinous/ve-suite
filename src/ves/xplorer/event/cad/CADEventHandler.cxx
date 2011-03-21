@@ -511,39 +511,48 @@ void CADEventHandler::_writePartToDB( ves::open::xml::cad::CADNodePtr newPart )
     newSet.SetPropertyValue( "GPS_Longitude", newPart->GetLongitude() );
     newSet.SetPropertyValue( "GPS_Latitude", newPart->GetLatitude() );
 
+    // Calculate and store the NodePath
+    std::string pathString;
     if( newPart->GetNodeType() == "Assembly" )
     {
-        //CADAssemblyPtr newAssembly( boost::dynamic_pointer_cast<CADAssembly>( newPart ) );
         ves::xplorer::scenegraph::DCS* transform = 
             m_cadHandler->GetAssembly( newPart->GetID() );
-            
-        osg::NodePathList nodePathList = 
-            transform->getParentalNodePaths(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
-        osg::NodePath nodePath = nodePathList.at( 0 );
-        std::string pathString = osgwTools::nodePathToString( nodePath );
-        newSet.SetPropertyValue( "NodePath", pathString );
+
+        pathString = _getNodePathString(
+                          scenegraph::SceneManager::instance()->GetRootNode(),
+                          transform);
     }
     else if( newPart->GetNodeType() == "Part" )
-    {
-        //CADPartPtr newPart( boost::dynamic_pointer_cast<CADPart>( activeNode ) );
-            
-        // Calculate and store the NodePath for this part
-        ves::xplorer::scenegraph::CADEntity* partNode =
-            m_cadHandler->GetPart( newPart->GetID() );
-        osg::Node* node = partNode->GetNode()->GetNode();
-        osg::NodePathList nodePathList = node->getParentalNodePaths(
-            ves::xplorer::scenegraph::SceneManager::instance()->
-            GetRootNode() );
-        if( !nodePathList.empty() )
-        {
-            osg::NodePath nodePath = nodePathList.at( 0 );
-            std::string pathString = osgwTools::nodePathToString( nodePath );
-            newSet.SetPropertyValue( "NodePath", pathString );
-        }
+    {       
+        osg::Node* node = m_cadHandler->
+                          GetPart( newPart->GetID() )->GetNode()->GetNode();
+
+        pathString = _getNodePathString(
+                      scenegraph::SceneManager::instance()->GetRootNode(),
+                      node );
     }
+    newSet.SetPropertyValue( "NodePath", pathString );
 
     newSet.SetPropertyValue( "Visibile", newPart->GetVisibility() );
 
     newSet.WriteToDatabase();
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string CADEventHandler::_getNodePathString( osg::Node* startNode,
+                                                 osg::Node* endNode )
+{
+    // Walk up from end to start
+    osg::NodePath nodePath;
+    nodePath.push_back( endNode );
+    while( (endNode->getNumParents() != 0) && (endNode != startNode) )
+    {
+        endNode = endNode->getParent( 0 );
+        nodePath.push_back( endNode );
+    }
+
+    // Reverse the nodePath so that it points from start to end
+    osg::NodePath temp;
+    temp.assign( nodePath.rbegin(), nodePath.rend() );
+
+    return osgwTools::nodePathToString( temp );
 }
