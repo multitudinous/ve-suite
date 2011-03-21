@@ -110,7 +110,7 @@ void CADPhysicsPropertiesEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             std::cout << "Changed Physics Property: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
     }

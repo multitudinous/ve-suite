@@ -94,9 +94,12 @@ void CADInitializePhysicsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             m_cadHandler->GetPart( nodeID->GetDataString() )->InitPhysics();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
+        std::cerr << "CADInitializePhysicsEventHandler::_operateOnNode : There was an " 
+            << "exception generated somewhere in the CAD event handlers." 
+            << std::endl;                
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////

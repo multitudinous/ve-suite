@@ -138,6 +138,9 @@ void CADMoveNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         std::cout << str << std::endl;
     }
     catch ( ... )
-    {}
-
+    {
+        std::cerr << "CADMoveNodeEventHandler::_operateOnNode : There was an " 
+            << "exception generated somewhere in the CAD event handlers." 
+            << std::endl;        
+    }
 }

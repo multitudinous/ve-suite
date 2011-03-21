@@ -80,7 +80,6 @@ void CADTransformEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-
         CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
 
         DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
@@ -119,7 +118,7 @@ void CADTransformEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             transform->SetScaleArray( rawTransform->GetScaleArray()->GetArray() );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!!Invalid command passed to CADTransformEH!!" << std::endl;
     }

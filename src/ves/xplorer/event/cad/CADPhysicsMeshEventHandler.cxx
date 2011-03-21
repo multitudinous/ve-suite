@@ -103,7 +103,7 @@ void CADPhysicsMeshEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() 
             << std::endl << vprDEBUG_FLUSH;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
     }
