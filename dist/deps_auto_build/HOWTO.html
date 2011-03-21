@@ -1,0 +1,303 @@
+<html>
+<head>
+<title> VE Suite Build Script </title>
+
+<style type="text/css">
+
+
+h1 {
+    text-align: center;
+    font-family:"Times New Roman", Times, serif;
+    font-size: 30;
+}
+
+h2 {
+    text-align: left;
+    font-family:"Times New Roman", Times, serif;
+    font-size: 18;
+    margin-left: 40;
+}
+
+pre
+{
+    margin-left: 80;
+}
+
+p 
+{
+    margin-left: 40;
+}
+
+
+li {
+    font-family:"Times New Roman",Georgia,Serif;
+}
+
+td {
+    font-family:"Times New Roman",Georgia,Serif;
+    font-size: 14;
+}
+
+td.vars {
+    width: 130px;
+    padding: 4px;
+    font-family:"Times New Roman",Georgia,Serif;
+    font-size: 14;
+    text-align: right;
+    font-weight: 900;
+}
+
+td.varx {
+    width: 400px;
+    padding: 4px;
+    font-family:"Times New Roman",Georgia,Serif;
+    font-size: 14;
+    text-align: left;
+    font-weight: normal;
+    margin-left: 40px
+}
+
+blockquote {
+    margin-left: 120px;
+    text-indent: -40px;
+    font-weight: bold;
+}
+
+</style>
+
+</head>
+<body>
+<h1 align=center> VE Suite Build Script </h1>
+
+<h2> Description </h2>
+
+<p>
+  This directory contains a build system for the VE Suite of software.  The 
+  core script is <code>build.sh</code>, which executes a package build from 
+  checking it out, running prebuild and building it.
+
+<p>
+  The script is called as follows:
+
+  <pre>
+    usage: ./build.sh [ options ] <package> ....
+
+    This function builds the named package.
+
+    OPTIONS:
+      -h      Show this message
+      -k      Check out the source code
+      -u      Update the source code
+      -c      Clean the build directory
+      -p      Execute prebuild script, e.g., cmake, configure, and autogen
+      -b      Build
+      -j      Build with multithreading enabled
+              Requires argument to specify number of jobs (1:8) to use
+      -d      Create disk image containing install files for package
+      -t      Create tag file with exuberant ctags
+</pre>
+
+<p>
+  Multiple command line options may be used at once.  For example, to check
+  out, prebuild and build osg <i>and</i> osgEphemeris, the following command 
+  will work:
+  <pre>
+
+      ./build.sh -kpbj 3 osg-2.8.3.build osgephemeris.build
+</pre>
+
+<h2> Environmental Variable(s) </h2>
+
+  <p>
+  The variable DEV_BASE_DIR is assumed, within the <code>build.sh</code> script to be 
+  <pre>
+      $HOME/dev
+</pre>
+  <p>unless otherwise specified in the environment.
+
+<h2> Build File Variables </h2>
+<p>
+  The contents of the <code>.build</code> files are nothing more than a set
+  of variables that indicate the various parameters needed to build each 
+  particular package.  An explanation of these variables follows.  
+
+  <table width=80% align=center rules=all>
+    <th colspan=2 bgcolor=#AABBCC valign=top> Build File Variables </th>
+    <tr> 
+        <td class=vars valign=top> BASE_DIR</td>
+        <td class=varx>
+            <p>
+            The base directory for the package.  Usually ${DEV_BASE_DIR}/&lt;Package&gt;<br>
+            e.g.<br>
+            <blockquote>
+                BASE_DIR=${DEV_BASE_DIR}/osg-2.8.3
+            </blockquote>
+        </td> 
+    </tr>
+    <tr> 
+        <td class=vars valign=top> SOURCE_RETRIEVAL_METHOD </td>
+        <td class=varx>
+            <p>
+            Method used for retrieval.  Accepted values are <b>svn</b>, or <b>wget</b>.  <br>
+            e.g.<br>
+            <blockquote>
+                SOURCE_RETRIEVAL_METHOD=svn
+            </blockquote>
+    </tr>
+    <tr> 
+        <td class=vars valign=top> SOURCE_URL </td>
+        <td class=varx>
+            <p>
+            URL where to retrieve the source code from.<br>
+            e.g.<br>
+            <blockquote>
+                SOURCE_URL=https://www.andesengineering.com/svn/osgEphemeris/trunk/osgEphemeris
+            </blockquote>
+    </tr>
+    <tr> 
+        <td class=vars valign=top> SOURCE_FORMAT </td>
+        <td class=varx>
+            <p>
+            When SOURCE_RETRIEVAL_METHOD is <b>wget</b>, provide the file format for the package
+            being retrieved.  Accepted values are <b>tgs</b>, or <b>bz2</b>
+            <br> e.g.<br>
+            <blockquote>
+                SOURCE_FORMAT=tgz
+            </blockquote>
+    </tr>
+    <tr> 
+        <td class=vars valign=top> SOURCE_DIR </td>
+        <td class=varx>
+            <p>
+            Where the source code can be found.  Usually <b>${BASE_DIR}</b>
+            <br> e.g.<br>
+            <blockquote>
+                 SOURCE_DIR=${BASE_DIR}
+            </blockquote>
+    </tr>
+
+    <tr> 
+        <td class=vars valign=top> BUILD_DIR </td>
+        <td class=varx>
+            <p>
+            The directory to build the source code in.  Note, some packages refuse to be
+            built in the same directory as ${BASE_DIR}.
+            <br> e.g.<br>
+            <blockquote>
+                 BUILD_DIR=${BASE_DIR}/build
+            </blockquote>
+    </tr>
+
+    <tr> 
+        <td class=vars valign=top> BUILD_METHOD </td>
+        <td class=varx>
+            <p>
+            Method used to build package.  Accepted values are <b>cmake</b>, <b>autotools</b>, or <b>scons</b>
+            <br> e.g.<br>
+            <blockquote>
+                 BUILD_METHOD=cmake
+            </blockquote>
+    </tr>
+
+    <tr> 
+        <td class=vars valign=top> BUILD_TARGET </td>
+        <td class=varx>
+            <p>
+            Build system (make, or scons) will build this target.  Usually <b>install</b>
+            <br> e.g.<br>
+            <blockquote>
+                BUILD_TARGET=install
+            </blockquote>
+    </tr>
+
+    <tr> 
+        <td class=vars valign=top> INSTALL_DIR </td>
+        <td class=varx>
+            <p>
+            Target directory for install build.  
+            <br> e.g.<br>
+            <blockquote>
+                INSTALL_DIR=${BASE_DIR}/install
+            </blockquote>
+    </tr>
+    <tr> 
+        <td class=vars valign=top> CMAKE_PARAMS </td>
+        <td class=varx>
+            <p>
+            If BUILD_METHOD is cmake, this variable specifies the parameters passed to 
+            cmake.
+            <br> e.g.<br>
+            <blockquote>
+CMAKE_PARAMS=" -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=RelWithDebInfo  -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+
+            </blockquote>
+    </tr>
+    <tr> 
+        <td class=vars valign=top> CONFIGURE_PARAMS </td>
+        <td class=varx>
+            <p>
+            If BUILD_METHOD is autotools, this variable specifies the parameters passed to <code>configure</code>
+            <br> e.g.<br>
+            <blockquote>
+                CONFIGURE_PARAMS="--prefix=${INSTALL_DIR}"
+            </blockquote>
+    </tr>
+    <tr> 
+        <td class=vars valign=top> CONFIGURE_PARAMS </td>
+        <td class=varx>
+            <p>
+            If BUILD_METHOD is scons, this variable specifies the parameters passed to <code>scons</code>
+            <br> e.g.<br>
+            <blockquote>
+SCONS_PARAMS="var_arch=x64 
+              var_type=optimized 
+              var_libtype=shared 
+              darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk 
+              prefix=${INSTALL_DIR}"
+            </blockquote>
+    </tr>
+    <tr> 
+        <td class=vars valign=top> SKIP_PREBUILD </td>
+        <td class=varx>
+            <p>
+            If the build method does not require a prebuild step, set this variable to <b>"yes"</b>.
+            This is necessary when BUILD_METHOD=scons
+            <br> e.g.<br>
+            <blockquote>
+                SKIP_PREBUILD="yes"
+            </blockquote>
+    </tr>
+    <tr> 
+        <td class=vars valign=top> 
+            CONFIGURE<br>
+            CMAKE<br>
+            MAKE<br>
+            SCONS<br>
+        </td>
+        <td class=varx>
+            <p>
+            These variables may be overriden from their defaults, which are:<br>.  
+            <blockquote>
+                CMAKE=cmake<br>
+                CONFIGURE=./configure<br>
+                SCONS=scons<br>
+                MAKE=make<br>
+            </blockquote>
+            An example of when this might be necessary is in the ACE_TAO.build file where 
+            the package complains when the user attempts to build with ./configure.  In this
+            case the BUILD_DIR is defined to be ${BASE_DIR}/build and CONFIGURE is overriden
+            to be ../configure
+            <br> e.g.<br>
+            <blockquote>
+                CONFIGURE=../configure
+            </blockquote>
+    </tr>
+    </table>
+
+
+
+
+
+
+</body>
+</html>
