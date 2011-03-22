@@ -1,0 +1,24 @@
+BASE_DIR=${DEV_BASE_DIR}/xerces-c-3.1.1
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_URL=http://www.ecoficial.com/apachemirror/xerces/c/3/sources/xerces-c-3.1.1.tar.gz
+SOURCE_FORMAT=tgz
+SOURCE_DIR=${BASE_DIR}
+BUILD_DIR=${BASE_DIR}/build-${ARCH}
+INSTALL_DIR=${BASE_DIR}/install-${ARCH}
+BUILD_METHOD=autotools
+CONFIGURE=../configure
+
+case $PLATFORM in
+  Windows)
+    ;;
+  Darwin)
+    CONFIGURE_PARAMS="CFLAGS=`-arch x86_64` \
+          CXXFLAGS=`-arch x86_64` \
+          --prefix=${INSTALL_DIR}"
+    ;;
+  Linux)
+    ;;
+esac
+
+BUILD_TARGET=install
+
