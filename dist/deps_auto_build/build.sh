@@ -68,9 +68,11 @@ echo "
 #
 # Some useful global variables
 #
-export OSG_DIR=${DEV_BASE_DIR}/OpenSceneGraph-2.8.3/osg_2.8.3_install
-export OSGWORKS_ROOT=${OSG_DIR}/include
-export BULLET_ROOT=${DEV_BASE_DIR}/bullet-2.77/install
+export OSG_DIR=${DEV_BASE_DIR}/osg_2.8.3/install-64-bit
+export OSGWORKS_ROOT=${DEV_BASE_DIR}/osgWorks/install-64-bit
+export BULLET_ROOT=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
+export BOOST_INSTALL_DIR=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
+export BOOST_INSTALL_DIR=/opt/local
 
 #
 # some "over-writeable" variables
