@@ -53,7 +53,7 @@ export ARCH
 #
 # DEV_BASE_DIR defines the base directory for all development packages.
 # May be overriden with a shell variable
-[ -z "${DEV_BASE_DIR}" ] && export DEV_BASE_DIR=${HOME}/dev
+[ -z "${DEV_BASE_DIR}" ] && export DEV_BASE_DIR=${HOME}/dev/deps
 
 echo "
   Kernel: $PLATFORM $ARCH
@@ -75,8 +75,15 @@ CONFIGURE=./configure
 SCONS=scons
 MAKE=make
 if [ $PLATFORM = "Windows" ]; then
-  CMAKE=nmake;
   MAKE=nmake;
+  case $ARCH in
+    32-bit)
+      #HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\SxS\VS7
+      ;;
+    64-bit)
+      #HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7
+      ;;
+  esac
 fi
 
 function bye()
