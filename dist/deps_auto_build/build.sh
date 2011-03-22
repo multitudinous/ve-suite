@@ -48,6 +48,11 @@ case $ARCH in
     kill -SIGINT $$
     ;;
 esac
+
+if [ $PLATFORM = "Darwin" ]; then
+  ARCH=64-bit;
+fi
+
 export ARCH
 
 #

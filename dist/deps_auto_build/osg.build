@@ -15,10 +15,10 @@ case $PLATFORM in
                   -G 'NMake Makefiles'"
     ;;
   Darwin)
-    CMAKE_PARAMS=$CMAKE_PARAMS \
+    CMAKE_PARAMS="$CMAKE_PARAMS \
                  -DCMAKE_OSX_ARCHITECTURES=x86_64 \
                  -DOSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX=imageio \
-                 -DOSG_WINDOWING_SYSTEM=Cocoa
+                 -DOSG_WINDOWING_SYSTEM=Cocoa"
     ;;
   Linux)
     ;;
