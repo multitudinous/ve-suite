@@ -7,8 +7,8 @@ PLATFORM=`uname -s`
 #http://en.wikipedia.org/wiki/Uname
 case $PLATFORM in
   CYGWIN*)
-    PLATFORM=Windows
-    HOME=/cygdrive/c/$USER
+    PLATFORM=Windows;
+    HOME=$USERPROFILE;
     ;;
   Darwin)
     ;;
@@ -50,18 +50,20 @@ case $ARCH in
 esac
 export ARCH
 
-echo "
-  $PLATFORM $ARCH"
-
 #
 # DEV_BASE_DIR defines the base directory for all development packages.
 # May be overriden with a shell variable
 [ -z "${DEV_BASE_DIR}" ] && export DEV_BASE_DIR=${HOME}/dev
 
+echo "
+  Kernel: $PLATFORM $ARCH
+  DEV_BASE_DIR: ${DEV_BASE_DIR}
+"
+
 #
 # Some useful global variables
 #
-export OSG_DIR=${DEV_BASE_DIR}/OpenSceneGraph-2.8.3/osg_2.8.3_install/
+export OSG_DIR=${DEV_BASE_DIR}/OpenSceneGraph-2.8.3/osg_2.8.3_install
 export OSGWORKS_ROOT=${OSG_DIR}/include
 export BULLET_ROOT=${DEV_BASE_DIR}/bullet-2.77/install
 
@@ -72,6 +74,10 @@ CMAKE=cmake
 CONFIGURE=./configure
 SCONS=scons
 MAKE=make
+if [ $PLATFORM = "Windows" ]; then
+  CMAKE=nmake;
+  MAKE=nmake;
+fi
 
 function bye()
 {
@@ -118,12 +124,12 @@ function e()
 
     case ${SOURCE_RETRIEVAL_METHOD} in
       svn)
-        cd ${DEV_BASE_DIR};
-        svn co ${SOURCE_URL} ${BASE_DIR};
+        cd "${DEV_BASE_DIR}";
+        svn co ${SOURCE_URL} "${BASE_DIR}";
         ;;
       wget)
         [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
-        cd ${DEV_BASE_DIR};
+        cd "${DEV_BASE_DIR}";
         wget ${SOURCE_URL}
         case ${SOURCE_FORMAT} in
           tgz)
@@ -145,15 +151,16 @@ function e()
   fi
 
   if [ "${update_source}" = "yes" ]; then
-    [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && (echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return)
+    [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && \
+    ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
     case ${SOURCE_RETRIEVAL_METHOD} in
       svn)
-        if [ -d ${BASE_DIR} ]; then
-          cd ${BASE_DIR};
+        if [ -d "${BASE_DIR}" ]; then
+          cd "${BASE_DIR}";
           svn up;
 
         # Assume that if the base directory does not exist, it has not been checked out
-        # test and perform a checkout 
+        # test and perform a checkout
         else
           echo "${BASE_DIR} non-existent, checking out ...."
           [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
@@ -161,12 +168,13 @@ function e()
 
           case ${SOURCE_RETRIEVAL_METHOD} in
             svn)
-              cd ${DEV_BASE_DIR};
+              cd "${DEV_BASE_DIR}";
               svn co ${SOURCE_URL};
               ;;
             wget)
               [ -z "${SOURCE_FORMAT}" ] && (echo "SOURCE_FORMAT undefined in package $package"; return)
-              cd ${DEV_BASE_DIR}; wget ${SOURCE_URL}
+              cd "${DEV_BASE_DIR}";
+              wget ${SOURCE_URL};
               case ${SOURCE_FORMAT} in
                 tgz)
                   tar xvfz `basename ${SOURCE_URL}`;
@@ -193,14 +201,14 @@ function e()
     [ -z "${BUILD_DIR}" ] && (echo "BUILD_DIR undefined in package $package"; return)
     [ -z "${BUILD_METHOD}" ] && (echo "BUILD_METHOD undefined in package $package"; return)
     [ -z "${SOURCE_DIR}" ] && (echo "SOURCE_DIR undefined in package $package"; return)
-    [ -d ${BUILD_DIR} ] || mkdir -p ${BUILD_DIR}
+    [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
     case ${BUILD_METHOD} in
       cmake)
-        cd ${BUILD_DIR}
-        ${CMAKE} ${CMAKE_PARAMS} ${SOURCE_DIR}
+        cd "${BUILD_DIR}";
+        ${CMAKE} ${CMAKE_PARAMS} "${SOURCE_DIR}";
         ;;
       autotools)
-        cd ${BUILD_DIR};
+        cd "${BUILD_DIR}";
         ${CONFIGURE} ${CONFIGURE_PARAMS};
         ;;
       *)
@@ -212,19 +220,19 @@ function e()
   if [ "${build}" = "yes" ]; then
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
     [ -z "${BUILD_METHOD}" ] && ( echo "BUILD_METHOD undefined in package $package"; return; )
-    [ -d ${BUILD_DIR} ] || mkdir -p ${BUILD_DIR}
+    [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
     [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs"
     case ${BUILD_METHOD} in
       cmake)
-        cd ${BUILD_DIR};
+        cd "${BUILD_DIR}";
         ${MAKE} ${JCMD} ${BUILD_TARGET};
         ;;
       autotools)
-        cd ${BUILD_DIR};
+        cd "${BUILD_DIR}";
         ${MAKE} ${JCMD} ${BUILD_TARGET};
         ;;
       scons)
-        cd ${BUILD_DIR};
+        cd "${BUILD_DIR}";
         ${SCONS} ${BUILD_TARGET} ${JCMD} ${SCONS_PARAMS};
         ;;
       *)
@@ -235,14 +243,14 @@ function e()
 
   if [ "${clean_build_dir}" = "yes" ]; then
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
-    [ -d ${BUILD_DIR} ] || ( echo "${BUILD_DIR} non existent."; return; )
+    [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
     case ${BUILD_METHOD} in
       cmake)
-        cd ${BUILD_DIR};
+        cd "${BUILD_DIR}";
         ${MAKE} clean;
         ;;
       autotools)
-        cd ${BUILD_DIR};
+        cd "${BUILD_DIR}";
         ${MAKE} clean;
         ;;
       *)
@@ -296,7 +304,7 @@ esac
 done
 shift $(($OPTIND - 1))
 
-[ -d ${DEV_BASE_DIR} ] || mkdir -p ${DEV_BASE_DIR}
+[ -d "${DEV_BASE_DIR}" ] || mkdir -p "${DEV_BASE_DIR}"
 [ $# -lt 1 ] && bye
 
 for p in $@; do e $p; done
