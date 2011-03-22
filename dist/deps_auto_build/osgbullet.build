@@ -1,29 +1,35 @@
 BASE_DIR=${DEV_BASE_DIR}/osgBullet
-SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_URL="http://osgbullet.googlecode.com/files/osgBullet_01_01_00.tar.gz"
-SOURCE_FORMAT=tgz
+SOURCE_RETRIEVAL_METHOD=svn
+SOURCE_URL=http://osgbullet.googlecode.com/svn/trunk/
 SOURCE_DIR=${BASE_DIR}
-BUILD_DIR=${BASE_DIR}/build
-INSTALL_DIR=${BASE_DIR}/install
+BUILD_DIR=${BASE_DIR}/build-${ARCH}
+INSTALL_DIR=${BASE_DIR}/install-${ARCH}
 BUILD_METHOD=cmake
-OSG_INSTALL_DIR=${DEV_BASE_DIR}/OpenSceneGraph-2.8.3/osg_2.8.3_install/
-BULLET_INSTALL_DIR=${DEV_BASE_DIR}/bullet-2.77/install
-OSGWORKS_INCLUDE_DIR=${OSG_DIR}/include
 
-CMAKE_PARAMS = "-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+CMAKE_PARAMS="-DCMAKE_BUILD_TYPE=RelWithDebInfo \
                 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
                 -DBUILD_SHARED_LIBS=ON \
                 -DOSGBULLET_BUILD_APPLICATIONS=ON \
                 -DOSGBULLET_BUILD_EXAMPLES=OFF \
                 -DOSGBULLET_BUILD_TESTS=OFF \
                 -DOSGBULLET_USE_DOUBLE_PRECISION=OFF \
-                -DBulletInstallType="Alternate Install Location" \
-                -DOSGInstallType="Alternate Install Location" \
-                -DBulletInstallLocation=${BULLET_INSTALL_DIR} \
-                -DBULLET_INCLUDE_DIR=${BULLET_INSTALL_DIR}/include/bullet \
-                -DOSGInstallLocation=${OSG_INSTALL_DIR} \
-                -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_INSTALL_DIR}/include"
+                -DBulletInstallType='Alternate Install Location' \
+                -DOSGInstallType='Alternate Install Location' \
+                -DBulletInstallLocation=${BULLET_ROOT} \
+                -DBULLET_INCLUDE_DIR=${BULLET_ROOT}/include \
+                -DOSGInstallLocation=${OSG_DIR} \
+                -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_ROOT}/include"
 
+case $PLATFORM in
+  Windows)
+    CMAKE_PARAMS="$CMAKE_PARAMS \
+                  -G 'NMake Makefiles'"
+    ;;
+  Darwin)
+    ;;
+  Linux)
+    ;;
+esac
 
 
 BUILD_TARGET=install
