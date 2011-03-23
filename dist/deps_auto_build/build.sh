@@ -138,6 +138,7 @@ function source_retrieval()
     wget)
       [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
       cd "${DEV_BASE_DIR}";
+      [ -d "${BASE_DIR}" ] && ( echo "We have already downloaded $package"; return; )
       wget ${SOURCE_URL}
       case ${SOURCE_FORMAT} in
         tgz)
