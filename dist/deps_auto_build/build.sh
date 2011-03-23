@@ -71,6 +71,7 @@ echo "
 export OSG_DIR=${DEV_BASE_DIR}/osg_2.8.3/install-64-bit
 export OSGWORKS_ROOT=${DEV_BASE_DIR}/osgWorks/install-64-bit
 export BULLET_ROOT=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
+export OSGBULLET_ROOT=${DEV_BASE_DIR}/osgBullet/install-64-bit
 export BOOST_INSTALL_DIR=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
 export BOOST_INSTALL_DIR=/opt/local
 
@@ -141,6 +142,10 @@ function e()
         cd "${DEV_BASE_DIR}";
         svn co ${SOURCE_URL} "${BASE_DIR}";
         ;;
+      private-svn)
+        cd "${DEV_BASE_DIR}";
+        svn co ${SOURCE_URL} "${BASE_DIR}" --username="${SVN_USERNAME}";
+        ;;
       wget)
         [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
         cd "${DEV_BASE_DIR}";
@@ -168,7 +173,7 @@ function e()
     [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && \
     ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
     case ${SOURCE_RETRIEVAL_METHOD} in
-      svn)
+      svn | private-svn)
         if [ -d "${BASE_DIR}" ]; then
           cd "${BASE_DIR}";
           svn up;
@@ -185,6 +190,10 @@ function e()
               cd "${DEV_BASE_DIR}";
               svn co ${SOURCE_URL};
               ;;
+            private-svn)
+              cd "${DEV_BASE_DIR}";
+              svn co ${SOURCE_URL} "${BASE_DIR}" --username="${SVN_USERNAME}";
+              ;;
             wget)
               [ -z "${SOURCE_FORMAT}" ] && (echo "SOURCE_FORMAT undefined in package $package"; return)
               cd "${DEV_BASE_DIR}";
@@ -200,7 +209,7 @@ function e()
               esac
               ;;
             *)
-              echo Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported;
+              echo "Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported";
               ;;
           esac
         fi
@@ -274,7 +283,7 @@ function e()
   fi
 }
 
-while getopts "hkucpbj:dt" opts
+while getopts "hkucpbj:U:dt" opts
 do
 case $opts in
   h)
@@ -292,12 +301,12 @@ case $opts in
       usage;
       kill -SIGINT $$;
     fi
-        export multithreading_jobs=$OPTARG
-        export build="yes"  # implied
+    export multithreading_jobs=$OPTARG
+    export build="yes"  # implied
     ;;
-  #d)
-    #args[5]="d"
-    #;;
+  U)
+    export SVN_USERNAME=$OPTARG
+    ;;
   #t)
     #args[6]="t"
     #;;
