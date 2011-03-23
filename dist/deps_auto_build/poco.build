@@ -16,7 +16,7 @@ case $PLATFORM in
       --no-samples \
       --omit=Data/MySQL \
       --config=Darwin64 \
-      --prefix=${POCO_INSTALL_DIR}"
+      --prefix=${INSTALL_DIR}"
     ;;
   Linux)
     ;;
