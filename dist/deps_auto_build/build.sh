@@ -83,6 +83,8 @@ CMAKE=cmake
 CONFIGURE=./configure
 SCONS=scons
 MAKE=make
+BJAM=bjam
+
 if [ $PLATFORM = "Windows" ]; then
   MAKE=nmake;
   case $ARCH in
@@ -117,6 +119,7 @@ function usage()
       -b      Build
       -j      Build with multithreading enabled
               Requires argument to specify number of jobs (1:8) to use
+      -U      Subversion username to use for private repo
       -d      Create disk image containing install files for package
       -t      Create tag file with exuberant ctags" >&2
 }
@@ -213,8 +216,12 @@ function e()
         cd "${BUILD_DIR}";
         ${CONFIGURE} ${CONFIGURE_PARAMS};
         ;;
+      bjam)
+        cd "${SOURCE_DIR}";
+        "${BJAM_PREBUILD}";
+        ;;
       *)
-        echo "Build method ${BUILD_METHOD} unsupported";
+        echo "Pre-Build method ${BUILD_METHOD} unsupported";
         ;;
     esac
   fi
@@ -236,6 +243,10 @@ function e()
       scons)
         cd "${BUILD_DIR}";
         ${SCONS} ${BUILD_TARGET} ${JCMD} ${SCONS_PARAMS};
+        ;;
+      bjam)
+        cd "${SOURCE_DIR}";
+        ${BJAM} ${BJAM_PARAMS} ${BUILD_TARGET} ${JCMD};
         ;;
       *)
         echo "Build method ${BUILD_METHOD} unsupported"

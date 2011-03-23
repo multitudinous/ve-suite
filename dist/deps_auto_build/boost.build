@@ -1,0 +1,35 @@
+BASE_DIR=${DEV_BASE_DIR}/boost_1_46_1
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.46.1/boost_1_46_1.tar.bz2
+SOURCE_FORMAT=bz2
+SOURCE_DIR=${BASE_DIR}
+BUILD_DIR=${BASE_DIR}/build-${ARCH}
+INSTALL_DIR=${BASE_DIR}/install-${ARCH}
+BUILD_METHOD=bjam
+BJAM=./bjam
+
+BJAM_PARAMS="variant=release \
+      link=shared \
+      address-model=64 \
+      threading=multi \
+      runtime-link=shared \
+      --prefix=${INSTALL_DIR}"
+
+case $PLATFORM in
+  Windows)
+    BJAM_PREBUILD=./bootstrap.bat
+    BJAM_PARAMS="$BJAM_PARAMS \
+                embed-manifest=on \
+                toolset=msvc,9.0"
+    ;;
+  Darwin)
+    BJAM_PREBUILD=./bootstrap.sh
+    BJAM_PARAMS="$BJAM_PARAMS \
+                toolset=darwin"
+    ;;
+  Linux)
+    ;;
+esac
+
+
+BUILD_TARGET=install
