@@ -13,5 +13,3 @@ CONFIGURE_PARAMS=" \
       --prefix=${INSTALL_DIR}"
 
 BUILD_TARGET=install
-
-

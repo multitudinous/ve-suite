@@ -138,7 +138,10 @@ function source_retrieval()
     wget)
       [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
       cd "${DEV_BASE_DIR}";
-      [ -d "${BASE_DIR}" ] && ( echo "We have already downloaded $package"; return; )
+      if [ -d "${BASE_DIR}" ]; then
+        echo "We have already downloaded $package"; 
+        return;
+      fi
       wget ${SOURCE_URL}
       case ${SOURCE_FORMAT} in
         tgz)
@@ -215,7 +218,7 @@ function e()
         ;;
       autotools)
         cd "${BUILD_DIR}";
-        ${CONFIGURE} ${CONFIGURE_PARAMS};
+        ${CONFIGURE} "${CONFIGURE_PARAMS}";
         ;;
       bjam)
         cd "${SOURCE_DIR}";

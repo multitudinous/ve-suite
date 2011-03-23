@@ -12,8 +12,8 @@ case $PLATFORM in
   Windows)
     ;;
   Darwin)
-    CONFIGURE_PARAMS="CFLAGS=`-arch x86_64` \
-          CXXFLAGS=`-arch x86_64` \
+    CONFIGURE_PARAMS="CFLAGS='-arch x86_64' \
+          CXXFLAGS='-arch x86_64' \
           --prefix=${INSTALL_DIR}"
     ;;
   Linux)
