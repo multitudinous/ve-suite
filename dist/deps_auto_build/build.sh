@@ -72,6 +72,7 @@ export OSG_DIR=${DEV_BASE_DIR}/osg_2.8.3/install-64-bit
 export OSGWORKS_ROOT=${DEV_BASE_DIR}/osgWorks/install-64-bit
 export BULLET_ROOT=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
 export OSGBULLET_ROOT=${DEV_BASE_DIR}/osgBullet/install-64-bit
+export OSGEPHEMERIS_ROOT=${DEV_BASE_DIR}/osgEphemeris/install-64-bit
 export BOOST_INSTALL_DIR=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
 export BOOST_INSTALL_DIR=/opt/local
 
