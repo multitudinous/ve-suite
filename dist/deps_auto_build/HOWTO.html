@@ -93,6 +93,7 @@ blockquote {
       -b      Build
       -j      Build with multithreading enabled
               Requires argument to specify number of jobs (1:8) to use
+      -U      Subversion username to use for private repo
       -d      Create disk image containing install files for package
       -t      Create tag file with exuberant ctags
 </pre>
@@ -192,7 +193,7 @@ blockquote {
         <td class=vars valign=top> BUILD_METHOD </td>
         <td class=varx>
             <p>
-            Method used to build package.  Accepted values are <b>cmake</b>, <b>autotools</b>, or <b>scons</b>
+            Method used to build package.  Accepted values are <b>cmake</b>, <b>autotools</b>, <b>bjam</b>, or <b>scons</b>
             <br> e.g.<br>
             <blockquote>
                  BUILD_METHOD=cmake
@@ -268,20 +269,33 @@ SCONS_PARAMS="var_arch=x64
             </blockquote>
     </tr>
     <tr> 
+        <td class=vars valign=top> SKIP_FPC_INSTALL </td>
+        <td class=varx>
+            <p>
+            If the package already has fpc files, like VR Juggler, then do not set this variable
+            otherwise set this variable to <b>"no"</b>.
+            <br> e.g.<br>
+            <blockquote>
+                SKIP_FPC_INSTALL="no"
+            </blockquote>
+    </tr>
+    <tr> 
         <td class=vars valign=top> 
             CONFIGURE<br>
             CMAKE<br>
             MAKE<br>
             SCONS<br>
+            BJAM<br>
         </td>
         <td class=varx>
             <p>
-            These variables may be overriden from their defaults, which are:<br>.  
+            These variables may be overriden from their defaults, which are:<br>
             <blockquote>
                 CMAKE=cmake<br>
                 CONFIGURE=./configure<br>
                 SCONS=scons<br>
                 MAKE=make<br>
+                BJAM=bjam<br>
             </blockquote>
             An example of when this might be necessary is in the ACE_TAO.build file where 
             the package complains when the user attempts to build with ./configure.  In this
@@ -293,11 +307,6 @@ SCONS_PARAMS="var_arch=x64
             </blockquote>
     </tr>
     </table>
-
-
-
-
-
 
 </body>
 </html>
