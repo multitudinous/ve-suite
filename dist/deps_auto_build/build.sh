@@ -1,8 +1,20 @@
 #!/bin/bash
 
 #
-# Define the platform
+# Get the scripts directory
 #
+IFS=$' \t\n'
+declare -x PATH=/bin:/usr/bin
+
+# If the call came via symlink, then use its target instead:
+arg=$0; [[ -L $0 ]] && arg=$(stat -f '%Y' "$0")
+
+pth=$(2>/dev/null cd "${arg%/*}" >&2; echo "`pwd -P`/${arg##*/}")
+SCRIPTDIR=$(dirname "$pth")
+
+#
+# Define the platform
+# 
 PLATFORM=`uname -s`
 #http://en.wikipedia.org/wiki/Uname
 case $PLATFORM in
@@ -60,11 +72,6 @@ export ARCH
 # May be overriden with a shell variable
 [ -z "${DEV_BASE_DIR}" ] && export DEV_BASE_DIR=${HOME}/dev/deps
 
-echo "
-  Kernel: $PLATFORM $ARCH
-  DEV_BASE_DIR: ${DEV_BASE_DIR}
-"
-
 #
 # Some useful global variables
 #
@@ -77,6 +84,7 @@ export BOOST_INSTALL_DIR=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
 export BOOST_INSTALL_DIR=/opt/local
 export CTAGS_INSTALL_DIR=/opt/local
 export TAGS_DIR=${HOME}/.vim/tags
+
 #
 # some "over-writeable" variables
 #
@@ -86,43 +94,52 @@ SCONS=scons
 MAKE=make
 BJAM=bjam
 
+REGPATH=/proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE
 if [ $PLATFORM = "Windows" ]; then
-  MAKE=nmake;
   case $ARCH in
     32-bit)
-      #HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\SxS\VS7
+      MSVS_ARCH="x86"
       ;;
     64-bit)
-      #HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7
+      REGPATH=${REGPATH}/WOW6432Node
+      MSVS_ARCH="amd64"
       ;;
   esac
+
+  MSVC_REGPATH=${REGPATH}/Microsoft/VisualStudio/SxS/VC7
+  VCInstallDir=$( cat "${MSVC_REGPATH}"/* )
+  MAKE="${SCRIPTDIR}/nmake.bat"
+
+  declare -a CMAKE_REGPATH=( "${REGPATH}"/Kitware/* )
+  CMAKEInstallDir=$( cat "${CMAKE_REGPATH[@]: -1}"/@ )
+  CMAKE="${SCRIPTDIR}/cmake.bat"
 fi
 
 function bye()
 {
-  [ $# -eq 0 ] && usage || echo Exiting: $1 
+  [ $# -eq 0 ] && usage || echo Exiting: $1
   exit 1
 }
 
 function usage()
 {
-  echo "
-    usage: $0 [ options ] <package> ....
+echo "
+  usage: $0 [ options ] <package> ....
 
-    This function builds the named package.
+  This function builds the named package.
 
-    OPTIONS:
-      -h      Show this message
-      -k      Check out the source code
-      -u      Update the source code
-      -c      Clean the build directory
-      -p      Execute prebuild script, e.g., cmake, configure, and autogen
-      -b      Build
-      -j      Build with multithreading enabled
-              Requires argument to specify number of jobs (1:8) to use
-      -U      Subversion username to use for private repo
-      -d      Create disk image containing install files for package
-      -t      Create tag file with exuberant ctags" >&2
+  OPTIONS:
+    -h      Show this message
+    -k      Check out the source code
+    -u      Update the source code
+    -c      Clean the build directory
+    -p      Execute prebuild script, e.g., cmake, configure, and autogen
+    -b      Build
+    -j      Build with multithreading enabled
+            Requires argument to specify number of jobs (1:8) to use
+    -U      Subversion username to use for private repo
+    -d      Create disk image containing install files for package
+    -t      Create tag file with exuberant ctags" >&2
 }
 
 function ctags()
@@ -233,7 +250,11 @@ function e()
     case ${BUILD_METHOD} in
       cmake)
         cd "${BUILD_DIR}";
-        ${CMAKE} ${CMAKE_PARAMS} "${SOURCE_DIR}";
+        if [ $PLATFORM = "Windows" ]; then
+          ${CMAKE} "${VCInstallDir}vcvarsall.bat" x86 "${CMAKEInstallDir}" "${SOURCE_DIR}" "${CMAKE_PARAMS}" -G "NMake Makefiles";
+        else
+          ${CMAKE} ${CMAKE_PARAMS} "${SOURCE_DIR}";
+        fi
         ;;
       autotools)
         cd "${BUILD_DIR}";
@@ -258,7 +279,11 @@ function e()
     case ${BUILD_METHOD} in
       cmake)
         cd "${BUILD_DIR}";
-        ${MAKE} ${JCMD} ${BUILD_TARGET};
+        if [ $PLATFORM = "Windows" ]; then
+          ${MAKE} "${VCInstallDir}vcvarsall.bat" x86 "nmake";
+        else
+          ${MAKE} ${JCMD} ${BUILD_TARGET};
+        fi
         ;;
       autotools)
         cd "${BUILD_DIR}";
@@ -360,6 +385,13 @@ shift $(($OPTIND - 1))
 
 [ -d "${DEV_BASE_DIR}" ] || mkdir -p "${DEV_BASE_DIR}"
 [ $# -lt 1 ] && bye
+
+echo -e "\nKernel: $PLATFORM $ARCH"
+if [ $PLATFORM = "Windows" ]; then
+  echo "VCInstallDir: $VCInstallDir"
+  echo "CMAKEInstallDir: $CMAKEInstallDir"
+fi
+echo -e "DEV_BASE_DIR: ${DEV_BASE_DIR}\n"
 
 for p in $@; do e $p; done
 

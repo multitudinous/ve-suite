@@ -11,8 +11,6 @@ CMAKE_PARAMS="-DCMAKE_BUILD_TYPE=RelWithDebInfo \
               -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS="$CMAKE_PARAMS \
-                  -G 'NMake Makefiles'"
     ;;
   Darwin)
     CMAKE_PARAMS="$CMAKE_PARAMS \
