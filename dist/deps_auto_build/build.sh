@@ -120,6 +120,40 @@ function usage()
       -t      Create tag file with exuberant ctags" >&2
 }
 
+function source_retrieval()
+{
+  case ${SOURCE_RETRIEVAL_METHOD} in
+    svn)
+      cd "${DEV_BASE_DIR}";
+      svn co ${SOURCE_URL} "${BASE_DIR}";
+      ;;
+    private-svn)
+      cd "${DEV_BASE_DIR}";
+      svn co ${SOURCE_URL} "${BASE_DIR}" --username="${SVN_USERNAME}";
+      ;;
+    wget)
+      [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
+      cd "${DEV_BASE_DIR}";
+      wget ${SOURCE_URL}
+      case ${SOURCE_FORMAT} in
+        tgz)
+          tar xvfz `basename ${SOURCE_URL}`;
+          rm -f `basename ${SOURCE_URL}`;
+          ;;
+        bz2)
+          tar xvfj `basename ${SOURCE_URL}`;
+          ;;
+        *)
+          echo "Source format ${SOURCE_FORMAT} not supported";
+          ;;
+      esac
+      ;;
+    *)
+      echo "Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported";
+      ;;
+  esac
+}
+
 function e()
 {
   package=$1
@@ -136,37 +170,7 @@ function e()
   if [ "${check_out_source}" = "yes" ]; then
     [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
     [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
-
-    case ${SOURCE_RETRIEVAL_METHOD} in
-      svn)
-        cd "${DEV_BASE_DIR}";
-        svn co ${SOURCE_URL} "${BASE_DIR}";
-        ;;
-      private-svn)
-        cd "${DEV_BASE_DIR}";
-        svn co ${SOURCE_URL} "${BASE_DIR}" --username="${SVN_USERNAME}";
-        ;;
-      wget)
-        [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
-        cd "${DEV_BASE_DIR}";
-        wget ${SOURCE_URL}
-        case ${SOURCE_FORMAT} in
-          tgz)
-            tar xvfz `basename ${SOURCE_URL}`;
-            rm -f `basename ${SOURCE_URL}`;
-            ;;
-          bz2)
-            tar xvfj `basename ${SOURCE_URL}`;
-            ;;
-          *)
-            echo "Source format ${SOURCE_FORMAT} not supported";
-            ;;
-        esac
-        ;;
-      *)
-        echo "Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported";
-        ;;
-    esac
+    source_retrieval;
   fi
 
   if [ "${update_source}" = "yes" ]; then
@@ -185,37 +189,11 @@ function e()
           [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
           [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
 
-          case ${SOURCE_RETRIEVAL_METHOD} in
-            svn)
-              cd "${DEV_BASE_DIR}";
-              svn co ${SOURCE_URL};
-              ;;
-            private-svn)
-              cd "${DEV_BASE_DIR}";
-              svn co ${SOURCE_URL} "${BASE_DIR}" --username="${SVN_USERNAME}";
-              ;;
-            wget)
-              [ -z "${SOURCE_FORMAT}" ] && (echo "SOURCE_FORMAT undefined in package $package"; return)
-              cd "${DEV_BASE_DIR}";
-              wget ${SOURCE_URL};
-              case ${SOURCE_FORMAT} in
-                tgz)
-                  tar xvfz `basename ${SOURCE_URL}`;
-                  rm -f `basename ${SOURCE_URL}`;
-                  ;;
-                *)
-                  echo "Source format ${SOURCE_FORMAT} not supported";
-                  ;;
-              esac
-              ;;
-            *)
-              echo "Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported";
-              ;;
-          esac
+          source_retrieval;
         fi
         ;;
       *)
-        echo Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported;
+        echo "Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported";
         ;;
     esac
   fi
