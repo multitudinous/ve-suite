@@ -75,7 +75,8 @@ export OSGBULLET_ROOT=${DEV_BASE_DIR}/osgBullet/install-64-bit
 export OSGEPHEMERIS_ROOT=${DEV_BASE_DIR}/osgEphemeris/install-64-bit
 export BOOST_INSTALL_DIR=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
 export BOOST_INSTALL_DIR=/opt/local
-
+export CTAGS_INSTALL_DIR=/opt/local
+export TAGS_DIR=${HOME}/.vim/tags
 #
 # some "over-writeable" variables
 #
@@ -127,6 +128,7 @@ function usage()
 function ctags()
 {
   ${CTAGS_INSTALL_DIR}/bin/ctags -RI --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ .
+  [ -d "${TAGS_DIR}" ] || mkdir -p "${TAGS_DIR}"
   rm ${TAGS_DIR}/${1}
   mv tags ${TAGS_DIR}/${1}
 }
