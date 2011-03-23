@@ -12,4 +12,4 @@ CONFIGURE_PARAMS=" \
       --with-boost-includes=${BOOST_INSTALL_DIR}/include \
       --prefix=${INSTALL_DIR}"
 
-BUILD_TARGET=install
+BUILD_TARGET="build install"

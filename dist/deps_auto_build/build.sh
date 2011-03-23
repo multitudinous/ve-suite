@@ -124,6 +124,13 @@ function usage()
       -t      Create tag file with exuberant ctags" >&2
 }
 
+function ctags()
+{
+  ${CTAGS_INSTALL_DIR}/bin/ctags -RI --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ .
+  rm ${TAGS_DIR}/${1}
+  mv tags ${TAGS_DIR}/${1}
+}
+
 function source_retrieval()
 {
   case ${SOURCE_RETRIEVAL_METHOD} in
@@ -150,6 +157,7 @@ function source_retrieval()
           ;;
         bz2)
           tar xvfj `basename ${SOURCE_URL}`;
+          rm -f `basename ${SOURCE_URL}`;
           ;;
         *)
           echo "Source format ${SOURCE_FORMAT} not supported";
@@ -165,22 +173,30 @@ function source_retrieval()
 function e()
 {
   package=$1
-
+  
+  #is this option really a package
   if [ ! -e $package ]; then
     echo "Ain't no package $package";
     return;
   fi
 
+  #reset the var controlling wether to install an fpc file
+  SKIP_FPC_INSTALL="yes"
+  
+  #setup the package specific vars
   . $package
 
+  #check to make sure that the base dir is defined for the package
   [ -z "${BASE_DIR}" ] && ( echo "BASE_DIR undefined in package $package"; return; )
 
+  #checkout the source for download the source
   if [ "${check_out_source}" = "yes" ]; then
     [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
     [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
     source_retrieval;
   fi
 
+  #update the source if needed
   if [ "${update_source}" = "yes" ]; then
     [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && \
     ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
@@ -206,6 +222,7 @@ function e()
     esac
   fi
 
+  #prebuild for the package
   if [ "${prebuild}" = "yes" ] && [ "${SKIP_PREBUILD}" != "yes" ]; then
     [ -z "${BUILD_DIR}" ] && (echo "BUILD_DIR undefined in package $package"; return)
     [ -z "${BUILD_METHOD}" ] && (echo "BUILD_METHOD undefined in package $package"; return)
@@ -230,6 +247,7 @@ function e()
     esac
   fi
 
+  #build the package
   if [ "${build}" = "yes" ]; then
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
     [ -z "${BUILD_METHOD}" ] && ( echo "BUILD_METHOD undefined in package $package"; return; )
@@ -256,8 +274,13 @@ function e()
         echo "Build method ${BUILD_METHOD} unsupported"
         ;;
     esac
+    if [ "${SKIP_FPC_INSTALL}" != "yes" ]; then
+      [ -d "${INSTALL_DIR}/lib/flagpoll" ] || mkdir -p "${INSTALL_DIR}/lib/flagpoll"
+      cp ${VES_SRC_DIR}/dist/linux/fpc_deps_files/${FPC_FILE}.in ${INSTALL_DIR}/lib/flagpoll/${FPC_FILE};
+    fi
   fi
 
+  #clean the build
   if [ "${clean_build_dir}" = "yes" ]; then
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
     [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
@@ -274,6 +297,17 @@ function e()
         echo "Build method ${BUILD_METHOD} unsupported";
         ;;
     esac
+  fi
+  
+  #Build the ctag files
+  if [ "${build_ctag_files}" = "yes" ]; then
+    cd ${INSTALL_DIR}/include; 
+    ctags $package;
+  fi
+  
+  #Build the dmg file
+  if [ "${build_dmg_installer}" = "yes" ]; then
+    echo "DMG package installer not working yet for $package";
   fi
 }
 
@@ -301,9 +335,10 @@ case $opts in
   U)
     export SVN_USERNAME=$OPTARG
     ;;
-  #t)
-    #args[6]="t"
-    #;;
+  t)
+    export build_ctag_files="yes";;
+  d)
+    export build_dmg_installer="yes";;
   ?)
     echo "Invalid option: $OPTARG" >&2
     usage
