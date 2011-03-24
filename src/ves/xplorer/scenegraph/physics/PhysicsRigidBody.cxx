@@ -267,6 +267,11 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
 {
     CleanRigidBody();
 
+    //Should we be ensuring that the top level node is toggled no before
+    //we try to create physics with it???
+    osg::Node::NodeMask tempMask = mOSGToBullet->getNodeMask();
+    mOSGToBullet->setNodeMask( 1 );
+        
     LocalToWorldNodePath ltw( mOSGToBullet.get(), 
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
     LocalToWorldNodePath::NodeAndPathList npl = ltw.GetLocalToWorldNodePath();
@@ -292,6 +297,11 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         osg::ref_ptr< osg::PositionAttitudeTransform > tempSubgraph = 
             new osg::PositionAttitudeTransform( *static_cast< osg::PositionAttitudeTransform* >( mOSGToBullet.get() ), 
             osg::CopyOp::DEEP_COPY_ALL );
+
+        //Now lets change the node back to how it was now that we are done
+        //traversing it.
+        mOSGToBullet->setNodeMask( tempMask );
+        
         //std::string newNodeName = mOSGToBullet->getName() +"_test.osg";
         //osgDB::writeNodeFile( *(tempSubgraph.get()), newNodeName );
 
