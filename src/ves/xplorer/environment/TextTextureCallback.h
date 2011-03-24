@@ -59,12 +59,8 @@ namespace environment
 {
 
 /*!\file TextTextureCallback.h
- *
- */
-/*!\class ves::xplorer::environment::TextTextureCallback
- *
- */
-/*!\namespace ves::xplorer::environment
+ * \class ves::xplorer::environment::TextTextureCallback
+ * \namespace ves::xplorer::environment
  *
  */
 ///

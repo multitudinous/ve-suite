@@ -59,8 +59,8 @@
 UnitWrapper::UnitWrapper( Body::Executive_ptr exec, std::string name )
     : 
     executive_( Body::Executive::_duplicate( exec ) ),
-    UnitName_( name ),
-    return_state( 0 )
+    return_state( 0 ),
+    UnitName_( name )
 {
     ///Initialize VE-Open
     ves::open::xml::XMLObjectFactory::Instance()->
