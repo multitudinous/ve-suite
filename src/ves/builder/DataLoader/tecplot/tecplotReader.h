@@ -38,6 +38,8 @@
 #include "GLOBAL.h"
 #include <ves/builder/DataLoader/tecplot/Manager.h>
 
+class vtkDataObject;
+class vtkMultiBlockDataSet;
 class vtkUnstructuredGrid;
 class vtkFloatArray;
 class vtkPoints;
@@ -51,16 +53,22 @@ namespace DataLoader
 class tecplotReader
 {
 public:
-    tecplotReader( std::string );
+    tecplotReader( std::string inputFileNameAndPath );
 
     ~tecplotReader();
 
+    void SetMultiBlockOn();
+
     int GetNumberOfOutputFiles();
 
-    vtkUnstructuredGrid* GetOutputFile( const int i );
+    vtkDataObject* GetOutputFile( const int fileNum );
+
+    vtkDataObject* ExtractMultiBlock();
 
 private:
     std::string inputFileNameAndPath;
+    bool multiblockOutput;
+    vtkMultiBlockDataSet* multiblock;
     vtkUnstructuredGrid* ugrid;
     int numberOfOutputFiles;
     EntIndex_t numZones;
@@ -75,7 +83,6 @@ private:
     int coordDataSharedAcrossZones;
     int totalNumberOfElements;
     int totalNumberOfNodalPoints;
-    int ii;
     int nodeOffset;
     int elementOffset;
     vtkPoints* vertex;
@@ -113,18 +120,21 @@ private:
     void AddFaceCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone );
     ///???
     void ReadNodalCoordinates( const EntIndex_t currentZone, const int numNodalPointsInZone );
-    ///???
-    void ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone, const int numNodalPointsInZone );
+
+    void ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone,
+                              const int numNodalPointsInZone, int parNum );
     ///???
     void AttachPointsAndDataToGrid();
-    ///???
+    
     void CountNumberOfFilesUsingSolnTime();
     ///???
     int GetStartingZoneForFile( const int fileNum );
     ///???
-    int * GetVtkInitArray();
+//    int * GetVtkInitArray();
     ///Test variable index 3 for the Z coord array
     bool TestForZVariable();
+    ///???
+    EntIndex_t GetNumZonesInCurrentFile( const EntIndex_t startZone );
 };
 }
 }

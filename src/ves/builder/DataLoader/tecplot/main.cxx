@@ -92,31 +92,32 @@ int main( int argc, char** argv )
         std::cout << "Optional commandline flags:" << std::endl;
         std::cout << "   --outputToCurrentDir to write converted files to current directory rather than to location specified in filename path" << std::endl;
         std::cout << "   --ascii to write converted files as plain text" << std::endl;
-        std::cout << "   --multiblock to write transient files in multiblock format" << std::endl;
+        std::cout << "   --multiblock to write data in multi-block file format" << std::endl;
         std::cout << "Note: If get segmentation fault right away, verify that Tecplot SDK evaluation license" << std::endl;
         std::cout << "      file 'sdkeval.lic' is at location specified by environment variable TECSDKHOME.\n" << std::endl;
         return( 0 );
     }
 
     // Examine commandline flags...
-    int outputToCurrentDir = 0;
-    int asciiOutput = 0;
-    int multiblock = 0;
+    int outputToCurrentDirFlag = 0;
+    int asciiOutputFlag = 0;
+    int multiBlockFlag = 0;
     for( int i = 1; i < argc; ++i ) // argument array is 0-based, but we won't look at the zeroth one (program name)
     {
         // Look for flag that specifies to output to current directory (used mainly for testing)
         if( !std::string( "--outputToCurrentDir" ).compare( argv[ i ] ) )
         {
-            outputToCurrentDir = 1;
+            outputToCurrentDirFlag = 1;
         }
         // Look for flag that specifies ascii output (used mainly for testing)
         else if( !std::string( "--ascii" ).compare( argv[ i ] ) )
         {
-            asciiOutput = 1;
+            asciiOutputFlag = 1;
         }
+        // Look for flag that specifies multi-block file format
         else if( !std::string( "--multiblock" ).compare( argv[ i ] ) )
         {
-            multiblock = 1;
+            multiBlockFlag = 1;
         }
     }
 
@@ -126,6 +127,7 @@ int main( int argc, char** argv )
     // argument array is 0-based, but we won't look at the zeroth one (program name)
     for( int i = 1; i < argc; ++i )
     {
+        // skip over any of the commmandline flags...
         if( !std::string("--outputToCurrentDir").compare( argv[ i ] ) || 
             !std::string("--ascii").compare( argv[ i ] ) ||
             !std::string("--multiblock").compare( argv[ i ] ) )
@@ -133,105 +135,81 @@ int main( int argc, char** argv )
             continue;
         }
 
+        // Start a new reader object using the current commandline argument as filename...
         std::string inputFileNameAndPath( argv[ i ] );
-
-        //std::cout << "\nAttempting to process file '" 
-        //    << inputFileNameAndPath << "'" << std::endl;
         tecplotReader* reader = new tecplotReader( inputFileNameAndPath );
         
-        vtkMultiBlockDataSet* mb = NULL;
-
-        int numFiles = reader->GetNumberOfOutputFiles();
-        if( numFiles == 1 )
+        if( multiBlockFlag )
         {
-            multiblock = 0; // this is for more than one file
-        }
+            reader->SetMultiBlockOn();
 
-        if( multiblock )
-        {
-            mb = vtkMultiBlockDataSet::New();
-            mb->SetNumberOfBlocks( numFiles );
-        }
-
-        for( int j = 0; j < numFiles; ++j )
-        {
-            vtkUnstructuredGrid* ugrid = reader->GetOutputFile( j );
-
-            std::string outputFileName;
-            if( numFiles == 1 )
-            {
-                // create a *.vtu output filename...
-                outputFileName = 
-                    stripExtension( inputFileNameAndPath ) + ".vtu";
-            }
-            else
-            {
-                // Using a zero-based incremental naming scheme, create a *.vtu output filename...
-                // Use boost for number-to-string conversion:
-                outputFileName = stripExtension( inputFileNameAndPath ) + 
-                    "_" + boost::lexical_cast<std::string>( j ) + ".vtu";
-            }
-
-            // If outputToCurrentDir flag was set, then write to current location...
-            if( outputToCurrentDir )
+            // create a *.vtm output filename...
+            std::string outputFileName = stripExtension( inputFileNameAndPath ) + ".vtm";
+            if( outputToCurrentDirFlag )
             {
                 outputFileName = extractFileNameFromFullPath( outputFileName );
             }
 
-            if( multiblock )
+            std::cout << "Writing to file \"" << outputFileName << "\"" << std::endl;
+
+            vtkXMLMultiBlockDataWriter* writer = vtkXMLMultiBlockDataWriter::New();
+            writer->SetInput( reader->ExtractMultiBlock() );
+            writer->SetFileName( outputFileName.c_str() );
+            if( asciiOutputFlag )
             {
-                // Add the unstructured grid to the multi-block dataset
-                // Will write when all grids are added.
-                mb->SetBlock( j, ugrid );
-                //ugrid->Delete();  //can't do this here
+                writer->SetDataModeToAscii();
             }
-            else
+            writer->SetWriteMetaFile( 1 );  // causes creation of *.vtm meta file
+            writer->Write();
+            writer->Delete();
+        }
+        else
+        {
+            int numFiles = reader->GetNumberOfOutputFiles();
+            for( int j = 0; j < numFiles; ++j )
             {
+                vtkDataObject* dataObject = reader->GetOutputFile( j );
+
+                std::string outputFileName;
+                if( numFiles == 1 )
+                {
+                    // create a *.vtu output filename...
+                    outputFileName = 
+                        stripExtension( inputFileNameAndPath ) + ".vtu";
+                }
+                else
+                {
+                    // Using a zero-based incremental naming scheme, create a *.vtu output filename...
+                    // Use boost for number-to-string conversion:
+                    outputFileName = stripExtension( inputFileNameAndPath ) + 
+                        "_" + boost::lexical_cast<std::string>( j ) + ".vtu";
+                }
+
+                // If outputToCurrentDirFlag was set, then write to current location...
+                if( outputToCurrentDirFlag )
+                {
+                    outputFileName = extractFileNameFromFullPath( outputFileName );
+                }
+
                 std::cout << "Writing to file \"" << outputFileName << "\"" << std::endl;
 
                 vtkXMLUnstructuredGridWriter* writer = vtkXMLUnstructuredGridWriter::New();
-                writer->SetInput( ugrid );
+                writer->SetInput( dataObject );
                 writer->SetFileName( outputFileName.c_str() );
-                if( asciiOutput )
+                if( asciiOutputFlag )
                 {
                     writer->SetDataModeToAscii();
                 }
                 writer->Write();
                 writer->Delete();
-
-                /*ugrid->Delete();
-                ugrid = NULL;*/
             }
-        }
-
-        // Now it is time to write the multi-block file...
-        if( multiblock )
-        {
-            // create a *.vtu output filename...
-            std::string outputFileName = stripExtension( inputFileNameAndPath ) + ".vtu";
-            if( outputToCurrentDir )
-            {
-                outputFileName = extractFileNameFromFullPath( outputFileName );
-            }
-
-            vtkXMLMultiBlockDataWriter* writer = vtkXMLMultiBlockDataWriter::New();
-            writer->SetInput( mb );
-            writer->SetFileName( outputFileName.c_str() );
-            if( asciiOutput )
-            {
-                writer->SetDataModeToAscii();
-            }
-            //writer->SetWriteMetaFile( 1 );
-            writer->Write();
-            writer->Delete();
-            mb->Delete();
         }
 
         delete reader;
         std::cout << std::endl;
     }
 
-    // Now lets shut the manager down
+    // Now let's shut the manager down
     manager.OneTimeCleanup();
     return( 0 );
 }

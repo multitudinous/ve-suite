@@ -35,6 +35,7 @@
 #include "TecIntegrationManager.h"
 #include "StringList.h"
 
+#include <vtkMultiBlockDataSet.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkPoints.h>
 #include <vtkCellType.h>
@@ -53,16 +54,22 @@ using namespace ves::builder::DataLoader;
 tecplotReader::tecplotReader( std::string inputFileNameAndPath )
 {
     this->inputFileNameAndPath = inputFileNameAndPath;
+    this->multiblockOutput = false;
+    this->multiblock = NULL;
     this->ugrid = NULL;
     this->numberOfOutputFiles = 0;
+    this->numZones = 0;
+    this->connectivityShareCount = 0;
+    this->numVars = 0;
     this->dimension = 0;
     this->xIndex = 0;
     this->yIndex = 0;
     this->zIndex = 0;
+    this->m_varName = NULL;
     this->numParameterArrays = 0;
+    this->coordDataSharedAcrossZones = 0;
     this->totalNumberOfElements = 0;
     this->totalNumberOfNodalPoints = 0;
-    this->ii = 0;
     this->nodeOffset = 0;
     this->elementOffset = 0;
     this->vertex = NULL;
@@ -104,6 +111,12 @@ tecplotReader::~tecplotReader()
 #ifdef PRINT_HEADERS
     std::cerr << "deleting tecplotReader\n" << std::endl;
 #endif // PRINT_HEADERS
+    if( this->multiblock )
+    {
+        this->multiblock->Delete();
+        this->multiblock = NULL;
+    }
+
     if( this->ugrid )
     {
         this->ugrid->Delete();
@@ -123,34 +136,85 @@ tecplotReader::~tecplotReader()
     }
 }
 
+void tecplotReader::SetMultiBlockOn()
+{
+    this->multiblockOutput = true;
+}
+
 int tecplotReader::GetNumberOfOutputFiles()
 {
     return this->numberOfOutputFiles;
 }
 
+/*
 int * tecplotReader::GetVtkInitArray()
 {
     return this->timeToInitVtk;
 }
+*/
 
-vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int fileNum )
+EntIndex_t tecplotReader::GetNumZonesInCurrentFile( const EntIndex_t startZone )
+{
+    EntIndex_t count = 1;
+    for( EntIndex_t currentZone = startZone; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
+    {
+        if( this->timeToInitVtk[ currentZone ] == 0 )   // look ahead to next zone
+        {
+            count++;
+        }
+        else
+        {
+            return count;
+        }
+    }
+    return 0;
+}
+
+vtkDataObject * tecplotReader::ExtractMultiBlock()
+{
+    // Begin at zone 1 and loop among the zones until we complete the dataset...
+    for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
+    {
+        EntIndex_t numZonesInCurrentFile = this->GetNumZonesInCurrentFile( currentZone );
+std::cout << "creating new multiblock with " << numZonesInCurrentFile << " zones" << std::endl;
+        this->multiblock = vtkMultiBlockDataSet::New();
+        this->multiblock->SetNumberOfBlocks( numZonesInCurrentFile );
+
+        this->InitializeVtkData();
+        this->AttachPointsAndDataToGrid();
+std::cout << "setting multiblock " << currentZone-1 << std::endl;
+        this->multiblock->SetBlock( currentZone-1, this->ugrid );
+        // Look at next zone to determine whether to attach points and point & cell data.
+        // If the grid is complete, then return the ugrid...
+        if( this->timeToInitVtk[ currentZone ] )
+        {
+std::cout << "returning multiblock" << std::endl;
+            return this->multiblock;
+        }
+    }
+}
+
+vtkDataObject * tecplotReader::GetOutputFile( const int fileNum )
 {
     // Verify that fileNum is an appropriate zero-based integer...
     if( fileNum < 0 || fileNum > this->numberOfOutputFiles - 1 )
     {
-        std::cerr << "Error: invalid request" << std::endl;
+        std::cerr << "Error: invalid request for file " << fileNum << std::endl;
         return NULL;
     }
 
     int startZone = this->GetStartingZoneForFile( fileNum );
 
-    // Begin at startZone and loop among the zones until we get to the grid that was requested...
+    int parNum = 0;
+
+    // Begin at startZone and loop among the zones until we complete the file that was requested...
     for( EntIndex_t currentZone = startZone; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
     {
-        // Initialize the ugrid if working on first zone of a new grid...
         if( this->timeToInitVtk[ currentZone-1 ] )
         {
+            // Initialize the ugrid if working on first zone of a new grid...
             this->InitializeVtkData();
+            parNum = 0;
         }
 
         this->ReadZoneName( currentZone );
@@ -169,12 +233,12 @@ vtkUnstructuredGrid * tecplotReader::GetOutputFile( const int fileNum )
         }
         else
         {
-            // face-based FE-data
+            // face-based FE-data (polygons and polyhedrons)
             this->AddFaceCellsToGrid( currentZone, zoneType, numElementsInZone );
         }
 
         this->ReadNodalCoordinates( currentZone, numNodalPointsInZone );
-        this->ReadNodeAndCellData( currentZone, numElementsInZone, numNodalPointsInZone );
+        this->ReadNodeAndCellData( currentZone, numElementsInZone, numNodalPointsInZone, parNum );
 
         // Look at next zone to determine whether to attach points and point & cell data.
         // If the grid is complete, then attach data and return the ugrid...
@@ -561,6 +625,10 @@ void tecplotReader::ComputeDimension()
 
     // Prepare to count the number of non-coordinate parameter arrays
     this->numParameterArrays = numNonCoordinateParameters;
+#ifdef PRINT_HEADERS
+    std::cout << "numParameterArrays = "
+        << this->numParameterArrays << std::endl;
+#endif // PRINT_HEADERS
 }
 ////////////////////////////////////////////////////////////////////////////////
 void tecplotReader::SeeIfDataSharedAcrossZones()
@@ -633,11 +701,6 @@ void tecplotReader::InitializeVtkData()
             parameterData[ paramCounter ]->SetName( m_varName[ i ] );
             paramCounter++;
         }
-    }
-
-    if( this->numberOfOutputFiles > 1 )
-    {
-        this->ii = 0;
     }
 
     this->nodeOffset = 0;
@@ -1155,12 +1218,12 @@ void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const in
     ///If any turn out to be non-existent (e.g., planar description),
     ///then set to zero for 3D coordinates.
     vtkFloatArray* x = NULL;
-    if( xIndex > 0 )
+    if( this->xIndex > 0 )
     {
         x = vtkFloatArray::New();
         x->SetName( "X" );
         x->SetNumberOfComponents( 1 );
-        ReadVariable( currentZone, xIndex, m_varName[ xIndex - 1 ], x );
+        this->ReadVariable( currentZone, this->xIndex, m_varName[ this->xIndex - 1 ], x );
     }
     else
     {
@@ -1168,12 +1231,12 @@ void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const in
     }
 
     vtkFloatArray* y = NULL;
-    if( yIndex > 0 )
+    if( this->yIndex > 0 )
     {
         y = vtkFloatArray::New();
         y->SetName( "Y" );
         y->SetNumberOfComponents( 1 );
-        ReadVariable( currentZone, yIndex, m_varName[ yIndex - 1 ], y );
+        this->ReadVariable( currentZone, this->yIndex, m_varName[ this->yIndex - 1 ], y );
     }
     else
     {
@@ -1181,12 +1244,12 @@ void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const in
     }
 
     vtkFloatArray* z = NULL;
-    if( zIndex > 0 )
+    if( this->zIndex > 0 )
     {
         z = vtkFloatArray::New();
         z->SetName( "Z" );
         z->SetNumberOfComponents( 1 );
-        ReadVariable( currentZone, zIndex, m_varName[ zIndex - 1 ], z );
+        this->ReadVariable( currentZone, this->zIndex, m_varName[ this->zIndex - 1 ], z );
     }
     else
     {
@@ -1203,8 +1266,9 @@ void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const in
     y->Delete();
     z->Delete();
 }
-////////////////////////////////////////////////////////////////////////////////
-void tecplotReader::ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone, const int numNodalPointsInZone )
+
+void tecplotReader::ReadNodeAndCellData( const EntIndex_t currentZone, const LgIndex_t numElementsInZone,
+                                         const int numNodalPointsInZone, int parNum )
 {
     int tecplotVar = 0;
     for( int i = 0; i < this->numVars; ++i )
@@ -1222,28 +1286,28 @@ void tecplotReader::ReadNodeAndCellData( const EntIndex_t currentZone, const LgI
         }
         else
         {
-            //cout << "this->ii = " << this->ii << std::endl;
+            //cout << "in ReadNodeAndCellData, parNum = " << parNum << std::endl;
 
             // If data is shared, read data from first zone.
             // Otherwise, read the parameter data from the current zone.
             // variable index is 1-based, names aren't
             if( dataShareCount == this->numZones )
             {
-                ReadVariable( 1, i+1, this->m_varName[ i ], this->parameterData[ this->ii ] );
+                this->ReadVariable( 1, i+1, this->m_varName[ i ], this->parameterData[ parNum ] );
             }
             else
             {
-                ReadVariable( currentZone, i+1, this->m_varName[ i ], this->parameterData[ this->ii ] );
+                this->ReadVariable( currentZone, i+1, this->m_varName[ i ], this->parameterData[ parNum ] );
             }
 /*
             if( this->numZones > 1 && this->coordDataSharedAcrossZones )
             {
                 std::string concatString( zoneName[ currentZone ] );
                 concatString += this->varName[ i ];
-                this->parameterData[ this->ii ]->SetName( concatString.c_str() );
+                this->parameterData[ parNum ]->SetName( concatString.c_str() );
             }
 */
-            this->ii++;
+            parNum++;
         }
 
     } // for each variable
@@ -1255,7 +1319,7 @@ void tecplotReader::ReadNodeAndCellData( const EntIndex_t currentZone, const LgI
 #endif // PRINT_HEADERS
         this->nodeOffset += numNodalPointsInZone;
         this->elementOffset += numElementsInZone;
-        this->ii = 0;
+        parNum = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
