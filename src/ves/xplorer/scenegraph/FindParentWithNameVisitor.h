@@ -34,15 +34,10 @@
 #define FIND_PARENT_WITH_NAME_VISITOR_H
 
 /*!\file FindParentWithNameVisitor.h
-*/
-
-/*!\class ves::xplorer::scenegraph::FindParentWithNameVisitor
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
+ * \class ves::xplorer::scenegraph::FindParentWithNameVisitor
+ * \namespace ves::xplorer::scenegraph
+ *
+ */
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>

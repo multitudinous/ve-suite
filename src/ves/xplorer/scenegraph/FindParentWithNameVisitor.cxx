@@ -40,7 +40,6 @@ FindParentWithNameVisitor::FindParentWithNameVisitor( osg::Node* node,
     const std::string& nodeName, bool exactNameMatch )
     :
     NodeVisitor( TRAVERSE_PARENTS ),
-    parentNode( 0 ),
     mParentName( nodeName ),
     m_exactNameMatch( exactNameMatch )
 {

@@ -34,15 +34,10 @@
 #define SET_STATE_ON_NURBS_NODE_VISITOR_H
 
 /*!\file SetStateOnNURBSVisitor.h
-*/
-
-/*!\class ves::xplorer::scenegraph::SetStateOnNURBSVisitor
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
+ * \class ves::xplorer::scenegraph::SetStateOnNURBSVisitor
+ * \namespace ves::xplorer::scenegraph
+ *
+ */
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>

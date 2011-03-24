@@ -50,10 +50,10 @@ SetStateOnNURBSNodeVisitor::SetStateOnNURBSNodeVisitor( osg::Node* node,
  
         :
         NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-        m_mousePoint( mousePoint ),
         m_selectedState( selectedState ),
-        m_mouseDelta( mouseDelta ),
-        m_dragState( dragState )
+        m_dragState( dragState ),
+        m_mousePoint( mousePoint ),
+        m_mouseDelta( mouseDelta )
 {
     node->accept( *this );
 }
