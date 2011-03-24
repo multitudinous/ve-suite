@@ -4,7 +4,7 @@ SOURCE_URL=https://subversion.vesuite.org/skewmatrix/skewmatrix/backdropFX/trunk
 SOURCE_DIR=${BASE_DIR}
 BUILD_DIR=${BASE_DIR}/build-${ARCH}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
-BUILD_METHOD=cmake
+PREBUILD_METHOD=cmake
 
 SKIP_FPC_INSTALL="no"
 FPC_FILE=backdropfx.fpc

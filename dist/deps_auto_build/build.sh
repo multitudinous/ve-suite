@@ -188,6 +188,18 @@ function e()
   #reset the var controlling wether to install an fpc file
   SKIP_FPC_INSTALL="yes"
   
+  #setup the build types unless other wise specified in a build file
+  case $PLATFORM in
+    Windows)
+      BUILD_METHOD=msbuild
+      ;;
+    Darwin)
+      BUILD_METHOD=make
+      ;;
+    Linux)
+      ;;
+   esac
+
   #setup the package specific vars
   . $package
 

@@ -5,7 +5,7 @@ SOURCE_FORMAT=tgz
 SOURCE_DIR=${BASE_DIR}
 BUILD_DIR=${BASE_DIR}/build-${ARCH}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
-BUILD_METHOD=autotools
+PREBUILD_METHOD=configure
 CONFIGURE=../configure
 
 case $PLATFORM in

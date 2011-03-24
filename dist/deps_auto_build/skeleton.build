@@ -6,8 +6,10 @@ SOURCE_FORMAT=( when SOURCE_RETRIVAL_METHOD is wget, provide file format - tgz o
 
 SOURCE_DIR=( usually ${BASE_DIR} )
 
+PREBUILD_METHOD=(cmake | configure | scons | bjam )
+
 BUILD_DIR=( build directory, e.g. ${BASE_DIR}/build )
-BUILD_METHOD=(cmake | autotools | scons)
+BUILD_METHOD=( msbuild | make | scons | bjam )
 BUILD_TARGET=( target for make, or scons.  e.g. install)
 
 INSTALL_DIR=( where to install, e.g. ${BASE_DIR}/install )
