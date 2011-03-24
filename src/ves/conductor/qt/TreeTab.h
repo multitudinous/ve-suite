@@ -82,6 +82,8 @@ public:
     /// Open tree view to the leaf specified in nodepath, if possible.
     QModelIndex OpenToAndSelect( osg::NodePath& nodepath, bool highlight = true );
 
+    std::string GetSelectedNodeID();
+
 protected:
     void changeEvent(QEvent *e);
 
@@ -95,6 +97,8 @@ protected:
     /// right after a CADPropertySet is read from the db but before its
     /// live properties are enabled.
     void SyncTransformFromDCS();
+
+    void OnNodeAdded();
 
 protected Q_SLOTS:
     /// Called when user changes selection in tree.

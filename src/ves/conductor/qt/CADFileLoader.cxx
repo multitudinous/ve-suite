@@ -33,8 +33,12 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include <ves/conductor/qt/CADFileLoader.h>
+#include <ves/conductor/qt/XMLDataBufferEngine.h>
 
 #include <ves/xplorer/command/CommandManager.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/Model.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -42,10 +46,13 @@
 #include <ves/open/xml/cad/CADAssembly.h>
 #include <ves/open/xml/cad/CADPart.h>
 #include <ves/open/xml/cad/CADPartPtr.h>
+#include <ves/open/xml/model/Model.h>
 
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/convenience.hpp>
+
+#include <iostream>
 
 namespace ves
 {
@@ -62,86 +69,71 @@ CADFileLoader::~CADFileLoader()
 
 void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string& parentID )
 {
+    //std::cout << "LoadCADFile " << fileName << " with parent " << parentID << std::endl << std::flush;
     namespace bfs = boost::filesystem;
     using namespace ves::open::xml;
     using namespace ves::open::xml::cad;
     
     // The filename
-    //wxFileName vegFileName( fileName );
     bfs::path vegFileName( fileName );
     
     // Re-write the path as being relative to CWD
-    //vegFileName.MakeRelativeTo( ::wxGetCwd() );
     vegFileName = bfs::system_complete( vegFileName );
     
     // Get the entire file path
-    //wxString vegFileNamePath( vegFileName.GetFullPath() );
     std::string vegFileNamePath = vegFileName.string();
     
     // Replace backslashes with single forward slash
-    //vegFileNamePath.Replace( _( "\\" ), _( "/" ), true );
     while( vegFileNamePath.find( "\\" ) != std::string::npos )
     {
         vegFileNamePath.replace( vegFileNamePath.find( "\\" ), 2, "/" );
     }
     
     // ?
-    //wxFileName cadFileName( vegFileNamePath.c_str() );
     bfs::path cadFileName( vegFileNamePath );
 
-    ////////////////////////////////// 
-    // Ask user for a part name. Name is stored in partName
-    //pop a text dialog to enter the name of the new assembly
-// This dialog will no longer happen. Instead, the part will automatically be
-// named New_fileBase, where fileBase corresponds to the filename with no path
-// and no extension. The user can then rename this part by selecting the name
-// in the CADTree and renaming it.
-//     wxTextEntryDialog partNameDlg( this,
-//                                    _( "New Part Name" ),
-//                                    _( "Enter name for new part:" ),
-//                                    cadFileName.GetName(), wxOK );
-//
-//    partNameDlg.CentreOnParent();
-//    partNameDlg.ShowModal();
-//    std::string partName = ConvertUnicode( partNameDlg.GetValue().GetData() );
+    // Part will automatically be named New_fileBase, where fileBase corresponds
+    // to the filename with no path and no extension. The user can then rename
+    // this part by selecting the name in the CADTree and renaming it.
     std::string partName = "New_";
     partName.append( bfs::basename( cadFileName ) );
-    //////////////////////////////////
 
     CADPartPtr newCADPart( new CADPart( partName  ) );
     newCADPart->SetCADFileName( vegFileNamePath );
     newCADPart->SetVisibility( true );
 
-    // TODO: Need to have a CADTree before this part can do anything meaningful
-    //CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _activeCADNode );
-    //tempAssembly->AddChild( newCADPart );
+    // Make this node the child of the top assembly, and tell it who its parent is.
+    ves::xplorer::Model* model =
+            ves::xplorer::ModelHandler::instance()->GetActiveModel();
 
-    //_geometryTree->AppendItem( _activeTreeNode->GetId(), wxString( newCADPart->GetNodeName().c_str(), wxConvUTF8 ),
-    //                           0, 1, new CADTreeBuilder::TreeNodeData( newCADPart ) );
-    //_commandName = std::string( "CAD_ADD_NODE" );
-
-    
-    //newCADPart->SetParent( _activeCADNode->GetID() );
-    if( parentID != "" )
+    if( model == NULL )
     {
-        newCADPart->SetParent( parentID );
+        std::cerr << "Error loading CAD file " << fileName << ": No model present "
+                "to which to add CAD. Please select New File from the file menu before "
+                "attempting to load CAD." << std::endl << std::flush;
+        return;
+    }
+
+//    if( model->GetModelCADHandler()->AssemblyExists( parentID ) )
+    {
+//        CADNodePtr cad = model->GetModelData()->GetGeometry();
+        ves::xplorer::scenegraph::DCS* cad =
+                model->GetModelCADHandler()->GetAssembly( parentID );
+        CADAssemblyPtr assembly = boost::dynamic_pointer_cast<CADAssembly>( cad->GetCADPart() );
+//        CADAssemblyPtr assembly = boost::dynamic_pointer_cast<CADAssembly>( cad );
+        assembly->AddChild( newCADPart );
+        //std::cout << "Assembly ID = " << assembly->GetID() << std::endl << std::flush;
+        newCADPart->SetParent( assembly->GetID() );
     }
     
-    
-    //_loadedCAD[fileName] = newCADPart;
-    
+    // Send node off to xplorer
     ves::open::xml::DataValuePairPtr cadNode( new ves::open::xml::DataValuePair() );
     cadNode->SetDataType( std::string( "XMLOBJECT" ) );
     cadNode->SetData( "New Node", newCADPart );
-    //_dataValuePairList.push_back( cadNode );
-    
     ves::open::xml::CommandPtr cadCommand( new ves::open::xml::Command() );
     cadCommand->SetCommandName( std::string( "CAD_ADD_NODE" ) );
     cadCommand->AddDataValuePair( cadNode );
-
-    //_sendCommandsToXplorer();
     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( cadCommand );
-
 }
 
 } // namespace conductor

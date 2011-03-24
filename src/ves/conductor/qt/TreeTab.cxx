@@ -101,6 +101,11 @@ TreeTab::TreeTab(QWidget *parent) :
             new ves::xplorer::eventmanager::SignalWrapper<
             boost::signals2::signal< void( osg::NodePath& ) > >( &m_highlightAndSetManipulators ),
         "TreeTab.HighlightAndSetManipulators" );
+
+    CONNECTSIGNALS_0( "%NodeAdded",
+                     void(),
+                     &TreeTab::OnNodeAdded,
+                     mConnections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 TreeTab::~TreeTab()
@@ -324,21 +329,28 @@ void TreeTab::OnObjectPicked( osg::NodePath& nodePath )
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::QueuedOnObjectPicked( osg::NodePath nodePath )
 {
-    // This is a bit hackish. Instead of re-reading the scenegraph every time a new
-    // selection is made, we should be hooked up to signals for changes to the
-    // scenegraph so we can re-read at the appropriate time. The only operation
-    // that *should* be done here is OpenToAndSelect.
-
-    // Don't repopulate on null selection
-    if( nodePath != osg::NodePath() )
-    {
-        PopulateWithRoot(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
-    }
-
     // Open the tree to this node, but don't attempt to highlight the geometry
     // again
     OpenToAndSelect( nodePath, false );
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string TreeTab::GetSelectedNodeID()
+{
+    if( mActiveSet )
+    {
+        return mActiveSet->GetUUIDAsString();
+    }
+    else
+    {
+        return std::string();
+    }
+}
+
+void TreeTab::OnNodeAdded()
+{
+    // Read the scenegraph and rebuild tree.
+    PopulateWithRoot(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 }
 
 } // namespace conductor

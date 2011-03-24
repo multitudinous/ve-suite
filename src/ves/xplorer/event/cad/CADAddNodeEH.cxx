@@ -33,6 +33,7 @@
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -50,7 +51,11 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 CADAddNodeEventHandler::CADAddNodeEventHandler()
         : ves::xplorer::event::CADEventHandler()
-{}
+{
+    eventmanager::EventManager::instance()->RegisterSignal(
+       new eventmanager::SignalWrapper< CADNodeAdded_Type >( &m_CADNodeAdded ),
+       "CADAddNodeEventHandler.NodeAdded" );
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 CADAddNodeEventHandler::CADAddNodeEventHandler( const CADAddNodeEventHandler& rhs )
         : ves::xplorer::event::CADEventHandler( rhs )
@@ -136,6 +141,9 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             _addNodeToNode( node->GetParent(), assembly );
         else if( nodeType == "Part" )
             _addNodeToNode( node->GetParent(), part );
+
+        // Emit signal saying we've just added a CAD node of some sort.
+        m_CADNodeAdded();
     }
     catch( char* str )
     {

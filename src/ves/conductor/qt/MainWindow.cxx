@@ -59,6 +59,7 @@
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/System.h>
 #include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/model/Network.h>
 
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
@@ -77,6 +78,8 @@
 
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
+
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 
 #ifdef MINERVA_GIS_SUPPORT
 # include <ves/xplorer/minerva/MinervaManager.h>
@@ -116,6 +119,7 @@ MainWindow::MainWindow(QWidget* parent) :
     m_pluginsTab( 0 )
 {
     ui->setupUi(this);
+    m_messageBox = new QMessageBox(this);
         
     //ui->menuBar->close();
     
@@ -441,6 +445,9 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         mFileDialog = 0;
     }
 
+    // Un-highlight any currently-highlighted geometry
+    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+
     // Now deal with loading the selected files
     for( int index = 0; index < fileNames.size(); index++ )
     {
@@ -462,13 +469,49 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
             // Assume it's a cad file for now
             ves::conductor::CADFileLoader loader;
             std::string parentID;
-            if( ves::xplorer::ModelHandler::instance()->GetActiveModel() )
+            ves::xplorer::Model* activeModel =
+                    ves::xplorer::ModelHandler::instance()->GetActiveModel();
+            if( !activeModel )
             {
-                parentID = ves::xplorer::ModelHandler::instance()->
-                           GetActiveModel()->GetModelData()->AddGeometry()->GetID();
+                this->on_actionNew_triggered();
+                activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+            }
+
+            ModelCADHandler* m_cadHandler = activeModel->GetModelCADHandler();
+
+            parentID = mScenegraphTreeTab->GetSelectedNodeID();
+            if( (parentID.empty()) || (!m_cadHandler->AssemblyExists( parentID )) )
+            {
+                // If no valid node is selected, or if the selected node is
+                // not an assembly, get or create the top-level assembly for
+                // the active model.
+                parentID = activeModel->GetModelData()->AddGeometry()->GetID();
+            }
+
+            // If AddGeometry call above turned out to be creation, do the
+            // rest necessary for proper creation.
+            if( !m_cadHandler->AssemblyExists( parentID ) )
+            {
+                m_cadHandler->CreateAssembly( parentID );
+                scenegraph::DCS* assembly = m_cadHandler->GetAssembly( parentID );
+                assembly->SetCADPart( activeModel->GetModelData()->GetGeometry() );
+                m_cadHandler->GetAssembly( parentID )->setName( "Model_Geometry" );
+
+                osg::Node::DescriptionList descriptorsList;
+                descriptorsList.push_back( "VE_XML_ID" );
+                descriptorsList.push_back( parentID );
+                descriptorsList.push_back( "Assembly" );
+                descriptorsList.push_back( "VE_XML_MODEL_ID" );
+                descriptorsList.push_back( activeModel->GetID() );
+
+                ves::xplorer::scenegraph::DCS* assemblyNode =
+                        m_cadHandler->GetAssembly( parentID );
+                assemblyNode->setDescriptions( descriptorsList );
+
+                //Add the top level CAD to the VEBaseClass
+                activeModel->GetDCS()->addChild( m_cadHandler->GetAssembly( parentID ) );
             }
             loader.LoadCADFile( file.string(), parentID );
-
         }
     }
 }
@@ -602,9 +645,6 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 
     // Show the scenegraph tree
     AddTab( mScenegraphTreeTab, "Scenegraph" );
-    // Populate the CADTree
-    mScenegraphTreeTab->PopulateWithRoot(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 
     // Reactivate the last-known active tab
     ActivateTab( LastKnownActive );
@@ -859,7 +899,7 @@ void MainWindow::on_actionViewStack_triggered( )
         m_viewMenuStack->Show();
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionShowPluginsTab_triggered()
 {
     int index = AddTab( m_pluginsTab, "Plugins" );
@@ -871,8 +911,60 @@ void MainWindow::on_actionShowPluginsTab_triggered()
 //    ui->tabWidget->SetTabButton( index, tb );
     ActivateTab( index );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionShowPreferencesTab_triggered()
 {
     ActivateTab( AddTab( m_preferencesTab,"Preferences" ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionNew_triggered()
+{
+    XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
+
+    mDataBufferEngine->NewVESData( true );
+    ///Initialize top level network
+    ves::open::xml::model::NetworkPtr tempNetwork( new ves::open::xml::model::Network() );
+
+    mDataBufferEngine->GetXMLSystemDataObject(
+        mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
+
+    using namespace ves::open::xml::model;
+
+    SystemPtr system( mDataBufferEngine->GetXMLSystemDataObject(
+            mDataBufferEngine->GetTopSystemId() ) );
+
+    ModelPtr mod( new Model );
+    mod->SetPluginType( "DefaultPlugin" );
+    mod->SetPluginName( "DefaultPlugin" );
+    mod->SetVendorName( "DefaultPlugin" );
+    mod->SetParentSystem( system );
+
+    system->AddModel( mod );
+
+    const std::string network = XMLDataBufferEngine::instance()->
+                    SaveVESData( std::string( "returnString" ) );
+
+    ves::xplorer::network::GraphicalPluginManager::instance()->SetCurrentNetwork( network );
+
+    ves::xplorer::network::GraphicalPluginManager::instance()->LoadDataFromCE();
+
+    ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );
+
+    ves::xplorer::ModelHandler::instance()->SetActiveModel( mod->GetID() );
+
+    // Force CAD tree to re-read the now "empty" scenegraph
+    mScenegraphTreeTab->PopulateWithRoot(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+
+    // Let xplorer know we are loading a new ves file so that it can do any
+    // necessary cleanup, such as resetting the database
+    ves::open::xml::CommandPtr loadVesFile( new ves::open::xml::Command() );
+    loadVesFile->SetCommandName( "LOAD_VES_FILE" );
+    // Dummy DVP to prevent crashes since xplorer assumes existence of
+    // valid DVP without testing.
+    ves::open::xml::DataValuePairPtr nullDVP( new ves::open::xml::DataValuePair() );
+    nullDVP->SetData( "LOAD_VES_FILE", "NULL" );
+    loadVesFile->AddDataValuePair( nullDVP );
+    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( loadVesFile );
 }

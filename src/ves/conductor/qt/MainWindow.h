@@ -34,6 +34,7 @@
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QFileDialog>
+#include <QtGui/QMessageBox>
 
 //Needed for NodePath
 #include <osg/Node>
@@ -178,6 +179,8 @@ protected Q_SLOTS:
     /// Called when the file operations icon on the main toolbar is clicked.
     /// Autoconnected slot
     void on_actionFile_triggered(); 
+
+    void on_actionNew_triggered();
     
     /// Called when the open file icon of the file operations stack is clicked.
     /// Autoconnected slot
@@ -314,6 +317,8 @@ private:
     boost::signals2::signal< void () > m_resyncFromDB;
 
     void SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::string fileName );
+
+    QMessageBox* m_messageBox;
 };
     
 }
