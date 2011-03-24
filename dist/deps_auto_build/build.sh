@@ -7,23 +7,19 @@ PLATFORM=`uname -s`
 #http://en.wikipedia.org/wiki/Uname
 case $PLATFORM in
   CYGWIN*)
-    #
-    # Get the scripts directory
-    #
-    IFS=$' \t\n'
-    declare -x PATH=/bin:/usr/bin
-
-    # If the call came via symlink, then use its target instead:
-    arg=$0; [[ -L $0 ]] && arg=$(stat -f '%Y' "$0")
-
-    pth=$(2>/dev/null cd "${arg%/*}" >&2; echo "`pwd -P`/${arg##*/}")
-    SCRIPTDIR=$(dirname "$pth")
+    # If the call came via symlink, then use its target instead
+    arg=$0; [[ -L $0 ]] && arg=$( stat -f '%Y' "$0" )
+    SCRIPTDIR=$( 2>/dev/null cd "${arg%/*}" >&2; echo "`pwd -P`/${arg##*/}" )
+    SCRIPTDIR=$( dirname "$SCRIPTDIR" )
     PLATFORM=Windows;
     HOME=$USERPROFILE;
+    # Does cmake exist?
+    type -P cmake &>/dev/null || { echo "CMake is not installed." >&2; exit 1; }
+    # Just going to assume VS 9 for now
+    CMAKE_GENERATOR="Visual Studio 9 2008"
+    REGPATH="/proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE"
     ;;
-  Darwin)
-    ;;
-  Linux)
+  Darwin | Linux)
     ;;
   *)
     echo "Unrecognized OS: $PLATFORM" >&2
@@ -35,36 +31,48 @@ export PLATFORM
 #
 # Define the architecture
 #
-[ -z "${ARCH}" ] && ARCH=`uname -m`
+if [ $PLATFORM = "Darwin" ]; then
+  ARCH=64-bit;
+else
+  [ -z "${ARCH}" ] && ARCH=`uname -m`
+fi
+
 #http://en.wikipedia.org/wiki/Uname
 case $ARCH in
-  i[3-6]86)
+  i[3-6]86 | x86 | 32-bit)
     ARCH=32-bit
     ;;
-  x86)
-    ARCH=32-bit
-    ;;
-  32-bit)
-    ;;
-  x86_64)
+  x86_64 | x64 | 64-bit)
     ARCH=64-bit
-    ;;
-  x64)
-    ARCH=64-bit
-    ;;
-  64-bit)
+    if [ $PLATFORM = "Windows" ]; then
+      REGPATH=${REGPATH}/WOW6432Node
+      CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
+    fi
     ;;
   *)
     echo "Unrecognized Architecture: $ARCH" >&2
     kill -SIGINT $$
     ;;
 esac
-
-if [ $PLATFORM = "Darwin" ]; then
-  ARCH=64-bit;
-fi
-
 export ARCH
+
+#
+# Some Windows-only variables
+#
+if [ $PLATFORM = "Windows" ]; then
+  declare -a MSVC_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/SxS/VC7/* )
+  VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
+
+  declare DOTNET_REGVAL=( "${REGPATH}"/Microsoft/.NETFramework/InstallRoot )
+  # .NET version is hardcoded to 3.5 for now
+  DotNETInstallDir=$( awk '{ gsub( "", "" ); print }' "${DOTNET_REGVAL}" )v3.5
+
+  #declare -a CMAKE_REGPATH=( "${REGPATH}"/Kitware/* )
+  #CMAKEInstallDir=$( awk '{ print }' "${CMAKE_REGPATH[@]: -1}"/@ )
+
+  #export Path="${DotNETInstallDir}";${Path}
+  MSBUILD="${DotNETInstallDir}/MSBuild.exe"
+fi
 
 #
 # DEV_BASE_DIR defines the base directory for all development packages.
@@ -92,27 +100,6 @@ CONFIGURE=./configure
 SCONS=scons
 MAKE=make
 BJAM=bjam
-
-REGPATH=/proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE
-if [ $PLATFORM = "Windows" ]; then
-  case $ARCH in
-    32-bit)
-      MSVS_ARCH="x86"
-      ;;
-    64-bit)
-      REGPATH=${REGPATH}/WOW6432Node
-      MSVS_ARCH="amd64"
-      ;;
-  esac
-
-  MSVC_REGPATH=${REGPATH}/Microsoft/VisualStudio/SxS/VC7
-  VCInstallDir=$( cat "${MSVC_REGPATH}"/* )
-  MAKE="${SCRIPTDIR}/nmake.bat"
-
-  declare -a CMAKE_REGPATH=( "${REGPATH}"/Kitware/* )
-  CMAKEInstallDir=$( cat "${CMAKE_REGPATH[@]: -1}"/@ )
-  CMAKE="${SCRIPTDIR}/cmake.bat"
-fi
 
 function bye()
 {
@@ -191,7 +178,7 @@ function source_retrieval()
 function e()
 {
   package=$1
-  
+
   #is this option really a package
   if [ ! -e $package ]; then
     echo "Ain't no package $package";
@@ -243,17 +230,13 @@ function e()
   #prebuild for the package
   if [ "${prebuild}" = "yes" ] && [ "${SKIP_PREBUILD}" != "yes" ]; then
     [ -z "${BUILD_DIR}" ] && (echo "BUILD_DIR undefined in package $package"; return)
-    [ -z "${BUILD_METHOD}" ] && (echo "BUILD_METHOD undefined in package $package"; return)
+    [ -z "${PREBUILD_METHOD}" ] && (echo "PREBUILD_METHOD undefined in package $package"; return)
     [ -z "${SOURCE_DIR}" ] && (echo "SOURCE_DIR undefined in package $package"; return)
     [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
-    case ${BUILD_METHOD} in
+    case ${PREBUILD_METHOD} in
       cmake)
         cd "${BUILD_DIR}";
-        if [ $PLATFORM = "Windows" ]; then
-          ${CMAKE} "${VCInstallDir}vcvarsall.bat" x86 "${CMAKEInstallDir}" "${SOURCE_DIR}" "${CMAKE_PARAMS}" -G "NMake Makefiles";
-        else
-          ${CMAKE} ${CMAKE_PARAMS} "${SOURCE_DIR}";
-        fi
+        ${CMAKE} -G "${CMAKE_GENERATOR}" "${CMAKE_PARAMS}" "${SOURCE_DIR}";
         ;;
       autotools)
         cd "${BUILD_DIR}";
@@ -264,7 +247,7 @@ function e()
         "${BJAM_PREBUILD}";
         ;;
       *)
-        echo "Pre-Build method ${BUILD_METHOD} unsupported";
+        echo "Pre-Build method ${PREBUILD_METHOD} unsupported";
         ;;
     esac
   fi
@@ -276,13 +259,23 @@ function e()
     [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
     [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs"
     case ${BUILD_METHOD} in
+      msbuild)
+        cd "${BUILD_DIR}";
+
+        for name in "${MSVC_PROJECT_NAMES[@]}"; do
+          PROJ_STR="$PROJ_STR$name$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
+        done
+
+        "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" \
+         /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
+         /p:TargetFrameworkVersion=v3.5 /p:ToolsVersion=2.0 \
+         /p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false \
+         /verbosity:detailed /p:WarningLevel=1 \
+         #/p:BuildProjectReferences=false
+        ;;
       cmake)
         cd "${BUILD_DIR}";
-        if [ $PLATFORM = "Windows" ]; then
-          ${MAKE} "${VCInstallDir}vcvarsall.bat" x86 "nmake";
-        else
-          ${MAKE} ${JCMD} ${BUILD_TARGET};
-        fi
+        ${MAKE} ${JCMD} ${BUILD_TARGET};
         ;;
       autotools)
         cd "${BUILD_DIR}";
