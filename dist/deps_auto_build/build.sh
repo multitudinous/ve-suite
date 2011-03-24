@@ -14,9 +14,10 @@ case $PLATFORM in
     PLATFORM=Windows;
     HOME=$USERPROFILE;
     # Does cmake exist?
-    type -P cmake &>/dev/null || { echo "CMake is not installed." >&2; exit 1; }
+    type -P cmake &>/dev/null || { echo "CMake is not installed." >&2; kill -SIGINT $$; }
     # Just going to assume VS 9 for now
     CMAKE_GENERATOR="Visual Studio 9 2008"
+    CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" )
     REGPATH="/proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE"
     ;;
   Darwin | Linux)
@@ -60,8 +61,8 @@ export ARCH
 # Some Windows-only variables
 #
 if [ $PLATFORM = "Windows" ]; then
-  declare -a MSVC_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/SxS/VC7/* )
-  VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
+  #declare -a MSVC_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/SxS/VC7/* )
+  #VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
 
   declare DOTNET_REGVAL=( "${REGPATH}"/Microsoft/.NETFramework/InstallRoot )
   # .NET version is hardcoded to 3.5 for now
@@ -278,7 +279,7 @@ function e()
           PROJ_STR="$PROJ_STR$name$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
         done
 
-        "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" "$MCMD"
+        "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" "${MCMD}" \
          /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
          /p:TargetFrameworkVersion=v3.5 /p:ToolsVersion=2.0 \
          /verbosity:Detailed /p:WarningLevel=1;
@@ -310,7 +311,7 @@ function e()
   if [ "${clean_build_dir}" = "yes" ]; then
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
     [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
-    [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs"
+    [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs" || MCMD='/p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false'
     case ${BUILD_METHOD} in
       msbuild)
         cd "${BUILD_DIR}";
@@ -319,9 +320,8 @@ function e()
           PROJ_STR="$PROJ_STR${name}:Clean$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
         done
 
-        "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" \
+        "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" "${MCMD}" \
          /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
-         /m:"$multithreading_jobs" /p:BuildInParallel=false \
          /verbosity:Normal /p:WarningLevel=0;
         ;;
       make)
@@ -365,7 +365,7 @@ case $opts in
       kill -SIGINT $$;
     fi
     export multithreading_jobs=$OPTARG
-    export build="yes"  # implied
+    #export build="yes"  # implied
     ;;
   U)
     export SVN_USERNAME=$OPTARG
@@ -396,8 +396,8 @@ shift $(($OPTIND - 1))
 
 echo -e "\nKernel: $PLATFORM $ARCH"
 if [ $PLATFORM = "Windows" ]; then
-  echo "VCInstallDir: $VCInstallDir"
-  echo "CMAKEInstallDir: $CMAKEInstallDir"
+  #echo "VCInstallDir: $VCInstallDir"
+  echo "DotNETInstallDir: $DotNETInstallDir"
 fi
 echo -e "DEV_BASE_DIR: ${DEV_BASE_DIR}\n"
 
