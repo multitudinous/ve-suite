@@ -236,9 +236,9 @@ function e()
     case ${PREBUILD_METHOD} in
       cmake)
         cd "${BUILD_DIR}";
-        ${CMAKE} -G "${CMAKE_GENERATOR}" "${CMAKE_PARAMS}" "${SOURCE_DIR}";
+        ${CMAKE} "${SOURCE_DIR}" "${CMAKE_PARAMS[@]}";
         ;;
-      autotools)
+      configure)
         cd "${BUILD_DIR}";
         ${CONFIGURE} "${CONFIGURE_PARAMS}";
         ;;
@@ -257,7 +257,7 @@ function e()
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
     [ -z "${BUILD_METHOD}" ] && ( echo "BUILD_METHOD undefined in package $package"; return; )
     [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
-    [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs"
+    [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs" || MCMD='/p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false'
     case ${BUILD_METHOD} in
       msbuild)
         cd "${BUILD_DIR}";
@@ -266,18 +266,13 @@ function e()
           PROJ_STR="$PROJ_STR$name$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
         done
 
-        "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" \
+        "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" "$MCMD"
          /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
          /p:TargetFrameworkVersion=v3.5 /p:ToolsVersion=2.0 \
-         /p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false \
-         /verbosity:detailed /p:WarningLevel=1 \
+         /verbosity:Detailed /p:WarningLevel=1;
          #/p:BuildProjectReferences=false
         ;;
-      cmake)
-        cd "${BUILD_DIR}";
-        ${MAKE} ${JCMD} ${BUILD_TARGET};
-        ;;
-      autotools)
+      make)
         cd "${BUILD_DIR}";
         ${MAKE} ${JCMD} ${BUILD_TARGET};
         ;;
@@ -303,12 +298,21 @@ function e()
   if [ "${clean_build_dir}" = "yes" ]; then
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
     [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
+    [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs"
     case ${BUILD_METHOD} in
-      cmake)
+      msbuild)
         cd "${BUILD_DIR}";
-        ${MAKE} clean;
+
+        for name in "${MSVC_PROJECT_NAMES[@]}"; do
+          PROJ_STR="$PROJ_STR${name}:Clean$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
+        done
+
+        "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" \
+         /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
+         /m:"$multithreading_jobs" /p:BuildInParallel=false \
+         /verbosity:Normal /p:WarningLevel=0;
         ;;
-      autotools)
+      make)
         cd "${BUILD_DIR}";
         ${MAKE} clean;
         ;;
