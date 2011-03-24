@@ -320,7 +320,14 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
             //converter.setSimplifyPercent( simplifyPercent );
         }
         //converter.setAxis( axis );
-        converter.convert("");
+        const std::string tempName;
+        bool createdRB = converter.convert( tempName );
+        if( !createdRB )
+        {
+            mRB = 0;
+            std::cout << "|\tUnable to create a new btRigidBody." << std::endl;
+            return;
+        }
         //std::string pname = mOSGToBullet->getName() + ".dae";
         //converter.convert( pname );
         mRB = converter.getRigidBody();
