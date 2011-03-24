@@ -6,6 +6,9 @@ BUILD_DIR=${BASE_DIR}/build-${ARCH}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
 BUILD_METHOD=cmake
 
+SKIP_FPC_INSTALL="no"
+FPC_FILE=osgworks.fpc
+
 case $PLATFORM in
   Windows)
     CMAKE_PARAMS="$CMAKE_PARAMS \

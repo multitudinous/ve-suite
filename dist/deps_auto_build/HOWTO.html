@@ -63,6 +63,13 @@ blockquote {
     font-weight: bold;
 }
 
+varlist {
+    margin-left: 120px;
+    text-indent: -40px;
+    font-weight: bold;
+    text-align: left;
+}
+
 </style>
 
 </head>
@@ -244,7 +251,7 @@ CMAKE_PARAMS=" -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=RelWithDebInfo  -DC
             </blockquote>
     </tr>
     <tr> 
-        <td class=vars valign=top> CONFIGURE_PARAMS </td>
+        <td class=vars valign=top> SCONS_PARAMS </td>
         <td class=varx>
             <p>
             If BUILD_METHOD is scons, this variable specifies the parameters passed to <code>scons</code>

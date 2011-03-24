@@ -1,24 +1,23 @@
 #!/bin/bash
 
 #
-# Get the scripts directory
-#
-IFS=$' \t\n'
-declare -x PATH=/bin:/usr/bin
-
-# If the call came via symlink, then use its target instead:
-arg=$0; [[ -L $0 ]] && arg=$(stat -f '%Y' "$0")
-
-pth=$(2>/dev/null cd "${arg%/*}" >&2; echo "`pwd -P`/${arg##*/}")
-SCRIPTDIR=$(dirname "$pth")
-
-#
 # Define the platform
 # 
 PLATFORM=`uname -s`
 #http://en.wikipedia.org/wiki/Uname
 case $PLATFORM in
   CYGWIN*)
+    #
+    # Get the scripts directory
+    #
+    IFS=$' \t\n'
+    declare -x PATH=/bin:/usr/bin
+
+    # If the call came via symlink, then use its target instead:
+    arg=$0; [[ -L $0 ]] && arg=$(stat -f '%Y' "$0")
+
+    pth=$(2>/dev/null cd "${arg%/*}" >&2; echo "`pwd -P`/${arg##*/}")
+    SCRIPTDIR=$(dirname "$pth")
     PLATFORM=Windows;
     HOME=$USERPROFILE;
     ;;
