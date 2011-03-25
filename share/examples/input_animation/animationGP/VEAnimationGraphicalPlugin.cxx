@@ -154,7 +154,7 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         
         double rot[3] = { 0.0, 0.0, 90.0 };
         double scale[3] = { 6.56, 6.56, 6.56 };
-        double pos[3] = { 20.75, -51.8, 6.7 };
+        double pos[3] = { 20.75, -52.5, 6.7 };
         m_valveDCS->SetTranslationArray( pos );
         m_valveDCS->SetRotationArray( rot );
         
@@ -204,8 +204,18 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 
     {
         //Setting up the pump or something to change colors with a scalar
-        /*m_pumpGeometry = osgDB::readNodeFile( "" );
-        mDCS->addChild( m_pumpGeometry.get() );
+        osg::ref_ptr< ves::xplorer::scenegraph::DCS > meterDCS = new ves::xplorer::scenegraph::DCS();     
+        m_pumpGeometry = osgDB::readNodeFile( "FlowMeter/flowmeter.ive" );
+          
+        meterDCS->addChild( m_pumpGeometry.get() );
+        double scale[3] = { 3.33, 3.33, 3.33 };
+        double pos[3] = { 35.97, -28.42, 1.04 };
+        meterDCS->SetTranslationArray( pos );
+        meterDCS->SetScaleArray( scale );
+        meterDCS->SetTechnique( "Select" );
+
+        //mDCS->addChild( m_pumpGeometry.get() );
+        mDCS->addChild( meterDCS.get() );
         //Initialize shaders
         const std::string shaderName = 
             osgDB::findDataFile( "color_texture_part.fs" );
@@ -220,8 +230,9 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         stateSet->setAttributeAndModes( program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
-        m_highlightColor = new osg::Uniform( "partColor", osg::Vec3( 0.0, 0.0, 0.0 ) );
-        stateSet->addUniform( m_highlightColor );*/
+        m_highlightColor = new osg::Uniform( "partColor", osg::Vec4( 1.0, 1.0, 1.0, 0.0 ) );
+        stateSet->addUniform( m_highlightColor );
+        stateSet->addUniform( new osg::Uniform( "tex", 0 ) );
     }
     
     //double rot[3] = { 90.0, 0.0, 0.0 };
@@ -396,6 +407,8 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
         double test = boost::lexical_cast<double>( percent );
         
         m_valveHeight = -0.125 * test;
+
+        m_highlightColor->set( osg::Vec4( 1.0, 1.0-test, 1.0-test, 0.0) );
     }
     ////////////////////////////////////////////////////////////////////////////
 
