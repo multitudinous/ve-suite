@@ -237,8 +237,11 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
         }
     }
     
+    if( set->PropertyExists( "Advanced_Greyscale" ) )
     {
-        ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetGreyscaleFlag( boost::any_cast<bool>( set->GetPropertyValue( "Advanced_Greyscale" ) ) );
+        ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->
+            SetGreyscaleFlag( boost::any_cast<bool>( 
+            set->GetPropertyValue( "Advanced_Greyscale" ) ) );
     }
 
     //Create the key for a specific object
