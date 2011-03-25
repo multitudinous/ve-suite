@@ -61,8 +61,9 @@ export ARCH
 # Some Windows-only variables
 #
 if [ $PLATFORM = "Windows" ]; then
-  #declare -a MSVC_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/SxS/VC7/* )
-  #VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
+  declare -a MSVC_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/SxS/V*7 )
+  #VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[1]}" )
+  #VSInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
 
   declare DOTNET_REGVAL=( "${REGPATH}"/Microsoft/.NETFramework/InstallRoot )
   # .NET version is hardcoded to 3.5 for now
@@ -83,12 +84,12 @@ fi
 #
 # Some useful global variables
 #
-export OSG_DIR=${DEV_BASE_DIR}/osg_2.8.3/install-64-bit
-export OSGWORKS_ROOT=${DEV_BASE_DIR}/osgWorks/install-64-bit
-export BULLET_ROOT=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
-export OSGBULLET_ROOT=${DEV_BASE_DIR}/osgBullet/install-64-bit
-export OSGEPHEMERIS_ROOT=${DEV_BASE_DIR}/osgEphemeris/install-64-bit
-export BOOST_INSTALL_DIR=${DEV_BASE_DIR}/bullet-2.77/install-64-bit
+export OSG_DIR=${DEV_BASE_DIR}/osg_2.8.3/install-"${ARCH}"
+export OSGWORKS_ROOT=${DEV_BASE_DIR}/osgWorks/install-"${ARCH}"
+export BULLET_ROOT=${DEV_BASE_DIR}/bullet-2.77/install-"${ARCH}"
+export OSGBULLET_ROOT=${DEV_BASE_DIR}/osgBullet/install-"${ARCH}"
+export OSGEPHEMERIS_ROOT=${DEV_BASE_DIR}/osgEphemeris/install-"${ARCH}"
+export BOOST_INSTALL_DIR=${DEV_BASE_DIR}/boost_1_46_1/install-"${ARCH}"
 export BOOST_INSTALL_DIR=/opt/local
 export CTAGS_INSTALL_DIR=/opt/local
 export TAGS_DIR=${HOME}/.vim/tags
@@ -152,11 +153,16 @@ function source_retrieval()
       [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
       cd "${DEV_BASE_DIR}";
       if [ -d "${BASE_DIR}" ]; then
-        echo "We have already downloaded $package"; 
+        echo "We have already downloaded $package";
         return;
       fi
+      # Settings (proxy etc.) for wget can be edited using /etc/wgetrc
       wget ${SOURCE_URL}
       case ${SOURCE_FORMAT} in
+        zip)
+          unzip `basename ${SOURCE_URL}`;
+          rm -f `basename ${SOURCE_URL}`;
+          ;;
         tgz)
           tar xvfz `basename ${SOURCE_URL}`;
           rm -f `basename ${SOURCE_URL}`;
@@ -328,7 +334,7 @@ function e()
         ;;
       bjam)
         cd "${SOURCE_DIR}";
-        ${BJAM} ${BJAM_PARAMS} ${BUILD_TARGET} ${JCMD};
+        ${BJAM} "${BJAM_PARAMS[@]}" ${BUILD_TARGET} ${JCMD};
         ;;
       *)
         echo "Build method ${BUILD_METHOD} unsupported"
