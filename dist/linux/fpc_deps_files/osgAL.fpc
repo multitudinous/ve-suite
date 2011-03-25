@@ -3,12 +3,11 @@ exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
-Name: OpenSceneGraph Audio Library (osgAL)
-Description: osgAL debug pre-compiled for VES
-Provides: osgAL
+Name: OpenSceneGraph Audio Library (osgAudio)
+Description: osgAudio pre-compiled for VES
+Provides: osgAL osgaudio
 Requires: openscenegraph openthreads
 Version: 0.6.1
-Libs: -L${libdir} -losgAudio -L/Developer/FMOD_Programmers_API_Mac/api/lib -lfmodex64
+Libs: -L${libdir} -losgAudio -L/Developer/FMOD_Programmers_API_Mac/api/lib -lfmodex
 Cflags: -I${includedir} -I/Developer/FMOD_Programmers_API_Mac/api/inc
 Arch: noarch
-
