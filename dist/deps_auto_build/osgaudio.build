@@ -6,6 +6,9 @@ BUILD_DIR=${BASE_DIR}/build-${ARCH}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
 PREBUILD_METHOD=cmake
 
+SKIP_FPC_INSTALL="no"
+FPC_FILE=osgAL.fpc
+
 case $PLATFORM in
   Windows)
     ;;

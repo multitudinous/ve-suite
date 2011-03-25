@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: OpenSceneGraph Audio Library (osgAL)
+Description: osgAL debug pre-compiled for VES
+Provides: osgAL
+Requires: openscenegraph openthreads
+Version: 0.6.1
+Libs: -L${libdir} -losgAudio -L/ves/VE_Software/ves-deps-install/fmodapi43001linux64/api/lib -lfmodex64
+Cflags: -I${includedir} -I/ves/VE_Software/ves-deps-install/fmodapi43001linux64/api/inc
+Arch: noarch
+
