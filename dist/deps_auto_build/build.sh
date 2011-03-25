@@ -195,11 +195,7 @@ function e()
       BUILD_METHOD=msbuild
       BUILD_TARGET=INSTALL
       ;;
-    Darwin)
-      BUILD_METHOD=make
-      BUILD_TARGET=install
-      ;;
-    Linux)
+    Darwin | Linux )
       BUILD_METHOD=make
       BUILD_TARGET=install
       ;;
@@ -279,15 +275,27 @@ function e()
       msbuild)
         cd "${BUILD_DIR}";
 
+        if [ -d "${BUILD_TARGET}" ]; then
+          MSVC_PROJECT_NAMES+=( "${BUILD_TARGET}" )
+        fi
+
         for name in "${MSVC_PROJECT_NAMES[@]}"; do
           PROJ_STR="$PROJ_STR$name$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
         done
 
-        "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" "${MCMD}" \
-         /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
-         /p:TargetFrameworkVersion=v3.5 /p:ToolsVersion=2.0 \
-         /verbosity:Detailed /p:WarningLevel=1;
-         #/p:BuildProjectReferences=false
+        if [ -z "${PROJ_STR}" ]; then
+          "${MSBUILD}" "$MSVC_SOLUTION" "${MCMD}" \
+             /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
+             /p:TargetFrameworkVersion=v3.5 /p:ToolsVersion=2.0 \
+             /verbosity:Detailed /p:WarningLevel=1;
+             #/p:BuildProjectReferences=false
+        else
+          "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" "${MCMD}" \
+             /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
+             /p:TargetFrameworkVersion=v3.5 /p:ToolsVersion=2.0 \
+             /verbosity:Detailed /p:WarningLevel=1;
+             #/p:BuildProjectReferences=false
+        fi
         ;;
       make)
         cd "${BUILD_DIR}";
