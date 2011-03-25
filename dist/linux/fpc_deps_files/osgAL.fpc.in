@@ -8,7 +8,7 @@ Description: osgAL debug pre-compiled for VES
 Provides: osgAL
 Requires: openscenegraph openthreads
 Version: 0.6.1
-Libs: -L${libdir} -losgAudio -L/Developer/FMOD_Programmers_API_Mac/api/lib -lfmodex64
+Libs: -L${libdir} -losgAudio -L/Developer/FMOD_Programmers_API_Mac/api/lib -lfmodex
 Cflags: -I${includedir} -I/Developer/FMOD_Programmers_API_Mac/api/inc
 Arch: noarch
 
