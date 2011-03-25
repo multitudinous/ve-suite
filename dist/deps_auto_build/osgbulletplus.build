@@ -1,6 +1,8 @@
 BASE_DIR=${DEV_BASE_DIR}/osgBulletPlus
+
 SOURCE_RETRIEVAL_METHOD=private-svn
 SOURCE_URL=https://subversion.vesuite.org/skewmatrix/skewmatrix/osgBulletPlus/trunk
+
 SOURCE_DIR=${BASE_DIR}
 BUILD_DIR=${BASE_DIR}/build-${ARCH}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
@@ -9,26 +11,28 @@ PREBUILD_METHOD=cmake
 SKIP_FPC_INSTALL="no"
 FPC_FILE=osgbulletplus.fpc
 
-CMAKE_PARAMS="\
-      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-      -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-      -DOSGBULLETPLUS_BUILD_APPLICATIONS=ON \
-      -DOSGBULLETPLUS_BUILD_EXAMPLES=OFF \
-      -DOSGBULLETPLUS_BUILD_PROTOS=OFF \
-      -DOSGBULLETPLUS_BUILD_TESTS=OFF \
-      -DOSGBULLETPLUS_USE_DOUBLE_PRECISION=OFF \
-      -DOSGBULLET_ROOT=${OSGBULLET_ROOT} \
-      -DBulletInstallType='Alternate Install Location' \
-      -DOSGInstallType='Alternate Install Location' \
-      -DBulletInstallLocation=${BULLET_ROOT} \
-      -DOSGInstallLocation=${OSG_DIR} \
-      -DOSGWORKS_INCLUDE_DIR=${OSGWORKS_ROOT}/include"
+CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DOSGBULLETPLUS_BUILD_APPLICATIONS=ON )
+CMAKE_PARAMS+=( -DOSGBULLETPLUS_BUILD_EXAMPLES=OFF )
+CMAKE_PARAMS+=( -DOSGBULLETPLUS_BUILD_PROTOS=OFF )
+CMAKE_PARAMS+=( -DOSGBULLETPLUS_BUILD_TESTS=OFF )
+CMAKE_PARAMS+=( -DOSGBULLETPLUS_USE_DOUBLE_PRECISION=OFF )
+CMAKE_PARAMS+=( -DOSGBULLET_ROOT="${OSGBULLET_ROOT}" )
+CMAKE_PARAMS+=( -DBulletInstallType="Alternate Install Location" )
+CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
+CMAKE_PARAMS+=( -DBulletInstallLocation="${BULLET_ROOT}" )
+CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_DIR}" )
+CMAKE_PARAMS+=( -DOSGWORKS_INCLUDE_DIR="${OSGWORKS_ROOT}/include" )
 
 case $PLATFORM in
   Windows)
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    MSVC_CONFIG=RelWithDebInfo
+    MSVC_PLATFORM=Win32
+    MSVC_SOLUTION="osgBulletPlus.sln"
+    MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
-  Darwin)
-    ;;
-  Linux)
+  Darwin | Linux)
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
 esac
