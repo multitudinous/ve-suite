@@ -195,6 +195,17 @@ void ContourPlanePropertySet::CreateSkeleton()
 
     AddProperty( "Advanced_WarpOption", false, "Warp Option" );
 
-    AddProperty( "Advanced_Greyscale", false, "Greyscale" );
+    {
+        AddProperty( "Advanced_Greyscale", false, "Greyscale" );
+        /*std::vector< PropertyPtr > greyscale;
+        greyscale.push_back( GetProperty( "Advanced_Greyscale" ) );
+        const std::string slotName = 
+            boost::lexical_cast<std::string>( this ) +".SetContourPlaneGreyscale";
+        MakeLiveBasePtr p( new MakeLiveLinked< bool >(
+                mUUIDString,
+                greyscale,
+                slotName ) );
+        mLiveObjects.push_back( p );*/
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

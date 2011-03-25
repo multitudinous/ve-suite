@@ -634,6 +634,12 @@ void cfdContourBase::UpdatePropertySet()
     {
         SetFillType( 2 );
     }
+
+    bool contourGreyscale = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_Greyscale" ) );
+    GetActiveDataSet()->SetGreyscaleFlag( contourGreyscale );
+    vprDEBUG( vesDBG, 0 ) << "|\tContour Greyscale set to : "
+    << contourGreyscale
+    << std::endl << vprDEBUG_FLUSH;
     
 	//Extract the surface flag
     /*activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );

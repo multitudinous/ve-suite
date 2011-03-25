@@ -42,6 +42,8 @@
 
 #include <ves/xplorer/event/cad/CADSlotInitializerPtr.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 #include <boost/signals2/signal.hpp>
 
 #include <ves/open/xml/CommandPtr.h>
@@ -184,6 +186,9 @@ private:
     ActiveModelChangedSignal_type mActiveModelChangedSignal;
     ///Slot for initializing CAD
     ves::xplorer::event::cad::CADSlotInitializerPtr m_CADSlotInitializer;
+
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 }
 }

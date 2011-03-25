@@ -80,6 +80,7 @@
 #include <ves/xplorer/event/data/ScalarBarEventHandler.h>
 #include <ves/xplorer/event/data/WireframeEventHandler.h>
 #include <ves/xplorer/event/data/ActiveDataSetEventHandler.h>
+#include <ves/xplorer/event/data/DataSlots.h>
 
 #include <ves/xplorer/event/environment/SoundActivateEH.h>
 #include <ves/xplorer/event/environment/SoundAddNewEH.h>
@@ -198,6 +199,11 @@ ModelHandler::ModelHandler()
     eventmanager::EventManager::instance()->RegisterSignal(
     new eventmanager::SignalWrapper< ActiveModelChangedSignal_type >( &mActiveModelChangedSignal ),
     "ModelHandler.ActiveModelChangedSignal");
+
+    CONNECTSIGNALS_STATIC( "%SetContourPlaneGreyscale", void( std::string const& uuid, std::vector< bool > const& greyscaleflag),
+                 &ves::xplorer::event::data::SetContourPlaneGreyscale,
+                 m_connections, any_SignalType, normal_Priority );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler()

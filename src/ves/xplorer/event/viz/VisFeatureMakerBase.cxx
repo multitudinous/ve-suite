@@ -237,6 +237,10 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
         }
     }
     
+    {
+        ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetGreyscaleFlag( boost::any_cast<bool>( set->GetPropertyValue( "Advanced_Greyscale" ) ) );
+    }
+
     //Create the key for a specific object
     std::pair< std::string, std::pair< std::string, std::string > > commandType;
     commandType = std::make_pair( std::string( m_commandName ),
