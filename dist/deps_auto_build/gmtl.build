@@ -1,7 +1,9 @@
 BASE_DIR=${DEV_BASE_DIR}/gmtl-0.6.1
+
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_URL=http://sourceforge.net/projects/ggt/files/Generic%20Math%20Template%20Library/0.6.1/gmtl-0.6.1.tar.bz2
 SOURCE_FORMAT=bz2
+
 SOURCE_DIR=${BASE_DIR}
 BUILD_DIR=${BASE_DIR}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
@@ -11,13 +13,13 @@ BUILD_METHOD=scons
 
 SKIP_PREBUILD=yes
 
+SCONS_PARAMS+=( prefix="${INSTALL_DIR}" )
+
 case $PLATFORM in
   Windows)
-    SCONS_PARAMS=""
     ;;
   Darwin)
-    SCONS_PARAMS="darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk \
-              prefix=${INSTALL_DIR}"
+    SCONS_PARAMS+=( darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk )
     ;;
   Linux)
     ;;

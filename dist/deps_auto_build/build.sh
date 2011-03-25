@@ -65,15 +65,23 @@ if [ $PLATFORM = "Windows" ]; then
   #VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[1]}" )
   #VSInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
 
-  declare DOTNET_REGVAL=( "${REGPATH}"/Microsoft/.NETFramework/InstallRoot )
+  declare DOTNET_REGVAL=( "${REGPATH}/Microsoft/.NETFramework/InstallRoot" )
   # .NET version is hardcoded to 3.5 for now
   DotNETInstallDir=$( awk '{ gsub( "", "" ); print }' "${DOTNET_REGVAL}" )v3.5
 
   #declare -a CMAKE_REGPATH=( "${REGPATH}"/Kitware/* )
-  #CMAKEInstallDir=$( awk '{ print }' "${CMAKE_REGPATH[@]: -1}"/@ )
+  #CMAKEInstallDir=$( awk '{ print }' "${CMAKE_REGPATH[@]: -1}/@" )
 
   #export Path="${DotNETInstallDir}";${Path}
   MSBUILD="${DotNETInstallDir}/MSBuild.exe"
+
+  #declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
+  #PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
+  #PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
+  #DRIVE_LETTER="${PYTHONHOME:0:1}"
+  #$( { gsub( "${DRIVE_LETTER}':'", "/cygwin/${DRIVE_LETTER}" ); print } )
+  #export PYTHONHOME; export PYTHONPATH
+  #export python="${PYTHONHOME}/python.exe"
 fi
 
 #
@@ -330,7 +338,7 @@ function e()
         ;;
       scons)
         cd "${BUILD_DIR}";
-        ${SCONS} ${BUILD_TARGET} ${JCMD} ${SCONS_PARAMS};
+        ${SCONS} "${SCONS_PARAMS[@]}" ${BUILD_TARGET} ${JCMD};
         ;;
       bjam)
         cd "${SOURCE_DIR}";
