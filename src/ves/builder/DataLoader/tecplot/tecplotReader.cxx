@@ -170,7 +170,7 @@ EntIndex_t tecplotReader::GetNumZonesInCurrentFile( const EntIndex_t startZone )
     return 0;
 }
 
-vtkDataObject * tecplotReader::ExtractMultiBlock()
+vtkDataObject* tecplotReader::ExtractMultiBlock()
 {
     // Begin at zone 1 and loop among the zones until we complete the dataset...
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
@@ -192,6 +192,7 @@ std::cout << "returning multiblock" << std::endl;
             return this->multiblock;
         }
     }
+    return 0;
 }
 
 vtkDataObject * tecplotReader::GetOutputFile( const int fileNum )
