@@ -149,6 +149,8 @@ boost::any PropertySet::GetPropertyValue( std::string const& propertyName ) cons
     }
     else
     {
+        std::cout << "Error: This set (" <<  mTableName <<  ") does not contain a property named " <<
+                propertyName << std::endl << std::flush;
         return boost::any();
     }
 }
