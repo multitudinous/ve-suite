@@ -182,7 +182,7 @@ function e()
 
   #is this option really a package
   if [ ! -e $package ]; then
-    echo "Ain't no package $package";
+    echo "$package is not a package.";
     return;
   fi
 
@@ -272,6 +272,9 @@ function e()
     [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
     [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs" || MCMD='/p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false'
     case ${BUILD_METHOD} in
+      devenv)
+        echo "Build method devenv is not implemented yet";
+        ;;
       msbuild)
         cd "${BUILD_DIR}";
 
@@ -283,10 +286,6 @@ function e()
           PROJ_STR="$PROJ_STR$name$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
         done
 
-        ${CMAKE} --build "${BUILD_DIR}" -- "$MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" /project "$PROJ_STR"
-
-COMMENT_BLOCK=
-if [ $COMMENT_BLOCK ]; then
         if [ -z "${PROJ_STR}" ]; then
           "${MSBUILD}" "$MSVC_SOLUTION" "${MCMD}" \
           /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" /p:TargetFrameworkVersion=v3.5 \
@@ -298,7 +297,26 @@ if [ $COMMENT_BLOCK ]; then
           /p:BuildProjectReferences=false /p:PostBuildEventUseInBuild=true /p:WarningLevel=1 \
           /toolsversion:3.5 /verbosity:Diagnostic
         fi
-fi
+        ;;
+      cmake)
+        cd "${BUILD_DIR}";
+        case $PLATFORM in
+          Windows)
+            if [ -d "${BUILD_TARGET}" ]; then
+              MSVC_PROJECT_NAMES+=( "${BUILD_TARGET}" )
+            fi
+
+            for name in "${MSVC_PROJECT_NAMES[@]}"; do
+              PROJ_STR="$PROJ_STR$name$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
+            done
+            #http://www.cmake.org/cmake/help/cmake-2-8-docs.html#opt:--builddir
+            ${CMAKE} --build "${BUILD_DIR}" -- "$MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" /project "$PROJ_STR"
+            ;;
+          Darwin | Linux )
+            #http://www.cmake.org/cmake/help/cmake-2-8-docs.html#opt:--builddir
+            ${CMAKE} --build "${BUILD_DIR}" -- ${JCMD} ${BUILD_TARGET}
+            ;;
+        esac
         ;;
       make)
         cd "${BUILD_DIR}";
@@ -326,7 +344,6 @@ fi
   if [ "${clean_build_dir}" = "yes" ]; then
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
     [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
-    [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs" || MCMD='/p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false'
     case ${BUILD_METHOD} in
       msbuild)
         cd "${BUILD_DIR}";
@@ -344,7 +361,7 @@ fi
         ${MAKE} clean;
         ;;
       *)
-        echo "Build method ${BUILD_METHOD} unsupported";
+        echo "Clean method ${BUILD_METHOD} unsupported";
         ;;
     esac
   fi
