@@ -4,6 +4,7 @@ SOURCE_URL=https://subversion.vesuite.org/skewmatrix/skewmatrix/backdropFX/trunk
 SOURCE_DIR=${BASE_DIR}
 BUILD_DIR=${BASE_DIR}/build-${ARCH}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
+
 PREBUILD_METHOD=cmake
 
 SKIP_FPC_INSTALL="no"
@@ -25,14 +26,9 @@ CMAKE_PARAMS="\
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS="$CMAKE_PARAMS \
-                  -G 'NMake Makefiles'"
     ;;
   Darwin)
     ;;
   Linux)
     ;;
 esac
-
-
-BUILD_TARGET=install

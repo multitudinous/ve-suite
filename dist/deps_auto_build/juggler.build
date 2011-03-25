@@ -4,12 +4,20 @@ SOURCE_URL=http://vrjuggler.googlecode.com/svn/juggler/trunk
 SOURCE_DIR=${BASE_DIR}
 BUILD_DIR=${BASE_DIR}/build-${ARCH}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
-PREBUILD_METHOD=configure
 
-CONFIGURE=../configure.pl
-CONFIGURE_PARAMS=" \
+case $PLATFORM in
+  Windows)
+    SCONS_PARAMS=""
+    ;;
+  Darwin)
+    BUILD_TARGET="build install"
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure.pl
+    CONFIGURE_PARAMS=" \
       --with-boost=${BOOST_INSTALL_DIR} \
       --with-boost-includes=${BOOST_INSTALL_DIR}/include \
       --prefix=${INSTALL_DIR}"
-
-BUILD_TARGET="build install"
+    ;;
+  Linux)
+    ;;
+esac

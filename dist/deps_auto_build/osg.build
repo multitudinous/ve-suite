@@ -27,4 +27,3 @@ case $PLATFORM in
   Linux)
     ;;
 esac
-BUILD_TARGET=install

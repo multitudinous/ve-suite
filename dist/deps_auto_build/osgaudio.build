@@ -10,8 +10,6 @@ FMOD_ROOT=/Developer/FMOD_Programmers_API_Mac/api
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS="$CMAKE_PARAMS \
-                  -G 'NMake Makefiles'"
     ;;
   Darwin)
     CMAKE_PARAMS="-DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -29,5 +27,3 @@ case $PLATFORM in
   Linux)
     ;;
 esac
-
-BUILD_TARGET=install

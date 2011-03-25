@@ -6,6 +6,7 @@ SOURCE_FORMAT=( when SOURCE_RETRIVAL_METHOD is wget, provide file format - tgz o
 
 SOURCE_DIR=( usually ${BASE_DIR} )
 
+#SKIP_PREBUILD
 PREBUILD_METHOD=(cmake | configure | scons | bjam )
 
 BUILD_DIR=( build directory, e.g. ${BASE_DIR}/build )
@@ -17,7 +18,6 @@ CMAKE_PARAMS= (if BUILD_METHOD == cmake, provide parameters to cmake here)
 CONFIGURE_PARAMS= (if BUILD_METHOD == autotools, provide parameters to ./configure here)
 SCONS_PARAMS=( if BUILD_METHOD == scons, provide arguments to scons here )
 
-#SKIP_PREBUILD
 #OSGWORKS_INCLUDE_DIR
 #CONFIGURE
 #CMAKE

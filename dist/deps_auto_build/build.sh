@@ -193,11 +193,15 @@ function e()
   case $PLATFORM in
     Windows)
       BUILD_METHOD=msbuild
+      BUILD_TARGET=INSTALL
       ;;
     Darwin)
       BUILD_METHOD=make
+      BUILD_TARGET=install
       ;;
     Linux)
+      BUILD_METHOD=make
+      BUILD_TARGET=install
       ;;
    esac
 

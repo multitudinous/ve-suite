@@ -18,16 +18,9 @@ CMAKE_PARAMS="-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS="$CMAKE_PARAMS \
-                  -G 'NMake Makefiles'"
     ;;
   Darwin)
     ;;
   Linux)
     ;;
 esac
-
-
-BUILD_TARGET=install
-
-
