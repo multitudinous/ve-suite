@@ -22,7 +22,7 @@ BJAM_PARAMS+=( variant=release )
 BJAM_PARAMS+=( link=shared )
 BJAM_PARAMS+=( threading=multi )
 BJAM_PARAMS+=( runtime-link=shared )
-#BJAM_PARAMS+=( --prefix="${INSTALL_DIR}" )
+BJAM_PARAMS+=( --prefix="${INSTALL_DIR}" )
 if [ "$ARCH" = "64-bit" ]; then
   BJAM_PARAMS+=( address-model=64 )
 else
