@@ -2,7 +2,7 @@
 
 #
 # Define the platform
-# 
+#
 PLATFORM=`uname -s`
 #http://en.wikipedia.org/wiki/Uname
 case $PLATFORM in
@@ -283,19 +283,22 @@ function e()
           PROJ_STR="$PROJ_STR$name$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
         done
 
+        ${CMAKE} --build "${BUILD_DIR}" -- "$MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" /project "$PROJ_STR"
+
+COMMENT_BLOCK=
+if [ $COMMENT_BLOCK ]; then
         if [ -z "${PROJ_STR}" ]; then
           "${MSBUILD}" "$MSVC_SOLUTION" "${MCMD}" \
-             /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
-             /p:TargetFrameworkVersion=v3.5 /p:ToolsVersion=2.0 \
-             /verbosity:Detailed /p:WarningLevel=1;
-             #/p:BuildProjectReferences=false
+          /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" /p:TargetFrameworkVersion=v3.5 \
+          /p:BuildProjectReferences=false /p:PostBuildEventUseInBuild=true /p:WarningLevel=1 \
+          /toolsversion:3.5 /verbosity:Diagnostic
         else
           "${MSBUILD}" "$MSVC_SOLUTION" /t:"$PROJ_STR" "${MCMD}" \
-             /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" \
-             /p:TargetFrameworkVersion=v3.5 /p:ToolsVersion=2.0 \
-             /verbosity:Detailed /p:WarningLevel=1;
-             #/p:BuildProjectReferences=false
+          /p:Configuration="$MSVC_CONFIG" /p:Platform="$MSVC_PLATFORM" /p:TargetFrameworkVersion=v3.5 \
+          /p:BuildProjectReferences=false /p:PostBuildEventUseInBuild=true /p:WarningLevel=1 \
+          /toolsversion:3.5 /verbosity:Diagnostic
         fi
+fi
         ;;
       make)
         cd "${BUILD_DIR}";
