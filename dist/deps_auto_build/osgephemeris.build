@@ -11,16 +11,20 @@ PREBUILD_METHOD=cmake
 SKIP_FPC_INSTALL="no"
 FPC_FILE=osgephemeris.fpc
 
-CMAKE_PARAMS="-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-              -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-              -DOSGInstallType='Alternate Install Location' \
-              -DOSGInstallLocation=${OSG_DIR}"
+CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
+CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_DIR}" )
+CMAKE_PARAMS+=( -DCMAKE_RELWITHDEBINFO_POSTFIX="" )
 
 case $PLATFORM in
   Windows)
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    MSVC_CONFIG=RelWithDebInfo
+    MSVC_PLATFORM=Win32
+    MSVC_SOLUTION="osgEphemeris.sln"
+    MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
-  Darwin)
-    ;;
-  Linux)
+  Darwin | Linux)
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
 esac
