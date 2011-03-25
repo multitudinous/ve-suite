@@ -195,7 +195,7 @@ function e()
   package=$1
 
   #is this option really a package
-  if [ ! -e $package ]; then
+  if [ ! -e "$package" ]; then
     echo "$package is not a package.";
     return;
   fi
@@ -351,6 +351,7 @@ function e()
     if [ "${SKIP_FPC_INSTALL}" != "yes" ]; then
       [ -d "${INSTALL_DIR}/lib/flagpoll" ] || mkdir -p "${INSTALL_DIR}/lib/flagpoll"
       cp "${VES_SRC_DIR}/dist/linux/fpc_deps_files/${FPC_FILE}.in" "${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}";
+      echo "Installing the fpc file ${FPC_FILE}"
     fi
   fi
 
@@ -447,6 +448,8 @@ if [ $PLATFORM = "Windows" ]; then
 fi
 echo -e "DEV_BASE_DIR: ${DEV_BASE_DIR}\n"
 
-for p in $@; do e $p; done
+for p in $@; do 
+  e $p; 
+done
 
 exit 0
