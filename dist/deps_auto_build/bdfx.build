@@ -29,7 +29,7 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
     MSVC_CONFIG=RelWithDebInfo
     MSVC_PLATFORM=Win32
-    MSVC_SOLUTION="osgEphemeris.sln"
+    MSVC_SOLUTION="backdropFX.sln"
     MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
   Darwin | Linux)
