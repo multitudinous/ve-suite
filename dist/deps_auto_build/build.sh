@@ -84,13 +84,13 @@ fi
 #
 # Some useful global variables
 #
-export OSG_DIR=${DEV_BASE_DIR}/osg_2.8.3/install-"${ARCH}"
-export OSGWORKS_ROOT=${DEV_BASE_DIR}/osgWorks/install-"${ARCH}"
-export BULLET_ROOT=${DEV_BASE_DIR}/bullet-2.77/install-"${ARCH}"
-export OSGBULLET_ROOT=${DEV_BASE_DIR}/osgBullet/install-"${ARCH}"
-export OSGEPHEMERIS_ROOT=${DEV_BASE_DIR}/osgEphemeris/install-"${ARCH}"
-export BOOST_INSTALL_DIR=${DEV_BASE_DIR}/boost_1_46_1/install-"${ARCH}"
-export BOOST_INSTALL_DIR=/opt/local
+export OSG_DIR="${DEV_BASE_DIR}/osg_2.8.3/install-${ARCH}"
+export OSGWORKS_ROOT="${DEV_BASE_DIR}/osgWorks/install-${ARCH}"
+export BULLET_ROOT="${DEV_BASE_DIR}/bullet-2.77/install-${ARCH}"
+export OSGBULLET_ROOT="${DEV_BASE_DIR}/osgBullet/install-${ARCH}"
+export OSGEPHEMERIS_ROOT="${DEV_BASE_DIR}/osgEphemeris/install-${ARCH}"
+export BOOST_INSTALL_DIR="${DEV_BASE_DIR}/boost_1_46_1/install-${ARCH}"
+#export BOOST_INSTALL_DIR=/opt/local
 export CTAGS_INSTALL_DIR=/opt/local
 export TAGS_DIR=${HOME}/.vim/tags
 
@@ -198,7 +198,7 @@ function e()
   #setup the build types unless other wise specified in a build file
   case $PLATFORM in
     Windows)
-      BUILD_METHOD=msbuild
+      BUILD_METHOD=cmake
       BUILD_TARGET=INSTALL
       ;;
     Darwin | Linux )
@@ -342,7 +342,7 @@ function e()
     esac
     if [ "${SKIP_FPC_INSTALL}" != "yes" ]; then
       [ -d "${INSTALL_DIR}/lib/flagpoll" ] || mkdir -p "${INSTALL_DIR}/lib/flagpoll"
-      cp ${VES_SRC_DIR}/dist/linux/fpc_deps_files/${FPC_FILE}.in ${INSTALL_DIR}/lib/flagpoll/${FPC_FILE};
+      cp "${VES_SRC_DIR}/dist/linux/fpc_deps_files/${FPC_FILE}.in" "${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}";
     fi
   fi
 
