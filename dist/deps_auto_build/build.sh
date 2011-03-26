@@ -133,7 +133,7 @@ echo "
     -j      Build with multithreading enabled
             Requires argument to specify number of jobs (1:8) to use
     -U      Subversion username to use for private repo
-    -d      Create disk image containing install files for package
+    -d      Create an installer containing install files for package
     -t      Create tag file with exuberant ctags" >&2
 }
 
@@ -143,6 +143,17 @@ function ctags()
   [ -d "${TAGS_DIR}" ] || mkdir -p "${TAGS_DIR}"
   rm ${TAGS_DIR}/${1}
   mv tags ${TAGS_DIR}/${1}
+}
+
+# setup the function for controlling innosetup
+function innosetup()
+{
+  #http://www.jrsoftware.org/ishelp/
+  #/F"MyProgram-1.0"  - The output filename for the installer
+  #/Sbyparam=$p - The sign tool for the installer
+  #/Q - The Quiet mode of the compiler
+  #/O"My Output" - Override the output directory
+  iscc /Q "${ISS_FILENAME}"
 }
 
 function source_retrieval()
@@ -350,7 +361,14 @@ function e()
     esac
     if [ "${SKIP_FPC_INSTALL}" != "yes" ]; then
       [ -d "${INSTALL_DIR}/lib/flagpoll" ] || mkdir -p "${INSTALL_DIR}/lib/flagpoll"
-      cp "${VES_SRC_DIR}/dist/linux/fpc_deps_files/${FPC_FILE}.in" "${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}";
+      case $PLATFORM in
+        Windows)
+          cp "${VES_SRC_DIR}/dist/win/fpc_deps_files/release/${FPC_FILE}.in" "${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}";
+          ;;
+        Darwin | Linux)
+          cp "${VES_SRC_DIR}/dist/linux/fpc_deps_files/${FPC_FILE}.in" "${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}";
+          ;;
+      esac
       echo "Installing the fpc file ${FPC_FILE}"
     fi
   fi
@@ -387,9 +405,23 @@ function e()
     ctags $package;
   fi
   
-  #Build the dmg file
-  if [ "${build_dmg_installer}" = "yes" ]; then
-    echo "DMG package installer not working yet for $package";
+  #Build the installer file
+  if [ "${build_installer}" = "yes" ]; then
+    [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
+    [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
+    [ -z "${INSTALL_DIR}" ] && ( echo "INSTALL_DIR undefined in package $package"; return; )
+    [ -d "${INSTALL_DIR}" ] || ( echo "${INSTALL_DIR} non existent."; return; )
+    [ -z "${ISS_FILENAME}" ] && ( echo "ISS_FILENAME undefined in package $package"; return; )
+    
+    case $PLATFORM in
+      Windows)
+        innosetup;
+        ;;
+      Darwin)
+        ;;
+      Linux )
+        ;;
+    esac
   fi
 }
 
@@ -414,13 +446,9 @@ case $opts in
     export multithreading_jobs=$OPTARG
     #export build="yes"  # implied
     ;;
-  U)
-    export SVN_USERNAME=$OPTARG
-    ;;
-  t)
-    export build_ctag_files="yes";;
-  d)
-    export build_dmg_installer="yes";;
+  U)export SVN_USERNAME=$OPTARG;;
+  t)export build_ctag_files="yes";;
+  d)export build_installer="yes";;
   ?)
     echo "Invalid option: $OPTARG" >&2
     usage
@@ -431,9 +459,7 @@ case $opts in
     usage
     kill -SIGINT $$
     ;;
-  *)
-    usage
-    ;;
+  *) usage;;
 esac
 done
 shift $(($OPTIND - 1))
