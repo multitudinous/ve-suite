@@ -34,15 +34,10 @@
 #define FIND_CHILD_WITH_NAME_VISITOR_H
 
 /*!\file FindChildWithNameVisitor.h
-*/
-
-/*!\class ves::xplorer::scenegraph::util::FindChildWithNameVisitor
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph::util
-*
-*/
+ * \class ves::xplorer::scenegraph::util::FindChildWithNameVisitor
+ * \namespace ves::xplorer::scenegraph::util
+ *
+ */
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -77,14 +72,18 @@ public:
     ///Return the parent node with the found name
     ///\return The node pointer of the parent
     bool FoundChild();
-
+    
+    ///Get the node we are trying to find
+    ///\return The node that we found
+    osg::Node* GetFoundNode();
+    
 private:
     ///Name of parent node to search for
     std::string mParentName;
     ///Lower case name
     std::string m_lowerCaseNodeName;
     ///Pointer to the found parent node
-    osg::ref_ptr< osg::Node > parentNode;
+    osg::ref_ptr< osg::Node > m_parentNode;
     ///Match the name exactly
     bool m_exactNameMatch;
     ///Found a node

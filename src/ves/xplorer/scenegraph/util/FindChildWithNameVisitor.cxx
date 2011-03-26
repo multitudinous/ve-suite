@@ -45,10 +45,9 @@ FindChildWithNameVisitor::FindChildWithNameVisitor( osg::Node* node,
     const std::string& nodeName, bool exactNameMatch, bool ignoreCase )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-    parentNode( 0 ),
     mParentName( nodeName ),
-    m_foundMatch( false ),
     m_exactNameMatch( exactNameMatch ),
+    m_foundMatch( false ),
     m_ignoreCase( ignoreCase )
 {
     if( m_ignoreCase )
@@ -62,12 +61,16 @@ FindChildWithNameVisitor::FindChildWithNameVisitor( osg::Node* node,
 ////////////////////////////////////////////////////////////////////////////////
 FindChildWithNameVisitor::~FindChildWithNameVisitor()
 {
-    parentNode = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool FindChildWithNameVisitor::FoundChild()
 {
     return m_foundMatch;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Node* FindChildWithNameVisitor::GetFoundNode()
+{
+    return m_parentNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FindChildWithNameVisitor::apply( osg::Node& node )
@@ -86,7 +89,7 @@ void FindChildWithNameVisitor::apply( osg::Node& node )
         if( nodeName == mParentName )
         {
             m_foundMatch = true;
-            parentNode = &node;
+            m_parentNode = &node;
             return;
         }
     }
@@ -96,7 +99,7 @@ void FindChildWithNameVisitor::apply( osg::Node& node )
         if( found != std::string::npos )
         {
             m_foundMatch = true;
-            parentNode = &node;
+            m_parentNode = &node;
             return;
         }
     }
