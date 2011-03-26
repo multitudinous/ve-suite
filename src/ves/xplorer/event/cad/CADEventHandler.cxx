@@ -497,6 +497,14 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
                                 newPart->GetFriction() );
         newSet.SetPropertyValue( "Physics_Restitution",
                                 newPart->GetRestitution() );
+        newSet.SetPropertyValue( "Physics_MotionType",
+                                 newPart->GetPhysicsMotionType() );
+        newSet.SetPropertyValue( "Physics_LODType",
+                                 newPart->GetPhysicsLODType() );
+        newSet.SetPropertyValue( "Physics_MeshType",
+                                 newPart->GetPhysicsMeshType() );
+        newSet.SetPropertyValue( "Physics_MeshDecimation",
+                                 newPart->GetPhysicsDecimationValue() );
     }
 
     newSet.SetPropertyValue( "Culling", newPart->GetOcclusionSettings() );
