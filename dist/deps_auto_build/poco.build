@@ -26,6 +26,7 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --no-tests )
     CONFIGURE_PARAMS+=( --no-samples )
     CONFIGURE_PARAMS+=( --omit=Data/MySQL )
+    CONFIGURE_PARAMS+=( --omit=Data/ODBC )
     CONFIGURE_PARAMS+=( --prefix=${INSTALL_DIR} )
     ;;
 esac
