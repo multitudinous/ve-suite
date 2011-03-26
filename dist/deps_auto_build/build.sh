@@ -193,7 +193,7 @@ function source_retrieval()
 function e()
 {
   package=$1
-
+  
   #is this option really a package
   if [ ! -e "$package" ]; then
     echo "$package is not a package.";
@@ -448,7 +448,11 @@ if [ $PLATFORM = "Windows" ]; then
 fi
 echo -e "DEV_BASE_DIR: ${DEV_BASE_DIR}\n"
 
-for p in $@; do 
+#Set the pwd so that for every new build file we can reset to the pwd
+PRESENT_DIR=$PWD
+
+for p in $@; do
+  cd $PRESENT_DIR
   e $p; 
 done
 
