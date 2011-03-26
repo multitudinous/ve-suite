@@ -267,7 +267,7 @@ function e()
         ;;
       configure)
         cd "${BUILD_DIR}";
-        ${CONFIGURE} "${CONFIGURE_PARAMS}";
+        ${CONFIGURE} "${CONFIGURE_PARAMS[@]}";
         ;;
       bjam)
         cd "${SOURCE_DIR}";

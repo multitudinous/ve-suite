@@ -15,10 +15,10 @@ case $PLATFORM in
   Linux| Darwin)
     PREBUILD_METHOD=configure
     CONFIGURE=../configure
-    CONFIGURE_PARAMS="--disable-tao-tests \
-                  --disable-tao-examples \
-                  --disable-ace-tests \
-                  --disable-ace-examples \
-                  --prefix=${INSTALL_DIR}"
+    CONFIGURE_PARAMS+=( --disable-tao-tests )
+    CONFIGURE_PARAMS+=( --disable-tao-examples)
+    CONFIGURE_PARAMS+=(  --disable-ace-tests )
+    CONFIGURE_PARAMS+=(  --disable-ace-examples )
+    CONFIGURE_PARAMS+=(  --prefix=${INSTALL_DIR} )
     ;;
 esac
