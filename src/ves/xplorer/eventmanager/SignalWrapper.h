@@ -116,7 +116,10 @@ public:
     }
 
 
-private:
+public:
+    // Made public so we can pass around SignalWrapperBase instances and be
+    // able to extract the underlying signal. There's no real need to add the
+    // overhead of get/set methods with a lightweight wrapper class like this.
     T* mSignal;
 
 };
