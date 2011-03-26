@@ -18,7 +18,7 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --with-boost-includes=${BOOST_INSTALL_DIR}/include )
     CONFIGURE_PARAMS+=( --prefix=${INSTALL_DIR} )
     export LD_LIBRARY_PATH=${BUILD_DIR}/instlinks/lib64:${LD_LIBRARY_PATH}
-    export LD_LIBRARY_PATH=${BUILD_DIR}/instlinks/lib64:${LD_LIBRARY_PATH}
-    export FLAGPOLL_PATH=${FLAGPOLL_PATH}:
+    export LD_LIBRARY_PATH=/home/users/mccdo/TSVEG/auto_deps/instlinks/lib64:${LD_LIBRARY_PATH}
+    export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/home/users/mccdo/TSVEG/auto_deps/gmtl-0.6.1/install-64-bit/share/flagpoll
     ;;
 esac

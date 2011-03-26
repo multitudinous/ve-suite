@@ -16,16 +16,16 @@ case $PLATFORM in
     SCONS_PARAMS=""
     ;;
   Darwin)
-    SCONS_PARAMS="var_arch=x64 \
-              var_type=optimized \
-              var_libtype=shared \
-              darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk \
-              prefix=${INSTALL_DIR}"
+    SCONS_PARAMS+=( var_arch=x64 )
+    SCONS_PARAMS+=( var_type=optimized )
+    SCONS_PARAMS+=( var_libtype=shared )
+    SCONS_PARAMS+=( darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk )
+    SCONS_PARAMS+=( prefix=${INSTALL_DIR} )
     ;;
   Linux)
-    SCONS_PARAMS="var_arch=x64 \
-              var_type=optimized \
-              var_libtype=shared \
-              prefix=${INSTALL_DIR}"
+    SCONS_PARAMS+=( var_arch=x64 )
+    SCONS_PARAMS+=( var_type=optimized )
+    SCONS_PARAMS+=( var_libtype=shared )
+    SCONS_PARAMS+=( prefix=${INSTALL_DIR} )
     ;;
 esac
