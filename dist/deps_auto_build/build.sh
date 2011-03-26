@@ -98,7 +98,6 @@ export BULLET_ROOT="${DEV_BASE_DIR}/bullet-2.77/install-${ARCH}"
 export OSGBULLET_ROOT="${DEV_BASE_DIR}/osgBullet/install-${ARCH}"
 export OSGEPHEMERIS_ROOT="${DEV_BASE_DIR}/osgEphemeris/install-${ARCH}"
 export BOOST_INSTALL_DIR="${DEV_BASE_DIR}/boost_1_46_1/install-${ARCH}"
-#export BOOST_INSTALL_DIR=/opt/local
 export CTAGS_INSTALL_DIR=/opt/local
 export TAGS_DIR=${HOME}/.vim/tags
 
@@ -202,6 +201,7 @@ function e()
 
   #reset the var controlling wether to install an fpc file
   SKIP_FPC_INSTALL="yes"
+  SKIP_PREBUILD="no"
   
   #setup the build types unless other wise specified in a build file
   case $PLATFORM in
@@ -213,7 +213,7 @@ function e()
       BUILD_METHOD=make
       BUILD_TARGET=install
       ;;
-   esac
+  esac
 
   #setup the package specific vars
   . $package
