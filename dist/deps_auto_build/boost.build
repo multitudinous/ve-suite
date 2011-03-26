@@ -42,6 +42,8 @@ case $PLATFORM in
     BJAM_PARAMS+=( toolset=darwin )
     ;;
   Linux)
+    BJAM_PREBUILD=./bootstrap.sh
+    #BJAM_PARAMS+=( toolset=darwin )
     ;;
 esac
 
