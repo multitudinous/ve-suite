@@ -14,13 +14,19 @@ case $PLATFORM in
   Darwin)
     PREBUILD_METHOD=configure
     CONFIGURE=../configure
-    CONFIGURE_PARAMS="--no-tests \
-      --no-samples \
-      --omit=Data/MySQL \
-      --config=Darwin64 \
-      --prefix=${INSTALL_DIR}"
+    CONFIGURE_PARAMS+=( --no-tests )
+    CONFIGURE_PARAMS+=( --no-samples )
+    CONFIGURE_PARAMS+=( --omit=Data/MySQL )
+    CONFIGURE_PARAMS+=( --config=Darwin64 )
+    CONFIGURE_PARAMS+=( --prefix=${INSTALL_DIR} )
     ;;
   Linux)
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --no-tests )
+    CONFIGURE_PARAMS+=( --no-samples )
+    CONFIGURE_PARAMS+=( --omit=Data/MySQL )
+    CONFIGURE_PARAMS+=( --prefix=${INSTALL_DIR} )
     ;;
 esac
 

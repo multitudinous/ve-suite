@@ -14,10 +14,9 @@ case $PLATFORM in
     BUILD_TARGET="build install"
     PREBUILD_METHOD=configure
     CONFIGURE=../configure.pl
-    CONFIGURE_PARAMS=" \
-      --with-boost=${BOOST_INSTALL_DIR} \
-      --with-boost-includes=${BOOST_INSTALL_DIR}/include \
-      --prefix=${INSTALL_DIR}"
+    CONFIGURE_PARAMS+=( --with-boost=${BOOST_INSTALL_DIR} )
+    CONFIGURE_PARAMS+=( --with-boost-includes=${BOOST_INSTALL_DIR}/include )
+    CONFIGURE_PARAMS+=( --prefix=${INSTALL_DIR} )
     ;;
   Linux)
     ;;

@@ -14,13 +14,13 @@ case $PLATFORM in
   Darwin)
     PREBUILD_METHOD=configure
     CONFIGURE=../configure
-    CONFIGURE_PARAMS="CFLAGS='-arch x86_64' \
-          CXXFLAGS='-arch x86_64' \
-          --prefix=${INSTALL_DIR}"
+    CONFIGURE_PARAMS+=( CFLAGS='-arch x86_64' )
+    CONFIGURE_PARAMS+=( CXXFLAGS='-arch x86_64' )
+    CONFIGURE_PARAMS+=( --prefix=${INSTALL_DIR} )
     ;;
   Linux)
     PREBUILD_METHOD=configure
     CONFIGURE=../configure
-    CONFIGURE_PARAMS="--prefix=${INSTALL_DIR}"
+    CONFIGURE_PARAMS+=( --prefix=${INSTALL_DIR} )
     ;;
 esac
