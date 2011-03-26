@@ -23,5 +23,9 @@ case $PLATFORM in
               prefix=${INSTALL_DIR}"
     ;;
   Linux)
+    SCONS_PARAMS="var_arch=x64 \
+              var_type=optimized \
+              var_libtype=shared \
+              prefix=${INSTALL_DIR}"
     ;;
 esac
