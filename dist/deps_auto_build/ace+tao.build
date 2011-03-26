@@ -12,7 +12,7 @@ case $PLATFORM in
     unset PROJ_STR
     unset BUILD_TARGET
     ;;
-  Darwin)
+  Linux| Darwin)
     PREBUILD_METHOD=configure
     CONFIGURE=../configure
     CONFIGURE_PARAMS="--disable-tao-tests \
@@ -20,7 +20,5 @@ case $PLATFORM in
                   --disable-ace-tests \
                   --disable-ace-examples \
                   --prefix=${INSTALL_DIR}"
-    ;;
-  Linux)
     ;;
 esac

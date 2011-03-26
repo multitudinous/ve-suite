@@ -19,5 +19,8 @@ case $PLATFORM in
           --prefix=${INSTALL_DIR}"
     ;;
   Linux)
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS="--prefix=${INSTALL_DIR}"
     ;;
 esac
