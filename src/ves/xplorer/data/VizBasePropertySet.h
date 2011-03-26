@@ -89,12 +89,14 @@ protected:
     ///\param statement The POCO write statement with params
     virtual bool WriteToDatabase( Poco::Data::Session* const session, std::string const& TableName, Poco::Data::Statement& statement );
 
+
     ///Signal to generate deleting a viz feature
     //typedef boost::signals2::signal< void ( std::string const& ) > DeleteVizFeatureSignal_type;
     ///The delete viz signal
-    ves::util::StringSignal_type m_deleteVizSignal;
+    ves::util::StringSignal_type* m_deleteVizSignal;
     ///The add viz signal
-    ves::util::TwoStringSignal_type m_addVizSignal;
+    ves::util::TwoStringSignal_type* m_addVizSignal;
+
     
 private:
 };
