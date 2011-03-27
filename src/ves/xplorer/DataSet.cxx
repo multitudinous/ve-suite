@@ -1880,6 +1880,8 @@ void DataSet::CreateCompositeDataSets()
         //Load Data sort of
         tempDataset->LoadData( currentDataset, true );
         m_childDataSets.push_back( tempDataset );
+
+        tempDataset->WriteDatabaseEntry();
         
         mgdIterator->GoToNextItem();
         num++;
