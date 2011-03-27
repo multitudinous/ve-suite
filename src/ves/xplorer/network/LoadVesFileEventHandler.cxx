@@ -44,9 +44,9 @@
 //#include <ves/open/xml/model/System.h>
 #include <ves/open/xml/model/Network.h>
 
-#ifdef QT_ON
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 #include <ves/xplorer/data/DatabaseManager.h>
-#endif // QT_ON
 
 #include <iostream>
 
@@ -61,7 +61,10 @@ using namespace ves::xplorer::network;
 LoadVesFileEventHandler::LoadVesFileEventHandler()
         : ves::xplorer::event::EventHandler()
 {
-    ;
+    CONNECTSIGNALS_1( "%VesFileLoaded%",
+                      void( const std::string& ),
+                      &LoadVesFileEventHandler::NewFileLoaded,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 LoadVesFileEventHandler::LoadVesFileEventHandler( const LoadVesFileEventHandler& rhs )
@@ -95,8 +98,11 @@ void LoadVesFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mod
 //////////////////////////////////////////////////////////////////////////
 void LoadVesFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-#ifdef QT_ON
+    NewFileLoaded( "null" );
+}
+
+void LoadVesFileEventHandler::NewFileLoaded( const std::string& fileName )
+{
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
-#endif // QT_ON
 }
 

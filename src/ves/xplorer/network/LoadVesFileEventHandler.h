@@ -39,6 +39,7 @@
  */
 
 #include <ves/VEConfig.h>
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 namespace ves
 {
@@ -92,7 +93,10 @@ public:
     ///\param xmlObject The current xmlObject event.
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
+    void NewFileLoaded( const std::string& fileName );
+
 private:
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 }
 }
