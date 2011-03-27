@@ -153,11 +153,12 @@ function innosetup()
   #/Sbyparam=$p - The sign tool for the installer
   #/Q - The Quiet mode of the compiler
   #/O"My Output" - Override the output directory
-  if [  $ARCH = "64-bit" ]; then
-    /cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 5/iscc /Q "${ISS_FILENAME}"
-  else
-    /cygdrive/c/Program\ Files/Inno\ Setup\ 5/iscc /Q "${ISS_FILENAME}"
-  fi
+  echo "Building the ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME} installer."
+  #if [  $ARCH = "64-bit" ]; then
+    /cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 5/iscc /Q /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
+  #else
+  #  /cygdrive/c/Program\ Files/Inno\ Setup\ 5/iscc /Q /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
+  #fi
 }
 
 function source_retrieval()
@@ -217,7 +218,8 @@ function e()
   #reset the var controlling wether to install an fpc file
   SKIP_FPC_INSTALL="yes"
   SKIP_PREBUILD="no"
-  
+  unset ISS_FILENAME
+
   #setup the build types unless other wise specified in a build file
   case $PLATFORM in
     Windows)
@@ -298,6 +300,7 @@ function e()
   if [ "${build}" = "yes" ]; then
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
     [ -z "${BUILD_METHOD}" ] && ( echo "BUILD_METHOD undefined in package $package"; return; )
+    [ -z "${SOURCE_DIR}" ] && (echo "SOURCE_DIR undefined in package $package"; return)
     [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
     [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs" || MCMD='/p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false'
     case ${BUILD_METHOD} in
@@ -471,12 +474,13 @@ shift $(($OPTIND - 1))
 [ -d "${DEV_BASE_DIR}" ] || mkdir -p "${DEV_BASE_DIR}"
 [ $# -lt 1 ] && bye
 
-echo -e "\nKernel: $PLATFORM $ARCH"
+echo -e "\n          Kernel: $PLATFORM $ARCH"
 if [ $PLATFORM = "Windows" ]; then
   #echo "VCInstallDir: $VCInstallDir"
   echo "DotNETInstallDir: $DotNETInstallDir"
 fi
-echo -e "DEV_BASE_DIR: ${DEV_BASE_DIR}\n"
+echo -e "    DEV_BASE_DIR: ${DEV_BASE_DIR}"
+echo -e "     VES_SRC_DIR: ${VES_SRC_DIR}\n"
 
 #Set the pwd so that for every new build file we can reset to the pwd
 PRESENT_DIR=$PWD
