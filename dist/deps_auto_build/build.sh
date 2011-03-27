@@ -153,7 +153,11 @@ function innosetup()
   #/Sbyparam=$p - The sign tool for the installer
   #/Q - The Quiet mode of the compiler
   #/O"My Output" - Override the output directory
-  iscc /Q "${ISS_FILENAME}"
+  if [  $ARCH = "64-bit" ]; then
+    /cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 5/iscc /Q "${ISS_FILENAME}"
+  else
+    /cygdrive/c/Program\ Files/Inno\ Setup\ 5/iscc /Q "${ISS_FILENAME}"
+  fi
 }
 
 function source_retrieval()
