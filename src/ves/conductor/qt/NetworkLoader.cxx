@@ -43,6 +43,7 @@
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
 
@@ -117,7 +118,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 //    std::string newDBPath = newWorkingDir;
 //    newDBPath += "/ves.db";
 //    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( newDBPath );
-    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
+//    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
     
     // TODO: This code needs a thorough cleanup since it is mostly ripped from
     // other files and pasted in here. 
@@ -130,7 +131,10 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     {
         // Let xplorer know we are loading a new ves file so that it can do any
         // necessary cleanup, such as resetting the database
-        CommandPtr loadVesFile( new Command() );
+        reinterpret_cast< xplorer::eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
+        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
+        ->mSignal->operator()( fileName );
+/*        CommandPtr loadVesFile( new Command() );
         loadVesFile->SetCommandName( "LOAD_VES_FILE" );
         // Dummy DVP to prevent crashes since xplorer assumes existence of 
         // valid DVP without testing.
@@ -138,7 +142,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         nullDVP->SetData( "LOAD_VES_FILE", "NULL" );
         loadVesFile->AddDataValuePair( nullDVP );
         ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( loadVesFile );
-
+*/
         //Send a new start position for all apps
         //do this before loading the ves data
         // so in case a file has a start position it will be used

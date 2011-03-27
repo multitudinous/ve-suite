@@ -63,6 +63,7 @@
 
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/xplorer/data/DatabaseManager.h>
 
@@ -959,6 +960,10 @@ void MainWindow::on_actionNew_triggered()
 
     // Let xplorer know we are loading a new ves file so that it can do any
     // necessary cleanup, such as resetting the database
+    reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
+    ( eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
+    ->mSignal->operator()( "New" );
+/*
     ves::open::xml::CommandPtr loadVesFile( new ves::open::xml::Command() );
     loadVesFile->SetCommandName( "LOAD_VES_FILE" );
     // Dummy DVP to prevent crashes since xplorer assumes existence of
@@ -967,4 +972,5 @@ void MainWindow::on_actionNew_triggered()
     nullDVP->SetData( "LOAD_VES_FILE", "NULL" );
     loadVesFile->AddDataValuePair( nullDVP );
     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( loadVesFile );
+*/
 }
