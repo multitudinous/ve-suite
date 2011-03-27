@@ -35,6 +35,13 @@ EventFactory::EventFactory():
             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "VizBasePropertySet.AddVizFeature" ] = swb;
     }
+    {
+        SignalWrapperBase* swb =
+                new SignalWrapper< ves::util::StringSignal_type >( &m_vesFileLoadedSignal );
+        evm->RegisterSignal( swb, "VesFileLoaded",
+            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "VesFileLoaded" ] = swb;
+    }
 }
 
 EventFactory::~EventFactory()
