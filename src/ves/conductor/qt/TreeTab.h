@@ -120,6 +120,8 @@ protected Q_SLOTS:
     /// of logic begun in slot OnObjectPicked.
     void QueuedOnObjectPicked( osg::NodePath nodePath );
 
+    void on_m_refreshTreeButton_clicked();
+
 
 
     Q_SIGNALS:

@@ -25,14 +25,21 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,1">
          <item>
           <widget class="QPushButton" name="ExpandAllButton">
            <property name="text">
             <string>Expand All</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_refreshTreeButton">
+           <property name="text">
+            <string>Refresh Tree</string>
            </property>
           </widget>
          </item>
@@ -71,9 +78,6 @@
          <attribute name="headerStretchLastSection">
           <bool>false</bool>
          </attribute>
-         <attribute name="headerStretchLastSection">
-          <bool>false</bool>
-         </attribute>
         </widget>
        </item>
       </layout>
@@ -101,7 +105,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="propertyBrowser/icons.qrc">
+            <iconset>
              <normaloff>:/images/refresh-32.png</normaloff>:/images/refresh-32.png</iconset>
            </property>
           </widget>
@@ -112,7 +116,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="propertyBrowser/icons.qrc">
+            <iconset>
              <normaloff>:/images/ok.png</normaloff>:/images/ok.png</iconset>
            </property>
           </widget>

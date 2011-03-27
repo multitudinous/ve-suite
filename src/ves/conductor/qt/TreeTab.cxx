@@ -348,6 +348,11 @@ std::string TreeTab::GetSelectedNodeID()
 
 void TreeTab::OnNodeAdded()
 {
+    on_m_refreshTreeButton_clicked();
+}
+
+void TreeTab::on_m_refreshTreeButton_clicked()
+{
     // Read the scenegraph and rebuild tree.
     PopulateWithRoot(
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
