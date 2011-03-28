@@ -18,6 +18,7 @@ SCONS_PARAMS+=( prefix="${INSTALL_DIR}" )
 case $PLATFORM in
   Windows)
     BUILD_TARGET=install
+    SCONS_PARAMS+=( MSVS_VERSION=9.0 )
     ;;
   Darwin)
     SCONS_PARAMS+=( darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk )
