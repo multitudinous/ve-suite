@@ -75,13 +75,15 @@ if [ $PLATFORM = "Windows" ]; then
   #export Path="${DotNETInstallDir}";${Path}
   MSBUILD="${DotNETInstallDir}/MSBuild.exe"
 
-  #declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
-  #PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
-  #PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
-  #DRIVE_LETTER="${PYTHONHOME:0:1}"
+  declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
+  export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
+  export PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
+  DRIVE_LETTER="${PYTHONHOME:0:1}"
   #$( { gsub( "${DRIVE_LETTER}':'", "/cygwin/${DRIVE_LETTER}" ); print } )
-  #export PYTHONHOME; export PYTHONPATH
-  #export python="${PYTHONHOME}/python.exe"
+  export python="${PYTHONHOME}/python.exe"
+  echo "Using Python $PYTHONHOME"
+  echo "Using Python Path $PYTHONPATH"
+  export PATH=$PATH:$PYTHONHOME/scripts:$PYTHONHOME
 fi
 
 #
