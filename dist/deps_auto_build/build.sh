@@ -65,6 +65,9 @@ if [ $PLATFORM = "Windows" ]; then
   #VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[1]}" )
   #VSInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
 
+  VS_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/9.0/InstallDir )
+  VSInstallDir=$( awk '{ print }' "${VS_REGPATH}" )
+
   declare DOTNET_REGVAL=( "${REGPATH}/Microsoft/.NETFramework/InstallRoot" )
   # .NET version is hardcoded to 3.5 for now
   DotNETInstallDir=$( awk '{ gsub( "", "" ); print }' "${DOTNET_REGVAL}" )v3.5
@@ -74,6 +77,7 @@ if [ $PLATFORM = "Windows" ]; then
 
   #export Path="${DotNETInstallDir}";${Path}
   MSBUILD="${DotNETInstallDir}/MSBuild.exe"
+  DEVENV="${VSInstallDir}/devenv.exe"
 
   declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
   export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
@@ -305,7 +309,10 @@ function e()
     [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs" || MCMD='/p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false'
     case ${BUILD_METHOD} in
       devenv)
-        echo "Build method devenv is not implemented yet";
+        cd "${SOURCE_DIR}";
+
+        "${DEVENV}" "$MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" \
+        $( [ -z "${PROJ_STR}" ] && echo "${PROJ_STR}" )
         ;;
       msbuild)
         cd "${BUILD_DIR}";
