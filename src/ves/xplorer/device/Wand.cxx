@@ -1786,7 +1786,8 @@ void Wand::PostProcessNav()
         m_worldQuat *= m_rotIncrement;
         
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
+        Device::EnsureCameraStaysAboveGround( vjHeadMat, m_worldTrans, 
+            m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
         
         m_activeDCS->SetTranslationArray( m_worldTrans );
         m_activeDCS->SetQuat( m_worldQuat );
@@ -1803,18 +1804,21 @@ void Wand::PostProcessNav()
         m_worldQuat *= m_rotIncrement;
         
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, 
+            m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
         
         m_activeDCS->SetTranslationArray( m_worldTrans );
         m_activeDCS->SetQuat( m_worldQuat );
         //If the z axis is positive then rotate by a specific dz
         if( m_rotIncrement[ 3 ] > 0 )
         {
-            m_characterController.Rotate( 0., osg::DegreesToRadians( -rotationStepSize ) );
+            m_characterController.Rotate( 0., 
+                osg::DegreesToRadians( -rotationStepSize ) );
         }
         else
         {
-            m_characterController.Rotate( 0., osg::DegreesToRadians( rotationStepSize ) );
+            m_characterController.Rotate( 0., 
+                osg::DegreesToRadians( rotationStepSize ) );
         }
         
         if( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
@@ -1828,5 +1832,18 @@ void Wand::PostProcessNav()
 osg::MatrixTransform& Wand::GetWandTransform()
 {
     return *(m_wandPAT.get());
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::TestUIIntersection()
+{
+    //We could do a constant test with the UI every frame since we are
+    //consolidated to only the UI node
+
+    //Get line from user pressing button 0
+    //Get node of that the UI is attached too
+    //Do an interesection test only on that node with the wand line
+    //See if they intersect
+    //If so then generate an event for qt
+    //IF not then not over the ui
 }
 ////////////////////////////////////////////////////////////////////////////////

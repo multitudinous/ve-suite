@@ -197,6 +197,9 @@ protected:
     ///Preprocess data for nav
     void PostProcessNav();
     
+    //Test the UI to see if the wand is over the UI
+    void TestUIIntersection();
+
 private:
     /// The keyboardmouse device needed for juggler >= 3.1
     typedef gadget::DigitalEventInterface<gadget::event::all_events_tag,

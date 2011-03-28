@@ -90,6 +90,7 @@ void FindChildWithNameVisitor::apply( osg::Node& node )
         {
             m_foundMatch = true;
             m_parentNode = &node;
+            //std::cout << m_parentNode->getName() << std::endl;
             return;
         }
     }
@@ -100,6 +101,7 @@ void FindChildWithNameVisitor::apply( osg::Node& node )
         {
             m_foundMatch = true;
             m_parentNode = &node;
+            //std::cout << m_parentNode->getName() << std::endl;
             return;
         }
     }

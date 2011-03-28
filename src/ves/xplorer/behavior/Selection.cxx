@@ -283,11 +283,12 @@ void Selection::ProcessSelection()
     //Test for intersections
     osgUtil::LineSegmentIntersector::Intersections& intersections =
     scenegraph::TestForIntersections(
-                                     *m_lineSegmentIntersector.get(), *m_sceneManager.GetModelRoot() );
+                                     *m_lineSegmentIntersector.get(), 
+                                     *m_sceneManager.GetModelRoot() );
     if( intersections.empty() )
     {
         vprDEBUG( vesDBG, 1 )
-        << "|\tKeyboardMouse::ProcessHit No object selected"
+        << "|\tSelection::ProcessSelection No object selected"
         << std::endl << vprDEBUG_FLUSH;
 
         // Tell everyone else we have a null selection. nullPath must be l-value
@@ -314,14 +315,21 @@ void Selection::ProcessSelection()
         
         if( !objectHit )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit No object selected"
+            vprDEBUG( vesDBG, 1 ) << "|\tSelection::ProcessSelection No object selected"
                 << std::endl << vprDEBUG_FLUSH;
             
             ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
                 ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
             
             return;
-        }        
+        }
+        ///Print the name of the first node hit
+        osg::NodePath nodePath = intersections.begin()->nodePath;
+        osg::Node* node = nodePath[ nodePath.size() - 1 ];
+        vprDEBUG( vesDBG, 1 ) 
+            << "|\tSelection::ProcessSelection The name of the first node hit is "
+            << node->getName() << std::endl << vprDEBUG_FLUSH;
+     
     }
     
     ///CAD selection code
@@ -352,7 +360,7 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
     if( !vesObject )
     {
         vprDEBUG( vesDBG, 1 )
-            << "|\tKeyboardMouse::ProcessHit Invalid object selected"
+            << "|\tSelection::HighlightAndSetManipulators Invalid object selected"
             << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(

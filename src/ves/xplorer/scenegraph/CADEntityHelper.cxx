@@ -49,6 +49,7 @@
 #include <ves/xplorer/scenegraph/nurbs/NSurface.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 #include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
+#include <ves/xplorer/scenegraph/util/FindChildWithNameVisitor.h>
 
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>
