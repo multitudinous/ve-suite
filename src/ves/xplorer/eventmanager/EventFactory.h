@@ -45,6 +45,7 @@
 #include <boost/signals2/signal.hpp>
 
 // --- VES includes --- //
+#include <ves/VEConfig.h>
 #include <ves/xplorer/Logging.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapperBase.h>
@@ -56,7 +57,7 @@ namespace xplorer
 {
 namespace eventmanager
 {
-class EventFactory
+class VE_EVENTMANAGER_EXPORTS EventFactory
 {
 public:
 
