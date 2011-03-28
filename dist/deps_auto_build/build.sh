@@ -78,12 +78,10 @@ if [ $PLATFORM = "Windows" ]; then
   declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
   export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
   export PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
-  DRIVE_LETTER="${PYTHONHOME:0:1}"
-  #$( { gsub( "${DRIVE_LETTER}':'", "/cygwin/${DRIVE_LETTER}" ); print } )
-  export python="${PYTHONHOME}/python.exe"
+  #DRIVE_LETTER="${PYTHONHOME:0:1}"
   echo "Using Python $PYTHONHOME"
   echo "Using Python Path $PYTHONPATH"
-  export PATH=$PATH:$PYTHONHOME/scripts:$PYTHONHOME
+  export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:$PATH
 fi
 
 #
