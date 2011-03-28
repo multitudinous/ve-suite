@@ -35,30 +35,33 @@
 #include <ves/conductor/qt/minerva/LayersTree.h>
 #include <ves/conductor/qt/minerva/AddLayerWidget.h>
 
+#include <Minerva/Core/Data/Container.h>
+
 using namespace ves::conductor::qt::minerva;
 
 StackedWidget::StackedWidget ( QWidget *parent ) : BaseClass ( parent ),
-  mLayersTree ( 0x0 )
+  m_layersTree ( 0x0 ),
+  m_addLayerWidget ( 0x0 )
 {
-    mLayersTree = new LayersTree ( this );
-    this->addWidget ( mLayersTree );
-    QObject::connect ( mLayersTree, SIGNAL ( addLayerRequested() ), this, SLOT ( showAddLayerWidget() ) );
+    m_layersTree = new LayersTree ( this );
+    this->addWidget ( m_layersTree );
+    QObject::connect ( m_layersTree, SIGNAL ( addLayerRequested() ), this, SLOT ( showAddLayerWidget() ) );
 
-    AddLayerWidget *addLayerWidget ( new AddLayerWidget );
-    this->addWidget ( addLayerWidget );
+    m_addLayerWidget = new AddLayerWidget;
+    this->addWidget ( m_addLayerWidget );
 
-    QObject::connect ( addLayerWidget, SIGNAL ( accepted() ), this, SLOT ( addLayerWidgetAccepted() ) );
-    QObject::connect ( addLayerWidget, SIGNAL ( rejected() ), this, SLOT ( addLayerWidgetRejected() ) );
+    QObject::connect ( m_addLayerWidget, SIGNAL ( accepted() ), this, SLOT ( addLayerWidgetAccepted() ) );
+    QObject::connect ( m_addLayerWidget, SIGNAL ( rejected() ), this, SLOT ( addLayerWidgetRejected() ) );
 }
 
 StackedWidget::~StackedWidget()
 {
-    delete mLayersTree;
+    delete m_layersTree;
 }
 
 void StackedWidget::setFeature ( Minerva::Core::Data::Feature * feature )
 {
-    mLayersTree->buildTree ( feature );
+    m_layersTree->BuildTree ( feature );
 }
 
 void StackedWidget::showAddLayerWidget()
@@ -69,6 +72,17 @@ void StackedWidget::showAddLayerWidget()
 void StackedWidget::addLayerWidgetAccepted()
 {
     this->setCurrentIndex ( 0 );
+
+    // Get the added layers and add them to the planet.
+    Minerva::Core::Data::Feature::RefPtr feature ( m_layersTree->GetCurrentFeature() );
+    if ( feature.valid() )
+    {
+        Minerva::Core::Data::Container::RefPtr container ( feature->asContainer() );
+        if ( container )
+        {
+            m_addLayerWidget->AddLayersToFeature ( container.get() );
+        }
+    }
 }
 
 void StackedWidget::addLayerWidgetRejected()

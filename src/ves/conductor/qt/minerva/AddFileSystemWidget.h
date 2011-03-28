@@ -37,6 +37,8 @@
 
 namespace Ui { class AddFileSystemWidget; }
 
+namespace Minerva { namespace Core { namespace Data { class Container; } } }
+
 namespace ves {
 namespace conductor {
 namespace qt {
@@ -51,6 +53,8 @@ public:
     typedef QWidget BaseClass;
 
     AddFileSystemWidget ( QWidget *parent = 0x0 );
+
+    void AddLayersToFeature ( Minerva::Core::Data::Container* );
 
 Q_SIGNALS:
 

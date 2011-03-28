@@ -36,7 +36,8 @@
 
 #include <Minerva/Qt/Widgets/AddNetworkLayerWidget.h>
 
-#include "Minerva/Core/Layers/RasterLayerWms.h"
+#include <Minerva/Core/Data/Container.h>
+#include <Minerva/Core/Layers/RasterLayerWms.h>
 
 #include "QtGui/QVBoxLayout"
 #include "QtGui/QHBoxLayout"
@@ -45,9 +46,9 @@
 
 using namespace ves::conductor::qt::minerva;
 
-typedef Minerva::QtWidgets::AddNetworkLayerWidget<Minerva::Core::Layers::RasterLayerWms> AddWmsLayerWidget;
-
-AddLayerWidget::AddLayerWidget ( QWidget *parent ) : BaseClass ( parent )
+AddLayerWidget::AddLayerWidget ( QWidget *parent ) : BaseClass ( parent ),
+    m_addFileSystemStackedWidget ( 0x0 ),
+    m_addWmsLayerWidget ( 0x0 )
 {
     QTabWidget *tabs ( new QTabWidget ( this ) );
     QPushButton *ok ( new QPushButton ( "Ok" ) );
@@ -70,18 +71,24 @@ AddLayerWidget::AddLayerWidget ( QWidget *parent ) : BaseClass ( parent )
     hLayout->addWidget ( ok );
     hLayout->addWidget ( cancel );
 
-    AddFileSystemStackedWidget* addFileSystemWidget ( new AddFileSystemStackedWidget ( tabs ) );
-    tabs->addTab ( addFileSystemWidget, "File System" );
+    m_addFileSystemStackedWidget = new AddFileSystemStackedWidget ( tabs );
+    tabs->addTab ( m_addFileSystemStackedWidget, "File System" );
 
-    AddWmsLayerWidget* addWmsLayerWidget ( new AddWmsLayerWidget ( tabs ) );
-    tabs->addTab ( addWmsLayerWidget, "WMS" );
+    m_addWmsLayerWidget = new AddWmsLayerWidget ( tabs );
+    tabs->addTab ( m_addWmsLayerWidget, "WMS" );
 
     // For now hide the button that opens a dialog.  This is usually not needed.
-    addWmsLayerWidget->setViewOptionsVisibility ( false );
+    m_addWmsLayerWidget->setViewOptionsVisibility ( false );
 }
 
 AddLayerWidget::~AddLayerWidget()
 {
+}
+
+void AddLayerWidget::AddLayersToFeature ( Minerva::Core::Data::Container* container )
+{
+    m_addFileSystemStackedWidget->AddLayersToFeature ( container );
+    m_addWmsLayerWidget->apply ( container );
 }
 
 #endif

@@ -48,12 +48,12 @@
 using namespace ves::conductor::qt::minerva;
 
 LayersTree::LayersTree ( QWidget *parent ) : BaseClass ( parent ),
-  mTreeControl ( 0x0 )
+  m_treeControl ( 0x0 )
 {
-    mTreeControl = new Minerva::QtWidgets::TreeControl ( this );
+    m_treeControl = new Minerva::QtWidgets::TreeControl ( this );
 
     QVBoxLayout *layout ( new QVBoxLayout );
-    layout->addWidget ( mTreeControl );
+    layout->addWidget ( m_treeControl );
 
     this->setContextMenuPolicy ( Qt::CustomContextMenu );
     QObject::connect ( this, SIGNAL ( customContextMenuRequested ( const QPoint& ) ), this,  SLOT   ( _onContextMenuShow ( const QPoint& ) ) );
@@ -63,38 +63,52 @@ LayersTree::LayersTree ( QWidget *parent ) : BaseClass ( parent ),
 
 LayersTree::~LayersTree()
 {
-    delete mTreeControl;
-    mTreeControl = 0x0;
+    delete m_treeControl;
+    m_treeControl = 0x0;
 }
 
-void LayersTree::buildTree ( Minerva::Core::Data::Feature * feature )
+void LayersTree::BuildTree ( Minerva::Core::Data::Feature * feature )
 {
-    mTreeControl->buildTree ( feature );
+    m_treeControl->buildTree ( feature );
+}
+
+Minerva::Core::Data::Feature* LayersTree::GetCurrentFeature() const
+{
+    if ( 0x0 != m_treeControl )
+    {
+        Minerva::QtWidgets::TreeNode *currentItem ( m_treeControl->currentNode() );
+        if ( 0x0 != currentItem )
+        {
+            return currentItem->node().get();
+        }
+    }
+
+    return 0x0;
 }
 
 void LayersTree::_onContextMenuShow ( const QPoint& pos )
 {
-    if ( 0x0 == mTreeControl )
+    if ( 0x0 == m_treeControl )
         return;
   
-    Minerva::QtWidgets::TreeNode *currentItem ( mTreeControl->currentNode() );
+    Minerva::QtWidgets::TreeNode *currentItem ( m_treeControl->currentNode() );
   
     if ( 0x0 == currentItem )
         return;
   
-    Minerva::QtWidgets::TreeNode *parentItem ( currentItem->parent() );
-  
-    Minerva::Core::Data::Feature::RefPtr unknown ( currentItem->node().get() );
-    Minerva::Core::Data::Feature::RefPtr parent ( 0x0 != parentItem ? parentItem->node().get() : 0x0 );
-    bool hasParent ( parent && parent->asContainer() );
+    Minerva::Core::Data::Feature::RefPtr feature ( currentItem->node() );
 
-    QMenu* menu ( new QMenu ( this ) );
-  
-    QAction* addLayerAction ( new QAction ( QString ( "Add..." ), 0x0 ) );
-    QObject::connect ( addLayerAction, SIGNAL ( triggered (bool) ), this, SLOT ( _addLayer() ) );
-    menu->addAction ( addLayerAction );
-  
-    menu->popup ( mTreeControl->mapToGlobal ( pos ) );
+    // Only add add button if a container was selected.
+    if ( feature && feature->asContainer() )
+    {
+        QMenu* menu ( new QMenu ( this ) );
+      
+        QAction* addLayerAction ( new QAction ( QString ( "Add..." ), 0x0 ) );
+        QObject::connect ( addLayerAction, SIGNAL ( triggered (bool) ), this, SLOT ( _addLayer() ) );
+        menu->addAction ( addLayerAction );
+      
+        menu->popup ( m_treeControl->mapToGlobal ( pos ) );
+    }
 }
 
 void LayersTree::_addLayer()

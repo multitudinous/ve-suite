@@ -39,25 +39,34 @@
 using namespace ves::conductor::qt::minerva;
 
 AddFileSystemStackedWidget::AddFileSystemStackedWidget ( QWidget *parent ) : BaseClass ( parent ),
-    mFileSystemWidget ( 0x0 ),
-    mFileDialog ( 0x0 )
+    m_fileSystemWidget ( 0x0 ),
+    m_fileDialog ( 0x0 )
 {
-    mFileSystemWidget = new AddFileSystemWidget ( this );
-    this->addWidget ( mFileSystemWidget );
+    m_fileSystemWidget = new AddFileSystemWidget ( this );
+    this->addWidget ( m_fileSystemWidget );
 
-    mFileDialog = new QFileDialog ( this );
-    mFileDialog->setOptions( QFileDialog::DontUseNativeDialog );
-    mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
-    mFileDialog->setFileMode( QFileDialog::ExistingFiles );
+    m_fileDialog = new QFileDialog ( this );
+    m_fileDialog->setOptions( QFileDialog::DontUseNativeDialog );
+    //m_fileDialog->setAttribute( Qt::WA_DeleteOnClose );
+    m_fileDialog->setFileMode( QFileDialog::ExistingFiles );
 
-    this->addWidget ( mFileDialog );
+    this->addWidget ( m_fileDialog );
 
-    QObject::connect ( mFileSystemWidget, SIGNAL ( showFileDialog() ), this, SLOT ( showFileDialog() ) );
-    QObject::connect ( mFileDialog, SIGNAL ( accepted() ), this, SLOT ( fileDialogAccepted() ) );
-    QObject::connect ( mFileDialog, SIGNAL ( rejected() ), this, SLOT ( fileDialogRejected() ) );
+    QObject::connect ( m_fileSystemWidget, SIGNAL ( showFileDialog() ), this, SLOT ( showFileDialog() ) );
+    QObject::connect ( m_fileDialog, SIGNAL ( accepted() ), this, SLOT ( fileDialogAccepted() ) );
+    QObject::connect ( m_fileDialog, SIGNAL ( rejected() ), this, SLOT ( fileDialogRejected() ) );
 
-    QObject::connect ( mFileDialog, SIGNAL ( filesSelected( const QStringList& ) ), mFileSystemWidget, SLOT ( onFilesSelected( const QStringList& ) ) );
-    //QObject::connect ( mFileDialog, SIGNAL ( fileSelected( const QString& ) ), mFileSystemWidget, SLOT ( onFileSelected( const QString& ) ) );
+    QObject::connect ( m_fileDialog, SIGNAL ( filesSelected( const QStringList& ) ), m_fileSystemWidget, SLOT ( onFilesSelected( const QStringList& ) ) );
+    //QObject::connect ( m_fileDialog, SIGNAL ( fileSelected( const QString& ) ), m_fileSystemWidget, SLOT ( onFileSelected( const QString& ) ) );
+}
+
+AddFileSystemStackedWidget::~AddFileSystemStackedWidget()
+{
+    this->removeWidget ( m_fileSystemWidget );
+    delete m_fileSystemWidget;
+
+    this->removeWidget ( m_fileDialog );
+    delete m_fileDialog;
 }
 
 void AddFileSystemStackedWidget::showFileDialog()
@@ -73,6 +82,11 @@ void AddFileSystemStackedWidget::fileDialogAccepted()
 void AddFileSystemStackedWidget::fileDialogRejected()
 {
     this->setCurrentIndex ( 0 );
+}
+
+void AddFileSystemStackedWidget::AddLayersToFeature ( Minerva::Core::Data::Container* container )
+{
+    m_fileSystemWidget->AddLayersToFeature ( container );
 }
 
 #endif

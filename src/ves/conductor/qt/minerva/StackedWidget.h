@@ -44,6 +44,7 @@ namespace qt {
 namespace minerva {
 
     class LayersTree;
+    class AddLayerWidget;
 
 class StackedWidget : public QStackedWidget
 {
@@ -65,8 +66,8 @@ protected Q_SLOTS:
 
 private:
 
-    LayersTree *mLayersTree;
-
+    LayersTree* m_layersTree;
+    AddLayerWidget* m_addLayerWidget;
 };
 
 }

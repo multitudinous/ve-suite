@@ -54,7 +54,9 @@ public:
     LayersTree ( QWidget *parent = 0x0 );
     virtual ~LayersTree();
 
-    void buildTree ( Minerva::Core::Data::Feature * feature );
+    void BuildTree ( Minerva::Core::Data::Feature * feature );
+
+    Minerva::Core::Data::Feature* GetCurrentFeature() const;
 
 Q_SIGNALS:
 
@@ -67,7 +69,7 @@ protected Q_SLOTS:
 
 private:
 
-    Minerva::QtWidgets::TreeControl *mTreeControl;
+    Minerva::QtWidgets::TreeControl *m_treeControl;
 
 };
 

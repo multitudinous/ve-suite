@@ -35,6 +35,8 @@
 
 #include <QtGui/QStackedWidget>
 
+namespace Minerva { namespace Core { namespace Data { class Container; } } }
+
 class QFileDialog;
 
 namespace ves {
@@ -52,6 +54,9 @@ public:
     typedef QStackedWidget BaseClass;
 
     AddFileSystemStackedWidget ( QWidget *parent = 0x0 );
+    virtual ~AddFileSystemStackedWidget();
+
+    void AddLayersToFeature ( Minerva::Core::Data::Container* );
 
 private Q_SLOTS:
 
@@ -61,8 +66,8 @@ private Q_SLOTS:
 
 private:
 
-    AddFileSystemWidget *mFileSystemWidget;
-    QFileDialog *mFileDialog;
+    AddFileSystemWidget *m_fileSystemWidget;
+    QFileDialog *m_fileDialog;
 };
 
 }

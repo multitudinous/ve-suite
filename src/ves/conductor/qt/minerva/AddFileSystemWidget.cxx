@@ -35,6 +35,9 @@
 
 #include <ves/conductor/qt/minerva/ui_AddFileSystemWidget.h>
 
+#include <Minerva/Core/Data/Container.h>
+#include <Minerva/Core/Functions/ReadFile.h>
+
 using namespace ves::conductor::qt::minerva;
 
 AddFileSystemWidget::AddFileSystemWidget ( QWidget *parent ) : BaseClass ( parent ),
@@ -72,6 +75,28 @@ void AddFileSystemWidget::onFilesSelected( const QStringList& fileNames )
 void AddFileSystemWidget::onFileSelected( const QString& fileName )
 {
     _ui->listWidget->addItem ( fileName );
+}
+
+void AddFileSystemWidget::AddLayersToFeature ( Minerva::Core::Data::Container* container )
+{
+    if ( 0x0 != container )
+    {
+        const unsigned int size ( _ui->listWidget->count() );
+        for ( unsigned int i = 0; i < size; ++i )
+        {
+            if ( QListWidgetItem* item = _ui->listWidget->item ( i ) )
+            {
+                const std::string filename ( item->text().toStdString() );
+                Minerva::Core::Data::Feature::RefPtr feature ( Minerva::Core::Functions::readFile ( filename ) );
+                if ( feature.valid() )
+                {
+                    container->add ( feature );
+                }
+            }
+        }
+    }
+
+    _ui->listWidget->clear();
 }
 
 #endif
