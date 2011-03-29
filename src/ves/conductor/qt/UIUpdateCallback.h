@@ -33,6 +33,11 @@
 #pragma once
 
 #include <osg/NodeCallback>
+/*!\file UIUpdateCallback.h
+ * \class ves::conductor::UIUpdateCallback
+ * \namespace ves::conductor
+ *
+ */
 
 namespace ves
 {
@@ -42,12 +47,12 @@ namespace conductor
 class UIUpdateCallback : public osg::NodeCallback
 {
 public:
-    UIUpdateCallback( );
-    virtual ~UIUpdateCallback( );
+    ///Constructor
+    UIUpdateCallback();
+    ///Destructor
+    virtual ~UIUpdateCallback();
 
-    ////////////////////////////////////////////////////////////////////////////////
     /// Update callback for osg. Override of osg::NodeCallback method.
-    ////////////////////////////////////////////////////////////////////////////////
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 private:
 

@@ -86,14 +86,8 @@ class UIElement;
 class UIUpdateCallback;
 
 /*!\file UIManager.h
- *
- */
-
-/*!\class ves::conductor::UIManager
- *
- */
-
-/*!\namespace ves::conductor
+ * \class ves::conductor::UIManager
+ * \namespace ves::conductor
  *
  */
 /// Manages UIElements by controlling element focus, passing interaction events,

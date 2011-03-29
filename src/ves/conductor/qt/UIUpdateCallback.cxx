@@ -37,16 +37,16 @@ namespace ves
 {
 namespace conductor
 {
-
-UIUpdateCallback::UIUpdateCallback( )
+////////////////////////////////////////////////////////////////////////////////
+UIUpdateCallback::UIUpdateCallback()
 {
 }
-
-UIUpdateCallback::~UIUpdateCallback( )
+////////////////////////////////////////////////////////////////////////////////
+UIUpdateCallback::~UIUpdateCallback()
 {
 }
-
-void UIUpdateCallback::operator( )( osg::Node* node, osg::NodeVisitor* nv )
+////////////////////////////////////////////////////////////////////////////////
+void UIUpdateCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
     // Request element repaints and so forth from UIManager
     ves::conductor::UIManager::instance()->Update( );
@@ -55,6 +55,5 @@ void UIUpdateCallback::operator( )( osg::Node* node, osg::NodeVisitor* nv )
     traverse( node, nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
 } // namespace conductor
 } // namespace ves
