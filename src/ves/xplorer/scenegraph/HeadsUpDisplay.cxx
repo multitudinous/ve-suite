@@ -39,6 +39,12 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 
+// --- BackdropFX Includes --- //
+#include <backdropFX/Version.h>
+#include <backdropFX/Manager.h>
+#include <backdropFX/ShaderModule.h>
+#include <backdropFX/ShaderModuleVisitor.h>
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Depth>
@@ -220,6 +226,21 @@ void HeadsUpDisplay::Initialize()
         mFramerateTextGeode->setStateSet( stateset.get() );
         wcsTextGeode->setStateSet( stateset.get() );
     }
+    
+    //Create shader modules emulating ffp
+    if( !scenegraph::SceneManager::instance()->IsRTTOn() )
+    {
+        backdropFX::ShaderModuleVisitor smv;
+        smv.setAddDefaults( false );
+        
+        SetFrameRateFlag( true );
+        SetCoordSysFlag( true );
+        
+        mCamera->accept( smv );
+        
+        SetFrameRateFlag( false );
+        SetCoordSysFlag( false );
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HeadsUpDisplay::LatePreFrame()
