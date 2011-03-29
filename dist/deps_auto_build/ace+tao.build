@@ -20,7 +20,7 @@ case $PLATFORM in
     else
       MSVC_PLATFORM=x64
     fi
-    MSVC_SOLUTION="ACE_vc9.sln"
+    MSVC_SOLUTION="${SOURCE_DIR}/TAO/TAO_ACE_vc9.sln"
     ;;
   Linux| Darwin)
     PREBUILD_METHOD=configure

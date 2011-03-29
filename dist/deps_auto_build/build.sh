@@ -77,8 +77,7 @@ if [ $PLATFORM = "Windows" ]; then
 
   #export Path="${DotNETInstallDir}";${Path}
   MSBUILD="${DotNETInstallDir}/MSBuild.exe"
-  DEVENV="${VSInstallDir}/devenv.exe"
-  echo $DEVENV
+  DEVENV="devenv.com"
   declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
   export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
   export PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
@@ -248,6 +247,15 @@ function e()
     [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
     source_retrieval;
   fi
+
+  #post checkout/download functions
+  case $package in
+    ace+tao.build)
+      if [ $PLATFORM = "Windows" ]; then
+        cp "${SOURCE_DIR}/ace/config-win32.h" "${SOURCE_DIR}/ace/config.h"
+      fi
+      ;;
+  esac
 
   #update the source if needed
   if [ "${update_source}" = "yes" ]; then
