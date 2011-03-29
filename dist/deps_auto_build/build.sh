@@ -252,7 +252,7 @@ function e()
   case $package in
     ace+tao.build)
       if [ $PLATFORM = "Windows" ]; then
-        cp "${SOURCE_DIR}/ace/config-win32.h" "${SOURCE_DIR}/ace/config.h"
+        cp "${SOURCE_DIR}/../ace/config-win32.h" "${SOURCE_DIR}/../ace/config.h"
       fi
       ;;
   esac

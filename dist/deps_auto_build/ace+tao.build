@@ -1,4 +1,4 @@
-BASE_DIR=${DEV_BASE_DIR}/ACE_wrappers
+BASE_DIR=${DEV_BASE_DIR}/ACE_wrappers/TAO
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_URL=http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO-5.7.9.tar.bz2
@@ -20,7 +20,7 @@ case $PLATFORM in
     else
       MSVC_PLATFORM=x64
     fi
-    MSVC_SOLUTION="${SOURCE_DIR}/TAO/TAO_ACE_vc9.sln"
+    MSVC_SOLUTION="TAO_ACE_vc9.sln"
     ;;
   Linux| Darwin)
     PREBUILD_METHOD=configure
