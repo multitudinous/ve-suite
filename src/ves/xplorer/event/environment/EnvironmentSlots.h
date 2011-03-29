@@ -49,6 +49,10 @@ namespace environment
  */
 ///Enable the physics debugger
 void EnablePhysicsDebugging( bool const& enable );
+///Display the on-screen frame rate
+void DisplayFrameRate( const bool& display );
+///Display the on-screen coordinate system
+void DisplayCoordinateSystem( const bool& display );
 
     
 } //end environment

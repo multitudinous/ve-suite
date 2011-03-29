@@ -37,6 +37,8 @@
 //#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 
 namespace ves
 {
@@ -50,6 +52,18 @@ namespace environment
 void EnablePhysicsDebugging( bool const& enable )
 {
     ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetDebuggingOn( enable );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DisplayFrameRate( const bool& display )
+{
+    ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()
+            ->SetFrameRateFlag( display );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DisplayCoordinateSystem( const bool& display )
+{
+    ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()
+            ->SetCoordSysFlag( display );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

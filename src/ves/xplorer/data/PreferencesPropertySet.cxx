@@ -205,7 +205,7 @@ void PreferencesPropertySet::CreateSkeleton()
     {
         AddProperty( "PhysicsDebugger", false, "Physics Debugger" );
         mPropertyMap["PhysicsDebugger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
+        MakeLiveBasePtr p( new MakeLive< const bool& >( mUUIDString,
                                                    mPropertyMap["PhysicsDebugger"],
                                                    "PreferencesPropertySet.PhysicsDebugger",
                                                    false ));
@@ -245,7 +245,7 @@ void PreferencesPropertySet::CreateSkeleton()
     {
         AddProperty( "DisplayFrameRate", false, "Display Frame Rate" );
         mPropertyMap["DisplayFrameRate"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
+        MakeLiveBasePtr p( new MakeLive< const bool& >( mUUIDString,
                                                    mPropertyMap["DisplayFrameRate"],
                                                    "PreferencesPropertySet.DisplayFrameRate",
                                                    false ));
@@ -255,7 +255,7 @@ void PreferencesPropertySet::CreateSkeleton()
     {
         AddProperty( "DisplayGlobalAxis", false, "Display Global Axis" );
         mPropertyMap["DisplayGlobalAxis"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
+        MakeLiveBasePtr p( new MakeLive< const bool& >( mUUIDString,
                                                    mPropertyMap["DisplayGlobalAxis"],
                                                    "PreferencesPropertySet.DisplayGlobalAxis",
                                                    false ));

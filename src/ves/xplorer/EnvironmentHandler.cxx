@@ -240,6 +240,14 @@ EnvironmentHandler::EnvironmentHandler()
     CONNECTSIGNALS_STATIC( "%PhysicsDebugger", void( bool const& enable ),
                      &ves::xplorer::event::environment::EnablePhysicsDebugging,
                      m_connections, any_SignalType, normal_Priority );    
+
+    CONNECTSIGNALS_STATIC( "%DisplayFrameRate", void( bool const& enable ),
+                     &ves::xplorer::event::environment::DisplayFrameRate,
+                     m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%DisplayGlobalAxis", void( bool const& enable ),
+                     &ves::xplorer::event::environment::DisplayCoordinateSystem,
+                     m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()
