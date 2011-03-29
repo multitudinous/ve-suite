@@ -78,7 +78,7 @@ if [ $PLATFORM = "Windows" ]; then
   #export Path="${DotNETInstallDir}";${Path}
   MSBUILD="${DotNETInstallDir}/MSBuild.exe"
   DEVENV="${VSInstallDir}/devenv.exe"
-
+  echo $DEVENV
   declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
   export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
   export PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
@@ -310,9 +310,9 @@ function e()
     case ${BUILD_METHOD} in
       devenv)
         cd "${SOURCE_DIR}";
-
+        echo "${DEVENV} $MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM"
         "${DEVENV}" "$MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" \
-        $( [ -z "${PROJ_STR}" ] && echo "${PROJ_STR}" )
+            $( [ -z "${PROJ_STR}" ] && echo "${PROJ_STR}" )
         ;;
       msbuild)
         cd "${BUILD_DIR}";

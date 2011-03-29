@@ -1,17 +1,30 @@
 BASE_DIR=${DEV_BASE_DIR}/poco-1.4.1p1-all
 SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.tar.gz
-SOURCE_FORMAT=tgz
 SOURCE_DIR=${BASE_DIR}
 BUILD_DIR=${BASE_DIR}/build-${ARCH}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
 
 case $PLATFORM in
   Windows)
+    SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.zip
+    SOURCE_FORMAT=zip
     unset PROJ_STR
     unset BUILD_TARGET
+    unset PREBUILD_METHOD
+    BUILD_METHOD=devenv
+    unset PROJ_STR
+    unset BUILD_TARGET
+    MSVC_CONFIG=Release
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+    else
+      MSVC_PLATFORM=x64
+    fi
+    MSVC_SOLUTION="ACE_vc9.sln"
     ;;
   Darwin)
+    SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.tar.gz
+    SOURCE_FORMAT=tgz
     PREBUILD_METHOD=configure
     CONFIGURE=../configure
     CONFIGURE_PARAMS+=( --no-tests )
@@ -21,6 +34,8 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --prefix=${INSTALL_DIR} )
     ;;
   Linux)
+    SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.tar.gz
+    SOURCE_FORMAT=tgz
     PREBUILD_METHOD=configure
     CONFIGURE=../configure
     CONFIGURE_PARAMS+=( --no-tests )
