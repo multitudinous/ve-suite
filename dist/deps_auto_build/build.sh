@@ -85,7 +85,7 @@ if [ $PLATFORM = "Windows" ]; then
   #DRIVE_LETTER="${PYTHONHOME:0:1}"
   echo "Using Python $PYTHONHOME"
   echo "Using Python Path $PYTHONPATH"
-  export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:$PATH
+  export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
 fi
 
 #

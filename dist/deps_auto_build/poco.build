@@ -6,6 +6,7 @@ INSTALL_DIR=${BASE_DIR}/install-${ARCH}
 
 case $PLATFORM in
   Windows)
+    # ./buildwin.cmd  90 build shared release Win32 nosamples devenv
     SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.zip
     SOURCE_FORMAT=zip
     unset PROJ_STR
