@@ -61,6 +61,8 @@
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
 
+#include <ves/conductor/qt/UIManager.h>
+
 // --- osgBullet Includes --- //
 #include <osgwTools/AbsoluteModelTransform.h>
 #include <osgbBullet/RefRigidBody.h>
@@ -665,7 +667,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Wand::ProcessEvents" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
+void Wand::SetStartEndPoint( osg::Vec3d*, osg::Vec3d* )
 {
     ;
 }
@@ -826,7 +828,7 @@ void Wand::ProcessHit()
 //This function currently deletes the existing beam each time it is called and
 //add a new beam.  This should be replaced such that it is only called once
 //and then a transform is modified for the location.
-void Wand::DrawLine( const osg::Vec3d& start, const osg::Vec3d& end )
+void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
 {
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( wand->getData() );
     const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
@@ -1839,11 +1841,13 @@ void Wand::TestUIIntersection()
     //We could do a constant test with the UI every frame since we are
     //consolidated to only the UI node
 
-    //Get line from user pressing button 0
-    //Get node of that the UI is attached too
-    //Do an interesection test only on that node with the wand line
+    bool wandOverUI = false;
     //See if they intersect
+    if( !wandOverUI )
+    {
+        return;
+    }
     //If so then generate an event for qt
-    //IF not then not over the ui
+    //If not then not over the ui
 }
 ////////////////////////////////////////////////////////////////////////////////

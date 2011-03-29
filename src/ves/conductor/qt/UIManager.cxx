@@ -41,6 +41,8 @@
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
 
+#include <ves/xplorer/scenegraph/Select.h>
+
 // --- OSG Includes --- //
 //#include <osg/Geometry>
 #include <osg/Group>
@@ -58,6 +60,9 @@
 
 // --- STL Includes --- //
 #include <iostream>
+
+// --- Boost Includes --- //
+#include <boost/concept_check.hpp>
 
 //#define VES_QT_RENDER_DEBUG
 
@@ -90,9 +95,11 @@ UIManager::UIManager() :
     mMoveElement( 0 ),
     mMinimizeElement( 0 ),
     mUnminimizeElement( 0 ),
-    mMouseInsideUI( true ) // We start out true, since no Qt events will happen
-                           // if we start out false. And that means no UI would
-                           // ever appear.
+    mMouseInsideUI( true ), // We start out true, since no Qt events will happen
+                            // if we start out false. And that means no UI would
+                            // ever appear.
+    m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector( 
+        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) )
 {
     // Register signals
     ves::xplorer::eventmanager::EventManager* evm = ves::xplorer::eventmanager::EventManager::instance();
@@ -184,6 +191,7 @@ osg::Geode* UIManager::AddElement( UIElement* element )
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::RemoveElement( osg::ref_ptr<osg::Geode> geode )
 {
+    boost::ignore_unused_variable_warning( geode );
     // Search through to find geode, then delete UIElement, geode, and
     // the swicth and transforms in its sub-branch, then erase
     // entry from map
@@ -280,6 +288,7 @@ void UIManager::HideAllElements()
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::ShowAllElements( bool showOnlyActive )
 {
+    boost::ignore_unused_variable_warning( showOnlyActive );
     // May not be able to touch scenegraph directly at the moment;
     // Set show flag to be discovered during update
     mShow = true;
@@ -1047,6 +1056,8 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
 {
+    boost::ignore_unused_variable_warning( z );
+    
     if( !_okayToSendEvent() )
     {
         return false;
@@ -1201,3 +1212,41 @@ void UIManager::_monopolizeInput( bool monopolize )
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+osg::Group& UIManager::GetUIRootNode() const
+{
+    return *(mUIGroup.get());
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::TestWandIntersection()
+{
+    //Get line from user pressing button 0
+    m_lineSegmentIntersector->reset();
+    m_lineSegmentIntersector->setStart( m_startPoint );
+    m_lineSegmentIntersector->setEnd( m_endPoint );
+    //Get node of that the UI is attached too
+    //Do an interesection test only on that node with the wand line
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        ves::xplorer::scenegraph::TestForIntersections( *m_lineSegmentIntersector.get(), GetUIRootNode() );
+    
+    if( intersections.size() )
+    {
+        //We are over the UI somewhere
+        mMouseInsideUI = true;
+        
+        //Now do a test to determine where the wand ray is interesting the plane
+        //of the UI texture so that we can translate that to an x,y location
+        osgUtil::LineSegmentIntersector::Intersection tempIntersection = 
+            *(intersections.begin());
+        osg::Vec3d intersectionPoint = tempIntersection.getLocalIntersectPoint();
+        std::cout << "Wand intersection with the UI " 
+            << intersectionPoint << std::endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
+{
+    m_startPoint = startPoint;
+    m_endPoint = endPoint;
+}
+////////////////////////////////////////////////////////////////////////////////

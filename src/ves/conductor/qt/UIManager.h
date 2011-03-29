@@ -51,6 +51,7 @@
 #include <osg/Node>
 #include <osg/NodeVisitor>
 #include <osg/Matrixd>
+#include <osgUtil/LineSegmentIntersector>
 
 namespace osg
 {
@@ -234,6 +235,17 @@ public:
     /// Hide if shown or show is hidden the element passed as the argument
     void ToggleElementVisibility( UIElement* element );
 
+    ///Get the UI root node
+    ///\return The group node that is holding all of the UI graphical elements
+    osg::Group& GetUIRootNode() const;
+
+    ///Connect to the signal that sets the start and end points for the wand
+    void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
+    
+    ///Test wether the wand ray is interesting the UI plane. This will emit the 
+    ///bool to let all slots know if the wand ray is within the UI plane.
+    void TestWandIntersection();
+
 private:
     // Set this class up as a singleton
     ///Constructor
@@ -359,10 +371,15 @@ private:
     typedef boost::signals2::signal< void( bool ) > voidBoolSignalType;
     /// Emits true when mouse enters and false when mouse leaves a UIElement
     voidBoolSignalType mUIEnterLeaveSignal;
-
+    ///Let everyone know if we are over the UI
     bool mMouseInsideUI;
 
     std::vector< boost::shared_ptr< ves::xplorer::eventmanager::ConnectionMonopoly > > mInputMonopolies;
+    ///Selection start end point line
+    osg::Vec3d m_startPoint;
+    osg::Vec3d m_endPoint;
+    ///The ray intersector test
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
 };
 
 } //end conductor
