@@ -446,6 +446,7 @@ void DataSet::SetGreyscale()
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetColorscale()
 {
+    //http://www.ncsu.edu/scivis/lessons/colormodels/color_models2.html#hue.
     this->lut->SetNumberOfColors( 256 );            //default is 256
     this->lut->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
     this->lut->SetSaturationRange( 1.0f , 1.0f );

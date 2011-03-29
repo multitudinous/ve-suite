@@ -1266,25 +1266,26 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     SetupStartEndPoint( m_startPoint, m_endPoint );
     m_startEndPointSignal( m_startPoint, m_endPoint );
 
+    ///For now we are going to map Wand button 0 to Mouse button 1
     switch(event) 
     {
     case gadget::DigitalState::ON:
     {
         UpdateSelectionLine( true );
 
-        (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        (*(m_wandButtonPressSignalMap["Wand.ButtonPress0"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        (*(m_wandButtonPressSignalMap["Wand.ButtonPress0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
         UpdateSelectionLine( false );
 
-        (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_UP );
         break;
     }
     default:
@@ -1302,21 +1303,22 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
     
     PreProcessNav();
     
+    ///For now we are going to map Wand button 1 to Mouse button 2
     switch(event) 
     {
         case gadget::DigitalState::ON:
         {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn1"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN|gadget::BUTTON2_MASK );
             break;
         }
         case gadget::DigitalState::TOGGLE_ON:
         {
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress1"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN|gadget::BUTTON2_MASK );
             break;
         }
         case gadget::DigitalState::TOGGLE_OFF:
         {
-            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_UP );
             break;
         }
         default:
@@ -1404,21 +1406,22 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
 
     PreProcessNav();
     
+    ///For now we are going to map Wand button 2 to Mouse button 3
     switch(event) 
     {
         case gadget::DigitalState::ON:
         {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn2"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN|gadget::BUTTON3_MASK );
             break;
         }
         case gadget::DigitalState::TOGGLE_ON:
         {
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress2"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN|gadget::BUTTON3_MASK );
             break;
         }
         case gadget::DigitalState::TOGGLE_OFF:
         {
-            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease2"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_UP );
             break;
         }
         default:
@@ -1834,20 +1837,5 @@ void Wand::PostProcessNav()
 osg::MatrixTransform& Wand::GetWandTransform()
 {
     return *(m_wandPAT.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Wand::TestUIIntersection()
-{
-    //We could do a constant test with the UI every frame since we are
-    //consolidated to only the UI node
-
-    bool wandOverUI = false;
-    //See if they intersect
-    if( !wandOverUI )
-    {
-        return;
-    }
-    //If so then generate an event for qt
-    //If not then not over the ui
 }
 ////////////////////////////////////////////////////////////////////////////////

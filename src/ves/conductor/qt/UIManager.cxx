@@ -147,6 +147,19 @@ UIManager::UIManager() :
                       ves::xplorer::eventmanager::BooleanPropagationCombiner,
                       &UIManager::MouseScrollEvent, mInputConnections,
                       input_SignalType, highest_Priority );
+           
+    ///Setup the wand now
+    CONNECTSIGNALS_4( "%Wand.ButtonPress%", bool( gadget::Keys, int, int, int ),
+                              &UIManager::ButtonPressEvent, mInputConnections,
+                              button_SignalType, highest_Priority );
+    
+    CONNECTSIGNALS_4( "%Wand.ButtonRelease%", bool( gadget::Keys, int, int, int ),
+                              &UIManager::ButtonReleaseEvent, mInputConnections,
+                              button_SignalType, highest_Priority );
+    
+    CONNECTSIGNALS_5( "%Wand.DoubleClick%", bool( gadget::Keys, int, int, int, int ),
+                              &UIManager::MouseDoubleClickEvent, mInputConnections,
+                              button_SignalType, highest_Priority );
 
     // Force input signal monopoly to agree with default state of mMouseInsideUI
     _monopolizeInput( mMouseInsideUI );
