@@ -1,5 +1,8 @@
 #!/bin/bash
 
+if [ -z "${VES_SRC_DIR}" ]; then
+  export VES_SRC_DIR=$PWD/../../
+fi
 #
 # Define the platform
 #
@@ -248,15 +251,6 @@ function e()
     source_retrieval;
   fi
 
-  #post checkout/download functions
-  case $package in
-    ace+tao.build)
-      if [ $PLATFORM = "Windows" ]; then
-        cp "${SOURCE_DIR}/ace/config-win32.h" "${SOURCE_DIR}/ace/config.h"
-      fi
-      ;;
-  esac
-
   #update the source if needed
   if [ "${update_source}" = "yes" ]; then
     [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && \
@@ -301,6 +295,10 @@ function e()
       bjam)
         cd "${SOURCE_DIR}";
         "${BJAM_PREBUILD}";
+        ;;
+      custom)
+        cd "${SOURCE_DIR}";
+        "${CUSTOM_PREBUILD[@]}";
         ;;
       *)
         echo "Pre-Build method ${PREBUILD_METHOD} unsupported";

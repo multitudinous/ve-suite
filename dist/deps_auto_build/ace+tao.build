@@ -10,7 +10,7 @@ INSTALL_DIR=${BASE_DIR}/install-${ARCH}
 
 case $PLATFORM in
   Windows)
-    unset PREBUILD_METHOD
+    PREBUILD_METHOD=custom
     BUILD_METHOD=devenv
     unset PROJ_STR
     unset BUILD_TARGET
@@ -21,6 +21,9 @@ case $PLATFORM in
       MSVC_PLATFORM=x64
     fi
     MSVC_SOLUTION="${SOURCE_DIR}/TAO/TAO_ACE_vc9.sln"
+    CUSTOM_PREBUILD+=( cp )
+    CUSTOM_PREBUILD+=( ./ace/config-win32.h )
+    CUSTOM_PREBUILD+=(  ./ace/config.h-test )
     ;;
   Linux| Darwin)
     PREBUILD_METHOD=configure
