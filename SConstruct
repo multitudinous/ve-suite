@@ -257,7 +257,7 @@ else:
    osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
                         ['osgText', 'osgText',
                          'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
-                         'osgSim', 'osgFX','osgViewer'])
+                         'osgSim', 'osgFX','osgViewer','osgAnimation'])
 opts.AddOption( osg_options )
 if GetPlatform() == 'win32':
    xerces_options = fp_option.FlagPollBasedOption("xerces",
