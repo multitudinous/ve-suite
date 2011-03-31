@@ -16,17 +16,16 @@ case $PLATFORM in
     MSVC_CONFIG=release_shared
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
-      #PLATFORM_SUFFIX=""
+      PLATFORM_SUFFIX=
     else
       MSVC_PLATFORM=x64
-      PLATFORM_SUFFIX="_x64"
+      PLATFORM_SUFFIX=_x64
     fi
-    #declare -a MSVC_SOLUTION
-    #MSVC_SOLUTION=CppUnit/CppUnit${PLATFORM_SUFFIX}_vs90.sln
+
     #CppUnit
-    MSVC_SOLUTION[0]=CppUnit/CppUnit${PLATFORM_SUFFIX}_vs90.sln
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/CppUnit/CppUnit${PLATFORM_SUFFIX}_vs90.sln" )
     #Foundation
-    #MSVC_SOLUTION+=( "Foundation/Foundation${PLATFORM_SUFFIX}_vs90.sln" )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Foundation/Foundation${PLATFORM_SUFFIX}_vs90.sln" )
     #XML
     #MSVC_SOLUTION+=( XML/XML${PLATFORM_SUFFIX}_vs90.sln )
     #Util

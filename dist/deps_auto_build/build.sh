@@ -316,9 +316,11 @@ function e()
     case ${BUILD_METHOD} in
       devenv)
         cd "${SOURCE_DIR}";
-        echo "${DEVENV} $MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM"
-        "${DEVENV}" "$MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" \
+        for sln in "${MSVC_SOLUTION[@]}"; do
+          echo "${DEVENV} $MSVC_SOLUTION /build $MSVC_CONFIG'|'$MSVC_PLATFORM"
+          "${DEVENV}" "$sln" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" \
             $( [ -z "${PROJ_STR}" ] && echo "${PROJ_STR}" )
+        done
         ;;
       msbuild)
         cd "${BUILD_DIR}";
