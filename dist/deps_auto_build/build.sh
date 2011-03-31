@@ -318,7 +318,7 @@ function e()
       devenv)
         cd "${SOURCE_DIR}";
         for sln in "${MSVC_SOLUTION[@]}"; do
-          echo "${DEVENV} ${sln} /build $MSVC_CONFIG'|'$MSVC_PLATFORM"
+          echo "${DEVENV} ${sln} /build $MSVC_CONFIG|$MSVC_PLATFORM"
           "${DEVENV}" "${sln}" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" \
             $( [ -z "${PROJ_STR}" ] && echo "${PROJ_STR}" )
         done
