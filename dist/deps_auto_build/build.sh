@@ -88,6 +88,7 @@ if [ $PLATFORM = "Windows" ]; then
   echo "Using Python $PYTHONHOME"
   echo "Using Python Path $PYTHONPATH"
   export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
+  echo ${VSInstallDir}
 fi
 
 #
@@ -317,8 +318,8 @@ function e()
       devenv)
         cd "${SOURCE_DIR}";
         for sln in "${MSVC_SOLUTION[@]}"; do
-          echo "${DEVENV} $MSVC_SOLUTION /build $MSVC_CONFIG'|'$MSVC_PLATFORM"
-          "${DEVENV}" "$sln" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" \
+          echo "${DEVENV} ${sln} /build $MSVC_CONFIG'|'$MSVC_PLATFORM"
+          "${DEVENV}" "${sln}" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" \
             $( [ -z "${PROJ_STR}" ] && echo "${PROJ_STR}" )
         done
         ;;

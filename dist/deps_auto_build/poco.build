@@ -16,7 +16,7 @@ case $PLATFORM in
     MSVC_CONFIG=release_shared
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
-      PLATFORM_SUFFIX=
+      #PLATFORM_SUFFIX=
     else
       MSVC_PLATFORM=x64
       PLATFORM_SUFFIX=_x64
@@ -27,29 +27,29 @@ case $PLATFORM in
     #Foundation
     MSVC_SOLUTION+=( "${SOURCE_DIR}/Foundation/Foundation${PLATFORM_SUFFIX}_vs90.sln" )
     #XML
-    #MSVC_SOLUTION+=( XML/XML${PLATFORM_SUFFIX}_vs90.sln )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/XML/XML${PLATFORM_SUFFIX}_vs90.sln" )
     #Util
-    #MSVC_SOLUTION+=( Util/Util${PLATFORM_SUFFIX}_vs90.sln )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Util/Util${PLATFORM_SUFFIX}_vs90.sln" )
     #Net
-    #MSVC_SOLUTION+=( Net/Net${PLATFORM_SUFFIX}_vs90.sln )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Net/Net${PLATFORM_SUFFIX}_vs90.sln" )
     #Crypto
-    #MSVC_SOLUTION+=( Crypto/Crypto${PLATFORM_SUFFIX}_vs90.sln )
+    #MSVC_SOLUTION+=( "${SOURCE_DIR}/Crypto/Crypto${PLATFORM_SUFFIX}_vs90.sln" )
     #NetSSL_OpenSSL
-    #MSVC_SOLUTION+=( NetSSL_OpenSSL/NetSSL_OpenSSL${PLATFORM_SUFFIX}_vs90.sln )
+    #MSVC_SOLUTION+=( "${SOURCE_DIR}/NetSSL_OpenSSL/NetSSL_OpenSSL${PLATFORM_SUFFIX}_vs90.sln" )
     #Data
-    #MSVC_SOLUTION+=( Data/Data${PLATFORM_SUFFIX}_vs90.sln )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/Data${PLATFORM_SUFFIX}_vs90.sln" )
     #Data/SQLite
-    #MSVC_SOLUTION+=( Data/SQLite/SQLite${PLATFORM_SUFFIX}_vs90.sln )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/SQLite/SQLite${PLATFORM_SUFFIX}_vs90.sln" )
     #Data/ODBC
-    #MSVC_SOLUTION+=( Data/ODBC/ODBC${PLATFORM_SUFFIX}_vs90.sln )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/ODBC/ODBC${PLATFORM_SUFFIX}_vs90.sln" )
     #Data/MySQL
-    #MSVC_SOLUTION+=( Data/MySQL/MySQL${PLATFORM_SUFFIX}_vs90.sln )
+    #MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/MySQL/MySQL${PLATFORM_SUFFIX}_vs90.sln" )
     #Zip
-    #MSVC_SOLUTION+=( Zip/Zip${PLATFORM_SUFFIX}_vs90.sln )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Zip/Zip${PLATFORM_SUFFIX}_vs90.sln" )
     #PageCompiler
-    #MSVC_SOLUTION+=( "PageCompiler/PageCompiler${PLATFORM_SUFFIX}_vs90.sln" )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/PageCompiler/PageCompiler${PLATFORM_SUFFIX}_vs90.sln" )
     #PageCompiler/File2Page
-    #MSVC_SOLUTION+=( PageCompiler/File2Page/File2Page${PLATFORM_SUFFIX}_vs90.sln )
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/PageCompiler/File2Page/File2Page${PLATFORM_SUFFIX}_vs90.sln" )
     ;;
   Darwin)
     SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.tar.gz
