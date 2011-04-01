@@ -1,3 +1,9 @@
 subversion
 wget
 unzip
+
+Setting file permissions in Cygwin:
+http://www.cygwin.com/cygwin-ug-net/ntsec.html
+
+This worked for me; edit /etc/fstab with the line:
+none /cygdrive cygdrive override,binary,noacl 0 0
