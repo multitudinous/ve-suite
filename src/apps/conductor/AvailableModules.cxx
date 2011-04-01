@@ -295,7 +295,10 @@ bool AvailableModules::LoadModules()
         UIPluginBase* plugin = pl_loader->GetPluginDataPair( i ).first;
         wxClassInfo* clsi = pl_loader->GetPluginDataPair( i ).second;
         
-        AddModule( plugin, clsi );
+        if( plugin->ShowAvailable() )
+        {
+            AddModule( plugin, clsi );
+        }
     }
     ExpandAll();
     return true;

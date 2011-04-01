@@ -208,8 +208,8 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         m_pumpGeometry = osgDB::readNodeFile( "FlowMeter/flowmeter.ive" );
           
         meterDCS->addChild( m_pumpGeometry.get() );
-        double scale[3] = { 3.33, 3.33, 3.33 };
-        double pos[3] = { 35.97, -28.42, 1.04 };
+        double scale[3] = { 3.28, 3.28, 3.28 };
+        double pos[3] = { 36, -28.67, 1.0 };
         meterDCS->SetTranslationArray( pos );
         meterDCS->SetScaleArray( scale );
         meterDCS->SetTechnique( "Select" );

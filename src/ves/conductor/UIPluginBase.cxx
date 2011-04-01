@@ -2483,3 +2483,7 @@ void UIPluginBase::SetPluginType( const std::string& pluginType )
     m_pluginType = pluginType;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool UIPluginBase::ShowAvailable()
+{
+    return true;
+}

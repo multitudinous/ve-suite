@@ -409,3 +409,8 @@ void OpcUOPlugin::OnMonitorVariable ( wxCommandEvent& event )
 {
     m_monitoring = true;
 }
+////////////////////////////////////////////////////////////////////////////////
+bool OpcUOPlugin::ShowAvailable()
+{
+    return false;
+}

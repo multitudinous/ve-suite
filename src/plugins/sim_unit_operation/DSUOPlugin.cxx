@@ -82,3 +82,8 @@ wxMenu* DSUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     baseMenu->Enable( DSUOPLUGIN_DYNSIM_MENU, true );
     return baseMenu;
 }
+////////////////////////////////////////////////////////////////////////////////
+bool DSUOPlugin::ShowAvailable()
+{
+    return false;
+}

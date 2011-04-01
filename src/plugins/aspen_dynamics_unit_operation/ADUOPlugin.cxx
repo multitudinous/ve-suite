@@ -309,3 +309,8 @@ void ADUOPlugin::OnMonitorVariable( wxCommandEvent& event )
 {
     m_monitoring = true;
 }
+////////////////////////////////////////////////////////////////////////////////
+bool ADUOPlugin::ShowAvailable()
+{
+    return false;
+}

@@ -294,6 +294,7 @@ public:
     wxBitmap* GetIconImage();
     ///Set the plugin type for the ui plugin
     void SetPluginType( const std::string& pluginType );
+    virtual bool ShowAvailable();
         
 protected:
     ///Add a port to the model
