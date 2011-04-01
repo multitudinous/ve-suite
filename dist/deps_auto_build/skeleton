@@ -1,0 +1,26 @@
+PACKAGE_NAME=
+BASE_DIR=${DEV_BASE_DIR}/( add directory created after source is retrieved)
+
+SOURCE_RETRIEVAL_METHOD=(svn or wget)
+SOURCE_URL=(url)
+SOURCE_FORMAT=( when SOURCE_RETRIVAL_METHOD is wget, provide file format - tgz or bz2)
+
+SOURCE_DIR=( usually ${BASE_DIR} )
+
+#SKIP_PREBUILD
+PREBUILD_METHOD=(cmake | configure | scons | bjam )
+
+BUILD_DIR=( build directory, e.g. ${BASE_DIR}/build )
+BUILD_METHOD=( msbuild | make | scons | bjam )
+BUILD_TARGET=( target for make, or scons.  e.g. install)
+
+INSTALL_DIR=( where to install, e.g. ${BASE_DIR}/install )
+CMAKE_PARAMS= (if BUILD_METHOD == cmake, provide parameters to cmake here)
+CONFIGURE_PARAMS= (if BUILD_METHOD == autotools, provide parameters to ./configure here)
+SCONS_PARAMS=( if BUILD_METHOD == scons, provide arguments to scons here )
+
+#OSGWORKS_INCLUDE_DIR
+#CONFIGURE
+#CMAKE
+#MAKE
+#SCONS
