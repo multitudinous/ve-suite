@@ -1,12 +1,12 @@
 PACKAGE_NAME=JUGGLER
-BASE_DIR=${DEV_BASE_DIR}/vrjuggler-trunk
+BASE_DIR="${DEV_BASE_DIR}/vrjuggler-trunk"
 
 SOURCE_RETRIEVAL_METHOD=svn
 SOURCE_URL=http://vrjuggler.googlecode.com/svn/juggler/trunk
 
-SOURCE_DIR=${BASE_DIR}
-BUILD_DIR=${BASE_DIR}/build-${ARCH}
-INSTALL_DIR=${BASE_DIR}/install-${ARCH}
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 
 case $PLATFORM in
   Windows)
@@ -17,9 +17,9 @@ case $PLATFORM in
     BUILD_TARGET="build install"
     PREBUILD_METHOD=configure
     CONFIGURE=../configure.pl
-    CONFIGURE_PARAMS+=( --with-boost=${BOOST_INSTALL_DIR} )
-    CONFIGURE_PARAMS+=( --with-boost-includes=${BOOST_INSTALL_DIR}/include )
-    CONFIGURE_PARAMS+=( --prefix=${INSTALL_DIR} )
+    CONFIGURE_PARAMS+=( --with-boost="${BOOST_INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --with-boost-includes="${BOOST_INSTALL_DIR}/include" )
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     export LD_LIBRARY_PATH=${BUILD_DIR}/instlinks/lib64:${LD_LIBRARY_PATH}
     export LD_LIBRARY_PATH=/home/users/mccdo/TSVEG/auto_deps/instlinks/lib64:${LD_LIBRARY_PATH}
     export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/home/users/mccdo/TSVEG/auto_deps/gmtl-0.6.1/install-64-bit/share/flagpoll

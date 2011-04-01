@@ -1,13 +1,13 @@
 PACKAGE_NAME=ACETAO
-BASE_DIR=${DEV_BASE_DIR}/ACE_wrappers
+BASE_DIR="${DEV_BASE_DIR}/ACE_wrappers"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_URL=http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO-5.7.0.tar.bz2
 SOURCE_FORMAT=bz2
 
-SOURCE_DIR=${BASE_DIR}
-BUILD_DIR=${BASE_DIR}/build-${ARCH}
-INSTALL_DIR=${BASE_DIR}/install-${ARCH}
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 
 case $PLATFORM in
   Windows)
@@ -33,6 +33,6 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --disable-tao-examples)
     CONFIGURE_PARAMS+=(  --disable-ace-tests )
     CONFIGURE_PARAMS+=(  --disable-ace-examples )
-    CONFIGURE_PARAMS+=(  --prefix=${INSTALL_DIR} )
+    CONFIGURE_PARAMS+=(  --prefix="${INSTALL_DIR}" )
     ;;
 esac
