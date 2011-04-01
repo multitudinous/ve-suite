@@ -1,7 +1,10 @@
+PACKAGE_NAME=OSGAUDIO
 BASE_DIR=${DEV_BASE_DIR}/osgAudio
+
 SOURCE_RETRIEVAL_METHOD=svn
 SOURCE_URL=http://osgaudio.googlecode.com/svn/trunk/
 SOURCE_DIR=${BASE_DIR}
+
 BUILD_DIR=${BASE_DIR}/build-${ARCH}
 INSTALL_DIR=${BASE_DIR}/install-${ARCH}
 PREBUILD_METHOD=cmake

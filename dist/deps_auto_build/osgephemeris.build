@@ -1,3 +1,4 @@
+PACKAGE_NAME=OSGEPHEMERIS
 BASE_DIR=${DEV_BASE_DIR}/osgEphemeris
 
 SOURCE_URL=https://www.andesengineering.com/svn/osgEphemeris/trunk/osgEphemeris

@@ -10,10 +10,6 @@ PLATFORM=`uname -s`
 #http://en.wikipedia.org/wiki/Uname
 case $PLATFORM in
   CYGWIN*)
-    # If the call came via symlink, then use its target instead
-    arg=$0; [[ -L $0 ]] && arg=$( stat -f '%Y' "$0" )
-    SCRIPTDIR=$( 2>/dev/null cd "${arg%/*}" >&2; echo "`pwd -P`/${arg##*/}" )
-    SCRIPTDIR=$( dirname "$SCRIPTDIR" )
     PLATFORM=Windows;
     HOME=$USERPROFILE;
     # Does cmake exist?
@@ -99,12 +95,6 @@ fi
 #
 # Some useful global variables
 #
-export OSG_DIR="${DEV_BASE_DIR}/osg_2.8.3/install-${ARCH}"
-export OSGWORKS_ROOT="${DEV_BASE_DIR}/osgWorks/install-${ARCH}"
-export BULLET_ROOT="${DEV_BASE_DIR}/bullet-2.77/install-${ARCH}"
-export OSGBULLET_ROOT="${DEV_BASE_DIR}/osgBullet/install-${ARCH}"
-export OSGEPHEMERIS_ROOT="${DEV_BASE_DIR}/osgEphemeris/install-${ARCH}"
-export BOOST_INSTALL_DIR="${DEV_BASE_DIR}/boost_1_46_1/install-${ARCH}"
 export CTAGS_INSTALL_DIR=/opt/local
 export TAGS_DIR=${HOME}/.vim/tags
 
@@ -499,11 +489,32 @@ echo -e "    DEV_BASE_DIR: ${DEV_BASE_DIR}"
 echo -e "     VES_SRC_DIR: ${VES_SRC_DIR}\n"
 
 #Set the pwd so that for every new build file we can reset to the pwd
+#arg=$0; [[ -L $0 ]] && arg=$( stat -f '%Y' "$0" )
+#PRESENT_DIR=$( 2>/dev/null cd "${arg%/*}" >&2; echo "`pwd -P`/${arg##*/}" )
+#PRESENT_DIR=$( dirname "$PRESENT_DIR" )
 PRESENT_DIR=$PWD
 
+#
+# Export the install directories for build dependencies and write to file
+# Do not put spaces in ${PACKAGE_NAME}
+#
+export_config_vars()
+{
+    EXPORT_FILE="${DEV_BASE_DIR}/exports"
+    rm -f "${EXPORT_FILE}"
+    for f in $*; do
+      eval $( sed -n '/^PACKAGE_NAME=\|^BASE_DIR=\|^INSTALL_DIR=/{p}' $f )
+      echo "export ${PACKAGE_NAME}_INSTALL_DIR=\"${INSTALL_DIR}\"" >> "${EXPORT_FILE}"
+    done
+
+    . "${EXPORT_FILE}"
+}
+
+export_config_vars *.build
+
 for p in $@; do
-  cd $PRESENT_DIR
-  e $p; 
+  cd "${PRESENT_DIR}"
+  e "${p}";
 done
 
 exit 0
