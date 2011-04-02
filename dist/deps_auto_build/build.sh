@@ -97,7 +97,8 @@ fi
 #
 export CTAGS_INSTALL_DIR=/opt/local
 export TAGS_DIR=${HOME}/.vim/tags
-
+export OSG_INSTALL_DIR=${DEV_BASE_DIR}/osg_2.8.3/install-64-bit
+export BOOST_INSTALL_DIR=${DEV_BASE_DIR}/boost_1_46_1/install-64-bit
 #
 # some "over-writeable" variables
 #

@@ -14,17 +14,20 @@ PREBUILD_METHOD=cmake
 SKIP_FPC_INSTALL="no"
 FPC_FILE=minerva.fpc
 
+echo "${OSG_INSTALL_DIR}"
+
+export boost_inc_dir="${BOOST_INSTALL_DIR}/include/boost-1_46_1"
+export boost_inc_dir="${BOOST_INSTALL_DIR}/lib"
+export OSG_INC_DIR="${OSG_INSTALL_DIR}/include"
+export OSG_LIB_DIR="${OSG_INSTALL_DIR}/lib"
+
 CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
-CMAKE_PARAMS+=( -Dboost_inc_dir= )
-CMAKE_PARAMS+=( -Dboost_lib_dir= )
-CMAKE_PARAMS+=( -Dosg_inc_dir= )
-CMAKE_PARAMS+=( -Dosg_lib_dir= )
-CMAKE_PARAMS+=( -DBDFX_PROFILE_ENABLE=OFF )
-CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
-CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_INSTALL_DIR}" )
-CMAKE_PARAMS+=( -DOSGWORKS_INCLUDE_DIR="${OSGWORKS_INSTALL_DIR}/include" )
-CMAKE_PARAMS+=( -DOSGEPHEMERIS_ROOT="${OSGEPHEMERIS_INSTALL_DIR}" )
-CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
+CMAKE_PARAMS+=( -Dboost_inc_dir="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
+CMAKE_PARAMS+=( -Dboost_lib_dir="${BOOST_INSTALL_DIR}/lib" )
+CMAKE_PARAMS+=( -DOSG_INC_DIR="${OSG_INSTALL_DIR}/include" )
+CMAKE_PARAMS+=( -DOSG_LIB_DIR="${OSG_INSTALL_DIR}/lib" )
+CMAKE_PARAMS+=( -DGDAL_INCLUDE_DIR="${DEV_BASE_DIR}/gdal-1.8.0/install-64-bit/include" )
+CMAKE_PARAMS+=( -DGDAL_LIBRARY="${DEV_BASE_DIR}/gdal-1.8.0/install-64-bit/lib/libgdal.a" )
 
 case $PLATFORM in
   Windows)
