@@ -574,13 +574,6 @@ void UIElementQt::_render()
     mImageDirty = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::paintEvent( QPaintEvent* event )
-{
-    _debug( "paintEvent" );
-    _render();
-    QGraphicsView::paintEvent( event );
-}
-////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonPressEvent( gadget::Keys button, int x, int y, int state )
 {
     _buttonEvent( 1, button, x, y, state );

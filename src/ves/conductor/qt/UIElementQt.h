@@ -116,7 +116,6 @@ public:
     virtual void ResizeCanvas( int width, int height );
 
 protected:
-    void paintEvent( QPaintEvent* event );
 
 private:
     void FreeOldWidgets();
