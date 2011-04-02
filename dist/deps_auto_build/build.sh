@@ -165,6 +165,10 @@ function source_retrieval()
       cd "${DEV_BASE_DIR}";
       svn co ${SOURCE_URL} "${BASE_DIR}";
       ;;
+    hg)
+      cd "${DEV_BASE_DIR}";
+      hg clone ${SOURCE_URL} "${BASE_DIR}";
+      ;;
     private-svn)
       cd "${DEV_BASE_DIR}";
       svn co ${SOURCE_URL} "${BASE_DIR}" --username="${SVN_USERNAME}";
@@ -254,6 +258,18 @@ function e()
 
         # Assume that if the base directory does not exist, it has not been checked out
         # test and perform a checkout
+        else
+          echo "${BASE_DIR} non-existent, checking out ...."
+          [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
+          [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
+
+          source_retrieval;
+        fi
+        ;;
+      hg)
+        if [ -d "${BASE_DIR}" ]; then
+          cd "${BASE_DIR}";
+          hg update;
         else
           echo "${BASE_DIR} non-existent, checking out ...."
           [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
