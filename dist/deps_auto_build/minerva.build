@@ -27,7 +27,7 @@ CMAKE_PARAMS+=( -Dboost_lib_dir="${BOOST_INSTALL_DIR}/lib" )
 CMAKE_PARAMS+=( -DOSG_INC_DIR="${OSG_INSTALL_DIR}/include" )
 CMAKE_PARAMS+=( -DOSG_LIB_DIR="${OSG_INSTALL_DIR}/lib" )
 CMAKE_PARAMS+=( -DGDAL_INCLUDE_DIR="${gdal_INSTALL_DIR}/include" )
-CMAKE_PARAMS+=( -DGDAL_LIBRARY="${gdal_INSTALL_DIR}/lib/libgdal.a" )
+CMAKE_PARAMS+=( -DGDAL_LIBRARY="${gdal_INSTALL_DIR}/lib/libgdal.dylib" )
 
 case $PLATFORM in
   Windows)
