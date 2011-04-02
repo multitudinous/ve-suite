@@ -520,7 +520,7 @@ export_config_vars()
     EXPORT_FILE="${DEV_BASE_DIR}/exports"
     rm -f "${EXPORT_FILE}"
     for f in $*; do
-      eval $( sed -n '/^PACKAGE_NAME=\|^BASE_DIR=\|^INSTALL_DIR=/{p}' $f )
+      eval $( sed -n '/^PACKAGE_NAME=/p;/^BASE_DIR=/p;/^INSTALL_DIR=/p;' $f )
       echo "export ${PACKAGE_NAME}_INSTALL_DIR=\"${INSTALL_DIR}\"" >> "${EXPORT_FILE}"
     done
 
