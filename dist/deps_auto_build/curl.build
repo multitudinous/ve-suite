@@ -1,0 +1,27 @@
+PACKAGE_NAME=curl
+BASE_DIR="${DEV_BASE_DIR}/curl-7.21.4"
+
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_URL=http://curl.haxx.se/download/curl-7.21.4.tar.gz
+SOURCE_FORMAT=tgz
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+case $PLATFORM in
+  Windows)
+    unset PROJ_STR
+    unset BUILD_TARGET
+    ;;
+  Darwin)
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    ;;
+  Linux)
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    ;;
+esac
