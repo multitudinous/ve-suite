@@ -35,6 +35,8 @@
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIElement.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 // --- OSG Includes --- //
 #include <osg/Vec4f>
 #include <osg/Matrix>
@@ -61,9 +63,12 @@ UIElement::UIElement():
     mElementTransform( 0 ),
     mElementMatrixDirty( false ),
     mAnimationOn( false ),
-    mGeode( 0 )
+    mGeode( 0 ),
+    m_mouseInsideUI( true )
 {
-
+    //Request connection to UIManager.EnterLeaveUI signal
+    CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &UIElement::UIEnterLeave,
+                    m_connections, highest_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIElement::~UIElement()
@@ -422,8 +427,11 @@ void UIElement::SetAnimationPath( osg::AnimationPath* path )
 //
 //        _UpdateCanvasTransform();
 //    }
-
-
+////////////////////////////////////////////////////////////////////////////////
+void UIElement::UIEnterLeave( bool uiEnter )
+{
+    m_MouseInsideUI = uiEnter;
+}
 } // namepsace conductor
 } // namespace ves
 

@@ -44,6 +44,8 @@
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 namespace osg
 {
 class Vec4f;
@@ -212,6 +214,9 @@ public:
     virtual osg::Geode* GetGeode();
 
 protected:
+    ///Tell whether the mouse is over the UI
+    void UIEnterLeave( bool uiEnter );
+    
     /// Sets up the sub-branch for the scenegraph. Derived classes must call this
     /// at the very end of their constructor.
     void PostConstructor();
@@ -230,6 +235,10 @@ protected:
     
     ///The resolution of the initial image size
     std::pair< int, int > m_initialImageSize;
+    ///Tell whether the UI enter or leave
+    bool m_mouseInsideUI;
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 
 } // namepsace conductor

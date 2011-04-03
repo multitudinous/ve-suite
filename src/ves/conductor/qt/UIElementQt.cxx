@@ -59,6 +59,8 @@
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QWheelEvent>
 
+#include <boost/concept_check.hpp>
+
 #ifdef VES_QT_RENDER_DEBUG
 #define _debug(text) std::cout << "UIElementQt::" << text << std::endl << std::flush
 #else
@@ -443,6 +445,9 @@ void UIElementQt::ResizeCanvas( int width, int height )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_resizeCanvas( int width, int height )
 {
+    boost::ignore_unused_variable_warning( width );
+    boost::ignore_unused_variable_warning( height );
+
 //    mWidget->resize( width, height - mTitlebar->height()  );
 //    mTitlebar->resize( width, mTitlebar->height() );
 //    UpdateSize();
@@ -543,6 +548,12 @@ void UIElementQt::FreeOldWidgets()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_render()
 {
+#if defined( _DARWIN )
+    if( !m_mouseInsideUI )
+    {
+        return;
+    }
+#endif
     _debug( "_render" );
     // If there's no widget to render, return NULL
     if( mWidget == NULL )
