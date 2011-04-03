@@ -430,7 +430,7 @@ void UIElement::SetAnimationPath( osg::AnimationPath* path )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::UIEnterLeave( bool uiEnter )
 {
-    m_MouseInsideUI = uiEnter;
+    m_mouseInsideUI = uiEnter;
 }
 } // namepsace conductor
 } // namespace ves
