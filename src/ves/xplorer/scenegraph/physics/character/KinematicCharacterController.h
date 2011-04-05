@@ -70,14 +70,8 @@ namespace scenegraph
 class PhysicsSimulator;
 
 /*!\file KinematicCharacterController.h
- *
- */
-
-/*!\class ves::xplorer::scenegraph::KinematicCharacterController
- *
- */
-
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::KinematicCharacterController
+ * \namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS KinematicCharacterController :
