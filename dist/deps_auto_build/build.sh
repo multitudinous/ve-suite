@@ -11,7 +11,7 @@ PLATFORM=`uname -s`
 case $PLATFORM in
   CYGWIN*)
     #Test for 64-buit capability
-    if [[ "${PLATFORM}" =~ "*WOW64" ]]; then
+    if [[ "${PLATFORM}" = *WOW64 ]]; then
       echo "Cygwin is 64-bit!"
     else
       echo "Cygwin is 32-bit!"
