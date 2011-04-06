@@ -15,7 +15,6 @@ case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
     MSVC_CONFIG=RelWithDebInfo
-    THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x64"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
       CMAKE_PARAMS+=( -DACTUAL_3DPARTY_DIR="${THIRD_PARTY}" )

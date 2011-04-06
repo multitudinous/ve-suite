@@ -122,6 +122,7 @@ function windows()
 #
 export CTAGS_INSTALL_DIR=/opt/local
 export TAGS_DIR=${HOME}/.vim/tags
+export THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x64"
 
 #
 # some "over-writeable" variables
