@@ -65,9 +65,8 @@ function arch()
       ARCH=64-bit
       if [ $PLATFORM = "Windows" ]; then
         # export REGPATH=${REGPATH}/Wow6432Node
-        export CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
+        CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
       fi
-      CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" )
       ;;
     *)
       echo "Unrecognized Architecture: $ARCH" >&2
@@ -251,10 +250,19 @@ function e()
     return;
   fi
 
-  #reset the var controlling wether to install an fpc file
+  #
+  #reset the vars for the builds
+  #
   SKIP_FPC_INSTALL="yes"
   SKIP_PREBUILD="no"
   unset ISS_FILENAME
+  unset CMAKE_PARAMS
+  CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" )
+  unset CONFIGURE_PARAMS
+  unset MSVC_PROJECT_NAMES
+  unset MSVC_SOLUTION
+  unset SCONS_PARAMS
+  unset BJAM_PARAMS
 
   #setup the build types unless other wise specified in a build file
   case $PLATFORM in
