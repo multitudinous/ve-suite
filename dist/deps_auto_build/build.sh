@@ -226,8 +226,15 @@ function source_retrieval()
           rm -f `basename ${SOURCE_URL}`;
           ;;
         bz2)
-          tar xvfj `basename ${SOURCE_URL}`;
-          rm -f `basename ${SOURCE_URL}`;
+          TEMPBASENAME=`basename ${SOURCE_URL}`
+          PACKAGE_BASE_DIR_NAME=$( tar tf "${TEMPBASENAME}" | grep -o '^[^/]\+' | sort -u )
+          tar xvfjk "${TEMPBASENAME}";
+          rm -f "${TEMPBASENAME}";
+          if [ -d "${BASE_DIR}" ]; then
+            echo "We have already downloaded $package";
+          else
+            mv "${PACKAGE_BASE_DIR_NAME}" "${BASE_DIR}";
+          fi
           ;;
         *)
           echo "Source format ${SOURCE_FORMAT} not supported";

@@ -1,5 +1,8 @@
 PACKAGE_NAME=ACETAO
-BASE_DIR="${DEV_BASE_DIR}/ACE_wrappers"
+
+if [ $PLATFORM = "Windows" ]; then
+  BASE_DIR="${DEV_BASE_DIR}/ACE_wrappers_${ARCH}"
+fi
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_URL=http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO-5.7.0.tar.bz2
@@ -24,7 +27,7 @@ case $PLATFORM in
     MSVC_SOLUTION="${SOURCE_DIR}/TAO/TAO_ACE_vc9.sln"
     CUSTOM_PREBUILD+=( cp )
     CUSTOM_PREBUILD+=( ./ace/config-win32.h )
-    CUSTOM_PREBUILD+=(  ./ace/config.h-test )
+    CUSTOM_PREBUILD+=(  ./ace/config.h )
     ;;
   Linux| Darwin)
     PREBUILD_METHOD=configure
