@@ -17,6 +17,7 @@ case $PLATFORM in
     MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
+      CMAKE_PARAMS+=( -DACTUAL_3DPARTY_DIR="C:\dev\deps\3rdParty_Win32Binaries_vc90sp1\3rdParty" )
     else
       MSVC_PLATFORM=x64
     fi

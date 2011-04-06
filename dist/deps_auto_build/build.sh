@@ -573,6 +573,7 @@ export_config_vars *.build
 for p in $@; do
   cd "${PRESENT_DIR}"
   e "${p}";
+  cd "${PRESENT_DIR}"
 done
 
 exit 0
