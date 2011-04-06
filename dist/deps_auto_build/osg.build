@@ -15,12 +15,20 @@ case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
     MSVC_CONFIG=RelWithDebInfo
+    THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x64"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
-      CMAKE_PARAMS+=( -DACTUAL_3DPARTY_DIR="C:\dev\deps\3rdParty_Win32Binaries_vc90sp1\3rdParty" )
+      CMAKE_PARAMS+=( -DACTUAL_3DPARTY_DIR="${THIRD_PARTY}" )
     else
+      CMAKE_PARAMS+=( -DACTUAL_3DPARTY_DIR="${THIRD_PARTY}" )
       MSVC_PLATFORM=x64
     fi
+    CMAKE_PARAMS+=( -DJPEG_INCLUDE_DIR="${THIRD_PARTY}/include" )
+    CMAKE_PARAMS+=( -DJPEG_LIBRARY="${THIRD_PARTY}/lib/jpeg.lib" )
+    CMAKE_PARAMS+=( -DTIFF_INCLUDE_DIR="${THIRD_PARTY}/include" )
+    CMAKE_PARAMS+=( -DTIFF_LIBRARY="${THIRD_PARTY}/lib/libtiff_i.lib" )
+    CMAKE_PARAMS+=( -DPNG_INCLUDE_DIR="${THIRD_PARTY}/include" )
+    CMAKE_PARAMS+=( -DPNG_LIBRARY="${THIRD_PARTY}/lib/libpng15.lib" )
     MSVC_SOLUTION="OpenSceneGraph.sln"
     MSVC_PROJECT_NAMES+=( INSTALL )
     ISS_FILENAME=osgPreComp.iss

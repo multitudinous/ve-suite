@@ -29,7 +29,11 @@ case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
     MSVC_CONFIG=RelWithDebInfo
-    MSVC_PLATFORM=Win32
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+    else
+      MSVC_PLATFORM=x64
+    fi
     MSVC_SOLUTION="BULLET_PHYSICS.sln"
     MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
