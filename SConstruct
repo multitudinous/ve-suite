@@ -518,7 +518,7 @@ if GetPlatform() == 'win32':
     elif "MSVC_VERSION" in tempArchWinEnv:
         tempEnv[ 'MSVC_VERSION' ] = tempArchWinEnv[ "MSVC_VERSION" ]
     else:
-        tempEnv[ 'MSVC_VERSION' ] = "8.0"
+        tempEnv[ 'MSVC_VERSION' ] = "9.0"
 
     if ARGUMENTS.has_key("MSVS_ARCH"):
         tempEnv[ 'MSVS_ARCH' ] = ARGUMENTS[ 'MSVS_ARCH' ]

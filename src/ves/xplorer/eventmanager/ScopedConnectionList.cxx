@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 namespace ves
@@ -39,7 +38,6 @@ namespace xplorer
 {
 namespace eventmanager
 {
-
 struct null_deleter
 {
     void operator()(void*) {}
