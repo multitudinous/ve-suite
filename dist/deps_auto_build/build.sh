@@ -108,6 +108,15 @@ function windows()
     echo "Using Python Path $PYTHONPATH"
     export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
     echo ${VSInstallDir}
+
+    #
+    #Setup OSG 3rd party directory
+    #
+    if [ ${ARCH} = "32-bit" ]; then
+      export THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x86"
+    else
+      export THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x64"
+    fi
   fi
 }
 
@@ -122,7 +131,6 @@ function windows()
 #
 export CTAGS_INSTALL_DIR=/opt/local
 export TAGS_DIR=${HOME}/.vim/tags
-export THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x64"
 
 #
 # some "over-writeable" variables
