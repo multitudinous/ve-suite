@@ -3,99 +3,118 @@
 if [ -z "${VES_SRC_DIR}" ]; then
   export VES_SRC_DIR=$PWD/../../
 fi
+
 #
 # Define the platform
 #
-PLATFORM=`uname -s`
-#http://en.wikipedia.org/wiki/Uname
-case $PLATFORM in
-  CYGWIN*)
-    #Test for 64-buit capability
-    if [[ "${PLATFORM}" = *WOW64 ]]; then
-      echo "Cygwin is 64-bit!"
-    else
-      echo "Cygwin is 32-bit!"
-    fi
-    PLATFORM=Windows;
-    HOME=$USERPROFILE;
-    # Does cmake exist?
-    type -P cmake &>/dev/null || { echo "CMake is not installed." >&2; kill -SIGINT $$; }
-    # Just going to assume VS 9 for now
-    CMAKE_GENERATOR="Visual Studio 9 2008"
-    CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" )
-    REGPATH="/proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE"
-    ;;
-  Darwin | Linux)
-    ;;
-  *)
-    echo "Unrecognized OS: $PLATFORM" >&2
-    kill -SIGINT $$
-    ;;
-esac
-export PLATFORM
+function platform()
+{
+  PLATFORM=`uname -s`
+  #http://en.wikipedia.org/wiki/Uname
+  case $PLATFORM in
+    CYGWIN*)
+      #Test for 64-buit capability
+      if [[ "${PLATFORM}" = *WOW64 ]]; then
+        ARCH=64-bit
+        if [[ "${1}" = 32 ]]; then
+          echo "Building 32-bit on x64."
+          ARCH=32-bit
+        else
+          echo "Building 64-bit on x64"
+        fi
+      else
+        echo "Building 32-bit on x86"
+        ARCH=32-bit
+      fi
+      PLATFORM=Windows;
+      HOME=$USERPROFILE;
+      # Does cmake exist?
+      type -P cmake &>/dev/null || { echo "CMake is not installed." >&2; kill -SIGINT $$; }
+      # Just going to assume VS 9 for now
+      CMAKE_GENERATOR="Visual Studio 9 2008"
+      REGPATH="/proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE"
+      ;;
+    Darwin | Linux)
+      ;;
+    *)
+      echo "Unrecognized OS: $PLATFORM" >&2
+      kill -SIGINT $$
+      ;;
+  esac
+  export PLATFORM
+  export ARCH
+}
 
 #
 # Define the architecture
 #
-if [ $PLATFORM = "Darwin" ]; then
-  ARCH=64-bit;
-else
-  [ -z "${ARCH}" ] && ARCH=`uname -m`
-fi
+function arch()
+{
+  if [ $PLATFORM = "Darwin" ]; then
+    ARCH=64-bit;
+  else
+    [ -z "${ARCH}" ] && ARCH=`uname -m`
+  fi
 
-#http://en.wikipedia.org/wiki/Uname
-case $ARCH in
-  i[3-6]86 | x86 | 32-bit)
-    ARCH=32-bit
-    ;;
-  x86_64 | x64 | 64-bit)
-    ARCH=64-bit
-    if [ $PLATFORM = "Windows" ]; then
-      REGPATH=${REGPATH}/WOW6432Node
-      CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
-    fi
-    ;;
-  *)
-    echo "Unrecognized Architecture: $ARCH" >&2
-    kill -SIGINT $$
-    ;;
-esac
-export ARCH
+  #http://en.wikipedia.org/wiki/Uname
+  case $ARCH in
+    i[3-6]86 | x86 | 32-bit)
+      ARCH=32-bit
+      ;;
+    x86_64 | x64 | 64-bit)
+      ARCH=64-bit
+      if [ $PLATFORM = "Windows" ]; then
+        # export REGPATH=${REGPATH}/Wow6432Node
+        export CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
+      fi
+      CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" )
+      ;;
+    *)
+      echo "Unrecognized Architecture: $ARCH" >&2
+      kill -SIGINT $$
+      ;;
+  esac
+  export ARCH
+}
 
 #
 # Some Windows-only variables
 #
-if [ $PLATFORM = "Windows" ]; then
-  declare -a MSVC_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/SxS/V*7 )
-  #VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[1]}" )
-  #VSInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
+function windows()
+{
+  if [ $PLATFORM = "Windows" ]; then
+    declare -a MSVC_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/SxS/V*7 )
+    #VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[1]}" )
+    #VSInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
 
-  VS_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/9.0/InstallDir )
-  VSInstallDir=$( awk '{ print }' "${VS_REGPATH}" )
+    VS_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/9.0/InstallDir )
+    VSInstallDir=$( awk '{ print }' "${VS_REGPATH}" )
 
-  declare DOTNET_REGVAL=( "${REGPATH}/Microsoft/.NETFramework/InstallRoot" )
-  # .NET version is hardcoded to 3.5 for now
-  DotNETInstallDir=$( awk '{ gsub( "", "" ); print }' "${DOTNET_REGVAL}" )v3.5
+    declare DOTNET_REGVAL=( "${REGPATH}/Microsoft/.NETFramework/InstallRoot" )
+    # .NET version is hardcoded to 3.5 for now
+    DotNETInstallDir=$( awk '{ gsub( "", "" ); print }' "${DOTNET_REGVAL}" )v3.5
 
-  #declare -a CMAKE_REGPATH=( "${REGPATH}"/Kitware/* )
-  #CMAKEInstallDir=$( awk '{ print }' "${CMAKE_REGPATH[@]: -1}/@" )
+    #declare -a CMAKE_REGPATH=( "${REGPATH}"/Kitware/* )
+    #CMAKEInstallDir=$( awk '{ print }' "${CMAKE_REGPATH[@]: -1}/@" )
 
-  #export Path="${DotNETInstallDir}";${Path}
-  MSBUILD="${DotNETInstallDir}/MSBuild.exe"
-  DEVENV="devenv.com"
-  declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
-  export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
-  export PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
-  #DRIVE_LETTER="${PYTHONHOME:0:1}"
-  echo "Using Python $PYTHONHOME"
-  echo "Using Python Path $PYTHONPATH"
-  export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
-  echo ${VSInstallDir}
-fi
+    #export Path="${DotNETInstallDir}";${Path}
+    MSBUILD="${DotNETInstallDir}/MSBuild.exe"
+    DEVENV="devenv.com"
+    declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
+    export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
+    export PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
+    #DRIVE_LETTER="${PYTHONHOME:0:1}"
+    echo "Using Python $PYTHONHOME"
+    echo "Using Python Path $PYTHONPATH"
+    export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
+    echo ${VSInstallDir}
+  fi
+}
 
 #
 # DEV_BASE_DIR defines the base directory for all development packages.
 # May be overriden with a shell variable
+#
 [ -z "${DEV_BASE_DIR}" ] && export DEV_BASE_DIR=${HOME}/dev/deps
 
 #
@@ -138,7 +157,8 @@ echo "
             Requires argument to specify number of jobs (1:8) to use
     -U      Subversion username to use for private repo
     -d      Create an installer containing install files for package
-    -t      Create tag file with exuberant ctags" >&2
+    -t      Create tag file with exuberant ctags
+    -a      Specify if we want to build 32 bit on 64 bit" >&2
 }
 
 function ctags()
@@ -158,11 +178,11 @@ function innosetup()
   #/Q - The Quiet mode of the compiler
   #/O"My Output" - Override the output directory
   echo "Building the ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME} installer."
-  #if [  $ARCH = "64-bit" ]; then
+  if [  $ARCH = "64-bit" ]; then
     /cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 5/iscc /Q /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
-  #else
-  #  /cygdrive/c/Program\ Files/Inno\ Setup\ 5/iscc /Q /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
-  #fi
+  else
+    /cygdrive/c/Program\ Files/Inno\ Setup\ 5/iscc /Q /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
+  fi
 }
 
 function source_retrieval()
@@ -361,6 +381,7 @@ function e()
         ;;
       cmake)
         cd "${BUILD_DIR}";
+        echo $BUILD_DIR
         case $PLATFORM in
           Windows)
             if [ -d "${BUILD_TARGET}" ]; then
@@ -371,6 +392,7 @@ function e()
               PROJ_STR="$PROJ_STR$name$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
             done
             #http://www.cmake.org/cmake/help/cmake-2-8-docs.html#opt:--builddir
+            echo "Build Command: --build ${BUILD_DIR} -- $MSVC_SOLUTION /build $MSVC_CONFIG|$MSVC_PLATFORM /project $PROJ_STR"
             ${CMAKE} --build "${BUILD_DIR}" -- "$MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" /project "$PROJ_STR"
             ;;
           Darwin | Linux )
@@ -461,7 +483,15 @@ function e()
   fi
 }
 
-while getopts "hkucpbj:U:dt" opts
+#
+# Before we run the script args we set the platform and arch and then set x64 on windows
+# if needed
+#
+platform
+arch
+windows
+
+while getopts "hkucpbj:U:dta" opts
 do
 case $opts in
   h)
@@ -485,6 +515,11 @@ case $opts in
   U)export SVN_USERNAME=$OPTARG;;
   t)export build_ctag_files="yes";;
   d)export build_installer="yes";;
+  a)
+    platform 32
+    arch
+    windows
+    ;;
   ?)
     echo "Invalid option: $OPTARG" >&2
     usage

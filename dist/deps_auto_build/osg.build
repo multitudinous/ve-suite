@@ -18,7 +18,7 @@ case $PLATFORM in
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
-      MSVC_PLATFORM=Win64
+      MSVC_PLATFORM=x64
     fi
     MSVC_SOLUTION="OpenSceneGraph.sln"
     MSVC_PROJECT_NAMES+=( INSTALL )
