@@ -14,6 +14,11 @@ FPC_FILE=osgAL.fpc
 
 case $PLATFORM in
   Windows)
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+    else
+      MSVC_PLATFORM=x64
+    fi
     ;;
   Darwin | Linux )
     FMOD_ROOT=/Developer/FMOD_Programmers_API_Mac/api
