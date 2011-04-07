@@ -31,6 +31,8 @@ case $PLATFORM in
     MSVC_SOLUTION="OpenSceneGraph.sln"
     MSVC_PROJECT_NAMES+=( INSTALL )
     ISS_FILENAME=osgPreComp.iss
+    INNO_PARAMS+=( "/dOSGSRCHOME=${INSTALL_DIR}" )
+    INNO_PARAMS+=( "/dOSG3RDPARTY=${THIRD_PARTY}" )
     ;;
   Darwin)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )

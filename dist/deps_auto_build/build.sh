@@ -187,7 +187,6 @@ function innosetup()
   #/Q - The Quiet mode of the compiler
   #/O"My Output" - Override the output directory
   echo "Building the ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME} installer."
-  unset INNO_PARAMS
   INNO_PARAMS+=( "/dvesAutoBuild=1" )
   INNO_PARAMS+=( "/dINSTALLERINSTALLLOCATION=${DEV_BASE_DIR}" )
   if [  $ARCH = "64-bit" ]; then
@@ -203,7 +202,6 @@ function innosetup()
   fi
   INNO_PARAMS+=( "/dVESGROUPNAME=VE-Suite" )
   INNO_PARAMS+=( "/dVEDEVHOME=${VES_SRC_DIR}" )
-  INNO_PARAMS+=( "/dACETAOSRCHOME=${INSTALL_DIR}" )
 
   if [  $OS_ARCH = "x64" ]; then
     /cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 5/iscc /Q  "${INNO_PARAMS[@]}" /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
@@ -290,6 +288,7 @@ function e()
   unset MSVC_SOLUTION
   unset SCONS_PARAMS
   unset BJAM_PARAMS
+  unset INNO_PARAMS
 
   #setup the build types unless other wise specified in a build file
   case $PLATFORM in
@@ -307,19 +306,19 @@ function e()
   . $package
 
   #check to make sure that the base dir is defined for the package
-  [ -z "${BASE_DIR}" ] && ( echo "BASE_DIR undefined in package $package"; return; )
+  if [ -z "${BASE_DIR}" ]; then echo "BASE_DIR undefined in package $package"; return; fi
 
   #checkout the source for download the source
   if [ "${check_out_source}" = "yes" ]; then
-    [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
-    [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
+    if [ -z "${SOURCE_URL}" ]; then echo "SOURCE_URL undefined in package $package"; return; fi
+    if [ -z "${SOURCE_RETRIEVAL_METHOD}" ]; then echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; fi
     source_retrieval;
   fi
 
   #update the source if needed
   if [ "${update_source}" = "yes" ]; then
-    [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && \
-    ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
+    if [ -z "${SOURCE_RETRIEVAL_METHOD}" ]; then echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; fi
+
     case ${SOURCE_RETRIEVAL_METHOD} in
       svn | private-svn)
         if [ -d "${BASE_DIR}" ]; then
@@ -356,10 +355,11 @@ function e()
 
   #prebuild for the package
   if [ "${prebuild}" = "yes" ] && [ "${SKIP_PREBUILD}" != "yes" ]; then
-    [ -z "${BUILD_DIR}" ] && (echo "BUILD_DIR undefined in package $package"; return)
-    [ -z "${PREBUILD_METHOD}" ] && (echo "PREBUILD_METHOD undefined in package $package"; return)
-    [ -z "${SOURCE_DIR}" ] && (echo "SOURCE_DIR undefined in package $package"; return)
+    if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
+    if [ -z "${PREBUILD_METHOD}" ]; then echo "PREBUILD_METHOD undefined in package $package"; return; fi
+    if [ -z "${SOURCE_DIR}" ]; then echo "SOURCE_DIR undefined in package $package"; return; fi
     [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
+
     case ${PREBUILD_METHOD} in
       cmake)
         cd "${BUILD_DIR}";
@@ -385,10 +385,10 @@ function e()
 
   #build the package
   if [ "${build}" = "yes" ]; then
-    [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
-    [ -z "${BUILD_METHOD}" ] && ( echo "BUILD_METHOD undefined in package $package"; return; )
-    [ -z "${SOURCE_DIR}" ] && (echo "SOURCE_DIR undefined in package $package"; return)
-    [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
+    if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
+    if [ -z "${BUILD_METHOD}" ]; then echo "BUILD_METHOD undefined in package $package"; return; fi
+    if [ -z "${SOURCE_DIR}" ]; then echo "SOURCE_DIR undefined in package $package"; return; fi
+    if [ ! -d "${BUILD_DIR}" ]; then mkdir -p "${BUILD_DIR}"; fi
     [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs" || MCMD='/p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false'
     case ${BUILD_METHOD} in
       devenv)
@@ -461,7 +461,7 @@ function e()
         ;;
     esac
     if [ "${SKIP_FPC_INSTALL}" != "yes" ]; then
-      [ -d "${INSTALL_DIR}/lib/flagpoll" ] || mkdir -p "${INSTALL_DIR}/lib/flagpoll"
+      if [ ! -d "${INSTALL_DIR}/lib/flagpoll" ]; then mkdir -p "${INSTALL_DIR}/lib/flagpoll"; fi
       case $PLATFORM in
         Windows)
           cp "${VES_SRC_DIR}/dist/win/fpc_deps_files/release/${FPC_FILE}.in" "${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}";
@@ -474,10 +474,13 @@ function e()
     fi
   fi
 
-  #clean the build
+  #
+  # clean the build
+  #
   if [ "${clean_build_dir}" = "yes" ]; then
-    [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
-    [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
+    if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
+    if [ -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
+
     case ${BUILD_METHOD} in
       msbuild)
         cd "${BUILD_DIR}";
@@ -510,15 +513,11 @@ function e()
   # Build the installer file
   #
   if [ "${build_installer}" = "yes" ]; then
-    [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
-    [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
-    [ -z "${INSTALL_DIR}" ] && ( echo "INSTALL_DIR undefined in package $package"; return; )
-    [ -d "${INSTALL_DIR}" ] || ( echo "${INSTALL_DIR} non existent."; return; )
-
-    if [ -z "${ISS_FILENAME}" ]; then
-      echo "ISS_FILENAME undefined in package $package";
-      return 1;
-    fi
+    if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
+    if [ ! -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
+    if [ -z "${INSTALL_DIR}" ]; then echo "INSTALL_DIR undefined in package $package"; return; fi
+    if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
+    if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
 
     case $PLATFORM in
       Windows)

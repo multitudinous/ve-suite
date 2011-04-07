@@ -29,6 +29,7 @@ case $PLATFORM in
     CUSTOM_PREBUILD+=( ./ace/config-win32.h )
     CUSTOM_PREBUILD+=(  ./ace/config.h )
     ISS_FILENAME=acetaoPrecomp.iss
+    INNO_PARAMS+=( "/dACETAOSRCHOME=${INSTALL_DIR}" )
     ;;
   Linux| Darwin)
     PREBUILD_METHOD=configure
