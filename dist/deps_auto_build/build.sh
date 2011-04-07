@@ -506,14 +506,20 @@ function e()
     ctags $package;
   fi
   
-  #Build the installer file
+  #
+  # Build the installer file
+  #
   if [ "${build_installer}" = "yes" ]; then
     [ -z "${BUILD_DIR}" ] && ( echo "BUILD_DIR undefined in package $package"; return; )
     [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
     [ -z "${INSTALL_DIR}" ] && ( echo "INSTALL_DIR undefined in package $package"; return; )
     [ -d "${INSTALL_DIR}" ] || ( echo "${INSTALL_DIR} non existent."; return; )
-    [ -z "${ISS_FILENAME}" ] && ( echo "ISS_FILENAME undefined in package $package"; return 1; )
-    echo "test"
+
+    if [ -z "${ISS_FILENAME}" ]; then
+      echo "ISS_FILENAME undefined in package $package";
+      return 1;
+    fi
+
     case $PLATFORM in
       Windows)
         innosetup;
