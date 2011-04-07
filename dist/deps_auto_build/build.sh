@@ -9,6 +9,7 @@ fi
 #
 function platform()
 {
+  OS_ARCH=x64
   PLATFORM=`uname -s`
   #http://en.wikipedia.org/wiki/Uname
   case $PLATFORM in
@@ -25,6 +26,7 @@ function platform()
       else
         echo "Building 32-bit on x86"
         ARCH=32-bit
+        OS_ARCH=x86
       fi
       PLATFORM=Windows;
       HOME=$USERPROFILE;
@@ -185,8 +187,26 @@ function innosetup()
   #/Q - The Quiet mode of the compiler
   #/O"My Output" - Override the output directory
   echo "Building the ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME} installer."
+  unset INNO_PARAMS
+  INNO_PARAMS+=( "/dvesAutoBuild=1" )
+  INNO_PARAMS+=( "/dINSTALLERINSTALLLOCATION=${DEV_BASE_DIR}" )
   if [  $ARCH = "64-bit" ]; then
-    /cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 5/iscc /Q /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
+    INNO_PARAMS+=( "/dMSVCVERSION=msvc-9.0-sp1-x64" )
+    INNO_PARAMS+=( "/dLIBDIR=lib64" )
+    INNO_PARAMS+=( "/dBUILDDIR=x64" )
+    INNO_PARAMS+=( "/dDISTDIR=Win64" )
+  else
+    INNO_PARAMS+=( "/dMSVCVERSION=msvc-9.0-sp1-x86" )
+    INNO_PARAMS+=( "/dLIBDIR=lib" )
+    INNO_PARAMS+=( "/dBUILDDIR=x86" )
+    INNO_PARAMS+=( "/dDISTDIR=Win32" )
+  fi
+  INNO_PARAMS+=( "/dVESGROUPNAME=VE-Suite" )
+  INNO_PARAMS+=( "/dVEDEVHOME=${VES_SRC_DIR}" )
+  INNO_PARAMS+=( "/dACETAOSRCHOME=${INSTALL_DIR}" )
+
+  if [  $OS_ARCH = "x64" ]; then
+    /cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 5/iscc /Q  "${INNO_PARAMS[@]}" /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
   else
     /cygdrive/c/Program\ Files/Inno\ Setup\ 5/iscc /Q /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
   fi
@@ -492,8 +512,8 @@ function e()
     [ -d "${BUILD_DIR}" ] || ( echo "${BUILD_DIR} non existent."; return; )
     [ -z "${INSTALL_DIR}" ] && ( echo "INSTALL_DIR undefined in package $package"; return; )
     [ -d "${INSTALL_DIR}" ] || ( echo "${INSTALL_DIR} non existent."; return; )
-    [ -z "${ISS_FILENAME}" ] && ( echo "ISS_FILENAME undefined in package $package"; return; )
-    
+    [ -z "${ISS_FILENAME}" ] && ( echo "ISS_FILENAME undefined in package $package"; return 1; )
+    echo "test"
     case $PLATFORM in
       Windows)
         innosetup;
