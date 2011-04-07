@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppVer "1.1.0"
+#define MyAppVer "1.1.50"
 #define MyAppName "osgBullet Pre-Compile"
 #define MyAppVerName "osgBullet"
 #define MyAppPublisher "VERG"

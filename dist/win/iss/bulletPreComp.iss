@@ -52,6 +52,7 @@ Name: eng; MessagesFile: compiler:Default.isl
 [Files]
 Source: {#BULLETSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#BULLETSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#BULLETSRCHOME}\lib\*.pdb; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\bullet.fpc.in; DestDir: {app}\lib\flagpoll; DestName: bullet.fpc; Languages: ; Flags: ignoreversion

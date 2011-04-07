@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppVer "0.1.0"
+#define MyAppVer "0.3.0"
 #define MyAppName "backdropFX Pre-Compile"
 #define MyAppVerName "backdropFX"
 #define MyAppPublisher "VERG"

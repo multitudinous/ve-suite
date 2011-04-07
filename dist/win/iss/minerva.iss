@@ -1,8 +1,8 @@
 ; Minerva installer script
 #include <vesenv.iss>
-#define MyAppVer "1.2.0-380"
-#define MyAppName "MinervaQt Pre-Compile"
-#define MyAppVerName "MinervaQt"
+#define MyAppVer "1.2.0-395"
+#define MyAppName "Minerva Pre-Compile"
+#define MyAppVerName "Minerva"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 
@@ -79,7 +79,7 @@ Source: {#GDALHOME}\html\*; DestDir: {app}\share\gdal\html; Flags: ignoreversion
 
 ;FPC file integration
 ;Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\Minerva.fpc.in; DestDir: {app}\lib\flagpoll; DestName: Minerva.fpc; Languages: ; Flags: ignoreversion
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\MinervaQt.fpc.in; DestDir: {app}\lib\flagpoll; DestName: Minerva.fpc; Languages: ; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\Minerva.fpc.in; DestDir: {app}\lib\flagpoll; DestName: Minerva.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 
