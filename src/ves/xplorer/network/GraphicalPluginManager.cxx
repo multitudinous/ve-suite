@@ -413,6 +413,9 @@ void GraphicalPluginManager::PreFrameUpdate()
         updatePluginResults = true;
     }
 
+    std::map< std::string, std::map< std::string, 
+        ves::xplorer::plugin::PluginBase* > >::const_iterator pluginEHMapIter;
+
     ///process the standard plugin stuff
     for( std::map< std::string, PluginBase* >::const_iterator 
         foundPlugin = mPluginsMap.begin(); foundPlugin != mPluginsMap.end();
@@ -425,22 +428,34 @@ void GraphicalPluginManager::PreFrameUpdate()
                     ModelHandler::instance()->GetActiveModel()->GetVECommand();
            foundPlugin->second->SetCurrentCommand( tempCommand );
         }*/
+        //1. See if the current plugin wants to process a command
+        if( tempCommand )
+        {
+            pluginEHMapIter = pluginEHMap.find( foundPlugin->first );
+            if( pluginEHMapIter != pluginEHMap.end() )
+            {
+                //Process a special plugin command
+                const std::string cmdName = tempCommand->GetCommandName();
+                std::map< std::string, ves::xplorer::plugin::PluginBase* >::const_iterator 
+                foundCommand = pluginEHMapIter->second.find( cmdName );
+                //PluginBase* const tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
+                if( foundCommand != pluginEHMapIter->second.end() )
+                {
+                    foundPlugin->second->SetCurrentCommand( tempCommand );
+                    
+                    std::vector< ves::open::xml::CommandPtr > tempCommands = 
+                    CommandManager::instance()->GetXMLCommands( cmdName );
+                    foundPlugin->second->SetCurrentCommands( tempCommands );
+                }
+            }
+        }
+        
         //2. if active model is the plugin's model...
         if( ModelHandler::instance()->GetActiveModel() &&
                 ( ModelHandler::instance()->GetActiveModel() ==
                   foundPlugin->second->GetCFDModel() )
            )
         {
-            //Process a special plugin command
-            if( tempCommand )
-            {
-                const std::string cmdName = tempCommand->GetCommandName();
-                PluginBase* const tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
-                if( tempBase )
-                {
-                    tempBase->SetCurrentCommand( tempCommand );
-                }
-            }
             //Update the draw function
             //only if you are selected
             foundPlugin->second->SelectedPreFrameUpdate();
