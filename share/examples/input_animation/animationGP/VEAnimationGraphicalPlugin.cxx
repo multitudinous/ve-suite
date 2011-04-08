@@ -207,6 +207,15 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         osg::ref_ptr< ves::xplorer::scenegraph::DCS > meterDCS = new ves::xplorer::scenegraph::DCS();     
         m_pumpGeometry = osgDB::readNodeFile( "FlowMeter/flowmeter.ive" );
           
+        /*
+        const std::string nodeName( "0800-LV002" );
+        const std::string nodeName( "Scene_Root_0800_LV002_0800_LV002_offset_0" );
+        util::FindChildWithNameVisitor findChild( mCadNode.get(), nodeName, false, true );
+        std::cout << findChild.FoundChild() << std::endl;
+        if( findChild.GetFoundNode() )
+            std::cout << findChild.GetFoundNode()->getName() << std::endl;
+        */
+
         meterDCS->addChild( m_pumpGeometry.get() );
         double scale[3] = { 3.28, 3.28, 3.28 };
         double pos[3] = { 36, -28.67, 1.0 };
@@ -423,7 +432,7 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
+/*
     const std::string commandName = command->GetCommandName();
     //std::cout << "Command Name " << commandName << std::endl;
     
@@ -444,15 +453,7 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
 		
 		//Move the shaft or rotate the shaft
     }
-    
-    //Process a temp or scalar for selected geom
-    if( command->GetDataValuePair("MY_SELECTED_GEOM") )
-    {
-        /*std::string percent;
-        command->GetDataValuePair("MY_SELECTED_GEOM")->GetData( percent );
-        double test = boost::lexical_cast<double>( percent );
-        m_highlightColor->set( osg::Vec3( 0.0, 0.0, 0.0 ) );*/
-    }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
