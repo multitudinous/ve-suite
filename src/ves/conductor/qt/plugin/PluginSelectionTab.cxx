@@ -35,6 +35,7 @@
 #include <ves/conductor/qt/plugin/PluginSelectionTab.h>
 #include <ves/conductor/qt/MainWindow.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
 
 // This is temporary until I get this sorted out. moc needs to have the include path
 // set so it can find these things in the correct place.
@@ -42,6 +43,20 @@
 #include <ves/conductor/qt/DefaultPlugin/UIPluginInterface.h>
 #include <ves/conductor/qt/plugin/UIPluginBase.h>
 #include <ves/conductor/qt/plugin/ui_PluginPorts.h>
+
+#include <ves/conductor/qt/XMLDataBufferEngine.h>
+
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/network/GraphicalPluginManager.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
 #include <iostream>
 #include <sstream>
@@ -129,7 +144,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
                     // Set the plugin's full path as extra data in the item so that later
                     // we can create new instances of this plugin.
                     item->setData( Qt::UserRole, loader.fileName() );
-                    item->setFlags( item->flags() | Qt::ItemIsEditable );
+                    //item->setFlags( item->flags() | Qt::ItemIsEditable );
                     ui->m_availablePlugins->addItem( item );
                 }
                 else
@@ -149,6 +164,16 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
         }
         ++iter;
     }
+
+    CONNECTSIGNALS_2( "%CreatePlugin",
+                      void ( const std::string&, ves::xplorer::plugin::PluginBase* ),
+                      &PluginSelectionTab::CreateUIPlugin, m_connections,
+                      any_SignalType, normal_Priority);
+
+    CONNECTSIGNALS_1( "%VesFileLoaded%",
+                      void( const std::string& ),
+                      &PluginSelectionTab::FileLoadedSlot,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 PluginSelectionTab::~PluginSelectionTab()
@@ -188,33 +213,43 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
                     qobject_cast< UIPluginFactory* >(plugin);
             if( factory )
             {
-                // Create new instance of the UIPluginInterface object
-                // this factory contains.
-                UIPluginInterface* interface = factory->CreateInstance();
+                // We have a valid plugin. Add this to the current system, and
+                // send to xplorer to load. When xplorer instantiates this plugin,
+                // it will send a signal which we catch in InstantiatePluginSlot.
+                // Then we finish the process of creating the UI portion of
+                // the plugin.
+                XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
 
+                ///Initialize top level network
+                ves::open::xml::model::NetworkPtr tempNetwork( new ves::open::xml::model::Network() );
 
-                int index = ui->m_instantiatedPlugins->count();
-                std::stringstream nameSS;
-                nameSS << interface->GetName();
-                nameSS << "_";
-                nameSS << index;
-                interface->SetName( nameSS.str() );
+                mDataBufferEngine->GetXMLSystemDataObject(
+                    mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
 
-                // Use the plugin info to create a new item for the instantiated
-                // plugins list. Notice here we use the name of the instance,
-                // rather than the name of the factory.
-                QString name;
-                QListWidgetItem* newItem =
-                        new QListWidgetItem( factory->GetIcon(),
-                                             name.fromStdString( interface->
-                                                                 GetName() ),
-                                             ui->m_instantiatedPlugins );
+                using namespace ves::open::xml::model;
 
-                newItem->setFlags( newItem->flags() | Qt::ItemIsEditable );
-                ui->m_instantiatedPlugins->addItem( newItem );
+                SystemPtr system( mDataBufferEngine->GetXMLSystemDataObject(
+                        mDataBufferEngine->GetTopSystemId() ) );
 
-                // Store the new interface
-                m_itemInterfaceMap[ newItem ] = interface;
+                ModelPtr mod( new Model );
+                mod->SetPluginType( factory->GetFactoryName() );
+                mod->SetPluginName( factory->GetFactoryName() );
+                //mod->SetVendorName( "DefaultPlugin" );
+                mod->SetParentSystem( system );
+
+                system->AddModel( mod );
+
+                const std::string network = XMLDataBufferEngine::instance()->
+                                SaveVESData( std::string( "returnString" ) );
+
+                ves::xplorer::network::GraphicalPluginManager::instance()->SetCurrentNetwork( network );
+
+                ves::xplorer::network::GraphicalPluginManager::instance()->LoadDataFromCE();
+
+                ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+                    ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );
+
+                ves::xplorer::ModelHandler::instance()->SetActiveModel( mod->GetID() );
             }
         }
     }
@@ -315,6 +350,107 @@ void PluginSelectionTab::on_m_removePluginButton_clicked()
         // Remove entry in instantiated plugins ListView
         delete ui->m_instantiatedPlugins->takeItem( ui->m_instantiatedPlugins->row( item ) );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::CreateUIPlugin( const std::string& pluginFactoryName,
+                                         ves::xplorer::plugin::PluginBase* xplorerPlugin)
+{
+    QString pluginName;
+    pluginName = pluginName.fromStdString( pluginFactoryName );
+
+    // See if this plugin exists in the available UI plugins list
+    QList<QListWidgetItem *> results = ui->m_availablePlugins->findItems( pluginName, Qt::MatchFixedString );
+    if( results.empty() )
+    {
+        std::cerr << "ERROR -- PluginSelectionTab::InstantiatePlugin: No available UI plugin named "
+                << pluginFactoryName << std::endl << std::flush;
+        return;
+    }
+
+    // Create an instance of the plugin from its factory
+    QListWidgetItem* item = results.at(0);
+    if( item )
+    {
+        // Get plugin filename from the current item
+        QString fileName = item->data( Qt::UserRole ).toString();
+
+        QPluginLoader loader( fileName );
+        QObject *plugin = loader.instance();
+        if (plugin)
+        {
+            UIPluginFactory* factory =
+                    qobject_cast< UIPluginFactory* >(plugin);
+            if( factory )
+            {
+                // Create new instance of the UIPluginInterface object
+                // this factory contains.
+                UIPluginInterface* interface = factory->CreateInstance();
+
+                // Set its name as interfaceName_index
+                int index = ui->m_instantiatedPlugins->count();
+                std::stringstream nameSS;
+                nameSS << interface->GetName();
+                nameSS << "_";
+                nameSS << index;
+                interface->SetName( nameSS.str() );
+
+                // Give the UI plugin a pointer to the xplorer plugin. This
+                // will give the UI plugin access to things like the correct model.
+                UIPluginBase* base = dynamic_cast<UIPluginBase*>( interface );
+                base->SetXplorerPlugin( xplorerPlugin );
+
+                // Use the plugin info to create a new item for the instantiated
+                // plugins list. Notice here we use the name of the instance,
+                // rather than the name of the factory.
+                QString name;
+                QListWidgetItem* newItem =
+                        new QListWidgetItem( factory->GetIcon(),
+                                             name.fromStdString( interface->
+                                                                 GetName() ),
+                                             ui->m_instantiatedPlugins );
+
+                newItem->setFlags( newItem->flags() | Qt::ItemIsEditable );
+                ui->m_instantiatedPlugins->addItem( newItem );
+
+                // Store the new interface
+                m_itemInterfaceMap[ newItem ] = interface;
+            }
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
+     ( QListWidgetItem* current, QListWidgetItem* previous )
+{
+    if( current )
+    {
+        std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
+                m_itemInterfaceMap.find( current );
+        if( iter != m_itemInterfaceMap.end() )
+        {
+            UIPluginBase* plugin = dynamic_cast< UIPluginBase* >( iter->second );
+            ves::xplorer::ModelHandler::instance()->SetActiveModel(
+                    plugin->GetVEModel()->GetID() );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::ClearActivePlugins()
+{
+    std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
+            m_itemInterfaceMap.begin();
+    while( iter != m_itemInterfaceMap.end() )
+    {
+        delete iter->second;
+        ++iter;
+    }
+    m_itemInterfaceMap.clear();
+    ui->m_instantiatedPlugins->clear();
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::FileLoadedSlot( const std::string& fileName )
+{
+    ClearActivePlugins();
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

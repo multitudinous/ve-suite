@@ -43,6 +43,9 @@ UIPlugin API
 #include <ves/open/xml/model/PortPtr.h>
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
+
+#include <ves/xplorer/plugin/PluginBase.h>
+
 #include <vector>
 #include <map>
 #include <string>
@@ -99,7 +102,9 @@ public:
     ves::open::xml::model::ModelPtr GetVEModel( void );
 
     ///Set the ve model
-    void SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel );
+    void SetVEModel( ves::open::xml::model::ModelPtr tempModel );
+
+    void SetXplorerPlugin( ves::xplorer::plugin::PluginBase* plugin );
 
     ///Sets the active model in Xplorer
     ///NOTE: Keep in mind that after a user submits a job that the active model
@@ -212,6 +217,8 @@ protected:
     ///Port data info
     std::vector< ves::open::xml::model::PortPtr > m_inputPorts;
     std::vector< ves::open::xml::model::PortPtr > m_outputPorts;
+
+    ves::xplorer::plugin::PluginBase* m_xplorerPlugin;
 
 private:
 };

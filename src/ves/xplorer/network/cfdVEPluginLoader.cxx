@@ -34,6 +34,9 @@
 #include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/xplorer/Debug.h>
 #include <ves/open/xml/model/Model.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
+
 #include <iostream>
 
 #include <vpr/vpr.h>
@@ -57,6 +60,11 @@ using namespace ves::xplorer::network;
 cfdVEPluginLoader::cfdVEPluginLoader()
 {
     plugins.clear();
+
+    ves::xplorer::eventmanager::EventManager::instance()->
+            RegisterSignal( new ves::xplorer::eventmanager::SignalWrapper
+                            < createPluginSignal_type >( &m_createUIPlugin ),
+            "cfdVEPluginLoader.CreatePlugin" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdVEPluginLoader::~cfdVEPluginLoader()
@@ -112,7 +120,11 @@ PluginBase* cfdVEPluginLoader::CreateObject( std::string _objname )
         return NULL;
     }
 
-    return CreateNewPlugin( selectPlugin );
+    PluginBase* result = CreateNewPlugin( selectPlugin );
+
+    m_createUIPlugin( _objname, result );
+
+    return result;
 }
 //////////////////////////////////////////////////////////////////
 void cfdVEPluginLoader::ScanAndLoad( void )

@@ -35,6 +35,8 @@
 
 #define QT_NO_KEYWORDS
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 #include <QtGui/QWidget>
 #include <map>
 
@@ -46,6 +48,13 @@ class QListWidgetItem;
 
 namespace ves
 {
+namespace xplorer
+{
+namespace plugin
+{
+class PluginBase;
+}
+}
 namespace conductor
 {
 class MainWindow;
@@ -59,6 +68,7 @@ class PluginSelectionTab : public QWidget
 public:
     explicit PluginSelectionTab( MainWindow* mainWindow, QWidget *parent = 0 );
     ~PluginSelectionTab();
+    void ClearActivePlugins();
 
 protected:
     void changeEvent(QEvent *e);
@@ -70,8 +80,13 @@ private:
     std::map< QListWidgetItem*, UIPluginInterface* > m_itemInterfaceMap;
 
     void InstantiatePlugin( QListWidgetItem* item );
+    void CreateUIPlugin( const std::string& pluginFactoryName,
+                         ves::xplorer::plugin::PluginBase* xplorerPlugin );
+    void FileLoadedSlot( const std::string& fileName );
 
     std::map< QListWidgetItem*, QWidget* > m_itemWidgetMap;
+
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 
 protected Q_SLOTS:
     // Auto-connected slot
@@ -79,7 +94,10 @@ protected Q_SLOTS:
     void on_m_removePluginButton_clicked();
     void on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item );
     void on_m_availablePlugins_itemDoubleClicked( QListWidgetItem* item );
+    ///Called when data of item changes
     void on_m_instantiatedPlugins_itemChanged ( QListWidgetItem * item );
+    ///Called when current item selection is changed via keyboard or mouse
+    void on_m_instantiatedPlugins_currentItemChanged ( QListWidgetItem * current, QListWidgetItem * previous );
 };
 
 }

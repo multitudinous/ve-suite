@@ -43,17 +43,12 @@ cfdVEPluginLoader API
 #include <vpr/DynLoad/LibraryFinder.h>
 
 #include <map>
+#include <string>
 #include <ves/VEConfig.h>
-namespace ves
-{
-namespace xplorer
-{
-namespace plugin
-{
-class PluginBase;
-}
-}
-}
+
+#include <ves/xplorer/plugin/PluginBase.h>
+
+#include <boost/signals2/signal.hpp>
 
 namespace ves
 {
@@ -84,6 +79,10 @@ public:
     std::map< int, ves::xplorer::plugin::PluginBase* > plugins;
 
     vpr::LibraryFinder::LibraryList libs;
+
+    typedef boost::signals2::signal< void ( const std::string&,
+                      ves::xplorer::plugin::PluginBase* ) > createPluginSignal_type;
+    createPluginSignal_type m_createUIPlugin;
 };
 }
 }

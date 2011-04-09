@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/plugin/UIPluginBase.h>
 #include <ves/xplorer/command/CommandManager.h>
+#include <ves/xplorer/Model.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -71,6 +72,16 @@ void UIPluginBase::SetPluginType( const std::string& pluginType )
 
 ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
 {
+    if( !m_xplorerPlugin )
+    {
+        return ves::open::xml::model::ModelPtr();
+    }
+
+    if( !m_veModel )
+    {
+        m_veModel = m_xplorerPlugin->GetCFDModel()->GetModelData();
+    }
+
     if( m_pluginName.empty() )
     {
         m_pluginName = "PleaseDefineClassName";
@@ -254,9 +265,10 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
 }
 
 
-void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
+void UIPluginBase::SetVEModel( ves::open::xml::model::ModelPtr tempModel )
 {
-    m_veModel = tempModel.lock();
+    //m_veModel = tempModel.lock();
+    m_veModel = tempModel;
 
 //    SetName( wxString( m_veModel->GetPluginName().c_str(), wxConvUTF8 ) );
     m_id = m_veModel->GetModelID();
@@ -392,6 +404,17 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
             //                 _( "VES File Read Error" ), wxOK | wxICON_ERROR, wxDefaultPosition );
         }
     }
+}
+
+void UIPluginBase::SetXplorerPlugin( ves::xplorer::plugin::PluginBase* plugin )
+{
+    if( !plugin )
+    {
+        throw "NULL plugin passed to UIPluginBase::SetXplorerPlugin";
+    }
+
+    m_xplorerPlugin = plugin;
+    //SetVEModel( plugin->GetCFDModel()->GetModelData() );
 }
 
 //??? Still needed ???
