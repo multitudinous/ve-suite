@@ -45,7 +45,7 @@ UIPluginInterface* DefaultPluginFactory::CreateInstance()
 
 std::string DefaultPluginFactory::GetFactoryName()
 {
-    return std::string( "Default Plugin" );
+    return std::string( "DefaultPlugin" );
 }
 
 double DefaultPluginFactory::GetVersion()
@@ -68,7 +68,7 @@ std::string DefaultPluginFactory::GetHelpURL()
 
 QIcon DefaultPluginFactory::GetIcon( )
 {
-    QIcon result(":/Plug.png");
+    QIcon result(":/xpm/ToolBar/PluginsButton.jpg");
     return result;
 }
 
