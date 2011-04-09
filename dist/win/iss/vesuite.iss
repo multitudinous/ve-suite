@@ -104,3 +104,8 @@ LogFileAppend=false
 
 [UninstallDelete]
 Name: {app}; Type: filesandordirs
+
+[InnoIDE_Settings]
+LogFile={#VEDEVHOME}\compile.log
+LogFileOverwrite=false
+
