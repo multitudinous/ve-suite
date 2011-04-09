@@ -633,6 +633,8 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
     //Put the preferences tab first
     AddTab( m_preferencesTab, "Preferences" );
 
+    AddTab( m_pluginsTab, "Plugins" );
+
     //AddTab( m_pluginsTab, "Plugins" );
 
     // Show visualization tab?
@@ -648,7 +650,15 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
     AddTab( mScenegraphTreeTab, "Scenegraph" );
 
     // Reactivate the last-known active tab
-    ActivateTab( LastKnownActive );
+    // If there was no active tab, activate vis tab, if it exists
+    if( LastKnownActive.empty() || LastKnownActive == "" && model->GetNumberOfCfdDataSets() > 0 )
+    {
+        ActivateTab( "Visualization" );
+    }
+    else
+    {
+        ActivateTab( LastKnownActive );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef MINERVA_GIS_SUPPORT
