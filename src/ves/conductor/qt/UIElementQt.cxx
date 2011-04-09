@@ -101,8 +101,8 @@ mWidth( 0 ),
 mHeight( 0 ),
 mTextureLeft( 0.0f ),
 mTextureRight( 1.0f ),
-mTextureBottom( 0.0f ),
-mTextureTop( 1.0f ),
+mTextureBottom( 1.0f ),
+mTextureTop( 0.0f ),
 mInitialized( false ),
 mImageDirty( true ),
 mTimer( 0 ),
@@ -201,7 +201,7 @@ void UIElementQt::Initialize()
         // thread is given execution sometime during this interval.
         mTimer = new QTimer( this );
         QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( _render() ) );
-        mTimer->start( 30 );
+        mTimer->start( 100 );
 
         QObject::connect( mQTitlebar->OpacitySlider,
                           SIGNAL( valueChanged( int ) ), this,
@@ -327,10 +327,10 @@ unsigned char* UIElementQt::RenderElementToImage()
     // do this little flip trick.
     if( mImageDirty )
     {
-        _debug( "RenderElementToImage...Flipping image" );
         { // Enter critical section
-            QMutexLocker locker( mImageMutex );
-            ( *mImageFlipped ) = mImage->mirrored( false, true );
+            //QMutexLocker locker( mImageMutex );
+            //( *mImageFlipped ) = mImage->mirrored( false, true );
+            //( *mImageFlipped ) = mImage->copy();
         } // Leave critical section
         mImageDirty = false;
         mDirty = true;
@@ -339,7 +339,8 @@ unsigned char* UIElementQt::RenderElementToImage()
     {
         mDirty = false;
     }
-    return mImageFlipped->bits();
+    //return mImageFlipped->bits();
+    return mImage->bits();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElementQt::IsDirty()
