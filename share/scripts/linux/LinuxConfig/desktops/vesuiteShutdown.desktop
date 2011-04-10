@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=VE-Suite Shutdown Cluster
-Categories=Graphics;Science;DataVisualization;Engineering;X-VESuite;
+Categories=Graphics;X-VESuite;
 Exec=vesuiteShutdown.sh
 Icon=ve-suite
 Type=Application
