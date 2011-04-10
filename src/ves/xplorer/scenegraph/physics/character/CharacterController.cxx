@@ -60,9 +60,7 @@
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>
-
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
-
 #include <BulletCollision/CollisionShapes/btCapsuleShape.h>
 
 // --- C/C++ Libraries --- //
@@ -688,6 +686,17 @@ void CharacterController::LookAt(
     matrix.mData[ 14 ] = -uVector.dot( eye );
     matrix.mData[ 15 ] =  1.0;
 
+    ///Lets take into account the current VR Juggler head position
+    ///Invert the Character LookAt matrix so that we can put it into
+    ///local character coordinate space.
+    matrix = gmtl::invert( matrix );
+    const gmtl::Matrix44d tempHeadMatrix = SceneManager::instance()->GetHeadMatrix();
+    const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
+    gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+    ///Take the current VR Juggler head matrix and transform it into Z up land
+    ///and then move it into the current LookAt space
+    matrix = tempHeadMatrix * myMat * matrix;
+    
     SceneManager::instance()->GetActiveNavSwitchNode()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
