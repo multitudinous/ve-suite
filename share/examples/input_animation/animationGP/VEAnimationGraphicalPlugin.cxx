@@ -159,7 +159,7 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         m_valveDCS->SetRotationArray( rot );
         
         m_valveDCS->SetScaleArray( scale );
-        m_valveDCS->SetTechnique( "Select" );
+        //m_valveDCS->SetTechnique( "Select" );
         //translate valve to proper location
         mDCS->addChild( m_valveDCS.get() );
         
@@ -191,7 +191,7 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         m_switchDCS->SetTranslationArray( pos2 );
         m_switchDCS->SetRotationArray( rot2 );
         m_switchDCS->SetScaleArray( scale2 );
-        m_switchDCS->SetTechnique( "Select" );
+        //m_switchDCS->SetTechnique( "Select" );
         
         mDCS->addChild( m_switchDCS.get() );
         
@@ -221,7 +221,7 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         double pos[3] = { 36, -28.67, 1.0 };
         meterDCS->SetTranslationArray( pos );
         meterDCS->SetScaleArray( scale );
-        meterDCS->SetTechnique( "Select" );
+        //meterDCS->SetTechnique( "Select" );
 
         //mDCS->addChild( m_pumpGeometry.get() );
         mDCS->addChild( meterDCS.get() );
@@ -414,7 +414,7 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
         command->GetDataValuePair("MY_VALVE")->GetData( percent );
         //command->GetDataValuePair("CVLENSEL")->GetData( percent );
         double test = boost::lexical_cast<double>( percent );
-        
+        std::cout << "valve position " << test << std::endl;
         m_valveHeight = -0.125 * test;
 
         m_highlightColor->set( osg::Vec4( 1.0, 1.0-test, 1.0-test, 0.0) );
@@ -454,6 +454,17 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
 		//Move the shaft or rotate the shaft
     }
     */
+}
+////////////////////////////////////////////////////////////////////////////////
+void VEAnimationGraphicalPlugin::SetCurrentCommands(
+    std::vector< ves::open::xml::CommandPtr > const& commands )
+{
+    if( commands.empty() )
+    {
+        return;
+    }
+    ves::open::xml::CommandPtr tempPtr = commands.at( commands.size() - 1 );
+    SetCurrentCommand( tempPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()

@@ -70,7 +70,7 @@ public:
     virtual void PreFrameUpdate();
     ///Process the current command in the queue from the dynsim unit
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
-
+    virtual void SetCurrentCommands( std::vector< ves::open::xml::CommandPtr > const& commands );
 private:
     void FindPartNodeAndHighlightNode();
     ///Keyboard helper pointer
