@@ -42,8 +42,7 @@ protected:
     std::vector< std::string > mUnitThreeInputs;
 
 public:
-	virtual void StartCalc( ACE_ENV_SINGLE_ARG_DECL )
-	ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ));
+	virtual void StartCalc();
 };
 
 #endif //STORAGE_UNIT

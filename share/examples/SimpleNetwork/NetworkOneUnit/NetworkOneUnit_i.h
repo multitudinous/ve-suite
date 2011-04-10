@@ -39,8 +39,7 @@ protected:
 	std::string mTextOne;
 
 public:
-	virtual void StartCalc( ACE_ENV_SINGLE_ARG_DECL )
-	ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ));
+	virtual void StartCalc();
 };
 
 #endif //NETWORK_ONE_UNIT
