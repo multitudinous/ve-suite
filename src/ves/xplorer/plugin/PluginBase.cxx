@@ -305,7 +305,7 @@ void PluginBase::SetModuleResults( const std::string& network )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginBase::CreateCustomVizFeature( int input )
+void PluginBase::CreateCustomVizFeature( int )
 {
     ;
 }
