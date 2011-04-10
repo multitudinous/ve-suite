@@ -825,9 +825,6 @@ void Wand::ProcessHit()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-//This function currently deletes the existing beam each time it is called and
-//add a new beam.  This should be replaced such that it is only called once
-//and then a transform is modified for the location.
 void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
 {
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( wand->getData() );
@@ -911,11 +908,12 @@ void Wand::UpdateObjectHandler()
 
         if( m_manipulatorManager.IsEnabled() )
         {
-            vprDEBUG( vesDBG, 2 ) << "|\tTrying to push a dragger." 
-                << std::endl << vprDEBUG_FLUSH;
             bool success = m_manipulatorManager.Handle(
                                         scenegraph::manipulator::Event::PUSH,
                                         m_beamLineSegment.get() );
+            vprDEBUG( vesDBG, 2 ) << "|\tTrying to push a dragger " 
+                << success << "." 
+                << std::endl << vprDEBUG_FLUSH;
             if( m_manipulatorManager.LeafDraggerIsActive() )
             {
                 vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully pushed a dragger." 
@@ -1096,6 +1094,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
         tempVec.set( 0, 0, wandQuat[ 1 ] );
     }
     
+    tempVec.normalize();
     //Create rotation increment
     m_rotIncrement =
         osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
