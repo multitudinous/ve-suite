@@ -691,7 +691,8 @@ void CharacterController::LookAt(
     matrix.mData[ 15 ] =  1.0;
 
     ///Lets take into account the current VR Juggler head position
-    ///Invert the Character LookAt matrix so that we can...I do not know
+    ///Invert the Character LookAt matrix so that we can put it into
+    ///local character coordinate space.
     matrix = gmtl::invert( matrix );
     const gmtl::Matrix44d tempHeadMatrix = SceneManager::instance()->GetHeadMatrix();
     const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
