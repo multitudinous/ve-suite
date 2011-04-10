@@ -36,9 +36,7 @@
 
 /*!\file GraphicalPluginManager.h
  * GraphicalPluginManager API
- */
-
-/*!\class ves::xplorer::GraphicalPluginManager
+ * \class ves::xplorer::GraphicalPluginManager
  *
  */
 

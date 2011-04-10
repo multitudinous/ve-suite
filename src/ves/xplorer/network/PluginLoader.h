@@ -31,14 +31,13 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CFD_PLUGINLOADER_H
-#define CFD_PLUGINLOADER_H
+#ifndef VES_XPLORER_NETWORK_PLUGINLOADER_H
+#define VES_XPLORER_NETWORK_PLUGINLOADER_H
 /*!\file cfdVEPluginLoader.h
-cfdVEPluginLoader API
-*/
-/*!\class ves::xplorer::cfdVEPluginLoader
-*
-*/
+ *       cfdVEPluginLoader API
+ * \class ves::xplorer::cfdVEPluginLoader
+ *
+ */
 
 #include <vpr/DynLoad/LibraryFinder.h>
 
@@ -56,15 +55,15 @@ namespace xplorer
 {
 namespace network
 {
-class VE_XPLORER_NETWORK_EXPORTS cfdVEPluginLoader
+class VE_XPLORER_NETWORK_EXPORTS PluginLoader
 {
 public:
 
-    cfdVEPluginLoader();
-    ~cfdVEPluginLoader();
+    PluginLoader();
+    ~PluginLoader();
 
-    void LoadPlugins( void );
-    void ScanAndLoad( void );
+    void LoadPlugins();
+    void ScanAndLoad();
     ves::xplorer::plugin::PluginBase* CreateNewPlugin( unsigned int );
 
     //Load all the dlls in the given dir

@@ -34,7 +34,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/network/VE_i.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
-#include <ves/xplorer/network/cfdVEPluginLoader.h>
+#include <ves/xplorer/network/PluginLoader.h>
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>

@@ -33,11 +33,10 @@
 #ifndef CFD_AVAIL_MODULES_H
 #define CFD_AVAIL_MODULES_H
 /*!\file cfdVEAvailModules.h
-cfdVEAvailModules API
-*/
-/*!\class ves::xplorer::cfdVEAvailModules
-*
-*/
+ *   cfdVEAvailModules API
+ * \class ves::xplorer::cfdVEAvailModules
+ *
+ */
 
 #include <ves/VEConfig.h>
 
@@ -47,7 +46,7 @@ namespace xplorer
 {
 namespace network
 {
-class cfdVEPluginLoader;
+class PluginLoader;
 
 class VE_XPLORER_NETWORK_EXPORTS cfdVEAvailModules
 {
@@ -59,13 +58,13 @@ public:
     //Load all the modules from the dlls
     bool LoadModules();
     ///Get the plugin loader to load available plugins
-    cfdVEPluginLoader* GetLoader( void );
+    PluginLoader* GetLoader( void );
     ///Reset the plugin loader so that plugins can be
     ///loaded as required by the user
     void ResetPluginLoader( void );
 
 protected:
-    cfdVEPluginLoader* pl_loader;
+    PluginLoader* pl_loader;
 };
 }
 }

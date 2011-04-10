@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/network/cfdVEPluginLoader.h>
+#include <ves/xplorer/network/PluginLoader.h>
 #include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/xplorer/Debug.h>
 #include <ves/open/xml/model/Model.h>
@@ -50,24 +50,24 @@ static const std::string DSO_SUFFIX( ".bundle" );
 static const std::string DSO_SUFFIX( ".so" );
 #endif
 
-#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
 ////////////////////////////////////////////////////////////////////////////////
-cfdVEPluginLoader::cfdVEPluginLoader()
+PluginLoader::PluginLoader()
 {
     plugins.clear();
 
     ves::xplorer::eventmanager::EventManager::instance()->
             RegisterSignal( new ves::xplorer::eventmanager::SignalWrapper
                             < createPluginSignal_type >( &m_createUIPlugin ),
-            "cfdVEPluginLoader.CreatePlugin" );
+            "PluginLoader.CreatePlugin" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdVEPluginLoader::~cfdVEPluginLoader()
+PluginLoader::~PluginLoader()
 {
     std::map< int, PluginBase* >::iterator iter;
     for( iter = plugins.begin(); iter != plugins.end(); ++iter )
@@ -93,12 +93,12 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
     libs.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-int cfdVEPluginLoader::GetNumberOfPlugins( void )
+int PluginLoader::GetNumberOfPlugins( void )
 {
     return plugins.size();
 }
-//////////////////////////////////////////////////////////////////
-PluginBase* cfdVEPluginLoader::CreateObject( std::string _objname )
+////////////////////////////////////////////////////////////////////////////////
+PluginBase* PluginLoader::CreateObject( std::string _objname )
 {
     int selectPlugin = -1;
     std::map< int, PluginBase* >::iterator iter;
@@ -115,7 +115,7 @@ PluginBase* cfdVEPluginLoader::CreateObject( std::string _objname )
 
     if( selectPlugin == -1 )
     {
-        std::cerr << "|\tcfdVEPluginLoader::CreateObject : " << _objname
+        std::cerr << "|\tPluginLoader::CreateObject : " << _objname
         << " : Plugin Not Found." << std::endl;
         return NULL;
     }
@@ -126,8 +126,8 @@ PluginBase* cfdVEPluginLoader::CreateObject( std::string _objname )
 
     return result;
 }
-//////////////////////////////////////////////////////////////////
-void cfdVEPluginLoader::ScanAndLoad( void )
+////////////////////////////////////////////////////////////////////////////////
+void PluginLoader::ScanAndLoad( void )
 {
     //Get the path for the plugins loaded for vesuite
     std::string vesuitePath;
@@ -243,8 +243,8 @@ void cfdVEPluginLoader::ScanAndLoad( void )
 
     LoadPlugins();
 }
-//////////////////////////////////////////////////////////////////
-void cfdVEPluginLoader::LoadPlugins( void )
+////////////////////////////////////////////////////////////////////////////////
+void PluginLoader::LoadPlugins( void )
 {
     for( size_t i = 0; i < libs.size(); ++i )
     {
@@ -268,8 +268,8 @@ void cfdVEPluginLoader::LoadPlugins( void )
         }
     }
 }
-//////////////////////////////////////////////////////////////////
-PluginBase* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
+////////////////////////////////////////////////////////////////////////////////
+PluginBase* PluginLoader::CreateNewPlugin( unsigned int input )
 {
     void*( *creator )();
     PluginBase* test_obj( NULL );
@@ -293,3 +293,4 @@ PluginBase* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
     test_obj = static_cast<PluginBase*>( object );
     return test_obj;
 }
+////////////////////////////////////////////////////////////////////////////////

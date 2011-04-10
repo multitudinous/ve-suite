@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/network/cfdVEAvailModules.h>
-#include <ves/xplorer/network/cfdVEPluginLoader.h>
+#include <ves/xplorer/network/PluginLoader.h>
 #include <iostream>
 
 #include <fstream>
@@ -42,7 +42,7 @@ using namespace ves::xplorer::network;
 ////////////////////////////////////////////////////////////////////////////////
 cfdVEAvailModules::cfdVEAvailModules()
 {
-    pl_loader = new cfdVEPluginLoader();
+    pl_loader = new PluginLoader();
     LoadModules();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ bool cfdVEAvailModules::LoadModules()
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdVEPluginLoader* cfdVEAvailModules::GetLoader()
+PluginLoader* cfdVEAvailModules::GetLoader()
 {
     return pl_loader;
 }
@@ -77,7 +77,7 @@ void cfdVEAvailModules::ResetPluginLoader()
 //investigated as this solution is a major hack.
     delete pl_loader;
 #endif
-    pl_loader = new cfdVEPluginLoader();
+    pl_loader = new PluginLoader();
     LoadModules();
 }
-
+////////////////////////////////////////////////////////////////////////////////
