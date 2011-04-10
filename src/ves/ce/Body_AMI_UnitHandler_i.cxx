@@ -244,10 +244,10 @@ void Body_AMI_UnitHandler_i::GetName_excep(
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::Query( const char* ami_return_val )
 {
-    std::cout << "Body_AMI_UnitHandler_i::Query " << ami_return_val << std::endl;
+    //std::cout << "Body_AMI_UnitHandler_i::Query " << ami_return_val << std::endl;
     m_responseHandler->Query( ami_return_val );
     
-    std::cout << "Body_AMI_UnitHandler_i deactivating self " << ami_return_val <<"."<< std::endl;
+    //std::cout << "Body_AMI_UnitHandler_i deactivating self " << ami_return_val <<"."<< std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
     m_poa->deactivate_object( oid.in() );
 }
