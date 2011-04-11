@@ -328,9 +328,9 @@ unsigned char* UIElementQt::RenderElementToImage()
     if( mImageDirty )
     {
         { // Enter critical section
-            QMutexLocker locker( mImageMutex );
+            //QMutexLocker locker( mImageMutex );
             //( *mImageFlipped ) = mImage->mirrored( false, true );
-            ( *mImageFlipped ) = mImage->copy();
+            //( *mImageFlipped ) = mImage->copy();
         } // Leave critical section
         mImageDirty = false;
         mDirty = true;
@@ -339,8 +339,8 @@ unsigned char* UIElementQt::RenderElementToImage()
     {
         mDirty = false;
     }
-    return mImageFlipped->bits();
-    //return mImage->bits();
+    //return mImageFlipped->bits();
+    return mImage->bits();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElementQt::IsDirty()
