@@ -194,12 +194,6 @@ public:
     ///Sets the projection matrix when not in Ortho2D mode
     void SetProjectionMatrix( osg::Matrixd& matrix );
 
-    /// Unimplemented
-    void UnembedAll();
-
-    /// Unimplemented
-    void EmbedAll();
-
     // Returns true if the point (x,y) is over a quad associated with a UIElement,
     // false otherwise.
     bool Ortho2DTestPointerCoordinates( int x, int y );

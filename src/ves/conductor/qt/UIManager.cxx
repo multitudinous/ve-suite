@@ -580,40 +580,6 @@ void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::UnembedAll()
-{
-    //    if( !mInitialized )
-    //    {
-    //        return;
-    //    }
-    //
-    //    HideAllElements();
-    //    ElementMap_type::iterator map_iterator;
-    //    for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
-    //            ++map_iterator )
-    //    {
-    //        UIElement* element = map_iterator->second;
-    //        element->Unembed();
-    //    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void UIManager::EmbedAll()
-{
-    //    if( !mInitialized )
-    //    {
-    //        return;
-    //    }
-    //
-    //    ElementMap_type::iterator map_iterator;
-    //    for ( map_iterator = mElements.begin(); map_iterator != mElements.end();
-    //            ++map_iterator )
-    //    {
-    //        UIElement* element = map_iterator->second;
-    //        element->Embed();
-    //    }
-    //    ShowAllElements();
-}
-////////////////////////////////////////////////////////////////////////////////
 bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
 {
     // Walk through every visible quad we own and see if the point lies on it
