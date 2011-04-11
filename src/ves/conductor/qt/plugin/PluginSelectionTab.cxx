@@ -68,6 +68,9 @@
 #include <QtGui/QIcon>
 #include <QtGui/QLabel>
 
+Q_DECLARE_METATYPE(std::string)
+Q_DECLARE_METATYPE(ves::xplorer::plugin::PluginBase)
+
 namespace ves
 {
 namespace conductor
@@ -164,6 +167,18 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
         }
         ++iter;
     }
+    qRegisterMetaType<std::string>();
+    qRegisterMetaType<ves::xplorer::plugin::PluginBase>();
+
+    connect( this, SIGNAL( CreateUIPluginQSignal( const std::string& ,
+                                         ves::xplorer::plugin::PluginBase* ) ),
+                              this, SLOT( qCreateUIPlugin( const std::string& ,
+                                         ves::xplorer::plugin::PluginBase*  ) ),
+                              Qt::QueuedConnection );
+
+    connect( this, SIGNAL( FileLoadedQSignal( const std::string&  ) ),
+                              this, SLOT( qFileLoadedSlot( const std::string& ) ),
+                              Qt::QueuedConnection );
 
     CONNECTSIGNALS_2( "%CreatePlugin",
                       void ( const std::string&, ves::xplorer::plugin::PluginBase* ),
@@ -355,6 +370,46 @@ void PluginSelectionTab::on_m_removePluginButton_clicked()
 void PluginSelectionTab::CreateUIPlugin( const std::string& pluginFactoryName,
                                          ves::xplorer::plugin::PluginBase* xplorerPlugin)
 {
+    CreateUIPluginQSignal( pluginFactoryName, xplorerPlugin );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
+     ( QListWidgetItem* current, QListWidgetItem* previous )
+{
+    if( current )
+    {
+        std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
+                m_itemInterfaceMap.find( current );
+        if( iter != m_itemInterfaceMap.end() )
+        {
+            UIPluginBase* plugin = dynamic_cast< UIPluginBase* >( iter->second );
+            ves::xplorer::ModelHandler::instance()->SetActiveModel(
+                    plugin->GetVEModel()->GetID() );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::ClearActivePlugins()
+{
+    std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
+            m_itemInterfaceMap.begin();
+    while( iter != m_itemInterfaceMap.end() )
+    {
+        delete iter->second;
+        ++iter;
+    }
+    m_itemInterfaceMap.clear();
+    ui->m_instantiatedPlugins->clear();
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::FileLoadedSlot( const std::string& fileName )
+{
+    FileLoadedQSignal( fileName );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
+                      ves::xplorer::plugin::PluginBase* xplorerPlugin )
+{
     QString pluginName;
     pluginName = pluginName.fromStdString( pluginFactoryName );
 
@@ -418,40 +473,13 @@ void PluginSelectionTab::CreateUIPlugin( const std::string& pluginFactoryName,
         }
     }
 }
+
 ////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
-     ( QListWidgetItem* current, QListWidgetItem* previous )
-{
-    if( current )
-    {
-        std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
-                m_itemInterfaceMap.find( current );
-        if( iter != m_itemInterfaceMap.end() )
-        {
-            UIPluginBase* plugin = dynamic_cast< UIPluginBase* >( iter->second );
-            ves::xplorer::ModelHandler::instance()->SetActiveModel(
-                    plugin->GetVEModel()->GetID() );
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::ClearActivePlugins()
-{
-    std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
-            m_itemInterfaceMap.begin();
-    while( iter != m_itemInterfaceMap.end() )
-    {
-        delete iter->second;
-        ++iter;
-    }
-    m_itemInterfaceMap.clear();
-    ui->m_instantiatedPlugins->clear();
-}
-////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::FileLoadedSlot( const std::string& fileName )
+void PluginSelectionTab::qFileLoadedSlot( const std::string& fileName )
 {
     ClearActivePlugins();
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 }
 }

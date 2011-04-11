@@ -98,6 +98,15 @@ protected Q_SLOTS:
     void on_m_instantiatedPlugins_itemChanged ( QListWidgetItem * item );
     ///Called when current item selection is changed via keyboard or mouse
     void on_m_instantiatedPlugins_currentItemChanged ( QListWidgetItem * current, QListWidgetItem * previous );
+    void qCreateUIPlugin( const std::string& pluginFactoryName,
+                          ves::xplorer::plugin::PluginBase* xplorerPlugin );
+    void qFileLoadedSlot( const std::string& fileName );
+
+Q_SIGNALS:
+    void CreateUIPluginQSignal( const std::string& pluginFactoryName,
+                              ves::xplorer::plugin::PluginBase* xplorerPlugin );
+    void FileLoadedQSignal( const std::string& fileName );
+
 };
 
 }
