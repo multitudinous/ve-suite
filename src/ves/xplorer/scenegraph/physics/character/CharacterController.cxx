@@ -529,6 +529,11 @@ void CharacterController::Zoom( bool inOut )
         {
             mToCameraDistance = mMinCameraDistance;
         }
+        
+        if( mToCameraDistance < (mMinCameraDistance + 1.0) )
+        {
+            mCharacterAnimations->setNodeMask( 0 );
+        }
     }
     else
     {
@@ -536,6 +541,11 @@ void CharacterController::Zoom( bool inOut )
         if( mToCameraDistance > mMaxCameraDistance )
         {
             mToCameraDistance = mMaxCameraDistance;
+        }
+
+        if( mToCameraDistance > (mMinCameraDistance + 1.0) )
+        {
+            mCharacterAnimations->setNodeMask( 1 );
         }
     }
 
