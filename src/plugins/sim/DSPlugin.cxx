@@ -85,7 +85,7 @@ DSPlugin::DSPlugin() :
     GetVEModel()->SetPluginType( "DSPlugin" );
     GetVEModel()->SetVendorName( "SIMSCI" );
 
-    iconFilename = "sim";
+    iconFilename = "sim.xpm";
     wxImage my_img( sim );
     SetImage( my_img );
 

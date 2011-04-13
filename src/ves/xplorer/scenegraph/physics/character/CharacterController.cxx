@@ -529,11 +529,6 @@ void CharacterController::Zoom( bool inOut )
         {
             mToCameraDistance = mMinCameraDistance;
         }
-        
-        if( mToCameraDistance < (mMinCameraDistance + 1.0) )
-        {
-            mCharacterAnimations->setNodeMask( 0 );
-        }
     }
     else
     {
@@ -541,11 +536,6 @@ void CharacterController::Zoom( bool inOut )
         if( mToCameraDistance > mMaxCameraDistance )
         {
             mToCameraDistance = mMaxCameraDistance;
-        }
-
-        if( mToCameraDistance > (mMinCameraDistance + 1.0) )
-        {
-            mCharacterAnimations->setNodeMask( 1 );
         }
     }
 
@@ -573,6 +563,15 @@ void CharacterController::CameraDistanceLERP()
         mCameraDistance = mToCameraDistance;
 
         mCameraDistanceLERP = false;
+    }
+    
+    if( mCameraDistance <= (mMinCameraDistance + 0.5) )
+    {
+        mCharacterAnimations->setNodeMask( 0 );
+    }
+    else if( mCameraDistance > (mMinCameraDistance + 0.5) )
+    {
+        mCharacterAnimations->setNodeMask( 1 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1176,7 +1175,7 @@ void CharacterController::InitializeCharacters()
 
     scaleDown->setScale( osg::Vec3d( 1.058, 1.058, 1.058 ) );
     
-    scaleDown->setPosition( osg::Vec3d( 0.0, -0.5, -4.4 ) );
+    scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -4.4 ) );
 
     mMatrixTransform->addChild( scaleDown.get() );
 
