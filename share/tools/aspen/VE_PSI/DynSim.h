@@ -51,16 +51,18 @@ class DynSim
 {
 public:
     DynSim();
+    ///Open the supplied file name in dynsim
+    ///\param filename This must be a fully qualified path reference to a file.
     std::string CreateNetwork( std::string filename );
-    int OpenFile( std::string filename );
+    //int OpenFile( std::string filename );
     //bool ConnectToOPC();
     std::vector< std::pair< std::string, std::string > > ReadVars();
     //std::map< std::string, std::pair< std::string, VARTYPE > > ReadVars();
     //std::string GetOPCValue( const std::string& );
-    std::string GetOPCValues( );
+    std::string GetOPCValues();
     void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
     //void ConnectWithList( std::vector< std::string > list );
-    bool ConnectToOPCServer( );
+    bool ConnectToOPCServer();
     std::string GetAllOPCVariables( const std::string& );
     void AddOPCVariable( const std::string& );
     bool IsOPCVarsEmpty();

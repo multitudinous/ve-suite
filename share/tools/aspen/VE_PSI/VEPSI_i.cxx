@@ -861,7 +861,8 @@ char* VEPSI_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 
             Display->SetWindowText( ( filename ).c_str());
             //go through bkp parsing procedure
-            network = dynSim->CreateNetwork( filename );
+            const std::string fullFilename = mWorkingDir + filename;
+            network = dynSim->CreateNetwork( fullFilename );
 
             mFileName = filename;
             firsttime=false;

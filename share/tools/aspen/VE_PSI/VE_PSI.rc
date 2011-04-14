@@ -34,8 +34,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\n"
-    "\0"
+    "#include ""afxres.h""\r\0"
 END
 
 3 TEXTINCLUDE 
@@ -48,10 +47,9 @@ BEGIN
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
     "LANGUAGE 9, 1\r\n"
     "#pragma code_page(1252)\r\n"
-    "#include ""res\\VE_PSI.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""res\\VE-PSI_Icon.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#include ""afxres.rc""     // Standard components\r\n"
-    "#endif\r\n"
-    "\0"
+    "#endif\r\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -64,7 +62,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\VE_PSI.ico"
+IDR_MAINFRAME           ICON                    "res\\VE-PSI_Icon.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -168,7 +166,7 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE 9, 1
 #pragma code_page(1252)
-#include "res\VE_PSI.rc2"  // non-Microsoft Visual C++ edited resources
+#include "res\VE-PSI_Icon.rc2"  // non-Microsoft Visual C++ edited resources
 #include "afxres.rc"     // Standard components
 #endif
 
