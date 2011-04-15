@@ -616,34 +616,20 @@ void Body_AMH_Executive_i::UnRegisterUnit (
                                  ) 
 {
     m_mutex.acquire();
-    
+    const std::string unitNameStr( UnitName );
     std::map<std::string, Execute_Thread*>::iterator iter;
-    iter = m_execThread.find( std::string( UnitName ) );
+    iter = m_execThread.find( unitNameStr );
     std::string message =  std::string( "Going to unregister unit " ) + 
     UnitName + std::string( "\n" );
     ClientMessage( message.c_str() );
     if( iter != m_execThread.end() )
     {
         ACE_Task_Base::cleanup( iter->second, NULL );
-        //if( iter->second )
-        //    delete iter->second;
-        
+        delete iter->second;
         m_execThread.erase( iter );
-        std::cout << "VE-CE : " << UnitName << " Unregistered!\n";
     }
-    
-    /*std::map< std::string, QueryThread* >::iterator iterQuery;
-    iterQuery =  m_queryThreads.find( std::string( UnitName ) );
-    if( iterQuery !=  m_queryThreads.end() )
-    {
-        ACE_Task_Base::cleanup( iterQuery->second, NULL );
-        //if( iterQuery->second )
-        //    delete iterQuery->second;
-        
-         m_queryThreads.erase( iterQuery );
-        std::cout << "VE-CE : " << UnitName << " Query Unregistered!\n";
-    }*/
-    message = std::string( "Successfully unregistered " ) + UnitName + std::string( "\n" );
+
+    message = std::string( "Successfully unregistered " ) + unitNameStr + std::string( "\n" );
     ClientMessage( message.c_str() );
     _tao_rh->UnRegisterUnit();
     m_mutex.release();
@@ -681,35 +667,11 @@ void Body_AMH_Executive_i::RegisterUnit (
     else //replace it with new reference
     {
         ACE_Task_Base::cleanup( iter->second, NULL );
-        if( iter->second )
-        {
-            delete iter->second;
-        }
-        Execute_Thread *ex = new Execute_Thread( m_modUnits[ strUnitName ], this );
+        delete iter->second;
+        Execute_Thread* ex = new Execute_Thread( m_modUnits[ strUnitName ], this );
         ex->activate();
         m_execThread[ strUnitName ] = ex;
     }
-    
-    /*std::map<std::string, QueryThread* >::iterator iterQuery;
-    iterQuery =  m_queryThreads.find( strUnitName );
-    
-    if( iterQuery ==  m_queryThreads.end() )
-    {
-        QueryThread* query = new QueryThread( m_modUnits[ strUnitName ] );
-        query->activate();
-         m_queryThreads[ strUnitName ] = query;
-    }
-    else
-    {
-        ACE_Task_Base::cleanup( iterQuery->second, NULL );
-        if( iterQuery->second )
-        {
-            delete iterQuery->second;
-        }
-        QueryThread* query = new QueryThread( m_modUnits[ strUnitName ] );
-        query->activate();
-         m_queryThreads[ strUnitName ] = query;
-    }*/
     
     message = std::string( "Successfully registered " ) + strUnitName + std::string( "\n" );
     ClientMessage( message.c_str() );

@@ -56,6 +56,7 @@ Execute_Thread::~Execute_Thread()
 int Execute_Thread::close(u_long flags)
 {
     m_isRunning = false;
+    ACE_OS::sleep( 2 );
     return 0;
     return ACE_Task_Base::close(flags);
 }
@@ -73,7 +74,7 @@ int Execute_Thread::svc( void )
 
             _mutex.release();
 
-            ACE_OS::sleep( 2 );
+            ACE_OS::sleep( 1 );
         }
 
         if( !m_isRunning )
