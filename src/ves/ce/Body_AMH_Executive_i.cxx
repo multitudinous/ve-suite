@@ -660,7 +660,7 @@ void Body_AMH_Executive_i::RegisterUnit (
     boost::ignore_unused_variable_warning( flag );
     // When this is called, a unit is already binded to the name service,
     // so this call can get it's reference from the name service
-    std::string strUnitName( UnitName );
+    const std::string strUnitName( UnitName );
     //delete UnitName;
     
     std::string message =  std::string( "Going to register unit " ) + strUnitName + std::string( "\n" );

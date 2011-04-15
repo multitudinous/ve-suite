@@ -191,6 +191,7 @@ void CorbaUnitManager::RunORB()
     catch (CORBA::Exception &)
     {
         std::cerr << "CORBA exception raised!" << std::endl;
+        orb->destroy();
     }
 }
 /////////////////////////////////////////////////////////////
