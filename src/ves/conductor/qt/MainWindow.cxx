@@ -61,6 +61,12 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/model/Network.h>
 
+// Req'd for dataset loads
+#include <ves/open/xml/ParameterBlock.h>
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/cfdVTKFileHandler.h>
+#include <ves/open/xml/OneDStringArray.h>
+
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
@@ -89,6 +95,7 @@
 #include <Minerva/Core/TileEngine/Body.h>
 #endif
 
+#define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/convenience.hpp>
@@ -218,6 +225,32 @@ MainWindow::MainWindow(QWidget* parent) :
                      void ( const std::string& ),
                      &MainWindow::OnActiveModelChanged,
                      mConnections, normal_Priority );
+
+    m_GeometryExtensions.push_back("osg");
+    m_GeometryExtensions.push_back("ive");
+    m_GeometryExtensions.push_back("stl");
+    m_GeometryExtensions.push_back("wrl");
+    m_GeometryExtensions.push_back("iv");
+    m_GeometryExtensions.push_back("obj");
+    m_GeometryExtensions.push_back("pfb");
+    m_GeometryExtensions.push_back("flt");
+    m_GeometryExtensions.push_back("dxf");
+    m_GeometryExtensions.push_back("3ds");
+
+    m_DataExtensions.push_back("vtk");
+    m_DataExtensions.push_back("vtu");
+    m_DataExtensions.push_back("vts");
+    m_DataExtensions.push_back("vti");
+    m_DataExtensions.push_back("vtm");
+    m_DataExtensions.push_back("vtp");
+    m_DataExtensions.push_back("vtr");
+    m_DataExtensions.push_back("param");
+    m_DataExtensions.push_back("ens");
+    m_DataExtensions.push_back("case");
+    m_DataExtensions.push_back("mfix");
+    m_DataExtensions.push_back("cas");
+    m_DataExtensions.push_back("avs");
+    m_DataExtensions.push_back("dcm");
 }
 ////////////////////////////////////////////////////////////////////////////////
 MainWindow::~MainWindow()
@@ -375,20 +408,51 @@ void MainWindow::on_actionOpen_triggered()
     // Make mFileDialog manage its own lifetime and memory
     mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
     mFileDialog->setFileMode( QFileDialog::ExistingFiles );
-    QStringList filters;
 
-    filters << "All Supported Files (*.ves *.osg *.ive *.stl *.wrl *.iv *.obj *.pfb *.flt *.dxf *.3ds)"
+    std::string AllGeometryExtensions;
+    std::vector< std::string >::iterator iter = m_GeometryExtensions.begin();
+    while( iter != m_GeometryExtensions.end() )
+    {
+        AllGeometryExtensions.append( "*." );
+        AllGeometryExtensions.append( *iter );
+        AllGeometryExtensions.append(" ");
+        ++iter;
+    }
+
+    std::string AllDataExtensions;
+    iter = m_DataExtensions.begin();
+    while( iter != m_DataExtensions.end() )
+    {
+        AllDataExtensions.append( "*." );
+        AllDataExtensions.append( *iter );
+        AllDataExtensions.append(" ");
+        ++iter;
+    }
+
+    std::string AllFilters = "All Supported Files (*.ves ";
+    AllFilters.append( AllGeometryExtensions );
+    AllFilters.append( AllDataExtensions );
+    AllFilters.append( ")" );
+
+    std::string GeometryFilters = "Geometry Files (";
+    GeometryFilters.append( AllGeometryExtensions );
+    GeometryFilters.append( ")" );
+
+    std::string DataFilters = "Data Files (";
+    DataFilters.append( AllDataExtensions );
+    DataFilters.append( ")" );
+
+    QStringList filters;
+    filters << AllFilters.c_str()
             << "VES Files (*.ves)"
-            << "OSG files (*.osg *.ive)"
-            << "STL files (*.stl)"
-            << "VRML/Inventor files (*.wrl *.iv)"
-            << "OBJ files (*.obj)"
-            << "Performer Binary files (*.pfb)"
-            << "Flight files (*.flt)"
-            << "DXF files (*.dxf)"
-            << "3DS files (*.3ds)"
+            << GeometryFilters.c_str()
+            << DataFilters.c_str()
             << "All Files (*.*)";
-    //mFileDialog->setNameFilter(tr("VES Files (*.ves)"));
+//    filters << "All Supported Files (*.ves *.osg *.ive *.stl *.wrl *.iv *.obj *.pfb *.flt *.dxf *.3ds *.vtk *.vtu *.vts *.vti *.vtm *.vtp *.vtr *.param *.ens *.case *.mfix *.cas *.avs *.dcm)"
+//            << "VES Files (*.ves)"
+//            << "Geometry files (*.osg *.ive *.stl *.wrl *.iv *.obj *.pfb *.flt *.dxf *.3ds)"
+//            << "Data files (*.vtk *.vtu *.vts *.vti *.vtm *.vtp *.vtr *.param *.ens *.case *.mfix *.cas *.avs *.dcm *.stl)"
+//            << "All Files (*.*)";
     mFileDialog->setNameFilters( filters );
     
     QObject::connect( mFileDialog, SIGNAL(filesSelected(const QStringList &)),
@@ -446,9 +510,6 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         mFileDialog = 0;
     }
 
-    // Un-highlight any currently-highlighted geometry
-    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
-
     // Now deal with loading the selected files
     for( int index = 0; index < fileNames.size(); index++ )
     {
@@ -465,55 +526,247 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
             // Destructor for loader is private; object autodeletes when done
             // processing.
         }
+        // Remove the dot from the head of extension so we can compare to our
+        // vectors of other file extensions
+        extension.erase( extension.begin() );
+        std::vector< std::string >::const_iterator iter =
+                std::find( m_GeometryExtensions.begin(), m_GeometryExtensions.end(), extension );
+        if( iter != m_GeometryExtensions.end() )
+        {
+            LoadGeometryFile( file.string() );
+        }
+
+        iter = std::find( m_DataExtensions.begin(), m_DataExtensions.end(), extension );
+        if( iter != m_DataExtensions.end() )
+        {
+            LoadDataFile( file.string() );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::LoadGeometryFile( std::string filename )
+{
+    // Un-highlight any currently-highlighted geometry
+    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+
+    ves::conductor::CADFileLoader loader;
+    std::string parentID;
+    ves::xplorer::Model* activeModel =
+            ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    if( !activeModel )
+    {
+        this->on_actionNew_triggered();
+        activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    }
+
+    ModelCADHandler* m_cadHandler = activeModel->GetModelCADHandler();
+
+    parentID = mScenegraphTreeTab->GetSelectedNodeID();
+    if( (parentID.empty()) || (!m_cadHandler->AssemblyExists( parentID )) )
+    {
+        // If no valid node is selected, or if the selected node is
+        // not an assembly, get or create the top-level assembly for
+        // the active model.
+        parentID = activeModel->GetModelData()->AddGeometry()->GetID();
+    }
+
+    // If AddGeometry call above turned out to be creation, do the
+    // rest necessary for proper creation.
+    if( !m_cadHandler->AssemblyExists( parentID ) )
+    {
+        m_cadHandler->CreateAssembly( parentID );
+        scenegraph::DCS* assembly = m_cadHandler->GetAssembly( parentID );
+        assembly->SetCADPart( activeModel->GetModelData()->GetGeometry() );
+        m_cadHandler->GetAssembly( parentID )->setName( "Model_Geometry" );
+        m_cadHandler->SetRootCADNodeID( parentID );
+
+        osg::Node::DescriptionList descriptorsList;
+        descriptorsList.push_back( "VE_XML_ID" );
+        descriptorsList.push_back( parentID );
+        descriptorsList.push_back( "Assembly" );
+        descriptorsList.push_back( "VE_XML_MODEL_ID" );
+        descriptorsList.push_back( activeModel->GetID() );
+
+        ves::xplorer::scenegraph::DCS* assemblyNode =
+                m_cadHandler->GetAssembly( parentID );
+        assemblyNode->setDescriptions( descriptorsList );
+
+        //Add the top level CAD to the VEBaseClass
+        activeModel->GetDCS()->addChild( m_cadHandler->GetAssembly( parentID ) );
+    }
+    loader.LoadCADFile( filename, parentID );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::LoadDataFile( std::string filename )
+{
+    ves::open::xml::ParameterBlockPtr mParamBlock;
+    ves::open::xml::model::ModelPtr m_veModel(
+            ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData() );
+    //---------------From OnInformationPacketAdd
+    {
+//        wxTextEntryDialog newDataSetName( this,
+//                                          wxString( _( "New Dataset" ) ),
+//                                          wxString( _( "Enter name for new Dataset:" ) ),
+//                                          wxString( _( "Dataset" ) ),
+//                                          wxOK | wxCANCEL | wxCENTRE );
+
+//        newDataSetName.CentreOnParent();
+
+//        if( newDataSetName.ShowModal() == wxID_CANCEL )
+//        {
+//            return;
+//        }
+
+
+//        if( dataSetList->FindString( newDataSetName.GetValue() ) != wxNOT_FOUND )
+//        {
+//            wxMessageBox( _( "Data with this name is already loaded." ),
+//                          newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
+//            return;
+//        }
+//        else
+        {
+//            dataSetList->Append( newDataSetName.GetValue() );
+//            dataSetList->SetStringSelection( newDataSetName.GetValue() );
+
+            mParamBlock = m_veModel->GetInformationPacket( -1 );
+            std::string tempStr = filename;
+//            tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
+            //boost::filesystem::path tempPath( filename );
+            //tempStr = tempPath.filename().string();
+            mParamBlock->SetName( tempStr );
+//            EnableUI( true );
+//            SetTextCtrls();
+        }
+    }
+
+
+    //---------------- From OnLoadFile
+    //Load a vtk file
+////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI.
+    // Before editing this code, remove the block markers.
+//    wxPoint pos( 0, 0 );
+//    wxFileDialog dialog( this,
+//                         _T( "Open Data Set File" ),
+//                         ::wxGetCwd(),
+//                         _T( "" ),
+//                         _T( "VTK DataSet Files (*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;)|*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;|StarCD Parameter File (*.param)|*.param;|EnSight(*.ens;*.case)|*.ens;*.case;|MFIX (*.mfix)|*.mfix;|Fluent (*.cas)|*.cas;|AVS (*.avs)|*.avs;|Dicom (*.dcm)|*.dcm;|STL (*.stl)|*.stl;|All Files (*.*)|*.*" ),
+//                         wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
+//                         wxDefaultPosition );
+//    dialog.CentreOnParent();
+
+//    if( dialog.ShowModal() == wxID_OK )
+//    {
+//        wxFileName datasetFilename( dialog.GetPath() );
+//        datasetFilename.MakeRelativeTo( ::wxGetCwd() );
+//        wxString relativeDataSetPath( datasetFilename.GetFullPath() );
+//        relativeDataSetPath.Replace( _( "\\" ), _( "/" ), true );
+//        dataSetTextEntry->SetValue( relativeDataSetPath );
+        std::string tempStr;
+        {
+            ves::open::xml::DataValuePairPtr tempDVP =
+                mParamBlock->GetProperty( "VTK_DATA_FILE" );
+            if( !tempDVP )
+            {
+                tempDVP = mParamBlock->GetProperty( -1 );
+            }
+//            tempStr = static_cast< const char* >(
+//                wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) );
+            tempStr = filename;
+            //boost::filesystem::path tempPath( filename );
+            //tempStr = tempPath.filename().string();
+            tempDVP->SetData( "VTK_DATA_FILE", tempStr );
+
+            // RPT: This block isn't doing anything useful yet. Need to figure
+            // out proper workflow for determining if the file is part of
+            // a transient series.
+            if( ves::xplorer::util::fileIO::getExtension( tempStr ) == "vtm" )
+            {
+                boost::filesystem::path tempPath( filename );
+                std::string transDir = tempPath.parent_path().string();
+
+//                ConvertUnicode( datasetFilename.GetPath().c_str() );
+//                if( transDir.empty() )
+//                {
+//                    transDir = ".";
+//                }
+                std::vector<std::string> transientFile =
+                    ves::xplorer::util::fileIO::GetFilesInDirectory(
+                    transDir, ".vtm" );
+                if( transientFile.size() > 0 )
+                {
+                    // ----- TODO: RPT: Need to think about how to deal with this.....
+                    /*
+                    wxMessageDialog promptDlg( this,
+                        _( "Is this file part of a transient series?" ),
+                        _( "Transient Data Chooser" ),
+                        wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                        wxDefaultPosition );
+                    int answer = promptDlg.ShowModal();
+                    if( answer == wxID_YES )
+                    {
+                        tempDVP =
+                            mParamBlock->GetProperty( "VTK_TRANSIENT_SERIES" );
+                        if( !tempDVP )
+                        {
+                            tempDVP = mParamBlock->GetProperty( -1 );
+                        }
+                        //unsigned int translfag = 1;
+                        tempDVP->SetData( "VTK_TRANSIENT_SERIES", transDir );
+                    }*/
+                }
+            }
+//        }
+
+        ves::xplorer::util::cfdVTKFileHandler tempHandler;
+        std::vector< std::string > dataArrayList =
+            tempHandler.GetDataSetArraysFromFile( tempStr );
+
+        if( !dataArrayList.empty() )
+        {
+            //open dialog to choose scalars to load
+//            DataSetDataArrayChoiceDialog choiceDialog( this );
+//            choiceDialog.SetDataArrays( dataArrayList );
+//            if( choiceDialog.ShowModal() == wxID_OK )
+//            {
+//                dataArrayList = choiceDialog.GetUserActiveArrays();
+                ves::open::xml::DataValuePairPtr arraysDVP =
+                    mParamBlock->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
+                if( !arraysDVP )
+                {
+                    arraysDVP = mParamBlock->GetProperty( -1 );
+                }
+                ves::open::xml::OneDStringArrayPtr
+                    stringArray( new ves::open::xml::OneDStringArray() );
+                stringArray->SetArray( dataArrayList );
+                arraysDVP->SetData( "VTK_ACTIVE_DATA_ARRAYS", stringArray );
+//            }
+        }
+        ves::open::xml::DataValuePairSharedPtr
+            dataValuePair( new ves::open::xml::DataValuePair() );
+        dataValuePair->SetData( "CREATE_NEW_DATASETS",
+            ves::open::xml::model::ModelPtr(
+            new ves::open::xml::model::Model( *m_veModel ) ) );
+//        SendCommandToXplorer( dataValuePair );
+        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+        veCommand->SetCommandName( std::string( "UPDATE_MODEL_DATASETS" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        //Add the active dataset name to the command
+        ves::open::xml::DataValuePairSharedPtr dataSetName(
+            new ves::open::xml::DataValuePair() );
+        if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
+        {
+            dataSetName->SetData( "VTK_DATASET_NAME",
+                                  mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+        }
         else
         {
-            // Assume it's a cad file for now
-            ves::conductor::CADFileLoader loader;
-            std::string parentID;
-            ves::xplorer::Model* activeModel =
-                    ves::xplorer::ModelHandler::instance()->GetActiveModel();
-            if( !activeModel )
-            {
-                this->on_actionNew_triggered();
-                activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-            }
-
-            ModelCADHandler* m_cadHandler = activeModel->GetModelCADHandler();
-
-            parentID = mScenegraphTreeTab->GetSelectedNodeID();
-            if( (parentID.empty()) || (!m_cadHandler->AssemblyExists( parentID )) )
-            {
-                // If no valid node is selected, or if the selected node is
-                // not an assembly, get or create the top-level assembly for
-                // the active model.
-                parentID = activeModel->GetModelData()->AddGeometry()->GetID();
-            }
-
-            // If AddGeometry call above turned out to be creation, do the
-            // rest necessary for proper creation.
-            if( !m_cadHandler->AssemblyExists( parentID ) )
-            {
-                m_cadHandler->CreateAssembly( parentID );
-                scenegraph::DCS* assembly = m_cadHandler->GetAssembly( parentID );
-                assembly->SetCADPart( activeModel->GetModelData()->GetGeometry() );
-                m_cadHandler->GetAssembly( parentID )->setName( "Model_Geometry" );
-
-                osg::Node::DescriptionList descriptorsList;
-                descriptorsList.push_back( "VE_XML_ID" );
-                descriptorsList.push_back( parentID );
-                descriptorsList.push_back( "Assembly" );
-                descriptorsList.push_back( "VE_XML_MODEL_ID" );
-                descriptorsList.push_back( activeModel->GetID() );
-
-                ves::xplorer::scenegraph::DCS* assemblyNode =
-                        m_cadHandler->GetAssembly( parentID );
-                assemblyNode->setDescriptions( descriptorsList );
-
-                //Add the top level CAD to the VEBaseClass
-                activeModel->GetDCS()->addChild( m_cadHandler->GetAssembly( parentID ) );
-            }
-            loader.LoadCADFile( file.string(), parentID );
+            dataSetName->SetData( "VTK_DATASET_NAME", "NULL" );
         }
+        veCommand->AddDataValuePair( dataSetName );
+        ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+        AddTab( mVisualizationTab, "Visualization" );
+        ActivateTab("Visualization");
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -930,6 +1183,12 @@ void MainWindow::on_actionShowPreferencesTab_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionNew_triggered()
 {
+    // Let xplorer know we are loading a new ves file so that it can do any
+    // necessary cleanup, such as resetting the database
+    reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
+    ( eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
+    ->mSignal->operator()( "New" );
+
     XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
 
     mDataBufferEngine->NewVESData( true );
@@ -967,20 +1226,4 @@ void MainWindow::on_actionNew_triggered()
     // Force CAD tree to re-read the now "empty" scenegraph
     mScenegraphTreeTab->PopulateWithRoot(
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
-
-    // Let xplorer know we are loading a new ves file so that it can do any
-    // necessary cleanup, such as resetting the database
-    reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
-    ( eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
-    ->mSignal->operator()( "New" );
-/*
-    ves::open::xml::CommandPtr loadVesFile( new ves::open::xml::Command() );
-    loadVesFile->SetCommandName( "LOAD_VES_FILE" );
-    // Dummy DVP to prevent crashes since xplorer assumes existence of
-    // valid DVP without testing.
-    ves::open::xml::DataValuePairPtr nullDVP( new ves::open::xml::DataValuePair() );
-    nullDVP->SetData( "LOAD_VES_FILE", "NULL" );
-    loadVesFile->AddDataValuePair( nullDVP );
-    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( loadVesFile );
-*/
 }

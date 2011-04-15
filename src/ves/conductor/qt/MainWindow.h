@@ -122,6 +122,11 @@ protected:
     /// appropriate tabs can be shown when the active model changes.
     void OnActiveModelChanged( const std::string& modelID );
 
+    /// Loads geometry file specified in @c filename
+    void LoadGeometryFile( std::string filename );
+    /// Loads data file specified in @c filename
+    void LoadDataFile( std::string filename );
+
 protected Q_SLOTS:
     
     /// Called when the physics icon is pressed on the toolbar
@@ -273,7 +278,7 @@ protected Q_SLOTS:
     /// Slot corresponding to ActiveModelChanged queued signal
     void QueuedOnActiveModelChanged( const std::string& modelID );
 
-private:
+private: 
     ///Qt window widget
     Ui::MainWindow* ui;
     ///Q file dialog
@@ -319,6 +324,9 @@ private:
     void SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::string fileName );
 
     QMessageBox* m_messageBox;
+
+    std::vector< std::string > m_GeometryExtensions;
+    std::vector< std::string > m_DataExtensions;
 };
     
 }

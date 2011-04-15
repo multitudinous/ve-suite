@@ -391,6 +391,7 @@ void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::ClearActivePlugins()
 {
+    std::cout << "Clearing active plugins" << std::endl << std::flush;
     std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
             m_itemInterfaceMap.begin();
     while( iter != m_itemInterfaceMap.end() )
@@ -421,6 +422,10 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
                 << pluginFactoryName << std::endl << std::flush;
         return;
     }
+    else
+    {
+        std::cout << "Found UI plugin lib matching name " << pluginFactoryName << std::endl << std::flush;
+    }
 
     // Create an instance of the plugin from its factory
     QListWidgetItem* item = results.at(0);
@@ -433,10 +438,12 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
         QObject *plugin = loader.instance();
         if (plugin)
         {
+            std::cout << "\t-Plugin instance valid" << std::endl << std::flush;
             UIPluginFactory* factory =
                     qobject_cast< UIPluginFactory* >(plugin);
             if( factory )
             {
+                std::cout << "\t-Factory instance valid" << std::endl << std::flush;
                 // Create new instance of the UIPluginInterface object
                 // this factory contains.
                 UIPluginInterface* interface = factory->CreateInstance();
@@ -448,6 +455,8 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
                 nameSS << "_";
                 nameSS << index;
                 interface->SetName( nameSS.str() );
+
+                std::cout << "\t-Setting interface name to " << nameSS.str() << std::endl << std::flush;
 
                 // Give the UI plugin a pointer to the xplorer plugin. This
                 // will give the UI plugin access to things like the correct model.
@@ -464,11 +473,21 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
                                                                  GetName() ),
                                              ui->m_instantiatedPlugins );
 
+                if( newItem )
+                {
+                    std::cout << "\t-Created item named " << interface->GetName() << std::endl << std::flush;
+                }
+                else
+                {
+                    std::cout << "\t-Failed to create list item!" << std::endl << std::flush;
+                }
+
                 newItem->setFlags( newItem->flags() | Qt::ItemIsEditable );
                 ui->m_instantiatedPlugins->addItem( newItem );
 
                 // Store the new interface
                 m_itemInterfaceMap[ newItem ] = interface;
+                std::cout << "\t-Map size: " << m_itemInterfaceMap.size() << std::endl << std::flush;
             }
         }
     }

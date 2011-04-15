@@ -93,6 +93,9 @@
 #include <sstream>
 #include <vector>
 
+#define BOOST_FILESYSTEM_VERSION 3
+#include <boost/filesystem.hpp>
+
 //Used for strcpy to setup the data translator code
 #include <cstring>
 
@@ -2003,9 +2006,12 @@ void DataSet::WriteDatabaseEntry()
 {
     xplorer::data::DatasetPropertySet set;
 
-    set.LoadByKey( "Filename", fileName );
+    boost::filesystem::path tempPath( fileName );
+    std::string shortName = tempPath.filename().string();
 
-    set.SetPropertyValue( "Filename", fileName );
+    set.LoadByKey( "Filename", shortName );
+
+    set.SetPropertyValue( "Filename", shortName );
     set.SetPropertyValue( "StepLength", stepLength );
     set.SetPropertyValue( "MaxTime", maxTime );
     set.SetPropertyValue( "TimeStep", timeStep );
