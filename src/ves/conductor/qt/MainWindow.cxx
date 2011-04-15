@@ -599,6 +599,11 @@ void MainWindow::LoadGeometryFile( std::string filename )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::LoadDataFile( std::string filename )
 {
+    if( !ves::xplorer::ModelHandler::instance()->GetActiveModel() )
+    {
+        on_actionNew_triggered();
+    }
+
     ves::open::xml::ParameterBlockPtr mParamBlock;
     ves::open::xml::model::ModelPtr m_veModel(
             ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData() );
