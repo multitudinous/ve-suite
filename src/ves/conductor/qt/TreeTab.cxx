@@ -355,7 +355,7 @@ void TreeTab::on_m_refreshTreeButton_clicked()
 {
     // Read the scenegraph and rebuild tree.
     PopulateWithRoot(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+        &(ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager()) );
 }
 
 } // namespace conductor

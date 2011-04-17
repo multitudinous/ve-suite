@@ -905,7 +905,7 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
     }
 
     // Show the scenegraph tree
-    AddTab( mScenegraphTreeTab, "Scenegraph" );
+    AddTab( mScenegraphTreeTab, "Layers" );
 
     // Reactivate the last-known active tab
     // If there was no active tab, activate vis tab, if it exists
@@ -1230,5 +1230,5 @@ void MainWindow::on_actionNew_triggered()
 
     // Force CAD tree to re-read the now "empty" scenegraph
     mScenegraphTreeTab->PopulateWithRoot(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+        &(ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager()) );
 }
