@@ -180,17 +180,11 @@ void FrameAll::DoFrameAll()
     activeNavSwitchNode->setPosition( endPoint - bs.center() );
     activeNavSwitchNode->setAttitude( osg::Quat( 0.0, 0.0, 0.0, 1.0 ) );
 
-    // Appears to be unnecessary since this function does not use the center point.
-    // I think this is legacy from KeyboardMouse's handling of all the nav code. --RPT
-
     //Get the new center of the bounding sphere in camera space
-//    activeSwitchNode->computeBound();
-//    osg::Vec3d center =
-//        bs.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
-//
-//
-//    mCenterPoint->set( center.x(), center.y(), center.z() );
-
+    //activeSwitchNode->computeBound();
+    osg::Vec3d center =
+        bs.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
+    m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
