@@ -105,14 +105,8 @@ class ManipulatorManager;
 }
 
 /*!\file SceneManager.h
- *
- */
-
-/*!\class ves::xplorer::scenegraph::SceneManager
- *
- */
-
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::SceneManager
+ * \namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS SceneManager
