@@ -306,6 +306,12 @@ App::App( int argc, char* argv[], bool enableRTT )
 App::~App()
 {
     LOG_INFO( "Quitting App" );
+#if defined( _DARWIN )
+    if( m_signalLock.test() )
+    {
+        m_signalLock.release();
+    }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::exit()
@@ -313,10 +319,12 @@ void App::exit()
     m_exitApp = true;
     m_exitSignal(m_exitApp);
 
+#if defined( _DARWIN )
     if( m_signalLock.test() )
     {
         m_signalLock.release();
     }
+#endif
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
     ves::xplorer::data::DatabaseManager::instance()->Shutdown();
@@ -1326,6 +1334,7 @@ void App::SetNearFarRatio( bool const& enable, double const& nearFar )
         m_nearFarRatio = 0.0005;
     }
 }
+#if defined( _DARWIN )
 ////////////////////////////////////////////////////////////////////////////////
 bool App::AcquireQtLock()
 {
@@ -1355,3 +1364,4 @@ bool App::Test()
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
+#endif

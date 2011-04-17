@@ -196,6 +196,7 @@ public:
     ///Calls the Qt event loop
     void runLoop();
     
+#if defined( _DARWIN )
     ///Acquire qt lock
     bool AcquireQtLock();
     
@@ -204,6 +205,7 @@ public:
     
     ///Test whether the Qt mutex can be locked
     bool Test();
+#endif
 
 protected:
 
@@ -284,9 +286,10 @@ private:
 
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
+#if defined( _DARWIN )
     ///A mutex to protect variables accesses
     vpr::Mutex m_signalLock;
-
+#endif
     ///File name for screen capture filename
     std::string m_filename;
 

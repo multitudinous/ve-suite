@@ -161,6 +161,7 @@ bool AppWrapper::JugglerIsRunning()
 void AppWrapper::init()
 {
     vrj::Kernel::instance()->waitForKernelStop();// Block until kernel stops
+    
 /*
     delete m_cfdApp;
     m_cfdApp = NULL;
