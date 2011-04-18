@@ -1,5 +1,6 @@
 PACKAGE_NAME=ACETAO
 
+BASE_DIR="${DEV_BASE_DIR}/ACE_wrappers"
 if [ $PLATFORM = "Windows" ]; then
   BASE_DIR="${DEV_BASE_DIR}/ACE_wrappers_${ARCH}"
 fi

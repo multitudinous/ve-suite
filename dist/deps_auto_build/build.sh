@@ -282,7 +282,7 @@ function e()
   SKIP_PREBUILD="no"
   unset ISS_FILENAME
   unset CMAKE_PARAMS
-  CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" )
+  if [ ! -z "${CMAKE_PARAMS}" ]; then CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" ); fi
   unset CONFIGURE_PARAMS
   unset MSVC_PROJECT_NAMES
   unset MSVC_SOLUTION
@@ -363,7 +363,11 @@ function e()
     case ${PREBUILD_METHOD} in
       cmake)
         cd "${BUILD_DIR}";
+        echo $BUILD_DIR
+        which cmake
         ${CMAKE} "${SOURCE_DIR}" "${CMAKE_PARAMS[@]}";
+        echo ${CMAKE_PARAMS[@]}
+        echo "done prebuild"
         ;;
       configure)
         cd "${BUILD_DIR}";
