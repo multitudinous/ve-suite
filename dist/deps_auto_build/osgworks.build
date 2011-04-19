@@ -12,13 +12,13 @@ PREBUILD_METHOD=cmake
 CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
 CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
 CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_INSTALL_DIR}" )
-CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
 
 SKIP_FPC_INSTALL="no"
 FPC_FILE=osgworks.fpc
 
 case $PLATFORM in
   Windows)
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
     MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
@@ -30,9 +30,11 @@ case $PLATFORM in
     MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
   Darwin)
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
   Linux)
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
 esac
