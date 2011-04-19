@@ -39,6 +39,7 @@ case $PLATFORM in
     MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
   Darwin | Linux)
+    CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.so" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
 esac
