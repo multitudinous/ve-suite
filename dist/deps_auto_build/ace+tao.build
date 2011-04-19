@@ -39,8 +39,8 @@ case $PLATFORM in
     CONFIGURE=../configure
     CONFIGURE_PARAMS+=( --disable-tao-tests )
     CONFIGURE_PARAMS+=( --disable-tao-examples)
-    CONFIGURE_PARAMS+=(  --disable-ace-tests )
-    CONFIGURE_PARAMS+=(  --disable-ace-examples )
-    CONFIGURE_PARAMS+=(  --prefix="${INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --disable-ace-tests )
+    CONFIGURE_PARAMS+=( --disable-ace-examples )
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     ;;
 esac
