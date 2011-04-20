@@ -1,0 +1,27 @@
+PACKAGE_NAME=JUGGLER30
+BASE_DIR="${DEV_BASE_DIR}/vrjuggler-3.0"
+
+SOURCE_RETRIEVAL_METHOD=svn
+SOURCE_URL=http://vrjuggler.googlecode.com/svn/juggler/branches/3.0
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+case $PLATFORM in
+  Windows)
+    unset PROJ_STR
+    unset BUILD_TARGET
+    ;;
+  Darwin | Linux)
+    BUILD_TARGET="build install"
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure.pl
+    CONFIGURE_PARAMS+=( --with-boost="${BOOST_INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --with-boost-includes="${BOOST_INSTALL_DIR}/include" )
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    export LD_LIBRARY_PATH=${BUILD_DIR}/instlinks/lib64:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${CPPDOM_INSTALL_DIR}/lib64
+    export FLAGPOLL_PATH=${FLAGPOLL_PATH}:${GMTL_INSTALL_DIR}/share/flagpoll
+    ;;
+esac
