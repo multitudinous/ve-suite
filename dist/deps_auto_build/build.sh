@@ -126,7 +126,6 @@ function windows()
 # May be overriden with a shell variable
 #
 [ -z "${DEV_BASE_DIR}" ] && export DEV_BASE_DIR="${HOME}/dev/deps"
-[ -z "${DEPS_INSTALL_DIR}" ] && export DEPS_INSTALL_DIR="${HOME}/dev/deps/install-${PLATFORM}"
 
 #
 # Some useful global variables
@@ -538,16 +537,17 @@ function e()
     if [ ! -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
     if [ -z "${INSTALL_DIR}" ]; then echo "INSTALL_DIR undefined in package $package"; return; fi
     if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
-    if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
     if [ ! -d "${DEPS_INSTALL_DIR}" ]; then mkdir -p "${DEPS_INSTALL_DIR}"; fi
     
     case $PLATFORM in
       Windows)
+        if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
         innosetup;
         ;;
       Darwin)
         ;;
       Linux )
+        echo "Installing ${INSTALL_DIR}/. to ${DEPS_INSTALL_DIR}"
         cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
         ;;
     esac
@@ -562,6 +562,14 @@ platform
 arch
 windows
 
+#
+# setup deps install dir
+#
+[ -z "${DEPS_INSTALL_DIR}" ] && export DEPS_INSTALL_DIR="${HOME}/dev/deps/install-${PLATFORM}"
+
+#
+# execute the script
+#
 while getopts "hkucpbj:U:dta" opts
 do
 case $opts in
