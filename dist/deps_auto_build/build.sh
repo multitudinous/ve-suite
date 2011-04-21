@@ -125,7 +125,8 @@ function windows()
 # DEV_BASE_DIR defines the base directory for all development packages.
 # May be overriden with a shell variable
 #
-[ -z "${DEV_BASE_DIR}" ] && export DEV_BASE_DIR=${HOME}/dev/deps
+[ -z "${DEV_BASE_DIR}" ] && export DEV_BASE_DIR="${HOME}/dev/deps"
+[ -z "${DEPS_INSTALL_DIR}" ] && export DEPS_INSTALL_DIR="${HOME}/dev/deps/install-${PLATFORM}"
 
 #
 # Some useful global variables
@@ -148,6 +149,9 @@ function bye()
   exit 1
 }
 
+#
+# help statement for script usage
+#
 function usage()
 {
 echo "
@@ -170,6 +174,9 @@ echo "
     -a      Specify if we want to build 32 bit on 64 bit" >&2
 }
 
+#
+# execute ctags
+#
 function ctags()
 {
   ${CTAGS_INSTALL_DIR}/bin/ctags -RI --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ .
@@ -178,7 +185,27 @@ function ctags()
   mv tags ${TAGS_DIR}/${1}
 }
 
+#
+# unset all of the vars for building
+#
+function unsetvars()
+{
+  SKIP_FPC_INSTALL="yes"
+  SKIP_PREBUILD="no"
+  unset ISS_FILENAME
+  unset CMAKE_PARAMS
+  if [ ! -z "${CMAKE_PARAMS}" ]; then CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" ); fi
+  unset CONFIGURE_PARAMS
+  unset MSVC_PROJECT_NAMES
+  unset MSVC_SOLUTION
+  unset SCONS_PARAMS
+  unset BJAM_PARAMS
+  unset INNO_PARAMS
+}
+
+#
 # setup the function for controlling innosetup
+#
 function innosetup()
 {
   #http://www.jrsoftware.org/ishelp/
@@ -278,17 +305,7 @@ function e()
   #
   #reset the vars for the builds
   #
-  SKIP_FPC_INSTALL="yes"
-  SKIP_PREBUILD="no"
-  unset ISS_FILENAME
-  unset CMAKE_PARAMS
-  if [ ! -z "${CMAKE_PARAMS}" ]; then CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" ); fi
-  unset CONFIGURE_PARAMS
-  unset MSVC_PROJECT_NAMES
-  unset MSVC_SOLUTION
-  unset SCONS_PARAMS
-  unset BJAM_PARAMS
-  unset INNO_PARAMS
+  unsetvars;
 
   #setup the build types unless other wise specified in a build file
   case $PLATFORM in
@@ -522,7 +539,8 @@ function e()
     if [ -z "${INSTALL_DIR}" ]; then echo "INSTALL_DIR undefined in package $package"; return; fi
     if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
     if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
-
+    if [ ! -d "${DEPS_INSTALL_DIR}" ]; then mkdir -p "${DEPS_INSTALL_DIR}"; fi
+    
     case $PLATFORM in
       Windows)
         innosetup;
@@ -530,6 +548,7 @@ function e()
       Darwin)
         ;;
       Linux )
+        cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
         ;;
     esac
   fi
@@ -613,7 +632,8 @@ export_config_vars()
     EXPORT_FILE="${DEV_BASE_DIR}/exports"
     rm -f "${EXPORT_FILE}"
     for f in $*; do
-      eval $( sed -n '/^PACKAGE_NAME=/p;/^BASE_DIR=/p;/^INSTALL_DIR=/p;' $f )
+      #eval $( sed -n '/^PACKAGE_NAME=/p;/^BASE_DIR=/p;/^INSTALL_DIR=/p;' $f )
+      unsetvars;
       echo "export ${PACKAGE_NAME}_INSTALL_DIR=\"${INSTALL_DIR}\"" >> "${EXPORT_FILE}"
     done
 
