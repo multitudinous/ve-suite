@@ -642,6 +642,7 @@ export_config_vars()
     for f in $*; do
       #eval $( sed -n '/^PACKAGE_NAME=/p;/^BASE_DIR=/p;/^INSTALL_DIR=/p;' $f )
       unsetvars;
+      . "${f}"
       echo "export ${PACKAGE_NAME}_INSTALL_DIR=\"${INSTALL_DIR}\"" >> "${EXPORT_FILE}"
     done
 

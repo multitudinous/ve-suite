@@ -1,0 +1,50 @@
+PACKAGE_NAME=BOOST1440
+BASE_DIR="${DEV_BASE_DIR}/boost_1_44_0"
+
+SOURCE_RETRIEVAL_METHOD=wget
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+PREBUILD_METHOD=bjam
+BUILD_METHOD=bjam
+
+BJAM=./bjam
+
+BJAM_PARAMS+=( variant=release )
+BJAM_PARAMS+=( link=shared )
+BJAM_PARAMS+=( threading=multi )
+BJAM_PARAMS+=( runtime-link=shared )
+BJAM_PARAMS+=( --prefix="${INSTALL_DIR}" )
+if [ "$ARCH" = "64-bit" ]; then
+  BJAM_PARAMS+=( address-model=64 )
+else
+  BJAM_PARAMS+=( address-model=32 )
+fi
+
+case $PLATFORM in
+  Windows)
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.44.0/boost_1_44_0.zip
+    SOURCE_FORMAT=zip
+
+    BJAM_PREBUILD=./bootstrap.bat
+    BJAM_PARAMS+=( embed-manifest=on )
+    BJAM_PARAMS+=( toolset=msvc-9.0 )
+    #There is an actual file called INSTALL in boost src dir
+    BUILD_TARGET=install
+    ;;
+  Darwin)
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.44.0/boost_1_44_0.tar.bz2
+    SOURCE_FORMAT=bz2
+
+    BJAM_PREBUILD=./bootstrap.sh
+    BJAM_PARAMS+=( toolset=darwin )
+    ;;
+  Linux)
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.44.0/boost_1_44_0.tar.bz2
+    SOURCE_FORMAT=bz2
+
+    BJAM_PREBUILD=./bootstrap.sh
+    ;;
+esac

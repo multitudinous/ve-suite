@@ -17,8 +17,8 @@ case $PLATFORM in
     BUILD_TARGET="build install"
     PREBUILD_METHOD=configure
     CONFIGURE=../configure.pl
-    CONFIGURE_PARAMS+=( --with-boost="${BOOST_INSTALL_DIR}" )
-    CONFIGURE_PARAMS+=( --with-boost-includes="${BOOST_INSTALL_DIR}/include" )
+    CONFIGURE_PARAMS+=( --with-boost="${BOOST1440_INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --with-boost-includes="${BOOST1440_INSTALL_DIR}/include" )
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     export LD_LIBRARY_PATH=${BUILD_DIR}/instlinks/lib64:${LD_LIBRARY_PATH}
     export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${CPPDOM_INSTALL_DIR}/lib64
