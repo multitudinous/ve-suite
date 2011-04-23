@@ -193,7 +193,7 @@ function unsetvars()
   SKIP_PREBUILD="no"
   unset ISS_FILENAME
   unset CMAKE_PARAMS
-  if [ ! -z "${CMAKE_PARAMS}" ]; then CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" ); fi
+  if [ ! -z "${CMAKE_GENERATOR}" ]; then CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" ); fi
   unset CONFIGURE_PARAMS
   unset MSVC_PROJECT_NAMES
   unset MSVC_SOLUTION
