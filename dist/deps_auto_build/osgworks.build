@@ -27,7 +27,7 @@ case $PLATFORM in
       MSVC_PLATFORM=x64
     fi
     MSVC_SOLUTION="osgWorks.sln"
-    MSVC_PROJECT_NAMES+=( INSTALL )
+    #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
   Darwin)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )

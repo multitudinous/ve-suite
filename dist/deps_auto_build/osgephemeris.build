@@ -27,7 +27,7 @@ case $PLATFORM in
       MSVC_PLATFORM=x64
     fi
     MSVC_SOLUTION="osgEphemeris.sln"
-    MSVC_PROJECT_NAMES+=( INSTALL )
+    #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
   Darwin | Linux)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
