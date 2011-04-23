@@ -1,9 +1,12 @@
 PACKAGE_NAME=VTK
-BASE_DIR="${DEV_BASE_DIR}/VTK"
+BASE_DIR="${DEV_BASE_DIR}/VTK-5.8"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=http://www.vtk.org/files/release/5.4/vtk-5.4.2.tar.gz
+#SOURCE_URL=http://www.vtk.org/files/release/5.4/vtk-5.4.2.tar.gz
+SOURCE_URL=http://www.vesuite.org/external/deps/src/VTK-5.8.tar.bz2
+
+VTK_VERSION_DIR=vtk-5.8
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
