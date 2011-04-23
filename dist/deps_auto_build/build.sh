@@ -447,10 +447,11 @@ function e()
         echo $BUILD_DIR
         case $PLATFORM in
           Windows)
-            if [ -d "${BUILD_TARGET}" ]; then
+            if [ ! -z "${BUILD_TARGET}" ]; then
               MSVC_PROJECT_NAMES+=( "${BUILD_TARGET}" )
             fi
 
+            unset PROJ_STR
             for name in "${MSVC_PROJECT_NAMES[@]}"; do
               PROJ_STR="$PROJ_STR$name$( [ "$name" != "${MSVC_PROJECT_NAMES[@]: -1}" ] && echo ';' )";
             done
