@@ -475,6 +475,7 @@ function e()
         ;;
       bjam)
         cd "${SOURCE_DIR}";
+        echo "Build Comand: ${BJAM_PARAMS[@]} ${BUILD_TARGET} ${JCMD}"
         ${BJAM} "${BJAM_PARAMS[@]}" ${BUILD_TARGET} ${JCMD};
         ;;
       *)

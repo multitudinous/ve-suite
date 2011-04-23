@@ -16,12 +16,15 @@ BJAM_PARAMS+=( variant=release )
 BJAM_PARAMS+=( link=shared )
 BJAM_PARAMS+=( threading=multi )
 BJAM_PARAMS+=( runtime-link=shared )
-BJAM_PARAMS+=( --prefix="${INSTALL_DIR}" )
+
 if [ "$ARCH" = "64-bit" ]; then
   BJAM_PARAMS+=( address-model=64 )
 else
   BJAM_PARAMS+=( address-model=32 )
 fi
+
+BJAM_PARAMS+=( --prefix="${INSTALL_DIR}" )
+BJAM_PARAMS+=( --build-dir="${BUILD_DIR}" )
 
 case $PLATFORM in
   Windows)
@@ -29,8 +32,8 @@ case $PLATFORM in
     SOURCE_FORMAT=zip
 
     BJAM_PREBUILD=./bootstrap.bat
-    BJAM_PARAMS+=( embed-manifest=on )
-    BJAM_PARAMS+=( toolset=msvc-9.0 )
+    BJAM_PARAMS+=( --embed-manifest=on )
+    BJAM_PARAMS+=( --toolset=msvc-9.0 )
     #There is an actual file called INSTALL in boost src dir
     BUILD_TARGET=install
     ;;
