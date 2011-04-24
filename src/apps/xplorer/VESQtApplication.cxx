@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#if defined( _DARWIN )
 #include "VESQtApplication.h"
 #include <iostream>
 #include <QtCore/QEvent>
@@ -154,3 +155,4 @@ bool VESQtApplication::ProcessEvent( QObject *obj, QEvent *event)
 ////////////////////////////////////////////////////////////////////////////////
 }
 }
+#endif
