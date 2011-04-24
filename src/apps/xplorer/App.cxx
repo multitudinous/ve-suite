@@ -1274,6 +1274,9 @@ void App::LoadUI()
     element->SetWidget( mainUIWidget );
     m_UIManager->AddElement( element );
 
+    // Start the main UI minimized
+    m_UIManager->MinimizeElement( element );
+
     m_uiInitialized = true;
 
     vprDEBUG( vesDBG, 2 ) << "|\tEnd App LoadUI" << std::endl << vprDEBUG_FLUSH;
