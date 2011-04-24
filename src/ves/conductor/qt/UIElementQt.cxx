@@ -319,12 +319,9 @@ unsigned char* UIElementQt::RenderElementToImage()
 
     // This method doesn't cause the element to repaint;
     // instead, we keep an internal timer that causes a repaint of this element
-    // every 30ms. Any time the present method is called, we simply return the
+    // every 100ms. Any time the present method is called, we simply return the
     // most recently painted image of this window.
 
-    // Flip mImage vertically and store in mImageFlipped. OpenGL treats textures
-    // as scanning from bottom up, but Qt renders images top down, so we have to
-    // do this little flip trick.
     if( mImageDirty )
     {
         { // Enter critical section
@@ -340,6 +337,7 @@ unsigned char* UIElementQt::RenderElementToImage()
         mDirty = false;
     }
     //return mImageFlipped->bits();
+    QMutexLocker locker( mImageMutex );
     return mImage->bits();
 }
 ////////////////////////////////////////////////////////////////////////////////
