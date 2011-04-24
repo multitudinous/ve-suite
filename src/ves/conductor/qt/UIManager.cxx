@@ -1095,6 +1095,13 @@ bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
         return false;
     }
 
+    // Intercept the UI hide/show hotkey.
+    if( key == gadget::KEY_F1 )
+    {
+        // Do nothing here; the work is done in KeyReleaseEvent
+        return true;
+    }
+
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
     ElementMap_type::iterator map_iterator;
@@ -1120,6 +1127,13 @@ bool UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
     if( ! _okayToSendEvent() )
     {
         return false;
+    }
+
+    // Intercept the UI hide/show hotkey.
+    if( key == gadget::KEY_F1 )
+    {
+        ToggleVisibility();
+        return true;
     }
 
     // TODO: this iterates over all elements. We should instead just find the match
