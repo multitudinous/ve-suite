@@ -39,8 +39,6 @@ namespace ves
 {
 namespace conductor
 {
-
-
 class VE_CONDUCTOR_QTUI_EXPORTS ExtendedToolBar : public QToolBar
 {
     Q_OBJECT
@@ -53,7 +51,7 @@ Q_SIGNALS:
 public Q_SLOTS:
 
 protected:
-    void leaveEvent ( QEvent* event );
+    virtual void leaveEvent( QEvent* event );
 
 };
 

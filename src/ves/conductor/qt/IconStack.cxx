@@ -53,7 +53,8 @@ IconStack::IconStack( QWidget* positionParent, QWidget* parent )
     setFloatable( false );
     setIconSize( QSize( 32, 32 ) );
     setAutoFillBackground( true );
-    hide();
+    setVisible( false );
+    setMouseTracking( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IconStack::SetExtendedToolBarParent( QToolBar* parent )
@@ -80,28 +81,28 @@ void IconStack::SetPersistence( bool persistence )
     mPersistent = persistence;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IconStack::AddAction ( QAction* action )
+void IconStack::AddAction( QAction* action )
 {
     addAction( action );
     _connectAction( action );
 }
 ////////////////////////////////////////////////////////////////////////////////
-QAction* IconStack::AddAction ( const QString& text )
+QAction* IconStack::AddAction( const QString& text )
 {
     return _connectAction( addAction( text ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-QAction* IconStack::AddAction ( const QIcon& icon, const QString& text )
+QAction* IconStack::AddAction( const QIcon& icon, const QString& text )
 {
     return _connectAction( addAction( icon, text ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-QAction* IconStack::AddAction ( const QString& text, const QObject* receiver, const char* member )
+QAction* IconStack::AddAction( const QString& text, const QObject* receiver, const char* member )
 {
     return _connectAction( addAction( text, receiver, member ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-QAction* IconStack::AddAction ( const QIcon& icon, const QString& text, const QObject* receiver, const char* member )
+QAction* IconStack::AddAction( const QIcon& icon, const QString& text, const QObject* receiver, const char* member )
 {
    return  _connectAction( addAction( icon, text, receiver, member ) );
 }
@@ -115,9 +116,14 @@ QAction* IconStack::_connectAction( QAction* action )
     return action;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IconStack::leaveEvent ( QEvent* event )
+void IconStack::leaveEvent( QEvent* )
 {
-    hide();
+    setVisible( false );
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconStack::mouseMoveEvent( QEvent* )
+{
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IconStack::Hide()
@@ -132,7 +138,7 @@ void IconStack::_hide()
 {
     if( !underMouse() )
     {
-        hide();
+        setVisible( false );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -35,12 +35,10 @@
 
 #include <QtGui/QToolBar>
 /*!\file IconStack.h
- Icon Stack Qt API
- */
-/*!\class ves::conductor::IconStack
+ * Icon Stack Qt API
+ * \class ves::conductor::IconStack
  * This class helps manage Icon Stacks in the Qt UI.
- */
-/*!\namespace ves::conductor
+ * \namespace ves::conductor
  * Icon Stack wrapper
  */
 namespace ves
@@ -65,16 +63,17 @@ public:
 
     /// "Overrides" of the similarly-named methods of QToolBar. Please use these
     /// instead of QToolBar::addAction( ... ) methods.
-    void AddAction ( QAction* action );
-    QAction* AddAction ( const QString& text );
-    QAction* AddAction ( const QIcon& icon, const QString& text );
-    QAction* AddAction ( const QString& text, const QObject* receiver, const char* member );
-    QAction* AddAction ( const QIcon& icon, const QString& text, const QObject* receiver, const char* member );
+    void AddAction( QAction* action );
+    QAction* AddAction( const QString& text );
+    QAction* AddAction( const QIcon& icon, const QString& text );
+    QAction* AddAction( const QString& text, const QObject* receiver, const char* member );
+    QAction* AddAction( const QIcon& icon, const QString& text, const QObject* receiver, const char* member );
 
     void SetExtendedToolBarParent( QToolBar* parent );
 
 protected:
-    void leaveEvent ( QEvent* event );
+    virtual void leaveEvent( QEvent* event );
+    virtual void mouseMoveEvent( QEvent* event );
 
 
 Q_SIGNALS:

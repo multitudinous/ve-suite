@@ -127,12 +127,14 @@ MainWindow::MainWindow(QWidget* parent) :
     m_preferencesTab( 0 ),
     m_pluginsTab( 0 )
 {
+    setMouseTracking( true );
     ui->setupUi(this);
     m_messageBox = new QMessageBox(this);
         
     //ui->menuBar->close();
 
     QToolBar* toolbar = new ExtendedToolBar(this);
+    toolbar->setMouseTracking( true );
     toolbar->setIconSize(QSize(32,32));
     toolbar->setMovable( false );
     this->addToolBar( toolbar );
