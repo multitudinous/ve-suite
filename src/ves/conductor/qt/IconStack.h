@@ -71,10 +71,19 @@ public:
     QAction* AddAction ( const QString& text, const QObject* receiver, const char* member );
     QAction* AddAction ( const QIcon& icon, const QString& text, const QObject* receiver, const char* member );
 
+    void SetExtendedToolBarParent( QToolBar* parent );
+
+protected:
+    void leaveEvent ( QEvent* event );
+
 
 Q_SIGNALS:
 
 public Q_SLOTS:
+    void Hide();
+
+protected Q_SLOTS:
+    void _hide();
 
 private:
     QWidget* mPositionParent;

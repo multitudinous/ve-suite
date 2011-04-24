@@ -33,6 +33,7 @@
 #include <ves/conductor/qt/IconStack.h>
 
 #include <QtGui/QAction>
+#include <QtCore/QTimer>
 
 #include <iostream>
 
@@ -53,6 +54,11 @@ IconStack::IconStack( QWidget* positionParent, QWidget* parent )
     setIconSize( QSize( 32, 32 ) );
     setAutoFillBackground( true );
     hide();
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconStack::SetExtendedToolBarParent( QToolBar* parent )
+{
+    connect( parent, SIGNAL(leaveSignal()), this, SLOT( Hide() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IconStack::Show()
@@ -107,6 +113,27 @@ QAction* IconStack::_connectAction( QAction* action )
         QObject::connect( action, SIGNAL(triggered(bool)), SLOT(hide()) );
     }
     return action;
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconStack::leaveEvent ( QEvent* event )
+{
+    hide();
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconStack::Hide()
+{
+    // Wait 100 milliseconds before executing _hide. This allows time for the
+    // current mouse position to be updated to show whether it is now over
+    // the stack.
+    QTimer::singleShot( 100, this, SLOT(_hide()) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconStack::_hide()
+{
+    if( !underMouse() )
+    {
+        hide();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

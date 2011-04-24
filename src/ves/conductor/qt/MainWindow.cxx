@@ -51,6 +51,7 @@
 #include <ves/conductor/qt/plugin/PluginSelectionTab.h>
 #include <ves/conductor/qt/VisFeatureManager.h>
 #include <ves/conductor/qt/XMLDataBufferEngine.h>
+#include <ves/conductor/qt/extendedWidgets/ExtendedToolBar.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -130,13 +131,19 @@ MainWindow::MainWindow(QWidget* parent) :
     m_messageBox = new QMessageBox(this);
         
     //ui->menuBar->close();
+
+    QToolBar* toolbar = new ExtendedToolBar(this);
+    toolbar->setIconSize(QSize(32,32));
+    toolbar->setMovable( false );
+    this->addToolBar( toolbar );
     
     ///The file menu stack
     {
-        ui->mainToolBar->addAction( ui->actionFile );
+        toolbar->addAction( ui->actionFile );
         
-        mFileOpsStack = new IconStack( ui->mainToolBar->
+        mFileOpsStack = new IconStack( toolbar->
             widgetForAction( ui->actionFile ), this );
+        mFileOpsStack->SetExtendedToolBarParent( toolbar );
         mFileOpsStack->AddAction( ui->actionNew );
         mFileOpsStack->AddAction( ui->actionOpen);
         mFileOpsStack->AddAction( ui->actionSave );
@@ -144,10 +151,11 @@ MainWindow::MainWindow(QWidget* parent) :
 
     ///The physics menu stack
     {
-        ui->mainToolBar->addAction( ui->actionPhysicsStack );
+        toolbar->addAction( ui->actionPhysicsStack );
         
-        m_physicsMenuStack = new IconStack( ui->mainToolBar->
+        m_physicsMenuStack = new IconStack( toolbar->
             widgetForAction( ui->actionPhysicsStack ), this );
+        m_physicsMenuStack->SetExtendedToolBarParent( toolbar );
         m_physicsMenuStack->AddAction( ui->actionPlayPhysics);
         m_physicsMenuStack->AddAction( ui->actionPausePhysics);
         m_physicsMenuStack->AddAction( ui->actionResetPhysics );
@@ -156,10 +164,11 @@ MainWindow::MainWindow(QWidget* parent) :
 
     ///The manipulator menu stack
     {
-        ui->mainToolBar->addAction( ui->actionManipulatorStack );
+        toolbar->addAction( ui->actionManipulatorStack );
         
-        m_manipulatorMenuStack = new IconStack( ui->mainToolBar->
+        m_manipulatorMenuStack = new IconStack( toolbar->
             widgetForAction( ui->actionManipulatorStack ), this );
+        m_manipulatorMenuStack->SetExtendedToolBarParent( toolbar );
         m_manipulatorMenuStack->AddAction( ui->actionEnableManipulator );
         m_manipulatorMenuStack->AddAction( ui->actionScaleManipulator );
         m_manipulatorMenuStack->AddAction( ui->actionTranslateManipulator );
@@ -175,10 +184,11 @@ MainWindow::MainWindow(QWidget* parent) :
     
     ///The nav menu stack
     {
-        ui->mainToolBar->addAction( ui->actionNavigationStack );
+        toolbar->addAction( ui->actionNavigationStack );
 
-        m_navMenuStack = new IconStack( ui->mainToolBar->
+        m_navMenuStack = new IconStack( toolbar->
             widgetForAction( ui->actionNavigationStack ), this );
+        m_navMenuStack->SetExtendedToolBarParent( toolbar );
         m_navMenuStack->AddAction( ui->actionSmallJump );
         m_navMenuStack->AddAction( ui->actionMediumJump );
         m_navMenuStack->AddAction( ui->actionLargeJump );
@@ -194,9 +204,10 @@ MainWindow::MainWindow(QWidget* parent) :
     }
 
     {
-        ui->mainToolBar->addAction( ui->actionViewStack );
-        m_viewMenuStack = new IconStack( ui->mainToolBar->
+        toolbar->addAction( ui->actionViewStack );
+        m_viewMenuStack = new IconStack( toolbar->
             widgetForAction( ui->actionViewStack ), this );
+        m_viewMenuStack->SetExtendedToolBarParent( toolbar );
         m_viewMenuStack->AddAction( ui->actionShowPreferencesTab );
         m_viewMenuStack->AddAction( ui->actionShowPluginsTab );
     }
@@ -608,171 +619,107 @@ void MainWindow::LoadDataFile( std::string filename )
     ves::open::xml::model::ModelPtr m_veModel(
             ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData() );
     //---------------From OnInformationPacketAdd
-    {
-//        wxTextEntryDialog newDataSetName( this,
-//                                          wxString( _( "New Dataset" ) ),
-//                                          wxString( _( "Enter name for new Dataset:" ) ),
-//                                          wxString( _( "Dataset" ) ),
-//                                          wxOK | wxCANCEL | wxCENTRE );
+    mParamBlock = m_veModel->GetInformationPacket( -1 );
+    mParamBlock->SetName( filename );
 
-//        newDataSetName.CentreOnParent();
-
-//        if( newDataSetName.ShowModal() == wxID_CANCEL )
-//        {
-//            return;
-//        }
-
-
-//        if( dataSetList->FindString( newDataSetName.GetValue() ) != wxNOT_FOUND )
-//        {
-//            wxMessageBox( _( "Data with this name is already loaded." ),
-//                          newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
-//            return;
-//        }
-//        else
-        {
-//            dataSetList->Append( newDataSetName.GetValue() );
-//            dataSetList->SetStringSelection( newDataSetName.GetValue() );
-
-            mParamBlock = m_veModel->GetInformationPacket( -1 );
-            std::string tempStr = filename;
-//            tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
-            //boost::filesystem::path tempPath( filename );
-            //tempStr = tempPath.filename().string();
-            mParamBlock->SetName( tempStr );
-//            EnableUI( true );
-//            SetTextCtrls();
-        }
-    }
 
 
     //---------------- From OnLoadFile
     //Load a vtk file
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI.
-    // Before editing this code, remove the block markers.
-//    wxPoint pos( 0, 0 );
-//    wxFileDialog dialog( this,
-//                         _T( "Open Data Set File" ),
-//                         ::wxGetCwd(),
-//                         _T( "" ),
-//                         _T( "VTK DataSet Files (*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;)|*.vtk;*.vtu;*.vts;*.vti;*.vtm;*.vtp;*.vtr;|StarCD Parameter File (*.param)|*.param;|EnSight(*.ens;*.case)|*.ens;*.case;|MFIX (*.mfix)|*.mfix;|Fluent (*.cas)|*.cas;|AVS (*.avs)|*.avs;|Dicom (*.dcm)|*.dcm;|STL (*.stl)|*.stl;|All Files (*.*)|*.*" ),
-//                         wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
-//                         wxDefaultPosition );
-//    dialog.CentreOnParent();
+    ves::open::xml::DataValuePairPtr tempDVP =
+        mParamBlock->GetProperty( "VTK_DATA_FILE" );
+    if( !tempDVP )
+    {
+        tempDVP = mParamBlock->GetProperty( -1 );
+    }
+    tempDVP->SetData( "VTK_DATA_FILE", filename );
 
-//    if( dialog.ShowModal() == wxID_OK )
-//    {
-//        wxFileName datasetFilename( dialog.GetPath() );
-//        datasetFilename.MakeRelativeTo( ::wxGetCwd() );
-//        wxString relativeDataSetPath( datasetFilename.GetFullPath() );
-//        relativeDataSetPath.Replace( _( "\\" ), _( "/" ), true );
-//        dataSetTextEntry->SetValue( relativeDataSetPath );
-        std::string tempStr;
+    // RPT: This block isn't doing anything useful yet. Need to figure
+    // out proper workflow for determining if the file is part of
+    // a transient series.
+    /*
+    if( ves::xplorer::util::fileIO::getExtension( filename ) == "vtm" )
+    {
+        boost::filesystem::path tempPath( filename );
+        std::string transDir = tempPath.parent_path().string();
+
+        std::vector<std::string> transientFile =
+            ves::xplorer::util::fileIO::GetFilesInDirectory(
+            transDir, ".vtm" );
+        if( transientFile.size() > 0 )
         {
-            ves::open::xml::DataValuePairPtr tempDVP =
-                mParamBlock->GetProperty( "VTK_DATA_FILE" );
-            if( !tempDVP )
+            // ----- TODO: RPT: Need to think about how to deal with this.....
+            wxMessageDialog promptDlg( this,
+                _( "Is this file part of a transient series?" ),
+                _( "Transient Data Chooser" ),
+                wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                wxDefaultPosition );
+            int answer = promptDlg.ShowModal();
+            if( answer == wxID_YES )
             {
-                tempDVP = mParamBlock->GetProperty( -1 );
-            }
-//            tempStr = static_cast< const char* >(
-//                wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) );
-            tempStr = filename;
-            //boost::filesystem::path tempPath( filename );
-            //tempStr = tempPath.filename().string();
-            tempDVP->SetData( "VTK_DATA_FILE", tempStr );
-
-            // RPT: This block isn't doing anything useful yet. Need to figure
-            // out proper workflow for determining if the file is part of
-            // a transient series.
-            if( ves::xplorer::util::fileIO::getExtension( tempStr ) == "vtm" )
-            {
-                boost::filesystem::path tempPath( filename );
-                std::string transDir = tempPath.parent_path().string();
-
-//                ConvertUnicode( datasetFilename.GetPath().c_str() );
-//                if( transDir.empty() )
-//                {
-//                    transDir = ".";
-//                }
-                std::vector<std::string> transientFile =
-                    ves::xplorer::util::fileIO::GetFilesInDirectory(
-                    transDir, ".vtm" );
-                if( transientFile.size() > 0 )
+                tempDVP =
+                    mParamBlock->GetProperty( "VTK_TRANSIENT_SERIES" );
+                if( !tempDVP )
                 {
-                    // ----- TODO: RPT: Need to think about how to deal with this.....
-                    /*
-                    wxMessageDialog promptDlg( this,
-                        _( "Is this file part of a transient series?" ),
-                        _( "Transient Data Chooser" ),
-                        wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
-                        wxDefaultPosition );
-                    int answer = promptDlg.ShowModal();
-                    if( answer == wxID_YES )
-                    {
-                        tempDVP =
-                            mParamBlock->GetProperty( "VTK_TRANSIENT_SERIES" );
-                        if( !tempDVP )
-                        {
-                            tempDVP = mParamBlock->GetProperty( -1 );
-                        }
-                        //unsigned int translfag = 1;
-                        tempDVP->SetData( "VTK_TRANSIENT_SERIES", transDir );
-                    }*/
+                    tempDVP = mParamBlock->GetProperty( -1 );
                 }
+                //unsigned int translfag = 1;
+                tempDVP->SetData( "VTK_TRANSIENT_SERIES", transDir );
             }
-//        }
+        }
+    }*/
 
-        ves::xplorer::util::cfdVTKFileHandler tempHandler;
-        std::vector< std::string > dataArrayList =
-            tempHandler.GetDataSetArraysFromFile( tempStr );
+    ves::xplorer::util::cfdVTKFileHandler tempHandler;
+    std::vector< std::string > dataArrayList =
+        tempHandler.GetDataSetArraysFromFile( filename );
 
-        if( !dataArrayList.empty() )
-        {
-            //open dialog to choose scalars to load
+    if( !dataArrayList.empty() )
+    {
+        // RPT: For now, we just load all scalars in the file. Need to think
+        // about how to choose specific ones from the file.
+        //open dialog to choose scalars to load
 //            DataSetDataArrayChoiceDialog choiceDialog( this );
 //            choiceDialog.SetDataArrays( dataArrayList );
 //            if( choiceDialog.ShowModal() == wxID_OK )
 //            {
 //                dataArrayList = choiceDialog.GetUserActiveArrays();
-                ves::open::xml::DataValuePairPtr arraysDVP =
-                    mParamBlock->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
-                if( !arraysDVP )
-                {
-                    arraysDVP = mParamBlock->GetProperty( -1 );
-                }
-                ves::open::xml::OneDStringArrayPtr
-                    stringArray( new ves::open::xml::OneDStringArray() );
-                stringArray->SetArray( dataArrayList );
-                arraysDVP->SetData( "VTK_ACTIVE_DATA_ARRAYS", stringArray );
-//            }
-        }
-        ves::open::xml::DataValuePairSharedPtr
-            dataValuePair( new ves::open::xml::DataValuePair() );
-        dataValuePair->SetData( "CREATE_NEW_DATASETS",
-            ves::open::xml::model::ModelPtr(
-            new ves::open::xml::model::Model( *m_veModel ) ) );
-//        SendCommandToXplorer( dataValuePair );
-        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-        veCommand->SetCommandName( std::string( "UPDATE_MODEL_DATASETS" ) );
-        veCommand->AddDataValuePair( dataValuePair );
-        //Add the active dataset name to the command
-        ves::open::xml::DataValuePairSharedPtr dataSetName(
-            new ves::open::xml::DataValuePair() );
-        if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
+        ves::open::xml::DataValuePairPtr arraysDVP =
+            mParamBlock->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
+        if( !arraysDVP )
         {
-            dataSetName->SetData( "VTK_DATASET_NAME",
-                                  mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+            arraysDVP = mParamBlock->GetProperty( -1 );
         }
-        else
-        {
-            dataSetName->SetData( "VTK_DATASET_NAME", "NULL" );
-        }
-        veCommand->AddDataValuePair( dataSetName );
-        ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
-        AddTab( mVisualizationTab, "Visualization" );
-        ActivateTab("Visualization");
+        ves::open::xml::OneDStringArrayPtr
+            stringArray( new ves::open::xml::OneDStringArray() );
+        stringArray->SetArray( dataArrayList );
+        arraysDVP->SetData( "VTK_ACTIVE_DATA_ARRAYS", stringArray );
     }
+
+    ves::open::xml::DataValuePairSharedPtr
+        dataValuePair( new ves::open::xml::DataValuePair() );
+    dataValuePair->SetData( "CREATE_NEW_DATASETS",
+        ves::open::xml::model::ModelPtr(
+        new ves::open::xml::model::Model( *m_veModel ) ) );
+
+    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+    veCommand->SetCommandName( std::string( "UPDATE_MODEL_DATASETS" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    //Add the active dataset name to the command
+    ves::open::xml::DataValuePairSharedPtr dataSetName(
+        new ves::open::xml::DataValuePair() );
+    if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
+    {
+        dataSetName->SetData( "VTK_DATASET_NAME",
+                              mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+    }
+    else
+    {
+        dataSetName->SetData( "VTK_DATASET_NAME", "NULL" );
+    }
+    veCommand->AddDataValuePair( dataSetName );
+    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+    AddTab( mVisualizationTab, "Visualization" );
+    ActivateTab("Visualization");
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileCancelled()
