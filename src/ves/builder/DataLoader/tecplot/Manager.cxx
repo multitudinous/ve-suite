@@ -1,6 +1,6 @@
 /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2010 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2011 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -149,17 +149,17 @@ void Manager::OneTimeSetup()
     setApplicationEventMonitor( new ApplicationEventMonitor() );
     
     char* tecSDKHomeDir = getenv("TECSDKHOME");
-    if( tecSDKHomeDir )
+    /*if( tecSDKHomeDir )
     {
         //std::cout << "TECSDKHOME=" << tecSDKHomeDir << std::endl;
         // the following produces screen output showing tecplot version and location of your tecplot.cfg
         ret = init( tecSDKHomeDir );
     }
-    else
+    else*/
     {
-        std::string tempHome(".\\");
+        std::string tempHome("./");
         //std::cout << "TECSDKHOME=" << tempHome << std::endl;
-        ret = init( tempHome );
+        ret = init( tempHome, "IowaStateBrydenResearchGroup 112 01/10/2011 0 1723380535" );
         //std::cerr << "The environment variable TECSDKHOME must be defined to run Tecplot SDK applications.\n" << std::endl;
         //ret = Manager::ManagerStartReturnCode_HomeDirectoryNotSpecified;
     }

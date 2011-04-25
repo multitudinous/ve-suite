@@ -49,7 +49,7 @@ SceneNode::SceneNode()
     :
     mActiveTechnique( "Default" )
 {
-    AddTechnique( "Default", new technique::DefaultTechnique() );
+    AddTechnique( mActiveTechnique, new technique::DefaultTechnique() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::SceneNode( const SceneNode& rhs )
