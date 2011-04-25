@@ -11,7 +11,7 @@
   <para>This chapter describes how to make visualizations using the VE-Suite
   toolkit and a sample dataset. To follow this example, download and unzip the
   PrISUm car dataset: <code><link
-  xlink:href="http://www.vesuite.org/external/data/PrISUm.zip">PrISUm.zip</link></code>
+  xlink:href="http://www.vesuite.org/external/data/PrISUm-0.2.zip">PrISUm.zip</link></code>
   (57MB).</para>
 
   <section>
