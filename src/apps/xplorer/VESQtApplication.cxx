@@ -122,8 +122,7 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
     {
         return ProcessEvent( obj, event );
     }
-    
-    
+
     //std::cout << event->type() << std::endl << std::flush;
     
     //return ProcessEvent( obj, event );
