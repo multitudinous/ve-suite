@@ -149,17 +149,17 @@ void Manager::OneTimeSetup()
     setApplicationEventMonitor( new ApplicationEventMonitor() );
     
     char* tecSDKHomeDir = getenv("TECSDKHOME");
-    /*if( tecSDKHomeDir )
+    if( tecSDKHomeDir )
     {
         //std::cout << "TECSDKHOME=" << tecSDKHomeDir << std::endl;
         // the following produces screen output showing tecplot version and location of your tecplot.cfg
         ret = init( tecSDKHomeDir );
     }
-    else*/
+    else
     {
         std::string tempHome("./");
         //std::cout << "TECSDKHOME=" << tempHome << std::endl;
-        ret = init( tempHome, "IowaStateBrydenResearchGroup 112 01/10/2011 0 1723380535" );
+        ret = init( tempHome );
         //std::cerr << "The environment variable TECSDKHOME must be defined to run Tecplot SDK applications.\n" << std::endl;
         //ret = Manager::ManagerStartReturnCode_HomeDirectoryNotSpecified;
     }
