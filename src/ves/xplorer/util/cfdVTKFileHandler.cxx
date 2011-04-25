@@ -76,7 +76,6 @@
 #include <iostream>
 #include <cstring>
 
-//#include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/version.hpp>
@@ -374,7 +373,7 @@ bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFil
     //PRectilinearGrid (.pvtr) — Parallel vtkRectilinearGrid (structured). 
     //PStructuredGrid (.pvts) — Parallel vtkStructuredGrid (structured). 
     //PUnstructuredGrid (.pvtu) — Parallel vtkUnstructuredGrid (unstructured). 
-    fs::path file_name( outFileName, fs::native );
+    fs::path file_name( outFileName );
     
     if( dataSet->IsA( "vtkMultiBlockDataSet" ) )
     {
@@ -584,7 +583,7 @@ std::vector< std::string > cfdVTKFileHandler::GetDataSetArraysFromFile( const st
         return m_activeArrays;
     }
     _inFileName = vtkFileName;
-    fs::path file_name( _inFileName, fs::native );
+    fs::path file_name( _inFileName );
 
     std::cout << "|\tLoading " << _inFileName
         << " and extension " << file_name.extension() << std::endl;;

@@ -54,6 +54,7 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;

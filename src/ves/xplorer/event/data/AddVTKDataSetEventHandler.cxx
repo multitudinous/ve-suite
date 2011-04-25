@@ -52,6 +52,7 @@
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
 
 #include <iostream>
 #include <sstream>

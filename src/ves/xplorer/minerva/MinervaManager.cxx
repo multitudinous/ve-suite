@@ -84,6 +84,7 @@
 #include <boost/bind.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
 
 using namespace ves::xplorer::minerva;
 

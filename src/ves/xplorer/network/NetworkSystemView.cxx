@@ -148,16 +148,9 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string const& netId )
             vpr::System::getenv( "XPLORER_DATA_DIR", dataPrefix );
 
             //removes the file extension
-#if BOOST_VERSION > 103301
-            fs::path file_name( model->GetIconFilename(), fs::native );
+            fs::path file_name( model->GetIconFilename() );
             file_name.replace_extension( "ive" );
             std::string iconFilename = file_name.string();
-#else
-            std::string iconFilename = model->GetIconFilename().
-                substr( 0, model->GetIconFilename().
-                rfind(".",model->GetIconFilename().size()));
-            iconFilename += ".ive";
-#endif
             
             osg::ref_ptr<osg::Node> loadedModel = 
                 osgDB::readNodeFile( dataPrefix + "/3DIcons/" + iconFilename );

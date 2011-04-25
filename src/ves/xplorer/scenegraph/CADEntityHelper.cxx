@@ -53,6 +53,7 @@
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
 
 // --- OSG Includes --- //
 #include <osg/Fog>
@@ -290,8 +291,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                     fullPathFilename.*/
             boost::filesystem::path fullPathFilename =
                 boost::filesystem::system_complete(
-                    boost::filesystem::path( venDirectory.c_str(),
-                                             boost::filesystem::native ) );
+                    boost::filesystem::path( venDirectory.c_str() ) );
             //std::cout << venDirectory << " "
             //<< fullPathFilename.native_file_string() << std::endl;
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
@@ -307,8 +307,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         {
             boost::filesystem::path fullPathFilename =
                 boost::filesystem::system_complete(
-                    boost::filesystem::path( filename.c_str(),
-                                             boost::filesystem::native ) );
+                    boost::filesystem::path( filename.c_str() ) );
             std::string fullPath;
             if( boost::filesystem::exists( fullPathFilename ) )
             {

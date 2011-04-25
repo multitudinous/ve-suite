@@ -48,6 +48,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/exception.hpp>
+#include <boost/version.hpp>
 
 
 namespace fs = boost::filesystem;
@@ -268,7 +269,7 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
         {
             try
             {
-                fs::path lib_file(info.dli_fname, fs::native);
+                fs::path lib_file(info.dli_fname);
                 lib_file = fs::system_complete(lib_file);
 
                 // Get the directory containing this shared library.
@@ -303,9 +304,9 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
                 if ( found )
                 {
                     setenv("XPLORER_BASE_DIR",
-                           base_dir.native_directory_string().c_str(), 1);
+                           base_dir.string().c_str(), 1);
                     std::cout << "XPLORER_BASE_DIR=" 
-                        << base_dir.native_directory_string() << std::endl;
+                        << base_dir.string() << std::endl;
                 }
             }
             catch (fs::filesystem_error& ex)
@@ -319,7 +320,7 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
     {
         try
         {
-            base_dir = fs::path(env_dir, fs::native);
+            base_dir = fs::path(env_dir);
         }
         catch (fs::filesystem_error& ex)
         {

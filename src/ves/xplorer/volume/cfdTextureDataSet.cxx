@@ -42,6 +42,7 @@
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/version.hpp>
 
 // --- C/C++ Includes --- //
 #include <iostream>

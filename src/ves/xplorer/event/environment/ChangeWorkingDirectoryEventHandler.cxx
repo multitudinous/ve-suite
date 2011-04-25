@@ -44,6 +44,7 @@
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
 
 #ifdef WIN32
 #include <direct.h>
@@ -87,7 +88,7 @@ void ChangeWorkingDirectoryEventHandler::Execute( const ves::open::xml::XMLObjec
     {
         newWorkingDir.assign( "./" );
     }
-    boost::filesystem::path dir_path( newWorkingDir, boost::filesystem::native );
+    boost::filesystem::path dir_path( newWorkingDir );
     try
     {
         if( !boost::filesystem::is_directory( dir_path ) )

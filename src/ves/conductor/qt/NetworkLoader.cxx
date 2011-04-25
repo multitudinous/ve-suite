@@ -85,7 +85,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 {
     ///First lets get the current working directory and see where we need to
     ///change it to the new ves filename.
-    boost::filesystem::path dir_path( fileName, boost::filesystem::native );
+    boost::filesystem::path dir_path( fileName );
     try
     {
         if( !boost::filesystem::exists( dir_path ) )

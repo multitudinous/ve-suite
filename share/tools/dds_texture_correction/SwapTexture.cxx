@@ -120,7 +120,7 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
                 if( tgaImage.valid() )
                 {
                     fileName = tgaImage->getFileName();
-                    boost::filesystem::path newFileName( fileName, boost::filesystem::native );
+                    boost::filesystem::path newFileName( fileName );
                     if( newFileName.extension() == ".tga" )
                     {
                         std::cout << "Texture file name = " 

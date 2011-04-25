@@ -34,6 +34,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
 
 #include <string>
 #include <iostream>
@@ -79,7 +80,7 @@ int fileIO::isFileWritable( std::string filename )
 int fileIO::DirectoryExists( std::string dirName )
 {
     dirName.empty();
-    fs::path pathName( dirName, fs::native );
+    fs::path pathName( dirName );
     //fs::path pathName( dirName.c_str, fs::native );
     if( ! fs::exists( pathName ) )
     {
@@ -101,7 +102,7 @@ int fileIO::isDirWritable( const std::string dirname )
     std::string fullDirName = dirname + std::string( "/" ) + std::string( "testing.txt" );
 
     // boost corrects for the "/"
-    fs::path file_name( fullDirName, fs::native );
+    fs::path file_name( fullDirName );
 
     // test the file
     fs::ofstream test_file( file_name, std::ios_base::out | std::ios_base::app );
