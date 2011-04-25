@@ -14,20 +14,18 @@ PREBUILD_METHOD=cmake
 SKIP_FPC_INSTALL="no"
 FPC_FILE=Minerva.fpc
 
-echo "${OSG_INSTALL_DIR}"
-
-export boost_inc_dir="${BOOST_INSTALL_DIR}/include/boost-1_46_1"
-export boost_inc_dir="${BOOST_INSTALL_DIR}/lib"
 export OSG_INC_DIR="${OSG_INSTALL_DIR}/include"
 export OSG_LIB_DIR="${OSG_INSTALL_DIR}/lib"
 
 CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
-CMAKE_PARAMS+=( -Dboost_inc_dir="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
-CMAKE_PARAMS+=( -Dboost_lib_dir="${BOOST_INSTALL_DIR}/lib" )
+CMAKE_PARAMS+=( -DBUILD_MINERVA_QT=ON )
+
+CMAKE_PARAMS+=( -DBoost_LIBRARY_DIRS="${BOOST_INSTALL_DIR}/lib" )
 CMAKE_PARAMS+=( -DOSG_INC_DIR="${OSG_INSTALL_DIR}/include" )
-CMAKE_PARAMS+=( -DOSG_LIB_DIR="${OSG_INSTALL_DIR}/lib" )
+#CMAKE_PARAMS+=( -DOSG_LIB_DIR="${OSG_INSTALL_DIR}/lib" )
 CMAKE_PARAMS+=( -DGDAL_INCLUDE_DIR="${gdal_INSTALL_DIR}/include" )
-CMAKE_PARAMS+=( -DGDAL_LIBRARY="${gdal_INSTALL_DIR}/lib/libgdal.dylib" )
+CMAKE_PARAMS+=( -DXERCESC_INCLUDE_DIR="${XERCES_INSTALL_DIR}/include" )
+CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
 
 case $PLATFORM in
   Windows)
@@ -38,10 +36,25 @@ case $PLATFORM in
     else
       MSVC_PLATFORM=x64
     fi
+    
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
+    CMAKE_PARAMS+=( -DSQLITE_INCLUDE_DIR="${VTK_INSTALL_DIR}/include/${VTK_VERSION_DIR}/vtksqlite;${VTK_INSTALL_DIR}/include/${VTK_VERSION_DIR}" )
+    CMAKE_PARAMS+=( -DSQLITE_LIBRARY="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtksqlite.dylib" )
+
     MSVC_SOLUTION="backdropFX.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
-  Darwin | Linux)
+  Darwin)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.dylib" )
+    CMAKE_PARAMS+=( -DGDAL_LIBRARY="${gdal_INSTALL_DIR}/lib/libgdal.dylib" )
+    CMAKE_PARAMS+=( -DSQLITE_INCLUDE_DIR="/usr/include" )
+    CMAKE_PARAMS+=( -DSQLITE_LIBRARY="/usr/lib/libsqlite3.dylib" )
+    CMAKE_PARAMS+=( -DXERCESC_LIBRARY_RELEASE="${XERCES_INSTALL_DIR}/lib/libxerces-c.dylib" )
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
+    ;;
+  Linux)
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.lib" )
     ;;
 esac

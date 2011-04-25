@@ -30,7 +30,7 @@ case $PLATFORM in
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
   Darwin)
-    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
   Linux)

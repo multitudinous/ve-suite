@@ -501,7 +501,7 @@ function e()
   #
   if [ "${clean_build_dir}" = "yes" ]; then
     if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
-    if [ -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
+    if [ ! -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
 
     case ${BUILD_METHOD} in
       msbuild)
@@ -518,6 +518,20 @@ function e()
       make)
         cd "${BUILD_DIR}";
         ${MAKE} clean;
+        ;;
+      cmake)
+        cd "${BUILD_DIR}";
+        echo $BUILD_DIR
+        case $PLATFORM in
+          Windows)
+            echo "I am not sure how to clean a cmake build on windows"
+            #${CMAKE} --build "${BUILD_DIR}" -- "$MSVC_SOLUTION" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" /project "$PROJ_STR"
+            ;;
+          Darwin | Linux )
+            #http://www.cmake.org/cmake/help/cmake-2-8-docs.html#opt:--builddir
+            ${CMAKE} --build "${BUILD_DIR}" -- clean
+            ;;
+        esac
         ;;
       *)
         echo "Clean method ${BUILD_METHOD} unsupported";

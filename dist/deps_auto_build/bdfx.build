@@ -23,16 +23,17 @@ CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
 CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_INSTALL_DIR}" )
 CMAKE_PARAMS+=( -DOSGWORKS_INCLUDE_DIR="${OSGWORKS_INSTALL_DIR}/include" )
 CMAKE_PARAMS+=( -DOSGEPHEMERIS_ROOT="${OSGEPHEMERIS_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
+CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="${PNG_INSTALL_DIR}/include" )
 
 case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
     CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/osgwTools.lib" )
-    CMAKE_PARAMS+=( -DPNG_LIBRARY="${THIRD_PARTY}/lib/libpng15.lib" )
-    CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="${THIRD_PARTY}/include" )
-    CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${THIRD_PARTY}/include" )
-    CMAKE_PARAMS+=( -DZLIB_LIBRARY="${THIRD_PARTY}/lib/zlib.lib" )
+
+    CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng15.lib" )
+    CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/zlib.lib" )
     MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
@@ -42,9 +43,18 @@ case $PLATFORM in
     MSVC_SOLUTION="backdropFX.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
-  Darwin | Linux)
+  Darwin)
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.dylib" )
+    CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.dylib" )
+    CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.dylib" )
+    ;;
+  Linux)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.so" )
+    CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.so" )
+    CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.so" )
     ;;
 esac
