@@ -121,7 +121,7 @@ void IconStack::leaveEvent( QEvent* )
     setVisible( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IconStack::mouseMoveEvent( QEvent* )
+void IconStack::mouseMoveEvent( QMouseEvent* )
 {
     ;
 }

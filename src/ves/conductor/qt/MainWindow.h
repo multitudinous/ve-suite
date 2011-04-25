@@ -74,12 +74,10 @@ class MainWindow;
 } // Ui
 
 /*!\file MainWindow.h
- Main Qt Window
- */
-/*!\class ves::conductor::MainWindow
+ * Main Qt Window
+ * \class ves::conductor::MainWindow
  * This class manages the main Qt window.
- */
-/*!\namespace ves::conductor
+ * \namespace ves::conductor
  * UI Namespace
  */
 
@@ -117,7 +115,12 @@ public:
 
 protected:
     void changeEvent(QEvent* e);
-    
+    /*
+    ///Test code
+    virtual void mouseMoveEvent( QMouseEvent* event );
+    ///Test code
+    virtual void mousePressEvent( QMouseEvent * event );
+    */
     /// Is connected to ModelHandler.ActiveModelChangedSignal so that
     /// appropriate tabs can be shown when the active model changes.
     void OnActiveModelChanged( const std::string& modelID );

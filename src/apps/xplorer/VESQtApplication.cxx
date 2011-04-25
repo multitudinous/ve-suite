@@ -116,12 +116,12 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
     if( event->type() == QEvent::DeferredDelete )
     {
         return ProcessEvent( obj, event );
-    }
+    }*/
     
-    if( event->type() == QEvent::LayoutRequest )
+    if( event->type() == QEvent::Leave )
     {
         return ProcessEvent( obj, event );
-    }*/
+    }
     
     
     //std::cout << event->type() << std::endl << std::flush;

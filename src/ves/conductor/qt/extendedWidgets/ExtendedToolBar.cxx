@@ -37,12 +37,13 @@ namespace ves
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
-ExtendedToolBar::ExtendedToolBar(QWidget *parent) :
-    QToolBar(parent)
+ExtendedToolBar::ExtendedToolBar( QWidget *parent )
+    :
+    QToolBar( parent )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ExtendedToolBar::leaveEvent ( QEvent* event )
+void ExtendedToolBar::leaveEvent( QEvent* )
 {
     emit leaveSignal();
 }

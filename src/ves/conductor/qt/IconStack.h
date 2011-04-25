@@ -73,7 +73,7 @@ public:
 
 protected:
     virtual void leaveEvent( QEvent* event );
-    virtual void mouseMoveEvent( QEvent* event );
+    virtual void mouseMoveEvent( QMouseEvent* event );
 
 
 Q_SIGNALS:

@@ -254,8 +254,7 @@ const osg::Vec4f UIElementQt::GetTextureCoordinates()
     return m_coordinates;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent&
-                                        event )
+void UIElementQt::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent& )
 {
 //    ves::xplorer::eventmanager::InteractionEvent* m_event =
 //            new ves::xplorer::eventmanager::InteractionEvent( event );
@@ -302,11 +301,11 @@ void UIElementQt::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char 
     //QString qUniKey = QString::fromWCharArray( &uniKey, 1 );
     Q_EMIT PutKeyReleaseEvent( key, modifierMask, unicode );
 }
+////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendScrollEvent( int deltaX, int deltaY, int x, int y, int state )
 {
     Q_EMIT PutScrollEvent( deltaX, deltaY, x, y, state );
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char* UIElementQt::RenderElementToImage()
 {
@@ -672,6 +671,8 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_mouseMoveEvent( int x, int y, int z, int state )
 {
+    boost::ignore_unused_variable_warning( z );
+
     Qt::MouseButtons buttons = _extractButtons( state );
     Qt::KeyboardModifiers modifiers = _extractModifiers( state );
 

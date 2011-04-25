@@ -376,6 +376,7 @@ void PluginSelectionTab::CreateUIPlugin( const std::string& pluginFactoryName,
 void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
      ( QListWidgetItem* current, QListWidgetItem* previous )
 {
+    boost::ignore_unused_variable_warning( previous );
     if( current )
     {
         std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
@@ -496,6 +497,7 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::qFileLoadedSlot( const std::string& fileName )
 {
+    boost::ignore_unused_variable_warning( fileName );
     ClearActivePlugins();
 }
 
