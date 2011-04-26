@@ -14,7 +14,7 @@ CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
 CMAKE_PARAMS+=( -DBUILD_SHARED_LIBS=ON )
 
 # remove the zconf.h file in the source dir
-if [ -e "${BASE_DIR}/zconf.h" ]; then rm "${BASE_DIR}/zconf.h"; fi
+POST_RETRIEVAL_METHOD="if [ -e ${BASE_DIR}/zconf.h ]; then rm ${BASE_DIR}/zconf.h; fi"
 
 case $PLATFORM in
   Windows)

@@ -79,6 +79,21 @@ function arch()
 }
 
 #
+# define the command used for downloading sources
+#
+function wget()
+{
+  case $PLATFORM in
+    Windows)
+      WGET_METHOD="wget"
+      ;;
+    Darwin | Linux )
+      WGET_METHOD="curl -O"
+      ;;
+  esac
+}
+
+#
 # Some Windows-only variables
 #
 function windows()
@@ -259,7 +274,7 @@ function source_retrieval()
         return;
       fi
       # Settings (proxy etc.) for wget can be edited using /etc/wgetrc
-      wget ${SOURCE_URL}
+      ${WGET_METHOD} ${SOURCE_URL}
       case ${SOURCE_FORMAT} in
         zip)
           unzip `basename ${SOURCE_URL}`;
@@ -275,7 +290,7 @@ function source_retrieval()
           tar xvfjk "${TEMPBASENAME}";
           rm -f "${TEMPBASENAME}";
           if [ -d "${BASE_DIR}" ]; then
-            echo "We have already downloaded $package";
+            echo "The BASE_DIR for $package already exists.";
           else
             mv "${PACKAGE_BASE_DIR_NAME}" "${BASE_DIR}";
           fi
@@ -306,7 +321,9 @@ function e()
   #
   unsetvars;
 
-  #setup the build types unless other wise specified in a build file
+  #
+  # setup the build types unless other wise specified in a build file
+  #
   case $PLATFORM in
     Windows)
       BUILD_METHOD=cmake
@@ -321,17 +338,29 @@ function e()
   #setup the package specific vars
   . $package
 
-  #check to make sure that the base dir is defined for the package
+  #
+  # check to make sure that the base dir is defined for the package
+  #
   if [ -z "${BASE_DIR}" ]; then echo "BASE_DIR undefined in package $package"; return; fi
 
-  #checkout the source for download the source
+  #
+  # checkout the source for download the source
+  #
   if [ "${check_out_source}" = "yes" ]; then
     if [ -z "${SOURCE_URL}" ]; then echo "SOURCE_URL undefined in package $package"; return; fi
     if [ -z "${SOURCE_RETRIEVAL_METHOD}" ]; then echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; fi
     source_retrieval;
+    if [ ! -z "${POST_RETRIEVAL_METHOD}" ]; then
+        echo "Running the POST_RETRIEVAL_METHOD for $package."
+        cd "${SOURCE_DIR}";
+        eval "${POST_RETRIEVAL_METHOD}"
+        unset POST_RETRIEVAL_METHOD
+    fi
   fi
 
-  #update the source if needed
+  #
+  # update the source if needed
+  #
   if [ "${update_source}" = "yes" ]; then
     if [ -z "${SOURCE_RETRIEVAL_METHOD}" ]; then echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; fi
 
@@ -369,12 +398,15 @@ function e()
     esac
   fi
 
-  #prebuild for the package
+  #
+  # prebuild for the package
+  #
   if [ "${prebuild}" = "yes" ] && [ "${SKIP_PREBUILD}" != "yes" ]; then
     if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
     if [ -z "${PREBUILD_METHOD}" ]; then echo "PREBUILD_METHOD undefined in package $package"; return; fi
     if [ -z "${SOURCE_DIR}" ]; then echo "SOURCE_DIR undefined in package $package"; return; fi
-    [ -d "${BUILD_DIR}" ] || mkdir -p "${BUILD_DIR}"
+    if [ ! -d "${SOURCE_DIR}" ]; then echo "SOURCE_DIR does not exist for package $package"; return; fi
+    if [ ! -d "${BUILD_DIR}" ]; then mkdir -p "${BUILD_DIR}"; fi
 
     case ${PREBUILD_METHOD} in
       cmake)
@@ -408,6 +440,7 @@ function e()
     if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
     if [ -z "${BUILD_METHOD}" ]; then echo "BUILD_METHOD undefined in package $package"; return; fi
     if [ -z "${SOURCE_DIR}" ]; then echo "SOURCE_DIR undefined in package $package"; return; fi
+    if [ ! -d "${SOURCE_DIR}" ]; then echo "SOURCE_DIR does not exist for package $package"; return; fi
     if [ ! -d "${BUILD_DIR}" ]; then mkdir -p "${BUILD_DIR}"; fi
     [ -z "$multithreading_jobs" ] || JCMD="-j $multithreading_jobs" || MCMD='/p:MultiProcessorCompilation=true /m:"$multithreading_jobs" /p:BuildInParallel=false'
     case ${BUILD_METHOD} in
@@ -493,6 +526,7 @@ function e()
           ;;
       esac
       echo "Installing the fpc file ${FPC_FILE}"
+      echo "Installing ${VES_SRC_DIR}/dist/linux/fpc_deps_files/${FPC_FILE}.in to ${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}"
     fi
   fi
 
@@ -577,6 +611,7 @@ function e()
 platform
 arch
 windows
+wget
 
 #
 # setup deps install dir
