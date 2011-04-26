@@ -321,16 +321,16 @@ tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                                                headerToCheck="ace/ACE.h")
 
 boost_header_options = fp_option.FlagPollBasedOption("Boost Headers",
-        "Boost", "1.46.0", True, True, helpText=None, compileTest=True)
+        "Boost", "1.46", True, True, helpText=None, compileTest=True)
 
 boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
-        "Boost.Filesystem", "1.46.0", True, True, helpText=None, compileTest=True)
+        "Boost.Filesystem", "1.46", True, True, helpText=None, compileTest=True)
 
 boost_program_options = fp_option.FlagPollBasedOption("Boost Program Options Libraries",
-        "Boost.program_options", "1.46.0", True, True, helpText=None, compileTest=True)
+        "Boost.program_options", "1.46", True, True, helpText=None, compileTest=True)
 
 boost_signals_options = fp_option.FlagPollBasedOption("Boost Signals Libraries",
-        "Boost.Signals", "1.46.0", True, True, helpText=None, compileTest=True)
+        "Boost.Signals", "1.46", True, True, helpText=None, compileTest=True)
 
 gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
                                              "gmtl", "0.5", True, True,
