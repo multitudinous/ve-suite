@@ -12,7 +12,6 @@ PREBUILD_METHOD=cmake
 
 CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
 CMAKE_PARAMS+=( -DBUILD_SHARED_LIBS=ON )
-CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
 
 # remove the zconf.h file in the source dir
 #if [ -e "${BASE_DIR}/zconf.h" ]; then rm "${BASE_DIR}/zconf.h"; fi
@@ -20,6 +19,7 @@ CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
 case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
     MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
@@ -30,7 +30,14 @@ case $PLATFORM in
     MSVC_SOLUTION="libpng.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
-  Darwin | Linux)
+  Darwin)
+    CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="/usr/include" )
+    CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib/libz.dylib" )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    ;;
+  Linux)
+    CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
+    CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.lib" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
 esac
