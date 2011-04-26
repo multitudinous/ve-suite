@@ -37,7 +37,7 @@ case $PLATFORM in
     ;;
   Linux)
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.lib" )
+    CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.so" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
 esac

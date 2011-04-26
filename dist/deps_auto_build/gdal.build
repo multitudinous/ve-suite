@@ -30,6 +30,6 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --with-geotiff=internal )
     CONFIGURE_PARAMS+=( --with-static-proj4="${proj_INSTALL_DIR}" )
     CONFIGURE_PARAMS+=( --with-expat-lib=/usr/lib64/libexpat.so )
-    CONFIGURE_PARAMS+=( LDFLAGS="-L/usr/lib64" )
+    CONFIGURE_PARAMS+=( LDFLAGS="-L/usr/lib64 -lexpat" )
     ;;
 esac

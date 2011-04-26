@@ -215,6 +215,7 @@ function unsetvars()
   unset SCONS_PARAMS
   unset BJAM_PARAMS
   unset INNO_PARAMS
+  unset POST_RETRIEVAL_METHOD
 }
 
 #
@@ -354,7 +355,6 @@ function e()
         echo "Running the POST_RETRIEVAL_METHOD for $package."
         cd "${SOURCE_DIR}";
         eval "${POST_RETRIEVAL_METHOD}"
-        unset POST_RETRIEVAL_METHOD
     fi
   fi
 
