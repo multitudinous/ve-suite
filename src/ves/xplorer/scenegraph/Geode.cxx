@@ -61,6 +61,9 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Geode::Geode()
+    :
+    osg::Geode(),
+    SceneNode()
 {
     _vtkDebugLevel = 0;
 }

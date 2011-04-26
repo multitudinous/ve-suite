@@ -60,15 +60,10 @@ class Technique;
 } //end technique
 
 /*!\file SceneNode.h
- *
- */
-
-/*!\class ves::xplorer::scenegraph::SceneNode
- *Base class for all scene graph nodes
- *Do not understand why we need this class
- */
-
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::SceneNode
+ * Base class for all scene graph nodes
+ * Do not understand why we need this class
+ * \namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS SceneNode

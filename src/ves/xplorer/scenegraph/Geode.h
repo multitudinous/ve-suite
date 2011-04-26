@@ -51,14 +51,9 @@ namespace xplorer
 namespace scenegraph
 {
 /*!\file Geode.h
- *
- */
-
-/*!\class ves::xplorer::scenegraph::Geode
- *A leaf node on the scene graph
- */
-
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::Geode
+ * A leaf node on the scene graph
+ * \namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS Geode : public osg::Geode, public SceneNode
