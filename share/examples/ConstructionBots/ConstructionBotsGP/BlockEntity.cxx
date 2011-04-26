@@ -52,6 +52,7 @@
 
 // --- C/C++ Libraries --- //
 #include <iostream>
+#include <sstream>
 
 using namespace bots;
 
