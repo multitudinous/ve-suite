@@ -39,8 +39,6 @@
 
 #include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
 
-//#include <gadget/Type/PositionInterface.h>
-
 // --- OSG Includes --- //
 #include <osg/Transform>
 #include <osg/Quat>
@@ -53,9 +51,7 @@ namespace scenegraph
 {
 /*!\file AutoTransform.h
  * AutoTransform API
- */
-
-/*!\class ves::xplorer::scenegraph::AutoTransform
+ * \class ves::xplorer::scenegraph::AutoTransform
  *
  */
 class VE_SCENEGRAPH_EXPORTS AutoTransform : public osg::Transform
@@ -223,8 +219,6 @@ private:
 
     ///
     osg::Quat m_rotation;
-    ///VRJuggler's head positional interface
-    //gadget::PositionInterface m_headPosition; 
 
 };
 } //end scenegraph

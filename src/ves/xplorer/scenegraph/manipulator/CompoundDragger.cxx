@@ -136,7 +136,7 @@ const char* CompoundDragger::className() const
 Dragger* CompoundDragger::Focus( osg::NodePath::iterator& npItr )
 {
     //Get the active dragger
-    osg::Node* node = *npItr;
+    //osg::Node* node = *npItr;
     ++npItr;
 
     Dragger* activeDragger( NULL );

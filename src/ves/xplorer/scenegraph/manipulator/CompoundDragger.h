@@ -54,9 +54,7 @@ class RotateCompound;
 
 /*!\file CompoundDragger.h
  * CompoundDragger API
- */
-
-/*!\class ves::xplorer::scenegraph::CompoundDragger
+ * \class ves::xplorer::scenegraph::CompoundDragger
  * Abstract Class
  */
 class VE_SCENEGRAPH_EXPORTS CompoundDragger : public Dragger

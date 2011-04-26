@@ -97,7 +97,6 @@ PhysicsSimulator::PhysicsSimulator()
     mDebugBulletFlag( false ),
     mDebugMode( 0 ),
     shoot_speed( 50.0 ),
-    head( NULL ),
     mDynamicsWorld( NULL ),
     mCollisionConfiguration( NULL ),
     mDispatcher( NULL ),
@@ -109,9 +108,6 @@ PhysicsSimulator::PhysicsSimulator()
     m_motionStateList(),
     m_physicsThread( NULL )
 {
-    head = new gadget::DeviceInterface< class gadget::PositionProxy >;
-    head->init( "VJHead" );
-
     InitializePhysicsSimulation();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,8 +125,6 @@ void PhysicsSimulator::ExitPhysics()
         m_physicsThread->join();
     }
 #endif
-    delete head;
-    head = 0;
 
     delete m_debugDrawer;
     m_debugDrawer = 0;

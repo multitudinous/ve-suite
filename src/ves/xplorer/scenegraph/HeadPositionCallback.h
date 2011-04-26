@@ -40,8 +40,6 @@
 #include <osg/ref_ptr>
 #include <osg/NodeCallback>
 
-#include <gadget/Type/PositionInterface.h>
-
 // --- C/C++ Includes --- //
 #include <vector>
 #include <deque>
@@ -54,12 +52,8 @@ namespace scenegraph
 {
 
 /*!\file HeadPositionCallback.h
- *
- */
-/*!\class ves::xplorer::scenegraph::HeadPositionCallback
- *
- */
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::HeadPositionCallback
+ * \namespace ves::xplorer::scenegraph
  *
  */
 ///
@@ -82,8 +76,6 @@ protected:
     virtual ~HeadPositionCallback();
 
 private:
-    ///
-    gadget::PositionInterface mHead;    
 };
 } // end scenegraph
 } // end xplorer

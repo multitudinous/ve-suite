@@ -67,8 +67,6 @@ namespace behavior
 ////////////////////////////////////////////////////////////////////////////////
 FrameAll::FrameAll()
 {
-    mHead.init( "VJHead" );
-
     CONNECTSIGNALS_0( "%FrameAll%", void(), &FrameAll::DoFrameAll,
                       mConnections, any_SignalType, normal_Priority );
 }
@@ -95,17 +93,15 @@ void FrameAll::DoFrameAll()
     osg::Vec3d startPoint( 0.0, 0.0, 0.0 );
     {
         //Note: for osg we are in z up land
-        gmtl::Matrix44d vjHeadMat =
-            gmtl::convertTo< double >( mHead->getData() );
         gmtl::Point3d jugglerHeadPoint =
-            gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+            gmtl::makeTrans< gmtl::Point3d >( m_sceneManager.GetHeadMatrix() );
 
         //We have to offset negative m_currX because the
         //view and frustum are drawn for the left eye
         startPoint.set(
             jugglerHeadPoint.mData[ 0 ] - ( 0.0345 * m2ft ),
-           -jugglerHeadPoint.mData[ 2 ],
-            jugglerHeadPoint.mData[ 1 ] );
+            jugglerHeadPoint.mData[ 1 ],
+            jugglerHeadPoint.mData[ 2 ] );
     }
 
 

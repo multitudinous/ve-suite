@@ -35,8 +35,6 @@
 #include <ves/VEConfig.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
-#include <gadget/Type/PositionInterface.h>
-
 namespace ves
 {
 namespace xplorer
@@ -63,9 +61,6 @@ public:
 private:
     /// Execute the frame all functionality
     void DoFrameAll();
-
-    /// VRJuggler's head positional interface
-    gadget::PositionInterface mHead;
 
     /// Required connections list for connecting to events via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;

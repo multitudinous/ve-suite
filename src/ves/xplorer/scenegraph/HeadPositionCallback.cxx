@@ -55,7 +55,7 @@ HeadPositionCallback::HeadPositionCallback()
     osg::Object(),
     osg::NodeCallback()
 {
-    mHead.init( "VJHead" );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 HeadPositionCallback::~HeadPositionCallback()
@@ -68,23 +68,20 @@ HeadPositionCallback::HeadPositionCallback( const HeadPositionCallback& ctc, con
     osg::Object( ctc, copyop ),
     osg::NodeCallback( ctc, copyop )
 {
-    mHead.init( "VJHead" );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HeadPositionCallback::operator()(
     osg::Node* node, osg::NodeVisitor* nv )
 {
-    //Do work to place texture
-    gmtl::Matrix44d vjHeadMat =
-        gmtl::convertTo< double >( mHead->getData() );
- 
+    //Do work to place texture 
     gmtl::Point3d jugglerHeadPoint =
-        gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+        gmtl::makeTrans< gmtl::Point3d >( vxs::SceneManager::instance()->GetHeadMatrix() );
     gmtl::Point3d startPoint;
     startPoint.set(
                    jugglerHeadPoint.mData[ 0 ] - 3.5f,
-                   -jugglerHeadPoint.mData[ 2 ] + 9.0f,
-                   jugglerHeadPoint.mData[ 1 ] + 0.0f);
+                   jugglerHeadPoint.mData[ 1 ] + 9.0f,
+                   jugglerHeadPoint.mData[ 2 ] + 0.0f);
     
     gmtl::Matrix44d worldMat = 
         vxs::SceneManager::instance()->GetInvertedNavMatrix();

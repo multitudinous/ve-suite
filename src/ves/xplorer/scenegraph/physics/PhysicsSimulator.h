@@ -40,8 +40,6 @@
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
-#include <gadget/Type/PositionInterface.h>
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Vec3>
@@ -191,9 +189,6 @@ private:
 
     ///Speed of shooting boxes
     float shoot_speed;
-
-    ///The head in vr juggler
-    gadget::PositionInterface* head;
 
     ///Implements dynamics - basic, discrete, parallel, and continuous
     btDynamicsWorld* mDynamicsWorld;
