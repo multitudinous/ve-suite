@@ -73,6 +73,6 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DLIBXML2_LIBRARIES="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtklibxml2.so" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.so" )
-    CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.a" )
+    CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.so" )
     ;;
 esac
