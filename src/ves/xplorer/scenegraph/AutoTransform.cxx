@@ -73,7 +73,7 @@ AutoTransform::AutoTransform()
     m_scale( 1.0, 1.0, 1.0 ),
     m_rotation( 0.0, 0.0, 0.0, 1.0 )
 {
-    m_headPosition.init( "VJHead" );
+    //m_headPosition.init( "VJHead" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 AutoTransform::AutoTransform(
@@ -184,15 +184,13 @@ bool AutoTransform::computeLocalToWorldMatrix(
     {
         up.set( 0.0, 0.0, 1.0 );
 
-        Matrix44d vjMat = gmtl::convertTo< double >( m_headPosition->getData() );
-        gmtl::Point3d jugglerHeadPoint =
-            gmtl::makeTrans< gmtl::Point3d >( vjMat );
         //Make it z up
-        gmtl::Point3d jugglerHeadPointTrans( jugglerHeadPoint[ 0 ], -jugglerHeadPoint[ 2 ], jugglerHeadPoint[ 1 ] );
+        gmtl::Point3d jugglerHeadPoint =
+            gmtl::makeTrans< gmtl::Point3d >( ves::xplorer::scenegraph::SceneManager::instance()->GetHeadMatrix() );
         
         ///Transform from juggler space to world space
         gmtl::Point3d worldWandMat =
-            ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix() * jugglerHeadPointTrans;
+            ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix() * jugglerHeadPoint;
         eye.set( worldWandMat[ 0 ], worldWandMat[ 1 ], worldWandMat[ 2 ] );
     }
     else
@@ -283,7 +281,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool AutoTransform::computeWorldToLocalMatrix(
-    osg::Matrix& matrix, osg::NodeVisitor* nv ) const
+    osg::Matrix& matrix, osg::NodeVisitor* ) const
 {
     if( _scale.x() == 0.0 || _scale.y() == 0.0 || _scale.z() == 0.0 )
     {
