@@ -31,11 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef WIN32
-#include <sys/types.h>
-//biv--check here if build/run problems occur
-#endif
-
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
@@ -350,7 +345,7 @@ void SceneManager::InitScene()
     m_navDCS->SetName( "World DCS" );
     //Setup world nav switch
     mNavSwitch->addChild( m_navDCS.get() );
-    
+
     //Setup logo nav switch
     mNavSwitch->addChild( new ves::xplorer::scenegraph::DCS() );
 
