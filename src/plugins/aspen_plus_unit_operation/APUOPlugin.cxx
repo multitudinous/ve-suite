@@ -324,3 +324,8 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     baseMenu->Enable( APUOPLUGIN_ASPEN_MENU, true );
     return baseMenu;
 }
+////////////////////////////////////////////////////////////////////////////////
+bool APUOPlugin::ShowAvailable()
+{
+    return false;
+}

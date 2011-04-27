@@ -163,6 +163,10 @@ public:
     ///\param command Current command from conductor
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
+    ///Set current command whatever it is
+    ///\param command Current command from conductor
+    virtual void SetCurrentCommands( std::vector< ves::open::xml::CommandPtr > const& commands );
+    
     ///Set the pointer to the cursor class so that dynamic
     ///objects can do custom features with the wand input
     ///\param cursor The cursor from xplorer

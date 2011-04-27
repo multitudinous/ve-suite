@@ -3,6 +3,7 @@
 #ifndef vesAutoBuild
   #include <vesenv.iss>
 #endif
+
 #define MyAppVer "5.7.0"
 #define MyAppName "ACE-TAO Pre-Compile"
 #define MyAppVerName "ACETAO"

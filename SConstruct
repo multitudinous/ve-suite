@@ -246,16 +246,10 @@ opts.AddOption(hdf5_options)
 hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','df','jpeg'])
 opts.AddOption(hdf4_options)
 
-osg_options = None
-#if GetPlatform() == 'win32':
 osg_options = fp_option.FlagPollBasedOption("OpenSceneGraph",
-                                               "openscenegraph", "1.2", True, True, compileTest=True)
-#else:
-#   osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
-#                        ['osgText', 'osgText',
-#                         'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
-#                         'osgSim', 'osgFX','osgViewer'])
+                                               "openscenegraph", "2.8", True, True, compileTest=True)
 opts.AddOption( osg_options )
+
 if GetPlatform() == 'win32':
    xerces_options = fp_option.FlagPollBasedOption("xerces",
          "xerces-c", "2.7", True, True, compileTest=True)

@@ -60,6 +60,7 @@
 #include <osgText/Text>
 
 #include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
 
 #include <osgSim/ColorRange>
 #include <osg/Vec3d>
@@ -76,9 +77,16 @@ VEAnimationGraphicalPlugin::VEAnimationGraphicalPlugin()
 {
     m_valveHeight = 0;
     m_valveOnOff = true;
+
+    //DYNSIM
     mObjectName = "DSPlugin"; //name of the sheet
     ///Set the name of the commands we want to capture from the dynsim unit
     mEventHandlerMap[ "OPCData" ] = this;
+
+    //DYNAMICS
+//    mObjectName = "ADPlugin"; //name of the sheet
+    ///Set the name of the commands we want to capture from the dynsim unit
+//    mEventHandlerMap[ "ADData" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VEAnimationGraphicalPlugin::~VEAnimationGraphicalPlugin()
@@ -112,81 +120,130 @@ void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 
-    ////////////////////////OLD//////////////////////////////////////////
-    //m_idleGeometry = osgDB::readNodeFile( "valve/valve.idle.osg" );
-    //m_openGeometry = osgDB::readNodeFile( "valve/valve.opening.osg" );
-    //m_closeGeometry = osgDB::readNodeFile( "valve/valve.closing.osg" );
+    {
+        ////////////////////////OLD//////////////////////////////////////////
+        //m_idleGeometry = osgDB::readNodeFile( "valve/valve.idle.osg" );
+        //m_openGeometry = osgDB::readNodeFile( "valve/valve.opening.osg" );
+        //m_closeGeometry = osgDB::readNodeFile( "valve/valve.closing.osg" );
+        
+        //m_valueAnimation = new osg::Switch();
+        //m_valueAnimation->addChild( m_idleGeometry.get() );
+        //m_valueAnimation->addChild( m_openGeometry.get() );
+        //m_valueAnimation->addChild( m_closeGeometry.get() );
+        //m_valueAnimation->setSingleChildOn( 0 );
+        
+        /////////////////////////////////////////////////////////////////////
+    }
+
+    {
+        ///////////////////VALVE/////////////////////////////////////////////
+        m_handwheelGeometry = osgDB::readNodeFile( "Valve/handwheel.ive" );
+        m_stemGeometry = osgDB::readNodeFile( "Valve/stem.ive" );
+        m_valveGeometry = osgDB::readNodeFile( "Valve/valve.ive" );
+        
+        m_rotationDCS = new ves::xplorer::scenegraph::DCS();
+        m_stemTransDCS = new ves::xplorer::scenegraph::DCS();
+        m_valveDCS = new ves::xplorer::scenegraph::DCS();
+        
+        m_rotationDCS->addChild( m_handwheelGeometry.get() );
+        m_stemTransDCS->addChild( m_stemGeometry.get() );
+        m_rotationDCS->addChild( m_stemTransDCS.get() );
+        
+        m_valveDCS->addChild( m_valveGeometry.get() );
+        m_valveDCS->addChild( m_rotationDCS.get() );
+        
+        double rot[3] = { 0.0, 0.0, 90.0 };
+        double scale[3] = { 6.56, 6.56, 6.56 };
+        double pos[3] = { 20.75, -52.5, 6.7 };
+        m_valveDCS->SetTranslationArray( pos );
+        m_valveDCS->SetRotationArray( rot );
+        
+        m_valveDCS->SetScaleArray( scale );
+        m_valveDCS->SetTechnique( "Select" );
+        //translate valve to proper location
+        mDCS->addChild( m_valveDCS.get() );
+        
+        //mDCS->addChild( m_valveGeometry.get() );
+        //mDCS->addChild( m_rotationDCS.get() );
+        ////////////////////////////////////////////////////////////////////
+    }
+
+    {
+        ///////////////////SWITCH///////////////////////////////////////////
+        m_panelGeometry = osgDB::readNodeFile( "Switch/panel.ive" );
+        m_startButtonGeometry = osgDB::readNodeFile( "Switch/go_button.ive" );
+        m_stopButtonGeometry = osgDB::readNodeFile( "Switch/stop_button.ive" );
+        
+        m_startTransDCS = new ves::xplorer::scenegraph::DCS();
+        m_stopTransDCS = new ves::xplorer::scenegraph::DCS();
+        m_switchDCS = new ves::xplorer::scenegraph::DCS();
+        
+        m_startTransDCS->addChild( m_startButtonGeometry.get() );
+        m_stopTransDCS->addChild( m_stopButtonGeometry.get() );
+        
+        m_switchDCS->addChild( m_panelGeometry.get() );
+        m_switchDCS->addChild( m_startTransDCS.get() );
+        m_switchDCS->addChild( m_stopTransDCS.get() );
+        
+        double rot2[3] = { 90.0, 0.0, 0.0 };
+        double scale2[3] = { 3.28, 3.28, 3.28 };
+        double pos2[3] = { -30.315, -12.336, 6.35 };
+        m_switchDCS->SetTranslationArray( pos2 );
+        m_switchDCS->SetRotationArray( rot2 );
+        m_switchDCS->SetScaleArray( scale2 );
+        m_switchDCS->SetTechnique( "Select" );
+        
+        mDCS->addChild( m_switchDCS.get() );
+        
+        
+        //mDCS->addChild( m_panelGeometry.get() );
+        //mDCS->addChild( m_startTransDCS.get() );
+        //mDCS->addChild( m_stopTransDCS.get() );
+        ////////////////////////////////////////////////////////////////////
+    }
+
+    {
+        //Setting up the pump or something to change colors with a scalar
+        osg::ref_ptr< ves::xplorer::scenegraph::DCS > meterDCS = new ves::xplorer::scenegraph::DCS();     
+        m_pumpGeometry = osgDB::readNodeFile( "FlowMeter/flowmeter.ive" );
+          
+        /*
+        const std::string nodeName( "0800-LV002" );
+        const std::string nodeName( "Scene_Root_0800_LV002_0800_LV002_offset_0" );
+        util::FindChildWithNameVisitor findChild( mCadNode.get(), nodeName, false, true );
+        std::cout << findChild.FoundChild() << std::endl;
+        if( findChild.GetFoundNode() )
+            std::cout << findChild.GetFoundNode()->getName() << std::endl;
+        */
+
+        meterDCS->addChild( m_pumpGeometry.get() );
+        double scale[3] = { 3.28, 3.28, 3.28 };
+        double pos[3] = { 36, -28.67, 1.0 };
+        meterDCS->SetTranslationArray( pos );
+        meterDCS->SetScaleArray( scale );
+        meterDCS->SetTechnique( "Select" );
+
+        //mDCS->addChild( m_pumpGeometry.get() );
+        mDCS->addChild( meterDCS.get() );
+        //Initialize shaders
+        const std::string shaderName = 
+            osgDB::findDataFile( "color_texture_part.fs" );
+        osg::ref_ptr< osg::Shader > fragShader = 
+            osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+        
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( fragShader.get() );
+        
+        osg::ref_ptr< osg::StateSet > stateSet = 
+            m_pumpGeometry->getOrCreateStateSet();
+        stateSet->setAttributeAndModes( program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        
+        m_highlightColor = new osg::Uniform( "partColor", osg::Vec4( 1.0, 1.0, 1.0, 0.0 ) );
+        stateSet->addUniform( m_highlightColor );
+        stateSet->addUniform( new osg::Uniform( "tex", 0 ) );
+    }
     
-    //m_valueAnimation = new osg::Switch();
-    //m_valueAnimation->addChild( m_idleGeometry.get() );
-    //m_valueAnimation->addChild( m_openGeometry.get() );
-    //m_valueAnimation->addChild( m_closeGeometry.get() );
-    //m_valueAnimation->setSingleChildOn( 0 );
-    
-    /////////////////////////////////////////////////////////////////////
-
-    ///////////////////VALVE/////////////////////////////////////////////
-    m_handwheelGeometry = osgDB::readNodeFile( "Valve/handwheel.ive" );
-    m_stemGeometry = osgDB::readNodeFile( "Valve/stem.ive" );
-    m_valveGeometry = osgDB::readNodeFile( "Valve/valve.ive" );
-    
-	m_rotationDCS = new ves::xplorer::scenegraph::DCS();
-	m_stemTransDCS = new ves::xplorer::scenegraph::DCS();
-	m_valveDCS = new ves::xplorer::scenegraph::DCS();
-
-    m_rotationDCS->addChild( m_handwheelGeometry.get() );
-    m_stemTransDCS->addChild( m_stemGeometry.get() );
-    m_rotationDCS->addChild( m_stemTransDCS.get() );
-
-    m_valveDCS->addChild( m_valveGeometry.get() );
-    m_valveDCS->addChild( m_rotationDCS.get() );
-
-    double rot[3] = { 0.0, 0.0, 90.0 };
-    double pos[3] = {46.8, -79.4, 7.5 };
-    double scale[3] = { 11, 11, 11 };
-    m_valveDCS->SetTranslationArray( pos );
-    m_valveDCS->SetRotationArray( rot );
-
-    m_valveDCS->SetScaleArray( scale );
-    m_valveDCS->SetTechnique( "Select" );
-    //translate valve to proper location
-    mDCS->addChild( m_valveDCS.get() );
-
-    //mDCS->addChild( m_valveGeometry.get() );
-    //mDCS->addChild( m_rotationDCS.get() );
-    ////////////////////////////////////////////////////////////////////
-
-    ///////////////////SWITCH///////////////////////////////////////////
-    m_panelGeometry = osgDB::readNodeFile( "Switch/panel.ive" );
-    m_startButtonGeometry = osgDB::readNodeFile( "Switch/go_button.ive" );
-    m_stopButtonGeometry = osgDB::readNodeFile( "Switch/stop_button.ive" );
-
-	m_startTransDCS = new ves::xplorer::scenegraph::DCS();
-    m_stopTransDCS = new ves::xplorer::scenegraph::DCS();
-	m_switchDCS = new ves::xplorer::scenegraph::DCS();
-
-    m_startTransDCS->addChild( m_startButtonGeometry.get() );
-    m_stopTransDCS->addChild( m_stopButtonGeometry.get() );
-
-    m_switchDCS->addChild( m_panelGeometry.get() );
-    m_switchDCS->addChild( m_startTransDCS.get() );
-    m_switchDCS->addChild( m_stopTransDCS.get() );
-
-    double rot2[3] = { 90.0, 0.0, 0.0 };
-    double pos2[3] = {-32.0, -13.0, 7.0 };
-    double scale2[3] = { 5.4, 5.4, 5.4 };
-    m_switchDCS->SetTranslationArray( pos2 );
-    m_switchDCS->SetRotationArray( rot2 );
-    m_switchDCS->SetScaleArray( scale2 );
-    m_switchDCS->SetTechnique( "Select" );
-
-    mDCS->addChild( m_switchDCS.get() );
-
-    //mDCS->addChild( m_panelGeometry.get() );
-    //mDCS->addChild( m_startTransDCS.get() );
-    //mDCS->addChild( m_stopTransDCS.get() );
-    ////////////////////////////////////////////////////////////////////
-
     //double rot[3] = { 90.0, 0.0, 0.0 };
     //double pos[3] = {-1000.0, -532.0, -10.0 };
     
@@ -351,12 +408,16 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
     }*/
 
     if( command->GetDataValuePair("MY_VALVE") )
+    //if( command->GetDataValuePair("CVLENSEL") )
     {
         std::string percent;
         command->GetDataValuePair("MY_VALVE")->GetData( percent );
+        //command->GetDataValuePair("CVLENSEL")->GetData( percent );
         double test = boost::lexical_cast<double>( percent );
         
         m_valveHeight = -0.125 * test;
+
+        m_highlightColor->set( osg::Vec4( 1.0, 1.0-test, 1.0-test, 0.0) );
     }
     ////////////////////////////////////////////////////////////////////////////
 
@@ -369,8 +430,9 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
         
         m_switchOnOff = test;
     }
-    ////////////////////////////////////////////////////////////////////////////
 
+    ////////////////////////////////////////////////////////////////////////////
+/*
     const std::string commandName = command->GetCommandName();
     //std::cout << "Command Name " << commandName << std::endl;
     
@@ -391,6 +453,7 @@ void VEAnimationGraphicalPlugin::SetCurrentCommand(
 		
 		//Move the shaft or rotate the shaft
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
@@ -498,6 +561,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
             ves::open::xml::DataValuePairPtr
                 inpParams( new ves::open::xml::DataValuePair() );
             inpParams->SetDataName( "MY_VALVE.OP" );
+            //inpParams->SetDataName( "CVLENSEL.Pos" );
             //temp
             if( m_valveOnOff )
             {

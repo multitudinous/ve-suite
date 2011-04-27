@@ -63,6 +63,7 @@ public:
 
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+    virtual bool ShowAvailable();
     
 private:
     wxMenu* mAspenMenu;

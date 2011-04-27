@@ -398,3 +398,8 @@ void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
     params->ShowModal();
     params->Destroy();
 }
+////////////////////////////////////////////////////////////////////////////////
+bool OpcUOPlugin::ShowAvailable()
+{
+    return false;
+}

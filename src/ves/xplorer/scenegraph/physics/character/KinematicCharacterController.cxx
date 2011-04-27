@@ -234,7 +234,8 @@ KinematicCharacterController::KinematicCharacterController()
     //m_characterWidth( 2.0/*1.83*/ ),
     m_characterWidth( 1.5 ),
     //The average height of a male in the U.S. is 5.83 ft
-    m_characterHeight( 6.0/*5.83*/ ),
+    //m_characterHeight( 5.83 ),
+    m_characterHeight( 6.0 ),
 
     m_displacement( 0.0, 0.0, 0.0 ),
     m_normalizedDirection( 0.0, 0.0, 0.0 ),

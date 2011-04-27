@@ -39,6 +39,8 @@
 
 #include <ves/xplorer/scenegraph/physics/character/KinematicCharacterController.h>
 
+class CharacterAnimation;
+
 // --- VRJuggler Includes --- //
 #include <gadget/Type/PositionInterface.h>
 
@@ -349,11 +351,6 @@ private:
 
     ///
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
-    
-    ///Pointer to the FBX root to all of the animations
-    //osg::ref_ptr< osg::Group > m_fbxCharacter;
-    ///Pointer to the FBX root to all of the animations
-    //osg::ref_ptr< osg::Group > m_fbxBackwardCharacter;
 
     ///Type defs to help create samples for the head position when using 
     ///tracking data
@@ -374,6 +371,9 @@ private:
     ///VRJuggler's wand positional interface
     gadget::PositionInterface wand;
 
+    ///The vector to hold all of the animations for the character
+    std::vector< CharacterAnimation* > m_fbxCharacters;
+    
     class CharacterTransformCallback : public osg::NodeCallback
     {
     public:

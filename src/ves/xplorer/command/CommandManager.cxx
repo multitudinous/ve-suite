@@ -92,6 +92,28 @@ const ves::open::xml::CommandPtr& CommandManager::GetXMLCommand()
     return m_activeCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
+std::vector< ves::open::xml::CommandPtr > 
+    CommandManager::GetXMLCommands( std::string const& commandName )
+{    
+    std::vector< ves::open::xml::CommandPtr > vectorQueue;
+    vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
+    for( std::vector< ves::open::xml::CommandPtr >::iterator 
+        iter = m_commandVectorQueue.begin(); 
+        iter != m_commandVectorQueue.end(); )
+    {
+        if( (*iter)->GetCommandName() == commandName )
+        {
+            vectorQueue.push_back( ves::open::xml::CommandPtr( new ves::open::xml::Command( *( *iter ) ) ) );
+            iter = m_commandVectorQueue.erase( iter );
+        }
+        else
+        {
+            iter++;
+        }
+    }
+    return vectorQueue;
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 } // end xplorer
 } // end ves

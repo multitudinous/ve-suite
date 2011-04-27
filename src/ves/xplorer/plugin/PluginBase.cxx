@@ -438,6 +438,15 @@ void PluginBase::SetCurrentCommand( ves::open::xml::CommandPtr command )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void PluginBase::SetCurrentCommands( std::vector< ves::open::xml::CommandPtr > const& commands )
+{
+    if( commands.size() > 0 )
+    {
+        vprDEBUG( vesDBG, 4 ) << commands.at( 0 )->GetCommandName() << std::endl
+        << vprDEBUG_FLUSH;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void PluginBase::ProcessOnSubmitJob()
 {
     ;
