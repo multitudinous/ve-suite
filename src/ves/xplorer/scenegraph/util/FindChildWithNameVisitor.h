@@ -76,10 +76,6 @@ public:
     ///Get the node we are trying to find
     ///\return The node that we found
     osg::Node* GetFoundNode();
-    
-    ///Get the node we are trying to find
-    ///\return The node that we found
-    osg::Node* GetFoundNode();
 
 private:
     ///Name of parent node to search for
