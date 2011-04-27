@@ -11,6 +11,10 @@
 #define VesIcon "ves_icon.ico"
 #define VesDocumentIcon "ves_document.ico"
 
+[InnoIDE_Settings]
+LogFile={#VEDEVHOME}\compile.log
+LogFileOverwrite=false
+
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
@@ -83,6 +87,7 @@ Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImag
 Source: {#SKEWMATRIXHOME}\*.dll; DestDir: {app}\{#LIBDIR}; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
 Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}
+Source: {#OPCVESINSTALLER}; DestDir: {tmp}; Flags: skipifsourcedoesntexist
 Source: {#INSTALLERINSTALLLOCATION}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}.exe; DestDir: {tmp}; Flags: ignoreversion
 
 [Icons]
@@ -91,8 +96,9 @@ Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingD
 Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
 
 [Run]
-Filename: {tmp}\vcredist_x64.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Tasks: 
+Filename: {tmp}\{#MSREDISTRIBUTABLEFILENAME}; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Tasks: 
 Filename: {tmp}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}; Flags: postinstall runascurrentuser; Description: VE-Suite Dependency Installer; StatusMsg: Installing VE-Suite dependencies
+Filename: {tmp}\{#OPCVESINSTALLERFILENAME}; Description: Install OPC for use with VE-PSI; StatusMsg: Installing OPC for use with VE-PSI...; Flags: postinstall unchecked skipifdoesntexist; Tasks: 
 
 [_ISToolPreCompile]
 ;Name: D:\devEnv\VES\share\scripts\win\buildVELauncher.exe.bat; Parameters: ; Flags: abortonerror
@@ -104,8 +110,3 @@ LogFileAppend=false
 
 [UninstallDelete]
 Name: {app}; Type: filesandordirs
-
-[InnoIDE_Settings]
-LogFile={#VEDEVHOME}\compile.log
-LogFileOverwrite=false
-

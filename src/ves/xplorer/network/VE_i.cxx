@@ -210,6 +210,8 @@ void VE_i::GetNetworkFromCE( void )
 ////////////////////////////////////////////////////////////////////////////////
 void VE_i::SetCommand( const char* openXMLCommand )
 { 
+    //vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
+    //std::cout << "VE_i command " << std::endl << openXMLCommand << std::endl << std::flush;
     //boost::ignore_unused_variable_warning( openXMLCommand ); 
     std::string tempString( const_cast<char*>( openXMLCommand ) );
     ves::open::xml::XMLReaderWriter networkReader;

@@ -39,8 +39,7 @@ Body_Unit_i::~Body_Unit_i (void)
 {
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::StartCalc ( ACE_ENV_SINGLE_ARG_DECL )
-  ACE_THROW_SPEC (( CORBA::SystemException , Error::EUnknown ))
+void Body_Unit_i::StartCalc()
 {
     // Add your implementation here
     std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;

@@ -228,10 +228,10 @@ else:
     vtk_options = SConsAddons.Options.StandardPackageOption("vtk",
         "VTK library options, default : vtk_incdir=<vtk>/include/vtk-5.2 vtk_libdir=<vtk>/lib(64)/vtk-5.2", 
         pj('vtkConfigure.h'), library=['vtkImaging','vtkGraphics','vtkCommon','vtkHybrid',
-                         'vtkIO','vtkexpat','vtkFiltering','vtkRendering', 
-                         'vtkParallel','vtkpng','vtktiff','vtksys','vtkjpeg', 
-                         'vtkexoIIc','vtkftgl','vtkfreetype','vtkDICOMParser', 
-                         'vtkzlib','vtkNetCDF','vtkverdict',
+                         'vtkIO','vtkFiltering','vtkRendering', 
+                         'vtkParallel','vtksys', 
+                         'vtkexoIIc','vtkftgl','vtkDICOMParser', 
+                         'vtkNetCDF',
                          'vtkmetaio','vtksqlite'], 
         symbol="main", required=True)
     if ARGUMENTS.has_key("vtk"):

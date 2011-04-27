@@ -465,7 +465,7 @@ void GraphicalPluginManager::PreFrameUpdate()
                 if( foundCommand != pluginEHMapIter->second.end() )
                 {
                     foundPlugin->second->SetCurrentCommand( tempCommand );
-                    
+
                     /*std::vector< ves::open::xml::CommandPtr > tempCommands = 
                     CommandManager::instance()->GetXMLCommands( cmdName );
                     foundPlugin->second->SetCurrentCommands( tempCommands );*/

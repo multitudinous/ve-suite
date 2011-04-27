@@ -90,7 +90,7 @@ xerces_options.apply( env )
 tao_options.apply( env )
 vpr_options.apply( env )
 
-prog = ves_pkg.createProgram('ves_psi' + env["PROGSUFFIX"], env, 'bin')
+prog = ves_pkg.createProgram('ve_psi' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
 prog.addHeaders( headers )
 prog.build()

@@ -39,5 +39,6 @@ private:
    VE_PSIDlg * parent;
    Body::Executive_var exec;
    vpr::Thread* m_thread;
+   bool m_running;
 };
 #endif

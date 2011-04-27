@@ -24,7 +24,8 @@ CorbaUnitManager::CorbaUnitManager(VE_PSIDlg * dialog)
     :
     parent( dialog ),
     unit_i( 0 ),
-    unit_i_instantiated( false )
+    unit_i_instantiated( false ),
+    m_running( false )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -185,10 +186,12 @@ void CorbaUnitManager::RunORB()
 
         //Call the Executive CORBA call to register it to the Executive
         exec->RegisterUnit(unit_i->UnitName_.c_str(), unit.in(), 0); //0 means a normal module
+        m_running = true;
     }
     catch (CORBA::Exception &)
     {
         std::cerr << "CORBA exception raised!" << std::endl;
+        orb->destroy();
     }
 }
 /////////////////////////////////////////////////////////////
@@ -199,13 +202,14 @@ void CorbaUnitManager::DestroyORB( void )
         return;
     }
     
+    //We must cleanup the orb before shutting down the orb thread
+    CleanUp();
+
     m_thread->join();
     delete m_thread;
     
     //unit_i->CloseAspen();
     //Sleep(5000);
-    
-    CleanUp();
 }
 /////////////////////////////////////////////////////////////
 VEPSI_i* CorbaUnitManager::GetUnitObject( void )
@@ -215,13 +219,6 @@ VEPSI_i* CorbaUnitManager::GetUnitObject( void )
 /////////////////////////////////////////////////////////////
 void CorbaUnitManager::CheckCORBAWork( void )
 {
-   /* if ( !CORBA::is_nil( orb ) )
-   {
-      if ( orb->work_pending() )
-      {
-         orb->perform_work();
-      }
-   }*/
     orb->run();
 }
 
@@ -244,11 +241,20 @@ bool CorbaUnitManager::CleanUp( void )
     try
     {
         exec->UnRegisterUnit( unit_i->UnitName_.c_str() );
+
+        try
+        {
+            orb->destroy();
+        }
+        catch( ... )
+        {
+            ;
+        }
+
         delete unit_i;
         unit_i = NULL;
-
     }
-    catch ( CORBA::SystemException& ex )
+    catch( CORBA::SystemException& ex )
     {
         return false;
     }

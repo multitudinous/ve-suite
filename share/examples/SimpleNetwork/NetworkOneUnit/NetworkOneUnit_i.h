@@ -29,18 +29,17 @@ namespace model
 class Body_Unit_i : public UnitWrapper
 {
 public:
-	Body_Unit_i (Body::Executive_ptr exec, std::string name );
-	virtual ~Body_Unit_i (void);
+    Body_Unit_i (Body::Executive_ptr exec, std::string name );
+    virtual ~Body_Unit_i (void);
 
 protected:
-	void error(std::string msg);
-	void warning(std::string msg);
+    void error(std::string msg);
+    void warning(std::string msg);
 
-	std::string mTextOne;
+    std::string mTextOne;
 
 public:
-	virtual void StartCalc( ACE_ENV_SINGLE_ARG_DECL )
-	ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ));
+    virtual void StartCalc();
 };
 
 #endif //NETWORK_ONE_UNIT

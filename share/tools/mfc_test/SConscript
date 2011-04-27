@@ -29,6 +29,7 @@ env.Clone(WINDOWS_INSERT_DEF = 1)
 env.Append( CPPDEFINES = ['WIN32'])
 env.Append( CPPDEFINES = ['_WINDOWS'])
 env.Append( CPPDEFINES = ['_AFXDLL'])
+env.Append( CPPDEFINES = ['_MBCS'])
 
 #env.Append( CPPFLAGS = ['/Gy'])
 #env.Append( CPPFLAGS = ['/GS'])

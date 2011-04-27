@@ -169,12 +169,12 @@ void VE_PSIDlg::OnBnClickedOk()
             initialized = false;
             return;
         }
-        else
+
         {
             initialized = true;
             GetDlgItem(IDOK)->EnableWindow(FALSE);
+            commManager->CheckCORBAWorkThread();
         }
-        commManager->CheckCORBAWorkThread();
     }
 }
 

@@ -564,6 +564,15 @@ void CharacterController::CameraDistanceLERP()
 
         mCameraDistanceLERP = false;
     }
+    
+    if( mCameraDistance <= (mMinCameraDistance + 0.5) )
+    {
+        mCharacterAnimations->setNodeMask( 0 );
+    }
+    else if( mCameraDistance > (mMinCameraDistance + 0.5) )
+    {
+        mCharacterAnimations->setNodeMask( 1 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::CameraRotationSLERP()
@@ -1166,7 +1175,7 @@ void CharacterController::InitializeCharacters()
 
     scaleDown->setScale( osg::Vec3d( 1.058, 1.058, 1.058 ) );
 
-    scaleDown->setPosition( osg::Vec3d( 0.0, -0.5, -4.4 ) );
+    scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -4.4 ) );
 
     mMatrixTransform->addChild( scaleDown.get() );
 

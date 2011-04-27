@@ -16,6 +16,10 @@
 #define VEDEVHOME "C:\dev\ve-suite-trunk"
 ; Location if the Microsoft redistributable executable
 #define MSREDISTRIBUTABLE "C:\dev\ves_deps\vcredist_x86.exe"
+#define MSREDISTRIBUTABLEFILENAME "vcredist_x86.exe"
+; Location if the OPC executable
+#define OPCVESINSTALLER "C:\dev\ves_deps\OPC_2.02.exe"
+#define OPCVESINSTALLERFILENAME "OPC_2.02.exe"
 ; Lib directory for x64 or x86
 #define LIBDIR "lib"
 #define BUILDDIR "x86"
@@ -27,9 +31,6 @@
 #define WXHOME "WXWidgets_2.8.10_msvc-9.0-sp1-x86"
 #define XERCESHOME "Xerces_3.0.1_msvc-9.0-sp1-x86"
 #define JUGGLERINSTHOME "VRJuggler_3.0.0_msvc-9.0-sp1-x86"
-;#define APRHOME "APR_1.3_msvc-9.0-sp1-x86"
-;#define APRUTILHOME "APR_1.3_msvc-9.0-sp1-x86"
-;#define APRICONVHOME "APR_1.3_msvc-9.0-sp1-x86"
 #define MINERVAHOME "Minerva_1.2.0-346_msvc-9.0-sp1-x86"
 #define SKEWMATRIXHOME "C:\dev\ves_deps\skewmatrix"
 #define OSGALHOME "osgAudio_2.0.0_msvc-9.0-sp1-x86"

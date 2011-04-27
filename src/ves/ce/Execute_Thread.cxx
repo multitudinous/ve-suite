@@ -42,17 +42,31 @@ using namespace ves::ce;
 Execute_Thread::Execute_Thread( Body::Unit_var m, Body_AMH_Executive_i* ex ) :
         _mod( m ),
         _is_exec( false ),
-        _executive( ex )
+        _executive( ex ),
+        m_isRunning( false )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 Execute_Thread::~Execute_Thread()
-{}
+{
+    _mod = 0;
+    _executive = 0;
+    m_isRunning = false;
+}
+////////////////////////////////////////////////////////////////////////////////
+int Execute_Thread::close(u_long flags)
+{
+    m_isRunning = false;
+    ACE_OS::sleep( 2 );
+    return 0;
+    return ACE_Task_Base::close(flags);
+}
 ////////////////////////////////////////////////////////////////////////////////
 int Execute_Thread::svc( void )
 {
-    while( true )
+    m_isRunning = true;
+    while( m_isRunning )
     {
-        while( true )
+        while( m_isRunning )
         {
             _mutex.acquire();
             if( _is_exec )
@@ -60,7 +74,12 @@ int Execute_Thread::svc( void )
 
             _mutex.release();
 
-            ACE_OS::sleep( 2 );
+            ACE_OS::sleep( 1 );
+        }
+
+        if( !m_isRunning )
+        {
+            return 0;
         }
 
         _mutex.release();
@@ -88,6 +107,7 @@ int Execute_Thread::svc( void )
             std::cout << "Module GetID Messed up." << std::endl;
         }
     }
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Execute_Thread::lock ()
