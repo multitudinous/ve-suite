@@ -323,11 +323,14 @@ unsigned char* UIElementQt::RenderElementToImage()
 
     if( mImageDirty )
     {
+#if defined( _DARWIN )
         { // Enter critical section
-            //QMutexLocker locker( mImageMutex );
+            QMutexLocker locker( mImageMutex );
             //( *mImageFlipped ) = mImage->mirrored( false, true );
-            //( *mImageFlipped ) = mImage->copy();
+            //Double buffer the texture image
+            ( *mImageFlipped ) = mImage->copy();
         } // Leave critical section
+#endif
         mImageDirty = false;
         mDirty = true;
     }
@@ -335,9 +338,11 @@ unsigned char* UIElementQt::RenderElementToImage()
     {
         mDirty = false;
     }
-    //return mImageFlipped->bits();
-    QMutexLocker locker( mImageMutex );
+#if defined( _DARWIN )
+    return mImageFlipped->bits();
+#else
     return mImage->bits();
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElementQt::IsDirty()

@@ -215,58 +215,60 @@ void PluginSelectionTab::on_m_addPluginButton_clicked()
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
 {
-    if( item )
+    if( !item )
     {
-        // Get plugin filename from the current item
-        QString fileName = item->data( Qt::UserRole ).toString();
+        return;
+    }
+    // Get plugin filename from the current item
+    QString fileName = item->data( Qt::UserRole ).toString();
 
-        QPluginLoader loader( fileName );
-        QObject *plugin = loader.instance();
-        if (plugin)
-        {
-            UIPluginFactory* factory =
-                    qobject_cast< UIPluginFactory* >(plugin);
-            if( factory )
-            {
-                // We have a valid plugin. Add this to the current system, and
-                // send to xplorer to load. When xplorer instantiates this plugin,
-                // it will send a signal which we catch in InstantiatePluginSlot.
-                // Then we finish the process of creating the UI portion of
-                // the plugin.
-                XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
+    QPluginLoader loader( fileName );
+    QObject *plugin = loader.instance();
+    if( !plugin )
+    {
+        return;
+    }
+    UIPluginFactory* factory =
+            qobject_cast< UIPluginFactory* >(plugin);
+    if( factory )
+    {
+        // We have a valid plugin. Add this to the current system, and
+        // send to xplorer to load. When xplorer instantiates this plugin,
+        // it will send a signal which we catch in InstantiatePluginSlot.
+        // Then we finish the process of creating the UI portion of
+        // the plugin.
+        XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
 
-                ///Initialize top level network
-                ves::open::xml::model::NetworkPtr tempNetwork( new ves::open::xml::model::Network() );
+        ///Initialize top level network
+        ves::open::xml::model::NetworkPtr tempNetwork( new ves::open::xml::model::Network() );
 
-                mDataBufferEngine->GetXMLSystemDataObject(
-                    mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
+        mDataBufferEngine->GetXMLSystemDataObject(
+            mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
 
-                using namespace ves::open::xml::model;
+        using namespace ves::open::xml::model;
 
-                SystemPtr system( mDataBufferEngine->GetXMLSystemDataObject(
-                        mDataBufferEngine->GetTopSystemId() ) );
+        SystemPtr system( mDataBufferEngine->GetXMLSystemDataObject(
+                mDataBufferEngine->GetTopSystemId() ) );
 
-                ModelPtr mod( new Model );
-                mod->SetPluginType( factory->GetFactoryName() );
-                mod->SetPluginName( factory->GetFactoryName() );
-                //mod->SetVendorName( "DefaultPlugin" );
-                mod->SetParentSystem( system );
+        ModelPtr mod( new Model );
+        mod->SetPluginType( factory->GetFactoryName() );
+        mod->SetPluginName( factory->GetFactoryName() );
+        //mod->SetVendorName( "DefaultPlugin" );
+        mod->SetParentSystem( system );
 
-                system->AddModel( mod );
+        system->AddModel( mod );
 
-                const std::string network = XMLDataBufferEngine::instance()->
-                                SaveVESData( std::string( "returnString" ) );
+        const std::string network = XMLDataBufferEngine::instance()->
+                        SaveVESData( std::string( "returnString" ) );
 
-                ves::xplorer::network::GraphicalPluginManager::instance()->SetCurrentNetwork( network );
+        ves::xplorer::network::GraphicalPluginManager::instance()->SetCurrentNetwork( network );
 
-                ves::xplorer::network::GraphicalPluginManager::instance()->LoadDataFromCE();
+        ves::xplorer::network::GraphicalPluginManager::instance()->LoadDataFromCE();
 
-                ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
-                    ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );
+        ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+            ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );
 
-                ves::xplorer::ModelHandler::instance()->SetActiveModel( mod->GetID() );
-            }
-        }
+        ves::xplorer::ModelHandler::instance()->SetActiveModel( mod->GetID() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -392,7 +394,7 @@ void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::ClearActivePlugins()
 {
-    std::cout << "Clearing active plugins" << std::endl << std::flush;
+    std::cout << "|\tClearing active plugins" << std::endl << std::flush;
     std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
             m_itemInterfaceMap.begin();
     while( iter != m_itemInterfaceMap.end() )
@@ -425,82 +427,87 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
     }
     else
     {
-        std::cout << "Found UI plugin lib matching name " << pluginFactoryName << std::endl << std::flush;
+        std::cout << "|Found UI plugin lib matching name " 
+            << pluginFactoryName << std::endl << std::flush;
     }
 
     // Create an instance of the plugin from its factory
     QListWidgetItem* item = results.at(0);
-    if( item )
+    if( !item )
     {
-        // Get plugin filename from the current item
-        QString fileName = item->data( Qt::UserRole ).toString();
+        return;
+    }
 
-        QPluginLoader loader( fileName );
-        QObject *plugin = loader.instance();
-        if (plugin)
+    // Get plugin filename from the current item
+    QString fileName = item->data( Qt::UserRole ).toString();
+
+    QPluginLoader loader( fileName );
+    QObject *plugin = loader.instance();
+    if( !plugin )
+    {
+        return;
+    }
+    std::cout << "|\tPlugin instance valid" << std::endl << std::flush;
+    UIPluginFactory* factory =
+            qobject_cast< UIPluginFactory* >(plugin);
+    if( factory )
+    {
+        std::cout << "|\tFactory instance valid" << std::endl << std::flush;
+        // Create new instance of the UIPluginInterface object
+        // this factory contains.
+        UIPluginInterface* interface = factory->CreateInstance();
+
+        // Set its name as interfaceName_index
+        int index = ui->m_instantiatedPlugins->count();
+        std::stringstream nameSS;
+        nameSS << interface->GetName();
+        nameSS << "_";
+        nameSS << index;
+        interface->SetName( nameSS.str() );
+
+        std::cout << "|\tSetting interface name to " 
+            << nameSS.str() << std::endl << std::flush;
+
+        // Give the UI plugin a pointer to the xplorer plugin. This
+        // will give the UI plugin access to things like the correct model.
+        UIPluginBase* base = dynamic_cast<UIPluginBase*>( interface );
+        base->SetXplorerPlugin( xplorerPlugin );
+
+        // Use the plugin info to create a new item for the instantiated
+        // plugins list. Notice here we use the name of the instance,
+        // rather than the name of the factory.
+        QString name;
+        QListWidgetItem* newItem =
+            new QListWidgetItem( 
+                factory->GetIcon(), name.fromStdString( interface->GetName() ),
+                ui->m_instantiatedPlugins );
+
+        if( newItem )
         {
-            std::cout << "\t-Plugin instance valid" << std::endl << std::flush;
-            UIPluginFactory* factory =
-                    qobject_cast< UIPluginFactory* >(plugin);
-            if( factory )
-            {
-                std::cout << "\t-Factory instance valid" << std::endl << std::flush;
-                // Create new instance of the UIPluginInterface object
-                // this factory contains.
-                UIPluginInterface* interface = factory->CreateInstance();
-
-                // Set its name as interfaceName_index
-                int index = ui->m_instantiatedPlugins->count();
-                std::stringstream nameSS;
-                nameSS << interface->GetName();
-                nameSS << "_";
-                nameSS << index;
-                interface->SetName( nameSS.str() );
-
-                std::cout << "\t-Setting interface name to " << nameSS.str() << std::endl << std::flush;
-
-                // Give the UI plugin a pointer to the xplorer plugin. This
-                // will give the UI plugin access to things like the correct model.
-                UIPluginBase* base = dynamic_cast<UIPluginBase*>( interface );
-                base->SetXplorerPlugin( xplorerPlugin );
-
-                // Use the plugin info to create a new item for the instantiated
-                // plugins list. Notice here we use the name of the instance,
-                // rather than the name of the factory.
-                QString name;
-                QListWidgetItem* newItem =
-                        new QListWidgetItem( factory->GetIcon(),
-                                             name.fromStdString( interface->
-                                                                 GetName() ),
-                                             ui->m_instantiatedPlugins );
-
-                if( newItem )
-                {
-                    std::cout << "\t-Created item named " << interface->GetName() << std::endl << std::flush;
-                }
-                else
-                {
-                    std::cout << "\t-Failed to create list item!" << std::endl << std::flush;
-                }
-
-                newItem->setFlags( newItem->flags() | Qt::ItemIsEditable );
-                ui->m_instantiatedPlugins->addItem( newItem );
-
-                // Store the new interface
-                m_itemInterfaceMap[ newItem ] = interface;
-                std::cout << "\t-Map size: " << m_itemInterfaceMap.size() << std::endl << std::flush;
-            }
+            std::cout << "|\tCreated item named " 
+                << interface->GetName() << std::endl << std::flush;
         }
+        else
+        {
+            std::cout << "|\tFailed to create list item!" 
+                << std::endl << std::flush;
+        }
+
+        newItem->setFlags( newItem->flags() | Qt::ItemIsEditable );
+        ui->m_instantiatedPlugins->addItem( newItem );
+
+        // Store the new interface
+        m_itemInterfaceMap[ newItem ] = interface;
+        std::cout << "|\tMap size: " << m_itemInterfaceMap.size() 
+            << std::endl << std::flush;
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::qFileLoadedSlot( const std::string& fileName )
 {
     boost::ignore_unused_variable_warning( fileName );
     ClearActivePlugins();
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 }
 }
