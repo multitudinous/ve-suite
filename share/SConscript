@@ -29,7 +29,6 @@ shareSubdirs = Split("""
     scripts
     osg-textures
     osg-data
-    bdfx-data
     logo
 """)
 
