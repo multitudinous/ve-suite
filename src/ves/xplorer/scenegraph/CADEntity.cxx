@@ -54,7 +54,7 @@
 #include <backdropFX/Version.h>
 #include <backdropFX/Manager.h>
 #include <backdropFX/ShaderModule.h>
-#include <backdropFX/ShaderModuleVisitor.h>
+//#include <backdropFX/ShaderModuleVisitor.h>
 
 // --- STL Includes --- //
 #include <cassert>

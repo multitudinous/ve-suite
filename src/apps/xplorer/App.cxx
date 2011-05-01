@@ -114,14 +114,6 @@
 // --- BackdropFX Includes --- //
 #include <backdropFX/Version.h>
 #include <backdropFX/Manager.h>
-#include <backdropFX/SkyDome.h>
-#include <backdropFX/DepthPartition.h>
-#include <backdropFX/DepthPeelUtils.h>
-#include <backdropFX/RenderingEffects.h>
-#include <backdropFX/EffectLibraryUtils.h>
-#include <backdropFX/LocationData.h>
-#include <backdropFX/ShaderModule.h>
-#include <backdropFX/ShaderModuleVisitor.h>
 #include <backdropFX/RTTViewport.h>
 
 // --- VR Juggler Includes --- //
@@ -802,7 +794,6 @@ void App::latePreFrame()
         osg::Vec4d position( tempVec[ 0 ], tempVec[ 1 ], tempVec[ 2 ], 0.0 );
         mSceneRenderToTexture->GetLight0()->setPosition( position );
         //Sneaky way to set uniform defined in
-        //backdropFX::ShaderModuleVisitor::setDefaults()
         //Access to these types of uniforms needs to be discussed with Paul
         if( !mRTT )
         {

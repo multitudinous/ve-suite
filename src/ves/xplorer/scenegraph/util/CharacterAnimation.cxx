@@ -133,13 +133,13 @@ osg::Group* CharacterAnimation::Register( std::string const& fileName )
     {
         osg::Group* node = dynamic_cast<osg::Group*>( osgDB::readNodeFile( fileName ) );
         //dynamic_cast<osgAnimation::AnimationManager*>(osgDB::readNodeFile(psr[1]));
-        root->addChild( node );
         if( !node )
         {
             std::cout << "No data loaded" << std::endl;
             return 0;
         }
-        
+        root->addChild( node );
+
         //Create shader modules emulating ffp
         if( !ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
         {
