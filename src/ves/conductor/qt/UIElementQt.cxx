@@ -321,6 +321,8 @@ unsigned char* UIElementQt::RenderElementToImage()
     // every 100ms. Any time the present method is called, we simply return the
     // most recently painted image of this window.
 
+    mDirty = mImageDirty;
+
     if( mImageDirty )
     {
 #if defined( _DARWIN )
@@ -332,12 +334,8 @@ unsigned char* UIElementQt::RenderElementToImage()
         } // Leave critical section
 #endif
         mImageDirty = false;
-        mDirty = true;
     }
-    else
-    {
-        mDirty = false;
-    }
+
 #if defined( _DARWIN )
     return mImageFlipped->bits();
 #else
