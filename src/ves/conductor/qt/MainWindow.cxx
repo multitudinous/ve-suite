@@ -37,6 +37,7 @@
 
 #include <QtGui/QPaintEvent>
 #include <QtGui/QToolButton>
+#include <QtCore/QDir>
 
 #include <ves/conductor/qt/ExtendedTabWidget.h>
 
@@ -537,7 +538,10 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
     for( int index = 0; index < fileNames.size(); index++ )
     {
         QString fileName = fileNames.at(index);
+        QDir dir = QDir::current();
+        fileName = dir.relativeFilePath( fileName );
         boost::filesystem::path file( fileName.toStdString() );
+
         std::string extension( boost::filesystem::extension( file ) );
 
         if( !extension.compare( ".ves" ) )
@@ -576,10 +580,26 @@ void MainWindow::LoadGeometryFile( std::string filename )
     std::string parentID;
     ves::xplorer::Model* activeModel =
             ves::xplorer::ModelHandler::instance()->GetActiveModel();
+
+    // If there's no active model, we need to set one up. This requires some
+    // gymnastics to get the working directory set properly.
     if( !activeModel )
     {
-        this->on_actionNew_triggered();
+        // Take the path to the selected Geometry file and use this as the
+        // working directory.
+        QString filePath( filename.c_str() );
+        QString currentDir( QDir::currentPath() );
+        filePath = currentDir + "/" + filePath;
+        QDir dir( filePath );
+        dir.setPath( dir.absolutePath( ) );
+        boost::filesystem::path tmp( dir.path().toStdString() );
+        filePath = filePath.fromStdString( tmp.remove_filename().string() );
+        this->on_actionNew_triggered( filePath );
         activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+
+        // Now the filename passed in can be shortened to just the leaf.
+        boost::filesystem::path tmp2( filename );
+        filename = tmp2.filename().string();
     }
 
     ModelCADHandler* m_cadHandler = activeModel->GetModelCADHandler();
@@ -622,9 +642,22 @@ void MainWindow::LoadGeometryFile( std::string filename )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::LoadDataFile( std::string filename )
 {
+    // If there's no active model, we need to set one up. This requires some
+    // gymnastics to get the working directory set properly.
     if( !ves::xplorer::ModelHandler::instance()->GetActiveModel() )
     {
+        QString filePath( filename.c_str() );
+        QString currentDir( QDir::currentPath() );
+        filePath = currentDir + "/" + filePath;
+        QDir dir( filePath );
+        dir.setPath( dir.absolutePath( ) );
+        boost::filesystem::path tmp( dir.path().toStdString() );
+        filePath = filePath.fromStdString( tmp.remove_filename().string() );
+        this->on_actionNew_triggered( filePath );
         on_actionNew_triggered();
+        // Now the filename passed in can be shortened to just the leaf.
+        boost::filesystem::path tmp2( filename );
+        filename = tmp2.filename().string();
     }
 
     ves::open::xml::ParameterBlockPtr mParamBlock;
@@ -732,6 +765,10 @@ void MainWindow::LoadDataFile( std::string filename )
     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
     AddTab( mVisualizationTab, "Visualization" );
     ActivateTab("Visualization");
+
+    // Unclear why this is needed here, but for some reason mFileDialog is not
+    // otherwise being nulled out when loading datasets.
+    mFileDialog = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileCancelled()
@@ -803,6 +840,11 @@ void MainWindow::onFileSaveSelected( const QString& fileName )
     ves::xplorer::data::DatabaseManager::instance()->SaveAs( dbFileName );
 
     // Set the database name in system
+    QString tempName;
+    tempName = tempName.fromStdString( dbFileName );
+    QDir relativeDir = QDir::current();
+    tempName = relativeDir.relativeFilePath( tempName );
+    dbFileName = tempName.toStdString();
     ves::xplorer::Model* model =
         ves::xplorer::ModelHandler::instance()->GetActiveModel();
     ves::open::xml::model::SystemPtr system = model->GetModelData()->GetParentSystem();
@@ -1145,8 +1187,54 @@ void MainWindow::on_actionShowPreferencesTab_triggered()
     ActivateTab( AddTab( m_preferencesTab,"Preferences" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::on_actionNew_triggered()
+void MainWindow::on_actionNew_triggered( const QString& workingDir )
 {
+    // If workingDir is empty, this method was called by clicking the "New File"
+    // icon. If workingDir is not empty, this method was called by successful
+    // completion of the "Select Working Directory" file dialog, which is
+    // initiated below.
+    if( workingDir.isEmpty() )
+    {
+        // Don't allow multiple file dialogs to be opened.
+        if( mFileDialog != 0 )
+        {
+            return;
+        }
+
+        mFileDialog = new QFileDialog( 0 );
+        // Ensure that we use Qt's internal file dialog class since native file
+        // dialogs cannot be embedded in a QTabWidget
+        mFileDialog->setOptions( QFileDialog::DontUseNativeDialog );
+        // Make mFileDialog manage its own lifetime and memory
+        mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
+        mFileDialog->setFileMode( QFileDialog::DirectoryOnly );
+
+        mFileDialog->setAcceptMode( QFileDialog::AcceptOpen );
+
+        QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)),
+                          this, SLOT(on_actionNew_triggered(const QString &)) );
+        QObject::connect( mFileDialog, SIGNAL(rejected()), this,
+                          SLOT( onFileCancelled() ) );
+
+        ActivateTab( AddTab( mFileDialog, "Select Working Directory" ) );
+        return;
+    }
+
+    //std::cout << "Working Dir is: " << workingDir.toStdString() << std::endl << std::flush;
+
+    // Change to the new working directory
+    std::cout << "Setting working directory to " << workingDir.toStdString() << std::endl << std::flush;
+    QDir::setCurrent( workingDir );
+
+    // Close out the fileDialog tab and kill the file dialog
+    RemoveTab( mFileDialog );
+
+    if ( mFileDialog != 0 )
+    {
+        mFileDialog->close();
+        mFileDialog = 0;
+    }
+
     // Let xplorer know we are loading a new ves file so that it can do any
     // necessary cleanup, such as resetting the database
     reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >

@@ -78,7 +78,7 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
     bfs::path vegFileName( fileName );
     
     // Re-write the path as being relative to CWD
-    vegFileName = bfs::system_complete( vegFileName );
+    //vegFileName = bfs::system_complete( vegFileName );
     
     // Get the entire file path
     std::string vegFileNamePath = vegFileName.string();

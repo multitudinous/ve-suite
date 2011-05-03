@@ -188,7 +188,7 @@ protected Q_SLOTS:
     /// Autoconnected slot
     void on_actionFile_triggered(); 
 
-    void on_actionNew_triggered();
+    void on_actionNew_triggered( const QString& workingDir = "" );
     
     /// Called when the open file icon of the file operations stack is clicked.
     /// Autoconnected slot

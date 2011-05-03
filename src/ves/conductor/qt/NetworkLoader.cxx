@@ -101,6 +101,8 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     std::cout << "|\tThe new working directory is " 
         << newWorkingDir << std::endl;
 
+    std::string tFileName = dir_path.filename().string();
+
 #ifdef WIN32
     //http://msdn.microsoft.com/en-us/library/bf7fwze1(VS.80).aspx
     _chdir( newWorkingDir.c_str() );
@@ -133,7 +135,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         // necessary cleanup, such as resetting the database
         reinterpret_cast< xplorer::eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
         ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
-        ->mSignal->operator()( fileName );
+        ->mSignal->operator()( tFileName );
 /*        CommandPtr loadVesFile( new Command() );
         loadVesFile->SetCommandName( "LOAD_VES_FILE" );
         // Dummy DVP to prevent crashes since xplorer assumes existence of 
@@ -204,7 +206,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     //Now load the xml data now that we are in the correct directory
     //canvas->PopulateNetworks( fileName );
     // RPT: Following line replaces key functionality of canvas->PopulateNetworks
-    XMLDataBufferEngine::instance()->LoadVESData( fileName );
+    XMLDataBufferEngine::instance()->LoadVESData( tFileName );
 
     //create hierarchy page
     //hierarchyTree->PopulateTree();
