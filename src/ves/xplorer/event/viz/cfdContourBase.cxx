@@ -65,12 +65,13 @@
 #include <vtkPointData.h>
 #include <vtkPoints.h>
 #include <vtkDoubleArray.h>
+#include <vtkExtractUnstructuredGrid.h>
 
 #include <vtkCellDataToPointData.h>
 #include <vtkPCellDataToPointData.h>
 
-#include <vtkFLUENTReader.h>
-#include <vtkMultiBlockDataSet.h>
+//#include <vtkFLUENTReader.h>
+//#include <vtkMultiBlockDataSet.h>
 
 #include <vtkPassThroughFilter.h>
 #include <vtkXMLPolyDataWriter.h>
@@ -460,9 +461,15 @@ void cfdContourBase::CreateArbSurface()
         return;
     }
 
-	vtkProbeFilter* surfProbe= vtkCompositeDataProbeFilter::New();
+    vtkExtractUnstructuredGrid* extractGrid = vtkExtractUnstructuredGrid::New();
+    extractGrid->SetInput( GetActiveDataSet()->GetDataSet() );
+    extractGrid->ExtentClippingOn();
+    double* pdbbox = pd->GetWholeBoundingBox();
+    extractGrid->SetExtent( pdbbox );
+    
+	vtkCompositeDataProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
     surfProbe->SetInput( pd );
-    surfProbe->SetSource( GetActiveDataSet()->GetDataSet() );
+    surfProbe->SetSourceConnection( extractGrid->GetOutputPort() );
     surfProbe->Update(); 
   
    	vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
@@ -479,10 +486,10 @@ void cfdContourBase::CreateArbSurface()
     	normals->AutoOrientNormalsOn();
     	normals->ConsistencyOn();
     	normals->SplittingOn();
-    	normals->Update();
+    	//normals->Update();
 	
     	mapper->SetColorModeToMapScalars();
-    	mapper->SetInput( normals->GetOutput() );
+    	mapper->SetInputConnection( normals->GetOutputPort() );
 	
    		mapper->SetScalarModeToUsePointFieldData();
     	mapper->UseLookupTableScalarRangeOn();
@@ -523,5 +530,6 @@ void cfdContourBase::CreateArbSurface()
     	lut1->Delete();
 	}
     surfProbe->Delete();
+    extractGrid->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
