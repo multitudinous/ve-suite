@@ -587,7 +587,8 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     if( !scenegraph::SceneManager::instance()->IsRTTOn() )
     {
         backdropFX::ShaderModuleVisitor smv;
-        smv.setAddDefaults( false );
+        //smv.setAddDefaults( false );
+        smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
         mCadNode->accept( smv );
     }
 }

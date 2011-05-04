@@ -199,9 +199,6 @@ void CharacterController::Initialize()
 
     //mMatrixTransform->addChild( geode.get() );
 #endif
-    SceneManager::instance()->GetModelRoot()->addChild(
-        mMatrixTransform.get() );
-
     mMatrixTransform->setUpdateCallback(
         new CharacterTransformCallback( m_ghostObject ) );
 
@@ -209,19 +206,27 @@ void CharacterController::Initialize()
     mLineSegmentIntersector =
         new osgUtil::LineSegmentIntersector(
             osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
-            
-    //now that the graph has the character added lets let bdfx know about it
-    
+                
     //Create shader modules emulating ffp
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
     {
         backdropFX::ShaderModuleVisitor smv;
-        smv.setAddDefaults( false );
+        //smv.setAddDefaults( false );
+        smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
         mMatrixTransform->accept( smv );
 
+        //now that the graph has the character added lets let bdfx know about it
+        SceneManager::instance()->GetModelRoot()->
+            addChild( mMatrixTransform.get() );
+        
         backdropFX::RebuildShaderModules rsm;
         backdropFX::Manager::instance()->getManagedRoot()->accept( rsm );
-    }        
+    }
+    else
+    {
+        SceneManager::instance()->GetModelRoot()->
+            addChild( mMatrixTransform.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Destroy()
