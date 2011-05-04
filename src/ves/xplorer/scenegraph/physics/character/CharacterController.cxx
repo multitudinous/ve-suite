@@ -66,6 +66,12 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
+// --- BackdropFX Includes --- //
+#include <backdropFX/Version.h>
+#include <backdropFX/Manager.h>
+#include <backdropFX/ShaderModule.h>
+#include <backdropFX/ShaderModuleVisitor.h>
+
 #define VES_USE_ANIMATED_CHARACTER 1
 
 using namespace ves::xplorer::scenegraph;
@@ -203,6 +209,19 @@ void CharacterController::Initialize()
     mLineSegmentIntersector =
         new osgUtil::LineSegmentIntersector(
             osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
+            
+    //now that the graph has the character added lets let bdfx know about it
+    
+    //Create shader modules emulating ffp
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
+    {
+        backdropFX::ShaderModuleVisitor smv;
+        smv.setAddDefaults( false );
+        mMatrixTransform->accept( smv );
+
+        backdropFX::RebuildShaderModules rsm;
+        backdropFX::Manager::instance()->getManagedRoot()->accept( rsm );
+    }        
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Destroy()
