@@ -144,12 +144,14 @@ void PhongLoader::SyncShaderAndStateSet()
         "        gl_Position=ftransform();\n"
 
         "        color=gl_Color.xyz;\n"
-        "                objPos=gl_Vertex.xyz;\n"
+        "        objPos=gl_Vertex.xyz;\n"
         "        eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);\n"
-        "                lightPos=gl_LightSource[0].position.xyz;\n"
+        "        lightPos=gl_LightSource[0].position.xyz;\n"
         "        normal=vec3(gl_NormalMatrix*gl_Normal);\n"
         "        gl_FrontSecondaryColor=vec4(1.0);\n"
         "        gl_BackSecondaryColor=vec4(0.0);\n"
+        "        gl_BackColor = vec4( color, 1.0);\n"
+        "        gl_FrontColor = vec4( color, 1.0);\n"
         "}\n"
     );
     std::string fSource(
