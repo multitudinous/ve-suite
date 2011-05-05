@@ -59,9 +59,10 @@ using namespace ves::xplorer::scenegraph::util;
 ShaderHelper::ShaderHelper()
     :
     m_twoSidedLighting( true )
-{}
-
-///////////////////////////////////////////////////
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 ShaderHelper::ShaderHelper( const ShaderHelper& rhs )
 {
     for( size_t i = 0; i < rhs.m_vertexUniformNames.size(); i++ )
@@ -82,7 +83,7 @@ ShaderHelper::ShaderHelper( const ShaderHelper& rhs )
     m_glslProgram = new osg::Program( *m_glslProgram.get() );
     m_ss = new osg::StateSet( *rhs.m_ss );
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ShaderHelper& ShaderHelper::operator=( const ShaderHelper& rhs )
 {
     if( this != &rhs )
@@ -117,12 +118,12 @@ ShaderHelper::~ShaderHelper()
     m_vertexUniformNames.clear();
     m_fragmentUniformNames.clear();
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::SetStateSet( osg::StateSet* shader )
 {
     m_ss = shader;
 }
-////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::LoadTransparencyProgram()
 {
     ShaderPtr vertShader(  new Shader() );
@@ -163,7 +164,7 @@ void ShaderHelper::LoadTransparencyProgram()
     glslProgram->SetFragmentShader( fragShader );
     LoadGLSLProgram( glslProgram );
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::LoadGLSLProgram( ProgramPtr glslProgram )
 {
     //std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
@@ -192,13 +193,16 @@ void ShaderHelper::LoadGLSLProgram( ProgramPtr glslProgram )
     }
     ///two-sided lighting hack until gl_FrontFacing works in glsl...
     ///only works if the shader implements it though...
+    ///This is required to make two sided lighting work in a shader. 
+    ///gl_FrontFacing can be used in the fragment shader but it requires 
+    ///per fragment lighting which is expensive.
     if( m_twoSidedLighting )
     {
         m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
     }
     _attachGLSLProgramToStateSet();
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::_createGLSLShader( ShaderPtr shader )
 {
     if( shader->GetShaderSource().empty() )
@@ -234,7 +238,7 @@ void ShaderHelper::_createGLSLShader( ShaderPtr shader )
         m_glslProgram->addShader( m_vshader.get() );
     }
 }
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
 {
     //create the image
@@ -365,7 +369,7 @@ void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
         }
     }
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::_setWrapOnTexture( osg::Texture* texture,
                                       osg::Texture::WrapParameter param,
                                       std::string wrapMode )
@@ -391,7 +395,7 @@ void ShaderHelper::_setWrapOnTexture( osg::Texture* texture,
         texture->setWrap( param, osg::Texture::CLAMP );
     }
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::UpdateUniform( UniformPtr uniformData )
 {
     std::string uniformName( "" );
@@ -499,7 +503,7 @@ void ShaderHelper::UpdateUniform( UniformPtr uniformData )
         }
     }
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
 {
     size_t nUniforms = shader->GetNumberOfUniforms();
