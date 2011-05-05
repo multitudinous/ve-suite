@@ -462,8 +462,10 @@ void cfdContourBase::CreateArbSurface()
     }
 
     vtkExtractUnstructuredGrid* extractGrid = vtkExtractUnstructuredGrid::New();
+    //vtkExtractGeometry* extractGrid = vtkExtractGeometry::New();
     extractGrid->SetInput( GetActiveDataSet()->GetDataSet() );
     extractGrid->ExtentClippingOn();
+   // extractGrid->ExtractBoundaryCellsOn();
     double* pdbbox = pd->GetWholeBoundingBox();
     extractGrid->SetExtent( pdbbox );
     

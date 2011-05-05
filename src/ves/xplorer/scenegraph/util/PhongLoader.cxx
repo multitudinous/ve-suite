@@ -46,11 +46,11 @@ using namespace ves::xplorer::scenegraph::util;
 PhongLoader::PhongLoader()
         : ShaderHelper()
 {}
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 PhongLoader::PhongLoader( const PhongLoader& rhs )
         : ShaderHelper( rhs )
 {}
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 PhongLoader& PhongLoader::operator=( const PhongLoader& rhs )
 {
     if( this != &rhs )
@@ -64,7 +64,7 @@ PhongLoader& PhongLoader::operator=( const PhongLoader& rhs )
 ///////////////////////////////////////////
 PhongLoader::~PhongLoader()
 {}
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSource )
 {
     ShaderPtr vertShader(  new Shader() );
@@ -113,10 +113,16 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     specularPower.push_back( 20.0 );
     specularValues->SetValues( specularPower );
 
-    fragShader->AddUniform( amaterial );
-    fragShader->AddUniform( dmaterial );
-    fragShader->AddUniform( smaterial );
-    fragShader->AddUniform( specularValues );
+    //fragShader->AddUniform( amaterial );
+    //fragShader->AddUniform( dmaterial );
+    //fragShader->AddUniform( smaterial );
+    //fragShader->AddUniform( specularValues );
+
+    vertShader->AddUniform( amaterial );
+    vertShader->AddUniform( dmaterial );
+    vertShader->AddUniform( smaterial );
+    vertShader->AddUniform( specularValues );
+    
     ProgramPtr glslProgram(  new Program() );
     glslProgram->SetProgramName( "Phong Shader" );
     glslProgram->SetVertexShader( vertShader );
@@ -130,31 +136,10 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
         m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
     }
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void PhongLoader::SyncShaderAndStateSet()
 {
     std::string vSource(
-        "varying vec3 color;\n"
-        "varying vec3 lightPos;\n"
-        "varying vec3 objPos;\n"
-        "varying vec3 eyePos;\n"
-        "varying vec3 normal;\n"
-        "void main()\n"
-        "{\n"
-        "        gl_Position=ftransform();\n"
-
-        "        color=gl_Color.xyz;\n"
-        "        objPos=gl_Vertex.xyz;\n"
-        "        eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);\n"
-        "        lightPos=gl_LightSource[0].position.xyz;\n"
-        "        normal=vec3(gl_NormalMatrix*gl_Normal);\n"
-        "        gl_FrontSecondaryColor=vec4(1.0);\n"
-        "        gl_BackSecondaryColor=vec4(0.0);\n"
-        "        gl_BackColor = vec4( color, 1.0);\n"
-        "        gl_FrontColor = vec4( color, 1.0);\n"
-        "}\n"
-    );
-    std::string fSource(
         "uniform vec3 ambientMaterial;\n"
         "uniform vec3 diffuseMaterial;\n"
         "uniform vec3 specularMaterial;\n"
@@ -165,30 +150,83 @@ void PhongLoader::SyncShaderAndStateSet()
         "varying vec3 objPos;\n"
         "varying vec3 eyePos;\n"
         "varying vec3 normal;\n"
-
         "void main()\n"
         "{\n"
+        "    gl_Position=ftransform();\n"
+
+        "    color=gl_Color.xyz;\n"
+        "    objPos=gl_Vertex.xyz;\n"
+        "    eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);\n"
+        "    lightPos=gl_LightSource[0].position.xyz;\n"
+        "    normal=vec3(gl_NormalMatrix*gl_Normal);\n"
+
         "    vec3 N=normalize(normal);\n"
-        "    if(gl_SecondaryColor.r < .5)\n"
-        "    {\n"
-        "       N=-N; \n"
-        "    }\n"
         "    vec3 L=normalize(lightPos);\n"
         "    float NDotL=max(dot(N,L),0.0);\n"
-
+        
         "    vec3 V=normalize(eyePos);\n"
         "    vec3 R=reflect(V,N);\n"
         "    float RDotL=max(dot(R,L),0.0);\n"
-
+        
         "    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
         "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
         "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
 
-        "    gl_FragData[ 0 ]=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
+        //"    gl_FrontSecondaryColor=vec4(1.0);\n"
+        //"    gl_BackSecondaryColor=vec4(0.0);\n"
+        //"    gl_BackColor = vec4( color, 1.0);\n"
+        //"    gl_FrontColor = vec4( color, 1.0);\n"
+        "    gl_FrontColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
+
+        //Now compute the back face for two sided lighting
+        "    N = -N;\n"
+        "    NDotL=max(dot(N,L),0.0);\n"
+        "    R=reflect(V,N);\n"
+        "    RDotL=max(dot(R,L),0.0);\n"
+        
+        "    TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
+        "    TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
+        "    TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
+
+        "    gl_BackColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
+        "}\n"
+    );
+    std::string fSource(
+        //"uniform vec3 ambientMaterial;\n"
+        //"uniform vec3 diffuseMaterial;\n"
+        //"uniform vec3 specularMaterial;\n"
+        //"uniform float specularPower;\n"
+
+        //"varying vec3 color;\n"
+        //"varying vec3 lightPos;\n"
+        //"varying vec3 objPos;\n"
+        //"varying vec3 eyePos;\n"
+        //"varying vec3 normal;\n"
+
+        //Use gl_FrontFacing to determine if the fragment is front facing
+        "void main()\n"
+        "{\n"
+        //"    vec3 N=normalize(normal);\n"
+        //"    if(gl_SecondaryColor.r < .5)\n"
+        //"    {\n"
+        //"       N=-N; \n"
+        //"    }\n"
+        //"    vec3 L=normalize(lightPos);\n"
+        //"    float NDotL=max(dot(N,L),0.0);\n"
+
+        //"    vec3 V=normalize(eyePos);\n"
+        //"    vec3 R=reflect(V,N);\n"
+        //"    float RDotL=max(dot(R,L),0.0);\n"
+
+        //"    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
+        //"    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
+        //"    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
+
+        //"    gl_FragData[ 0 ]=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
+        "    gl_FragData[ 0 ]=gl_Color;\n"
         "    //To handle the glow\n"
         "    gl_FragData[ 1 ] = vec4( 0, 0, 0, 1 );\n"
         " }\n"
-
     );
     _loadShader( vSource, fSource );
 }

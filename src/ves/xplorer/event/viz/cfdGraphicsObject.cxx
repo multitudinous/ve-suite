@@ -36,6 +36,7 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdStreamers.h>
+#include <ves/xplorer/event/viz/cfdPolyData.h>
 
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>
 #include <ves/xplorer/Debug.h>
@@ -208,6 +209,25 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* input )
     {
         isStreamLine = true;
     }
+    
+    bool isPD = false;
+    if( dynamic_cast< ves::xplorer::cfdPolyData* >( input ) )
+    {
+        isPD = true;
+    }
+
+    /*bool isVector = false;
+    if( dynamic_cast< ves::xplorer::cfdVectorBase* >( input ) )
+    {
+        isVector = true;
+    }
+
+    bool isIso = false;
+    if( dynamic_cast< ves::xplorer::cfdIsosurface* >( input ) )
+    {
+        isIso = true;
+    }*/
+
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodeList =
         input->GetGeodes();
         
@@ -218,14 +238,14 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* input )
             geodes.push_back( geodeList.at( i ) );
         }
 
-        if( !isStreamLine && !input->IsGPUTools() )
+        if( !isStreamLine && !isPD && !input->IsGPUTools() )
         {
             //Add phong shading to the geodes
             osg::ref_ptr< osg::StateSet > geodeProperties = geodes.at( i )->getOrCreateStateSet();
             ves::xplorer::scenegraph::util::PhongLoader phongShader;
-            if( input->IsGPUTools() )
+            //if( input->IsGPUTools() )
             {
-                phongShader.SetTwoSidedLighting( false );
+                //phongShader.SetTwoSidedLighting( false );
             }
             phongShader.SetStateSet( geodeProperties.get() );
             phongShader.SyncShaderAndStateSet();
