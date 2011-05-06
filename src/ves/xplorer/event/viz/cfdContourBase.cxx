@@ -65,15 +65,12 @@
 #include <vtkPointData.h>
 #include <vtkPoints.h>
 #include <vtkDoubleArray.h>
-#include <vtkExtractUnstructuredGrid.h>
+#include <vtkExtractGeometry.h>
+#include <vtkBox.h>
 
 #include <vtkCellDataToPointData.h>
 #include <vtkPCellDataToPointData.h>
 
-//#include <vtkFLUENTReader.h>
-//#include <vtkMultiBlockDataSet.h>
-
-#include <vtkPassThroughFilter.h>
 #include <vtkXMLPolyDataWriter.h>
 
 using namespace ves::xplorer;
@@ -461,17 +458,29 @@ void cfdContourBase::CreateArbSurface()
         return;
     }
 
-    vtkExtractUnstructuredGrid* extractGrid = vtkExtractUnstructuredGrid::New();
-    //vtkExtractGeometry* extractGrid = vtkExtractGeometry::New();
+    //vtkExtractUnstructuredGrid* extractGrid = vtkExtractUnstructuredGrid::New();
+    vtkExtractGeometry* extractGrid = vtkExtractGeometry::New();
     extractGrid->SetInput( GetActiveDataSet()->GetDataSet() );
-    extractGrid->ExtentClippingOn();
-   // extractGrid->ExtractBoundaryCellsOn();
-    double* pdbbox = pd->GetWholeBoundingBox();
-    extractGrid->SetExtent( pdbbox );
-    
+    //extractGrid->ExtentClippingOn();
+    extractGrid->ExtractBoundaryCellsOn();
+    //pd->ComputeBounds();
+    double* pdbbox = pd->GetBounds();
+    pdbbox[ 0 ] -= 0.05;
+    pdbbox[ 2 ] -= 0.05;
+    pdbbox[ 4 ] -= 0.05;
+    pdbbox[ 1 ] += 0.05;
+    pdbbox[ 3 ] += 0.05;
+    pdbbox[ 5 ] += 0.05;
+    //std::cout << pdbbox[ 0 ] << " " << pdbbox[ 1 ] << " " << pdbbox[ 2 ] << " " << pdbbox[ 3 ] << " " << pdbbox[ 4 ] << " " << pdbbox[ 5 ] << std::endl;
+    //extractGrid->SetExtent( pdbbox );
+    vtkBox* bbox = vtkBox::New();
+    bbox->SetBounds( pdbbox );
+    extractGrid->SetImplicitFunction( bbox );
+
 	vtkCompositeDataProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
     surfProbe->SetInput( pd );
     surfProbe->SetSourceConnection( extractGrid->GetOutputPort() );
+    //surfProbe->SetSource( GetActiveDataSet()->GetDataSet() );
     surfProbe->Update(); 
   
    	vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
@@ -533,5 +542,6 @@ void cfdContourBase::CreateArbSurface()
 	}
     surfProbe->Delete();
     extractGrid->Delete();
+    bbox->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
