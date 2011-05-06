@@ -59,6 +59,8 @@
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
 #include <vtkXMLPolyDataWriter.h>
+#include <vtkExtractGeometry.h>
+#include <vtkBox.h>
 
 using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
@@ -470,9 +472,29 @@ void cfdVectorBase::CreateArbSurface()
         return;
     }
     
-	vtkProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
+    //vtkExtractUnstructuredGrid* extractGrid = vtkExtractUnstructuredGrid::New();
+    vtkExtractGeometry* extractGrid = vtkExtractGeometry::New();
+    extractGrid->SetInput( GetActiveDataSet()->GetDataSet() );
+    //extractGrid->ExtentClippingOn();
+    extractGrid->ExtractBoundaryCellsOn();
+    //pd->ComputeBounds();
+    double* pdbbox = pd->GetBounds();
+    pdbbox[ 0 ] -= 0.05;
+    pdbbox[ 2 ] -= 0.05;
+    pdbbox[ 4 ] -= 0.05;
+    pdbbox[ 1 ] += 0.05;
+    pdbbox[ 3 ] += 0.05;
+    pdbbox[ 5 ] += 0.05;
+    //std::cout << pdbbox[ 0 ] << " " << pdbbox[ 1 ] << " " << pdbbox[ 2 ] << " " << pdbbox[ 3 ] << " " << pdbbox[ 4 ] << " " << pdbbox[ 5 ] << std::endl;
+    //extractGrid->SetExtent( pdbbox );
+    vtkBox* bbox = vtkBox::New();
+    bbox->SetBounds( pdbbox );
+    extractGrid->SetImplicitFunction( bbox );
+
+	vtkCompositeDataProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
     surfProbe->SetInput( pd );
-    surfProbe->SetSource( GetActiveDataSet()->GetDataSet() );
+    surfProbe->SetSourceConnection( extractGrid->GetOutputPort() );
+    //surfProbe->SetSource( GetActiveDataSet()->GetDataSet() );
     surfProbe->Update(); 
     
    	vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
@@ -538,5 +560,7 @@ void cfdVectorBase::CreateArbSurface()
     }
     
     surfProbe->Delete();
+    extractGrid->Delete();
+    bbox->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
