@@ -35,6 +35,7 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QFileDialog>
 #include <QtGui/QMessageBox>
+#include <QtGui/QLabel>
 
 //Needed for NodePath
 #include <osg/Node>
@@ -129,6 +130,8 @@ protected:
     void LoadGeometryFile( std::string filename );
     /// Loads data file specified in @c filename
     void LoadDataFile( std::string filename );
+
+    void OnNodeAdded();
 
 protected Q_SLOTS:
     
@@ -327,6 +330,8 @@ private:
     void SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::string fileName );
 
     QMessageBox* m_messageBox;
+    //QLabel* m_loading;
+    std::vector< QLabel* > m_loadNotifiers;
 
     std::vector< std::string > m_GeometryExtensions;
     std::vector< std::string > m_DataExtensions;

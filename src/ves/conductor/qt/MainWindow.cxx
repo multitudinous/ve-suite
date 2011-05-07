@@ -240,6 +240,11 @@ MainWindow::MainWindow(QWidget* parent) :
                      &MainWindow::OnActiveModelChanged,
                      mConnections, normal_Priority );
 
+    CONNECTSIGNALS_0( "%NodeAdded",
+                     void(),
+                     &MainWindow::OnNodeAdded,
+                     mConnections, any_SignalType, normal_Priority );
+
     m_GeometryExtensions.push_back("osg");
     m_GeometryExtensions.push_back("ive");
     m_GeometryExtensions.push_back("stl");
@@ -537,10 +542,24 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
     // Now deal with loading the selected files
     for( int index = 0; index < fileNames.size(); index++ )
     {
+//        if(!m_loading)
+//        {
+//            m_loading = new QLabel;
+//        }
+        QLabel* m_loading = new QLabel();
+        m_loadNotifiers.push_back( m_loading );
+        QString text("Loading ");
+        m_loading->setStyleSheet( "font: bold 16px;" );
+        m_loading->setAlignment( Qt::AlignCenter );
+        ActivateTab( AddTab( m_loading, "Loading..." ) );
+
         QString fileName = fileNames.at(index);
         QDir dir = QDir::current();
         fileName = dir.relativeFilePath( fileName );
         boost::filesystem::path file( fileName.toStdString() );
+
+        text = text + fileName + " ...";
+        m_loading->setText( text );
 
         std::string extension( boost::filesystem::extension( file ) );
 
@@ -1278,4 +1297,11 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     // Force CAD tree to re-read the now "empty" scenegraph
     mScenegraphTreeTab->PopulateWithRoot(
         &(ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager()) );
+}
+
+void MainWindow::OnNodeAdded()
+{
+    RemoveTab( m_loadNotifiers.front() );
+    delete m_loadNotifiers.at(0);
+    m_loadNotifiers.erase( m_loadNotifiers.begin() );
 }
