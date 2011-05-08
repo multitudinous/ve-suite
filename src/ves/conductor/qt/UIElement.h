@@ -208,7 +208,7 @@ public:
     virtual void SetAnimationPath( osg::AnimationPath* path );
 
     ///
-    virtual osg::Switch* GetVisibilitySwitch();
+    //virtual osg::Switch* GetVisibilitySwitch();
 
     ///
     virtual osg::Geode* GetGeode();
@@ -225,13 +225,13 @@ protected:
     bool mUIMatrixDirty;
     std::vector< osg::Matrixf > mUIMatrices;
     //std::vector< osg::Matrixf > mElementMatrices;
-    osg::MatrixTransform* mUITransform;
-    osg::MatrixTransform* mElementTransform;
+    osg::ref_ptr< osg::MatrixTransform > mUITransform;
+    osg::ref_ptr< osg::MatrixTransform > mElementTransform;
     osg::Matrixf mElementMatrix;
     bool mElementMatrixDirty;
     bool mAnimationOn;
-    osg::ref_ptr< osg::Switch > mVisibilitySwitch;
-    osg::Geode* mGeode;
+    //osg::ref_ptr< osg::Switch > mVisibilitySwitch;
+    osg::ref_ptr< osg::Geode > mGeode;
     
     ///The resolution of the initial image size
     std::pair< int, int > m_initialImageSize;

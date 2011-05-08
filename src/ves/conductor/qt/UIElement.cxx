@@ -59,11 +59,11 @@ namespace conductor
 UIElement::UIElement():
     mIsMinimized( false ),
     mUIMatrixDirty( false ),
-    mUITransform( 0 ),
-    mElementTransform( 0 ),
+    //mUITransform( 0 ),
+    //mElementTransform( 0 ),
     mElementMatrixDirty( false ),
     mAnimationOn( false ),
-    mGeode( 0 ),
+    //mGeode( 0 ),
     m_mouseInsideUI( true )
 {
     //Request connection to UIManager.EnterLeaveUI signal
@@ -80,11 +80,15 @@ void UIElement::PostConstructor()
 {
     //
     osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
-    vertices->push_back( osg::Vec3( 0.0f, 0.0f, 0.0 ) );
+    /*vertices->push_back( osg::Vec3( 0.0f, 0.0f, 0.0 ) );
     vertices->push_back( osg::Vec3( 1.0f, 0.0f, 0.0 ) );
     vertices->push_back( osg::Vec3( 1.0f, 1.0f, 0.0 ) );
-    vertices->push_back( osg::Vec3( 0.0f, 1.0f, 0.0 ) );
-
+    vertices->push_back( osg::Vec3( 0.0f, 1.0f, 0.0 ) );*/
+    vertices->push_back( osg::Vec3( -1.0f, -1.0f, 1.0 ) );
+    vertices->push_back( osg::Vec3(  1.0f, -1.0f, 1.0 ) );
+    vertices->push_back( osg::Vec3(  1.0f,  1.0f, 1.0 ) );
+    vertices->push_back( osg::Vec3( -1.0f,  1.0f, 1.0 ) );
+    
     //
     osg::Vec4f coordinates = GetTextureCoordinates();
     float m_left = coordinates.w();
@@ -144,18 +148,18 @@ void UIElement::PostConstructor()
     mUITransform = uiTransform.get();
 
     //
-    mVisibilitySwitch = new osg::Switch();
-    mVisibilitySwitch->addChild( uiTransform.get() );
+    //mVisibilitySwitch = new osg::Switch();
+    //mVisibilitySwitch->addChild( uiTransform.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Switch* UIElement::GetVisibilitySwitch()
+/*osg::Switch* UIElement::GetVisibilitySwitch()
 {
     return mVisibilitySwitch.get();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* UIElement::GetGeode()
 {
-    return mGeode;
+    return mGeode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SetInitialImageWidthAndHeight( int width, int height )
@@ -267,7 +271,7 @@ bool UIElement::IsDirty()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::Initialize()
 {
-    
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SetMinimized( bool state )
@@ -350,31 +354,34 @@ void UIElement::Update()
         mElementMatrixDirty = false;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 osg::MatrixTransform* UIElement::GetUITransform()
 {
-    return mUITransform;
+    return mUITransform.get();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 osg::MatrixTransform* UIElement::GetElementTransform()
 {
-    return mElementTransform;
+    return mElementTransform.get();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool UIElement::IsVisible()
 {
-    return mVisibilitySwitch->getValue( 0 );
+    return static_cast< bool >( mUITransform->getNodeMask() );
+    //mVisibilitySwitch->getValue( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SetVisible( bool visible )
 {
     if( visible )
     {
-        mVisibilitySwitch->setAllChildrenOn();
+        mUITransform->setNodeMask( 0x1 );
+        //mVisibilitySwitch->setAllChildrenOn();
     }
     else
     {
-        mVisibilitySwitch->setAllChildrenOff();
+        mUITransform->setNodeMask( 0x0 );
+        //mVisibilitySwitch->setAllChildrenOff();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -432,6 +439,7 @@ void UIElement::UIEnterLeave( bool uiEnter )
 {
     m_mouseInsideUI = uiEnter;
 }
+////////////////////////////////////////////////////////////////////////////////
 } // namepsace conductor
 } // namespace ves
 

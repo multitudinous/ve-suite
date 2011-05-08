@@ -256,7 +256,7 @@ private:
     ElementMap_type mElements;
 
     /// Stores nodes that should be added to scenegraph during next update
-    std::vector< osg::ref_ptr< osg::Switch > > mNodesToAdd;
+    std::vector< osg::ref_ptr< osg::Node > > mNodesToAdd;
 
     /// Root node of the UI branch
     osg::ref_ptr< osg::Switch > mUIGroup;
@@ -266,7 +266,7 @@ private:
 
     /// Projection matrix that applies to everything under mUIGroup. This is
     /// how we deal with Ortho projection and/or head tracking
-    osg::ref_ptr< osg::Projection > mProjection;
+    //osg::ref_ptr< osg::Projection > mProjection;
     //osg::ref_ptr< osg::MatrixTransform > mProjection;
     osg::Matrixd mTempProj;
 

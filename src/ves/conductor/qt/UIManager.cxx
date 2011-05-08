@@ -192,7 +192,7 @@ osg::Geode* UIManager::AddElement( UIElement* element )
 {
     //Store the switch node so that it can be added to mUIGroup during the
     //next update traversal.
-    mNodesToAdd.push_back( element->GetVisibilitySwitch() );
+    mNodesToAdd.push_back( element->GetUITransform() );
 
     mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
 
@@ -241,8 +241,8 @@ void UIManager::Update()
     // Update the UI's rectangle if it has been dirtied.
     if( mRectangleDirty )
     {
-        mProjection->setMatrix( osg::Matrix::ortho2D( mLeft, mRight,
-                                                      mBottom, mTop ) );
+        //mProjection->setMatrix( osg::Matrix::ortho2D( mLeft, mRight,
+        //                                              mBottom, mTop ) );
         //mProjection->setMatrix( mTempProj );
         mRectangleDirty = false;
     }
@@ -250,7 +250,7 @@ void UIManager::Update()
     // Do hide/show operations
     if( mToggleVisibility )
     {
-        if( mUIGroup->asSwitch()->getValue( 0 ) )
+        if( mUIGroup->getValue( 0 ) )
         {
             mShow = false;
             mHide = true;
@@ -332,23 +332,37 @@ void UIManager::Initialize( osg::Group* parentNode )
         return;
     }
 
-    mProjection = new osg::Projection();
-    mProjection->setMatrix( osg::Matrix::ortho2D( mLeft, mRight,
-                                                  mBottom, mTop ) );
+    //mProjection = new osg::Projection();
+    //mProjection->setMatrix( osg::Matrix::ortho2D( mLeft, mRight,
+    //                                              mBottom, mTop ) );
 
-    osg::MatrixTransform* modelViewMatrix = new osg::MatrixTransform;
-    modelViewMatrix->setMatrix( osg::Matrix::identity() );
-    modelViewMatrix->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+    //osg::MatrixTransform* modelViewMatrix = new osg::MatrixTransform;
+    //modelViewMatrix->setMatrix( osg::Matrix::identity() );
+    //modelViewMatrix->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
 
-    mProjection->addChild( modelViewMatrix );
+    //mProjection->addChild( modelViewMatrix );
 
     mUIGroup = new osg::Switch();
     mUIGroup->setDataVariance( osg::Object::DYNAMIC );
     mUIGroup->setUpdateCallback( mUIUpdateCallback.get() );
-    modelViewMatrix->addChild( mUIGroup.get() );
+    //modelViewMatrix->addChild( mUIGroup.get() );
 
-    parentNode->addChild( mProjection.get() );
+    //parentNode->addChild( mProjection.get() );
+    parentNode->addChild( mUIGroup.get() );
 
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    std::string vertexSource =
+        "void main() \n"
+        "{ \n"
+        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
+        "gl_Position = gl_Vertex; \n"
+        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+        "} \n";
+    
+    vertexShader->setType( osg::Shader::VERTEX );
+    vertexShader->setShaderSource( vertexSource );
+    vertexShader->setName( "VS UI Quad Vertex Shader" );
+    
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     std::string fragmentSource =
             "uniform sampler2D baseMap; \n"
@@ -365,12 +379,13 @@ void UIManager::Initialize( osg::Group* parentNode )
 
     fragmentShader->setType( osg::Shader::FRAGMENT );
     fragmentShader->setShaderSource( fragmentSource );
-    fragmentShader->setName( "VS Quad Fragment Shader" );
+    fragmentShader->setName( "VS UI Quad Fragment Shader" );
 
     //
     osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( vertexShader.get() );
     program->addShader( fragmentShader.get() );
-    program->setName( "VS Quad Program" );
+    program->setName( "VS UI Quad Program" );
 
     //Set depth test to always pass and don't write to the depth buffer
     osg::ref_ptr< osg::Depth > depth = new osg::Depth();
@@ -492,13 +507,13 @@ void UIManager::Initialize( osg::Group* parentNode )
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_insertNodesToAdd()
 {
-    std::vector< osg::ref_ptr<osg::Switch> >::iterator vec_iterator;
+    std::vector< osg::ref_ptr< osg::Node > >::iterator vec_iterator;
     for( vec_iterator = mNodesToAdd.begin();
             vec_iterator != mNodesToAdd.end();
             ++vec_iterator )
     {
         mUIGroup->addChild( ( *vec_iterator ).get() );
-        ( *vec_iterator ).release();
+        //( *vec_iterator ).release();
     }
 
     mNodesToAdd.clear();
