@@ -41,6 +41,7 @@
 #include <osg/Matrixf>
 #include <osg/Switch>
 #include <osg/Geode>
+#include <osg/AnimationPath>
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
@@ -233,7 +234,7 @@ protected:
     osg::Matrixf mElementMatrix;
     bool mElementMatrixDirty;
     bool mAnimationOn;
-    //osg::ref_ptr< osg::Switch > mVisibilitySwitch;
+    osg::ref_ptr< osg::AnimationPath > m_animationPath;
     osg::ref_ptr< osg::Geode > mGeode;
     
     ///The resolution of the initial image size

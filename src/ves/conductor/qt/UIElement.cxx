@@ -265,6 +265,7 @@ void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char un
     boost::ignore_unused_variable_warning( unicode );
     std::cerr << "UIElement::SendKeyReleaseEvent If you see this we have problems." << std::endl;
 }
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendScrollEvent( int deltaX, int deltaY, int x, int y, int state )
 {
     boost::ignore_unused_variable_warning( deltaX );
@@ -274,7 +275,6 @@ void UIElement::SendScrollEvent( int deltaX, int deltaY, int x, int y, int state
     boost::ignore_unused_variable_warning( state );
     std::cerr << "UIElement::SendScrollEvent If you see this we have problems." << std::endl;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char* UIElement::RenderElementToImage()
 {
@@ -357,6 +357,8 @@ void UIElement::Update()
             mUITransform->setUpdateCallback( 0 );
             mAnimationOn = false;
         }
+        
+        //m_animationPath->get
     }
 
     if( mUIMatrixDirty )
@@ -426,8 +428,9 @@ void UIElement::SetAnimationPath( osg::AnimationPath* path )
 {
     mAnimationOn = true;
 
-    osg::ref_ptr<osg::AnimationPathCallback> aniCallback = new osg::AnimationPathCallback( path );
-    mUITransform->setUpdateCallback( aniCallback.get() );
+    //osg::ref_ptr<osg::AnimationPathCallback> aniCallback = new osg::AnimationPathCallback( path );
+    //mUITransform->setUpdateCallback( aniCallback.get() );
+    m_animationPath = path;
 }
 ////////////////////////////////////////////////////////////////////////////////
 //

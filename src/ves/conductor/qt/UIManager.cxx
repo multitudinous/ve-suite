@@ -42,6 +42,8 @@
 #include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/Select.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
 // --- OSG Includes --- //
 //#include <osg/Geometry>
@@ -50,6 +52,7 @@
 #include <osg/MatrixTransform>
 #include <osg/Geode>
 #include <osg/StateAttribute>
+#include <osg/Geometry>
 //#include <osg/Texture2D>
 #include <osg/Projection>
 #include <osg/NodeCallback>
@@ -760,15 +763,20 @@ osg::Vec4 UIManager::_computeMouseBoundsForElement( UIElement* element )
 {
     //This function basically is creating the screen coordinates to do
     //mouse testing against to see if the mouse is over the ui
-    osg::Matrixf fullTransform = element->GetElementMatrix() * element->GetUIMatrix();
+    osg::ref_ptr< osg::Geode > geode = element->GetGeode();
+    osg::Vec3Array* vertexArray = 
+        static_cast< osg::Vec3Array* >( geode->getDrawable( 0 )->asGeometry()->getVertexArray() );
+    osg::Vec3& ll = vertexArray->at( 0 );
+    osg::Vec3& ur = vertexArray->at( 2 );
 
-    // Compute transformed corner coordinates of a unit square with origin at
-    // (0,0,0)
-    osg::Vec4 bl = osg::Vec4( 0.f, 0.f, 0.f, 1.f ) * fullTransform;
-    osg::Vec4 tr = osg::Vec4( 1.f, 1.f, 0.f, 1.f ) * fullTransform;
+    osg::Matrixd const& windowMat = 
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetCurrentGLTransformInfo()->GetWindowMatrixOSG();
+    osg::Vec3 min = ll * windowMat;
+    osg::Vec3 max = ur * windowMat;
 
     // Return in the form (left, right, bottom, top)
-    return osg::Vec4( bl.x(), tr.x(), bl.y(), tr.y() );
+    return osg::Vec4( min.x(), max.x(), min.y(), max.y() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::InitiateMoveElement( UIElement* element )
@@ -856,9 +864,9 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
             // Translate mouse coordinates to window coordinates
             // TODO: This may be done better by using the element's entire UIMatrix
             // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix().getTrans();
-            x = x - trans.x();
-            y = y - trans.y();
+            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+            x = x - uiCorners[ 0 ];
+            y = y - uiCorners[ 2 ];
             //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
             // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
@@ -917,9 +925,9 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
             // Translate mouse coordinates to window coordinates
             // TODO: This may be done better by using the element's entire UIMatrix
             // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix().getTrans();
-            x = x - trans.x();
-            y = y - trans.y();
+            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+            x = x - uiCorners[ 0 ];
+            y = y - uiCorners[ 2 ];
 
             // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
@@ -965,9 +973,9 @@ bool UIManager::MouseScrollEvent( int deltaX, int deltaY, int x, int y, int stat
             // Translate mouse coordinates to window coordinates
             // TODO: This may be done better by using the element's entire UIMatrix
             // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix().getTrans();
-            x = x - trans.x();
-            y = y - trans.y();
+            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+            x = x - uiCorners[ 0 ];
+            y = y - uiCorners[ 2 ];
             // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
             element->SendScrollEvent( deltaX, deltaY, x, y, state );
@@ -1036,9 +1044,9 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
             // Translate mouse coordinates to window coordinates
             // TODO: This may be done better by using the element's entire UIMatrix
             // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix().getTrans();
-            x = x - trans.x();
-            y = y - trans.y();
+            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+            x = x - uiCorners[ 0 ];
+            y = y - uiCorners[ 2 ];
 
             // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
@@ -1086,9 +1094,9 @@ bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
             // Translate mouse coordinates to window coordinates
             // TODO: This may be done better by using the element's entire UIMatrix
             // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix().getTrans();
-            x = x - trans.x();
-            y = y - trans.y();
+            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+            x = x - uiCorners[ 0 ];
+            y = y - uiCorners[ 2 ];
 
             // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
