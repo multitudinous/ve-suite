@@ -287,7 +287,6 @@ void UIManager::Update()
     // Check visibility of UI branch before bothering with repaints
     if( mUIGroup->getValue( 0 ) )
     {
-        //mOverallOpacity->setAlpha( osg::Material::FRONT_AND_BACK, mOpacity );
         m_opacityUniform->set( mOpacity );
         _repaintChildren();
     }

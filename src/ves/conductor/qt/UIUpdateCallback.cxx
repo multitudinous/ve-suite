@@ -49,7 +49,7 @@ UIUpdateCallback::~UIUpdateCallback()
 void UIUpdateCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
     // Request element repaints and so forth from UIManager
-    ves::conductor::UIManager::instance()->Update( );
+    ves::conductor::UIManager::instance()->Update();
 
     // Allow update traversal to continue
     traverse( node, nv );
