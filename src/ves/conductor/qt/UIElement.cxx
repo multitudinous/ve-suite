@@ -137,20 +137,21 @@ void UIElement::PostConstructor()
     // Transform to make unit square appear with same dimensions as underlying
     // element dimensions
     osg::ref_ptr<osg::MatrixTransform> elementTransform = new osg::MatrixTransform();
-    //elementTransform->setMatrix( osg::Matrix::scale( GetElementWidth(),
-    //                                                 GetElementHeight(),
-    //                                                 1.0f ) );
-    elementTransform->setMatrix( osg::Matrix::identity() );
+    elementTransform->setMatrix( osg::Matrix::scale( GetElementWidth(),
+                                                     GetElementHeight(),
+                                                     1.0f ) );
+    //elementTransform->setMatrix( osg::Matrix::identity() );
 
     PushElementMatrix( elementTransform->getMatrix() );
-    elementTransform->addChild( geode.get() );
+    //elementTransform->addChild( mGeode.get() );
     mElementTransform = elementTransform.get();
 
     //
     osg::ref_ptr<osg::MatrixTransform> uiTransform = new osg::MatrixTransform();
     uiTransform->setMatrix( osg::Matrix::identity() );
     PushUIMatrix( uiTransform->getMatrix() );
-    uiTransform->addChild( elementTransform.get() );
+    //uiTransform->addChild( elementTransform.get() );
+    uiTransform->addChild( mGeode.get() );
     mUITransform = uiTransform.get();
 
     //

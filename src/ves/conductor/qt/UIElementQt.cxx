@@ -466,10 +466,13 @@ void UIElementQt::UpdateSize()
     mWidth = mWidget->width();
     mHeight = mWidget->height() + mTitlebar->height();
 
-    //mElementMatrix.makeScale( mWidth, mHeight, 1);
+    //We mess with this matrix so that this:
+    //_computeMouseBoundsForElement 
+    //is correct.
+    mElementMatrix.makeScale( mWidth, mHeight, 1);
     mElementMatrixDirty = true;
 
-    
+    //This assumes that we are spanning the whole ui the height of the screen
     int xDim = m_desktopSize.first;
     int yDim = m_desktopSize.second;
 

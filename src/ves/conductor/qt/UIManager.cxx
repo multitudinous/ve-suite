@@ -759,6 +759,8 @@ void UIManager::_doUnminimize()
 ////////////////////////////////////////////////////////////////////////////////
 osg::Vec4 UIManager::_computeMouseBoundsForElement( UIElement* element )
 {
+    //This function basically is creating the screen coordinates to do
+    //mouse testing against to see if the mouse is over the ui
     osg::Matrixf fullTransform = element->GetElementMatrix() * element->GetUIMatrix();
 
     // Compute transformed corner coordinates of a unit square with origin at

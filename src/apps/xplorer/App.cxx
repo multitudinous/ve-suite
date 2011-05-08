@@ -1265,11 +1265,14 @@ void App::LoadUI()
     element->SetInitialImageWidthAndHeight( 600, height );
     element->SetScreenDimensions( width, height );
     element->SetWidget( mainUIWidget );
+    //element->Update();
     
     m_UIManager->AddElement( element );
 
     // Start the main UI minimized
-    m_UIManager->MinimizeElement( element );
+    //Until we get minimize working with the new matrix stack tools this will
+    //be disabled.
+    //m_UIManager->MinimizeElement( element );
 
     m_uiInitialized = true;
 
