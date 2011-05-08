@@ -42,8 +42,6 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
-#include <osg/io_utils>
-
 // --- Juggler includes --- //
 #include <gadget/Type/KeyboardMouse/Keys.h>
 

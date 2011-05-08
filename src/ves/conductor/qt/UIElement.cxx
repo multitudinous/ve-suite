@@ -37,6 +37,9 @@
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
+
 // --- OSG Includes --- //
 #include <osg/Vec4f>
 #include <osg/Matrix>
@@ -45,6 +48,8 @@
 #include <osg/Switch>
 #include <osg/Geometry>
 #include <osg/Texture2D>
+
+#include <osg/io_utils>
 
 // --- C++ Includes --- //
 #include <iostream>
@@ -360,29 +365,24 @@ void UIElement::Update()
         //mUITransform->setMatrix( tempUIMatrix );
         mUIMatrixDirty = false;
         
-        //This assumes that we are spanning the whole ui the height of the screen
-        int xDim = m_desktopSize.first;
-        int yDim = m_desktopSize.second;
-        
         osg::Vec3d trans = tempUIMatrix.getTrans();
-        osg::Vec3d scale = tempUIMatrix.getScale();
-        double xFraction = double( GetElementWidth() ) / double( xDim );
-        double yFraction = double( GetElementHeight() ) / double( yDim );
 
-        double xStart = -1.0 + ( trans.x() * 2.0f / double( xDim ) );
-        double yStart = -1.0 + ( trans.y() * 2.0f / double( yDim ) );
+        osg::Matrixd const& windowMat = 
+            ves::xplorer::scenegraph::SceneManager::instance()->
+            GetCurrentGLTransformInfo()->GetInvertedWindowMatrixOSG();
+        osg::Vec3 min = trans * windowMat;
+        osg::Vec3 max = trans + osg::Vec3( GetElementWidth(), GetElementHeight(), 1.0 );
+        max[ 2 ] = 1.0;
+        max = max * windowMat;
 
-        double xMax = xStart + (xFraction * 2.0f);
-        double yMax = yStart + (yFraction * 2.0f);
-        
-        //std::cout << xStart << " " << yStart << " " << xMax << " " << yMax << std::endl;
-        m_vertices->at( 0 ) = osg::Vec3( xStart, yStart, 1.0 ); //ll
-        m_vertices->at( 1 ) = osg::Vec3(   xMax, yStart, 1.0 ); //lr
-        m_vertices->at( 2 ) = osg::Vec3(   xMax,   yMax, 1.0 ); //ur
-        m_vertices->at( 3 ) = osg::Vec3( xStart,   yMax, 1.0 ); //ul
+        //This assumes that we are spanning the whole ui the height of the screen
+        m_vertices->at( 0 ) = osg::Vec3( min.x(), min.y(), 1.0 ); //ll
+        m_vertices->at( 1 ) = osg::Vec3( max.x(), min.y(), 1.0 ); //lr
+        m_vertices->at( 2 ) = osg::Vec3( max.x(), max.y(), 1.0 ); //ur
+        m_vertices->at( 3 ) = osg::Vec3( min.x(), max.y(), 1.0 ); //ul
         
         mGeode->getDrawable( 0 )->dirtyDisplayList();
-        mGeode->dirtyBound();   
+        mGeode->dirtyBound();
     }
 
     if( mElementMatrixDirty )
