@@ -213,6 +213,8 @@ public:
     ///
     virtual osg::Geode* GetGeode();
 
+    void SetScreenDimensions( int width, int height );
+    
 protected:
     ///Tell whether the mouse is over the UI
     void UIEnterLeave( bool uiEnter );
@@ -225,6 +227,7 @@ protected:
     bool mUIMatrixDirty;
     std::vector< osg::Matrixf > mUIMatrices;
     //std::vector< osg::Matrixf > mElementMatrices;
+    osg::ref_ptr< osg::Vec3Array > m_vertices;
     osg::ref_ptr< osg::MatrixTransform > mUITransform;
     osg::ref_ptr< osg::MatrixTransform > mElementTransform;
     osg::Matrixf mElementMatrix;
@@ -235,6 +238,8 @@ protected:
     
     ///The resolution of the initial image size
     std::pair< int, int > m_initialImageSize;
+    ///The resolution of the desktop size
+    std::pair< int, int > m_desktopSize;
     ///Tell whether the UI enter or leave
     bool m_mouseInsideUI;
     /// Required to be able to connect up to signals.

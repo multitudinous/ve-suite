@@ -244,6 +244,7 @@ void UIManager::Update()
         //mProjection->setMatrix( osg::Matrix::ortho2D( mLeft, mRight,
         //                                              mBottom, mTop ) );
         //mProjection->setMatrix( mTempProj );
+        
         mRectangleDirty = false;
     }
 
@@ -531,7 +532,6 @@ void UIManager::_repaintChildren()
         UIElement* element = map_iterator->second;
         if( element->IsVisible() )
         {
-
             element->Update();
             unsigned char* image_Data = element->RenderElementToImage();
 

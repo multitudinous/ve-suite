@@ -66,6 +66,7 @@ UIElement::UIElement():
     //mGeode( 0 ),
     m_mouseInsideUI( true )
 {
+    m_desktopSize = std::make_pair< int, int >( 0, 0 );
     //Request connection to UIManager.EnterLeaveUI signal
     CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &UIElement::UIEnterLeave,
                     m_connections, highest_Priority );
@@ -79,15 +80,18 @@ UIElement::~UIElement()
 void UIElement::PostConstructor()
 {
     //
-    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
+    GetElementWidth();
+    GetElementHeight();
+
+    m_vertices = new osg::Vec3Array();
     /*vertices->push_back( osg::Vec3( 0.0f, 0.0f, 0.0 ) );
     vertices->push_back( osg::Vec3( 1.0f, 0.0f, 0.0 ) );
     vertices->push_back( osg::Vec3( 1.0f, 1.0f, 0.0 ) );
     vertices->push_back( osg::Vec3( 0.0f, 1.0f, 0.0 ) );*/
-    vertices->push_back( osg::Vec3( -1.0f, -1.0f, 1.0 ) );
-    vertices->push_back( osg::Vec3(  1.0f, -1.0f, 1.0 ) );
-    vertices->push_back( osg::Vec3(  1.0f,  1.0f, 1.0 ) );
-    vertices->push_back( osg::Vec3( -1.0f,  1.0f, 1.0 ) );
+    m_vertices->push_back( osg::Vec3( -1.0f, -1.0f, 1.0 ) );
+    m_vertices->push_back( osg::Vec3(  1.0f, -1.0f, 1.0 ) );
+    m_vertices->push_back( osg::Vec3(  1.0f,  1.0f, 1.0 ) );
+    m_vertices->push_back( osg::Vec3( -1.0f,  1.0f, 1.0 ) );
     
     //
     osg::Vec4f coordinates = GetTextureCoordinates();
@@ -104,7 +108,7 @@ void UIElement::PostConstructor()
 
     //
     osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-    geometry->setVertexArray( vertices.get() );
+    geometry->setVertexArray( m_vertices.get() );
     geometry->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
     geometry->setTexCoordArray( 0, texture_coordinates.get() );
@@ -133,9 +137,11 @@ void UIElement::PostConstructor()
     // Transform to make unit square appear with same dimensions as underlying
     // element dimensions
     osg::ref_ptr<osg::MatrixTransform> elementTransform = new osg::MatrixTransform();
-    elementTransform->setMatrix( osg::Matrix::scale( GetElementWidth(),
-                                                     GetElementHeight(),
-                                                     1.0f ) );
+    //elementTransform->setMatrix( osg::Matrix::scale( GetElementWidth(),
+    //                                                 GetElementHeight(),
+    //                                                 1.0f ) );
+    elementTransform->setMatrix( osg::Matrix::identity() );
+
     PushElementMatrix( elementTransform->getMatrix() );
     elementTransform->addChild( geode.get() );
     mElementTransform = elementTransform.get();
@@ -165,6 +171,11 @@ osg::Geode* UIElement::GetGeode()
 void UIElement::SetInitialImageWidthAndHeight( int width, int height )
 {
     m_initialImageSize = std::make_pair< int, int >( width, height );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElement::SetScreenDimensions( int width, int height )
+{
+    m_desktopSize = std::make_pair< int, int >( width, height );
 }
 ////////////////////////////////////////////////////////////////////////////////
 int UIElement::GetImageWidth()

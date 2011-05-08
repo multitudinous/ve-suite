@@ -86,30 +86,31 @@ namespace ves
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
-UIElementQt::UIElementQt( QWidget *parent ) :
-NonScrollGraphicsView( parent ),
-UIElement(),
-mWidget( 0 ),
-mImage( 0 ),
-mImageFlipped( 0 ),
-mGraphicsScene( 0 ),
-mGraphicsProxyWidget( 0 ),
-mGraphicsView( 0 ),
-mImageWidth( 0 ),
-mImageHeight( 0 ),
-mWidth( 0 ),
-mHeight( 0 ),
-mTextureLeft( 0.0f ),
-mTextureRight( 1.0f ),
-mTextureBottom( 1.0f ),
-mTextureTop( 0.0f ),
-mInitialized( false ),
-mImageDirty( true ),
-mTimer( 0 ),
-mImageMutex( 0 ),
-mDirty( true ),
-mTitlebar( 0 ),
-mQTitlebar( 0 )
+UIElementQt::UIElementQt( QWidget *parent )
+    :
+    NonScrollGraphicsView( parent ),
+    UIElement(),
+    mWidget( 0 ),
+    mImage( 0 ),
+    mImageFlipped( 0 ),
+    mGraphicsScene( 0 ),
+    mGraphicsProxyWidget( 0 ),
+    mGraphicsView( 0 ),
+    mImageWidth( 0 ),
+    mImageHeight( 0 ),
+    mWidth( 0 ),
+    mHeight( 0 ),
+    mTextureLeft( 0.0f ),
+    mTextureRight( 1.0f ),
+    mTextureBottom( 1.0f ),
+    mTextureTop( 0.0f ),
+    mInitialized( false ),
+    mImageDirty( true ),
+    mTimer( 0 ),
+    mImageMutex( 0 ),
+    mDirty( true ),
+    mTitlebar( 0 ),
+    mQTitlebar( 0 )
 {
     _debug( "ctor" );
 
@@ -465,9 +466,23 @@ void UIElementQt::UpdateSize()
     mWidth = mWidget->width();
     mHeight = mWidget->height() + mTitlebar->height();
 
-    mElementMatrix.makeScale( mWidth, mHeight, 1);
+    //mElementMatrix.makeScale( mWidth, mHeight, 1);
     mElementMatrixDirty = true;
 
+    
+    int xDim = m_desktopSize.first;
+    int yDim = m_desktopSize.second;
+
+    float xFraction = float( mWidth ) / float( xDim );
+    float yFraction = float( mHeight ) / float( yDim );
+    float xMax = -1.0f + (xFraction * 2.0f);
+    float yMax = -1.0f + (yFraction * 2.0f);
+
+    m_vertices->at( 0 ) = osg::Vec3( -1.0f, -1.0f, 1.0 ); //ll
+    m_vertices->at( 1 ) = osg::Vec3(  xMax, -1.0f, 1.0 ); //lr
+    m_vertices->at( 2 ) = osg::Vec3(  xMax,  1.0f, 1.0 ); //ur
+    m_vertices->at( 3 ) = osg::Vec3( -1.0f,  1.0f, 1.0 ); //ul
+    
     // Delete the image and flipped image object if the required texture size
     // has changed.
     if( ( mWidth != old_Width ) || ( mHeight != old_Height ) )

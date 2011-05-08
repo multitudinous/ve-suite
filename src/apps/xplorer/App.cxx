@@ -1261,8 +1261,11 @@ void App::LoadUI()
         << height << std::endl << std::flush;
     
     m_UIManager->SetRectangle( 0, width, 0, height );
+    
     element->SetInitialImageWidthAndHeight( 600, height );
+    element->SetScreenDimensions( width, height );
     element->SetWidget( mainUIWidget );
+    
     m_UIManager->AddElement( element );
 
     // Start the main UI minimized
