@@ -296,12 +296,12 @@ bool UIElement::IsMinimized()
     return mIsMinimized;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Matrixf UIElement::GetUIMatrix()
+osg::Matrixf& UIElement::GetUIMatrix()
 {
     return mUIMatrices.at( mUIMatrices.size() - 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::PushUIMatrix( osg::Matrixf matrix )
+void UIElement::PushUIMatrix( osg::Matrixf const& matrix )
 {
     mUIMatrices.push_back( matrix );
     mUIMatrixDirty = true;
@@ -315,13 +315,13 @@ osg::Matrixf UIElement::PopUIMatrix()
     return last;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::PushElementMatrix( osg::Matrixf matrix )
+void UIElement::PushElementMatrix( osg::Matrixf const& matrix )
 {
     mElementMatrix = matrix;
     mElementMatrixDirty = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Matrixf UIElement::GetElementMatrix()
+osg::Matrixf& UIElement::GetElementMatrix()
 {
     return mElementMatrix;
 }
@@ -356,13 +356,38 @@ void UIElement::Update()
 
     if( mUIMatrixDirty )
     {
-        mUITransform->setMatrix( GetUIMatrix() );
+        osg::Matrixf& tempUIMatrix = GetUIMatrix();
+        //mUITransform->setMatrix( tempUIMatrix );
         mUIMatrixDirty = false;
+        
+        //This assumes that we are spanning the whole ui the height of the screen
+        int xDim = m_desktopSize.first;
+        int yDim = m_desktopSize.second;
+        
+        osg::Vec3d trans = tempUIMatrix.getTrans();
+        osg::Vec3d scale = tempUIMatrix.getScale();
+        double xFraction = double( GetElementWidth() ) / double( xDim );
+        double yFraction = double( GetElementHeight() ) / double( yDim );
+
+        double xStart = -1.0 + ( trans.x() * 2.0f / double( xDim ) );
+        double yStart = -1.0 + ( trans.y() * 2.0f / double( yDim ) );
+
+        double xMax = xStart + (xFraction * 2.0f);
+        double yMax = yStart + (yFraction * 2.0f);
+        
+        //std::cout << xStart << " " << yStart << " " << xMax << " " << yMax << std::endl;
+        m_vertices->at( 0 ) = osg::Vec3( xStart, yStart, 1.0 ); //ll
+        m_vertices->at( 1 ) = osg::Vec3(   xMax, yStart, 1.0 ); //lr
+        m_vertices->at( 2 ) = osg::Vec3(   xMax,   yMax, 1.0 ); //ur
+        m_vertices->at( 3 ) = osg::Vec3( xStart,   yMax, 1.0 ); //ul
+        
+        mGeode->getDrawable( 0 )->dirtyDisplayList();
+        mGeode->dirtyBound();   
     }
 
     if( mElementMatrixDirty )
     {
-        mElementTransform->setMatrix( mElementMatrix );
+        //mElementTransform->setMatrix( mElementMatrix );
         mElementMatrixDirty = false;
     }
 }
@@ -372,10 +397,10 @@ osg::MatrixTransform* UIElement::GetUITransform()
     return mUITransform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::MatrixTransform* UIElement::GetElementTransform()
+/*osg::MatrixTransform* UIElement::GetElementTransform()
 {
     return mElementTransform.get();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElement::IsVisible()
 {

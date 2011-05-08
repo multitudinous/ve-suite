@@ -93,6 +93,9 @@ public:
     virtual bool IsDirty();
     virtual void Initialize();
 
+    ///Override this so that we can dirty the image and ask for a draw
+    //virtual void MoveCanvas( float dx, float dy, float dz );
+
     // Functions unique to this derived class
 
     /**

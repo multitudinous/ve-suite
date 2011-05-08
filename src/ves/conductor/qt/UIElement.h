@@ -169,19 +169,19 @@ public:
     virtual bool IsMinimized();
 
     ///
-    virtual osg::Matrixf GetUIMatrix();
+    virtual osg::Matrixf& GetUIMatrix();
 
     ///
-    virtual void PushUIMatrix( osg::Matrixf matrix );
+    virtual void PushUIMatrix( osg::Matrixf const& matrix );
 
     ///
     virtual osg::Matrixf PopUIMatrix();
 
     ///
-    virtual void PushElementMatrix( osg::Matrixf matrix );
+    virtual void PushElementMatrix( osg::Matrixf const& matrix );
 
     ///
-    virtual osg::Matrixf GetElementMatrix();
+    virtual osg::Matrixf& GetElementMatrix();
 
     ///
     virtual void MoveCanvas( float dx, float dy, float dz = 0.0f );
@@ -196,7 +196,7 @@ public:
     virtual osg::MatrixTransform* GetUITransform();
 
     ///
-    virtual osg::MatrixTransform* GetElementTransform();
+    //virtual osg::MatrixTransform* GetElementTransform();
 
     ///
     virtual bool IsVisible();
