@@ -36,9 +36,13 @@
 
 // --- VES includes --- //
 #include <ves/conductor/qt/UIElementQt.h>
-#include <ves/xplorer/eventmanager/InteractionEvent.h>
 #include <ves/conductor/qt/ui_titlebar.h>
-//#include <ves/conductor/qt/MoveFrame.h>
+#include <ves/xplorer/eventmanager/InteractionEvent.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
+
+#include <osg/io_utils>
 
 // --- Juggler includes --- //
 #include <gadget/Type/KeyboardMouse/Keys.h>
@@ -471,21 +475,17 @@ void UIElementQt::UpdateSize()
     //is correct.
     mElementMatrix.makeScale( mWidth, mHeight, 1);
     mElementMatrixDirty = true;
+    
+    osg::Matrixd const& windowMat = 
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetCurrentGLTransformInfo()->GetInvertedWindowMatrixOSG();
+    osg::Vec3 max = osg::Vec3( mWidth, mHeight, 1.0 ) * windowMat;
 
     //This assumes that we are spanning the whole ui the height of the screen
-    int xDim = m_desktopSize.first;
-    int yDim = m_desktopSize.second;
-
-    float xFraction = float( GetElementWidth() ) / float( xDim );
-    float yFraction = float( GetElementHeight() ) / float( yDim );
-    float xStart = -1.0;
-    float xMax = xStart + (xFraction * 2.0f);
-    float yMax = -1.0f + (yFraction * 2.0f);
-
-    m_vertices->at( 0 ) = osg::Vec3(xStart, -1.0f, 1.0 ); //ll
-    m_vertices->at( 1 ) = osg::Vec3(  xMax, -1.0f, 1.0 ); //lr
-    m_vertices->at( 2 ) = osg::Vec3(  xMax,  1.0f, 1.0 ); //ur
-    m_vertices->at( 3 ) = osg::Vec3(xStart,  1.0f, 1.0 ); //ul
+    m_vertices->at( 0 ) = osg::Vec3(   -1.0f, -1.0f, 1.0 ); //ll
+    m_vertices->at( 1 ) = osg::Vec3( max.x(), -1.0f, 1.0 ); //lr
+    m_vertices->at( 2 ) = osg::Vec3( max.x(),  1.0f, 1.0 ); //ur
+    m_vertices->at( 3 ) = osg::Vec3(   -1.0f,  1.0f, 1.0 ); //ul
     
     // Delete the image and flipped image object if the required texture size
     // has changed.

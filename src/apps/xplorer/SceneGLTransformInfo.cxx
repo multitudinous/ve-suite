@@ -171,6 +171,14 @@ void SceneGLTransformInfo::Initialize()
         (*m_glTransformInfoMap)[ viewport ] = glTransformInfo;
         sceneManager->PushBackGLTransformInfo( viewport, glTransformInfo );
     }
+    
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        ves::xplorer::scenegraph::SceneManager::instance()->
+            SetCurrentGLTransformInfo( 
+            GetGLTransformInfo( display->getViewport( 0 ) ) );
+    }
+                                                                                      
     vprDEBUG( vesDBG, 1 ) << "SceneGLTransformInfo::Initialize - "
         << "GLTransformInfo is initialized." << std::endl << vprDEBUG_FLUSH;
 }

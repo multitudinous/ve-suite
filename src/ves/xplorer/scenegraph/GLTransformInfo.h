@@ -76,13 +76,9 @@ namespace scenegraph
  *    x: 0 to viewport width
  *    y: 0 to viewport height
  *    z: 0 to 1
- */
-
-/*!\class ves::xplorer::scenegraph::GLTransformInfo
  *
- */
-
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::GLTransformInfo
+ * \namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS GLTransformInfo
@@ -188,7 +184,13 @@ public:
     gmtl::Matrix44d const& GetWindowMatrix() const;
 
     ///
+    gmtl::Matrix44d const& GetInvertedWindowMatrix() const;
+
+    ///
     osg::Matrixd const& GetWindowMatrixOSG() const;
+
+    ///
+    osg::Matrixd const& GetInvertedWindowMatrixOSG() const;
 
     ///
     gmtl::Matrix44d const GetVPWMatrix() const;
@@ -321,7 +323,13 @@ private:
     gmtl::Matrix44d m_windowMatrix;
 
     ///
+    gmtl::Matrix44d m_invertedWindowMatrix;
+
+    ///
     osg::Matrixd m_windowMatrixOSG;
+
+    ///
+    osg::Matrixd m_invertedWindowMatrixOSG;
 
     ///
     gmtl::Matrix44d m_vrjCenterViewMatrix;

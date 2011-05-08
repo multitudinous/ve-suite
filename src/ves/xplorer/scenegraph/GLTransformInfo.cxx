@@ -283,9 +283,19 @@ gmtl::Matrix44d const& GLTransformInfo::GetWindowMatrix() const
     return m_windowMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
+gmtl::Matrix44d const& GLTransformInfo::GetInvertedWindowMatrix() const
+{
+    return m_invertedWindowMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
 osg::Matrixd const& GLTransformInfo::GetWindowMatrixOSG() const
 {
     return m_windowMatrixOSG;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Matrixd const& GLTransformInfo::GetInvertedWindowMatrixOSG() const
+{
+    return m_invertedWindowMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
 gmtl::Matrix44d const GLTransformInfo::GetVPWMatrix() const
@@ -420,5 +430,8 @@ void GLTransformInfo::UpdateWindowMatrix()
     m_windowMatrix.mData[ 13 ] = m_windowMatrix.mData[ 5 ] + m_viewportOriginY;
 
     m_windowMatrixOSG.set( m_windowMatrix.mData );
+
+    gmtl::invert( m_invertedWindowMatrix, m_windowMatrix );
+    m_invertedWindowMatrixOSG.set( m_invertedWindowMatrix.mData );
 }
 ////////////////////////////////////////////////////////////////////////////////
