@@ -364,16 +364,17 @@ void UIElement::Update()
     if( mUIMatrixDirty )
     {
         osg::Matrixf& tempUIMatrix = GetUIMatrix();
-        //mUITransform->setMatrix( tempUIMatrix );
         mUIMatrixDirty = false;
-        
+        //std::cout << tempUIMatrix << std::endl;
         osg::Vec3d trans = tempUIMatrix.getTrans();
+        osg::Vec3d scale = tempUIMatrix.getScale();
 
         osg::Matrixd const& windowMat = 
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetCurrentGLTransformInfo()->GetInvertedWindowMatrixOSG();
         osg::Vec3 min = trans * windowMat;
-        osg::Vec3 max = trans + osg::Vec3( GetElementWidth(), GetElementHeight(), 1.0 );
+        osg::Vec3 max = trans + scale;
+        //std::cout << max << std::endl;
         max[ 2 ] = 1.0;
         max = max * windowMat;
 

@@ -75,7 +75,7 @@ vprSingletonImp( UIManager );
 
 ////////////////////////////////////////////////////////////////////////////////
 UIManager::UIManager() :
-    mUIUpdateCallback( new UIUpdateCallback ),
+    mUIUpdateCallback( new UIUpdateCallback() ),
     mInitialized( false ),
     mLeft( 0 ),
     mRight( 640 ),
@@ -102,7 +102,8 @@ UIManager::UIManager() :
                             // if we start out false. And that means no UI would
                             // ever appear.
     m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector( 
-        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) )
+        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
+    m_updateBBoxes( false )
 {
     // Register signals
     ves::xplorer::eventmanager::EventManager* evm = ves::xplorer::eventmanager::EventManager::instance();
@@ -179,7 +180,7 @@ UIManager::~UIManager()
     // Delete all UIElements of which we've taken charge
     // Note that these were not allocated inside this class, but the class
     // interface specifies that it takes ownership of these objects
-    ElementMap_type::iterator map_iterator;
+    ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
@@ -197,7 +198,8 @@ osg::Geode* UIManager::AddElement( UIElement* element )
     //next update traversal.
     mNodesToAdd.push_back( element->GetGeode() );
 
-    mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
+    //mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
+    m_updateBBoxes = true;
 
     osg::Geode* geode = element->GetGeode();
     mElements[ geode ] = element;
@@ -241,6 +243,13 @@ void UIManager::Update()
         _insertNodesToAdd();
     }
 
+    // Update all of the bounding boxes for the uis
+    if( m_updateBBoxes )
+    {
+        UpdateElementBoundingBoxes();
+        m_updateBBoxes = false;
+    }
+    
     // Update the UI's rectangle if it has been dirtied.
     if( mRectangleDirty )
     {
@@ -524,7 +533,7 @@ void UIManager::_insertNodesToAdd()
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_repaintChildren()
 {
-    ElementMap_type::iterator map_iterator;
+    ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
@@ -576,7 +585,7 @@ void UIManager::_showAll()
 {
     //if( !showOnlyActive )
     {
-        ElementMap_type::iterator map_iterator;
+        ElementMap_type::const_iterator map_iterator;
         for( map_iterator = mElements.begin(); map_iterator != mElements.end();
                 ++map_iterator )
         {
@@ -586,6 +595,16 @@ void UIManager::_showAll()
 
     mUIGroup->setAllChildrenOn();
     mShow = false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::UpdateElementBoundingBoxes()
+{
+    ElementMap_type::const_iterator map_iterator;
+    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
+        ++map_iterator )
+    {
+        mElementPositionsOrtho2D[ map_iterator->second ] = _computeMouseBoundsForElement( map_iterator->second );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
@@ -649,7 +668,7 @@ void UIManager::_doMinimize()
     }
     else
     {
-        ElementMap_type::iterator map_iterator;
+        ElementMap_type::const_iterator map_iterator;
         for( map_iterator = mElements.begin(); map_iterator != mElements.end();
                 ++map_iterator )
         {
@@ -703,11 +722,14 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     // the end state of the animation.
     if( minimize )
     {
+        //std::cout << downScale * (uiCorners[ 1 ] - uiCorners[ 0 ]) << std::endl;
+        //std::cout << uiCorners << std::endl;
         element->SetMinimized( true );
         c1.setPosition( osg::Vec3f( mMinimizeXOffset, yPadding, 0.0f ) );
-        c1.setScale( osg::Vec3f( downScale, downScale, downScale ) );
+        c1.setScale( osg::Vec3f( downScale * (uiCorners[ 1 ] - uiCorners[ 0 ]), downScale * (uiCorners[ 3 ] - uiCorners[ 2 ]), 1.0 ) );
         osg::Matrixf tempMatrix;
         c1.getMatrix( tempMatrix );
+        //std::cout << tempMatrix << std::endl;
         element->PushUIMatrix( tempMatrix );
 
         mMinimizeXOffset += downScale * ( element->GetElementWidth() ) + xPadding;
@@ -732,9 +754,9 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     path->insert( 0.0f, c0 );
     path->insert( duration, c1 );
 
-    element->SetAnimationPath( path.get() );
-
-    mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
+    //element->SetAnimationPath( path.get() );
+    m_updateBBoxes = true;
+    //mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_doUnminimize()
@@ -746,7 +768,7 @@ void UIManager::_doUnminimize()
     }
     else
     {
-        ElementMap_type::iterator map_iterator;
+        ElementMap_type::const_iterator map_iterator;
         for( map_iterator = mElements.begin(); map_iterator != mElements.end();
                 ++map_iterator )
         {
@@ -851,7 +873,7 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 
     // TODO: his iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::iterator map_iterator;
+    ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
@@ -900,7 +922,7 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
     // If we're ending an element move, do that and sink the event
     if( mMoveElement )
     {
-        mElementPositionsOrtho2D[ mMoveElement ] = _computeMouseBoundsForElement( mMoveElement );
+        m_updateBBoxes = true;
         mMoveElement = 0;
         return false;
     }
@@ -912,7 +934,7 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
 
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::iterator map_iterator;
+    ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
@@ -960,7 +982,7 @@ bool UIManager::MouseScrollEvent( int deltaX, int deltaY, int x, int y, int stat
 
     // TODO: his iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::iterator map_iterator;
+    ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
@@ -1031,7 +1053,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
 
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::iterator map_iterator;
+    ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
@@ -1081,7 +1103,7 @@ bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
 
     // TODO: his iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::iterator map_iterator;
+    ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
@@ -1130,7 +1152,7 @@ bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
 
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::iterator map_iterator;
+    ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
@@ -1164,7 +1186,7 @@ bool UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
 
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::iterator map_iterator;
+    ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {

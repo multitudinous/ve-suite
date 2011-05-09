@@ -344,6 +344,9 @@ private:
 
     void _doMinMaxElement( UIElement* element, bool minimize );
 
+    ///Update the mElementPositionsOrtho2D map with any new element changes
+    void UpdateElementBoundingBoxes();
+    
     osg::Vec4 _computeMouseBoundsForElement( UIElement* element );
 
     void _monopolizeInput( bool monopolize );
@@ -368,6 +371,8 @@ private:
     osg::Vec3d m_endPoint;
     ///The ray intersector test
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
+    ///Bounding box uis
+    bool m_updateBBoxes;
 };
 
 } //end conductor
