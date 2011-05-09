@@ -195,7 +195,7 @@ osg::Geode* UIManager::AddElement( UIElement* element )
 {
     //Store the switch node so that it can be added to mUIGroup during the
     //next update traversal.
-    mNodesToAdd.push_back( element->GetUITransform() );
+    mNodesToAdd.push_back( element->GetGeode() );
 
     mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
 
@@ -689,10 +689,12 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     float duration = 0.4f;
 
     // Animation based on two control points: c0 (current state) and c1 (end state)
-    osg::Matrixf currentMatrix = element->GetUIMatrix();
+    //osg::Matrixf currentMatrix = element->GetUIMatrix();
 
-    osg::AnimationPath::ControlPoint c0( currentMatrix.getTrans() );
-    c0.setScale( currentMatrix.getScale() );
+    osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+
+    osg::AnimationPath::ControlPoint c0( osg::Vec3( uiCorners[ 0 ], uiCorners[ 2 ], 0.0 ) );//currentMatrix.getTrans() );
+    c0.setScale( osg::Vec3( uiCorners[ 1 ] - uiCorners[ 0 ], uiCorners[ 3 ] - uiCorners[ 2 ], 0.0 ) );//currentMatrix.getScale() );
 
     osg::AnimationPath::ControlPoint c1;
 
@@ -719,9 +721,9 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
         mMinimizeXOffset -= downScale * ( element->GetElementWidth() ) + xPadding;
 
         element->SetMinimized( false );
-        element->PopUIMatrix();
-        c1.setPosition( element->GetUIMatrix().getTrans() );
-        c1.setScale( element->GetUIMatrix().getScale() );
+        osg::Matrixf tempUIMat = element->PopUIMatrix();
+        c1.setPosition( tempUIMat.getTrans() );
+        c1.setScale( tempUIMat.getScale() );
     }
 
     osg::ref_ptr< osg::AnimationPath > path = new osg::AnimationPath;

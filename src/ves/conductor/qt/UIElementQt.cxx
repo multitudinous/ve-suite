@@ -471,8 +471,8 @@ void UIElementQt::UpdateSize()
     //We mess with this matrix so that this:
     //_computeMouseBoundsForElement 
     //is correct.
-    mElementMatrix.makeScale( mWidth, mHeight, 1);
-    mElementMatrixDirty = true;
+    //mElementMatrix.makeScale( mWidth, mHeight, 1);
+    //mElementMatrixDirty = true;
     
     osg::Matrixd const& windowMat = 
         ves::xplorer::scenegraph::SceneManager::instance()->
@@ -480,10 +480,10 @@ void UIElementQt::UpdateSize()
     osg::Vec3 max = osg::Vec3( mWidth, mHeight, 1.0 ) * windowMat;
 
     //This assumes that we are spanning the whole ui the height of the screen
-    m_vertices->at( 0 ) = osg::Vec3(   -1.0f, -1.0f, 1.0 ); //ll
-    m_vertices->at( 1 ) = osg::Vec3( max.x(), -1.0f, 1.0 ); //lr
-    m_vertices->at( 2 ) = osg::Vec3( max.x(),  1.0f, 1.0 ); //ur
-    m_vertices->at( 3 ) = osg::Vec3(   -1.0f,  1.0f, 1.0 ); //ul
+    m_vertices->at( 0 ) = osg::Vec3(   -1.0f,   -1.0f, 1.0 ); //ll
+    m_vertices->at( 1 ) = osg::Vec3( max.x(),   -1.0f, 1.0 ); //lr
+    m_vertices->at( 2 ) = osg::Vec3( max.x(), max.y(), 1.0 ); //ur
+    m_vertices->at( 3 ) = osg::Vec3(   -1.0f, max.y(), 1.0 ); //ul
     
     // Delete the image and flipped image object if the required texture size
     // has changed.

@@ -160,7 +160,7 @@ public:
 ///
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual void Initialize(  );
+    virtual void Initialize();
 ////////////////////////////////////////////////////////////////////////////////
 
     ///
@@ -179,10 +179,10 @@ public:
     virtual osg::Matrixf PopUIMatrix();
 
     ///
-    virtual void PushElementMatrix( osg::Matrixf const& matrix );
+    //virtual void PushElementMatrix( osg::Matrixf const& matrix );
 
     ///
-    virtual osg::Matrixf& GetElementMatrix();
+    //virtual osg::Matrixf& GetElementMatrix();
 
     ///
     virtual void MoveCanvas( float dx, float dy, float dz = 0.0f );
@@ -194,7 +194,7 @@ public:
     virtual void Update();
 
     ///
-    virtual osg::MatrixTransform* GetUITransform();
+    //virtual osg::MatrixTransform* GetUITransform();
 
     ///
     //virtual osg::MatrixTransform* GetElementTransform();
@@ -229,10 +229,10 @@ protected:
     std::vector< osg::Matrixf > mUIMatrices;
     //std::vector< osg::Matrixf > mElementMatrices;
     osg::ref_ptr< osg::Vec3Array > m_vertices;
-    osg::ref_ptr< osg::MatrixTransform > mUITransform;
-    osg::ref_ptr< osg::MatrixTransform > mElementTransform;
-    osg::Matrixf mElementMatrix;
-    bool mElementMatrixDirty;
+    //osg::ref_ptr< osg::MatrixTransform > mUITransform;
+    //osg::ref_ptr< osg::MatrixTransform > mElementTransform;
+    //osg::Matrixf mElementMatrix;
+    //bool mElementMatrixDirty;
     bool mAnimationOn;
     osg::ref_ptr< osg::AnimationPath > m_animationPath;
     osg::ref_ptr< osg::Geode > mGeode;

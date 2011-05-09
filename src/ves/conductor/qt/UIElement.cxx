@@ -66,7 +66,7 @@ UIElement::UIElement():
     mUIMatrixDirty( false ),
     //mUITransform( 0 ),
     //mElementTransform( 0 ),
-    mElementMatrixDirty( false ),
+    //mElementMatrixDirty( false ),
     mAnimationOn( false ),
     //mGeode( 0 ),
     m_mouseInsideUI( true )
@@ -135,29 +135,29 @@ void UIElement::PostConstructor()
     texture->setDataVariance( osg::Object::DYNAMIC );
 
     //Create stateset for adding texture
-    osg::ref_ptr< osg::StateSet > stateset = geode->getOrCreateStateSet();
+    osg::ref_ptr< osg::StateSet > stateset = mGeode->getOrCreateStateSet();
     stateset->setTextureAttributeAndModes(
         0, texture.get(), osg::StateAttribute::ON );
 
     // Transform to make unit square appear with same dimensions as underlying
     // element dimensions
-    osg::ref_ptr<osg::MatrixTransform> elementTransform = new osg::MatrixTransform();
-    elementTransform->setMatrix( osg::Matrix::scale( GetElementWidth(),
-                                                     GetElementHeight(),
-                                                     1.0f ) );
+    //osg::ref_ptr<osg::MatrixTransform> elementTransform = new osg::MatrixTransform();
+    //elementTransform->setMatrix( osg::Matrix::scale( GetElementWidth(),
+    //                                                 GetElementHeight(),
+    //                                                 1.0f ) );
     //elementTransform->setMatrix( osg::Matrix::identity() );
 
-    PushElementMatrix( elementTransform->getMatrix() );
+    //PushElementMatrix( elementTransform->getMatrix() );
     //elementTransform->addChild( mGeode.get() );
-    mElementTransform = elementTransform.get();
+    //mElementTransform = elementTransform.get();
 
     //
-    osg::ref_ptr<osg::MatrixTransform> uiTransform = new osg::MatrixTransform();
-    uiTransform->setMatrix( osg::Matrix::identity() );
-    PushUIMatrix( uiTransform->getMatrix() );
+    //osg::ref_ptr<osg::MatrixTransform> uiTransform = new osg::MatrixTransform();
+    //uiTransform->setMatrix( osg::Matrix::identity() );
+    PushUIMatrix( osg::Matrix::identity() );
     //uiTransform->addChild( elementTransform.get() );
-    uiTransform->addChild( mGeode.get() );
-    mUITransform = uiTransform.get();
+    //uiTransform->addChild( mGeode.get() );
+    //mUITransform = uiTransform.get();
 
     //
     //mVisibilitySwitch = new osg::Switch();
@@ -314,22 +314,22 @@ void UIElement::PushUIMatrix( osg::Matrixf const& matrix )
 ////////////////////////////////////////////////////////////////////////////////
 osg::Matrixf UIElement::PopUIMatrix()
 {
-    osg::Matrixf last = GetUIMatrix();
     mUIMatrices.pop_back();
+    osg::Matrixf last = GetUIMatrix();
     mUIMatrixDirty = true;
     return last;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::PushElementMatrix( osg::Matrixf const& matrix )
+/*void UIElement::PushElementMatrix( osg::Matrixf const& matrix )
 {
     mElementMatrix = matrix;
     mElementMatrixDirty = true;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
-osg::Matrixf& UIElement::GetElementMatrix()
+/*osg::Matrixf& UIElement::GetElementMatrix()
 {
     return mElementMatrix;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::MoveCanvas( float dx, float dy, float dz )
 {
@@ -351,12 +351,12 @@ void UIElement::Update()
     if( mAnimationOn )
     {
         // Check whether animation has ended and remove the callback if so
-        osg::AnimationPathCallback* cb = static_cast < osg::AnimationPathCallback* > ( mUITransform->getUpdateCallback() );
+        /*osg::AnimationPathCallback* cb = static_cast < osg::AnimationPathCallback* > ( mUITransform->getUpdateCallback() );
         if( cb->getAnimationTime() >= cb->getAnimationPath()->getLastTime() )
         {
             mUITransform->setUpdateCallback( 0 );
             mAnimationOn = false;
-        }
+        }*/
         
         //m_animationPath->get
     }
@@ -387,17 +387,17 @@ void UIElement::Update()
         mGeode->dirtyBound();
     }
 
-    if( mElementMatrixDirty )
+    /*if( mElementMatrixDirty )
     {
         //mElementTransform->setMatrix( mElementMatrix );
         mElementMatrixDirty = false;
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::MatrixTransform* UIElement::GetUITransform()
+/*osg::MatrixTransform* UIElement::GetUITransform()
 {
     return mUITransform.get();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 /*osg::MatrixTransform* UIElement::GetElementTransform()
 {
@@ -406,7 +406,7 @@ osg::MatrixTransform* UIElement::GetUITransform()
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElement::IsVisible()
 {
-    return static_cast< bool >( mUITransform->getNodeMask() );
+    return static_cast< bool >( mGeode->getNodeMask() );
     //mVisibilitySwitch->getValue( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -414,12 +414,12 @@ void UIElement::SetVisible( bool visible )
 {
     if( visible )
     {
-        mUITransform->setNodeMask( 0x1 );
+        mGeode->setNodeMask( 0x1 );
         //mVisibilitySwitch->setAllChildrenOn();
     }
     else
     {
-        mUITransform->setNodeMask( 0x0 );
+        mGeode->setNodeMask( 0x0 );
         //mVisibilitySwitch->setAllChildrenOff();
     }
 }
