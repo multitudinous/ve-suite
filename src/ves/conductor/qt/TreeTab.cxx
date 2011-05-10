@@ -45,6 +45,7 @@
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/data/CADPropertySet.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
@@ -209,14 +210,23 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     }
 
     // See if this node has a VE_XML_ID
+    std::string type;
     bool found = false;
     if( node )
     {
+        std::cout << "Node description list:" << std::endl << std::flush;
         osg::Node::DescriptionList descList = node->getDescriptions();
         for( size_t i = 0; i < descList.size(); ++i )
         {
+            std::cout << descList.at( i ) << std::endl << std::flush;
             if( descList.at( i ) == "VE_XML_ID" )
             {
+                type = "CAD";
+                found = true;
+            }
+            else if( descList.at( i ) == "VE_DATA_NODE" )
+            {
+                type = "DATA";
                 found = true;
             }
         }
@@ -234,8 +244,16 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     ves::xplorer::scenegraph::DCS* newSelectedDCS = static_cast< ves::xplorer::scenegraph::DCS* >( node );
 
     // Create a CADPropertySet and load it in the browser
-    mActiveSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CADPropertySet() );
-    mActiveSet->SetUUID( newSelectedDCS->GetCADPart()->GetID() );
+    if( type == "CAD")
+    {
+        mActiveSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CADPropertySet() );
+        mActiveSet->SetUUID( newSelectedDCS->GetCADPart()->GetID() );
+    }
+    else if( type == "DATA" )
+    {
+        mActiveSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::DatasetPropertySet() );
+        mActiveSet->SetUUID( node->getDescriptions().at(1) );
+    }
     mBrowser->ParsePropertySet( mActiveSet );
 
     ui->cadPropertyBrowser->setPropertyBrowser( mBrowser );
@@ -244,19 +262,23 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
 
     // Load properties from db
     mActiveSet->LoadFromDatabase();
-    // Update transform properties to agree with the current state of the
-    // associated DCS
-    SyncTransformFromDCS();
-    // Turn on live updates
-    static_cast<ves::xplorer::data::CADPropertySet*>(mActiveSet.get())->
-            EnableLiveProperties( true );
+
+    if( type == "CAD")
+    {
+        // Update transform properties to agree with the current state of the
+        // associated DCS
+        SyncTransformFromDCS();
+        // Turn on live updates
+        static_cast<ves::xplorer::data::CADPropertySet*>(mActiveSet.get())->
+                EnableLiveProperties( true );
+    }
 
     mBrowser->RefreshAll();
 
     // highlight will be true if this method was called from the tree widget in
     // any form, and false if it was called as a side-effect of
     // ObjectPickedSignal
-    if( highlight )
+    if( highlight && type == "CAD" )
     {
         //Set the selected DCS
         std::string pathString = boost::any_cast< std::string >

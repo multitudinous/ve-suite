@@ -2011,6 +2011,11 @@ void DataSet::WriteDatabaseEntry()
 
     set.LoadByKey( "Filename", shortName );
 
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList.push_back( "VE_DATA_NODE" );
+    descriptorsList.push_back( set.GetUUIDAsString() );
+    GetDCS()->setDescriptions( descriptorsList );
+
     set.SetPropertyValue( "Filename", shortName );
     set.SetPropertyValue( "StepLength", stepLength );
     set.SetPropertyValue( "MaxTime", maxTime );
