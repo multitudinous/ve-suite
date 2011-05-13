@@ -115,6 +115,12 @@ UIManager::UIManager() :
             new SignalWrapper< voidBoolSignalType >( &mUIEnterLeaveSignal ),
             "UIManager.EnterLeaveUI" );
 
+    CONNECTSIGNALS_2( "%.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &UIManager::SetStartEndPoint,
+                     mConnections, any_SignalType, normal_Priority );
+    
+    //CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &UIManager::SetStartEndPoint,
+    //                 m_connections, any_SignalType, normal_Priority );
+                     
     // Connect slots to external signals
     CONNECTSIGNALS_0( "%HideShowUI%", void (), &UIManager::ToggleVisibility, mConnections,
                       any_SignalType, highest_Priority);
@@ -155,15 +161,15 @@ UIManager::UIManager() :
                       input_SignalType, highest_Priority );
            
     ///Setup the wand now
-    CONNECTSIGNALS_4( "%Wand.ButtonPress%", bool( gadget::Keys, int, int, int ),
+    CONNECTSIGNALS_4( "%Wand.ButtonPress%", void( gadget::Keys, int, int, int ),
                               &UIManager::ButtonPressEvent, mInputConnections,
                               button_SignalType, highest_Priority );
     
-    CONNECTSIGNALS_4( "%Wand.ButtonRelease%", bool( gadget::Keys, int, int, int ),
+    CONNECTSIGNALS_4( "%Wand.ButtonRelease%", void( gadget::Keys, int, int, int ),
                               &UIManager::ButtonReleaseEvent, mInputConnections,
                               button_SignalType, highest_Priority );
     
-    CONNECTSIGNALS_5( "%Wand.DoubleClick%", bool( gadget::Keys, int, int, int, int ),
+    CONNECTSIGNALS_5( "%Wand.DoubleClick%", void( gadget::Keys, int, int, int, int ),
                               &UIManager::MouseDoubleClickEvent, mInputConnections,
                               button_SignalType, highest_Priority );
 
@@ -208,7 +214,6 @@ osg::Geode* UIManager::AddElement( UIElement* element )
         m_rttQuadTransform = new osg::PositionAttitudeTransform();
         m_rttQuadTransform->addChild( geode );
         m_rttQuadTransform->setUpdateCallback( new ves::xplorer::scenegraph::HeadPositionCallback() );
-
         mNodesToAdd.push_back( m_rttQuadTransform.get() );
     }
 
@@ -375,42 +380,45 @@ void UIManager::Initialize( osg::Group* parentNode )
     //parentNode->addChild( mProjection.get() );
     parentNode->addChild( mUIGroup.get() );
 
-    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
-    std::string vertexSource =
-        "void main() \n"
-        "{ \n"
-        //Ignore MVP transformation as vertices are already in Normalized Device Coord.
-        "gl_Position = gl_Vertex; \n"
-        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
-        "} \n";
-    
-    vertexShader->setType( osg::Shader::VERTEX );
-    vertexShader->setShaderSource( vertexSource );
-    vertexShader->setName( "VS UI Quad Vertex Shader" );
-    
-    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-    std::string fragmentSource =
-            "uniform sampler2D baseMap; \n"
-            "uniform float opacityVal;\n"
-            "uniform vec3 glowColor; \n"
+    //Setup the shaders
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->setName( "VS UI Quad Program" );
 
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+        std::string vertexSource =
             "void main() \n"
             "{ \n"
-            "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
-            "baseColor.a = opacityVal;\n"
-            "gl_FragData[ 0 ] = baseColor; \n"
-            "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+            //Ignore MVP transformation as vertices are already in Normalized Device Coord.
+            "gl_Position = gl_Vertex; \n"
+            "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
             "} \n";
+        
+        vertexShader->setType( osg::Shader::VERTEX );
+        vertexShader->setShaderSource( vertexSource );
+        vertexShader->setName( "VS UI Quad Vertex Shader" );
+        program->addShader( vertexShader.get() );
+    }
+
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    std::string fragmentSource =
+        "uniform sampler2D baseMap; \n"
+        "uniform float opacityVal;\n"
+        "uniform vec3 glowColor; \n"
+
+        "void main() \n"
+        "{ \n"
+        "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
+        "baseColor.a = opacityVal;\n"
+        "gl_FragData[ 0 ] = baseColor; \n"
+        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
+        "} \n";
 
     fragmentShader->setType( osg::Shader::FRAGMENT );
     fragmentShader->setShaderSource( fragmentSource );
     fragmentShader->setName( "VS UI Quad Fragment Shader" );
-
-    //
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( vertexShader.get() );
     program->addShader( fragmentShader.get() );
-    program->setName( "VS UI Quad Program" );
 
     //Set depth test to always pass and don't write to the depth buffer
     osg::ref_ptr< osg::Depth > depth = new osg::Depth();
@@ -739,7 +747,6 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     //osg::Matrixf currentMatrix = element->GetUIMatrix();
 
     osg::Vec4 const& uiCorners = element->GetUICorners();
-    //std::cout << uiCorners << std::endl;
     osg::AnimationPath::ControlPoint c0( osg::Vec3( uiCorners[ 0 ], uiCorners[ 2 ], 0.0 ) );//currentMatrix.getTrans() );
     c0.setScale( osg::Vec3( uiCorners[ 1 ] - uiCorners[ 0 ], uiCorners[ 3 ] - uiCorners[ 2 ], 0.0 ) );//currentMatrix.getScale() );
 
@@ -750,14 +757,11 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     // the end state of the animation.
     if( minimize )
     {
-        //std::cout << downScale * (uiCorners[ 1 ] - uiCorners[ 0 ]) << std::endl;
-        //std::cout << uiCorners << std::endl;
         element->SetMinimized( true );
         c1.setPosition( osg::Vec3f( mMinimizeXOffset, yPadding, 0.0f ) );
         c1.setScale( osg::Vec3f( downScale * (uiCorners[ 1 ] - uiCorners[ 0 ]), downScale * (uiCorners[ 3 ] - uiCorners[ 2 ]), 1.0 ) );
         osg::Matrixf tempMatrix;
         c1.getMatrix( tempMatrix );
-        //std::cout << "minimize " << tempMatrix << std::endl;
         element->PushUIMatrix( tempMatrix );
 
         mMinimizeXOffset += downScale * ( element->GetElementWidth() ) + xPadding;
@@ -914,10 +918,7 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
-        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
-        {
-            y = static_cast < double > ( mTop ) - y;
-        }
+        y = static_cast < double > ( mTop ) - y;
         //std::cout << y << " " << mTop << std::endl;
         m_selectedUIElement->SendButtonPressEvent( button, x, y, state );
     }
@@ -970,10 +971,7 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
-        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
-        {
-            y = static_cast < double > ( mTop ) - y;
-        }
+        y = static_cast < double > ( mTop ) - y;
         m_selectedUIElement->SendButtonReleaseEvent( button, x, y, state );
     }
 
@@ -1077,10 +1075,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
-        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
-        {
-            y = static_cast < double > ( mTop ) - y;
-        }
+        y = static_cast < double > ( mTop ) - y;
         m_selectedUIElement->SendMouseMoveEvent( x, y, z, state );
     }
 
@@ -1122,10 +1117,7 @@ bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
-        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
-        {
-            y = static_cast < double > ( mTop ) - y;
-        }
+        y = static_cast < double > ( mTop ) - y;
         m_selectedUIElement->SendDoubleClickEvent( button, x, y, state );
     }
     else
@@ -1274,7 +1266,7 @@ bool UIManager::TestWandIntersection()
     m_selectedUINode = 0;
     m_selectedUIElement = 0;
     m_intersectionPoint = osg::Vec3d( -10000, -10000, -10000 );
-    
+    std::cout << " ray test " << m_startPoint << " " << m_endPoint << " " << intersections.size() << std::endl;
     if( !intersections.empty() )
     {
         //We are over the UI somewhere

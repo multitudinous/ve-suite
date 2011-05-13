@@ -325,7 +325,6 @@ unsigned char* UIElementQt::RenderElementToImage()
     // instead, we keep an internal timer that causes a repaint of this element
     // every 100ms. Any time the present method is called, we simply return the
     // most recently painted image of this window.
-
     mDirty = mImageDirty;
 
     if( mImageDirty )
@@ -486,7 +485,6 @@ void UIElementQt::UpdateSize()
     m_vertices->at( 1 ) = osg::Vec3( max.x(),   -1.0f, 1.0 ); //lr
     m_vertices->at( 2 ) = osg::Vec3( max.x(), max.y(), 1.0 ); //ur
     m_vertices->at( 3 ) = osg::Vec3(   -1.0f, max.y(), 1.0 ); //ul*/
-    
     // Delete the image and flipped image object if the required texture size
     // has changed.
     if( ( mWidth != old_Width ) || ( mHeight != old_Height ) )
