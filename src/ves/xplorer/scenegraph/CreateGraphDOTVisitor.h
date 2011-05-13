@@ -34,15 +34,10 @@
 #define CREATE_GRAPH_DOT_VISITOR_H
 
 /*!\file CreateGraphDOTVisitor.h
-*/
-
-/*!\class ves::xplorer::scenegraph::CreateGraphDOTVisitor
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph::
-*
-*/
+ * \class ves::xplorer::scenegraph::CreateGraphDOTVisitor
+ * \namespace ves::xplorer::scenegraph::
+ *
+ */
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
