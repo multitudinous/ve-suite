@@ -383,6 +383,7 @@ function e()
       hg)
         if [ -d "${BASE_DIR}" ]; then
           cd "${BASE_DIR}";
+          hg pull;
           hg update;
         else
           echo "${BASE_DIR} non-existent, checking out ...."
