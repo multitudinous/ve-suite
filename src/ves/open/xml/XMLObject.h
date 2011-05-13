@@ -59,13 +59,11 @@ namespace xml
 {
 
 /*!\file XMLObject.h
-  Base XML API
-  */
-/*!\class ves::open::xml::XMLObject
+ * Base XML API
+ * \class ves::open::xml::XMLObject
  * This class is the base class for representing
  * XML objects.
- */
-/*!\namespace ves::open::xml
+ * \namespace ves::open::xml
  * Contains nodes for creating/managing a XML Objects.
  */
 class VE_XML_EXPORTS XMLObject

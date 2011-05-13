@@ -72,9 +72,7 @@ class CameraObject;
 
 /*!\file CameraManager.h
  * CameraManager API
- */
-
-/*!\class ves::xplorer::scenegraph::camera::CameraManager
+ * \class ves::xplorer::scenegraph::camera::CameraManager
  *
  */
 class VE_SCENEGRAPH_EXPORTS CameraManager : public osg::Group
