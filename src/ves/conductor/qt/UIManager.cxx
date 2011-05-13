@@ -44,6 +44,7 @@
 #include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
+#include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 
 // --- OSG Includes --- //
 //#include <osg/Geometry>
@@ -103,6 +104,7 @@ UIManager::UIManager() :
                             // ever appear.
     m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector( 
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
+    m_selectedUIElement( 0 ),
     m_updateBBoxes( false )
 {
     // Register signals
@@ -196,12 +198,23 @@ osg::Geode* UIManager::AddElement( UIElement* element )
 {
     //Store the switch node so that it can be added to mUIGroup during the
     //next update traversal.
-    mNodesToAdd.push_back( element->GetGeode() );
+    osg::Geode* geode = element->GetGeode();
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        mNodesToAdd.push_back( geode );
+    }
+    else
+    {
+        m_rttQuadTransform = new osg::PositionAttitudeTransform();
+        m_rttQuadTransform->addChild( geode );
+        m_rttQuadTransform->setUpdateCallback( new ves::xplorer::scenegraph::HeadPositionCallback() );
+
+        mNodesToAdd.push_back( m_rttQuadTransform.get() );
+    }
 
     //mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
     m_updateBBoxes = true;
 
-    osg::Geode* geode = element->GetGeode();
     mElements[ geode ] = element;
 
     return geode;
@@ -246,7 +259,7 @@ void UIManager::Update()
     // Update all of the bounding boxes for the uis
     if( m_updateBBoxes )
     {
-        UpdateElementBoundingBoxes();
+        //UpdateElementBoundingBoxes();
         m_updateBBoxes = false;
     }
     
@@ -618,22 +631,37 @@ void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
 {
+    m_selectedUIElement = 0;
+
+    ///Handle the test for non desktop mode
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        if( TestWandIntersection() )
+        {
+            ElementMap_type::const_iterator iter = 
+                mElements.find( m_selectedUINode->asGeode() );
+            if( iter != mElements.end() )
+            {
+                m_selectedUIElement = iter->second;
+            }
+            return true;
+        }
+        return false;
+    }
+
     // Walk through every visible quad we own and see if the point lies on it
-    osg::Vec4 quadPos;
-    std::map< UIElement*, osg::Vec4 >::iterator map_iterator = mElementPositionsOrtho2D.begin();
-    while( map_iterator != mElementPositionsOrtho2D.end() )
+    UIElement* tempElement;
+    ElementMap_type::const_iterator map_iterator = mElements.begin();
+    while( map_iterator != mElements.end() )
     {
         // If the quad isn't visible, treat it as though the pointer can't be
         // over it
-        if( map_iterator->first->IsVisible() )
+        tempElement = map_iterator->second;
+        if( tempElement->IsVisible() )
         {
-            quadPos = map_iterator->second;
-            /*std::cout << "Testing (" << x << ", " << y << ") against ("
-                    << quadPos.x() << ", " << quadPos.y() << ", " << quadPos.z()
-                    << ", " << quadPos.w() << ")\n";*/
-            if( ( x >= quadPos.x() ) && ( x <= quadPos.y() ) &&
-                    ( y >= quadPos.z() ) && ( y <= quadPos.w() ) )
+            if( tempElement->TestQuadIntersection( x, y ) )
             {
+                m_selectedUIElement = tempElement;
                 return true;
             }
         }
@@ -710,8 +738,8 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     // Animation based on two control points: c0 (current state) and c1 (end state)
     //osg::Matrixf currentMatrix = element->GetUIMatrix();
 
-    osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-
+    osg::Vec4 const& uiCorners = element->GetUICorners();
+    //std::cout << uiCorners << std::endl;
     osg::AnimationPath::ControlPoint c0( osg::Vec3( uiCorners[ 0 ], uiCorners[ 2 ], 0.0 ) );//currentMatrix.getTrans() );
     c0.setScale( osg::Vec3( uiCorners[ 1 ] - uiCorners[ 0 ], uiCorners[ 3 ] - uiCorners[ 2 ], 0.0 ) );//currentMatrix.getScale() );
 
@@ -729,7 +757,7 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
         c1.setScale( osg::Vec3f( downScale * (uiCorners[ 1 ] - uiCorners[ 0 ]), downScale * (uiCorners[ 3 ] - uiCorners[ 2 ]), 1.0 ) );
         osg::Matrixf tempMatrix;
         c1.getMatrix( tempMatrix );
-        //std::cout << tempMatrix << std::endl;
+        //std::cout << "minimize " << tempMatrix << std::endl;
         element->PushUIMatrix( tempMatrix );
 
         mMinimizeXOffset += downScale * ( element->GetElementWidth() ) + xPadding;
@@ -748,11 +776,11 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
         c1.setScale( tempUIMat.getScale() );
     }
 
-    osg::ref_ptr< osg::AnimationPath > path = new osg::AnimationPath;
+    /*osg::ref_ptr< osg::AnimationPath > path = new osg::AnimationPath;
     path->setLoopMode( osg::AnimationPath::NO_LOOPING );
 
     path->insert( 0.0f, c0 );
-    path->insert( duration, c1 );
+    path->insert( duration, c1 );*/
 
     //element->SetAnimationPath( path.get() );
     m_updateBBoxes = true;
@@ -870,37 +898,32 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
     {
         return false;
     }
+    
+    bool visible = m_selectedUIElement->IsVisible();
+    bool minimized = m_selectedUIElement->IsMinimized();
 
-    // TODO: his iterates over all elements. We should instead just find the match
-    // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::const_iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
+    // Only send events if element is visible and not minimzed
+    if( ( visible ) && ( !minimized ) )
     {
-        UIElement* element = map_iterator->second;
-
-        bool visible = element->IsVisible();
-        bool minimized = element->IsMinimized();
-
-        // Only send events if element is visible and not minimzed
-        if( ( visible ) && ( !minimized ) )
+        // Translate mouse coordinates to window coordinates
+        // TODO: This may be done better by using the element's entire UIMatrix
+        // so that mouse events can be mapped to scaled (but not minimized) windows.
+        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+        //x = x - uiCorners[ 0 ];
+        //y = y - uiCorners[ 2 ];
+        m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
+        //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
+        // Flip y mouse coordinate to origin GUI expects
+        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
         {
-            // Translate mouse coordinates to window coordinates
-            // TODO: This may be done better by using the element's entire UIMatrix
-            // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-            x = x - uiCorners[ 0 ];
-            y = y - uiCorners[ 2 ];
-            //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
-            // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
-            //std::cout << y << " " << mTop << std::endl;
-            element->SendButtonPressEvent( button, x, y, state );
         }
-        else
-        {
-            mUnminimize = true;
-        }
+        //std::cout << y << " " << mTop << std::endl;
+        m_selectedUIElement->SendButtonPressEvent( button, x, y, state );
+    }
+    else
+    {
+        mUnminimize = true;
     }
 
     return false;
@@ -932,31 +955,26 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
         return false;
     }
 
-    // TODO: this iterates over all elements. We should instead just find the match
-    // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::const_iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
+    bool visible = m_selectedUIElement->IsVisible();
+    bool minimized = m_selectedUIElement->IsMinimized();
+
+    // Only send events if element is visible and not minimzed
+    if( ( visible ) && ( !minimized ) )
     {
-        UIElement* element = map_iterator->second;
-
-        bool visible = element->IsVisible();
-        bool minimized = element->IsMinimized();
-
-        // Only send events if element is visible and not minimzed
-        if( ( visible ) && ( !minimized ) )
+        // Translate mouse coordinates to window coordinates
+        // TODO: This may be done better by using the element's entire UIMatrix
+        // so that mouse events can be mapped to scaled (but not minimized) windows.
+        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+        //x = x - uiCorners[ 0 ];
+        //y = y - uiCorners[ 2 ];
+        m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
+        //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
+        // Flip y mouse coordinate to origin GUI expects
+        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
         {
-            // Translate mouse coordinates to window coordinates
-            // TODO: This may be done better by using the element's entire UIMatrix
-            // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-            x = x - uiCorners[ 0 ];
-            y = y - uiCorners[ 2 ];
-
-            // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
-            element->SendButtonReleaseEvent( button, x, y, state );
         }
+        m_selectedUIElement->SendButtonReleaseEvent( button, x, y, state );
     }
 
     return false;
@@ -980,30 +998,23 @@ bool UIManager::MouseScrollEvent( int deltaX, int deltaY, int x, int y, int stat
         return false;
     }
 
-    // TODO: his iterates over all elements. We should instead just find the match
-    // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::const_iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
+    bool visible = m_selectedUIElement->IsVisible();
+    bool minimized = m_selectedUIElement->IsMinimized();
+
+    // Only send events if element is visible and not minimzed
+    if( ( visible ) && ( !minimized ) )
     {
-        UIElement* element = map_iterator->second;
-
-        bool visible = element->IsVisible();
-        bool minimized = element->IsMinimized();
-
-        // Only send events if element is visible and not minimzed
-        if( ( visible ) && ( !minimized ) )
-        {
-            // Translate mouse coordinates to window coordinates
-            // TODO: This may be done better by using the element's entire UIMatrix
-            // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-            x = x - uiCorners[ 0 ];
-            y = y - uiCorners[ 2 ];
-            // Flip y mouse coordinate to origin GUI expects
-            y = static_cast < double > ( mTop ) - y;
-            element->SendScrollEvent( deltaX, deltaY, x, y, state );
-        }
+        // Translate mouse coordinates to window coordinates
+        // TODO: This may be done better by using the element's entire UIMatrix
+        // so that mouse events can be mapped to scaled (but not minimized) windows.
+        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+        //x = x - uiCorners[ 0 ];
+        //y = y - uiCorners[ 2 ];
+        osg::Vec3d tempPoint;
+        m_selectedUIElement->GetPointIntersectionInPixels( x, y, tempPoint );
+        // Flip y mouse coordinate to origin GUI expects
+        y = static_cast < double > ( mTop ) - y;
+        m_selectedUIElement->SendScrollEvent( deltaX, deltaY, x, y, state );
     }
 
     return false;
@@ -1051,31 +1062,26 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
         return false;
     }
 
-    // TODO: this iterates over all elements. We should instead just find the match
-    // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::const_iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
+    bool visible = m_selectedUIElement->IsVisible();
+    bool minimized = m_selectedUIElement->IsMinimized();
+
+    // Only send events if element is visible and not minimzed
+    if( ( visible ) && ( !minimized ) )
     {
-        UIElement* element = map_iterator->second;
-
-        bool visible = element->IsVisible();
-        bool minimized = element->IsMinimized();
-
-        // Only send events if element is visible and not minimzed
-        if( ( visible ) && ( !minimized ) )
+        // Translate mouse coordinates to window coordinates
+        // TODO: This may be done better by using the element's entire UIMatrix
+        // so that mouse events can be mapped to scaled (but not minimized) windows.
+        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+        //x = x - uiCorners[ 0 ];
+        //y = y - uiCorners[ 2 ];
+        m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
+        //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
+        // Flip y mouse coordinate to origin GUI expects
+        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
         {
-            // Translate mouse coordinates to window coordinates
-            // TODO: This may be done better by using the element's entire UIMatrix
-            // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-            x = x - uiCorners[ 0 ];
-            y = y - uiCorners[ 2 ];
-
-            // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
-            element->SendMouseMoveEvent( x, y, z, state );
         }
+        m_selectedUIElement->SendMouseMoveEvent( x, y, z, state );
     }
 
     return false;
@@ -1101,35 +1107,30 @@ bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
         return false;
     }
 
-    // TODO: his iterates over all elements. We should instead just find the match
-    // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::const_iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
+    bool visible = m_selectedUIElement->IsVisible();
+    bool minimized = m_selectedUIElement->IsMinimized();
+
+    // Only send events if element is visible and not minimzed
+    if( ( visible ) && ( !minimized ) )
     {
-        UIElement* element = map_iterator->second;
-
-        bool visible = element->IsVisible();
-        bool minimized = element->IsMinimized();
-
-        // Only send events if element is visible and not minimzed
-        if( ( visible ) && ( !minimized ) )
+        // Translate mouse coordinates to window coordinates
+        // TODO: This may be done better by using the element's entire UIMatrix
+        // so that mouse events can be mapped to scaled (but not minimized) windows.
+        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
+        //x = x - uiCorners[ 0 ];
+        //y = y - uiCorners[ 2 ];
+        m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
+        //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
+        // Flip y mouse coordinate to origin GUI expects
+        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
         {
-            // Translate mouse coordinates to window coordinates
-            // TODO: This may be done better by using the element's entire UIMatrix
-            // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-            x = x - uiCorners[ 0 ];
-            y = y - uiCorners[ 2 ];
-
-            // Flip y mouse coordinate to origin GUI expects
             y = static_cast < double > ( mTop ) - y;
-            element->SendDoubleClickEvent( button, x, y, state );
         }
-        else
-        {
-            mUnminimize = true;
-        }
+        m_selectedUIElement->SendDoubleClickEvent( button, x, y, state );
+    }
+    else
+    {
+        mUnminimize = true;
     }
 
     return false;
@@ -1259,7 +1260,7 @@ osg::Group& UIManager::GetUIRootNode() const
     return *(mUIGroup.get());
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::TestWandIntersection()
+bool UIManager::TestWandIntersection()
 {
     //Get line from user pressing button 0
     m_lineSegmentIntersector->reset();
@@ -1270,7 +1271,11 @@ void UIManager::TestWandIntersection()
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         ves::xplorer::scenegraph::TestForIntersections( *m_lineSegmentIntersector.get(), GetUIRootNode() );
     
-    if( intersections.size() )
+    m_selectedUINode = 0;
+    m_selectedUIElement = 0;
+    m_intersectionPoint = osg::Vec3d( -10000, -10000, -10000 );
+    
+    if( !intersections.empty() )
     {
         //We are over the UI somewhere
         mMouseInsideUI = true;
@@ -1279,10 +1284,16 @@ void UIManager::TestWandIntersection()
         //of the UI texture so that we can translate that to an x,y location
         osgUtil::LineSegmentIntersector::Intersection tempIntersection = 
             *(intersections.begin());
-        osg::Vec3d intersectionPoint = tempIntersection.getLocalIntersectPoint();
+        m_intersectionPoint = tempIntersection.getLocalIntersectPoint();
         std::cout << "Wand intersection with the UI " 
-            << intersectionPoint << std::endl;
+            << m_intersectionPoint << std::endl;
+        
+        m_selectedUINode = *(tempIntersection.nodePath.rbegin());
+        std::cout << "Wand intersection with the this node " 
+            << m_selectedUINode->getName() << std::endl;
+        return true;
     }
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )

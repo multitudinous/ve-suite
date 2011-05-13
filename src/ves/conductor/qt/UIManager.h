@@ -232,7 +232,7 @@ public:
     
     ///Test wether the wand ray is interesting the UI plane. This will emit the 
     ///bool to let all slots know if the wand ray is within the UI plane.
-    void TestWandIntersection();
+    bool TestWandIntersection();
 
 private:
     // Set this class up as a singleton
@@ -260,6 +260,9 @@ private:
 
     /// Root node of the UI branch
     osg::ref_ptr< osg::Switch > mUIGroup;
+
+    /// The transform to control the placement of the quads when in cave mode
+    osg::ref_ptr< osg::PositionAttitudeTransform > m_rttQuadTransform;
 
     /// Flag to tell if we're initialized
     bool mInitialized;
@@ -371,6 +374,12 @@ private:
     osg::Vec3d m_endPoint;
     ///The ray intersector test
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
+    ///The selected node for non desktop mode
+    osg::ref_ptr< osg::Node > m_selectedUINode;
+    ///The cooresponding selected UIElement
+    UIElement* m_selectedUIElement;
+    ///The selected point for non desktop mode
+    osg::Vec3d m_intersectionPoint;
     ///Bounding box uis
     bool m_updateBBoxes;
 };

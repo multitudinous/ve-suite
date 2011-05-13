@@ -1260,12 +1260,19 @@ void App::LoadUI()
     std::cout << "|\tWindow value: " << width << " " 
         << height << std::endl << std::flush;
     
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    { 
+        ///These values must match the values in UIElement on line 105
+        width = 600;
+        height = 967;
+    }
+    ///Only the height value is used to enable flipping the y value to put
+    ///it in qt space.
     m_UIManager->SetRectangle( 0, width, 0, height );
-    
+
     element->SetInitialImageWidthAndHeight( 600, height );
     element->SetScreenDimensions( width, height );
     element->SetWidget( mainUIWidget );
-    //element->Update();
     
     m_UIManager->AddElement( element );
 

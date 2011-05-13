@@ -69,7 +69,8 @@ UIElement::UIElement():
     //mElementMatrixDirty( false ),
     mAnimationOn( false ),
     //mGeode( 0 ),
-    m_mouseInsideUI( true )
+    m_mouseInsideUI( true ),
+    m_pixelUIRatio( 0 )
 {
     m_desktopSize = std::make_pair< int, int >( 0, 0 );
     //Request connection to UIManager.EnterLeaveUI signal
@@ -93,10 +94,23 @@ void UIElement::PostConstructor()
     vertices->push_back( osg::Vec3( 1.0f, 0.0f, 0.0 ) );
     vertices->push_back( osg::Vec3( 1.0f, 1.0f, 0.0 ) );
     vertices->push_back( osg::Vec3( 0.0f, 1.0f, 0.0 ) );*/
-    m_vertices->push_back( osg::Vec3( -1.0f, -1.0f, 1.0 ) );
-    m_vertices->push_back( osg::Vec3(  1.0f, -1.0f, 1.0 ) );
-    m_vertices->push_back( osg::Vec3(  1.0f,  1.0f, 1.0 ) );
-    m_vertices->push_back( osg::Vec3( -1.0f,  1.0f, 1.0 ) );
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        m_vertices->push_back( osg::Vec3( -1.0f, -1.0f, 1.0 ) );
+        m_vertices->push_back( osg::Vec3(  1.0f, -1.0f, 1.0 ) );
+        m_vertices->push_back( osg::Vec3(  1.0f,  1.0f, 1.0 ) );
+        m_vertices->push_back( osg::Vec3( -1.0f,  1.0f, 1.0 ) );
+    }
+    else
+    {
+        m_pixelUIRatio = double( 967 )/double( 3 );
+        //600 x 967 - 3/967 = 0.00310237
+        // 1.8614 x 3 
+        m_vertices->push_back( osg::Vec3( -0.9307f, 0.1f, -1.5 ) ); //ll
+        m_vertices->push_back( osg::Vec3(  0.9307f, 0.1f, -1.5 ) ); //lr
+        m_vertices->push_back( osg::Vec3(  0.9307f, 0.1f,  1.5 ) ); //ur
+        m_vertices->push_back( osg::Vec3( -0.9307f, 0.1f,  1.5 ) ); //ul
+    }
     
     //
     osg::Vec4f coordinates = GetTextureCoordinates();
@@ -361,11 +375,16 @@ void UIElement::Update()
         //m_animationPath->get
     }
 
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        return;
+    }
+
     if( mUIMatrixDirty )
     {
         osg::Matrixf& tempUIMatrix = GetUIMatrix();
         mUIMatrixDirty = false;
-        //std::cout << tempUIMatrix << std::endl;
+        //std::cout << "element update " << tempUIMatrix << std::endl;
         osg::Vec3d trans = tempUIMatrix.getTrans();
         osg::Vec3d scale = tempUIMatrix.getScale();
 
@@ -386,6 +405,9 @@ void UIElement::Update()
         
         mGeode->getDrawable( 0 )->dirtyDisplayList();
         mGeode->dirtyBound();
+        
+        //Now update the stored corners for the UI
+        ComputeMouseBoundsForElement();
     }
 
     /*if( mElementMatrixDirty )
@@ -479,6 +501,58 @@ void UIElement::SetAnimationPath( osg::AnimationPath* path )
 void UIElement::UIEnterLeave( bool uiEnter )
 {
     m_mouseInsideUI = uiEnter;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElement::GetPointIntersectionInPixels( int& x, int& y, osg::Vec3d& point )
+{
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        x = point.x() * m_pixelUIRatio;
+        y = point.y() * m_pixelUIRatio;
+    }
+    else
+    {
+        x = x - m_uiCorners[ 0 ];
+        y = y - m_uiCorners[ 2 ];
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElement::ComputeMouseBoundsForElement()
+{
+    //This function basically is creating the screen coordinates to do
+    //mouse testing against to see if the mouse is over the ui
+    //osg::ref_ptr< osg::Geode > geode = element->GetGeode();
+    osg::Vec3Array* vertexArray = 
+    static_cast< osg::Vec3Array* >( mGeode->getDrawable( 0 )->asGeometry()->getVertexArray() );
+    osg::Vec3& ll = vertexArray->at( 0 );
+    osg::Vec3& ur = vertexArray->at( 2 );
+    
+    osg::Matrixd const& windowMat = 
+    ves::xplorer::scenegraph::SceneManager::instance()->
+    GetCurrentGLTransformInfo()->GetWindowMatrixOSG();
+    osg::Vec3 min = ll * windowMat;
+    osg::Vec3 max = ur * windowMat;
+    
+    // Return in the form (left, right, bottom, top)
+    m_uiCorners = osg::Vec4( min.x(), max.x(), min.y(), max.y() );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool UIElement::TestQuadIntersection( int x, int y )
+{
+    /*std::cout << "Testing (" << x << ", " << y << ") against ("
+     << quadPos.x() << ", " << quadPos.y() << ", " << quadPos.z()
+     << ", " << quadPos.w() << ")\n";*/
+    if( ( x >= m_uiCorners.x() ) && ( x <= m_uiCorners.y() ) &&
+       ( y >= m_uiCorners.z() ) && ( y <= m_uiCorners.w() ) )
+    {
+        return true;
+    }
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Vec4d& UIElement::GetUICorners()
+{
+    return m_uiCorners;
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namepsace conductor

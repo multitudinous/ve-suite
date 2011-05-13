@@ -214,8 +214,21 @@ public:
     ///
     virtual osg::Geode* GetGeode();
 
+    ///
     void SetScreenDimensions( int width, int height );
     
+    ///Get the intersection point in pixels from a mouse press or wand test
+    void GetPointIntersectionInPixels( int& x, int& y, osg::Vec3d& point );
+    
+    ///Update the min and max corners for the UI element
+    void ComputeMouseBoundsForElement();
+
+    ///Test the quad for intersections with mouse coordinates
+    bool TestQuadIntersection( int x, int y );
+
+    ///Get the corners for this quad
+    osg::Vec4d& GetUICorners();
+
 protected:
     ///Tell whether the mouse is over the UI
     void UIEnterLeave( bool uiEnter );
@@ -245,6 +258,10 @@ protected:
     bool m_mouseInsideUI;
     /// Required to be able to connect up to signals.
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    ///Keep a ratio of the number of pixels per foot for non-desktop mode
+    double m_pixelUIRatio;
+    ///The min and max corners for this element
+    osg::Vec4d m_uiCorners;
 };
 
 } // namepsace conductor
