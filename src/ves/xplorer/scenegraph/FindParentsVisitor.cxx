@@ -36,10 +36,11 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-FindParentsVisitor::FindParentsVisitor( osg::Node* node )
+FindParentsVisitor::FindParentsVisitor( osg::Node* node, osg::Node* rootNode )
         :
         NodeVisitor( TRAVERSE_PARENTS ),
-        parentNode( 0 )
+        parentNode( 0 ),
+        m_rootNode( rootNode )
 {
     node->accept( *this );
 }
@@ -61,18 +62,28 @@ std::string FindParentsVisitor::GetNodeGUID()
 ////////////////////////////////////////////////////////////////////////////////
 void FindParentsVisitor::apply( osg::Node& node )
 {
-    osg::Node::DescriptionList descriptorsList;
-    descriptorsList = node.getDescriptions();
-
-    //Find the parent node and the id of this particular node
-    for( size_t i = 0; i < descriptorsList.size(); i++ )
+    if( m_rootNode.valid() )
     {
-        if( descriptorsList.at( i ) == "VE_XML_ID" )
+        if( &node == m_rootNode.get() )
         {
-            modelGUID = descriptorsList.at( i + 1 );
             parentNode = &node;
-
-            break;
+        }
+    }
+    else
+    {
+        osg::Node::DescriptionList descriptorsList;
+        descriptorsList = node.getDescriptions();
+        
+        //Find the parent node and the id of this particular node
+        for( size_t i = 0; i < descriptorsList.size(); i++ )
+        {
+            if( descriptorsList.at( i ) == "VE_XML_ID" )
+            {
+                modelGUID = descriptorsList.at( i + 1 );
+                parentNode = &node;
+                
+                break;
+            }
         }
     }
 

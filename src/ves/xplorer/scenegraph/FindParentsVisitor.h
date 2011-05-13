@@ -34,15 +34,10 @@
 #define FIND_PARENTS_VISITOR_H
 
 /*!\file FindParentsVisitor.h
-*/
-
-/*!\class ves::xplorer::scenegraph::FindParentsVisitor
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
+ * \class ves::xplorer::scenegraph::FindParentsVisitor
+ * \namespace ves::xplorer::scenegraph
+ *
+ */
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -61,7 +56,7 @@ class VE_SCENEGRAPH_EXPORTS FindParentsVisitor : public osg::NodeVisitor
 public:
     ///Constructor
     ///\param node The node to be traversed
-    FindParentsVisitor( osg::Node* node );
+    FindParentsVisitor( osg::Node* node, osg::Node* rootNode = 0 );
 
     ///Destructor
     virtual ~FindParentsVisitor();
@@ -79,6 +74,7 @@ public:
 private:
     std::string modelGUID;///<GUID to identify the VE-Open model
     osg::ref_ptr< osg::Node > parentNode;///<Pointer to the found parent node
+    osg::ref_ptr< osg::Node > m_rootNode;///<Pointer to the found parent node
 };
 }
 }
