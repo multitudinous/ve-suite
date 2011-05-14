@@ -36,5 +36,6 @@ case $PLATFORM in
     ;;
   Linux)
     SCONS_PARAMS+=( var_arch=x64 )
+    SCONS_PARAMS+=( BoostBaseDir="${BOOST_INSTALL_DIR}" )
     ;;
 esac
