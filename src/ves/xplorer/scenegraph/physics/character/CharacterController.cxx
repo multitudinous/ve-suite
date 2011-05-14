@@ -38,6 +38,7 @@
 #include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
 #include <ves/xplorer/scenegraph/util/CharacterAnimation.h>
 
@@ -71,6 +72,7 @@
 #include <backdropFX/Manager.h>
 #include <backdropFX/ShaderModule.h>
 #include <backdropFX/ShaderModuleVisitor.h>
+#include <backdropFX/ShaderModuleUtils.h>
 
 #define VES_USE_ANIMATED_CHARACTER 1
 
@@ -210,11 +212,17 @@ void CharacterController::Initialize()
     //Create shader modules emulating ffp
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
     {
+        backdropFX::ShaderModuleCullCallback::ShaderMap tempMap;
+        ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( SceneManager::instance()->GetModelRoot(), backdropFX::Manager::instance()->getManagedRoot() );
+        osg::NodePath nodePath = parentVisitor.getNodePath();
+        osg::StateSet* tempState = backdropFX::accumulateStateSetsAndShaderModules( tempMap, nodePath );
+        
         backdropFX::ShaderModuleVisitor smv;
-        //smv.setAddDefaults( false );
         smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
-        mMatrixTransform->accept( smv );
-
+        smv.setInitialStateSet( tempState, tempMap );
+        
+        backdropFX::convertFFPToShaderModules( mMatrixTransform.get(), &smv );
+        
         //now that the graph has the character added lets let bdfx know about it
         SceneManager::instance()->GetModelRoot()->
             addChild( mMatrixTransform.get() );

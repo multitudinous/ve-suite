@@ -228,10 +228,10 @@ void HeadsUpDisplay::Initialize()
     }
     
     //Create shader modules emulating ffp
-    if( !scenegraph::SceneManager::instance()->IsRTTOn() )
+    /*if( !scenegraph::SceneManager::instance()->IsRTTOn() )
     {
         backdropFX::ShaderModuleVisitor smv;
-        smv.setAddDefaults( false );
+        //smv.setAddDefaults( false );
         
         SetFrameRateFlag( true );
         SetCoordSysFlag( true );
@@ -240,7 +240,7 @@ void HeadsUpDisplay::Initialize()
         
         SetFrameRateFlag( false );
         SetCoordSysFlag( false );
-    }    
+    }*/    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HeadsUpDisplay::LatePreFrame()

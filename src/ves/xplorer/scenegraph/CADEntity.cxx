@@ -35,7 +35,7 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
-//#include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
@@ -54,7 +54,8 @@
 #include <backdropFX/Version.h>
 #include <backdropFX/Manager.h>
 #include <backdropFX/ShaderModule.h>
-//#include <backdropFX/ShaderModuleVisitor.h>
+#include <backdropFX/ShaderModuleVisitor.h>
+#include <backdropFX/ShaderModuleUtils.h>
 
 // --- STL Includes --- //
 #include <cassert>
@@ -86,6 +87,20 @@ CADEntity::CADEntity(
     mFileName.assign( geomFile );
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
+    //Create shader modules emulating ffp
+    if( !scenegraph::SceneManager::instance()->IsRTTOn() )
+    {
+        backdropFX::ShaderModuleCullCallback::ShaderMap tempMap;
+        ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( parentDCS, backdropFX::Manager::instance()->getManagedRoot() );
+        osg::NodePath nodePath = parentVisitor.getNodePath();
+        osg::StateSet* tempState = backdropFX::accumulateStateSetsAndShaderModules( tempMap, nodePath );
+        
+        backdropFX::ShaderModuleVisitor smv;
+        smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
+        smv.setInitialStateSet( tempState, tempMap );
+        
+        backdropFX::convertFFPToShaderModules( mDCS.get(), &smv );
+    }    
     parentDCS->AddChild( mDCS.get() );
     if( !scenegraph::SceneManager::instance()->IsRTTOn() )
     {

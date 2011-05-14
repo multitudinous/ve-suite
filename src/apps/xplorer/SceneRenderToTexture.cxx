@@ -93,6 +93,7 @@
 #include <backdropFX/EffectLibraryUtils.h>
 #include <backdropFX/LocationData.h>
 #include <backdropFX/ShaderModule.h>
+#include <backdropFX/ShaderModuleUtils.h>
 #include <backdropFX/ShaderModuleVisitor.h>
 
 // --- STL Includes --- //
@@ -176,14 +177,12 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
         //skyDome.setSunScale( 2.0 );
         //skyDome.setMoonScale( 2.0 );
 
-
-        backdropFX::DepthPartition& depthPartition =
-            backdropFX::Manager::instance()->getDepthPartition();
-        depthPartition.setNumPartitions( 1 );
-
         //Add root group to backdropFX::Manager
         backdropFX::Manager::instance()->setSceneData( m_rootGroup.get() );
         backdropFX::Manager::instance()->rebuild( 0 );//backdropFX::Manager::depthPeel );
+
+        // Disable depth partitioning.
+        backdropFX::Manager::instance()->getDepthPartition().setNumPartitions( 1 );
         
         //
         InitRootGroup();
@@ -349,11 +348,12 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
     else
     {
         backdropFX::ShaderModuleVisitor smv;
-        smv.setAttachMain( false );
-        //Only set to "true" if using outside the backdropFX::Manager
-        smv.setAttachTransform( false );
-        smv.setSupportSunLighting( false );
-        m_rootGroup->accept( smv );
+        smv.setAttachMain( false ); // Use bdfx-main
+        smv.setAttachTransform( false ); // Use bdfx-transform
+        smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
+        
+        backdropFX::convertFFPToShaderModules( m_rootGroup.get(), &smv );
+        
         //
         backdropFX::Manager::instance()->setTextureWidthHeight(
             viewportDimensions.first, viewportDimensions.second );

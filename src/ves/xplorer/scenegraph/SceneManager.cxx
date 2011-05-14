@@ -34,6 +34,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
 #ifdef VE_SOUND
 #include <ves/xplorer/scenegraph/Sound.h>
@@ -62,6 +63,7 @@
 #include <backdropFX/DepthPartition.h>
 #include <backdropFX/ShaderModule.h>
 #include <backdropFX/ShaderModuleVisitor.h>
+#include <backdropFX/ShaderModuleUtils.h>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -533,9 +535,15 @@ void SceneManager::_createLogo()
         osgDB::readNodeFile( "logo/ve-suite.ive" );
     if( !m_isRTTOn )
     {
+        backdropFX::ShaderModuleCullCallback::ShaderMap tempMap;
+        ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( mLogoNode.get(), backdropFX::Manager::instance()->getManagedRoot() );
+        osg::NodePath nodePath = parentVisitor.getNodePath();
+        osg::StateSet* tempState = backdropFX::accumulateStateSetsAndShaderModules( tempMap, nodePath );
+
         backdropFX::ShaderModuleVisitor smv;
-        smv.setAddDefaults( false );
-        vesuiteNode->accept( smv );
+        smv.setInitialStateSet( tempState, tempMap );
+        
+        backdropFX::convertFFPToShaderModules( vesuiteNode.get(), &smv );
     }
     mLogoNode->addChild( vesuiteNode.get() );
     if( !m_isRTTOn )

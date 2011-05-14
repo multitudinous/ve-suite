@@ -109,12 +109,6 @@
 #include <osgOQ/OcclusionQueryVisitor.h>
 #endif
 
-// --- BackdropFX Includes --- //
-#include <backdropFX/Version.h>
-#include <backdropFX/Manager.h>
-#include <backdropFX/ShaderModule.h>
-#include <backdropFX/ShaderModuleVisitor.h>
-
 // --- STL Includes --- //
 #include <cctype>
 #include <sstream>
@@ -581,15 +575,6 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             stateset->addUniform(
                 new osg::Uniform( "textureZeroIsBound", false ) );
         }
-    }
-
-    //Create shader modules emulating ffp
-    if( !scenegraph::SceneManager::instance()->IsRTTOn() )
-    {
-        backdropFX::ShaderModuleVisitor smv;
-        smv.setAddDefaults( false );
-        //smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
-        mCadNode->accept( smv );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
