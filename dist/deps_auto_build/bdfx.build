@@ -58,8 +58,8 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.so" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="/usr/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib64/libz.so" )
-    CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="${PNG_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.a" )
+    CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="/usr/include" )
+    CMAKE_PARAMS+=( -DPNG_LIBRARY="/usr/lib64/libpng.so" )
     CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
     CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;
