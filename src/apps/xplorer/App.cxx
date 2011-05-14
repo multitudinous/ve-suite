@@ -545,6 +545,8 @@ void App::initScene()
         }
     }
 
+    //Set rtt mode for devices
+    SceneManager::instance()->SetRTT( mRTT );
     //Define the rootNode, worldDCS, and lighting
     SceneManager::instance()->InitScene();
     SceneManager::instance()->ViewLogo( true );
@@ -577,8 +579,6 @@ void App::initScene()
     EnvironmentHandler::instance()->InitScene();
     cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
 
-    //Set rtt mode for devices
-    ves::xplorer::scenegraph::SceneManager::instance()->SetRTT( mRTT );
     //Tell scenemanager if we are the master node
     ves::xplorer::scenegraph::SceneManager::instance()->
         SetMasterNode( m_vjobsWrapper->IsMaster() );
