@@ -6,7 +6,7 @@ includedir=${prefix}/include
 Name: osgEphemeris
 Description: osgEphemeris release pre-compiled for VES
 Provides: osgEphemeris osgephemeris
-Requires: openscenegraph openthreads libpng
+Requires: openscenegraph openthreads
 Version: 1.0.0
 Libs: -L${libdir} -losgEphemeris
 Cflags: -I${includedir}
