@@ -36,5 +36,7 @@ case $PLATFORM in
   Linux)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
+    CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;
 esac

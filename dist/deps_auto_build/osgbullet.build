@@ -45,5 +45,7 @@ case $PLATFORM in
   Linux)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.so" )
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
+    CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;
 esac

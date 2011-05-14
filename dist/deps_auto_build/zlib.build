@@ -28,7 +28,12 @@ case $PLATFORM in
     MSVC_SOLUTION="zlib.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
-  Darwin | Linux)
+  Darwin)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    ;;
+  Linux)
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
+    CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;
 esac

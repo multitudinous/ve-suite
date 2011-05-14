@@ -87,12 +87,16 @@ function wget()
     Windows)
       WGET_METHOD="wget"
       ;;
-    Darwin | Linux )
-      WGET_METHOD="curl -O"
+    Darwin)
+      WGET_METHOD=$( which curl )
+      WGET_METHOD=${WGET_METHOD}" -O"
+      ;;
+    Linux )
+      WGET_METHOD=$( which wget )
+      #WGET_METHOD=curl\ -O
       ;;
   esac
 }
-
 #
 # Some Windows-only variables
 #
@@ -274,8 +278,9 @@ function source_retrieval()
         echo "We have already downloaded $package";
         return;
       fi
-      # Settings (proxy etc.) for wget can be edited using /etc/wgetrc
-      ${WGET_METHOD} ${SOURCE_URL}
+      # Settings (proxy etc.) for wget can be edited using /etc/wgetrc 
+      echo "${WGET_METHOD}"
+      "${WGET_METHOD}" "${SOURCE_URL}"
       case ${SOURCE_FORMAT} in
         zip)
           unzip `basename ${SOURCE_URL}`;

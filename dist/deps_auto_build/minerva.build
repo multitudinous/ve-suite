@@ -66,5 +66,7 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DXERCESC_INCLUDE_DIR="/usr/include" )
     CMAKE_PARAMS+=( -DXERCESC_LIBRARY_RELEASE="/usr/lib64/libxerces-c.so" )
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
+    CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;
 esac

@@ -31,5 +31,6 @@ case $PLATFORM in
     ;;
   Darwin | Linux)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DLIB_POSTFIX="" )
     ;;
 esac
