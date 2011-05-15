@@ -406,12 +406,22 @@ void UIManager::Initialize( osg::Group* parentNode )
         "uniform sampler2D baseMap; \n"
         "uniform float opacityVal;\n"
         "uniform vec3 glowColor; \n"
+        "uniform vec2 mousePoint; \n"
 
         "void main() \n"
         "{ \n"
         "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
-        "baseColor.a = opacityVal;\n"
-        "gl_FragData[ 0 ] = baseColor; \n"
+        "vec2 powers = pow(abs(gl_TexCoord[ 0 ].st - mousePoint),vec2(2.0));\n"
+        ///Radius squared
+        "float radiusSqrd = pow(0.003,2.0);\n"
+        ///tolerance
+        "float tolerance = 0.0001;\n"
+        //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
+        "float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, powers.x+powers.y);\n"
+        //blend between fragments in the circle and out of the circle defining our "pixel region"
+        "vec4 tempColor = mix( vec4(1.0,0.0,0.0,1.0), baseColor, gradient);\n"
+        "tempColor.a = opacityVal;\n"
+        "gl_FragData[ 0 ] = tempColor; \n"
         "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
         "} \n";
 
@@ -439,6 +449,9 @@ void UIManager::Initialize( osg::Group* parentNode )
     stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
     m_opacityUniform = new osg::Uniform( "opacityVal", mOpacity );
     stateset->addUniform( m_opacityUniform.get() );
+
+    m_mousePointUniform = new osg::Uniform( "mousePoint", osg::Vec2d( 0.2, 0.2 ) );
+    stateset->addUniform( m_mousePointUniform.get() );
 
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
     bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
@@ -741,7 +754,7 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     float downScale = 0.15f;
 
     // Duration in seconds of animation
-    float duration = 0.4f;
+    //float duration = 0.4f;
 
     // Animation based on two control points: c0 (current state) and c1 (end state)
     //osg::Matrixf currentMatrix = element->GetUIMatrix();
@@ -919,6 +932,8 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
         //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
         y = static_cast < double > ( mTop ) - y;
+        m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
+        //osg::Vec2d& tempCoords = m_selectedUIElement->GetTextureCoords( x, y );
         //std::cout << y << " " << mTop << std::endl;
         m_selectedUIElement->SendButtonPressEvent( button, x, y, state );
     }
@@ -1076,6 +1091,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
         //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
         y = static_cast < double > ( mTop ) - y;
+        m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
         m_selectedUIElement->SendMouseMoveEvent( x, y, z, state );
     }
 

@@ -103,13 +103,17 @@ void UIElement::PostConstructor()
     }
     else
     {
-        m_pixelUIRatio = double( 967 )/double( 3 );
+        m_pixelUIRatio = double( 967 )/double( 6 );
+        m_uiSize.first = 600;
+        m_uiSize.first = 967;
+
+        double tempWidth = 0.5f * double( 600 ) * (double( 6 )/double( 967 ));
         //600 x 967 - 3/967 = 0.00310237
         // 1.8614 x 3 
-        m_vertices->push_back( osg::Vec3( -0.9307f, 0.1f, -1.5 ) ); //ll
-        m_vertices->push_back( osg::Vec3(  0.9307f, 0.1f, -1.5 ) ); //lr
-        m_vertices->push_back( osg::Vec3(  0.9307f, 0.1f,  1.5 ) ); //ur
-        m_vertices->push_back( osg::Vec3( -0.9307f, 0.1f,  1.5 ) ); //ul
+        m_vertices->push_back( osg::Vec3( -tempWidth, 0.1f, -3.0 ) ); //ll
+        m_vertices->push_back( osg::Vec3(  tempWidth, 0.1f, -3.0 ) ); //lr
+        m_vertices->push_back( osg::Vec3(  tempWidth, 0.1f,  3.0 ) ); //ur
+        m_vertices->push_back( osg::Vec3( -tempWidth, 0.1f,  3.0 ) ); //ul
     }
     
     //
@@ -553,6 +557,21 @@ bool UIElement::TestQuadIntersection( int x, int y )
 osg::Vec4d& UIElement::GetUICorners()
 {
     return m_uiCorners;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Vec2d& UIElement::GetTextureCoords( int x, int y )
+{
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        m_texCoords[ 0 ] = double( x ) / double( GetImageWidth() );
+        m_texCoords[ 1 ] = double( y ) / double( GetImageHeight() );
+    }
+    else
+    {
+        m_texCoords[ 0 ] = double( x ) / double( m_uiSize.first );
+        m_texCoords[ 1 ] = double( y ) / double( m_uiSize.second );
+    }
+    return m_texCoords;
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namepsace conductor

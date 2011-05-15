@@ -42,6 +42,7 @@
 #include <osg/Switch>
 #include <osg/Geode>
 #include <osg/AnimationPath>
+#include <osg/Vec2d>
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
@@ -229,6 +230,9 @@ public:
     ///Get the corners for this quad
     osg::Vec4d& GetUICorners();
 
+    ///Convert pixel coords to texture coords
+    osg::Vec2d& GetTextureCoords( int x, int y );
+
 protected:
     ///Tell whether the mouse is over the UI
     void UIEnterLeave( bool uiEnter );
@@ -262,6 +266,10 @@ protected:
     double m_pixelUIRatio;
     ///The min and max corners for this element
     osg::Vec4d m_uiCorners;
+    ///Texture coord
+    osg::Vec2d m_texCoords;
+    ///UI size for cave mode
+    std::pair< int, int > m_uiSize;
 };
 
 } // namepsace conductor

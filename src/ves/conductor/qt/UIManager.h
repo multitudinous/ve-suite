@@ -304,7 +304,7 @@ private:
 
     /// Pointer directly to the material controlling overall opacity of all
     /// UI Elements
-    //osg::ref_ptr< osg::Material > mOverallOpacity;
+    osg::ref_ptr< osg::Uniform > m_mousePointUniform;
     osg::ref_ptr< osg::Uniform > m_opacityUniform;
     
     /// Current value of overall opacity
