@@ -1282,7 +1282,7 @@ bool UIManager::TestWandIntersection()
     m_selectedUINode = 0;
     m_selectedUIElement = 0;
     m_intersectionPoint = osg::Vec3d( -10000, -10000, -10000 );
-    std::cout << " ray test " << m_startPoint << " " << m_endPoint << " " << intersections.size() << std::endl;
+
     if( !intersections.empty() )
     {
         //We are over the UI somewhere
@@ -1293,11 +1293,10 @@ bool UIManager::TestWandIntersection()
         osgUtil::LineSegmentIntersector::Intersection tempIntersection = 
             *(intersections.begin());
         m_intersectionPoint = tempIntersection.getLocalIntersectPoint();
-        std::cout << "Wand intersection with the UI " 
-            << m_intersectionPoint << std::endl;
         
         m_selectedUINode = *(tempIntersection.nodePath.rbegin());
-        std::cout << "Wand intersection with the this node " 
+        std::cout << "Wand intersection at " << m_intersectionPoint 
+            << " with the this UI node " <<
             << m_selectedUINode->getName() << std::endl;
         return true;
     }
