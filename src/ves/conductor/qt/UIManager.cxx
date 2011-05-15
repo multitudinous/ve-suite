@@ -417,10 +417,15 @@ void UIManager::Initialize( osg::Group* parentNode )
 
         "if( d < 0.05 )\n"
         "{\n"
+        //width of "pixel region" in texture coords
+        //"   vec2 texCoordsStep = 1.0/(vec2(float(600),float(967))/float(20)); \n"
+        //x and y coordinates within "pixel region"
+        //"   vec2 pixelRegionCoords = fract(gl_TexCoord[0].st/texCoordsStep);\n"
         ///Radius squared
         "   float radiusSqrd = pow(0.01,2.0);\n"
         ///tolerance
         "   float tolerance = 0.0001;\n"
+        "   vec2 powers = pow(abs(gl_TexCoord[0].st - mousePoint),vec2(2.0));\n"
         //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
         "   float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, pow(d,2.0) );\n"
         //blend between fragments in the circle and out of the circle defining our "pixel region"

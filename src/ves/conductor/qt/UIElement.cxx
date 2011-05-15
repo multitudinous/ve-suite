@@ -564,8 +564,8 @@ osg::Vec2d& UIElement::GetTextureCoords( int x, int y )
 {
     if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
-        m_texCoords[ 0 ] = -1.0;//double( x ) / double( GetImageWidth() );
-        m_texCoords[ 1 ] = -1.0;//double( y ) / double( GetImageHeight() );
+        m_texCoords[ 0 ] = double( x ) / double( GetImageWidth() );
+        m_texCoords[ 1 ] = double( y ) / double( GetImageHeight() );
     }
     else
     {
