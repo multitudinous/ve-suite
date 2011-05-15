@@ -411,15 +411,30 @@ void UIManager::Initialize( osg::Group* parentNode )
         "void main() \n"
         "{ \n"
         "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
-        "vec2 powers = pow(abs(gl_TexCoord[ 0 ].st - mousePoint),vec2(2.0));\n"
+        // Calculate distance to circle center
+        "float d = distance(gl_TexCoord[0].st, mousePoint);\n"
+        "vec4 tempColor = baseColor;\n"
+
+        "if( d < 0.05 )\n"
+        "{\n"
         ///Radius squared
-        "float radiusSqrd = pow(0.003,2.0);\n"
+        "   float radiusSqrd = pow(0.01,2.0);\n"
         ///tolerance
-        "float tolerance = 0.0001;\n"
+        "   float tolerance = 0.0001;\n"
         //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
-        "float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, powers.x+powers.y);\n"
+        "   float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, pow(d,2.0) );\n"
         //blend between fragments in the circle and out of the circle defining our "pixel region"
-        "vec4 tempColor = mix( vec4(1.0,0.0,0.0,1.0), baseColor, gradient);\n"
+        "   tempColor = mix( vec4(1.0,0.0,0.0,1.0), baseColor, gradient);\n"
+        "}\n"
+        //"vec2 powers = pow(abs(gl_TexCoord[ 0 ].st - mousePoint),vec2(2.0));\n"
+        ///Radius squared
+        //"float radiusSqrd = pow(0.003,2.0);\n"
+        ///tolerance
+        //"float tolerance = 0.0001;\n"
+        //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
+        //"float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, powers.x+powers.y);\n"
+        //blend between fragments in the circle and out of the circle defining our "pixel region"
+        //"vec4 tempColor = mix( vec4(1.0,0.0,0.0,1.0), baseColor, gradient);\n"
         "tempColor.a = opacityVal;\n"
         "gl_FragData[ 0 ] = tempColor; \n"
         "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
@@ -1296,7 +1311,7 @@ bool UIManager::TestWandIntersection()
         
         m_selectedUINode = *(tempIntersection.nodePath.rbegin());
         std::cout << "Wand intersection at " << m_intersectionPoint 
-            << " with the this UI node " <<
+            << " with the this UI node "
             << m_selectedUINode->getName() << std::endl;
         return true;
     }
