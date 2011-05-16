@@ -89,7 +89,7 @@ function wget()
       ;;
     Darwin)
       WGET_METHOD=$( which curl )
-      WGET_METHOD=${WGET_METHOD}" -O"
+      WGET_METHOD=${WGET_METHOD}" -O --fail -L"
       ;;
     Linux )
       WGET_METHOD=$( which wget )
@@ -280,7 +280,7 @@ function source_retrieval()
       fi
       # Settings (proxy etc.) for wget can be edited using /etc/wgetrc 
       echo "${WGET_METHOD}"
-      "${WGET_METHOD}" "${SOURCE_URL}"
+      eval "${WGET_METHOD}" "${SOURCE_URL}"
       case ${SOURCE_FORMAT} in
         zip)
           unzip `basename ${SOURCE_URL}`;
