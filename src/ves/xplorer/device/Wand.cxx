@@ -102,7 +102,7 @@ Wand::Wand()
     m_cadSelectionMode( false ),
     m_wandEvents( new ves::xplorer::behavior::WandEvents )
 {
-    wand.init( "VJWand" );
+    m_wand.init( "VJWand" );
     head.init( "VJHead" );
     
     // Connect to Juggler's new event handling interface
@@ -236,6 +236,13 @@ Wand::Wand()
         new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
         "Wand.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
     
+    evm->RegisterSignal(
+        new SignalWrapper< WandMoveSignal_type >( &m_wandMove ),
+        "Wand.WandMove", eventmanager::EventManager::mouse_SignalType );
+    
+    CONNECTSIGNAL_0( "App.LatePreFrame", void(), &Wand::LatePreFrameUpdate,
+                    m_connections, highest_Priority );
+
     // trigger (and top right button) used for the selection line
     digital[ 0 ].init( "VJButton0" );
     // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
@@ -293,7 +300,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     }
 
     //If the wand does not exist
-    if( wand->isStupefied() )
+    if( m_wand->isStupefied() )
     {
         return;
     }
@@ -827,7 +834,7 @@ void Wand::ProcessHit()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
 {
-    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( wand->getData() );
+    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
     const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
     const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
 
@@ -990,7 +997,7 @@ void Wand::UpdateWandLocalDirection()
     //Get the normalized direction relative to the juggler frame
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, -1.0f );
-    Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
+    Matrix44d vjMat = gmtl::convertTo< double >( m_wand->getData() );
 
     gmtl::xform( vjVec, vjMat, vjVec );
     gmtl::normalize( vjVec );
@@ -1006,7 +1013,7 @@ void Wand::UpdateWandGlobalLocation()
     //Transform wand point into global space get juggler Matrix of worldDCS
     //Note:: for osg we are in z up land
     gmtl::Point3d loc_temp, osgPointLoc;
-    Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
+    Matrix44d vjMat = gmtl::convertTo< double >( m_wand->getData() );
 
     gmtl::setTrans( loc_temp, vjMat );
     osgPointLoc[ 0 ] =  loc_temp[ 0 ];
@@ -1044,7 +1051,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
 
-    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( wand->getData() );
+    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
     gmtl::Quatd wandQuat = gmtl::make< gmtl::Quatd >( vrjWandMat );
 
     osg::Vec3d tempVec( 0, 0, wandQuat[ 1 ] );
@@ -1127,7 +1134,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
 double* Wand::GetPlaneEquationConstantsNormalToWand()
 {
     ///Get wand pointing vector
-    Matrix44d vjMat = gmtl::convertTo< double >( wand->getData() );
+    Matrix44d vjMat = gmtl::convertTo< double >( m_wand->getData() );
     ///Transform from juggler space to world space
     Matrix44d worldWandMat =
         ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->GetMat() * vjMat;
@@ -1271,6 +1278,8 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     case gadget::DigitalState::ON:
     {
         UpdateSelectionLine( true );
+
+        //m_wandMove( 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
 
         (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
         break;
@@ -1748,7 +1757,7 @@ void Wand::PreProcessNav()
     }
     
     //If the wand does not exist
-    if( wand->isStupefied() )
+    if( m_wand->isStupefied() )
     {
         return;
     }
@@ -1836,5 +1845,16 @@ void Wand::PostProcessNav()
 osg::MatrixTransform& Wand::GetWandTransform()
 {
     return *(m_wandPAT.get());
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::LatePreFrameUpdate()
+{
+    //If the wand does not exist
+    if( m_wand->isStupefied() )
+    {
+        return;
+    }
+
+    //m_wandMove( 0, 0, 0, 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////

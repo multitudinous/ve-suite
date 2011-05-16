@@ -173,6 +173,10 @@ UIManager::UIManager() :
                               &UIManager::MouseDoubleClickEvent, mInputConnections,
                               button_SignalType, highest_Priority );
 
+    CONNECTSIGNALS_4( "Wand.WandMove", void( int, int, int, int ),
+                              &UIManager::MouseMoveEvent, mInputConnections,
+                              any_SignalType,highest_Priority );
+    
     // Force input signal monopoly to agree with default state of mMouseInsideUI
     _monopolizeInput( mMouseInsideUI );
 }
@@ -1007,6 +1011,7 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
         //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
         y = static_cast < double > ( mTop ) - y;
+        m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
         m_selectedUIElement->SendButtonReleaseEvent( button, x, y, state );
     }
 
@@ -1315,9 +1320,9 @@ bool UIManager::TestWandIntersection()
         m_intersectionPoint = tempIntersection.getLocalIntersectPoint();
         
         m_selectedUINode = *(tempIntersection.nodePath.rbegin());
-        std::cout << "Wand intersection at " << m_intersectionPoint 
-            << " with the this UI node "
-            << m_selectedUINode->getName() << std::endl;
+        //std::cout << "Wand intersection at " << m_intersectionPoint 
+        //    << " with the this UI node "
+        //    << m_selectedUINode->getName() << std::endl;
         return true;
     }
     return false;

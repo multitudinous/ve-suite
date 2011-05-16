@@ -97,13 +97,8 @@ namespace device
 {
 /*!\file Wand.h
  * Wand API
- */
-
-/*!\class ves::xplorer::Wand
- *
- */
-
-/*!\namespace ves::xplorer
+ * \class ves::xplorer::Wand
+ * \namespace ves::xplorer
  *
  */
 class VE_XPLORER_EXPORTS Wand : public Device
@@ -234,13 +229,19 @@ private:
     void OnWandButton4DoubleClick( gadget::DigitalState::State event );
     void OnWandButton5DoubleClick( gadget::DigitalState::State event );
 
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+
+    ///LAte PreFrame slot to generate mouse mve events
+    void LatePreFrameUpdate();
+
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
     int buttonData[ 6 ]; ///<do not know what this does
     gadget::DigitalInterface buttonEight;
 
     int cfdIso_value; ///<Value to translate
 
-    gadget::PositionInterface wand; ///<VRJuggler's wand positional interface
+    gadget::PositionInterface m_wand; ///<VRJuggler's wand positional interface
     gadget::PositionInterface head; ///<VRJuggler's head positional interface
 
     gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
@@ -318,6 +319,11 @@ private:
     /// Params are: start point and end point
     typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
     StartEndPointSignal_type m_startEndPointSignal;
+    
+    /// MouseMove signal
+    /// Params are: x, y, z, state (modifier mask OR'd with button mask)
+    typedef boost::signals2::signal< void ( int, int, int, int ) > WandMoveSignal_type;
+    WandMoveSignal_type m_wandMove;
     
     ///Wand event management
     ves::xplorer::behavior::WandEvents* m_wandEvents;
