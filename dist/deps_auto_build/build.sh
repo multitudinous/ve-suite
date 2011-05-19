@@ -85,7 +85,7 @@ function wget()
 {
   case $PLATFORM in
     Windows)
-      WGET_METHOD="wget"
+      WGET_METHOD=$( which wget )
       ;;
     Darwin)
       WGET_METHOD=$( which curl )
