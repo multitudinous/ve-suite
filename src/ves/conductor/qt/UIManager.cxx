@@ -695,7 +695,7 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
     }
 
     // Walk through every visible quad we own and see if the point lies on it
-    UIElement* tempElement;
+    UIElement* tempElement = 0;
     ElementMap_type::const_iterator map_iterator = mElements.begin();
     while( map_iterator != mElements.end() )
     {
@@ -1091,7 +1091,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
     {
         mMouseInsideUI = false;
         mUIEnterLeaveSignal( false );
-        _monopolizeInput( false );
+        //_monopolizeInput( false );
     }
 
     // If we're actually not over a managed quad, do no more
@@ -1104,7 +1104,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
     bool minimized = m_selectedUIElement->IsMinimized();
 
     // Only send events if element is visible and not minimzed
-    if( ( visible ) && ( !minimized ) )
+    if( visible && ( !minimized ) )
     {
         // Translate mouse coordinates to window coordinates
         // TODO: This may be done better by using the element's entire UIMatrix
@@ -1295,7 +1295,6 @@ osg::Group& UIManager::GetUIRootNode() const
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::TestWandIntersection()
 {
-    //Get line from user pressing button 0
     m_lineSegmentIntersector->reset();
     m_lineSegmentIntersector->setStart( m_startPoint );
     m_lineSegmentIntersector->setEnd( m_endPoint );
@@ -1310,9 +1309,6 @@ bool UIManager::TestWandIntersection()
 
     if( !intersections.empty() )
     {
-        //We are over the UI somewhere
-        mMouseInsideUI = true;
-        
         //Now do a test to determine where the wand ray is interesting the plane
         //of the UI texture so that we can translate that to an x,y location
         osgUtil::LineSegmentIntersector::Intersection tempIntersection = 

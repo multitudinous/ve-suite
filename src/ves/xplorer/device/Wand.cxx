@@ -1260,8 +1260,6 @@ void Wand::SetCADSelectionMode( bool cadSelectionMode )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 {
-    //std::cout << " here 1 " << event << " " << digital[ 0 ]->getData() << std::endl;
-    //event = digital[ 0 ]->getData();
     if( event == gadget::DigitalState::OFF )
     {
         return;
@@ -1279,9 +1277,10 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     {
         UpdateSelectionLine( true );
 
-        //m_wandMove( 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
-
         (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
+
+        m_wandMove( 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
+        
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -1303,7 +1302,6 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton1Event( gadget::DigitalState::State event )
 {
-    event = digital[ 1 ]->getData();
     if( event == gadget::DigitalState::OFF )
     {
         return;
@@ -1406,7 +1404,6 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton2Event( gadget::DigitalState::State event )
 {
-    event = digital[ 2 ]->getData();
     if( event == gadget::DigitalState::OFF )
     {
         return;
@@ -1465,7 +1462,6 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton3Event( gadget::DigitalState::State event )
 {
-    event = digital[ 3 ]->getData();
     if( event == gadget::DigitalState::OFF )
     {
         return;
@@ -1504,7 +1500,6 @@ void Wand::OnWandButton3Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton4Event( gadget::DigitalState::State event )
 {
-    event = digital[ 4 ]->getData();
     if( event == gadget::DigitalState::OFF )
     {
         return;
@@ -1563,7 +1558,6 @@ void Wand::OnWandButton4Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton5Event( gadget::DigitalState::State event )
 {
-    event = digital[ 5 ]->getData();
     if( event == gadget::DigitalState::OFF )
     {
         return;
