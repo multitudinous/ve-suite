@@ -44,7 +44,10 @@
 #include <ves/open/xml/CommandPtr.h>
 
 #include <boost/signals2/signal.hpp>
+
 #include <ves/xplorer/eventmanager/InteractionEvent.h>
+
+#include <Poco/Util/Timer.h>
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>
@@ -234,7 +237,9 @@ private:
 
     ///LAte PreFrame slot to generate mouse mve events
     void LatePreFrameUpdate();
-
+    ///Trigger a wand move event
+    void OnWandMoveTimer( Poco::Util::TimerTask& task );
+    
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
     int buttonData[ 6 ]; ///<do not know what this does
     gadget::DigitalInterface buttonEight;
@@ -331,6 +336,12 @@ private:
     osg::Vec3d m_startPoint;
     ///Selection ray end point
     osg::Vec3d m_endPoint;
+    ///Timer to control when wand move events are sent
+    Poco::Util::Timer m_wandMoveTimer;
+    ///Trigger wand move
+    bool m_triggerWandMove;
+    ///
+    bool m_shutdown;
 };
 } //end device
 } //end xplorer

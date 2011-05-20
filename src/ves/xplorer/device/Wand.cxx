@@ -83,6 +83,12 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
+// --- Boost Includes --- //
+#include <boost/concept_check.hpp>
+
+// --- POCO Includes --- //
+#include <Poco/Util/TimerTaskAdapter.h>
+
 using namespace gmtl;
 using namespace gadget;
 using namespace ves::xplorer::device;
@@ -100,7 +106,9 @@ Wand::Wand()
     m_distance( 1000 ),
     m_buttonPushed( false ),
     m_cadSelectionMode( false ),
-    m_wandEvents( new ves::xplorer::behavior::WandEvents )
+    m_wandEvents( new ves::xplorer::behavior::WandEvents ),
+    m_triggerWandMove( false ),
+    m_shutdown( false )
 {
     m_wand.init( "VJWand" );
     head.init( "VJHead" );
@@ -281,11 +289,15 @@ void Wand::Initialize()
     }
     
     MakeWandLine();
+
+	Poco::Util::TimerTask::Ptr moveTask = 
+        new Poco::Util::TimerTaskAdapter<Wand>(*this, &Wand::OnWandMoveTimer);
+    m_wandMoveTimer.schedule( moveTask, 500, 500 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Wand::~Wand()
 {
-    ;
+    m_shutdown = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
@@ -1265,6 +1277,8 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
         return;
     }
 
+    m_triggerWandMove = false;
+
     PreProcessNav();
     
     SetupStartEndPoint( m_startPoint, m_endPoint );
@@ -1743,13 +1757,6 @@ void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::PreProcessNav()
 {
-    m_activeDCS =
-        ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
-    if( !m_activeDCS )
-    {
-        return;
-    }
-    
     //If the wand does not exist
     if( m_wand->isStupefied() )
     {
@@ -1761,7 +1768,14 @@ void Wand::PreProcessNav()
     //Update the wand direction every frame
     UpdateWandLocalDirection();
     UpdateWandGlobalLocation();
-    
+
+    m_activeDCS =
+        ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
+    if( !m_activeDCS )
+    {
+        return;
+    }
+
     buttonData[ 0 ] = digital[ 0 ]->getData();
     buttonData[ 1 ] = digital[ 1 ]->getData();
     buttonData[ 2 ] = digital[ 2 ]->getData();
@@ -1848,7 +1862,28 @@ void Wand::LatePreFrameUpdate()
     {
         return;
     }
+    
+    if( !m_triggerWandMove )
+    {
+        return;
+    }
 
-    //m_wandMove( 0, 0, 0, 0 );
+    m_triggerWandMove = false;
+
+    PreProcessNav();
+    SetupStartEndPoint( m_startPoint, m_endPoint );
+    m_startEndPointSignal( m_startPoint, m_endPoint );
+    m_wandMove( 0, 0, 0, 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandMoveTimer( Poco::Util::TimerTask& task )
+{
+    if( m_shutdown )
+    {
+        task.cancel();
+        return;
+    }
+
+    m_triggerWandMove = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
