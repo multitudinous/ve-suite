@@ -290,9 +290,12 @@ void Wand::Initialize()
     
     MakeWandLine();
 
-	Poco::Util::TimerTask::Ptr moveTask = 
-        new Poco::Util::TimerTaskAdapter<Wand>(*this, &Wand::OnWandMoveTimer);
-    m_wandMoveTimer.schedule( moveTask, 500, 500 );
+    if( !m_sceneManager.IsDesktopMode() )
+    {
+        Poco::Util::TimerTask::Ptr moveTask = 
+            new Poco::Util::TimerTaskAdapter<Wand>(*this, &Wand::OnWandMoveTimer);
+        m_wandMoveTimer.schedule( moveTask, 500, 500 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 Wand::~Wand()
@@ -1321,6 +1324,8 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
         return;
     }
     
+    m_triggerWandMove = false;
+
     PreProcessNav();
     
     ///For now we are going to map Wand button 1 to Mouse button 2
@@ -1423,6 +1428,8 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
         return;
     }
 
+    m_triggerWandMove = false;
+
     PreProcessNav();
     
     ///For now we are going to map Wand button 2 to Mouse button 3
@@ -1481,6 +1488,8 @@ void Wand::OnWandButton3Event( gadget::DigitalState::State event )
         return;
     }
 
+    m_triggerWandMove = false;
+
     PreProcessNav();
     
     switch(event) 
@@ -1518,6 +1527,8 @@ void Wand::OnWandButton4Event( gadget::DigitalState::State event )
     {
         return;
     }
+
+    m_triggerWandMove = false;
 
     PreProcessNav();
     
@@ -1577,6 +1588,8 @@ void Wand::OnWandButton5Event( gadget::DigitalState::State event )
         return;
     }
     
+    m_triggerWandMove = false;
+
     PreProcessNav();
     
     switch(event) 
@@ -1713,6 +1726,8 @@ void Wand::OnWandButton0DoubleClick( gadget::DigitalState::State event )
     {
         return;
     }
+    
+    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick0"]))( gadget::MBUTTON1, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton1DoubleClick( gadget::DigitalState::State event )
@@ -1721,6 +1736,8 @@ void Wand::OnWandButton1DoubleClick( gadget::DigitalState::State event )
     {
         return;
     }
+
+    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick1"]))( gadget::MBUTTON2, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON2_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton2DoubleClick( gadget::DigitalState::State event )
@@ -1729,6 +1746,8 @@ void Wand::OnWandButton2DoubleClick( gadget::DigitalState::State event )
     {
         return;
     }
+
+    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick2"]))( gadget::MBUTTON3, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON3_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton3DoubleClick( gadget::DigitalState::State event )
@@ -1737,6 +1756,8 @@ void Wand::OnWandButton3DoubleClick( gadget::DigitalState::State event )
     {
         return;
     }
+
+    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick3"]))( gadget::MBUTTON4, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON4_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton4DoubleClick( gadget::DigitalState::State event )
@@ -1745,6 +1766,8 @@ void Wand::OnWandButton4DoubleClick( gadget::DigitalState::State event )
     {
         return;
     }
+
+    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick4"]))( gadget::MBUTTON5, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON5_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
@@ -1753,6 +1776,8 @@ void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
     {
         return;
     }
+
+    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick5"]))( gadget::MBUTTON6, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON6_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::PreProcessNav()

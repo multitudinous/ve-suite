@@ -1156,7 +1156,6 @@ bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
         //x = x - uiCorners[ 0 ];
         //y = y - uiCorners[ 2 ];
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
-        //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
         y = static_cast < double > ( mTop ) - y;
         m_selectedUIElement->SendDoubleClickEvent( button, x, y, state );

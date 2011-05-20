@@ -106,14 +106,14 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
     /*if( event->type() == QEvent::NonClientAreaMouseButtonDblClick )
     {
         return ProcessEvent( obj, event );
-    }
+    }*/
     
     if( event->type() == QEvent::MouseButtonDblClick )
     {
         return ProcessEvent( obj, event );
     }
     
-    if( event->type() == QEvent::DeferredDelete )
+    /*if( event->type() == QEvent::DeferredDelete )
     {
         return ProcessEvent( obj, event );
     }*/

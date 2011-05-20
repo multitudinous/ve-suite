@@ -617,7 +617,10 @@ void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int stat
 {
     QWidget *vw = this->childAt( x, y );
 
-    if( vw == NULL ) return;
+    if( vw == NULL )
+    {
+        return;
+    }
 
     Qt::MouseButton qbutton = _extractButton( button );
     Qt::MouseButtons buttons = _extractButtons( state );
@@ -634,7 +637,6 @@ void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int stat
     QMouseEvent e( QEvent::MouseButtonDblClick, position, globalPos, qbutton,
                 buttons, modifiers );
     qt_sendSpontaneousEvent( this->viewport(), &e );
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int state )
