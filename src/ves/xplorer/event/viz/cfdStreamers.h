@@ -34,8 +34,6 @@
 #define CFD_STREAMERS_H
 
 #include <ves/xplorer/event/viz/cfdObjects.h>
-#include <ves/xplorer/Model.h>
-#include <ves/xplorer/ModelHandler.h>
 
 class vtkStreamTracer;
 class vtkTubeFilter;
