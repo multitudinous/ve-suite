@@ -126,7 +126,7 @@ enum
 
     
     //
-    //AD Var Dialog
+    //DW Var Dialog
     //
     DW_VAR_ID_MONITORBUTTON,
     DW_VAR_ID_CANCELBUTTON,

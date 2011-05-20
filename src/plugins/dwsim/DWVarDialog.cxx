@@ -33,6 +33,7 @@
 #include "DWVarDialog.h"
 #include "DWPlugin.h"
 #include <plugins/ConductorPluginEnums.h>
+#include <wx/tokenzr.h>
 
 using namespace ves::conductor;
 BEGIN_EVENT_TABLE( DWVarDialog, wxDialog )
@@ -125,21 +126,24 @@ void DWVarDialog::SetButtonClick(wxCommandEvent& event)
 {  
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
-    params->SetCommandName( "setParam" );
+    params->SetCommandName( "setInputs" );
 
     int numOfChanges = rowsChanged.size();
     for(int i = 0; i < numOfChanges; i++)
     {        
         std::vector<std::string> paramList;
         
-        //component name
-        paramList.push_back( ConvertUnicode( m_compName.c_str() ) );
+        wxString varName = WxGrid->GetRowLabelValue( rowsChanged[i] );
+        wxStringTokenizer tkz( varName, wxT("."));
+        //varName
+        
+        ///component name
+        paramList.push_back( ConvertUnicode( tkz.GetNextToken().c_str() ) );
 
         //variable name
-        wxString varName = WxGrid->GetRowLabelValue( rowsChanged[i] );
         //reinsert the prefix
-        varName = prefix.Append( varName.c_str() );
-        paramList.push_back( ConvertUnicode( varName.c_str() ) );
+        //varName = prefix.Append( varName.c_str() );
+        paramList.push_back( ConvertUnicode( tkz.GetNextToken().c_str() ) );
 
         //value
         wxString value = WxGrid->GetCellValue( rowsChanged[i], 1 );
@@ -163,7 +167,7 @@ void DWVarDialog::SetButtonClick(wxCommandEvent& event)
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     m_serviceList->Query( status );
 
-    wxMessageDialog popup( this, _("Data has been sent to Aspen Dynamics") );
+    wxMessageDialog popup( this, _("Data has been sent to DWSim") );
     popup.ShowModal(); 
 }
 

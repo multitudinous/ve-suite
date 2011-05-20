@@ -65,17 +65,10 @@ using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( DWPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( DWPLUGIN_OPEN_SIM, DWPlugin::OnOpen )
-    //EVT_MENU( DWPLUGIN_SHOW_SIMULATION, DWPlugin::ShowSimulation )
-    //EVT_MENU( DWPLUGIN_HIDE_SIMULATION, DWPlugin::HideSimulation )
     EVT_MENU( DWPLUGIN_INPUTS, DWPlugin::GetInputs )
     EVT_MENU( DWPLUGIN_OUTPUTS, DWPlugin::GetOutputs )
     //EVT_MENU( DWPLUGIN_SET_INPUTS, DWPlugin::SetInputs )
-    EVT_MENU( DWPLUGIN_RUN_NETWORK, DWPlugin::RunSimulation )
     EVT_MENU( DWPLUGIN_CLOSE_SIMULATION, DWPlugin::OnCloseSimulation )
-    //EVT_MENU( DWPLUGIN_REINITIALIZE_SIMULATION, DWPlugin::ReinitializeSimulation )
-    //EVT_MENU( DWPLUGIN_STEP_NETWORK, DWPlugin::StepNetwork )
-    //EVT_MENU( DWPLUGIN_SAVE_SIMULATION, DWPlugin::SaveSimulation )
-    //EVT_MENU( DWPLUGIN_SAVEAS_SIMULATION, DWPlugin::SaveAsSimulation )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( DWPlugin, ves::conductor::UIPluginBase )
@@ -171,32 +164,7 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
     {
         return;
     }    
-    
-    /*ves::open::xml::XMLReaderWriter networkWriter;
-    networkWriter.UseStandaloneDOMDocumentManager();
-    networkWriter.ReadFromString();
-    std::vector< std::pair< std::string, std::string > > dataToObtain;
-    std::vector< std::pair< std::string, std::string > >::iterator dataIter;
-    dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
-    networkWriter.ReadXMLData( nw_str, dataToObtain );
-    std::vector< ves::open::xml::XMLObjectPtr >::iterator objectIter;
-    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
-        networkWriter.GetLoadedXMLObjects();
-    ves::open::xml::model::SystemPtr tempSystem;
-    tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
-    ves::open::xml::model::ModelPtr dwsimModel;
-    //set parent model on topmost level
-    for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++)
-    {
-        tempSystem->GetModel( modelCount )->SetParentModel( dwsimModel );
-    }
 
-    GetVEModel()->SetSubSystem( tempSystem );
-    mDataBufferEngine->ParseSystem( tempSystem );
-
-    //Network * network = m_canvas->GetActiveNetwork();
-    //m_canvas->AddSubNetworks( );
-*/
     event.SetId( UPDATE_HIER_TREE );
     ::wxPostEvent( m_canvas, event );
 
@@ -220,54 +188,10 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
 
     mIsSheetOpen = true;
 }
-////////////////////////////////////////////////////////////////////////////////
-void DWPlugin::ShowSimulation( wxCommandEvent& event  )
-{
-    UIPLUGIN_CHECKID( event )
-    //Log( "Show Simulation.\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "showSimulation" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "showSimulation" );
-    returnState->AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    std::string nw_str = serviceList->Query( status ) + "\n";
-    //Log( nw_str.c_str() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void DWPlugin::HideSimulation( wxCommandEvent& event )
-{
-    UIPLUGIN_CHECKID( event )
-    //Log( "Hide Simulation.\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "hideSimulation" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "hideSimulation" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    std::string nw_str = serviceList->Query( status ) + "\n";
-    //Log( nw_str.c_str() );
-}
 ////////////////////////////////////////////////////////////////////////////////
 void DWPlugin::CloseSimulation( void )
 {    
-    //Log( "Close Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
     DataValuePairPtr data( new DataValuePair() );
@@ -283,8 +207,6 @@ void DWPlugin::CloseSimulation( void )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     std::string nw_str = serviceList->Query( status ) + "\n";
-    //Log( nw_str.c_str() );
-    //AspenSimOpen = false;
     mIsSheetOpen = false;
     SetName( _("DWPlugin") );
     wxCommandEvent event;
@@ -292,16 +214,10 @@ void DWPlugin::CloseSimulation( void )
     GlobalNameUpdate( event );
 
     mMenu->Enable( DWPLUGIN_CLOSE_SIMULATION, false );
-    //mMenu->Enable( DWPLUGIN_SHOW_SIMULATION, false );
-    //mMenu->Enable( DWPLUGIN_HIDE_SIMULATION, false );
     mMenu->Enable( DWPLUGIN_RUN_NETWORK, false );
     mMenu->Enable( DWPLUGIN_INPUTS, false );
     mMenu->Enable( DWPLUGIN_OUTPUTS, false );
     //mMenu->Enable( DWPLUGIN_SET_INPUTS, false );
-    //mMenu->Enable( DWPLUGIN_REINITIALIZE_SIMULATION, false );
-    //mMenu->Enable( DWPLUGIN_STEP_NETWORK, false );
-    //mMenu->Enable( DWPLUGIN_SAVE_SIMULATION, false );
-    //mMenu->Enable( DWPLUGIN_SAVEAS_SIMULATION, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DWPlugin::OnCloseSimulation( wxCommandEvent& event )
@@ -329,122 +245,7 @@ void DWPlugin::RunSimulation( wxCommandEvent& event )
 
     serviceList->Query( status );
 }
-///////////////////////////////////////////////////////////////////////////////
-/*void DWPlugin::ReinitializeSimulation( wxCommandEvent& event )
-{
-    UIPLUGIN_CHECKID( event )
-    //Log( "Reinitialize Simulation.\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "reinitNetwork" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "reinitNetwork" );
-    returnState->AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    serviceList->Query( status );
-}
-////////////////////////////////////////////////////////////////////////////////
-void DWPlugin::StepNetwork( wxCommandEvent& event )
-{
-    UIPLUGIN_CHECKID( event )
-    //Log( "Run Simulation.\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "stepNetwork" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "runNetwork" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    serviceList->Query( status );
-}
-////////////////////////////////////////////////////////////////////////////////
-void DWPlugin::SaveSimulation( wxCommandEvent& event )
-{
-    UIPLUGIN_CHECKID( event )
-    //Log( "Saving Simulation...\n" );
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "saveSimulation" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "saveSimulation" );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-    serviceList->Query( status );
-    //std::string nw_str = serviceList->Query( status ) + "\n";
-    //Log(nw_str.c_str());
-    //Log( "Simulation Saved.\n" );
-}
-////////////////////////////////////////////////////////////////////////////////
-void DWPlugin::SaveAsSimulation( wxCommandEvent& event )
-{
-    UIPLUGIN_CHECKID( event )
-    wxFileName saveFileName;
-    wxTextEntryDialog newDataSetName( m_canvas,
-                                      wxString( "Enter filename (.apw):", wxConvUTF8 ),
-                                      wxString( "Save Flowsheet", wxConvUTF8 ),
-                                      wxString( "", wxConvUTF8 ), wxOK | wxCANCEL );
-
-    if( newDataSetName.ShowModal() != wxID_OK )
-    {
-        return;
-    }
-
-    //Log( "Saving Simulation...\n" );
-    saveFileName.ClearExt();
-    saveFileName.SetName( newDataSetName.GetValue() );
-    //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
-
-    CommandPtr returnState( new Command() );
-    returnState->SetCommandName( "saveAsSimulation" );
-    DataValuePairPtr data( new DataValuePair() );
-    data->SetData( "NetworkQuery", "saveAsSimulation" );
-    returnState->AddDataValuePair( data );
-
-    data = DataValuePairPtr( new DataValuePair() );
-    data->SetData( "SaveFileName",
-                   ConvertUnicode( saveFileName.GetFullName().c_str() ) );
-    returnState->AddDataValuePair( data );
-
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair < XMLObjectPtr,
-                     std::string > ( returnState, "vecommand" ) );
-    XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-    //Get results
-    std::string nw_str = serviceList->Query( status );
-    //Log( "Simulation Saved.\n" );
-
-    CommandPtr dwDWSIMFile( new Command() );
-    dwDWSIMFile->SetCommandName( "DWSIM_Preferences" );
-    data = DataValuePairPtr( new DataValuePair() );
-    data->SetData( "BKPFileName",
-                   ConvertUnicode( saveFileName.GetFullName().c_str() ) );
-    dwDWSIMFile->AddDataValuePair( data );
-    mUserPrefBuffer->SetCommand( "DWSIM_Preferences", dwDWSIMFile );
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 wxMenu* DWPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 {
@@ -468,12 +269,6 @@ wxMenu* DWPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mMenu->Enable( DWPLUGIN_RUN_NETWORK, false );
     mMenu->Append( DWPLUGIN_CLOSE_SIMULATION, _( "Close" ) );
     mMenu->Enable( DWPLUGIN_CLOSE_SIMULATION, false );
-    //mMenu->Append( DWPLUGIN_SHOW_SIMULATION, _( "Show" ) );
-    //mMenu->Append( DWPLUGIN_HIDE_SIMULATION, _( "Hide" ) );
-    //mMenu->Append( DWPLUGIN_REINITIALIZE_SIMULATION, _( "Reinitialize" ) );
-    //mMenu->Append( DWPLUGIN_STEP_NETWORK, _( "Step" ) );
-    //mMenu->Append( DWPLUGIN_SAVE_SIMULATION, _( "Save" ) );
-    //mMenu->Append( DWPLUGIN_SAVEAS_SIMULATION, _( "SaveAs" ) );
     baseMenu->Insert( 0, DWPLUGIN_MENU,   _( "DWSIM" ), mMenu,
                     _( "Used in conjunction with DWSIM" ) );
     baseMenu->Enable( DWPLUGIN_MENU, true );
@@ -536,6 +331,7 @@ void DWPlugin::GetInputs( wxCommandEvent& event )
 
     //loop over all pairs
     DWVarDialog* params = new DWVarDialog( GetPluginParent() );
+    params->SetServiceList( serviceList );
     int numdvps = cmd->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numdvps; i++ )
     {
@@ -602,7 +398,7 @@ void DWPlugin::GetOutputs( wxCommandEvent& event )
     params->Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DWPlugin::SetInputs( wxCommandEvent& event )
+/*void DWPlugin::SetInputs( wxCommandEvent& event )
 {
     //read inputs.xml
     CommandPtr returnState( new Command() );
@@ -622,4 +418,4 @@ void DWPlugin::SetInputs( wxCommandEvent& event )
     std::string nw_str = serviceList->Query( status ) + "\n";
 
     //create a dialog - can be editted
-}
+}*/
