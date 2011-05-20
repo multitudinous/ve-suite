@@ -32,7 +32,11 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdStreamers.h>
 #include <ves/xplorer/event/viz/OSGStreamlineStage.h>
+
 #include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
+
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/open/xml/Command.h>

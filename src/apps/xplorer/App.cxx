@@ -470,7 +470,7 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     }
 
     //Set default viewport, projection matrix, and view matrix for each scene view
-    newSceneViewer->setViewport( 0.0, 0.0, 1.0, 1.0 );
+    newSceneViewer->setViewport( 0, 0, 1, 1 );
     newSceneViewer->setProjectionMatrix(
         m_sceneGLTransformInfo->GetIdentityMatrixOSG() );
     newSceneViewer->setViewMatrix( 
