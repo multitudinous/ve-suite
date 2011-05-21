@@ -132,11 +132,11 @@ function windows()
     #
     #Setup OSG 3rd party directory
     #
-    if [ ${ARCH} = "32-bit" ]; then
-      export THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x86"
-    else
-      export THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x64"
-    fi
+    #if [ ${ARCH} = "32-bit" ]; then
+    #  export THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x86"
+    #else
+    #  export THIRD_PARTY="C:\dev\deps\3rdParty_x86_x64\x64"
+    #fi
   fi
 }
 
@@ -275,7 +275,7 @@ function source_retrieval()
       [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
       cd "${DEV_BASE_DIR}";
       if [ -d "${BASE_DIR}" ]; then
-        echo "We have already downloaded $package";
+        echo "We have already downloaded $package for ${BASE_DIR}";
         return;
       fi
       # Settings (proxy etc.) for wget can be edited using /etc/wgetrc 
@@ -285,6 +285,11 @@ function source_retrieval()
         zip)
           unzip `basename ${SOURCE_URL}`;
           rm -f `basename ${SOURCE_URL}`;
+          #if [ -d "${BASE_DIR}" ]; then
+          #  echo "The BASE_DIR for $package already exists.";
+          #else
+          #  mkdir -p "${BASE_DIR}";
+          fi
           ;;
         tgz)
           tar xvfz `basename ${SOURCE_URL}`;
