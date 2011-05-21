@@ -214,11 +214,11 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     bool found = false;
     if( node )
     {
-        std::cout << "Node description list:" << std::endl << std::flush;
+        //std::cout << "Node description list:" << std::endl << std::flush;
         osg::Node::DescriptionList descList = node->getDescriptions();
         for( size_t i = 0; i < descList.size(); ++i )
         {
-            std::cout << descList.at( i ) << std::endl << std::flush;
+            //std::cout << descList.at( i ) << std::endl << std::flush;
             if( descList.at( i ) == "VE_XML_ID" )
             {
                 type = "CAD";
