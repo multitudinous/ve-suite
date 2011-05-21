@@ -179,11 +179,12 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
 
         //Add root group to backdropFX::Manager
         backdropFX::Manager::instance()->setSceneData( m_rootGroup.get() );
-        backdropFX::Manager::instance()->rebuild( 0 );//backdropFX::Manager::depthPeel );
 
         // Disable depth partitioning.
         backdropFX::Manager::instance()->getDepthPartition().setNumPartitions( 1 );
         
+        backdropFX::Manager::instance()->rebuild( 0 );//backdropFX::Manager::depthPeel );
+
         //
         InitRootGroup();
     }
