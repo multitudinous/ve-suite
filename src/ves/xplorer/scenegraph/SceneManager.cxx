@@ -533,7 +533,9 @@ void SceneManager::_createLogo()
     //Add the logo model
     osg::ref_ptr< osg::Node > vesuiteNode =
         osgDB::readNodeFile( "logo/ve-suite.ive" );
-    if( !m_isRTTOn )
+    //I think that the logo node is added before we do all of the bdfx
+    //initialization so there is no need to run rsm at this stage.
+    /*if( !m_isRTTOn )
     {
         backdropFX::ShaderModuleCullCallback::ShaderMap tempMap;
         ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( mLogoNode.get(), backdropFX::Manager::instance()->getManagedRoot() );
@@ -544,13 +546,13 @@ void SceneManager::_createLogo()
         smv.setInitialStateSet( tempState, tempMap );
         
         backdropFX::convertFFPToShaderModules( vesuiteNode.get(), &smv );
-    }
+    }*/
     mLogoNode->addChild( vesuiteNode.get() );
-    if( !m_isRTTOn )
+    /*if( !m_isRTTOn )
     {
         backdropFX::RebuildShaderModules rsm;
         backdropFX::Manager::instance()->getManagedRoot()->accept( rsm );
-    }
+    }*/
     /*
     std::string vsName = osgDB::findDataFile( "phong.vs" );
     std::string fsName = osgDB::findDataFile( "phong.fs" );
