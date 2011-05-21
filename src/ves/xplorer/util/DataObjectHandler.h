@@ -33,13 +33,11 @@
 #ifndef DATA_OBJECT_HANDLER_H
 #define DATA_OBJECT_HANDLER_H
 /*!\file DataObjectHandler.h
-DataObjectHandler API. At a minimum, converts cell data to point data in each dataset of
-the data object.
-*/
-
-/*!\class ves::xplorer::util::DataObjectHandler
-*
-*/
+ * DataObjectHandler API. At a minimum, converts cell data to point data in each dataset of
+ * the data object.
+ * \class ves::xplorer::util::DataObjectHandler
+ *
+ */
 class vtkDataObject;
 class vtkDataSet;
 
@@ -68,14 +66,23 @@ public:
     public:
         ///Constructor
         DatasetOperatorCallback()
-        {};
+        {
+            m_isMultiBlock = false;
+        }
         ///Destructor
-        virtual ~DatasetOperatorCallback()
-        {};
+        virtual ~DatasetOperatorCallback(){;}
+
+        ///Set the type of dataset
+        void SetIsMultiBlockDataset( bool multiBlock )
+        {
+            m_isMultiBlock = multiBlock;
+        }
+        
         ///The operation to do on each vtkDataSet in the vtkDataObject
         ///\param dataset The vtkDataSet to operate on
         virtual void OperateOnDataset( vtkDataSet* dataset ) = 0;
     protected:
+        bool m_isMultiBlock;
     };
     ///Do the operation specified in the DataObjectHandlerCallback\n
     ///on a vtkDataObject

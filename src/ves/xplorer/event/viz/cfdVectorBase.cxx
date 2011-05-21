@@ -36,6 +36,8 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 
+#include <ves/xplorer/util/ExtractGeometryCallback.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -58,9 +60,6 @@
 #include <vtkPolyDataNormals.h>
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
-#include <vtkXMLPolyDataWriter.h>
-#include <vtkExtractGeometry.h>
-#include <vtkBox.h>
 
 using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
@@ -460,9 +459,8 @@ void cfdVectorBase::CreateArbSurface()
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     // set the dataset as the appropriate dastaset type
     // (and the active dataset as well)
-    DataSet* surfDataset = 
-    activeModel->GetCfdDataSet( 
-                               activeModel->GetIndexOfDataSet( m_surfDataset ) );
+    DataSet* surfDataset = activeModel->GetCfdDataSet( 
+      activeModel->GetIndexOfDataSet( m_surfDataset ) );
     vtkPolyData* pd = surfDataset->GetPolyData();
     
     if( !pd )
@@ -472,30 +470,17 @@ void cfdVectorBase::CreateArbSurface()
         return;
     }
     
-    //vtkExtractUnstructuredGrid* extractGrid = vtkExtractUnstructuredGrid::New();
-    vtkExtractGeometry* extractGrid = vtkExtractGeometry::New();
-    extractGrid->SetInput( GetActiveDataSet()->GetDataSet() );
-    //extractGrid->ExtentClippingOn();
-    extractGrid->ExtractBoundaryCellsOn();
-    //pd->ComputeBounds();
-    double* pdbbox = pd->GetBounds();
-    pdbbox[ 0 ] -= 0.05;
-    pdbbox[ 2 ] -= 0.05;
-    pdbbox[ 4 ] -= 0.05;
-    pdbbox[ 1 ] += 0.05;
-    pdbbox[ 3 ] += 0.05;
-    pdbbox[ 5 ] += 0.05;
-    //std::cout << pdbbox[ 0 ] << " " << pdbbox[ 1 ] << " " << pdbbox[ 2 ] << " " << pdbbox[ 3 ] << " " << pdbbox[ 4 ] << " " << pdbbox[ 5 ] << std::endl;
-    //extractGrid->SetExtent( pdbbox );
-    vtkBox* bbox = vtkBox::New();
-    bbox->SetBounds( pdbbox );
-    extractGrid->SetImplicitFunction( bbox );
+    ves::xplorer::util::ExtractGeometryCallback* extractGeomCbk = 
+        new ves::xplorer::util::ExtractGeometryCallback();
+    ves::xplorer::util::DataObjectHandler handler;
+    handler.SetDatasetOperatorCallback( extractGeomCbk );
+    extractGeomCbk->SetPolyDataSurface( pd );
+    handler.OperateOnAllDatasetsInObject( GetActiveDataSet()->GetDataSet() );
 
 	vtkCompositeDataProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
     surfProbe->SetInput( pd );
-    surfProbe->SetSourceConnection( extractGrid->GetOutputPort() );
-    //surfProbe->SetSource( GetActiveDataSet()->GetDataSet() );
-    surfProbe->Update(); 
+    //surfProbe->SetSourceConnection( extractGeomCbk->GetDataset() );
+    surfProbe->SetSource( extractGeomCbk->GetDataset() );
     
    	vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
     
@@ -503,24 +488,31 @@ void cfdVectorBase::CreateArbSurface()
     {
         return;
     }
-    
-    vtkPolyDataNormals* normalGen = 0;
-    vtkPolyData* normalsOutputPD = surfProbeOutput;
+
+    vtkPolyData* normalsOutputPD = 0;
     if( m_selectDataMapping == 1 )
     { 
         // The code below computes volume flux on the specified contour plane
-        normalGen = vtkPolyDataNormals::New();
-        normalGen->SetInput( surfProbeOutput );
+        vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+        normalGen->SetInputConnection( surfProbe->GetOutputPort() );
         normalGen->Update();
         
-        normalsOutputPD = ComputeVolumeFlux( normalGen->GetOutput() );
+        normalsOutputPD = 
+            ComputeVolumeFlux( normalGen->GetOutput() );
+        ptmask->SetInput( normalsOutputPD );
+        ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+        //ptmask->Update();
+
+        normalGen->Delete();
 	}
-    
-    // get every nth point from the dataSet data
-    this->ptmask->SetInput( normalsOutputPD );
-    this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-    this->ptmask->Update();
-    
+    else
+    {
+        // get every nth point from the dataSet data
+        ptmask->SetInputConnection( surfProbe->GetOutputPort() );
+        ptmask->SetOnRatio( GetVectorRatioFactor() );
+        //ptmask->Update();
+    }
+
     SetGlyphWithThreshold();
     SetGlyphAttributes();
     
@@ -556,11 +548,10 @@ void cfdVectorBase::CreateArbSurface()
 		mapper->Update();
         
     	lut1->Delete();
-        normalGen->Delete();
     }
     
     surfProbe->Delete();
-    extractGrid->Delete();
-    bbox->Delete();
+    delete extractGeomCbk;
+    extractGeomCbk = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -33,13 +33,16 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdContourBase.h>
 #include <ves/xplorer/DataSet.h>
+
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
-#include <ves/xplorer/Debug.h>
 
+#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+
+#include <ves/xplorer/util/ExtractGeometryCallback.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -65,14 +68,12 @@
 #include <vtkPointData.h>
 #include <vtkPoints.h>
 #include <vtkDoubleArray.h>
-#include <vtkExtractGeometry.h>
-#include <vtkBox.h>
 
 #include <vtkCellDataToPointData.h>
 #include <vtkPCellDataToPointData.h>
 
-#include <vtkXMLPolyDataWriter.h>
-
+#include <vtkXMLUnstructuredGridWriter.h>
+#include <vtkUnstructuredGrid.h>
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
@@ -458,46 +459,25 @@ void cfdContourBase::CreateArbSurface()
         return;
     }
 
-    //vtkExtractUnstructuredGrid* extractGrid = vtkExtractUnstructuredGrid::New();
-    vtkExtractGeometry* extractGrid = vtkExtractGeometry::New();
-    extractGrid->SetInput( GetActiveDataSet()->GetDataSet() );
-    //extractGrid->ExtentClippingOn();
-    extractGrid->ExtractBoundaryCellsOn();
-    //pd->ComputeBounds();
-    double* pdbbox = pd->GetBounds();
-    pdbbox[ 0 ] -= 0.05;
-    pdbbox[ 2 ] -= 0.05;
-    pdbbox[ 4 ] -= 0.05;
-    pdbbox[ 1 ] += 0.05;
-    pdbbox[ 3 ] += 0.05;
-    pdbbox[ 5 ] += 0.05;
-    //std::cout << pdbbox[ 0 ] << " " << pdbbox[ 1 ] << " " << pdbbox[ 2 ] << " " << pdbbox[ 3 ] << " " << pdbbox[ 4 ] << " " << pdbbox[ 5 ] << std::endl;
-    //extractGrid->SetExtent( pdbbox );
-    vtkBox* bbox = vtkBox::New();
-    bbox->SetBounds( pdbbox );
-    extractGrid->SetImplicitFunction( bbox );
+    ves::xplorer::util::ExtractGeometryCallback* extractGeomCbk = 
+        new ves::xplorer::util::ExtractGeometryCallback();
+    ves::xplorer::util::DataObjectHandler handler;
+    handler.SetDatasetOperatorCallback( extractGeomCbk );
+    extractGeomCbk->SetPolyDataSurface( pd );
+    handler.OperateOnAllDatasetsInObject( GetActiveDataSet()->GetDataSet() );
 
 	vtkCompositeDataProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
     surfProbe->SetInput( pd );
-    surfProbe->SetSourceConnection( extractGrid->GetOutputPort() );
-    //surfProbe->SetSource( GetActiveDataSet()->GetDataSet() );
-    surfProbe->Update(); 
-  
-   	vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
-
-    if( !surfProbeOutput )
-    {
-        return;
-    }
+    //surfProbe->SetSourceConnection( extractGeomCbk->GetDataset() );
+    surfProbe->SetSource( extractGeomCbk->GetDataset() );
 
     if( m_selectDataMapping != 1 )
     {
-    	normals->SetInput( surfProbeOutput );
+    	normals->SetInputConnection( surfProbe->GetOutputPort() );
     	normals->NonManifoldTraversalOn();
     	normals->AutoOrientNormalsOn();
     	normals->ConsistencyOn();
     	normals->SplittingOn();
-    	//normals->Update();
 	
     	mapper->SetColorModeToMapScalars();
     	mapper->SetInputConnection( normals->GetOutputPort() );
@@ -510,38 +490,40 @@ void cfdContourBase::CreateArbSurface()
 		mapper->Update();
 	}
     else
-    { 
+    {
         // The code below computes volume flux on the specified contour plane
-	    normals->SetInput( surfProbeOutput );
+	    normals->SetInputConnection( surfProbe->GetOutputPort() );
 	    normals->Update();
 	
         vtkPolyData* normalsOutputPD = 
             ComputeVolumeFlux( normals->GetOutput() );
-		
-    	mapper->SetInput( normalsOutputPD );
-	
-    	double range[ 2 ];
-    	normalsOutputPD->GetPointData()->
-            GetScalars( "VolumeFlux" )->GetRange( range );
-	
-    	vtkLookupTable* lut1 = vtkLookupTable::New();
-    	lut1->SetNumberOfColors( 2 );            //default is 256
-    	lut1->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
-    	lut1->SetTableRange( range );
-    	lut1->Build();
-	
-    	mapper->SetColorModeToMapScalars();
-    	mapper->SetScalarRange( range );
-    	mapper->SetLookupTable( lut1 );
-    	mapper->SetScalarModeToUsePointFieldData();
-    	mapper->UseLookupTableScalarRangeOn();
-    	mapper->SelectColorArray( "VolumeFlux" );
-		mapper->Update();
+		if( normalsOutputPD )
+        {
+    	    mapper->SetInput( normalsOutputPD );
+    	
+    	    double range[ 2 ];
+    	    normalsOutputPD->GetPointData()->
+                GetScalars( "VolumeFlux" )->GetRange( range );
+    	
+    	    vtkLookupTable* lut1 = vtkLookupTable::New();
+    	    lut1->SetNumberOfColors( 2 );            //default is 256
+    	    lut1->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
+    	    lut1->SetTableRange( range );
+    	    lut1->Build();
+    	
+    	    mapper->SetColorModeToMapScalars();
+    	    mapper->SetScalarRange( range );
+    	    mapper->SetLookupTable( lut1 );
+    	    mapper->SetScalarModeToUsePointFieldData();
+    	    mapper->UseLookupTableScalarRangeOn();
+    	    mapper->SelectColorArray( "VolumeFlux" );
+		    mapper->Update();
 
-    	lut1->Delete();
+    	    lut1->Delete();
+        }
 	}
     surfProbe->Delete();
-    extractGrid->Delete();
-    bbox->Delete();
+    delete extractGeomCbk;
+    extractGeomCbk = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
