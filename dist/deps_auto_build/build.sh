@@ -289,7 +289,7 @@ function source_retrieval()
           #  echo "The BASE_DIR for $package already exists.";
           #else
           #  mkdir -p "${BASE_DIR}";
-          fi
+          #fi
           ;;
         tgz)
           tar xvfz `basename ${SOURCE_URL}`;
