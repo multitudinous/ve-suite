@@ -1091,7 +1091,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
     {
         mMouseInsideUI = false;
         mUIEnterLeaveSignal( false );
-        //_monopolizeInput( false );
+        _monopolizeInput( false );
     }
 
     // If we're actually not over a managed quad, do no more
