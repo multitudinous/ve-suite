@@ -55,8 +55,6 @@
 #include <ves/xplorer/util/CreateDataObjectBBoxActorsCallback.h>
 #include <ves/xplorer/util/ComputeVectorMagnitudeAndScalarsCallback.h>
 
-#include <ves/xplorer/data/DatasetPropertySet.h>
-
 #include <ves/builder/DataLoader/DataLoader.h>
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
@@ -92,8 +90,6 @@
 
 //Used for strcpy to setup the data translator code
 #include <cstring>
-
-//#include <osgDB/WriteFile>
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
