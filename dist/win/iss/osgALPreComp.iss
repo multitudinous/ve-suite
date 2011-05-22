@@ -60,14 +60,14 @@ Source: {#LIBOGGHOME}\win32\VS2008\{#BUILDDIR}\Release\*.lib; DestDir: {app}\lib
 Source: {#LIBVORBISHOME}\win32\VS2008\{#BUILDDIR}\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 Source: {#OPENALHOME}\libs\{#DISTDIR}\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGALSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-;Source: {#ALUTSRCINSTALL}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#ALUTSRCINSTALL}\admin\VisualStudioDotNET\alut\x64\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#ALUTSRCINSTALL}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+;Source: {#ALUTSRCINSTALL}\admin\VisualStudioDotNET\alut\x64\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 ; dlls
 Source: {#LIBOGGHOME}\win32\VS2008\{#BUILDDIR}\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 Source: {#LIBVORBISHOME}\win32\VS2008\{#BUILDDIR}\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 Source: {#OSGALSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-;Source: {#ALUTSRCINSTALL}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#ALUTSRCINSTALL}\admin\VisualStudioDotNET\alut\x64\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#ALUTSRCINSTALL}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+;Source: {#ALUTSRCINSTALL}\admin\VisualStudioDotNET\alut\x64\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 ; exe
 Source: {#OPENALHOME}\redist\oalinst.exe; DestDir: {app}\share; Flags: ignoreversion
 Source: {#OSGALSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion

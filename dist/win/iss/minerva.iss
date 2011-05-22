@@ -2,7 +2,7 @@
 #include <vesenv.iss>
 #define MyAppVer "1.2.0-397"
 #define MyAppName "Minerva Pre-Compile"
-#define MyAppVerName "Minerva"
+#define MyAppVerName "MinervaBoost142"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 

@@ -106,13 +106,20 @@ Source: {#OSGPTEXPORTERHOME}\EXP_ISU_OSG.HLP; DestDir: {app}\{#VCPLUGINDIR}; Com
 
 ;Name: {commondesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\VE_icon.ico
 ;Name: {group}\velauncher; Filename: {app}\velauncher.exe; WorkingDir: {app}; Comment: velauncher; Flags: createonlyiffileexists
+[UninstallDelete]
+Name: {app}\vcplugin\exp_isu_osg.ini; Type: files; Components: 
+Name: {app}\{#VCPLUGINDIR}\exp_isu_osg.ini; Type: files; Components: 
+
 [Code]
 function GetInstallDir(def: string): string;
 var
 InstallDir : string;
+var
+FoundKey : Boolean;
 begin
   Result := 'MyDefaultInstallDir';
   //Check for polytrans first
+  //if IsWin64 then
   //On x86 platforms this statement should be:
   if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans','cwd', InstallDir) then begin
   //On x86_64 platforms this statement should be:
@@ -133,5 +140,3 @@ begin
     end;
   end;
 end;
-[UninstallDelete]
-Name: {app}\{#VCPLUGINDIR}\exp_isu_osg.ini; Type: files; Components: 

@@ -2,33 +2,34 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define VEVERSION "2.2.1"
 #define SVNVERSION "15976"
-#define MSVCVERSION "msvc-9.0-sp1-x86"
+#define MSVCVERSION "msvc-9.0-sp1-x64"
 ; Define the group name for all the windows links to be
 ; installed under for the Start Menu
 #define VESGROUPNAME "VE-Suite"
 ; Location where all of the ves dependencies are installed
-#define DEPENDSINSTALLHOME "C:\dev\ves_deps\msvs_9.0"
+#define DEPENDSINSTALLHOME "C:\dev\deps\msvc90"
 ; Location where you want innosetup to build the installers
-#define INSTALLERINSTALLLOCATION "C:\dev\VE_Suite\dist\win\iss"
+#define INSTALLERINSTALLLOCATION "C:\dev\TSVEG\VE_Suite\dist\win\iss"
 ; Install prefix of ves
-#define VEINSTALLHOME "C:\dev\VE_Suite\install-release-9.0"
+#define VEINSTALLHOME "C:\dev\TSVEG\VE_Suite\install-win32"
 ; Source root location for ves
-#define VEDEVHOME "C:\dev\VE_Suite"
+#define VEDEVHOME "C:\dev\TSVEG\VE_Suite"
 ; Location if the Microsoft redistributable executable
-#define MSREDISTRIBUTABLE "C:\dev\ves_deps\vcredist_x86.exe"
+#define MSREDISTRIBUTABLE "C:\dev\deps\vcredist_x86.exe"
 #define MSREDISTRIBUTABLEFILENAME "vcredist_x86.exe"
 ; Location if the OPC executable
 #define OPCVESINSTALLER "C:\dev\ves_deps\OPC_2.02.exe"
 #define OPCVESINSTALLERFILENAME "OPC_2.02.exe"
 ; Lib directory for x64 or x86
 #define LIBDIR "lib"
-#define BUILDDIR "x86"
+#define BUILDDIR "Win32"
+#define ALUTLIBDIR "x86"
 #define DISTDIR "Win32"
 ; Directory names for all VES dependencies
-#define ACETAOHOME "ACETAO_5.7.0_Pre-Compile_vcmsvc-9.0-sp1-x86"
+#define ACETAOHOME "ACETAO_5.7.0_msvc-9.0-sp1-x86"
 #define VTKHOME "VTK_5.4.2_msvc-9.0-sp1-x86"
 #define OSGHOME "OSG_2.8.3_msvc-9.0-sp1-x86"
-#define WXHOME "WXWidgets_2.8.11_msvc-9.0-sp1-x86"
+#define WXHOME "wxWidgets_2.8.11_msvc-9.0-sp1-x86"
 #define XERCESHOME "Xerces_3.0.1_msvc-9.0-sp1-x86"
 #define JUGGLERINSTHOME "VRJuggler_3.0.0_msvc-9.0-sp1-x86"
 #define MINERVAHOME "Minerva_1.2.0-397_msvc-9.0-sp1-x86"
@@ -37,7 +38,6 @@
 #define POCOHOME "POCO_1.3.5_msvc-9.0-sp1-x86"
 #define OSGWORKSHOME "osgWorks_1.1.51_msvc-9.0-sp1-x86"
 
-
 ; Source directories for compiling application specific installers
 #define ACETAOSRCHOME "C:\Projects\ves-windows\ACE_wrappers"
 ;The directory below contains all each apr, apr-iconv, and apr-util
@@ -45,37 +45,37 @@
 ;and less version dependent when running this installer
 #define APRINSTALL "C:\Projects\ves-windows\workapr"
 ; Minerva deps
-#define MINERVASRCHOME "E:\dev\ves_deps\minerva-gc-svn-1.1.0\install-win64"
+#define MINERVASRCHOME "C:\dev\deps\minervagis-svn\instal-win32-boost-1.42"
 ; #define FWTOOLS "C:\Program Files\FWTools2.3.0"
-#define PROJHOME "E:\dev\ves_deps\proj-4.7.0\install-win64"
-#define GDALHOME "E:\dev\ves_deps\gdal-1.7.1\install-win64"
+#define PROJHOME "C:\dev\deps\proj-4.7.0\install-win32"
+#define GDALHOME "C:\dev\deps\gdal-1.6.3\install-win32"
 ; #define CURL_HOME "C:\dev\ves_deps\curl-7.19.5\build-win32"
 ; #define OSG3RDPARTY "C:\dev\ves_deps\3rdParty\3rdParty_win32binaries_vs80sp1"
 ; osgAL deps
-#define LIBOGGHOME "E:\dev\ves_deps\libogg"
-#define LIBVORBISHOME "E:\dev\ves_deps\libvorbis"
-#define OPENALHOME "C:\Program Files (x86)\OpenAL 1.1 SDK"
-#define OSGALSRCHOME "E:\dev\ves_deps\osgaudio-gc-svn\install-win64"
-#define OSGAUDIOROOTHOME "E:\dev\ves_deps\osgaudio-gc-svn"
-#define ALUTSRCINSTALL "E:\dev\ves_deps\freealut-1.1.0-src"
+#define LIBOGGHOME "C:\dev\deps\libogg"
+#define LIBVORBISHOME "C:\dev\deps\vorbis-svn"
+#define OPENALHOME "C:\dev\deps\openalsdk"
+#define OSGALSRCHOME "C:\dev\deps\osgaudio-gc-svn\install-win32"
+#define OSGAUDIOROOTHOME "C:\dev\deps\osgaudio-gc-svn"
+#define ALUTSRCINSTALL "C:\dev\deps\freealut-1.1.0-bin"
 ; OSG deps
-#define OSGSRCHOME "E:\dev\ves_deps\OpenSceneGraph-2.8-branch\install-win64"
+#define OSGSRCHOME "C:\dev\deps\OpenSceneGraph-2.8-branch\install-win32"
 ; #define SIMAGEHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\simage-1.6.1"
-#define COINHOME "E:\dev\ves_deps\OSG-3rd-party-deps\install-win64"
-#define OSG3RDPARTY "E:\dev\ves_deps\OSG-3rd-party-deps\install-win64"
+#define COINHOME "C:\dev\deps\Coin3D"
+#define OSG3RDPARTY "C:\dev\deps\3rdParty_Win32Binaries_vc90sp1\3rdParty"
 ; osgWorks deps
-#define OSGWORKSINSTLOCATION "E:\dev\ves_deps\osgworks-gc-svn\install-win64"
+#define OSGWORKSINSTLOCATION "C:\dev\deps\osgworks-gc-svn\install-win32"
 ; POCO deps
 #define POCOSRCHOME "C:\Projects\ves-windows\poco-1.3.5-all"
 #define SQLITEHOME "C:\Projects\ves-windows\sqlitedll-3_6_20"
 ; VR Juggler deps
-#define VRJUGGLER_INST_LOCATION "E:\dev\ves_deps\vrjuggler-gc-svn\install-winx64"
-#define VRJUGGLER_DEPS_INST_LOCATION "E:\dev\ves_deps\vrjuggler-gc-svn\install-winx64_deps"
-#define TRACKDAPIHOME "E:\dev\ves_deps\trackdAPI"
+#define VRJUGGLER_INST_LOCATION "C:\dev\deps\vrjuggler-3.0-branch-test\vrjuggler-3.0-branch-test\install-test-x64"
+#define VRJUGGLER_DEPS_INST_LOCATION "C:\dev\deps\vrjuggler-3.0-branch-test\vrjuggler-3.0-branch-test\install-deps-test-x64"
+#define TRACKDAPIHOME "C:\dev\deps\trackdAPI"
 ; VTK deps
 #define VTKSRCHOME "C:\dev\ves_deps\vtk-5.2.0-install"
 ; WX deps
-#define WXSRCINSTALL "C:\wxWidgets-2.8.10"
+#define WXSRCINSTALL "C:\dev\deps\wxMSW-2.8.11"
 ; xerces deps
 #define XERCESSRCINSTALL "C:\Projects\ves-windows\xerces-c-3.0.1-x86-windows-vc-9.0"
 ; Tecplot SDK installation
