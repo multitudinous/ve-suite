@@ -9,6 +9,7 @@
 #define MyAppVerName "ACETAO"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
+
 [Setup]
 AppName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 AppVerName={#MyAppVerName}_{#MyAppVer}_{#MSVCVERSION}
@@ -41,23 +42,29 @@ TimeStampsInUTC=true
 DisableProgramGroupPage=false
 Uninstallable=true
 UsePreviousAppDir=false
+VersionInfoVersion=1.0.0
+VersionInfoCompany=SMDS
+VersionInfoProductVersion=1.0.0
+AppVersion=1.0.0
+UninstallDisplayIcon={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
+UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#ACETAOSRCHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#ACETAOSRCHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly createallsubdirs ignoreversion
-Source: {#ACETAOSRCHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\bin\tao_idl.exe; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly createallsubdirs ignoreversion
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Release version of the naming service
-Source: {#ACETAOSRCHOME}\TAO\orbsvcs\Naming_Service\Release\Naming_Service.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\
-Source: {#ACETAOSRCHOME}\ace\*.h; DestDir: {app}\include\ace; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\tao\*.h; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly  ignoreversion
-Source: {#ACETAOSRCHOME}\ace\*.inl; DestDir: {app}\include\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\TAO\*.inl; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\TAO\*.i; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\ace\*.cpp; DestDir: {app}\include\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
-Source: {#ACETAOSRCHOME}\TAO\*.cpp; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\TAO\orbsvcs\Naming_Service\Release\Naming_Service.exe; DestDir: {app}\bin
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\ace\*.h; DestDir: {app}\include\ace; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\tao\*.h; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly  ignoreversion
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\ace\*.inl; DestDir: {app}\include\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\TAO\*.inl; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\TAO\*.i; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\ace\*.cpp; DestDir: {app}\include\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#VESAUTODEPSDIR}\{#ACETAODIRNAME}\TAO\*.cpp; DestDir: {app}\include\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ; Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\

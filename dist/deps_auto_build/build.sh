@@ -220,6 +220,7 @@ function unsetvars()
   unset BJAM_PARAMS
   unset INNO_PARAMS
   unset POST_RETRIEVAL_METHOD
+  unset POST_BUILD_METHOD
 }
 
 #
@@ -538,6 +539,11 @@ function e()
       esac
       echo "Installing the fpc file ${FPC_FILE}"
       echo "Installing ${VES_SRC_DIR}/dist/linux/fpc_deps_files/${FPC_FILE}.in to ${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}"
+    fi
+    if [ ! -z "${POST_BUILD_METHOD}" ]; then
+      echo "Running the POST_BUILD_METHOD for $package."
+      cd "${BUILD_DIR}";
+      eval "${POST_BUILD_METHOD}"
     fi
   fi
 

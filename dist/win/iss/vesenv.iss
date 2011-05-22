@@ -2,7 +2,19 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define VEVERSION "3.0.0"
 #define SVNVERSION "14920"
+;#define x64 "1"
+; Lib directory for x64 or x86
+#ifdef x64
+#define LIBDIR "lib64"
+#define BUILDDIR "x64"
+#define DISTDIR "Win64"
+#define MSVCVERSION "msvc-9.0-sp1-x64"
+#else
+#define LIBDIR "lib"
+#define BUILDDIR "x86"
+#define DISTDIR "Win32"
 #define MSVCVERSION "msvc-9.0-sp1-x86"
+#endif
 ; Define the group name for all the windows links to be
 ; installed under for the Start Menu
 #define VESGROUPNAME "VE-Suite"
@@ -20,10 +32,7 @@
 ; Location if the OPC executable
 #define OPCVESINSTALLER "C:\dev\ves_deps\OPC_2.02.exe"
 #define OPCVESINSTALLERFILENAME "OPC_2.02.exe"
-; Lib directory for x64 or x86
-#define LIBDIR "lib"
-#define BUILDDIR "x86"
-#define DISTDIR "Win32"
+
 ; Directory names for all VES dependencies
 #define ACETAOHOME "ACETAO_5.7.0_Pre-Compile_vcmsvc-9.0-sp1-x86"
 #define VTKHOME "VTK_5.4.2_msvc-9.0-sp1-x86"
@@ -37,8 +46,37 @@
 #define POCOHOME "POCO_1.3.5_msvc-9.0-sp1-x86"
 #define OSGWORKSHOME "osgWorks_1.1.1_msvc-9.0-sp1-x86"
 
-
 ; Source directories for compiling application specific installers
+#define VESAUTODEPSDIR "C:\dev\deps\auto_deps"
+#ifdef x64
+#define VESINSTALLDIR "install-64-bit"
+#else
+#define VESINSTALLDIR "install-32-bit"
+#endif
+#define BDFXDIRNAME "bdfx"
+#define BULLETDIRNAME "bullet-2.77"
+#define PNGDIRNAME "libpng-1.5.2"
+#define OSGDIRNAME "osg_2.8.3"
+#define OSGBULLETDIRNAME "osgBullet"
+#define OSGBULLETPLUSDIRNAME "osgBulletPlus"
+#define OSGEPHEMERISDIRNAME "osgEphemeris"
+#define OSGWORKSDIRNAME "osgWorks"
+#define ZLIBDIRNAME "zlib-1.2.5"
+#define VTKDIRNAME "VTK-5.8"
+#define COIN3DDIRNAME "Coin-3.1.3"
+#ifdef x64
+#define ACETAODIRNAME "ACE_wrappers_64-bit"
+#define XERCESCDIRNAME "xerces-c-3.1.1-x86_64-windows-vc-9.0"
+#else
+#define ACETAODIRNAME "ACE_wrappers_32-bit"
+#define XERCESCDIRNAME "xerces-c-3.1.1-x86-windows-vc-9.0"
+#endif
+#define POCODIRNAME "poco-1.4.1p1-all"
+
+
+
+
+; ACE deps
 #define ACETAOSRCHOME "C:\Projects\ves-windows\ACE_wrappers"
 ;The directory below contains all each apr, apr-iconv, and apr-util
 ;The versioned directories have been copied to be easier to build
@@ -61,8 +99,8 @@
 ; OSG deps
 #define OSGSRCHOME "C:\dev\deps\OpenSceneGraph-2.8-branch\install-win32"
 ; #define SIMAGEHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\simage-1.6.1"
-#define COINHOME "C:\dev\deps\3rdParty_Win32Binaries_vc90sp1\3rdParty"
-#define OSG3RDPARTY "C:\dev\deps\3rdParty_Win32Binaries_vc90sp1\3rdParty"
+;#define COINHOME "C:\dev\deps\3rdParty_Win32Binaries_vc90sp1\3rdParty"
+;#define OSG3RDPARTY "C:\dev\deps\3rdParty_Win32Binaries_vc90sp1\3rdParty"
 ; osgWorks deps
 #define OSGWORKSINSTLOCATION "C:\dev\deps\osgworks-gc-svn\install-win32"
 ; POCO deps

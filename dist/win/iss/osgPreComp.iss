@@ -3,6 +3,7 @@
 #ifndef vesAutoBuild
   #include <vesenv.iss>
 #endif
+
 #define MyAppVer "2.8.3"
 #define MyAppName "OSG Pre-Compile"
 #define MyAppVerName "OSG"
@@ -53,32 +54,44 @@ Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
 ;OpenSceneGraph
-Source: {#OSGSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs
-Source: {#OSGSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGSRCHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VESAUTODEPSDIR}\{#OSGDIRNAME}\{#VESINSTALLDIR}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#OSGDIRNAME}\{#VESINSTALLDIR}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs
+Source: {#VESAUTODEPSDIR}\{#OSGDIRNAME}\{#VESINSTALLDIR}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#OSGDIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#OSGDIRNAME}\{#VESINSTALLDIR}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 
-Source: {#OSGSRCHOME}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#MyAppVer}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_qt.dll
-Source: {#OSGSRCHOME}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#MyAppVer}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_avi.dll
-Source: {#OSGSRCHOME}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#MyAppVer}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_mpg.dll
+Source: {#VESAUTODEPSDIR}\{#OSGDIRNAME}\{#VESINSTALLDIR}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#MyAppVer}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_qt.dll
+Source: {#VESAUTODEPSDIR}\{#OSGDIRNAME}\{#VESINSTALLDIR}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#MyAppVer}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_avi.dll
+Source: {#VESAUTODEPSDIR}\{#OSGDIRNAME}\{#VESINSTALLDIR}\bin\osgPlugins-{#MyAppVer}\osgdb_qt.dll; DestDir: {app}\lib\osgPlugins-{#MyAppVer}\; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; DestName: osgdb_mpg.dll
 
 ; License
-Source: {#OSGSRCHOME}\..\LICENSE.txt; DestDir: {app}\share; Flags: ignoreversion
+Source: {#VESAUTODEPSDIR}\{#OSGDIRNAME}\{#VESINSTALLDIR}\..\LICENSE.txt; DestDir: {app}\share; Flags: ignoreversion
 ;simage
 ; Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ;OSG 3rd Party libs
-Source: {#OSG3RDPARTY}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
-Source: {#OSG3RDPARTY}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
-Source: {#OSG3RDPARTY}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSG3RDPARTY}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#PNGDIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VESAUTODEPSDIR}\{#PNGDIRNAME}\{#VESINSTALLDIR}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VESAUTODEPSDIR}\{#PNGDIRNAME}\{#VESINSTALLDIR}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#PNGDIRNAME}\{#VESINSTALLDIR}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+
+Source: {#VESAUTODEPSDIR}\{#ZLIBDIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VESAUTODEPSDIR}\{#ZLIBDIRNAME}\{#VESINSTALLDIR}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VESAUTODEPSDIR}\{#ZLIBDIRNAME}\{#VESINSTALLDIR}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#ZLIBDIRNAME}\{#VESINSTALLDIR}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+
+Source: {#VESAUTODEPSDIR}\{#VTKDIRNAME}\{#VESINSTALLDIR}\bin\vtkjpeg.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VESAUTODEPSDIR}\{#VTKDIRNAME}\{#VESINSTALLDIR}\bin\vtktiff.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VESAUTODEPSDIR}\{#VTKDIRNAME}\{#VESINSTALLDIR}\bin\vtklibxml2.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#VTKDIRNAME}\{#VESINSTALLDIR}\bin\vtkfreetype.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+
 ;Coin libraries
-#ifdef COINHOME
-Source: {#COINHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
-Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
-Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
-#endif
+;#ifdef COINHOME
+Source: {#VESAUTODEPSDIR}\{#COIN3DDIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VESAUTODEPSDIR}\{#COIN3DDIRNAME}\{#VESINSTALLDIR}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#VESAUTODEPSDIR}\{#COIN3DDIRNAME}\{#VESINSTALLDIR}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#COIN3DDIRNAME}\{#VESINSTALLDIR}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+;#endif
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\OSG.fpc.in; DestDir: {app}\lib\flagpoll; DestName: OSG.fpc; Languages: ; Flags: ignoreversion
 

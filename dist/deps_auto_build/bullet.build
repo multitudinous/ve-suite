@@ -36,6 +36,7 @@ case $PLATFORM in
     fi
     MSVC_SOLUTION="BULLET_PHYSICS.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
+    POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"
     ;;
   Darwin)
     CMAKE_PARAMS+=( -DLIB_DESTINATION="${INSTALL_DIR}/lib" )
