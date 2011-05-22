@@ -10,7 +10,6 @@ exampleSubdirs = Split("""
     ConstructionBots
     Fermentor
     HyperLab
-    InteractiveStove
     nurbs
     ParallaxMapping
     simple
@@ -24,6 +23,8 @@ exampleSubdirs = Split("""
 #VascularSimViewer
 #sensor_overlay
 #VirtualLab
+if GetPlatform() != 'win32':
+    exampleSubdirs.append( 'InteractiveStove' )
 
 if poco_options.isAvailable():
     exampleSubdirs.append( 'WarrantyTool' )
