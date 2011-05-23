@@ -3,8 +3,8 @@
 
 #include <vesenv.iss>
 #define MyAppName "VE-Suite"
-#define MyAppVer "2.2.1"
-#define MyAppVerName "VE-Suite 2.2.1"
+#define MyAppVer "2.2.2"
+#define MyAppVerName "VE-Suite 2.2.2"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define VELauncher "velauncher.exe"
@@ -13,7 +13,7 @@
 
 [InnoIDE_Settings]
 LogFile={#VEDEVHOME}\compile.log
-LogFileOverwrite=false
+LogFileOverwrite=true
 
 [Setup]
 AppName={#MyAppName}
