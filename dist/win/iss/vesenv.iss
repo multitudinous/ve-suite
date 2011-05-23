@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define VEVERSION "3.0.0"
 #define SVNVERSION "14920"
-;#define x64 "1"
+#define x64 "1"
 ; Lib directory for x64 or x86
 #ifdef x64
 #define LIBDIR "lib64"
