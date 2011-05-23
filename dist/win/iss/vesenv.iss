@@ -2,7 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define VEVERSION "2.2.1"
 #define SVNVERSION "15976"
+;#define x64 "1"
+#ifdef x64
 #define MSVCVERSION "msvc-9.0-sp1-x64"
+#else
+#define MSVCVERSION "msvc-9.0-sp1-x86"
+#endif
 ; Define the group name for all the windows links to be
 ; installed under for the Start Menu
 #define VESGROUPNAME "VE-Suite"
@@ -21,10 +26,17 @@
 #define OPCVESINSTALLER "C:\dev\ves_deps\OPC_2.02.exe"
 #define OPCVESINSTALLERFILENAME "OPC_2.02.exe"
 ; Lib directory for x64 or x86
+#ifdef x64
+#define LIBDIR "lib64"
+#define BUILDDIR "x64"
+#define ALUTLIBDIR "x64"
+#define DISTDIR "Win64"
+#else
 #define LIBDIR "lib"
 #define BUILDDIR "Win32"
 #define ALUTLIBDIR "x86"
 #define DISTDIR "Win32"
+#endif
 ; Directory names for all VES dependencies
 #define ACETAOHOME "ACETAO_5.7.0_msvc-9.0-sp1-x86"
 #define VTKHOME "VTK_5.4.2_msvc-9.0-sp1-x86"
@@ -55,8 +67,12 @@
 #define LIBOGGHOME "C:\dev\deps\libogg"
 #define LIBVORBISHOME "C:\dev\deps\vorbis-svn"
 #define OPENALHOME "C:\dev\deps\openalsdk"
+#ifdef x64
+#define OSGALSRCHOME "C:\dev\deps\osgaudio-gc-svn\install-win64"
+#else
 #define OSGALSRCHOME "C:\dev\deps\osgaudio-gc-svn\install-win32"
-#define OSGAUDIOROOTHOME "C:\dev\deps\osgaudio-gc-svn"
+#endif
+;#define OSGAUDIOROOTHOME "C:\dev\deps\osgaudio-gc-svn"
 #define ALUTSRCINSTALL "C:\dev\deps\freealut-1.1.0-bin"
 ; OSG deps
 #define OSGSRCHOME "C:\dev\deps\OpenSceneGraph-2.8-branch\install-win32"
@@ -69,8 +85,8 @@
 #define POCOSRCHOME "C:\Projects\ves-windows\poco-1.3.5-all"
 #define SQLITEHOME "C:\Projects\ves-windows\sqlitedll-3_6_20"
 ; VR Juggler deps
-#define VRJUGGLER_INST_LOCATION "C:\dev\deps\vrjuggler-3.0-branch-test\vrjuggler-3.0-branch-test\install-test-x64"
-#define VRJUGGLER_DEPS_INST_LOCATION "C:\dev\deps\vrjuggler-3.0-branch-test\vrjuggler-3.0-branch-test\install-deps-test-x64"
+#define VRJUGGLER_INST_LOCATION "C:\dev\deps\vrjuggler-3.0-branch-test\vrjuggler-3.0-branch-test\install-test"
+#define VRJUGGLER_DEPS_INST_LOCATION "C:\dev\deps\vrjuggler-3.0-branch-test\vrjuggler-3.0-branch-test\install-deps-test"
 #define TRACKDAPIHOME "C:\dev\deps\trackdAPI"
 ; VTK deps
 #define VTKSRCHOME "C:\dev\ves_deps\vtk-5.2.0-install"
