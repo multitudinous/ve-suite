@@ -64,7 +64,6 @@
 
 #include <Usul/App/Application.h>
 #include <Usul/Components/Manager.h>
-#include <Usul/DLL/LibraryPool.h>
 #include <Usul/Errors/Assert.h>
 #include <Usul/Functions/SafeCall.h>
 #include <Usul/Pointers/Functions.h>
@@ -257,6 +256,8 @@ void MinervaManager::AddEarthToScene()
 {
   // Make sure.
   this->Clear();
+
+  vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager adding earth to the scene." << std::endl << vprDEBUG_FLUSH;
 
   _manager = new Usul::Jobs::Manager ( "VE-Suite Minerva Job Manager", 4 );
 
@@ -585,7 +586,7 @@ bool MinervaManager::_removeLayer ( Minerva::Core::Data::Container *group, const
 void MinervaManager::_loadPlugins()
 {
 //#ifdef __APPLE__
-  Usul::Components::Manager::instance().load( Usul::Interfaces::IUnknown::IID, std::string("GDALReadImage.plug") );
+  Usul::Components::Manager::instance().load( std::string("GDALReadImage.plug") );
 //#endif
   // this causes huge problems because the output is never flushed.
   //This can probably be corrected but I am not sure how.
@@ -603,9 +604,7 @@ void MinervaManager::_loadPlugins()
   const std::string minervaGdalName ( "libMinervaGDAL.so" );
 #endif
   
-  // Should I use vpr::LibraryLoader instead?  Also, should the directory of the library be specified.
-  Usul::DLL::Library::RefPtr library( new Usul::DLL::Library ( minervaGdalName ) );
-  Usul::DLL::LibraryPool::instance().add ( library.get() );
+  Usul::Components::Manager::instance().load ( minervaGdalName );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -616,7 +615,6 @@ void MinervaManager::_loadPlugins()
 
 void MinervaManager::_unloadPlugins()
 {
-  Usul::DLL::LibraryPool::instance().clear ( 0x0 );
   Usul::Components::Manager::instance().clear ( 0x0 );
 }
 ///////////////////////////////////////////////////////////////////////////////
