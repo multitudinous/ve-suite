@@ -543,9 +543,10 @@ void SceneManager::_createLogo()
         osg::StateSet* tempState = backdropFX::accumulateStateSetsAndShaderModules( tempMap, nodePath );
 
         backdropFX::ShaderModuleVisitor smv;
-        smv.setInitialStateSet( tempState, tempMap );
+        smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
+        smv.setInitialStateSet( tempState, &tempMap );
         
-        backdropFX::convertFFPToShaderModules( vesuiteNode.get(), &smv );
+        backdropFX::convertFFPToShaderModules( vesuiteNode.get(), smv );
     }*/
     mLogoNode->addChild( vesuiteNode.get() );
     /*if( !m_isRTTOn )
