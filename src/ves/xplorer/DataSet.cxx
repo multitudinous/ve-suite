@@ -55,9 +55,7 @@
 #include <ves/xplorer/util/CreateDataObjectBBoxActorsCallback.h>
 #include <ves/xplorer/util/ComputeVectorMagnitudeAndScalarsCallback.h>
 
-#ifdef QT_ON
-#include <ves/xplorer/data/DatasetPropertySet.h>
-#endif //QT_ON
+#include <ves/xplorer/data/PropertySet.h>
 
 #include <ves/builder/DataLoader/DataLoader.h>
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
@@ -76,7 +74,6 @@
 #include <vtkCellTypes.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkCellData.h>
-#include <vtkOutlineFilter.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
@@ -98,8 +95,6 @@
 
 //Used for strcpy to setup the data translator code
 #include <cstring>
-
-//#include <osgDB/WriteFile>
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;

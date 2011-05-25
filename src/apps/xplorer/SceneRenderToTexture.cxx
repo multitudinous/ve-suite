@@ -352,7 +352,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
         smv.setAttachMain( false ); // Use bdfx-main
         smv.setAttachTransform( false ); // Use bdfx-transform
         smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
-        
+        //smv.setRemoveFFPState(false);
+
         backdropFX::convertFFPToShaderModules( m_rootGroup.get(), &smv );
         
         //

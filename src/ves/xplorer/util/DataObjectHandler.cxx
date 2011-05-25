@@ -76,6 +76,7 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
                 _convertCellDataToPointData( currentDataset );
                 if( m_datasetOperator )
                 {
+                    m_datasetOperator->SetIsMultiBlockDataset( true );
                     m_datasetOperator->OperateOnDataset( currentDataset );
                 }
                 UpdateNumberOfPDArrays( currentDataset );
@@ -101,6 +102,7 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
         _convertCellDataToPointData( currentDataset );
         if( m_datasetOperator )
         {
+            m_datasetOperator->SetIsMultiBlockDataset( false );
             m_datasetOperator->OperateOnDataset( currentDataset );
         }
         UpdateNumberOfPDArrays( currentDataset );
