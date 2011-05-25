@@ -168,6 +168,12 @@ CADEntity::CADEntity(
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
+    
+    if( !scenegraph::SceneManager::instance()->IsRTTOn() )
+    {
+        backdropFX::RebuildShaderModules rsm;
+        backdropFX::Manager::instance()->getManagedRoot()->accept( rsm );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
