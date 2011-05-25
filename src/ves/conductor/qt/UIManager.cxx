@@ -468,7 +468,7 @@ void UIManager::Initialize( osg::Group* parentNode )
     stateset->setRenderBinDetails( 99, "RenderBin" );
     stateset->setAttributeAndModes( depth.get(), glModeValue );
     stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
-    stateset->setMode( GL_LIGHTING, glModeValue);
+    //stateset->setMode( GL_LIGHTING, glModeValue);
     stateset->setAttributeAndModes( program.get(), glModeValue );
     stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
     m_opacityUniform = new osg::Uniform( "opacityVal", mOpacity );
