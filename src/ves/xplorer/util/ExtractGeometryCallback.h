@@ -78,9 +78,10 @@ protected:
     int m_dataCounter;
     ///The surface for the sample region
     vtkPolyData* m_surface;
+    ///Bounds for the dataset
+    double m_bbox[ 6 ];
 };
 }// end of util namesapce
 }// end of xplorer namesapce
 }// end of ves namesapce
 #endif
-

@@ -68,6 +68,14 @@ vtkDataObject* ExtractGeometryCallback::GetDataset()
 void ExtractGeometryCallback::SetPolyDataSurface( vtkPolyData* surface )
 {
     m_surface = surface;
+    m_surface->GetBounds( m_bbox );
+    m_bbox[ 0 ] -= 0.05;
+    m_bbox[ 2 ] -= 0.05;
+    m_bbox[ 4 ] -= 0.05;
+    m_bbox[ 1 ] += 0.05;
+    m_bbox[ 3 ] += 0.05;
+    m_bbox[ 5 ] += 0.05;
+    std::cout << "|\t\tThe bounding box dims " << m_bbox[ 0 ] << " " << m_bbox[ 1 ] << " " << m_bbox[ 2 ] << " " << m_bbox[ 3 ] << " " << m_bbox[ 4 ] << " " << m_bbox[ 5 ] << std::endl;
 }
 /////////////////////////////////////////////////////////////////////////////
 void ExtractGeometryCallback::OperateOnDataset( vtkDataSet* dataset )
@@ -80,17 +88,9 @@ void ExtractGeometryCallback::OperateOnDataset( vtkDataSet* dataset )
     extractGrid->SetInput( dataset );
     extractGrid->ExtractBoundaryCellsOn();
 
-    double* pdbbox = m_surface->GetBounds();
-    pdbbox[ 0 ] -= 0.05;
-    pdbbox[ 2 ] -= 0.05;
-    pdbbox[ 4 ] -= 0.05;
-    pdbbox[ 1 ] += 0.05;
-    pdbbox[ 3 ] += 0.05;
-    pdbbox[ 5 ] += 0.05;
-    std::cout << "|\t\tThe bounding box dims " << pdbbox[ 0 ] << " " << pdbbox[ 1 ] << " " << pdbbox[ 2 ] << " " << pdbbox[ 3 ] << " " << pdbbox[ 4 ] << " " << pdbbox[ 5 ] << std::endl;
     //extractGrid->SetExtent( pdbbox );
     vtkBox* bbox = vtkBox::New();
-    bbox->SetBounds( pdbbox );
+    bbox->SetBounds( m_bbox );
     extractGrid->SetImplicitFunction( bbox );
 
     if( !m_dataset )
@@ -109,4 +109,3 @@ void ExtractGeometryCallback::OperateOnDataset( vtkDataSet* dataset )
     bbox->Delete();
     extractGrid->Delete();
 }
-
