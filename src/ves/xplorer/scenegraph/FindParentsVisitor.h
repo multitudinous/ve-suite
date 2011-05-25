@@ -70,11 +70,16 @@ public:
 
     ///Return the GUID for the found node
     std::string GetNodeGUID();
+    
+    ///Get the node path for the found parent
+    osg::NodePath GetParentNodePath();
 
 private:
     std::string modelGUID;///<GUID to identify the VE-Open model
     osg::ref_ptr< osg::Node > parentNode;///<Pointer to the found parent node
     osg::ref_ptr< osg::Node > m_rootNode;///<Pointer to the found parent node
+    ///The node path to the parent from the respective node
+    osg::NodePath m_finalNodePath;
 };
 }
 }

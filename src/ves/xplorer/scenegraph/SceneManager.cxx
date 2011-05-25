@@ -539,7 +539,7 @@ void SceneManager::_createLogo()
     {
         backdropFX::ShaderModuleCullCallback::ShaderMap tempMap;
         ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( mLogoNode.get(), backdropFX::Manager::instance()->getManagedRoot() );
-        osg::NodePath nodePath = parentVisitor.getNodePath();
+        osg::NodePath nodePath = parentVisitor.GetParentNodePath();
         osg::StateSet* tempState = backdropFX::accumulateStateSetsAndShaderModules( tempMap, nodePath );
 
         backdropFX::ShaderModuleVisitor smv;

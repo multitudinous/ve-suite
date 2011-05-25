@@ -67,6 +67,7 @@ void FindParentsVisitor::apply( osg::Node& node )
         if( &node == m_rootNode.get() )
         {
             parentNode = &node;
+            m_finalNodePath = getNodePath();
         }
     }
     else
@@ -81,7 +82,7 @@ void FindParentsVisitor::apply( osg::Node& node )
             {
                 modelGUID = descriptorsList.at( i + 1 );
                 parentNode = &node;
-                
+                m_finalNodePath = getNodePath();
                 break;
             }
         }
@@ -92,5 +93,10 @@ void FindParentsVisitor::apply( osg::Node& node )
     {
         osg::NodeVisitor::traverse( node );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::NodePath FindParentsVisitor::GetParentNodePath()
+{
+    return m_finalNodePath;
 }
 ////////////////////////////////////////////////////////////////////////////////

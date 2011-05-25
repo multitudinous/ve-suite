@@ -214,7 +214,7 @@ void CharacterController::Initialize()
     {
         backdropFX::ShaderModuleCullCallback::ShaderMap tempMap;
         ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( SceneManager::instance()->GetModelRoot(), backdropFX::Manager::instance()->getManagedRoot() );
-        osg::NodePath nodePath = parentVisitor.getNodePath();
+        osg::NodePath nodePath = parentVisitor.GetParentNodePath();
         osg::StateSet* tempState = backdropFX::accumulateStateSetsAndShaderModules( tempMap, nodePath );
         
         backdropFX::ShaderModuleVisitor smv;
