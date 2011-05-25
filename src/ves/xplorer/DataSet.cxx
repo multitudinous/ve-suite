@@ -55,7 +55,7 @@
 #include <ves/xplorer/util/CreateDataObjectBBoxActorsCallback.h>
 #include <ves/xplorer/util/ComputeVectorMagnitudeAndScalarsCallback.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
 
 #include <ves/builder/DataLoader/DataLoader.h>
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
