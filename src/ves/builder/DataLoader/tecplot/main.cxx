@@ -139,7 +139,7 @@ int main( int argc, char** argv )
         std::string inputFileNameAndPath( argv[ i ] );
         tecplotReader* reader = new tecplotReader( inputFileNameAndPath );
         
-        if( multiBlockFlag )
+        /*if( multiBlockFlag )
         {
             reader->SetMultiBlockOn();
 
@@ -163,26 +163,35 @@ int main( int argc, char** argv )
             writer->Write();
             writer->Delete();
         }
-        else
+        else*/
         {
+            std::string fileExtension(".vtu");
+            if( multiBlockFlag )
+            {
+                reader->SetMultiBlockOn();
+                fileExtension = ".vtm";
+
+            }
+
             int numFiles = reader->GetNumberOfOutputFiles();
             for( int j = 0; j < numFiles; ++j )
             {
                 vtkDataObject* dataObject = reader->GetOutputFile( j );
+
 
                 std::string outputFileName;
                 if( numFiles == 1 )
                 {
                     // create a *.vtu output filename...
                     outputFileName = 
-                        stripExtension( inputFileNameAndPath ) + ".vtu";
+                        stripExtension( inputFileNameAndPath ) + fileExtension;
                 }
                 else
                 {
                     // Using a zero-based incremental naming scheme, create a *.vtu output filename...
                     // Use boost for number-to-string conversion:
                     outputFileName = stripExtension( inputFileNameAndPath ) + 
-                        "_" + boost::lexical_cast<std::string>( j ) + ".vtu";
+                        "_" + boost::lexical_cast<std::string>( j ) + fileExtension;
                 }
 
                 // If outputToCurrentDirFlag was set, then write to current location...
@@ -193,15 +202,31 @@ int main( int argc, char** argv )
 
                 std::cout << "Writing to file \"" << outputFileName << "\"" << std::endl;
 
-                vtkXMLUnstructuredGridWriter* writer = vtkXMLUnstructuredGridWriter::New();
-                writer->SetInput( dataObject );
-                writer->SetFileName( outputFileName.c_str() );
-                if( asciiOutputFlag )
+                if( multiBlockFlag )
                 {
-                    writer->SetDataModeToAscii();
+                    vtkXMLMultiBlockDataWriter* writer = vtkXMLMultiBlockDataWriter::New();
+                    writer->SetInput( dataObject );
+                    writer->SetFileName( outputFileName.c_str() );
+                    if( asciiOutputFlag )
+                    {
+                        writer->SetDataModeToAscii();
+                    }
+                    writer->SetWriteMetaFile( 1 );  // causes creation of *.vtm meta file
+                    writer->Write();
+                    writer->Delete();                    
                 }
-                writer->Write();
-                writer->Delete();
+                else
+                {
+                    vtkXMLUnstructuredGridWriter* writer = vtkXMLUnstructuredGridWriter::New();
+                    writer->SetInput( dataObject );
+                    writer->SetFileName( outputFileName.c_str() );
+                    if( asciiOutputFlag )
+                    {
+                        writer->SetDataModeToAscii();
+                    }
+                    writer->Write();
+                    writer->Delete();
+                }
             }
         }
 

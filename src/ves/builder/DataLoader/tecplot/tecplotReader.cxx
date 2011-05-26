@@ -135,24 +135,24 @@ tecplotReader::~tecplotReader()
         this->timeToInitVtk = NULL;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void tecplotReader::SetMultiBlockOn()
 {
     this->multiblockOutput = true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int tecplotReader::GetNumberOfOutputFiles()
 {
     return this->numberOfOutputFiles;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 /*
 int * tecplotReader::GetVtkInitArray()
 {
     return this->timeToInitVtk;
 }
 */
-
+////////////////////////////////////////////////////////////////////////////////
 EntIndex_t tecplotReader::GetNumZonesInCurrentFile( const EntIndex_t startZone )
 {
     EntIndex_t count = 1;
@@ -169,16 +169,16 @@ EntIndex_t tecplotReader::GetNumZonesInCurrentFile( const EntIndex_t startZone )
     }
     return 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 vtkDataObject* tecplotReader::ExtractMultiBlock()
 {
+    this->multiblock = vtkMultiBlockDataSet::New();
     // Begin at zone 1 and loop among the zones until we complete the dataset...
     for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
     {
         EntIndex_t numZonesInCurrentFile = this->GetNumZonesInCurrentFile( currentZone );
 std::cout << "creating new multiblock with " << numZonesInCurrentFile << " zones" << std::endl;
-        this->multiblock = vtkMultiBlockDataSet::New();
-        this->multiblock->SetNumberOfBlocks( numZonesInCurrentFile );
+        //this->multiblock->SetNumberOfBlocks( numZonesInCurrentFile );
 
         this->InitializeVtkData();
         this->AttachPointsAndDataToGrid();
@@ -194,7 +194,7 @@ std::cout << "returning multiblock" << std::endl;
     }
     return 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 vtkDataObject * tecplotReader::GetOutputFile( const int fileNum )
 {
     // Verify that fileNum is an appropriate zero-based integer...
@@ -208,10 +208,20 @@ vtkDataObject * tecplotReader::GetOutputFile( const int fileNum )
 
     int parNum = 0;
 
-    // Begin at startZone and loop among the zones until we complete the file that was requested...
-    for( EntIndex_t currentZone = startZone; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
+    if( multiblockOutput )
     {
-        if( this->timeToInitVtk[ currentZone-1 ] )
+        if( multiblock )
+        {
+            multiblock->Delete();
+            multiblock = 0;
+        }
+        this->multiblock = vtkMultiBlockDataSet::New();
+    }
+
+    // Begin at startZone and loop among the zones until we complete the file that was requested...
+    for( EntIndex_t currentZone = startZone; currentZone < this->numZones+1; ++currentZone ) // zone numbers are 1-based
+    {
+        if( this->timeToInitVtk[ currentZone-1 ] || multiblockOutput )
         {
             // Initialize the ugrid if working on first zone of a new grid...
             this->InitializeVtkData();
@@ -243,17 +253,28 @@ vtkDataObject * tecplotReader::GetOutputFile( const int fileNum )
 
         // Look at next zone to determine whether to attach points and point & cell data.
         // If the grid is complete, then attach data and return the ugrid...
-        if( this->timeToInitVtk[ currentZone ] )
+        if( this->timeToInitVtk[ currentZone ] || multiblockOutput )
         {
             this->AttachPointsAndDataToGrid();
-            return this->ugrid;
+            if( multiblockOutput )
+            {
+                this->multiblock->SetBlock( currentZone-1, this->ugrid );
+            }
+            else
+            {
+                return this->ugrid;
+            }
         }
     }
 
+    if( multiblockOutput )
+    {
+        return multiblock;
+    }
     std::cerr << "Error: should not be here" << std::endl;
     return NULL;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 /*
 Tecplot files can have one or more zones. Each zone contains a single element type (bricks, tetrahedrons, etc).
 Each zone will have the same list of variable names (which will include 1d, 2d, or 3d coordinate data).
@@ -383,7 +404,8 @@ vtkFloatArray * tecplotReader::ZeroArray( std::string varName, int numTuples )
     return zero;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void tecplotReader::ReadVectorNameAndUpdateIndex( int currentIndex, int currentVar, std::string s, std::string & vecName, int * vectorIndex )
+void tecplotReader::ReadVectorNameAndUpdateIndex( int currentIndex, int currentVar, 
+    std::string s, std::string & vecName, int * vectorIndex )
 {
     // if all vectorIndexes are zero, then store candidate vector name and index...
     if( ( vectorIndex[ 0 ] + vectorIndex[ 1 ] + vectorIndex[ 2 ] ) == 0 )
@@ -474,7 +496,8 @@ void tecplotReader::ProcessAnyVectorData( vtkFloatArray ** vectorData )
                     }
                     else
                     {
-                        //cout << "copying data from " << vectorData[ vectorIndex[ j ]-1-this->dimension ]->GetName() << ", value = " << parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetValue( i ) << std::endl;
+                        //cout << "copying data from " << vectorData[ vectorIndex[ j ]-1-this->dimension ]->GetName() 
+                        //    << ", value = " << parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetValue( i ) << std::endl;
                         vector->InsertComponent( j, k, vectorData[ vectorIndex[ k ]-1-this->dimension ]->GetValue( j ) );
                     }
                 }
@@ -718,7 +741,8 @@ void tecplotReader::CountNumberOfFilesUsingSolnTime()
     // Get the Solution Time associated with the first zone.
     double previousSolutionTime = TecUtilZoneGetSolutionTime( 1 );
 #ifdef PRINT_HEADERS
-    std::cout << "for zone 1, strandID = " << previousStrandID << ", solutionTime = " << previousSolutionTime << std::endl;
+    std::cout << "for zone 1, strandID = " << previousStrandID 
+        << ", solutionTime = " << previousSolutionTime << std::endl;
 #endif // PRINT_HEADERS
 
     this->numberOfOutputFiles = 1;
@@ -735,7 +759,8 @@ void tecplotReader::CountNumberOfFilesUsingSolnTime()
         // Get the Solution Time associated with the specified zone.
         double currentSolutionTime = TecUtilZoneGetSolutionTime( currentZone );
 #ifdef PRINT_HEADERS
-        std::cout << "for zone " << currentZone << ", strandID = " << currentStrandID << ", solutionTime = " << currentSolutionTime << std::endl;
+        std::cout << "for zone " << currentZone << ", strandID = " << currentStrandID 
+            << ", solutionTime = " << currentSolutionTime << std::endl;
 #endif // PRINT_HEADERS
 
         // StrandID of 0 indicates that the zone is not part of a strand (a static zone).
@@ -939,7 +964,8 @@ void tecplotReader::ReadZoneName( const EntIndex_t currentZone )
     if( TecUtilZoneGetName( currentZone, &zoneName[ currentZone - 1 ] ) )
     {
 #ifdef PRINT_HEADERS
-        std::cout << "For Zone " << currentZone << ", zoneName is \"" << zoneName[ currentZone - 1 ] << "\""  << std::endl;
+        std::cout << "For Zone " << currentZone << ", zoneName is \"" 
+            << zoneName[ currentZone - 1 ] << "\""  << std::endl;
 #endif // PRINT_HEADERS
         TecUtilStringDealloc( &zoneName[ currentZone - 1 ] );
     }
@@ -950,7 +976,8 @@ void tecplotReader::ReadZoneName( const EntIndex_t currentZone )
     delete [] zoneName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone, const int numNodesPerElement )
+void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone, 
+    const ZoneType_e zoneType, const LgIndex_t numElementsInZone, const int numNodesPerElement )
 {
 /*
     EntIndex_t this->connectivityShareCount = TecUtilDataConnectGetShareCount( currentZone );
@@ -1047,7 +1074,8 @@ void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone, const ZoneType
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone )
+void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, 
+    const ZoneType_e zoneType, const LgIndex_t numElementsInZone )
 {
     ElemToFaceMap_pa ElemToFaceMap = TecUtilDataElemGetReadableRef( currentZone );
     if( ! ElemToFaceMap ) 
@@ -1071,7 +1099,11 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
 
             LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum ); 	
 #ifdef PRINT_HEADERS
-            if( elemNum < 10 ) { std::cout << "For elem " << elemNum << ", numFacesPerElement = " << numFacesPerElement << std::endl; }
+            if( elemNum < 10 )
+            { 
+                std::cout << "For elem " << elemNum 
+                    << ", numFacesPerElement = " << numFacesPerElement << std::endl; 
+            }
 #endif // PRINT_HEADERS
 
             vtkIdList* tempIdList = vtkIdList::New();
@@ -1083,7 +1115,11 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
                 // how many nodes comprise the specified face? (will return 2 for polygonal zones)
                 LgIndex_t numNodesOnFace = TecUtilDataFaceMapGetNFaceNodes( FaceMap, faceNumber ); 	
 #ifdef PRINT_HEADERS
-                if( elemNum < 10 ) { std::cout << "   For face " << faceNumber << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; }
+                if( elemNum < 10 )
+                {
+                    std::cout << "   For face " << faceNumber 
+                        << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; 
+                }
 #endif // PRINT_HEADERS
 
                 for( LgIndex_t node = 1; node < numNodesOnFace+1; node++ ) // numbers are 1-based
@@ -1131,7 +1167,11 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
         {
             LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum ); 	
 #ifdef PRINT_HEADERS
-            if( elemNum < 10 ) { std::cout << "For elem " << elemNum << ", numFacesPerElement = " << numFacesPerElement << std::endl; }
+            if( elemNum < 10 )
+            {
+                std::cout << "For elem " << elemNum 
+                    << ", numFacesPerElement = " << numFacesPerElement << std::endl; 
+            }
 #endif // PRINT_HEADERS
 
             // Begin setting up the tempIdList. 
@@ -1146,7 +1186,11 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
                 // how many nodes comprise the specified face?
                 LgIndex_t numNodesOnFace = TecUtilDataFaceMapGetNFaceNodes( FaceMap, faceNumber ); 	
 #ifdef PRINT_HEADERS
-                if( elemNum < 10 ) { std::cout << "   For face " << faceNumber << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; }
+                if( elemNum < 10 )
+                { 
+                    std::cout << "   For face " << faceNumber 
+                    << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; 
+                }
 #endif // PRINT_HEADERS
                 tempIdList->InsertNextId( numNodesOnFace );
 
@@ -1168,14 +1212,19 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
             tempIdList->Delete();
         }
 #else // VTK_VERSION
-        //std::cout << "Warning: VTK version " << VTK_VERSION << " can not handle polyhedron cells in zone " << currentZone << std::endl;
+        //std::cout << "Warning: VTK version " << VTK_VERSION 
+        //    << " can not handle polyhedron cells in zone " << currentZone << std::endl;
         // Begin setting up the tempIdList. 
         vtkIdList* tempIdList = vtkIdList::New();
         for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; ++elemNum ) // element numbers are 1-based
         {
             LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum ); 	
 #ifdef PRINT_HEADERS
-            if( elemNum < 10 ) { std::cout << "For elem " << elemNum << ", numFacesPerElement = " << numFacesPerElement << std::endl; }
+            if( elemNum < 10 )
+            { 
+                std::cout << "For elem " << elemNum 
+                    << ", numFacesPerElement = " << numFacesPerElement << std::endl; 
+            }
 #endif // PRINT_HEADERS
             for( LgIndex_t faceOffset = 1; faceOffset < numFacesPerElement+1; ++faceOffset ) // numbers are 1-based
             {
@@ -1184,13 +1233,18 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, const Zone
                 // how many nodes comprise the specified face?
                 LgIndex_t numNodesOnFace = TecUtilDataFaceMapGetNFaceNodes( FaceMap, faceNumber ); 	
 #ifdef PRINT_HEADERS
-                if( elemNum < 10 ) { std::cout << "   For face " << faceNumber << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; }
+                if( elemNum < 10 )
+                {
+                    std::cout << "   For face " << faceNumber 
+                    << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; 
+                }
 #endif // PRINT_HEADERS
                 
                 for( LgIndex_t node = 1; node < numNodesOnFace+1; ++node ) // numbers are 1-based
                 {
                     // node numbers in tecplot are 1-based, 0-based in VTK
-                    vtkIdType nodeValue = TecUtilDataFaceMapGetFaceNode( FaceMap, faceNumber, node ) - 1 + this->nodeOffset; 	
+                    vtkIdType nodeValue = 
+                        TecUtilDataFaceMapGetFaceNode( FaceMap, faceNumber, node ) - 1 + this->nodeOffset; 	
 #ifdef PRINT_HEADERS
                     if( elemNum < 10 ) { std::cout << "  " << nodeValue; }
 #endif // PRINT_HEADERS
@@ -1356,7 +1410,11 @@ void tecplotReader::AttachPointsAndDataToGrid()
         }
         else
         {
-            std::cerr << "Error: Don't know what to do! parameterData[ " << i << " ]->GetNumberOfTuples() = " << this->parameterData[ i ]->GetNumberOfTuples() << ", totalNumberOfNodalPoints = " << this->totalNumberOfNodalPoints << ", totalNumberOfElements = " << this->totalNumberOfElements << std::endl;
+            std::cerr << "Error: Don't know what to do! parameterData[ " 
+                << i << " ]->GetNumberOfTuples() = " 
+                << this->parameterData[ i ]->GetNumberOfTuples() 
+                << ", totalNumberOfNodalPoints = " << this->totalNumberOfNodalPoints 
+                << ", totalNumberOfElements = " << this->totalNumberOfElements << std::endl;
         }
     }
 
