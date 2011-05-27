@@ -169,6 +169,12 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
         MakeLiveBasePtr p;
 
         p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
+                                                     GetProperty( "SurfaceWrap" ),
+                                                     "SetDatasetSurfaceWrap",
+                                                     true ));
+        mLiveObjects.push_back( p );
+
+        p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
                                                      GetProperty( "BoundingBox" ),
                                                      "ShowDatasetBBox",
                                                      true ));

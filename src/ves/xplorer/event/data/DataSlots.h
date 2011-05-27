@@ -49,10 +49,14 @@ namespace data
  *   Class for changing data signals
  * \namespace ves::xplorer::event::data
  */
-///Turns greyscaling for contour planes on or off.
+/// Turns greyscaling for contour planes on or off.
 void SetContourPlaneGreyscale( std::string const& uuid, std::vector< bool > const& greyscaleflag );
 
+/// Transforms a data set in the scenegraph
 void TransformDatasetNode( const std::string& uuid, const std::vector< double >& transform );
+
+/// Toggles surface wrap for a data set
+void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap );
 
     
 } //end data

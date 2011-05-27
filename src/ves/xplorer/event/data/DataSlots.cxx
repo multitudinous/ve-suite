@@ -104,6 +104,33 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
+{
+    std::cout << "SetDatasetSurfaceWrap" << std::endl << std::flush;
+    ves::xplorer::Model* activeModel = ModelHandler::instance()->GetActiveModel();
+    ves::xplorer::data::DatasetPropertySet set;
+    set.SetUUID( uuid );
+    set.LoadFromDatabase();
+    std::string datasetName = boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
+
+    DataSet* dataSet = activeModel->GetCfdDataSet(
+        activeModel->GetIndexOfDataSet( datasetName ) );
+
+    if( !dataSet )
+    {
+        return;
+    }
+
+    if( surfaceWrap )
+    {
+        dataSet->CreateSurfaceWrap();
+    }
+    else
+    {
+        // TODO: How do we undo a surface wrap?
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 }
 }

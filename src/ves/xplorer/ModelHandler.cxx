@@ -207,6 +207,10 @@ ModelHandler::ModelHandler()
     CONNECTSIGNALS_STATIC( "%TransformDataNode", void( std::string const&, std::vector< double > const&),
                  &ves::xplorer::event::data::TransformDatasetNode,
                  m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SetDatasetSurfaceWrap", void( std::string const&, bool const ),
+                 &ves::xplorer::event::data::SetDatasetSurfaceWrap,
+                 m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler()
