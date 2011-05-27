@@ -50,6 +50,7 @@
 
 #include <utility>
 #include <vector>
+#include <string>
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
@@ -71,70 +72,12 @@ namespace fs = boost::filesystem;
 
 using namespace ves::xplorer;
 
+void SetupLogger( const std::string& logFile );
+
 //#define VES_QT_RENDER_DEBUG 1
 #ifndef VES_QT_RENDER_DEBUG
 int main( int argc, char* argv[] )
 {
-    //Create a root logger that contains the output channels, pattern formatters,
-    //etc. This also lets us easily create an xplorer child, conductor child, etc.
-    Poco::Logger& rootLogger( Poco::Logger::get("") );
-    //Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
-    Poco::FileChannel* fileChannel = new Poco::FileChannel;
-    std::string logPath;
-#if defined(_MSC_VER)
-#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-    logPath = boost::filesystem::temp_directory_path().string();
-#else
-    logPath = "C:/Temp/";
-#endif // BOOST_VERSION
-#else
-    // Standard log path for POSIX
-    logPath = "/var/tmp/ves-";
-    logPath.append( std::string( std::getenv("LOGNAME") ) );
-    logPath.append( "/" );
-    // Create ves-LOGNAME subdir if needed
-#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-    boost::filesystem::path p(logPath);
-    if( !boost::filesystem::exists(p) )
-    {
-        boost::filesystem::create_directory(p);
-    }
-#endif // BOOST_VERSION
-
-#endif // _MSC_VERSION
-    logPath.append( "vesuite.log" );
-    //boost::filesystem::remove( logPath );
-    fileChannel->setProperty( "path", logPath );
-    fileChannel->setProperty( "rotation", "2M" );
-    fileChannel->setProperty( "archive", "number" );
-    fileChannel->setProperty( "purgeCount", "5" );
-
-    // Format the logged output as
-    // time_with_microseconds [thread number] (priority) source message extra_crlf
-    Poco::PatternFormatter* formatter = new Poco::PatternFormatter;
-    formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%l) %s: %t");
-    Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel );
-
-    rootLogger.setChannel( formattingChannel );
-    // Default log level will log messages with priorities error, critical, and
-    // fatal. Command line option parsed later may adjust this up or down.
-    rootLogger.setLevel( Poco::Message::PRIO_ERROR );
-
-    Poco::Logger& m_logger( Poco::Logger::get( "xplorer" ) );
-    LogStreamPtr m_logStream;
-    m_logStream = LogStreamPtr( new Poco::LogStream( m_logger ) );
-
-    LOG_FATAL( 
-        "|-----------------------------------------------------------------|"
-        << std::endl
-        << "|\tVE-Xplorer Version "
-        << VES_MAJOR_VERSION << "."
-        << VES_MINOR_VERSION << "."
-        << VES_PATCH_VERSION << "."
-        << SVN_VES_REVISION << std::endl
-        << "|-----------------------------------------------------------------|"
-        << std::endl );
-
     std::cout
         << "|-----------------------------------------------------------------|"
         << std::endl
@@ -211,6 +154,9 @@ int main( int argc, char* argv[] )
     xplorer_desc.add_options()("VESLog", po::value< std::string >(),
         "Logging level: fatal, critical, error, warning, notice, information, debug, trace");
 
+    xplorer_desc.add_options()("VESLogPath", po::value< std::string >(),
+        "Full path to log file, including filename");
+
     // jconf files can be given as positional arguments.
     //po::positional_options_description pos_desc;
     //pos_desc.add("jconf", -1);
@@ -233,6 +179,20 @@ int main( int argc, char* argv[] )
         return 0;
     }
 
+    if( vm.count("VESLogPath") )
+    {
+        std::string logPath = vm["VESLogPath"].as< std::string >();
+        SetupLogger( logPath );
+    }
+    else
+    {
+        SetupLogger("");
+    }
+
+    Poco::Logger& rootLogger( Poco::Logger::get("") );
+    Poco::Logger& m_logger( Poco::Logger::get( "xplorer" ) );
+    LogStreamPtr m_logStream;
+    m_logStream = LogStreamPtr( new Poco::LogStream( m_logger ) );
     if( vm.count("VESLog") )
     {
         Poco::Message::Priority priority = Poco::Message::PRIO_ERROR;
@@ -486,3 +446,76 @@ int main( int argc, char* argv[] )
     return 0;
 }
 #endif
+
+void SetupLogger( const std::string& logFile )
+{
+    //Create a root logger that contains the output channels, pattern formatters,
+    //etc. This also lets us easily create an xplorer child, conductor child, etc.
+    Poco::Logger& rootLogger( Poco::Logger::get("") );
+    //Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
+    Poco::FileChannel* fileChannel = new Poco::FileChannel;
+    std::string logPath;
+    if( logFile != "" )
+    {
+        logPath = logFile;
+    }
+    else
+    {
+#if defined(_MSC_VER)
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        logPath = boost::filesystem::temp_directory_path().string();
+#else
+        logPath = "C:/Temp/";
+#endif // BOOST_VERSION
+#else
+    // Standard log path for POSIX
+        logPath = "/var/tmp/ves-";
+        logPath.append( std::string( std::getenv("LOGNAME") ) );
+        logPath.append( "/" );
+    // Create ves-LOGNAME subdir if needed
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        boost::filesystem::path p(logPath);
+        if( !boost::filesystem::exists(p) )
+        {
+            boost::filesystem::create_directory(p);
+        }
+#endif // BOOST_VERSION
+
+#endif // _MSC_VERSION
+        logPath.append( "vesuite.log" );
+        //boost::filesystem::remove( logPath );
+    }
+
+    fileChannel->setProperty( "path", logPath );
+    fileChannel->setProperty( "rotation", "2M" );
+    fileChannel->setProperty( "archive", "number" );
+    fileChannel->setProperty( "purgeCount", "5" );
+
+    // Format the logged output as
+    // time_with_microseconds [thread number] (priority) source message extra_crlf
+    Poco::PatternFormatter* formatter = new Poco::PatternFormatter;
+    formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%l) %s: %t");
+    formatter->setProperty("times", "local");
+    Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel );
+
+    rootLogger.setChannel( formattingChannel );
+    // Default log level will log messages with priorities error, critical, and
+    // fatal. Command line option parsed later may adjust this up or down.
+    rootLogger.setLevel( Poco::Message::PRIO_ERROR );
+
+    Poco::Logger& m_logger( Poco::Logger::get( "xplorer" ) );
+    LogStreamPtr m_logStream;
+    m_logStream = LogStreamPtr( new Poco::LogStream( m_logger ) );
+
+    LOG_FATAL(
+        "|-----------------------------------------------------------------|"
+        << std::endl
+        << "|\tVE-Xplorer Version "
+        << VES_MAJOR_VERSION << "."
+        << VES_MINOR_VERSION << "."
+        << VES_PATCH_VERSION << "."
+        << SVN_VES_REVISION << std::endl
+        << "|-----------------------------------------------------------------|"
+        << std::endl );
+
+}
