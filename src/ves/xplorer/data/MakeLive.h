@@ -88,7 +88,8 @@ public:
     ///                   a unique identifier to differentiate different
     ///                   instances of the same propertyset.
     /// @param passUUID If true, emitted signal will contain the uuid passed in
-    ///                 ctor in addition to the value of the property. If false
+    ///                 ctor as the first argument, in addition to the value of
+    ///                 the property (as the second argument). If false,
     ///                 the uuid is omitted in both the signal signature as
     ///                 well as signal emission. Default: true.
     MakeLive( std::string& uuid, PropertyPtr property, const std::string& signalName, bool passUUID = true ):
