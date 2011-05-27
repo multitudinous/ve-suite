@@ -299,6 +299,13 @@ void UIManager::Update()
         mToggleVisibility = false;
     }
 
+    // Check visibility of UI branch before bothering with repaints
+    if( mUIGroup->getValue( 0 ) )
+    {
+        m_opacityUniform->set( mOpacity );
+        _repaintChildren();
+    }
+
     if( mShow )
     {
         _showAll();
@@ -318,12 +325,12 @@ void UIManager::Update()
         _doUnminimize();
     }
 
-    // Check visibility of UI branch before bothering with repaints
-    if( mUIGroup->getValue( 0 ) )
-    {
-        m_opacityUniform->set( mOpacity );
-        _repaintChildren();
-    }
+//    // Check visibility of UI branch before bothering with repaints
+//    if( mUIGroup->getValue( 0 ) )
+//    {
+//        m_opacityUniform->set( mOpacity );
+//        _repaintChildren();
+//    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::HideAllElements()
@@ -796,9 +803,14 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     {
         element->SetMinimized( true );
         c1.setPosition( osg::Vec3f( mMinimizeXOffset, yPadding, 0.0f ) );
-        c1.setScale( osg::Vec3f( downScale * (uiCorners[ 1 ] - uiCorners[ 0 ]), downScale * (uiCorners[ 3 ] - uiCorners[ 2 ]), 1.0 ) );
+        float xSize = downScale * (uiCorners[ 1 ] - uiCorners[ 0 ]);
+        float ySize = downScale * (uiCorners[ 3 ] - uiCorners[ 2 ]);
+        c1.setScale( osg::Vec3f( xSize, ySize, 1.0 ) );
         osg::Matrixf tempMatrix;
+        //c0.getMatrix( tempMatrix );
+        //std::cout << "minimize before" << tempMatrix << std::endl;
         c1.getMatrix( tempMatrix );
+        //std::cout << "minimize after" << tempMatrix << std::endl << std::flush;
         element->PushUIMatrix( tempMatrix );
 
         mMinimizeXOffset += downScale * ( element->GetElementWidth() ) + xPadding;

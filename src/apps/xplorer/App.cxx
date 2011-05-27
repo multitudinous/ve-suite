@@ -623,7 +623,6 @@ void App::preFrame()
         //Sets the worldDCS before it is synced
         EnvironmentHandler::instance()->PreFrameUpdate();
     }
-
 #ifndef _DARWIN
     if( !m_uiInitialized )
     {
@@ -1277,9 +1276,10 @@ void App::LoadUI()
     m_UIManager->AddElement( element );
 
     // Start the main UI minimized
-    //Until we get minimize working with the new matrix stack tools this will
-    //be disabled.
-    //m_UIManager->MinimizeElement( element );
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        m_UIManager->MinimizeElement( element );
+    }
 
     m_uiInitialized = true;
 
