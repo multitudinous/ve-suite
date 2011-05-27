@@ -36,7 +36,7 @@
 #include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/open/xml/XMLObjectPtr.h>
 
-#include <boost/signals2/signal.hpp>
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 
 namespace ves
@@ -70,8 +70,7 @@ protected:
     ///\param command The Command containing the udpated transform.
     void _operateOnNode( ves::open::xml::XMLObjectPtr command );
 
-    typedef boost::signals2::signal< void() > CADNodeAdded_Type;
-    CADNodeAdded_Type m_CADNodeAdded;
+    ves::util::StringSignal_type m_CADNodeAdded;
 };
 
 }

@@ -18,7 +18,7 @@ EventFactory::EventFactory():
 
     EventManager* evm = EventManager::instance();
 
-    ///Delete viz feature
+    //Delete viz feature
     {
         SignalWrapperBase* swb =
                 new SignalWrapper< ves::util::StringSignal_type >( &m_deleteVizSignal );
@@ -27,7 +27,7 @@ EventFactory::EventFactory():
         m_signals[ "VizBasePropertySet.DeleteVizFeature" ] = swb;
     }
 
-    ///Add viz feature
+    //Add viz feature
     {
         SignalWrapperBase* swb =
                 new SignalWrapper< ves::util::TwoStringSignal_type >( &m_addVizSignal );
@@ -35,6 +35,17 @@ EventFactory::EventFactory():
             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "VizBasePropertySet.AddVizFeature" ] = swb;
     }
+
+    //Ves File Loading
+    {
+        SignalWrapperBase* swb =
+                new SignalWrapper< ves::util::StringSignal_type >( &m_vesFileLoadingSignal );
+        evm->RegisterSignal( swb, "VesFileLoading",
+            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "VesFileLoading" ] = swb;
+    }
+
+    //Ves File Loaded
     {
         SignalWrapperBase* swb =
                 new SignalWrapper< ves::util::StringSignal_type >( &m_vesFileLoadedSignal );

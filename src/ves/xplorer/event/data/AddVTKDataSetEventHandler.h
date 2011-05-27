@@ -37,6 +37,8 @@
 
 #include <ves/xplorer/ModelPtr.h>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 #include <string>
 
 
@@ -86,6 +88,8 @@ protected:
     void Load3DTextureDirectories( std::string dirToLoad );
 
     ves::xplorer::Model* _activeModel;///<The active cfdModel;
+
+    ves::util::StringSignal_type m_datafileLoaded;
 };
 
 }

@@ -52,6 +52,8 @@ namespace data
 ///Turns greyscaling for contour planes on or off.
 void SetContourPlaneGreyscale( std::string const& uuid, std::vector< bool > const& greyscaleflag );
 
+void TransformDatasetNode( const std::string& uuid, const std::vector< double >& transform );
+
     
 } //end data
 } //end event

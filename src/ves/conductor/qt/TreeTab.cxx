@@ -61,6 +61,7 @@
 #include <iostream>
 
 Q_DECLARE_METATYPE(osg::NodePath)
+Q_DECLARE_METATYPE(std::string)
 
 namespace ves
 {
@@ -87,8 +88,13 @@ TreeTab::TreeTab(QWidget *parent) :
     mBrowser = new PropertyBrowser( this );
 
     qRegisterMetaType<osg::NodePath>();
+    qRegisterMetaType<std::string>();
     QObject::connect( this, SIGNAL( ObjectPicked( osg::NodePath ) ),
                       this, SLOT( QueuedOnObjectPicked( osg::NodePath ) ),
+                      Qt::QueuedConnection );
+
+    QObject::connect( this, SIGNAL(NodeAddedQSignal(std::string)),
+                      this, SLOT(QueuedNodeAdded(std::string)),
                       Qt::QueuedConnection );
 
     // Connect to ObjectPickedSignal so we can update the scenegraph tree view when
@@ -103,10 +109,15 @@ TreeTab::TreeTab(QWidget *parent) :
             boost::signals2::signal< void( osg::NodePath& ) > >( &m_highlightAndSetManipulators ),
         "TreeTab.HighlightAndSetManipulators" );
 
-    CONNECTSIGNALS_0( "%NodeAdded",
-                     void(),
+    CONNECTSIGNALS_1( "%NodeAdded",
+                     void ( std::string const& ),
                      &TreeTab::OnNodeAdded,
                      mConnections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNAL_1( "AddVTKDataSetEventHandler.DatafileLoaded",
+                     void ( std::string const& ),
+                     &TreeTab::OnNodeAdded,
+                     mConnections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 TreeTab::~TreeTab()
@@ -267,9 +278,15 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     {
         // Update transform properties to agree with the current state of the
         // associated DCS
-        SyncTransformFromDCS();
+        SyncTransformFromDCS( newSelectedDCS );
         // Turn on live updates
         static_cast<ves::xplorer::data::CADPropertySet*>(mActiveSet.get())->
+                EnableLiveProperties( true );
+    }
+    else
+    {
+        SyncTransformFromDCS( newSelectedDCS );
+        static_cast<ves::xplorer::data::DatasetPropertySet*>(mActiveSet.get())->
                 EnableLiveProperties( true );
     }
 
@@ -289,19 +306,19 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TreeTab::SyncTransformFromDCS()
+void TreeTab::SyncTransformFromDCS( ves::xplorer::scenegraph::DCS* dcs )
 {
     if( !mActiveSet.get() )
     {
         return;
     }
 
-    ves::xplorer::Model* model = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-    ves::xplorer::ModelCADHandler* mch = model->GetModelCADHandler();
-    if( mch->PartExists( mActiveSet->GetUUIDAsString() ) )
+    //ves::xplorer::Model* model = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    //ves::xplorer::ModelCADHandler* mch = model->GetModelCADHandler();
+    //if( mch->PartExists( mActiveSet->GetUUIDAsString() ) )
     {
-        ves::xplorer::scenegraph::CADEntity* cad = mch->GetPart( mActiveSet->GetUUIDAsString() );
-        ves::xplorer::scenegraph::DCS* dcs = cad->GetDCS();
+      //  ves::xplorer::scenegraph::CADEntity* cad = mch->GetPart( mActiveSet->GetUUIDAsString() );
+      //  ves::xplorer::scenegraph::DCS* dcs = cad->GetDCS();
 
         double* trans = dcs->GetVETranslationArray();
         mActiveSet->SetPropertyValue( "Transform_Translation_X", trans[0] );
@@ -367,18 +384,23 @@ std::string TreeTab::GetSelectedNodeID()
         return std::string();
     }
 }
-
-void TreeTab::OnNodeAdded()
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::OnNodeAdded( std::string const& filename )
+{
+    NodeAddedQSignal( filename );
+}
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::QueuedNodeAdded( std::string const& filename )
 {
     on_m_refreshTreeButton_clicked();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_m_refreshTreeButton_clicked()
 {
     // Read the scenegraph and rebuild tree.
     PopulateWithRoot(
         &(ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager()) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
 } // namespace ves

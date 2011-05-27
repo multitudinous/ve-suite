@@ -37,6 +37,8 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/device/cfdCursor.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -58,9 +60,13 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 AxesEventHandler::AxesEventHandler()
-        : ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler(),
+         _activeModel( 0 )
 {
-    _activeModel = 0;
+    CONNECTSIGNALS_2( "%ShowDatasetAxes",
+                     void ( const std::string&, const bool ),
+                     &AxesEventHandler::ShowAxes,
+                     m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 AxesEventHandler::AxesEventHandler( const AxesEventHandler& rhs )
@@ -125,4 +131,20 @@ void AxesEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
         dataSet->SetAxesState( state );
     }
 
+}
+
+void AxesEventHandler::ShowAxes( const std::string& uuid, const bool& show )
+{
+    SetGlobalBaseObject();
+    ves::xplorer::data::DatasetPropertySet set;
+    set.SetUUID( uuid );
+    set.LoadFromDatabase();
+    std::string datasetName = boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
+
+    DataSet* dataSet = _activeModel->GetCfdDataSet(
+     _activeModel->GetIndexOfDataSet( datasetName ) );
+    if( dataSet )
+    {
+        dataSet->SetAxesState( show );
+    }
 }

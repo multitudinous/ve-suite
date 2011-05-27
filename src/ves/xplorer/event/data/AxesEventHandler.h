@@ -37,7 +37,7 @@
 
 #include <ves/xplorer/ModelPtr.h>
 #include <ves/open/xml/XMLObjectPtr.h>
-
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
 #include <map>
 
@@ -79,8 +79,11 @@ public:
     ///\param xmlObject The current xmlObject event.
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
+    void ShowAxes( const std::string& uuid, const bool& show );
+
 private:
     ves::xplorer::Model* _activeModel;///<The active cfdModel
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 
 }

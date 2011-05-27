@@ -101,7 +101,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     std::cout << "|\tThe new working directory is " 
         << newWorkingDir << std::endl;
 
-    std::string tFileName = dir_path.filename().string();
+    m_filename = dir_path.filename().string();
 
 #ifdef WIN32
     //http://msdn.microsoft.com/en-us/library/bf7fwze1(VS.80).aspx
@@ -134,8 +134,8 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         // Let xplorer know we are loading a new ves file so that it can do any
         // necessary cleanup, such as resetting the database
         reinterpret_cast< xplorer::eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
-        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
-        ->mSignal->operator()( tFileName );
+        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoading" ) )
+        ->mSignal->operator()( m_filename );
 /*        CommandPtr loadVesFile( new Command() );
         loadVesFile->SetCommandName( "LOAD_VES_FILE" );
         // Dummy DVP to prevent crashes since xplorer assumes existence of 
@@ -206,7 +206,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     //Now load the xml data now that we are in the correct directory
     //canvas->PopulateNetworks( fileName );
     // RPT: Following line replaces key functionality of canvas->PopulateNetworks
-    XMLDataBufferEngine::instance()->LoadVESData( tFileName );
+    XMLDataBufferEngine::instance()->LoadVESData( m_filename );
 
     //create hierarchy page
     //hierarchyTree->PopulateTree();
@@ -424,6 +424,11 @@ void NetworkLoader::OnActiveModelChanged( const std::string& modelID )
     {
         ves::xplorer::data::DatabaseManager::instance()->LoadFrom( db );
     }
+
+    // Notify of completion of this file load
+    reinterpret_cast< xplorer::eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
+    ->mSignal->operator()( m_filename );
 
     //Autodestruct
     delete this;

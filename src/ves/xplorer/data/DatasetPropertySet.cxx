@@ -78,6 +78,38 @@ void DatasetPropertySet::CreateSkeleton()
     AddProperty( "Axes_ZLabel", std::string( "Z Axis" ), "Z axis label" );
 
 
+    AddProperty( "Transform", boost::any(), "Transform" );
+    SetPropertyAttribute( "Transform", "isUIGroupOnly", true );
+    SetPropertyAttribute( "Transform", "setExpanded", false );
+
+    AddProperty( "Transform_Translation", boost::any(), "Translation" );
+    SetPropertyAttribute( "Transform_Translation", "isUIGroupOnly", true );
+
+    AddProperty( "Transform_Translation_X", 0.0, "x" );
+    AddProperty( "Transform_Translation_Y", 0.0, "y" );
+    AddProperty( "Transform_Translation_Z", 0.0, "z" );
+    SetPropertyAttribute( "Transform_Translation_X", "DisplayPrecision", 4 );
+    SetPropertyAttribute( "Transform_Translation_Y", "DisplayPrecision", 4 );
+    SetPropertyAttribute( "Transform_Translation_Z", "DisplayPrecision", 4 );
+
+    AddProperty( "Transform_Rotation", boost::any(), "Rotation" );
+    SetPropertyAttribute( "Transform_Rotation", "isUIGroupOnly", true );
+
+    AddProperty( "Transform_Rotation_X", 0.0, "x" );
+    AddProperty( "Transform_Rotation_Y", 0.0, "y" );
+    AddProperty( "Transform_Rotation_Z", 0.0, "z" );
+
+    AddProperty( "Transform_Scale", boost::any(), "Scale" );
+    SetPropertyAttribute( "Transform_Scale", "isUIGroupOnly", true );
+
+    AddProperty( "Transform_Scale_X", 0.0, "x" );
+    AddProperty( "Transform_Scale_Y", 0.0, "y" );
+    AddProperty( "Transform_Scale_Z", 0.0, "z" );
+    SetPropertyAttribute( "Transform_Scale_X", "DisplayPrecision", 6 );
+    SetPropertyAttribute( "Transform_Scale_Y", "DisplayPrecision", 6 );
+    SetPropertyAttribute( "Transform_Scale_Z", "DisplayPrecision", 6 );
+
+
 
     //***** The following properties should all eventually make use of
     // of userVisibile = false to hide them from the user. They are intended
@@ -119,3 +151,58 @@ void DatasetPropertySet::CreateSkeleton()
     SetPropertyAttribute( "PrecomputedSurfaceDir", "userVisible", false );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void DatasetPropertySet::EnableLiveProperties( bool live )
+{
+    if( !live )
+    {
+        // Clearing list will allow live objs to go out of scope and autodelete
+        mLiveObjects.clear();
+        return;
+    }
+    else if( !mLiveObjects.empty() )
+    {
+        // Properties are already live
+        return;
+    }
+    else
+    {
+        MakeLiveBasePtr p;
+
+        p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
+                                                     GetProperty( "BoundingBox" ),
+                                                     "ShowDatasetBBox",
+                                                     true ));
+        mLiveObjects.push_back( p );
+
+        p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
+                                                       GetProperty( "ScalarBar" ),
+                                                       "ShowDatasetScalarBar",
+                                                       true ));
+        mLiveObjects.push_back( p );
+
+        p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
+                                                       GetProperty( "Axes" ),
+                                                       "ShowDatasetAxes",
+                                                       true ));
+        mLiveObjects.push_back( p );
+
+        // Link up all the transform properties so that a single signal named
+        // "TransformCADNode" is fired whenever any of the values changes.
+        std::vector< PropertyPtr > transformLink;
+        transformLink.push_back( GetProperty( "Transform_Translation_X" ) );
+        transformLink.push_back( GetProperty( "Transform_Translation_Y" ) );
+        transformLink.push_back( GetProperty( "Transform_Translation_Z" ) );
+        transformLink.push_back( GetProperty( "Transform_Rotation_X" ) );
+        transformLink.push_back( GetProperty( "Transform_Rotation_Y" ) );
+        transformLink.push_back( GetProperty( "Transform_Rotation_Z" ) );
+        transformLink.push_back( GetProperty( "Transform_Scale_X" ) );
+        transformLink.push_back( GetProperty( "Transform_Scale_Y" ) );
+        transformLink.push_back( GetProperty( "Transform_Scale_Z" ) );
+        p = MakeLiveBasePtr(new MakeLiveLinked< double >(
+                mUUIDString,
+                transformLink,
+                "TransformDataNode"));
+        mLiveObjects.push_back(p);
+
+    }
+}

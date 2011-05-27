@@ -185,7 +185,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
                       &PluginSelectionTab::CreateUIPlugin, m_connections,
                       any_SignalType, normal_Priority);
 
-    CONNECTSIGNALS_1( "%VesFileLoaded%",
+    CONNECTSIGNALS_1( "%VesFileLoading%",
                       void( const std::string& ),
                       &PluginSelectionTab::FileLoadedSlot,
                       m_connections, any_SignalType, normal_Priority );

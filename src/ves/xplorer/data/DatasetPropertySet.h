@@ -65,6 +65,8 @@ public:
     ///Destructor
     virtual ~DatasetPropertySet();
 
+    void EnableLiveProperties( bool live );
+
 protected:
 
     

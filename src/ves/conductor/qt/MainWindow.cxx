@@ -233,17 +233,35 @@ MainWindow::MainWindow(QWidget* parent) :
                       this, SLOT( QueuedOnActiveModelChanged( std::string ) ),
                       Qt::QueuedConnection );
 
+    QObject::connect( this, SIGNAL(RemoveNotifierQSignal(std::string)),
+             this, SLOT(QueuedRemoveNotifier(std::string)),
+             Qt::QueuedConnection );
+
     // Connect to the ActiveModelChangedSignal so we can show the correct 
     // tabs when the model changes
     CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
                      void ( const std::string& ),
                      &MainWindow::OnActiveModelChanged,
                      mConnections, normal_Priority );
-
-    CONNECTSIGNALS_0( "%NodeAdded",
-                     void(),
-                     &MainWindow::OnNodeAdded,
+    // Connect to NodeAdded signal, which is sent out whenever CAD is added to the
+    // scenegraph
+    CONNECTSIGNALS_1( "%NodeAdded",
+                      void( const std::string& ),
+                     &MainWindow::RemoveNotifier,
                      mConnections, any_SignalType, normal_Priority );
+    // Connect to VesFileLoaded signal, which is sent out when loading of a .ves
+    // finishes
+    CONNECTSIGNAL_1( "%VesFileLoaded",
+                     void ( const std::string& ),
+                     &MainWindow::RemoveNotifier,
+                     mConnections, normal_Priority );
+    // Connect to DatafileLoaded signal, which is sent out when loading of a
+    // dataset finishes.
+    CONNECTSIGNAL_1( "AddVTKDataSetEventHandler.DatafileLoaded",
+                     void ( const std::string& ),
+                     &MainWindow::RemoveNotifier,
+                     mConnections, normal_Priority );
+
 
     m_GeometryExtensions.push_back("osg");
     m_GeometryExtensions.push_back("ive");
@@ -547,7 +565,7 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
 //            m_loading = new QLabel;
 //        }
         QLabel* m_loading = new QLabel();
-        m_loadNotifiers.push_back( m_loading );
+        //m_loadNotifiers.push_back( m_loading );
         QString text("Loading ");
         m_loading->setStyleSheet( "font: bold 16px;" );
         m_loading->setAlignment( Qt::AlignCenter );
@@ -557,6 +575,8 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         QDir dir = QDir::current();
         fileName = dir.relativeFilePath( fileName );
         boost::filesystem::path file( fileName.toStdString() );
+
+        m_loadNotifiers[ file.filename().string() ] = m_loading;
 
         text = text + fileName + " ...";
         m_loading->setText( text );
@@ -672,8 +692,7 @@ void MainWindow::LoadDataFile( std::string filename )
         dir.setPath( dir.absolutePath( ) );
         boost::filesystem::path tmp( dir.path().toStdString() );
         filePath = filePath.fromStdString( tmp.remove_filename().string() );
-        this->on_actionNew_triggered( filePath );
-        on_actionNew_triggered();
+        on_actionNew_triggered( filePath );
         // Now the filename passed in can be shortened to just the leaf.
         boost::filesystem::path tmp2( filename );
         filename = tmp2.filename().string();
@@ -782,8 +801,7 @@ void MainWindow::LoadDataFile( std::string filename )
     }
     veCommand->AddDataValuePair( dataSetName );
     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
-    AddTab( mVisualizationTab, "Visualization" );
-    ActivateTab("Visualization");
+    ActivateTab( AddTab( mVisualizationTab, "Visualization" ) );
 
     // Unclear why this is needed here, but for some reason mFileDialog is not
     // otherwise being nulled out when loading datasets.
@@ -906,7 +924,7 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 
     const std::string LastKnownActive = mActiveTab;
 
-    RemoveAllTabs();
+    //RemoveAllTabs();
 
     //Put the preferences tab first
     AddTab( m_preferencesTab, "Preferences" );
@@ -1257,7 +1275,7 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     // Let xplorer know we are loading a new ves file so that it can do any
     // necessary cleanup, such as resetting the database
     reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
-    ( eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
+    ( eventmanager::EventFactory::instance()->GetSignal( "VesFileLoading" ) )
     ->mSignal->operator()( "New" );
 
     XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
@@ -1298,10 +1316,19 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     mScenegraphTreeTab->PopulateWithRoot(
         &(ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager()) );
 }
-
-void MainWindow::OnNodeAdded()
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::RemoveNotifier( const std::string& filename )
 {
-    RemoveTab( m_loadNotifiers.front() );
-    delete m_loadNotifiers.at(0);
-    m_loadNotifiers.erase( m_loadNotifiers.begin() );
+    RemoveNotifierQSignal( filename );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::QueuedRemoveNotifier(  std::string const& filename )
+{
+    std::map< std::string, QLabel* >::iterator iter = m_loadNotifiers.find( filename );
+    if( iter != m_loadNotifiers.end() )
+    {
+        RemoveTab( iter->second );
+        delete iter->second;
+        m_loadNotifiers.erase( iter );
+    }
 }

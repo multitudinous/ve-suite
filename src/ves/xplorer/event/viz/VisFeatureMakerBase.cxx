@@ -258,6 +258,15 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     //Need to wire this up to the UI
     //ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->
     //    SetDataSetScalarState( boost::any_cast<bool>( set->GetPropertyValue( "ScalarBar" ) ) );
+    // Load instance of selected DataSet from database and get relevant properties
+    // from it.
+    xplorer::data::DatasetPropertySet dataset;
+    dataset.LoadByKey( "Filename", boost::any_cast<std::string >
+                       ( set->GetPropertyAttribute
+                       ( "DataSet", "enumCurrentString" )
+                       ) );
+    ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->
+        SetDataSetScalarState( boost::any_cast<bool>( dataset.GetPropertyValue( "ScalarBar" ) ) );
     
     // Check to see if any of the objectss need updated before we
     // create actors

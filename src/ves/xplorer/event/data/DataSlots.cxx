@@ -38,6 +38,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
 
 namespace ves
 {
@@ -61,6 +62,46 @@ void SetContourPlaneGreyscale( std::string const& uuid, std::vector< bool > cons
     }
 
     ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetGreyscaleFlag( greyscaleflag[0] );
+}
+////////////////////////////////////////////////////////////////////////////////
+void TransformDatasetNode( const std::string& uuid, const std::vector< double >& transform )
+{
+    ves::xplorer::Model* activeModel = ModelHandler::instance()->GetActiveModel();
+
+    if( activeModel == NULL )
+    {
+        return;
+    }
+
+    ves::xplorer::data::DatasetPropertySet set;
+    set.SetUUID( uuid );
+    set.LoadFromDatabase();
+    std::string datasetName =
+            boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
+
+    DataSet* dataSet = activeModel->GetCfdDataSet(
+            activeModel->GetIndexOfDataSet( datasetName ) );
+
+    scenegraph::DCS* dcs = dataSet->GetDCS();
+
+    if( dcs )
+    {
+        // Entire transform is packed into a single vector. Unpack into
+        // separate translation, rotation, and scale pieces.
+        std::vector<double>::const_iterator start = transform.begin();
+        std::vector<double>::const_iterator stop = transform.begin() + 3;
+        std::vector<double> translation( start, stop  );
+        std::vector<double> rotation( start + 3, stop + 3 );
+        std::vector<double> scale( start + 6, stop + 6 );
+
+        dcs->SetTranslationArray( translation );
+        dcs->SetRotationArray( rotation );
+        dcs->SetScaleArray( scale );
+
+//        EnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( translation );
+//        EnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( rotation );
+//        EnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( scale );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

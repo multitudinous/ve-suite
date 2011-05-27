@@ -37,6 +37,8 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/device/cfdCursor.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -59,9 +61,13 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 BBoxEventHandler::BBoxEventHandler()
-        : ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler(),
+        _activeModel( 0 )
 {
-    _activeModel = 0;
+    CONNECTSIGNALS_2( "%ShowDatasetBBox",
+                     void ( const std::string&, const bool ),
+                     &BBoxEventHandler::ShowBBox,
+                     m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 BBoxEventHandler::BBoxEventHandler( const BBoxEventHandler& rhs )
@@ -126,4 +132,20 @@ void BBoxEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
         dataSet->SetBoundingBoxState( state );
     }
 
+}
+////////////////////////////////////////////////////////////////////////////////
+void BBoxEventHandler::ShowBBox( const std::string& uuid, const bool& show )
+{
+    SetGlobalBaseObject();
+    ves::xplorer::data::DatasetPropertySet set;
+    set.SetUUID( uuid );
+    set.LoadFromDatabase();
+    std::string datasetName = boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
+
+    DataSet* dataSet = _activeModel->GetCfdDataSet(
+     _activeModel->GetIndexOfDataSet( datasetName ) );
+    if( dataSet )
+    {
+        dataSet->SetBoundingBoxState( show );
+    }
 }

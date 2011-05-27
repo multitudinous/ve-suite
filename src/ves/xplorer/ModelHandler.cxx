@@ -200,10 +200,13 @@ ModelHandler::ModelHandler()
     new eventmanager::SignalWrapper< ActiveModelChangedSignal_type >( &mActiveModelChangedSignal ),
     "ModelHandler.ActiveModelChangedSignal");
 
-    CONNECTSIGNALS_STATIC( "%SetContourPlaneGreyscale", void( std::string const& uuid, std::vector< bool > const& greyscaleflag),
+    CONNECTSIGNALS_STATIC( "%SetContourPlaneGreyscale", void( std::string const&, std::vector< bool > const&),
                  &ves::xplorer::event::data::SetContourPlaneGreyscale,
                  m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_STATIC( "%TransformDataNode", void( std::string const&, std::vector< double > const&),
+                 &ves::xplorer::event::data::TransformDatasetNode,
+                 m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler()

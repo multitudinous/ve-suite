@@ -41,6 +41,7 @@
 #include <Poco/Data/DataException.h>
 
 #include <boost/shared_ptr.hpp>
+#define BOOST_FILESYSTEM_VERSION 2
 #include <boost/filesystem.hpp>
 
 #include <iostream>

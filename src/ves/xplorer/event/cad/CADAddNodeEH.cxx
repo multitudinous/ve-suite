@@ -53,8 +53,8 @@ CADAddNodeEventHandler::CADAddNodeEventHandler()
         : ves::xplorer::event::CADEventHandler()
 {
     eventmanager::EventManager::instance()->RegisterSignal(
-       new eventmanager::SignalWrapper< CADNodeAdded_Type >( &m_CADNodeAdded ),
-       "CADAddNodeEventHandler.NodeAdded" );
+       new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_CADNodeAdded ),
+       "CADEventHandler.NodeAdded" );
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADAddNodeEventHandler::CADAddNodeEventHandler( const CADAddNodeEventHandler& rhs )
@@ -138,12 +138,20 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         }
 
         if( nodeType == "Assembly" )
+        {
             _addNodeToNode( node->GetParent(), assembly );
+            // Since assemblies don't strictly have an associated filename,
+            // we send a blank filename arg.
+            m_CADNodeAdded( "" );
+        }
         else if( nodeType == "Part" )
+        {
             _addNodeToNode( node->GetParent(), part );
+            m_CADNodeAdded( part->GetCADFileName() );
+        }
 
         // Emit signal saying we've just added a CAD node of some sort.
-        m_CADNodeAdded();
+        //m_CADNodeAdded( node->GetNodeName() );
     }
     catch( char* str )
     {

@@ -66,6 +66,10 @@ private:
         NetworkLoader();
         ~NetworkLoader();
 
+        /// Holds the filename we're loading so we can later emit a signal
+        /// indicating loading is done.
+        std::string m_filename;
+
         void OnActiveModelChanged( const std::string& modelID );
         ves::xplorer::eventmanager::ScopedConnectionList m_connections;
         

@@ -130,8 +130,8 @@ protected:
     void LoadGeometryFile( std::string filename );
     /// Loads data file specified in @c filename
     void LoadDataFile( std::string filename );
-
-    void OnNodeAdded();
+    /// Removes "Loading file ..." notifier for file filename
+    void RemoveNotifier( const std::string& filename );
 
 protected Q_SLOTS:
     
@@ -279,10 +279,12 @@ Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
     /// required for thread safety
     void ActiveModelChanged( std::string modelID );
+    void RemoveNotifierQSignal( std::string filename );
 
 protected Q_SLOTS:
     /// Slot corresponding to ActiveModelChanged queued signal
     void QueuedOnActiveModelChanged( const std::string& modelID );
+    void QueuedRemoveNotifier( std::string const& filename );
 
 private: 
     ///Qt window widget
@@ -331,7 +333,7 @@ private:
 
     QMessageBox* m_messageBox;
     //QLabel* m_loading;
-    std::vector< QLabel* > m_loadNotifiers;
+    std::map< std::string, QLabel* > m_loadNotifiers;
 
     std::vector< std::string > m_GeometryExtensions;
     std::vector< std::string > m_DataExtensions;

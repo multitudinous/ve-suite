@@ -62,6 +62,13 @@ class TreeModel;
 
 namespace ves
 {
+namespace xplorer
+{
+namespace scenegraph
+{
+class DCS;
+}
+}
 namespace conductor
 {
 class PropertyBrowser;
@@ -96,9 +103,9 @@ protected:
     /// Syncs db with current transform info read from DCS. This is done
     /// right after a CADPropertySet is read from the db but before its
     /// live properties are enabled.
-    void SyncTransformFromDCS();
+    void SyncTransformFromDCS( ves::xplorer::scenegraph::DCS* dcs );
 
-    void OnNodeAdded();
+    void OnNodeAdded( std::string const& filename );
 
 protected Q_SLOTS:
     /// Called when user changes selection in tree.
@@ -119,6 +126,9 @@ protected Q_SLOTS:
     /// Slot corresponding to ObjectPicked queued signal. The final destination
     /// of logic begun in slot OnObjectPicked.
     void QueuedOnObjectPicked( osg::NodePath nodePath );
+    /// Slot corresponding to NodeAddedQSignal. Final destination of logic begun
+    /// in NodeAdded.
+    void QueuedNodeAdded( std::string const& filename );
 
     void on_m_refreshTreeButton_clicked();
 
@@ -129,6 +139,9 @@ protected Q_SLOTS:
     /// Queued signal emitted when OnObjectPicked slot is called. This is
     /// required for thread safety
     void ObjectPicked( osg::NodePath nodePath );
+    /// Queued signal emitted when NodeAdded slot is called. This is
+    /// required for thread safety
+    void NodeAddedQSignal( std::string const& filename );
 
 private:
     Ui::TreeTab *ui;

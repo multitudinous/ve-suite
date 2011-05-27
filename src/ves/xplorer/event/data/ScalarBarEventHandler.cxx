@@ -37,6 +37,8 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/device/cfdCursor.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -59,9 +61,13 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ScalarBarEventHandler::ScalarBarEventHandler()
-        : ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler(),
+        _activeModel( 0 )
 {
-    _activeModel = 0;
+    CONNECTSIGNALS_2( "%ShowDatasetScalarBar",
+                     void ( const std::string&, const bool ),
+                     &ScalarBarEventHandler::ShowScalarBar,
+                     m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ScalarBarEventHandler::ScalarBarEventHandler( const ScalarBarEventHandler& rhs )
@@ -107,7 +113,7 @@ void ScalarBarEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
         std::cout << "Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!" << std::endl;
     }
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ScalarBarEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
@@ -130,5 +136,21 @@ void ScalarBarEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObje
         _activeModel->SetActiveDataSet( dataSet );
         dataSet->SetActiveScalar( scalarName );
         dataSet->SetDataSetScalarState( state );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScalarBarEventHandler::ShowScalarBar( const std::string& uuid, const bool show )
+{
+    SetGlobalBaseObject();
+    ves::xplorer::data::DatasetPropertySet set;
+    set.SetUUID( uuid );
+    set.LoadFromDatabase();
+    std::string datasetName = boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
+
+    DataSet* dataSet = _activeModel->GetCfdDataSet(
+     _activeModel->GetIndexOfDataSet( datasetName ) );
+    if( dataSet )
+    {
+        dataSet->SetDataSetScalarState( show );
     }
 }

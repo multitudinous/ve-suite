@@ -86,7 +86,9 @@ private:
     /// The add viz signal
     /// Pass PropertySet UUID as arg1, tablename as arg2
     ves::util::TwoStringSignal_type m_addVizSignal;
-    /// Signal indicating a new ves file has just been loaded.
+    /// Signal indicating a new ves file is about to be loaded.
+    ves::util::StringSignal_type m_vesFileLoadingSignal;
+    /// Signal indicating a new ves file has successfully loaded.
     ves::util::StringSignal_type m_vesFileLoadedSignal;
 
     //--------------------------------------

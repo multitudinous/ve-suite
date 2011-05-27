@@ -38,6 +38,10 @@
 #include <ves/xplorer/ModelPtr.h>
 #include <ves/open/xml/XMLObjectPtr.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
+#include <string>
+
 
 
 namespace ves
@@ -77,8 +81,11 @@ public:
     ///\param xmlObject The current xmlObject event.
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
+    void ShowScalarBar( const std::string& uuid, const bool show );
+
 private:
     ves::xplorer::Model* _activeModel;
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 
 }
