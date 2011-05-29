@@ -72,6 +72,7 @@
 #define XERCESCDIRNAME "xerces-c-3.1.1-x86-windows-vc-9.0"
 #endif
 #define POCODIRNAME "poco-1.4.1p1-all"
+#define VRJUGGLERDIRNAME "vrjuggler-trunk"
 
 
 
