@@ -306,7 +306,8 @@ private:
     /// UI Elements
     osg::ref_ptr< osg::Uniform > m_mousePointUniform;
     osg::ref_ptr< osg::Uniform > m_opacityUniform;
-    
+    osg::ref_ptr< osg::Uniform > m_aspectRatioUniform;
+
     /// Current value of overall opacity
     float mOpacity;
 

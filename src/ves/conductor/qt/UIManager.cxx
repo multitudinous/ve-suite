@@ -418,27 +418,32 @@ void UIManager::Initialize( osg::Group* parentNode )
         "uniform float opacityVal;\n"
         "uniform vec3 glowColor; \n"
         "uniform vec2 mousePoint; \n"
+        "uniform float aspectRatio; \n"
 
         "void main() \n"
         "{ \n"
         "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
         // Calculate distance to circle center
-        "float d = distance(gl_TexCoord[0].st, mousePoint);\n"
+        "vec2 texCoords = gl_TexCoord[0].st; \n"
+        //"texCoords.s = texCoords.s * aspectRatio; \n"
+        "float d = distance(texCoords.st, mousePoint);\n"
         "vec4 tempColor = baseColor;\n"
 
-        "if( d < 0.05 )\n"
+        "if( d < 0.055 )\n"
         "{\n"
         //width of "pixel region" in texture coords
         //"   vec2 texCoordsStep = 1.0/(vec2(float(600),float(967))/float(20)); \n"
         //x and y coordinates within "pixel region"
         //"   vec2 pixelRegionCoords = fract(gl_TexCoord[0].st/texCoordsStep);\n"
         ///Radius squared
-        "   float radiusSqrd = pow(0.01,2.0);\n"
+        "   float radiusSqrd = pow(0.011,2.0);\n"
         ///tolerance
         "   float tolerance = 0.0001;\n"
-        "   vec2 powers = pow(abs(gl_TexCoord[0].st - mousePoint),vec2(2.0));\n"
+        //"   texCoords.t = texCoords.t * (1.0/aspectRatio); \n"
+        "   vec2 powers = pow(abs(texCoords.st - mousePoint),vec2(2.0));\n"
+        "   powers.t = powers.t * aspectRatio; \n"
         //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
-        "   float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, pow(d,2.0) );\n"
+        "   float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, powers.x+powers.y );\n"
         //blend between fragments in the circle and out of the circle defining our "pixel region"
         "   tempColor = mix( vec4(1.0,0.0,0.0,1.0), baseColor, gradient);\n"
         "}\n"
@@ -461,34 +466,51 @@ void UIManager::Initialize( osg::Group* parentNode )
     fragmentShader->setName( "VS UI Quad Fragment Shader" );
     program->addShader( fragmentShader.get() );
 
-    //Set depth test to always pass and don't write to the depth buffer
-    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    depth->setFunction( osg::Depth::ALWAYS );
-    depth->setWriteMask( false );
-
     //Create stateset for adding texture
 	osg::StateAttribute::GLModeValue glModeValue =
-		osg::StateAttribute::ON |
-		osg::StateAttribute::PROTECTED |
-		osg::StateAttribute::OVERRIDE;
+        osg::StateAttribute::ON |
+        osg::StateAttribute::PROTECTED |
+        osg::StateAttribute::OVERRIDE;
     osg::ref_ptr< osg::StateSet > stateset = mUIGroup->getOrCreateStateSet();
-    stateset->setRenderBinDetails( 99, "RenderBin" );
-    stateset->setAttributeAndModes( depth.get(), glModeValue );
-    stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
-    //stateset->setMode( GL_LIGHTING, glModeValue);
+    {
+        //Set depth test to always pass and don't write to the depth buffer
+        osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+        depth->setFunction( osg::Depth::ALWAYS );
+        depth->setWriteMask( false );
+        stateset->setRenderBinDetails( 99, "RenderBin" );
+        stateset->setAttributeAndModes( depth.get(), glModeValue );
+        stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
+        //stateset->setMode( GL_LIGHTING, glModeValue);
+    }
+
     stateset->setAttributeAndModes( program.get(), glModeValue );
     stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
-    m_opacityUniform = new osg::Uniform( "opacityVal", mOpacity );
-    stateset->addUniform( m_opacityUniform.get() );
 
-    m_mousePointUniform = new osg::Uniform( "mousePoint", osg::Vec2d( 0.2, 0.2 ) );
-    stateset->addUniform( m_mousePointUniform.get() );
+    {
+        m_opacityUniform = new osg::Uniform( "opacityVal", mOpacity );
+        stateset->addUniform( m_opacityUniform.get() );
+    }
 
-    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
-    bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
-                     osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-    stateset->setMode( GL_BLEND, glModeValue );
-    stateset->setAttributeAndModes( bf.get(), glModeValue );
+    {
+        m_mousePointUniform = 
+            new osg::Uniform( "mousePoint", osg::Vec2d( -1.0, -1.0 ) );
+        stateset->addUniform( m_mousePointUniform.get() );
+    }
+
+    {
+        float uiAspectRatio = 1.0;
+        m_aspectRatioUniform = 
+            new osg::Uniform( "aspectRatio", uiAspectRatio );
+        stateset->addUniform( m_aspectRatioUniform.get() );
+    }
+
+    {
+        osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
+        bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
+                        osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+        stateset->setMode( GL_BLEND, glModeValue );
+        stateset->setAttributeAndModes( bf.get(), glModeValue );
+    }
 
     mInitialized = true;
 }
@@ -608,6 +630,9 @@ void UIManager::_repaintChildren()
         UIElement* element = map_iterator->second;
         if( element->IsVisible() )
         {
+            float uiAspectRatio =
+                float( element->GetImageHeight() ) / float( element->GetImageWidth() );
+            m_aspectRatioUniform->set( uiAspectRatio );
             element->Update();
             unsigned char* image_Data = element->RenderElementToImage();
 
