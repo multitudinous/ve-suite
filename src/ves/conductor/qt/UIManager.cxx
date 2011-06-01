@@ -424,9 +424,7 @@ void UIManager::Initialize( osg::Group* parentNode )
         "{ \n"
         "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
         // Calculate distance to circle center
-        "vec2 texCoords = gl_TexCoord[0].st; \n"
-        //"texCoords.s = texCoords.s * aspectRatio; \n"
-        "float d = distance(texCoords.st, mousePoint);\n"
+        "float d = distance(gl_TexCoord[0].st, mousePoint);\n"
         "vec4 tempColor = baseColor;\n"
 
         "if( d < 0.055 )\n"
@@ -436,12 +434,14 @@ void UIManager::Initialize( osg::Group* parentNode )
         //x and y coordinates within "pixel region"
         //"   vec2 pixelRegionCoords = fract(gl_TexCoord[0].st/texCoordsStep);\n"
         ///Radius squared
-        "   float radiusSqrd = pow(0.011,2.0);\n"
+        "   float radiusSqrd = pow(0.012,2.0);\n"
         ///tolerance
         "   float tolerance = 0.0001;\n"
-        //"   texCoords.t = texCoords.t * (1.0/aspectRatio); \n"
-        "   vec2 powers = pow(abs(texCoords.st - mousePoint),vec2(2.0));\n"
-        "   powers.t = powers.t * aspectRatio; \n"
+        "   vec2 powers = pow(abs(gl_TexCoord[0].st - mousePoint),vec2(2.0));\n"
+        ///Account for thr fact that the texture is not square and therefore
+        ///the mapping from -1 to 1 is not uniform in distance for the 
+        ///circle
+        "   powers.t = powers.t * aspectRatio * aspectRatio; \n"
         //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
         "   float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, powers.x+powers.y );\n"
         //blend between fragments in the circle and out of the circle defining our "pixel region"
