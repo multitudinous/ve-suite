@@ -1725,20 +1725,6 @@ void DataSet::SetBoundingBoxState( unsigned int state )
         GetDCS()->AddChild( m_visualBBox.get() );
     }
     m_visualBBox->setNodeMask(( state == 0 ) ? 0 : 1 );
-    /*if ( (state == 0) && bboxGeode.valid() )
-    {
-       //GetDCS()->RemoveChild( bboxGeode.get() );
-        bboxGeode->setNodeMask(0);
-    }
-    else if(state == 1 )
-    {
-       if(bboxGeode == 0 )
-       {
-       
-       }
-       GetDCS()->RemoveChild( bboxGeode.get() );
-      
-    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetWireframeState( unsigned int state )
