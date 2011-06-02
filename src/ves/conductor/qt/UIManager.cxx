@@ -414,52 +414,33 @@ void UIManager::Initialize( osg::Group* parentNode )
 
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     std::string fragmentSource =
-        "uniform sampler2D baseMap; \n"
-        "uniform float opacityVal;\n"
-        "uniform vec3 glowColor; \n"
-        "uniform vec2 mousePoint; \n"
-        "uniform float aspectRatio; \n"
+    "uniform sampler2D baseMap;\n"
+    "uniform vec2 mousePoint;\n"
+    "uniform vec3 glowColor;\n"
+    "uniform float opacityVal;\n"
+    "uniform float aspectRatio;\n"
 
-        "void main() \n"
-        "{ \n"
-        "vec4 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
-        // Calculate distance to circle center
-        "float d = distance(gl_TexCoord[0].st, mousePoint);\n"
-        "vec4 tempColor = baseColor;\n"
+    "void main()\n"
+    "{\n"
+        "vec3 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ).rgb;\n"
 
-        "if( d < 0.055 )\n"
+        "vec2 v = abs( gl_TexCoord[ 0 ].st - mousePoint );\n"
+        "v.t *= aspectRatio;\n"
+        "vec2 v2 = v * v;\n"
+
+        "float radius = 0.025;\n"
+        "float r2 = radius * radius;\n"
+
+        //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
+        "if( ( v2.s + v2.t ) <= r2 )\n"
         "{\n"
-        //width of "pixel region" in texture coords
-        //"   vec2 texCoordsStep = 1.0/(vec2(float(600),float(967))/float(20)); \n"
-        //x and y coordinates within "pixel region"
-        //"   vec2 pixelRegionCoords = fract(gl_TexCoord[0].st/texCoordsStep);\n"
-        ///Radius squared
-        "   float radiusSqrd = pow(0.012,2.0);\n"
-        ///tolerance
-        "   float tolerance = 0.0001;\n"
-        "   vec2 powers = pow(abs(gl_TexCoord[0].st - mousePoint),vec2(2.0));\n"
-        ///Account for thr fact that the texture is not square and therefore
-        ///the mapping from -1 to 1 is not uniform in distance for the 
-        ///circle
-        "   powers.t = powers.t * aspectRatio * aspectRatio; \n"
-        //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
-        "   float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, powers.x+powers.y );\n"
-        //blend between fragments in the circle and out of the circle defining our "pixel region"
-        "   tempColor = mix( vec4(1.0,0.0,0.0,1.0), baseColor, gradient);\n"
+            "float grad = smoothstep( 0.0, r2, v2.s + v2.t );\n"
+            "baseColor = mix( vec3( 1.0, 0.0, 0.0 ), baseColor, grad );\n"
         "}\n"
-        //"vec2 powers = pow(abs(gl_TexCoord[ 0 ].st - mousePoint),vec2(2.0));\n"
-        ///Radius squared
-        //"float radiusSqrd = pow(0.003,2.0);\n"
-        ///tolerance
-        //"float tolerance = 0.0001;\n"
-        //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
-        //"float gradient = smoothstep(radiusSqrd-tolerance, radiusSqrd+tolerance, powers.x+powers.y);\n"
-        //blend between fragments in the circle and out of the circle defining our "pixel region"
-        //"vec4 tempColor = mix( vec4(1.0,0.0,0.0,1.0), baseColor, gradient);\n"
-        "tempColor.a = opacityVal;\n"
-        "gl_FragData[ 0 ] = tempColor; \n"
-        "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-        "} \n";
+
+        "gl_FragData[ 0 ] = vec4( baseColor, opacityVal );\n"
+        "gl_FragData[ 1 ] = vec4( glowColor, opacityVal );\n"
+    "}\n";
 
     fragmentShader->setType( osg::Shader::FRAGMENT );
     fragmentShader->setShaderSource( fragmentSource );
@@ -467,7 +448,7 @@ void UIManager::Initialize( osg::Group* parentNode )
     program->addShader( fragmentShader.get() );
 
     //Create stateset for adding texture
-	osg::StateAttribute::GLModeValue glModeValue =
+    osg::StateAttribute::GLModeValue glModeValue =
         osg::StateAttribute::ON |
         osg::StateAttribute::PROTECTED |
         osg::StateAttribute::OVERRIDE;
