@@ -223,7 +223,7 @@ SConsignFile(options_db_cache)
 
 if GetPlatform() == 'win32':
     vtk_options = fp_option.FlagPollBasedOption("VTK",
-         "VTK", "5.2", True, True, compileTest=True )
+         "VTK", "5.8", True, True, compileTest=True )
 else:
     vtk_options = SConsAddons.Options.StandardPackageOption("vtk",
         "VTK library options, default : vtk_incdir=<vtk>/include/vtk-5.2 vtk_libdir=<vtk>/lib(64)/vtk-5.2", 
@@ -236,11 +236,11 @@ else:
         symbol="main", required=True)
     if ARGUMENTS.has_key("vtk"):
         vtkBaseDir = ARGUMENTS["vtk"]
-        vtk_options.setInitial( {'vtk_incdir' : pj(vtkBaseDir,'include','vtk-5.2'),
-                'vtk_libdir': pj(vtkBaseDir,'lib','vtk-5.2')} )
+        vtk_options.setInitial( {'vtk_incdir' : pj(vtkBaseDir,'include','vtk-5.8'),
+                'vtk_libdir': pj(vtkBaseDir,'lib','vtk-5.8')} )
 opts.AddOption( vtk_options )
 
-#opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.2')
+#opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.8')
 hdf5_options = HDF5.HDF5("hdf5","1.6.5", False, True, ['hdf5','hdf5_cpp','hdf5_hl','sz'])
 opts.AddOption(hdf5_options)
 hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','df','jpeg'])
