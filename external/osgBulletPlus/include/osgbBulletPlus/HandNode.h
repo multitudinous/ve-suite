@@ -62,10 +62,10 @@ public:
     virtual bool computeLocalToWorldMatrix( osg::Matrix& matrix, osg::NodeVisitor* nv ) const;
     virtual bool computeWorldToLocalMatrix( osg::Matrix& matrix, osg::NodeVisitor* nv ) const;
 
-    inline void setPosition( const osg::Vec3d& pos ) { _position = pos; dirtyBound(); updateTransform(); }
-    inline const osg::Vec3d& getPosition() const { return _position; }
+    void setPosition( const osg::Vec3& pos ); 
+    inline const osg::Vec3& getPosition() const { return _position; }
 
-    inline void setAttitude( const osg::Quat& quat ) { _attitude = quat; dirtyBound(); updateTransform(); }
+    void setAttitude( const osg::Quat& quat );
     inline const osg::Quat& getAttitude() const { return _attitude; }
 
     inline void setTraverseHand( const bool traverse ) { _traverseHand = traverse; }

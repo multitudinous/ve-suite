@@ -569,6 +569,12 @@ bool HandNode::computeWorldToLocalMatrix( osg::Matrix& matrix, osg::NodeVisitor*
     return true;
 }
 
+
+void HandNode::setPosition( const osg::Vec3& pos ) 
+{ _position = pos; dirtyBound(); updateTransform(); }
+
+void HandNode::setAttitude( const osg::Quat& quat ) 
+{ _attitude = quat; dirtyBound(); updateTransform(); }
 // Must be called to set the Bullet shape transformations any time
 // the PAT transformation changes. This wouldn't be necessary if
 // we could override methods like setPosition and setAttitude, but
