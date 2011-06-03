@@ -226,21 +226,21 @@ SConsignFile(options_db_cache)
 
 if GetPlatform() == 'win32':
     vtk_options = fp_option.FlagPollBasedOption("VTK",
-         "VTK", "5.2", True, True, compileTest=True )
+         "VTK", "5.4", True, True, compileTest=True )
 else:
     vtk_options = SConsAddons.Options.StandardPackageOption("vtk",
         "VTK library options, default : vtk_incdir=<vtk>/include/vtk-5.2 vtk_libdir=<vtk>/lib(64)/vtk-5.2", 
-        pj('vtkConfigure.h'), library=['vtkImaging','vtkGraphics','vtkCommon','vtkHybrid',
-                         'vtkIO','vtkFiltering','vtkRendering', 
-                         'vtkParallel','vtksys', 
-                         'vtkexoIIc','vtkftgl','vtkDICOMParser', 
-                         'vtkNetCDF',
-                         'vtkmetaio','vtksqlite'], 
+        pj('vtkConfigure.h'), library=['vtkImaging','vtkGraphics','vtkCommon',
+                         'vtkIO','vtkFiltering','vtkRendering','vtkHybrid',
+                         'vtkParallel','vtksys', 'vtkverdict',
+                         'vtkexoIIc','vtkftgl','vtkDICOMParser','vtkexpat',
+                         'vtkNetCDF','vtkjpeg','vtktiff','vtkpng',
+                         'vtkmetaio','vtksqlite','vtkfreetype'], 
         symbol="main", required=True)
     if ARGUMENTS.has_key("vtk"):
         vtkBaseDir = ARGUMENTS["vtk"]
-        vtk_options.setInitial( {'vtk_incdir' : pj(vtkBaseDir,'include','vtk-5.2'),
-                'vtk_libdir': pj(vtkBaseDir,'lib','vtk-5.2')} )
+        vtk_options.setInitial( {'vtk_incdir' : pj(vtkBaseDir,'include','vtk-5.4'),
+                'vtk_libdir': pj(vtkBaseDir,'lib','vtk-5.4')} )
 opts.AddOption( vtk_options )
 
 #opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.2')
@@ -361,7 +361,7 @@ else:
     poco_options = SConsAddons.Options.StandardPackageOption("POCO",
       "POCO library options, default : POCO_incdir=<POCO>/include POCO_libdir=<POCO>/lib(64)", 
       pj('Poco','Data','SQLite','SQLite.h'), library=['PocoFoundation','PocoData',
-      'PocoNet','PocoSQLite','PocoUtil','PocoXML','PocoZip'], symbol="main", required=False)
+      'PocoNet','PocoDataSQLite','PocoUtil','PocoXML','PocoZip'], symbol="main", required=False)
 
 # Setup osgWorks library
 if GetPlatform() == 'win32':
