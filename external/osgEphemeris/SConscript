@@ -2,7 +2,6 @@
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
-
 Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform')
 openDir = os.path.abspath( pj(RootDir, 'external', 'osgEphemeris') )
 headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgEphemeris') )
