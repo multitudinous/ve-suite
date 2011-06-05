@@ -218,7 +218,7 @@ void CharacterController::Initialize()
         osg::StateSet* tempState = backdropFX::accumulateStateSetsAndShaderModules( tempMap, nodePath );
         
         backdropFX::ShaderModuleVisitor smv;
-        smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
+        //smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
         smv.setInitialStateSet( tempState, tempMap );
         
         backdropFX::convertFFPToShaderModules( mMatrixTransform.get(), &smv );

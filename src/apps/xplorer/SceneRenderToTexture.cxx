@@ -118,9 +118,7 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
     m_1dyVP( NULL ),
     m_1dyFP( NULL ),
     m_finalShader( NULL ),
-    m_light0( new osg::Light() ),
-    m_lightSource0( new osg::LightSource() ),
-    m_lightModel0( new osg::LightModel() )
+    m_light0( new osg::Light() )
 {
     /// When m_enableRTT is true we will use our old RTT and post processing 
     /// pipeline. When it is false we will use bdfx.
@@ -183,7 +181,11 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
         // Disable depth partitioning.
         backdropFX::Manager::instance()->getDepthPartition().setNumPartitions( 1 );
         
-        backdropFX::Manager::instance()->rebuild( 0 );//backdropFX::Manager::depthPeel );
+        backdropFX::Manager::instance()->
+            rebuild( backdropFX::Manager::defaultFeatures & 
+                    ~backdropFX::Manager::shadowMap & 
+                    ~backdropFX::Manager::skyDome & 
+                    ~backdropFX::Manager::depthPeel );
 
         //
         InitRootGroup();
@@ -252,27 +254,37 @@ void SceneRenderToTexture::SetupDefaultLighting()
     m_light0->setAmbient( osg::Vec4d( 0.36862, 0.36842, 0.36842, 1.0 ) );
     m_light0->setDiffuse( osg::Vec4d( 0.88627, 0.88500, 0.88500, 1.0 ) );
     m_light0->setSpecular( osg::Vec4d( 0.49019, 0.48872, 0.48872, 1.0 ) );
-    //We are in openGL space
-    m_light0->setPosition( osg::Vec4d( 0.0, 10000.0, 10000.0, 0.0 ) );
-    //m_light0->setDirection( osg::Vec3d( 0.0, 1.0, -1.0 ) );
 
-    m_lightSource0->setLight( m_light0.get() );
-    m_lightSource0->setLocalStateSetModes( osg::StateAttribute::ON );
-    //See the opengl docs on the difference between ABSOLUTE and RELATIVE
-    m_lightSource0->setReferenceFrame( osg::LightSource::RELATIVE_RF );
+    if( m_enableRTT )
+    {
+        //We are in openGL space
+        m_light0->setPosition( osg::Vec4d( 0.0, 10000.0, 10000.0, 0.0 ) );
 
-    m_lightModel0->setAmbientIntensity( osg::Vec4( 0.1, 0.1, 0.1, 1.0 ) );
-    //Get correct specular lighting across pipes
-    //See http://www.ds.arch.tue.nl/General/Staff/Joran/osg/osg_specular_problem.htm
-    m_lightModel0->setLocalViewer( true );
+        osg::LightSource* lightSource0 = new osg::LightSource();
+        lightSource0->setLight( m_light0.get() );
+        lightSource0->setLocalStateSetModes( osg::StateAttribute::ON );
+        //See the opengl docs on the difference between ABSOLUTE and RELATIVE
+        lightSource0->setReferenceFrame( osg::LightSource::RELATIVE_RF );
+        
+        osg::LightModel* lightModel0 = new osg::LightModel();       
+        lightModel0->setAmbientIntensity( osg::Vec4( 0.1, 0.1, 0.1, 1.0 ) );
+        //Get correct specular lighting across pipes
+        //See http://www.ds.arch.tue.nl/General/Staff/Joran/osg/osg_specular_problem.htm
+        lightModel0->setLocalViewer( true );
 
-    osg::ref_ptr< osg::StateSet > lightStateSet =
+        osg::ref_ptr< osg::StateSet > lightStateSet =
         m_rootGroup->getOrCreateStateSet();
-    lightStateSet->setAssociatedModes( m_light0.get(), osg::StateAttribute::ON );
-    lightStateSet->setMode( GL_LIGHTING, osg::StateAttribute::ON );
-    lightStateSet->setAttributeAndModes(
-        m_lightModel0.get(), osg::StateAttribute::ON );
-    m_rootGroup->addChild( m_lightSource0.get() );
+        lightStateSet->setAssociatedModes( m_light0.get(), osg::StateAttribute::ON );
+        lightStateSet->setMode( GL_LIGHTING, osg::StateAttribute::ON );
+        lightStateSet->setAttributeAndModes( lightModel0, osg::StateAttribute::ON );
+        m_rootGroup->addChild( lightSource0 );
+    }
+    else
+    {
+        //We are in OSG space
+        m_light0->setPosition( osg::Vec4d( 0.0, -10000.0, 10000.0, 0.0 ) );
+        backdropFX::Manager::instance()->setLight( m_light0.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
@@ -351,7 +363,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
         backdropFX::ShaderModuleVisitor smv;
         smv.setAttachMain( false ); // Use bdfx-main
         smv.setAttachTransform( false ); // Use bdfx-transform
-        smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
+        //smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
         //smv.setRemoveFFPState(false);
 
         backdropFX::convertFFPToShaderModules( m_rootGroup.get(), &smv );

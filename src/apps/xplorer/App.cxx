@@ -518,8 +518,9 @@ void App::initScene()
     XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD", new cad::CADCreator() );
     //Check and see if we have osg plugins available
     {
+        const std::string osgExtension( "osg" );
         osgDB::ReaderWriter* osgReaderWriter = 
-            osgDB::Registry::instance()->getReaderWriterForExtension( "osg" );
+            osgDB::Registry::instance()->getReaderWriterForExtension( osgExtension );
         osgDB::Registry::ReaderWriterList readerlist = 
             osgDB::Registry::instance()->getReaderWriterList();
         if( (readerlist.size() == 0) || !osgReaderWriter )
