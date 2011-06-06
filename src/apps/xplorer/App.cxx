@@ -793,21 +793,12 @@ void App::latePreFrame()
         tempVec = tempNavMatrix * tempVec;
         osg::Vec4d position( tempVec[ 0 ], tempVec[ 1 ], tempVec[ 2 ], 0.0 );
         mSceneRenderToTexture->GetLight0()->setPosition( position );
+        
         //Sneaky way to set uniform defined in
         //Access to these types of uniforms needs to be discussed with Paul
         if( !mRTT )
         {
-            osg::StateSet* stateset =
-                mSceneRenderToTexture->GetRootGroup()->getStateSet();
-            if( stateset )
-            {
-                osg::Uniform* uniform =
-                    stateset->getUniform( "bdfx_lightSource[0].position" );
-                if( uniform )
-                {
-                    uniform->set( position );
-                }
-            }
+            backdropFX::Manager::instance()->setLightPosition( 0, position );
         }
     }
     ///////////////////////
