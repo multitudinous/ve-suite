@@ -607,13 +607,13 @@ function e()
     if [ ! -d "${DEPS_INSTALL_DIR}" ]; then mkdir -p "${DEPS_INSTALL_DIR}"; fi
     
     case $PLATFORM in
-      Windows)
+      Windows )
         if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
         innosetup;
         ;;
-      Darwin)
-        ;;
-      Linux )
+      Darwin | Linux )
+      #  ;;
+      #Linux )
         echo "Installing ${INSTALL_DIR}/. to ${DEPS_INSTALL_DIR}"
         cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
         ;;
