@@ -1204,7 +1204,10 @@ void App::update()
 void App::LoadUI()
 {
     Poco::Logger& conductorLoggerInit = Poco::Logger::get( "conductor" );
-    boost::ignore_unused_variable_warning( conductorLoggerInit );
+    ves::xplorer::LogStreamPtr logStream;
+    logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( conductorLoggerInit ) );
+    (*logStream).information() << "Initialized conductor logger" << std::endl;
+    //boost::ignore_unused_variable_warning( conductorLoggerInit );
 
     vprDEBUG( vesDBG, 2 ) << "|\tApp LoadUI" << std::endl << vprDEBUG_FLUSH;
 
@@ -1228,6 +1231,10 @@ void App::LoadUI()
     m_uiInitialized = true;
     return;
 #endif
+
+    // Equivalent to turning drag 'n' drop off for our application
+    m_qtApp->setStartDragDistance(10000);
+
     //Get or create UIManager
     ves::conductor::UIManager* m_UIManager =
         ves::conductor::UIManager::instance();
