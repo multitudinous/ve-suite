@@ -44,13 +44,14 @@
 #include <ves/conductor/qt/ui_MainWindow.h>
 
 #include <ves/conductor/qt/Visualization.h>
+//#include <ves/conductor/qt/Constraints.h>
 #include <ves/conductor/qt/NetworkLoader.h>
 #include <ves/conductor/qt/CADFileLoader.h>
 #include <ves/conductor/qt/IconStack.h>
 #include <ves/conductor/qt/TreeTab.h>
 #include <ves/conductor/qt/PreferencesTab.h>
 #include <ves/conductor/qt/plugin/PluginSelectionTab.h>
-#include <ves/conductor/qt/VisFeatureManager.h>
+//#include <ves/conductor/qt/VisFeatureManager.h>
 #include <ves/conductor/qt/XMLDataBufferEngine.h>
 #include <ves/conductor/qt/extendedWidgets/ExtendedToolBar.h>
 
@@ -126,7 +127,8 @@ MainWindow::MainWindow(QWidget* parent) :
     mVisualizationTab( 0 ),
     mMinervaStackedWidget ( 0 ),
     m_preferencesTab( 0 ),
-    m_pluginsTab( 0 )
+    m_pluginsTab( 0 )/*,
+    m_constraintsTab( 0 )*/
 {
     setMouseTracking( true );
     ui->setupUi(this);
@@ -223,6 +225,9 @@ MainWindow::MainWindow(QWidget* parent) :
     mScenegraphTreeTab = new ves::conductor::TreeTab( 0 );
     m_preferencesTab = new ves::conductor::PreferencesTab( 0 );
     m_pluginsTab = new ves::conductor::PluginSelectionTab( this, 0 );
+    //m_constraintsTab = new ves::conductor::Constraints( 0 );
+
+    //AddTab( m_constraintsTab, "Constraints" );
 
     // Connect queued signals for all slots connected via EventManager to ensure
     // that widgets can be altered during slot execution. All EventManager slots
@@ -567,8 +572,10 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         QLabel* m_loading = new QLabel();
         //m_loadNotifiers.push_back( m_loading );
         QString text("Loading ");
-        m_loading->setStyleSheet( "font: bold 16px;" );
+        m_loading->setStyleSheet( "font: bold 12px;" );
         m_loading->setAlignment( Qt::AlignCenter );
+        m_loading->setWordWrap( true );
+        m_loading->setMaximumSize( this->width() - 20, m_loading->maximumHeight() );
         ActivateTab( AddTab( m_loading, "Loading..." ) );
 
         QString fileName = fileNames.at(index);
@@ -578,6 +585,10 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
 
         m_loadNotifiers[ file.filename().string() ] = m_loading;
 
+        // Insert spaces on either side of slashes to allow better wordwrapping
+        // in the notifier
+        fileName.replace(QString("/"), QString(" / "));
+        fileName.replace(QString("\\"), QString(" \\ "));
         text = text + fileName + " ...";
         m_loading->setText( text );
 

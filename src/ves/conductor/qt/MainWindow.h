@@ -58,6 +58,7 @@ class PreferencesTab;
 class TreeTab;
 class IconStack;
 class PluginSelectionTab;
+//class Constraints;
 
 namespace qt 
 { 
@@ -321,6 +322,8 @@ private:
     ves::conductor::PreferencesTab* m_preferencesTab;
 
     ves::conductor::PluginSelectionTab* m_pluginsTab;
+
+    //ves::conductor::Constraints* m_constraintsTab;
     
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
