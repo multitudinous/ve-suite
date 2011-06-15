@@ -199,6 +199,7 @@ void CADPropertySet::CreateSkeleton()
     SetPropertyAttribute( "NodePath", "userVisible", false );
     
     AddProperty( "DynamicAnalysisData", std::string("null"), "Multi-body Dynamics Data" );
+    SetPropertyAttribute( "DynamicAnalysisData", "isFilePath", true );
     mPropertyMap["DynamicAnalysisData"]->
         SignalValueChanged.connect( boost::bind( &CADPropertySet::AddDynamicAnalysisData, this, _1 ) );
 }
