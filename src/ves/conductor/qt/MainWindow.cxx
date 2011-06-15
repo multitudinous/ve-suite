@@ -44,7 +44,7 @@
 #include <ves/conductor/qt/ui_MainWindow.h>
 
 #include <ves/conductor/qt/Visualization.h>
-//#include <ves/conductor/qt/Constraints.h>
+#include <ves/conductor/qt/Constraints.h>
 #include <ves/conductor/qt/NetworkLoader.h>
 #include <ves/conductor/qt/CADFileLoader.h>
 #include <ves/conductor/qt/IconStack.h>
@@ -54,6 +54,7 @@
 //#include <ves/conductor/qt/VisFeatureManager.h>
 #include <ves/conductor/qt/XMLDataBufferEngine.h>
 #include <ves/conductor/qt/extendedWidgets/ExtendedToolBar.h>
+#include <ves/conductor/qt/UITabs.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -127,8 +128,8 @@ MainWindow::MainWindow(QWidget* parent) :
     mVisualizationTab( 0 ),
     mMinervaStackedWidget ( 0 ),
     m_preferencesTab( 0 ),
-    m_pluginsTab( 0 )/*,
-    m_constraintsTab( 0 )*/
+    m_pluginsTab( 0 ),
+    m_constraintsTab( 0 )
 {
     setMouseTracking( true );
     ui->setupUi(this);
@@ -225,9 +226,9 @@ MainWindow::MainWindow(QWidget* parent) :
     mScenegraphTreeTab = new ves::conductor::TreeTab( 0 );
     m_preferencesTab = new ves::conductor::PreferencesTab( 0 );
     m_pluginsTab = new ves::conductor::PluginSelectionTab( this, 0 );
-    //m_constraintsTab = new ves::conductor::Constraints( 0 );
+    m_constraintsTab = new ves::conductor::Constraints( 0 );
 
-    //AddTab( m_constraintsTab, "Constraints" );
+    ves::conductor::UITabs::instance()->SetChild( this );
 
     // Connect queued signals for all slots connected via EventManager to ensure
     // that widgets can be altered during slot execution. All EventManager slots
@@ -942,8 +943,6 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 
     AddTab( m_pluginsTab, "Plugins" );
 
-    //AddTab( m_pluginsTab, "Plugins" );
-
     // Show visualization tab?
     ves::xplorer::Model* model =
         ves::xplorer::ModelHandler::instance()->GetActiveModel();
@@ -952,6 +951,8 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
     {
         AddTab( mVisualizationTab, "Visualization" );
     }
+
+    AddTab( m_constraintsTab, "Constraints" );
 
     // Show the scenegraph tree
     AddTab( mScenegraphTreeTab, "Layers" );

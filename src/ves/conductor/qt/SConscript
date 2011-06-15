@@ -56,7 +56,19 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'propertyBrowser','PropertyBrowser.h')]
 cppSources += lib_env.qt_moc(source)
 
+#source = [pj(buildSrcDir,'propertyBrowser','fileedit.h')]
+#cppSources += lib_env.qt_moc(source)
+
+#source = [pj(buildSrcDir,'propertyBrowser','fileeditfactory.h')]
+#cppSources += lib_env.qt_moc(source)
+
+#source = [pj(buildSrcDir,'propertyBrowser','filepathmanager.h')]
+#cppSources += lib_env.qt_moc(source)
+
 source = [pj(buildSrcDir,'Visualization.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'Constraints.h')]
 cppSources += lib_env.qt_moc(source)
 
 source = [pj(buildSrcDir,'propertyBrowser','GenericPropertyBrowser.h')]
@@ -102,6 +114,9 @@ source = [pj(buildSrcDir,'MainWindow.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
 source = [pj(buildSrcDir,'Visualization.ui')]
+cppHeaders += lib_env.qt_uic(source)
+
+source = [pj(buildSrcDir,'Constraints.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
 source = [pj(buildSrcDir,'plugin','PluginPorts.ui')]

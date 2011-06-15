@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#define VES_DEBUG
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
 
 #include <gmtl/Math.h>
@@ -53,6 +54,7 @@ PropertyBrowser::PropertyBrowser( QObject* parent ) :
     mEnumManager = new QtEnumPropertyManager( this );
     mGroupManager = new QtGroupPropertyManager( this );
     mIntManager = new QtIntPropertyManager( this );
+    //mFilePathManager = new FilePathManager( this );
 
     // Connect managers' valueChanged signals to our slots
     connect( mBooleanManager, SIGNAL( valueChanged( QtProperty*, bool ) ),
@@ -65,6 +67,8 @@ PropertyBrowser::PropertyBrowser( QObject* parent ) :
              this, SLOT( IntValueChanged( QtProperty*, int ) ) );
     connect( mStringManager, SIGNAL( valueChanged( QtProperty*, QString ) ),
              this, SLOT( StringValueChanged( QtProperty*, QString ) ) );
+//    connect( mFilePathManager, SIGNAL(valueChanged(QtProperty*,QString)),
+//             this, SLOT(FilePathValueChanged(QtProperty*,QString)));
 }
 ////////////////////////////////////////////////////////////////////////////////
 PropertyBrowser::~PropertyBrowser()
@@ -85,6 +89,7 @@ PropertyBrowser::~PropertyBrowser()
     mIntManager->clear();
     mDoubleManager->clear();
     mStringManager->clear();
+    //mFilePathManager->clear();
 
     delete mGroupManager;
     delete mBooleanManager;
@@ -92,6 +97,7 @@ PropertyBrowser::~PropertyBrowser()
     delete mIntManager;
     delete mDoubleManager;
     delete mStringManager;
+    //delete mFilePathManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
 QtDoublePropertyManager* PropertyBrowser::GetDoubleManager()
@@ -124,6 +130,11 @@ QtIntPropertyManager* PropertyBrowser::GetIntManager()
     return mIntManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
+//FilePathManager* PropertyBrowser::GetFilePathManager()
+//{
+//    return mFilePathManager;
+//}
+////////////////////////////////////////////////////////////////////////////////
 PropertyBrowser::ItemVector* PropertyBrowser::GetItems()
 {
     return &mTreedItems;
@@ -150,6 +161,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
     mIntManager->clear();
     mDoubleManager->clear();
     mStringManager->clear();
+    //mFilePathManager->clear();
 
     mSet = set;
 
@@ -165,8 +177,8 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
     // Walk through properties list and store a pointer to each underlying property
     { // Bracket used to scope iterator and end
         PropertySet::PSVectorOfStrings::iterator iterator;
-        PropertySet::PSVectorOfStrings::iterator end = mPropertyNames.end();
-        for( iterator = mPropertyNames.begin(); iterator != end; iterator++ )
+        //PropertySet::PSVectorOfStrings::iterator end = mPropertyNames.end();
+        for( iterator = mPropertyNames.begin(); iterator != mPropertyNames.end();  )
         {
             // If the userVisible attribute is false, do not add this property
             // to any of our lists.
@@ -180,6 +192,15 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
             if( show )
             {
                 mProperties.push_back( set->GetProperty( ( *iterator ) ) );
+                LOG_TRACE( "Adding property named " << (*iterator) );
+                ++iterator;
+            }
+            else
+            {
+                LOG_TRACE( "Not adding property named " << (*iterator) );
+                mPropertyNames.erase( iterator );
+                // No need to increment iterator here since everything past the
+                // deleted iterator will fall back in the vector
             }
         }
     }
@@ -249,7 +270,25 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
             }
             else if( property->IsString() )
             {
-                item = mStringManager->addProperty( label );
+                LOG_DEBUG( "Checking for FilePath" );
+                if( property->AttributeExists( "isFilePath" ) )
+                {
+                    bool flag = boost::any_cast<bool>( property->GetAttribute("isFilePath") );
+                    if( flag )
+                    {
+                        LOG_DEBUG( "Adding a FilePath item" );
+                        //item = mFilePathManager->addProperty( label );
+                        item = mStringManager->addProperty( label );
+                    }
+                    else
+                    {
+                        item = mStringManager->addProperty( label );
+                    }
+                }
+                else
+                {
+                    item = mStringManager->addProperty( label );
+                }
             }
 
             // These are done for all items
@@ -471,8 +510,19 @@ void PropertyBrowser::_createHierarchy()
                 // Got a hit; add this as sub-item
                 subItem = true;
                 QtProperty* parent = mItems[parentIndex];
+                LOG_TRACE( "parentIndex = " << parentIndex <<
+                           " Looked for parent " << parentName.toStdString() );
+                LOG_TRACE( " and picked up property with label "
+                           << parent->propertyName().toStdString() );
                 parent->addSubProperty( item );
             }
+            else
+            {
+                LOG_ERROR ( "Error finding parent property named "
+                              << parentName.toStdString() << " for property "
+                              << propertyName );
+            }
+
         }
 
         if( !subItem )
@@ -518,6 +568,19 @@ void PropertyBrowser::StringValueChanged( QtProperty* item, const QString & valu
     std::string castValue = value.toStdString();
     _setPropertyValue( item, castValue );
 }
+////////////////////////////////////////////////////////////////////////////////
+//void PropertyBrowser::FilePathValueChanged( QtProperty* item, const QString& value )
+//{
+//    if( m_ignoreValueChanges )
+//    {
+//        return;
+//    }
+
+//    LOG_TRACE( "FilePathValueChanged" );
+//    std::string castValue = value.toStdString();
+//    _setPropertyValue( item, castValue );
+//}
+
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
 {
@@ -679,9 +742,26 @@ void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::PropertyPt
     else if( property->IsString() )
     {
         std::string castValue = boost::any_cast<std::string > ( value );
-        LOG_TRACE( "_setItemValue: " << castValue );
         QString qCastValue = QString::fromStdString( castValue );
-        mStringManager->setValue( item, qCastValue );
+        if( property->AttributeExists( "isFilePath" ) )
+        {
+            bool flag = boost::any_cast<bool>( property->GetAttribute("isFilePath") );
+            if( flag )
+            {
+                LOG_TRACE( "_setItemValue: (filePath) " << castValue );
+                //mFilePathManager->setValue( item, qCastValue );
+            }
+            else
+            {
+                LOG_TRACE( "_setItemValue: " << castValue );
+                mStringManager->setValue( item, qCastValue );
+            }
+        }
+        else
+        {
+            LOG_TRACE( "_setItemValue: " << castValue );
+            mStringManager->setValue( item, qCastValue );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

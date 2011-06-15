@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Constraints</class>
+ <widget class="QDialog" name="Constraints">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>590</width>
+    <height>489</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Constraints</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_5">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <item>
+      <widget class="QListWidget" name="FeaturesList">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>153</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QListWidget
+{
+	background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(30, 30, 30, 255), stop:1 rgba(80, 80, 80, 255));
+	color: rgb(220,220,220);
+	selection-background-color: rgba(255,255,255,50);
+}
+
+QListWidget::item
+{
+	background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(30, 30, 30, 255), stop:1 rgba(80, 80, 80, 255));
+	color: rgb(220,220,220);
+	selection-background-color: rgba(255,255,255,50);
+}
+
+QListWidget::item:selected
+{
+	background: rgba(255,255,255,50);
+}
+
+/*QListWidget:item:hover
+{
+	background: rgb(0,0,0);
+}*/</string>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="tabKeyNavigation">
+        <bool>true</bool>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectItems</enum>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>64</width>
+         <height>64</height>
+        </size>
+       </property>
+       <property name="flow">
+        <enum>QListView::TopToBottom</enum>
+       </property>
+       <property name="viewMode">
+        <enum>QListView::ListMode</enum>
+       </property>
+       <property name="uniformItemSizes">
+        <bool>false</bool>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="selectionRectVisible">
+        <bool>true</bool>
+       </property>
+       <property name="currentRow">
+        <number>-1</number>
+       </property>
+       <item>
+        <property name="text">
+         <string>Angular Spring</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/images/contour.xpm</normaloff>:/images/contour.xpm</iconset>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Linear and Angular Spring</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/images/new_vector.xpm</normaloff>:/images/new_vector.xpm</iconset>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Linear Spring</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/images/streamlines.xpm</normaloff>:/images/streamlines.xpm</iconset>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ball and Socket</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/images/isosurface.xpm</normaloff>:/images/isosurface.xpm</iconset>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Box</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/images/scalartb.xpm</normaloff>:/images/scalartb.xpm</iconset>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Cardan</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/images/isosurface.xpm</normaloff>:/images/isosurface.xpm</iconset>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Fixed</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Hinge</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Planar</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ragdoll</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Slider</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Twist Slider</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wheel Suspension</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsEnabled</set>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1">
+     <item>
+      <widget class="QGroupBox" name="VisFeaturePropertiesGroupBox">
+       <property name="title">
+        <string>Constraint Properties</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="margin">
+         <number>1</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetNoConstraint</enum>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QComboBox" name="FeatureIDSelector">
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="NewFeatureButton">
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="DeleteFeatureButton">
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/images/remove.png</normaloff>:/images/remove.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="RefreshPropertiesButton">
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/images/refresh-32.png</normaloff>:/images/refresh-32.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="WritePropertiesButton">
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/images/ok.png</normaloff>:/images/ok.png</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="ves::conductor::GenericPropertyBrowser" name="vfpb" native="true">
+            <property name="acceptDrops">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ves::conductor::GenericPropertyBrowser</class>
+   <extends>QWidget</extends>
+   <header>ves/conductor/qt/propertyBrowser/GenericPropertyBrowser.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
