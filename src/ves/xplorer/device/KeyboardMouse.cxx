@@ -226,6 +226,13 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         const gadget::KeyEventPtr keyEvt =
             boost::static_pointer_cast< gadget::KeyEvent >( event );
 
+        if(keyEvt->getKey() == gadget::KEY_UNKNOWN)
+        {
+            vprDEBUG( vesDBG, 2 )
+                << "|\tGadgeteer does not recognize this key: " <<
+                keyEvt->getKeyChar() << std::endl << vprDEBUG_FLUSH;
+        }
+
         // Emit the keypress signal associated with this particular key
         KeyPressSignalMapType::iterator itr = mKeyPressSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyPressSignalMap.end() )
