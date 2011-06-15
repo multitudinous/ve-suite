@@ -123,7 +123,8 @@ void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
 
     if( surfaceWrap )
     {
-        dataSet->CreateSurfaceWrap();
+        //dataSet->CreateSurfaceWrap();
+        dataSet->CreateWireframeGeode();
     }
     else
     {
