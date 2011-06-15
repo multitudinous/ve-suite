@@ -38,7 +38,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>true</border>
-         <hide_mouse>false</hide_mouse>
+         <hide_mouse>true</hide_mouse>
          <full_screen>false</full_screen>
          <always_on_top>false</always_on_top>
          <active>true</active>
@@ -50,16 +50,19 @@
                <size>1.0</size>
                <view>Left Eye</view>
                <lower_left_corner>-1.2192</lower_left_corner>
-               <lower_left_corner>0.1524</lower_left_corner>
+               <lower_left_corner>0.8524</lower_left_corner>
                <lower_left_corner>-1.8288</lower_left_corner>
+
                <lower_right_corner>1.2192</lower_right_corner>
-               <lower_right_corner>0.1524</lower_right_corner>
+               <lower_right_corner>0.8524</lower_right_corner>
                <lower_right_corner>-1.8288</lower_right_corner>
+
                <upper_right_corner>1.2192</upper_right_corner>
-               <upper_right_corner>1.9812</upper_right_corner>
+               <upper_right_corner>2.6812</upper_right_corner>
                <upper_right_corner>-1.8288</upper_right_corner>
+
                <upper_left_corner>-1.2192</upper_left_corner>
-               <upper_left_corner>1.9812</upper_left_corner>
+               <upper_left_corner>2.6812</upper_left_corner>
                <upper_left_corner>-1.8288</upper_left_corner>
                <user>User1</user>
                <active>true</active>
@@ -76,16 +79,19 @@
                <size>1.0</size>
                <view>Right Eye</view>
                <lower_left_corner>-1.2192</lower_left_corner>
-               <lower_left_corner>0.1524</lower_left_corner>
+               <lower_left_corner>0.8524</lower_left_corner>
                <lower_left_corner>-1.8288</lower_left_corner>
+
                <lower_right_corner>1.2192</lower_right_corner>
-               <lower_right_corner>0.1524</lower_right_corner>
+               <lower_right_corner>0.8524</lower_right_corner>
                <lower_right_corner>-1.8288</lower_right_corner>
+
                <upper_right_corner>1.2192</upper_right_corner>
-               <upper_right_corner>1.9812</upper_right_corner>
+               <upper_right_corner>2.6812</upper_right_corner>
                <upper_right_corner>-1.8288</upper_right_corner>
+
                <upper_left_corner>-1.2192</upper_left_corner>
-               <upper_left_corner>1.9812</upper_left_corner>
+               <upper_left_corner>2.6812</upper_left_corner>
                <upper_left_corner>-1.8288</upper_left_corner>
                <user>User1</user>
                <active>true</active>
