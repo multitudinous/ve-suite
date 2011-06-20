@@ -175,13 +175,7 @@ void cfdIsosurface::Update()
     //this->mapper->SetColorModeToMapScalars();
 #endif
 
-    vtkLookupTable* lut = vtkLookupTable::New();
-    lut->SetNumberOfColors( 256 );            //default is 256
-    lut->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
-    lut->SetTableRange( minValue, maxValue );
-    lut->Build();
-
-    mapper->SetLookupTable( lut );
+    mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
     mapper->Update();
 
     vtkActor* temp = vtkActor::New();
@@ -190,7 +184,6 @@ void cfdIsosurface::Update()
     geodes.push_back( new ves::xplorer::scenegraph::Geode() );
     geodes.back()->TranslateToGeode( temp );
     temp->Delete();
-    lut->Delete();
     c2p->Delete();
     contourFilter->Delete();
     this->updateFlag = true;
@@ -318,6 +311,12 @@ void cfdIsosurface::UpdatePropertySet()
         }
         dataSet->SetActiveScalar( activeTempScalar );
     }
+
+    bool isoGreyscale = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_Greyscale" ) );
+    ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetGreyscaleFlag( isoGreyscale );
+    vprDEBUG( vesDBG, 0 ) << "|\tIsosurface Greyscale set to : "
+    << isoGreyscale
+    << std::endl << vprDEBUG_FLUSH;
 
     /*ves::open::xml::DataValuePairPtr nearestPrecomputed( new ves::open::xml::DataValuePair() );
     nearestPrecomputed->SetData( "Use Nearest Precomputed", static_cast<unsigned int>( 0 ) );

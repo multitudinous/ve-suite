@@ -146,6 +146,22 @@ void IsosurfacePropertySet::CreateSkeleton()
     SetPropertyAttribute( "IsosurfaceValue", "maximumValue", 100.0 );
     
     AddProperty( "UseGPUTools", false, "Use GPU Tools" );
+    
+    AddProperty( "Advanced", boost::any(), "Advanced" );
+    SetPropertyAttribute( "Advanced", "isUIGroupOnly", true );
+
+    {
+        AddProperty( "Advanced_Greyscale", false, "Greyscale" );
+        /*std::vector< PropertyPtr > greyscale;
+        greyscale.push_back( GetProperty( "Advanced_Greyscale" ) );
+        const std::string slotName = 
+            boost::lexical_cast<std::string>( this ) +".SetIsosurfaceGreyscale";
+        MakeLiveBasePtr p( new MakeLiveLinked< bool >(
+                mUUIDString,
+                greyscale,
+                slotName ) );
+        mLiveObjects.push_back( p );*/
+    }
 
     // Now that DataSet has choices loaded, force an update on the available
     // scalar and vector data

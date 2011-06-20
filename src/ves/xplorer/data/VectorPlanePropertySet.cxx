@@ -193,5 +193,18 @@ void VectorPlanePropertySet::CreateSkeleton()
     SetPropertyAttribute( "Advanced_VectorRatio", "maximumValue", 200.0 );
 
     AddProperty( "Advanced_ScaleByVectorMagnitude", false, "Scale By Vector Magnitude" );
+
+    {
+        AddProperty( "Advanced_Greyscale", false, "Greyscale" );
+        /*std::vector< PropertyPtr > greyscale;
+        greyscale.push_back( GetProperty( "Advanced_Greyscale" ) );
+        const std::string slotName = 
+            boost::lexical_cast<std::string>( this ) +".SetVectorPlaneGreyscale";
+        MakeLiveBasePtr p( new MakeLiveLinked< bool >(
+                mUUIDString,
+                greyscale,
+                slotName ) );
+        mLiveObjects.push_back( p );*/
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

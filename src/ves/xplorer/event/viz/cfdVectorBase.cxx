@@ -641,6 +641,12 @@ void cfdVectorBase::UpdatePropertySet()
       
     m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
 
+    bool vectorGreyscale = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_Greyscale" ) );
+    GetActiveDataSet()->SetGreyscaleFlag( vectorGreyscale );
+    vprDEBUG( vesDBG, 0 ) << "|\tVector Greyscale set to : "
+    << vectorGreyscale
+    << std::endl << vprDEBUG_FLUSH;
+
 	//Extract the surface flag
     /*activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
     if( activeModelDVP )
