@@ -193,6 +193,17 @@ void ContourPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "Lined" );
     SetPropertyAttribute( "Advanced_ContourType", "enumValues", enumValues );
 
+    AddProperty( "Advanced_LinedContourWidth", 1.0, "Line Width" );
+    SetPropertyAttribute( "Advanced_LinedContourWidth", "minimumValue", 0.0 );
+    SetPropertyAttribute( "Advanced_LinedContourWidth", "maximumValue", 1.0 );
+    mPropertyMap["Advanced_LinedContourWidth"]->SetDisabled();
+
+    PropertyPtr contype = mPropertyMap["Advanced_ContourType"];
+    if( contype )
+    {
+        contype->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::EnableLineWidth, this, _1 ) );
+    }
+
     AddProperty( "Advanced_WarpOption", false, "Warp Option" );
 
     {

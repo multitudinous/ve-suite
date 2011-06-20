@@ -337,6 +337,23 @@ void VizBasePropertySet::UpdateModeOptions( PropertyPtr property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::EnableLineWidth( PropertyPtr property )
+{
+    // Make sure the main value is an int as it should be
+    if( property->IsInt() )
+    {
+        int value = boost::any_cast<int>( property->GetValue() );
+        if( value == 2 ) // "lined"
+        {
+            mPropertyMap["Advanced_LinedContourWidth"]->SetEnabled();
+        }
+        else
+        {
+            mPropertyMap["Advanced_LinedContourWidth"]->SetDisabled();
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 bool VizBasePropertySet::ValidateScalarMinMax( PropertyPtr property, boost::any value )
 {
     PropertyPtr min = mPropertyMap["DataSet_ScalarRange_Min"];

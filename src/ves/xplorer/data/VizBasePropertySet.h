@@ -62,6 +62,8 @@ public:
 
     ///Update method
     void UpdateModeOptions( PropertyPtr property );
+    ///Enables/Disables line width option for different contour types
+    void EnableLineWidth( PropertyPtr property );
     ///Validate method
     bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
     ///Update method
