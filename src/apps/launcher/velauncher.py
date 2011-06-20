@@ -793,20 +793,21 @@ class LauncherWindow(wx.Frame):
         self.splash.SetTextColor(wx.BLACK)
         self.splash.SetTextPosition((155,43))
         self.splash.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
-        self.splash.SetText("Version 2.2.1")
+        versionString = "Version 2.2.2"
+        self.splash.SetText(versionString)
         self.splash.Show(True)
 
         if self.state.GetSurface("NameServer"):
-            self.splash.SetText("Version 2.2.1", "Starting Name Server...")
+            self.splash.SetText(versionString, "Starting Name Server...")
             wx.MilliSleep(1000)
         if self.state.GetSurface("Xplorer"):
-            self.splash.SetText("Version 1.1", "Starting Xplorer...")
+            self.splash.SetText(versionString, "Starting Xplorer...")
             wx.MilliSleep(500)
         if self.state.GetSurface("Conductor"):
-            self.splash.SetText("Version 1.1", "Starting Conductor...")
+            self.splash.SetText(versionString, "Starting Conductor...")
             wx.MilliSleep(1000)
 
-        self.splash.SetText("Version 1.1", "Preparing to Launch VE-Suite...")
+        self.splash.SetText(versionString, "Preparing to Launch VE-Suite...")
         wx.MilliSleep(1000)
         
         self.splash.OnCloseWindow()

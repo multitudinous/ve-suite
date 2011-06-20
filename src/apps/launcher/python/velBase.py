@@ -289,5 +289,5 @@ will launch, despite previous settings.
 
 def version():
     """Prints VE-Suite's version."""
-    print """VE-Suite v2.2.1"""
+    print """VE-Suite v2.2.2"""
     return
