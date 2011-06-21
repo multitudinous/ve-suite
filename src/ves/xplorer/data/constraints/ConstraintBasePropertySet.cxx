@@ -30,8 +30,10 @@ void ConstraintBasePropertySet::RegisterPropertySet( std::string const& tableNam
 ////////////////////////////////////////////////////////////////////////////////
 void ConstraintBasePropertySet::CreateSkeleton()
 {
-    AddProperty( "ObjectA", std::string( "Click then select object" ), "Object A" );
-    AddProperty( "ObjectB", std::string( "Click then select object" ), "Object B" );
+    AddProperty( "ObjectA", std::string( "" ), "Object A" );
+    SetPropertyAttribute( "ObjectA", "isNodePath", true );
+    AddProperty( "ObjectB", std::string( "" ), "Object B" );
+    SetPropertyAttribute( "ObjectB", "isNodePath", true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
