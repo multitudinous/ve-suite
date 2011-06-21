@@ -39,6 +39,10 @@
 #include <qtpropertybrowser.h>
 #include <qtpropertymanager.h>
 #include <qteditorfactory.h>
+#include <ves/conductor/qt/propertyBrowser/FileEditFactory.h>
+#include <ves/conductor/qt/propertyBrowser/FilePathManager.h>
+#include <ves/conductor/qt/propertyBrowser/NodeSelectFactory.h>
+#include <ves/conductor/qt/propertyBrowser/NodeSelectManager.h>
 
 #include <vector>
 
@@ -128,6 +132,9 @@ public:
     /// Returns the manager used for group types
     QtGroupPropertyManager* GetGroupManager();
 
+    FilePathManager* GetFilePathManager();
+    NodeSelectManager* GetNodeSelectManager();
+
 
 Q_SIGNALS:
     public Q_SLOTS :
@@ -151,6 +158,9 @@ Q_SIGNALS:
     /// and attempts to synchronize the value of the underlying Property
     void StringValueChanged( QtProperty* item, const QString & value );
 
+    void FilePathValueChanged( QtProperty* item, const QString& value );
+    void NodePathValueChanged( QtProperty* item, const QString& value );
+
 private:
     // The following three vectors should be synchronized at all times.
     // 1. They should always have same number of items.
@@ -173,6 +183,8 @@ private:
     QtEnumPropertyManager* mEnumManager;
     QtGroupPropertyManager* mGroupManager;
     QtIntPropertyManager* mIntManager;
+    FilePathManager* mFilePathManager;
+    NodeSelectManager* mNodeSelectManager;
 
     // Helper functions to find things in the triad of synchronized vectors
     int _getPropertyIndex( ves::xplorer::data::PropertyPtr property );

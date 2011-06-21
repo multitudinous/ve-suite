@@ -30,45 +30,46 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef GENERICPROPERTYBROWSER_H
-#define GENERICPROPERTYBROWSER_H
+#pragma once
 
-#define QT_NO_KEYWORDS
+/** This class is a slightly altered version of the FileEdit class shown in
+ Qt Quarterly at
+http://doc.qt.nokia.com/qq/qq18-propertybrowser.html#extendingtheframework
+It is being used in accordance with the terms of LGPL **/
 
-#include <qttreepropertybrowser.h>
-#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+#include <QtGui/QLineEdit>
+#include <QtGui/QFileDialog>
 
 namespace ves
 {
 namespace conductor
 {
 
-class GenericPropertyBrowser : public QtTreePropertyBrowser
+class FileEdit : public QWidget
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit GenericPropertyBrowser(QWidget* parent = 0);
-
-    void setPropertyBrowser( PropertyBrowser* browser );
-    void RefreshContents();
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
+    FileEdit(QWidget *parent = 0);
+    void setFilePath(const QString &filePath) { if (theLineEdit->text() != filePath) theLineEdit->setText(filePath); }
+    QString filePath() const { return theLineEdit->text(); }
+    void setFilter(const QString &filter) { theFilter = filter; }
+    QString filter() const { return theFilter; }
+signals:
+    void filePathChanged(const QString &filePath);
+protected:
+    void focusInEvent(QFocusEvent *e);
+    void focusOutEvent(QFocusEvent *e);
+    void keyPressEvent(QKeyEvent *e);
+    void keyReleaseEvent(QKeyEvent *e);
+private slots:
+    void buttonClicked();
+    void onFileSelected( const QString& filePath );
+    void onFileCancelled();
 private:
-    PropertyBrowser* mBrowser;
-    QtDoubleSpinBoxFactory* mDoubleSpinBoxFactory;
-    QtSpinBoxFactory* mSpinBoxFactory;
-    QtCheckBoxFactory* mCheckBoxFactory;
-    QtLineEditFactory* mLineEditFactory;
-    QtEnumEditorFactory* mComboBoxFactory;
-    QtSliderFactory* mSliderFactory;
-    FileEditFactory* mFileEditFactory;
-    NodeSelectFactory* mNodeSelectFactory;
+    QLineEdit *theLineEdit;
+    QString theFilter;
+    QFileDialog* m_fileDialog;
 };
 
-} // namespace conductor
-} // namespace ves
-
-#endif // GENERICPROPERTYBROWSER_H
+}
+}

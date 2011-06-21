@@ -109,6 +109,11 @@ TreeTab::TreeTab(QWidget *parent) :
             boost::signals2::signal< void( osg::NodePath& ) > >( &m_highlightAndSetManipulators ),
         "TreeTab.HighlightAndSetManipulators" );
 
+    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
+            new ves::xplorer::eventmanager::SignalWrapper<
+            ves::util::StringSignal_type >( &m_CADNodeSelected ),
+        "TreeTab.CADNodeSelected" );
+
     CONNECTSIGNALS_1( "%NodeAdded",
                      void ( std::string const& ),
                      &TreeTab::OnNodeAdded,
@@ -118,6 +123,7 @@ TreeTab::TreeTab(QWidget *parent) :
                      void ( std::string const& ),
                      &TreeTab::OnNodeAdded,
                      mConnections, normal_Priority );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 TreeTab::~TreeTab()
@@ -304,6 +310,12 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
              ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode());
         m_highlightAndSetManipulators( nodePath );
     }
+
+    if( type == "CAD" )
+    {
+        m_CADNodeSelected( boost::any_cast< std::string >
+                       ( mActiveSet->GetPropertyValue( "NodePath" ) ));
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::SyncTransformFromDCS( ves::xplorer::scenegraph::DCS* dcs )
@@ -400,6 +412,13 @@ void TreeTab::on_m_refreshTreeButton_clicked()
     // Read the scenegraph and rebuild tree.
     PopulateWithRoot(
         &(ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager()) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::on_m_searchBox_textEdited( const QString& pattern )
+{
+    ui->mTreeView->expandAll();
+    QString fullPattern = "DCS: " + pattern;
+    ui->mTreeView->keyboardSearch( fullPattern );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor

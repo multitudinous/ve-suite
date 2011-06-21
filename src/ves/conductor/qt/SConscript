@@ -56,14 +56,23 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'propertyBrowser','PropertyBrowser.h')]
 cppSources += lib_env.qt_moc(source)
 
-#source = [pj(buildSrcDir,'propertyBrowser','fileedit.h')]
-#cppSources += lib_env.qt_moc(source)
+source = [pj(buildSrcDir,'propertyBrowser','FileEdit.h')]
+cppSources += lib_env.qt_moc(source)
 
-#source = [pj(buildSrcDir,'propertyBrowser','fileeditfactory.h')]
-#cppSources += lib_env.qt_moc(source)
+source = [pj(buildSrcDir,'propertyBrowser','FileEditFactory.h')]
+cppSources += lib_env.qt_moc(source)
 
-#source = [pj(buildSrcDir,'propertyBrowser','filepathmanager.h')]
-#cppSources += lib_env.qt_moc(source)
+source = [pj(buildSrcDir,'propertyBrowser','FilePathManager.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'propertyBrowser','NodeSelect.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'propertyBrowser','NodeSelectFactory.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'propertyBrowser','NodeSelectManager.h')]
+cppSources += lib_env.qt_moc(source)
 
 source = [pj(buildSrcDir,'Visualization.h')]
 cppSources += lib_env.qt_moc(source)

@@ -30,45 +30,48 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef GENERICPROPERTYBROWSER_H
-#define GENERICPROPERTYBROWSER_H
+#pragma once
 
-#define QT_NO_KEYWORDS
+/** This class is a slightly altered version of the FileEdit class shown in
+ Qt Quarterly at
+http://doc.qt.nokia.com/qq/qq18-propertybrowser.html#extendingtheframework
+It is being used in accordance with the terms of LGPL **/
 
-#include <qttreepropertybrowser.h>
-#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+#include <qtpropertybrowser.h>
+#include <QtCore/QMap>
 
 namespace ves
 {
 namespace conductor
 {
 
-class GenericPropertyBrowser : public QtTreePropertyBrowser
+class NodeSelectManager : public QtAbstractPropertyManager
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit GenericPropertyBrowser(QWidget* parent = 0);
+    NodeSelectManager(QObject *parent = 0)
+        : QtAbstractPropertyManager(parent)
+            { }
 
-    void setPropertyBrowser( PropertyBrowser* browser );
-    void RefreshContents();
-
-Q_SIGNALS:
+    QString value(const QtProperty *property) const;
 
 public Q_SLOTS:
-
+    void setValue(QtProperty *property, const QString &val);
+Q_SIGNALS:
+    void valueChanged(QtProperty *property, const QString &val);
+protected:
+    virtual QString valueText(const QtProperty *property) const { return value(property); }
+    virtual void initializeProperty(QtProperty *property) { theValues[property] = Data(); }
+    virtual void uninitializeProperty(QtProperty *property) { theValues.remove(property); }
 private:
-    PropertyBrowser* mBrowser;
-    QtDoubleSpinBoxFactory* mDoubleSpinBoxFactory;
-    QtSpinBoxFactory* mSpinBoxFactory;
-    QtCheckBoxFactory* mCheckBoxFactory;
-    QtLineEditFactory* mLineEditFactory;
-    QtEnumEditorFactory* mComboBoxFactory;
-    QtSliderFactory* mSliderFactory;
-    FileEditFactory* mFileEditFactory;
-    NodeSelectFactory* mNodeSelectFactory;
+
+    struct Data
+    {
+        QString value;
+    };
+
+    QMap<const QtProperty *, Data> theValues;
 };
 
-} // namespace conductor
-} // namespace ves
-
-#endif // GENERICPROPERTYBROWSER_H
+}
+}

@@ -30,45 +30,62 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef GENERICPROPERTYBROWSER_H
-#define GENERICPROPERTYBROWSER_H
 
-#define QT_NO_KEYWORDS
-
-#include <qttreepropertybrowser.h>
-#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+#include <ves/conductor/qt/propertyBrowser/FilePathManager.h>
 
 namespace ves
 {
 namespace conductor
 {
 
-class GenericPropertyBrowser : public QtTreePropertyBrowser
+QString FilePathManager::value(const QtProperty *property) const
 {
-Q_OBJECT
-public:
-    explicit GenericPropertyBrowser(QWidget* parent = 0);
+    if (!theValues.contains(property))
+        return QString();
+    return theValues[property].value;
+}
 
-    void setPropertyBrowser( PropertyBrowser* browser );
-    void RefreshContents();
+QString FilePathManager::filter(const QtProperty *property) const
+{
+    if (!theValues.contains(property))
+        return QString();
+    return theValues[property].filter;
+}
 
-Q_SIGNALS:
+void FilePathManager::setValue(QtProperty *property, const QString &val)
+{
+    if (!theValues.contains(property))
+        return;
 
-public Q_SLOTS:
+    Data data = theValues[property];
 
-private:
-    PropertyBrowser* mBrowser;
-    QtDoubleSpinBoxFactory* mDoubleSpinBoxFactory;
-    QtSpinBoxFactory* mSpinBoxFactory;
-    QtCheckBoxFactory* mCheckBoxFactory;
-    QtLineEditFactory* mLineEditFactory;
-    QtEnumEditorFactory* mComboBoxFactory;
-    QtSliderFactory* mSliderFactory;
-    FileEditFactory* mFileEditFactory;
-    NodeSelectFactory* mNodeSelectFactory;
-};
+    if (data.value == val)
+        return;
 
-} // namespace conductor
-} // namespace ves
+    data.value = val;
 
-#endif // GENERICPROPERTYBROWSER_H
+    theValues[property] = data;
+
+    emit propertyChanged(property);
+    emit valueChanged(property, data.value);
+}
+
+void FilePathManager::setFilter(QtProperty *property, const QString &fil)
+{
+    if (!theValues.contains(property))
+        return;
+
+    Data data = theValues[property];
+
+    if (data.filter == fil)
+        return;
+
+    data.filter = fil;
+
+    theValues[property] = data;
+
+    emit filterChanged(property, data.filter);
+}
+
+}
+}

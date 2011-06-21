@@ -30,45 +30,38 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef GENERICPROPERTYBROWSER_H
-#define GENERICPROPERTYBROWSER_H
 
-#define QT_NO_KEYWORDS
-
-#include <qttreepropertybrowser.h>
-#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+#include <ves/conductor/qt/propertyBrowser/NodeSelectManager.h>
 
 namespace ves
 {
 namespace conductor
 {
 
-class GenericPropertyBrowser : public QtTreePropertyBrowser
+QString NodeSelectManager::value(const QtProperty *property) const
 {
-Q_OBJECT
-public:
-    explicit GenericPropertyBrowser(QWidget* parent = 0);
+    if (!theValues.contains(property))
+        return QString();
+    return theValues[property].value;
+}
 
-    void setPropertyBrowser( PropertyBrowser* browser );
-    void RefreshContents();
+void NodeSelectManager::setValue(QtProperty *property, const QString &val)
+{
+    if (!theValues.contains(property))
+        return;
 
-Q_SIGNALS:
+    Data data = theValues[property];
 
-public Q_SLOTS:
+    if (data.value == val)
+        return;
 
-private:
-    PropertyBrowser* mBrowser;
-    QtDoubleSpinBoxFactory* mDoubleSpinBoxFactory;
-    QtSpinBoxFactory* mSpinBoxFactory;
-    QtCheckBoxFactory* mCheckBoxFactory;
-    QtLineEditFactory* mLineEditFactory;
-    QtEnumEditorFactory* mComboBoxFactory;
-    QtSliderFactory* mSliderFactory;
-    FileEditFactory* mFileEditFactory;
-    NodeSelectFactory* mNodeSelectFactory;
-};
+    data.value = val;
 
-} // namespace conductor
-} // namespace ves
+    theValues[property] = data;
 
-#endif // GENERICPROPERTYBROWSER_H
+    emit propertyChanged(property);
+    emit valueChanged(property, data.value);
+}
+
+}
+}

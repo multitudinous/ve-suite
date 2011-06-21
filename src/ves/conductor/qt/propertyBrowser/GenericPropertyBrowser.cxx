@@ -51,6 +51,8 @@ GenericPropertyBrowser::GenericPropertyBrowser(QWidget* parent) :
     mLineEditFactory = new QtLineEditFactory(this);
     mComboBoxFactory = new QtEnumEditorFactory(this);
     mSliderFactory = new QtSliderFactory(this);
+    mFileEditFactory = new FileEditFactory(this);
+    mNodeSelectFactory = new NodeSelectFactory(this);
 }
 
 void GenericPropertyBrowser::setPropertyBrowser( PropertyBrowser* browser )
@@ -63,6 +65,8 @@ void GenericPropertyBrowser::setPropertyBrowser( PropertyBrowser* browser )
     this->setFactoryForManager( browser->GetDoubleManager(), mDoubleSpinBoxFactory );
     this->setFactoryForManager( browser->GetStringManager(), mLineEditFactory );
     this->setFactoryForManager( browser->GetEnumManager(), mComboBoxFactory );
+    this->setFactoryForManager( browser->GetFilePathManager(), mFileEditFactory );
+    this->setFactoryForManager( browser->GetNodeSelectManager(), mNodeSelectFactory );
 }
 
 void GenericPropertyBrowser::RefreshContents()

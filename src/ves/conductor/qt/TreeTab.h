@@ -37,6 +37,7 @@
 
 #include <ves/xplorer/data/PropertySetPtr.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 #include <QtGui/QWidget>
 #include <QtCore/QAbstractItemModel>
@@ -132,7 +133,7 @@ protected Q_SLOTS:
 
     void on_m_refreshTreeButton_clicked();
 
-
+    void on_m_searchBox_textEdited( const QString& pattern );
 
     Q_SIGNALS:
 
@@ -155,6 +156,7 @@ private:
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
 
     boost::signals2::signal< void( osg::NodePath& ) > m_highlightAndSetManipulators;
+    ves::util::StringSignal_type m_CADNodeSelected;
 };
 
 } // namespace conductor

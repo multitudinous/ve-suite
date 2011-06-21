@@ -30,45 +30,45 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef GENERICPROPERTYBROWSER_H
-#define GENERICPROPERTYBROWSER_H
+#pragma once
 
-#define QT_NO_KEYWORDS
+/** This class is a slightly altered version of the FileEdit class shown in
+ Qt Quarterly at
+http://doc.qt.nokia.com/qq/qq18-propertybrowser.html#extendingtheframework
+It is being used in accordance with the terms of LGPL **/
 
-#include <qttreepropertybrowser.h>
-#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+#include <qtpropertybrowser.h>
+#include <ves/conductor/qt/propertyBrowser/FilePathManager.h>
 
 namespace ves
 {
 namespace conductor
 {
 
-class GenericPropertyBrowser : public QtTreePropertyBrowser
+class FileEdit;
+
+class FileEditFactory : public QtAbstractEditorFactory<FilePathManager>
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit GenericPropertyBrowser(QWidget* parent = 0);
-
-    void setPropertyBrowser( PropertyBrowser* browser );
-    void RefreshContents();
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
+    FileEditFactory(QObject *parent = 0)
+        : QtAbstractEditorFactory<FilePathManager>(parent)
+            { }
+    virtual ~FileEditFactory();
+protected:
+    virtual void connectPropertyManager(FilePathManager *manager);
+    virtual QWidget *createEditor(FilePathManager *manager, QtProperty *property,
+                QWidget *parent);
+    virtual void disconnectPropertyManager(FilePathManager *manager);
+private Q_SLOTS:
+    void slotPropertyChanged(QtProperty *property, const QString &value);
+    void slotFilterChanged(QtProperty *property, const QString &filter);
+    void slotSetValue(const QString &value);
+    void slotEditorDestroyed(QObject *object);
 private:
-    PropertyBrowser* mBrowser;
-    QtDoubleSpinBoxFactory* mDoubleSpinBoxFactory;
-    QtSpinBoxFactory* mSpinBoxFactory;
-    QtCheckBoxFactory* mCheckBoxFactory;
-    QtLineEditFactory* mLineEditFactory;
-    QtEnumEditorFactory* mComboBoxFactory;
-    QtSliderFactory* mSliderFactory;
-    FileEditFactory* mFileEditFactory;
-    NodeSelectFactory* mNodeSelectFactory;
+    QMap<QtProperty *, QList<FileEdit *> > theCreatedEditors;
+    QMap<FileEdit *, QtProperty *> theEditorToProperty;
 };
 
-} // namespace conductor
-} // namespace ves
-
-#endif // GENERICPROPERTYBROWSER_H
+}
+}

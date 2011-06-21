@@ -37,9 +37,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="m_refreshTreeButton">
-           <property name="text">
-            <string>Refresh Tree</string>
+          <widget class="QLineEdit" name="m_searchBox">
+           <property name="placeholderText">
+            <string>Search...</string>
            </property>
           </widget>
          </item>
@@ -151,8 +151,8 @@
    <slot>expandAll()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>95</x>
-     <y>27</y>
+     <x>86</x>
+     <y>28</y>
     </hint>
     <hint type="destinationlabel">
      <x>104</x>

@@ -54,7 +54,8 @@ PropertyBrowser::PropertyBrowser( QObject* parent ) :
     mEnumManager = new QtEnumPropertyManager( this );
     mGroupManager = new QtGroupPropertyManager( this );
     mIntManager = new QtIntPropertyManager( this );
-    //mFilePathManager = new FilePathManager( this );
+    mFilePathManager = new FilePathManager( this );
+    mNodeSelectManager = new NodeSelectManager( this );
 
     // Connect managers' valueChanged signals to our slots
     connect( mBooleanManager, SIGNAL( valueChanged( QtProperty*, bool ) ),
@@ -67,8 +68,10 @@ PropertyBrowser::PropertyBrowser( QObject* parent ) :
              this, SLOT( IntValueChanged( QtProperty*, int ) ) );
     connect( mStringManager, SIGNAL( valueChanged( QtProperty*, QString ) ),
              this, SLOT( StringValueChanged( QtProperty*, QString ) ) );
-//    connect( mFilePathManager, SIGNAL(valueChanged(QtProperty*,QString)),
-//             this, SLOT(FilePathValueChanged(QtProperty*,QString)));
+    connect( mFilePathManager, SIGNAL(valueChanged(QtProperty*,QString)),
+             this, SLOT(FilePathValueChanged(QtProperty*,QString)));
+    connect( mNodeSelectManager, SIGNAL(valueChanged(QtProperty*,QString)),
+             this, SLOT(NodePathValueChanged(QtProperty*,QString)));
 }
 ////////////////////////////////////////////////////////////////////////////////
 PropertyBrowser::~PropertyBrowser()
@@ -89,7 +92,8 @@ PropertyBrowser::~PropertyBrowser()
     mIntManager->clear();
     mDoubleManager->clear();
     mStringManager->clear();
-    //mFilePathManager->clear();
+    mFilePathManager->clear();
+    mNodeSelectManager->clear();
 
     delete mGroupManager;
     delete mBooleanManager;
@@ -97,7 +101,8 @@ PropertyBrowser::~PropertyBrowser()
     delete mIntManager;
     delete mDoubleManager;
     delete mStringManager;
-    //delete mFilePathManager;
+    delete mFilePathManager;
+    delete mNodeSelectManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
 QtDoublePropertyManager* PropertyBrowser::GetDoubleManager()
@@ -130,10 +135,15 @@ QtIntPropertyManager* PropertyBrowser::GetIntManager()
     return mIntManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-//FilePathManager* PropertyBrowser::GetFilePathManager()
-//{
-//    return mFilePathManager;
-//}
+FilePathManager* PropertyBrowser::GetFilePathManager()
+{
+    return mFilePathManager;
+}
+////////////////////////////////////////////////////////////////////////////////
+NodeSelectManager* PropertyBrowser::GetNodeSelectManager()
+{
+    return mNodeSelectManager;
+}
 ////////////////////////////////////////////////////////////////////////////////
 PropertyBrowser::ItemVector* PropertyBrowser::GetItems()
 {
@@ -161,7 +171,8 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
     mIntManager->clear();
     mDoubleManager->clear();
     mStringManager->clear();
-    //mFilePathManager->clear();
+    mFilePathManager->clear();
+    mNodeSelectManager->clear();
 
     mSet = set;
 
@@ -271,19 +282,17 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
             else if( property->IsString() )
             {
                 LOG_DEBUG( "Checking for FilePath" );
-                if( property->AttributeExists( "isFilePath" ) )
+                if( (property->AttributeExists( "isFilePath" )) &&
+                    boost::any_cast<bool>( property->GetAttribute("isFilePath") ))
                 {
-                    bool flag = boost::any_cast<bool>( property->GetAttribute("isFilePath") );
-                    if( flag )
-                    {
-                        LOG_DEBUG( "Adding a FilePath item" );
-                        //item = mFilePathManager->addProperty( label );
-                        item = mStringManager->addProperty( label );
-                    }
-                    else
-                    {
-                        item = mStringManager->addProperty( label );
-                    }
+                    LOG_DEBUG( "Adding a FilePath item" );
+                    item = mFilePathManager->addProperty( label );
+                }
+                else if( (property->AttributeExists( "isNodePath" )) &&
+                         boost::any_cast<bool>( property->GetAttribute("isNodePath") ))
+                {
+                    LOG_DEBUG( "Adding a NodePath item" );
+                    item = mNodeSelectManager->addProperty( label );
                 }
                 else
                 {
@@ -569,18 +578,29 @@ void PropertyBrowser::StringValueChanged( QtProperty* item, const QString & valu
     _setPropertyValue( item, castValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
-//void PropertyBrowser::FilePathValueChanged( QtProperty* item, const QString& value )
-//{
-//    if( m_ignoreValueChanges )
-//    {
-//        return;
-//    }
+void PropertyBrowser::FilePathValueChanged( QtProperty* item, const QString& value )
+{
+    if( m_ignoreValueChanges )
+    {
+        return;
+    }
 
-//    LOG_TRACE( "FilePathValueChanged" );
-//    std::string castValue = value.toStdString();
-//    _setPropertyValue( item, castValue );
-//}
+    LOG_TRACE( "FilePathValueChanged" );
+    std::string castValue = value.toStdString();
+    _setPropertyValue( item, castValue );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PropertyBrowser::NodePathValueChanged( QtProperty* item, const QString& value )
+{
+    if( m_ignoreValueChanges )
+    {
+        return;
+    }
 
+    LOG_TRACE( "NodePathValueChanged" );
+    std::string castValue = value.toStdString();
+    _setPropertyValue( item, castValue );
+}
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
 {
@@ -743,19 +763,17 @@ void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::PropertyPt
     {
         std::string castValue = boost::any_cast<std::string > ( value );
         QString qCastValue = QString::fromStdString( castValue );
-        if( property->AttributeExists( "isFilePath" ) )
+        if( (property->AttributeExists( "isFilePath" )) &&
+            boost::any_cast<bool>( property->GetAttribute("isFilePath") ) )
         {
-            bool flag = boost::any_cast<bool>( property->GetAttribute("isFilePath") );
-            if( flag )
-            {
-                LOG_TRACE( "_setItemValue: (filePath) " << castValue );
-                //mFilePathManager->setValue( item, qCastValue );
-            }
-            else
-            {
-                LOG_TRACE( "_setItemValue: " << castValue );
-                mStringManager->setValue( item, qCastValue );
-            }
+            LOG_TRACE( "_setItemValue: (filePath) " << castValue );
+            mFilePathManager->setValue( item, qCastValue );
+        }
+        else if( (property->AttributeExists( "isNodePath" )) &&
+                 boost::any_cast<bool>( property->GetAttribute("isNodePath") ) )
+        {
+            LOG_TRACE( "_setItemValue: (nodePath) " << castValue );
+            mNodeSelectManager->setValue( item, qCastValue );
         }
         else
         {
