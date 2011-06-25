@@ -56,6 +56,7 @@ public:
     QString filePath() const { return theLineEdit->text(); }
 signals:
     void filePathChanged(const QString &filePath);
+    void nodeSelectedQSignal( const std::string nodePath );
 protected:
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
@@ -64,6 +65,7 @@ protected:
 private slots:
     void buttonClicked();
     void onNodeSelected( const std::string& nodePath );
+    void onNodeSelectedQueued( const std::string nodePath );
 private:
     QLineEdit *theLineEdit;
 

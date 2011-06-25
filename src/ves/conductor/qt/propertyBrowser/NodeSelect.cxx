@@ -66,6 +66,9 @@ NodeSelect::NodeSelect(QWidget *parent)
                 this, SIGNAL(filePathChanged(const QString &)));
     connect(button, SIGNAL(clicked()),
                 this, SLOT(buttonClicked()));
+    connect( this, SIGNAL(nodeSelectedQSignal(std::string)),
+             this, SLOT(onNodeSelectedQueued(std::string)),
+             Qt::QueuedConnection );
 }
 
 void NodeSelect::buttonClicked()
@@ -78,6 +81,11 @@ void NodeSelect::buttonClicked()
 }
 
 void NodeSelect::onNodeSelected( const std::string& nodePath )
+{
+    emit nodeSelectedQSignal( nodePath );
+}
+
+void NodeSelect::onNodeSelectedQueued( const std::string nodePath )
 {
     m_connections.DropConnections();
     ves::conductor::UITabs::instance()->ActivateTab( "Constraints" );
