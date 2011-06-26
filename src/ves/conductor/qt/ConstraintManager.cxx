@@ -101,6 +101,7 @@ ves::xplorer::data::PropertySetPtr ConstraintManager::CreateNewConstraint( const
             m_constraintTypeToSetPtrMap.find( constraintType );
     if( iter != m_constraintTypeToSetPtrMap.end() )
     {
+        LOG_INFO( "Created new propertyset for constraint: " + constraintType );
         return iter->second->CreateNew();
     }
     else
