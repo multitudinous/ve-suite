@@ -250,7 +250,7 @@ void VizBasePropertySet::UpdateScalarDataOptions( PropertyPtr property )
     enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "ScalarNames" ) );
     if( enumValues.empty() )
     {
-        enumValues.push_back( "No datasets loaded" );
+        enumValues.push_back( "No scalars available" );
     }
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
 

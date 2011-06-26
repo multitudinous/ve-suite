@@ -90,6 +90,7 @@ void CADPropertySet::CreateSkeleton()
 {
     AddProperty( "Visible", true, "Visible" );
 
+    AddProperty( "SurfaceData", false, "Use as surface data" );
 
     AddProperty( "Transform", boost::any(), "Transform" );
     SetPropertyAttribute( "Transform", "isUIGroupOnly", true );
@@ -202,6 +203,9 @@ void CADPropertySet::CreateSkeleton()
     SetPropertyAttribute( "DynamicAnalysisData", "isFilePath", true );
     mPropertyMap["DynamicAnalysisData"]->
         SignalValueChanged.connect( boost::bind( &CADPropertySet::AddDynamicAnalysisData, this, _1 ) );
+
+    AddProperty( "Filename", emptyString, "Filename: not visible in UI" );
+    SetPropertyAttribute( "Filename", "userVisible", false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
@@ -232,6 +236,12 @@ void CADPropertySet::EnableLiveProperties( bool live )
     else
     {
         MakeLiveBasePtr p;
+
+        p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
+                                                GetProperty("SurfaceData"),
+                                                "UseAsSurfaceData") );
+        mLiveObjects.push_back(p);
+
         p = MakeLiveBasePtr(new MakeLive<bool>( mUUIDString,
                                                      GetProperty("Visible"),
                                                      "ToggleCADNode" ));

@@ -76,6 +76,7 @@
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/data/CADPropertySet.h>
 
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
@@ -243,6 +244,10 @@ MainWindow::MainWindow(QWidget* parent) :
              this, SLOT(QueuedRemoveNotifier(std::string)),
              Qt::QueuedConnection );
 
+    connect( this, SIGNAL(UseAsSurfaceDataQSignal(std::string,bool)),
+             this, SLOT(UseAsSurfaceDataQueued(std::string,bool)),
+             Qt::QueuedConnection );
+
     // Connect to the ActiveModelChangedSignal so we can show the correct 
     // tabs when the model changes
     CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
@@ -266,6 +271,10 @@ MainWindow::MainWindow(QWidget* parent) :
     CONNECTSIGNAL_1( "AddVTKDataSetEventHandler.DatafileLoaded",
                      void ( const std::string& ),
                      &MainWindow::RemoveNotifier,
+                     mConnections, normal_Priority );
+
+    CONNECTSIGNAL_2( "%UseAsSurfaceData%", void( const std::string&, bool ),
+                     &MainWindow::UseAsSurfaceData,
                      mConnections, normal_Priority );
 
 
@@ -1343,4 +1352,20 @@ void MainWindow::QueuedRemoveNotifier(  std::string const& filename )
         delete iter->second;
         m_loadNotifiers.erase( iter );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::UseAsSurfaceData( const std::string& uuid, bool flag )
+{
+    UseAsSurfaceDataQSignal( uuid, flag );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::UseAsSurfaceDataQueued( const std::string uuid, bool flag )
+{
+    if( !flag )
+        return;
+    ves::xplorer::data::CADPropertySet cad;
+    cad.SetUUID( uuid );
+    cad.LoadFromDatabase();
+    std::string filename = boost::any_cast<std::string>( cad.GetPropertyValue( "Filename" ) );
+    LoadDataFile( filename );
 }

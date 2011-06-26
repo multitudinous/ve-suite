@@ -134,6 +134,8 @@ protected:
     /// Removes "Loading file ..." notifier for file filename
     void RemoveNotifier( const std::string& filename );
 
+    void UseAsSurfaceData( const std::string& uuid, bool flag );
+
 protected Q_SLOTS:
     
     /// Called when the physics icon is pressed on the toolbar
@@ -276,11 +278,14 @@ protected Q_SLOTS:
     void on_actionRemove_Planet_triggered ( bool );
     void on_actionConfigure_Layers_triggered ( bool );
 
+    void UseAsSurfaceDataQueued( const std::string uuid, bool flag );
+
 Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
     /// required for thread safety
     void ActiveModelChanged( std::string modelID );
     void RemoveNotifierQSignal( std::string filename );
+    void UseAsSurfaceDataQSignal( const std::string uuid, bool flag );
 
 protected Q_SLOTS:
     /// Slot corresponding to ActiveModelChanged queued signal

@@ -533,7 +533,7 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
                           transform);
     }
     else if( newPart->GetNodeType() == "Part" )
-    {       
+    {
         osg::Node* node = m_cadHandler->
                           GetPart( newPart->GetID() )->GetNode()->GetNode();
 
@@ -542,6 +542,13 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
                       node );
     }
     newSet.SetPropertyValue( "NodePath", pathString );
+
+    if( newPart->GetNodeType() == "Part" )
+    {
+        CADPartPtr tPart( boost::dynamic_pointer_cast<CADPart>( newPart ) );
+        std::string filename = tPart->GetCADFileName();
+        newSet.SetPropertyValue( "Filename", filename );
+    }
 
     newSet.SetPropertyValue( "Visibile", newPart->GetVisibility() );
 
