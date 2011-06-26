@@ -75,6 +75,7 @@ private:
     void CreateSkeleton();
     ///Add dynamic analysis data
     void AddDynamicAnalysisData( PropertyPtr property );
+    void Scale( PropertyPtr property );
 
     typedef boost::signals2::signal< void ( std::string const& nodeType, 
         std::string const& filename, std::string const& nodeID ) > AddAnimationDataSignal_type;

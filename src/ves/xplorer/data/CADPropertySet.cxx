@@ -122,8 +122,9 @@ void CADPropertySet::CreateSkeleton()
     SetPropertyAttribute( "Transform_Scale_X", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Y", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Z", "DisplayPrecision", 6 );
-
-
+    GetProperty("Transform_Scale_X")->SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
+    GetProperty("Transform_Scale_Y")->SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
+    GetProperty("Transform_Scale_Z")->SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
 
     AddProperty( "Transform_Scale_Uniform", false, "Uniform Scaling" );
 
@@ -206,6 +207,31 @@ void CADPropertySet::CreateSkeleton()
 
     AddProperty( "Filename", emptyString, "Filename: not visible in UI" );
     SetPropertyAttribute( "Filename", "userVisible", false );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADPropertySet::Scale( PropertyPtr property )
+{
+    bool uniform = boost::any_cast<bool>( GetPropertyValue( "Transform_Scale_Uniform" ) );
+    if( uniform )
+    {
+        double scale = boost::any_cast<double>( property->GetValue() );
+        std::string name = boost::any_cast<std::string>(property->GetAttribute("nameInSet"));
+        if( name == "Transform_Scale_X" )
+        {
+            SetPropertyValue( "Transform_Scale_Y", scale );
+            SetPropertyValue( "Transform_Scale_Z", scale );
+        }
+        else if( name == "Transform_Scale_Y" )
+        {
+            SetPropertyValue( "Transform_Scale_X", scale );
+            SetPropertyValue( "Transform_Scale_Z", scale );
+        }
+        else if( name == "Transform_Scale_Z" )
+        {
+            SetPropertyValue( "Transform_Scale_X", scale );
+            SetPropertyValue( "Transform_Scale_Y", scale );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
