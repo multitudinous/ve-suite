@@ -36,7 +36,7 @@
 ; Directory names for all VES dependencies
 #define ACETAOHOME "ACETAO_5.7.0_Pre-Compile_vcmsvc-9.0-sp1-x86"
 #define VTKHOME "VTK_5.4.2_msvc-9.0-sp1-x86"
-#define OSGHOME "OSG_2.8.3_msvc-9.0-sp1-x86"
+#define OSGHOME "OSG_2.8.5_msvc-9.0-sp1-x86"
 #define WXHOME "WXWidgets_2.8.10_msvc-9.0-sp1-x86"
 #define XERCESHOME "Xerces_3.0.1_msvc-9.0-sp1-x86"
 #define JUGGLERINSTHOME "VRJuggler_3.0.0_msvc-9.0-sp1-x86"
@@ -56,7 +56,7 @@
 #define BDFXDIRNAME "bdfx"
 #define BULLETDIRNAME "bullet-2.77"
 #define PNGDIRNAME "libpng-1.5.2"
-#define OSGDIRNAME "osg_2.8.3"
+#define OSGDIRNAME "osg_2.8.5"
 #define OSGBULLETDIRNAME "osgBullet"
 #define OSGBULLETPLUSDIRNAME "osgBulletPlus"
 #define OSGEPHEMERISDIRNAME "osgEphemeris"
@@ -94,7 +94,11 @@
 #define LIBOGGHOME "C:\dev\deps\libogg"
 #define LIBVORBISHOME "C:\dev\deps\vorbis-svn"
 #define OPENALHOME "C:\Program Files (x86)\OpenAL 1.1 SDK"
+#ifdef x64
+#define OSGALSRCHOME "C:\dev\deps\osgaudio-gc-svn\install-win64"
+#else
 #define OSGALSRCHOME "C:\dev\deps\osgaudio-gc-svn\install-win32"
+#endif
 #define OSGAUDIOROOTHOME "C:\dev\deps\osgaudio-gc-svn"
 #define ALUTSRCINSTALL "C:\dev\deps\freealut-1.1.0-bin"
 ; OSG deps

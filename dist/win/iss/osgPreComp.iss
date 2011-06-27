@@ -4,7 +4,7 @@
   #include <vesenv.iss>
 #endif
 
-#define MyAppVer "2.8.3"
+#define MyAppVer "2.8.5"
 #define MyAppName "OSG Pre-Compile"
 #define MyAppVerName "OSG"
 #define MyAppPublisher "VERG"

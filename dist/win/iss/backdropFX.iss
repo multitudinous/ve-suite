@@ -4,7 +4,7 @@
   #include <vesenv.iss>
 #endif
 
-#define MyAppVer "0.3.0"
+#define MyAppVer "0.3.1"
 #define MyAppName "backdropFX Pre-Compile"
 #define MyAppVerName "backdropFX"
 #define MyAppPublisher "VERG"
