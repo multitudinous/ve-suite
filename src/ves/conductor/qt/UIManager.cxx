@@ -1201,6 +1201,12 @@ bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
         return true;
     }
 
+    // Don't pass on key events if mouse pointer is not inside the UI
+    if( !mMouseInsideUI )
+    {
+        return false;
+    }
+
     // TODO: this iterates over all elements. We should instead just find the match
     // from Ortho2DTestPointerCoordinates and send to it.
     ElementMap_type::const_iterator map_iterator;
@@ -1233,6 +1239,12 @@ bool UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
     {
         ToggleVisibility();
         return true;
+    }
+
+    // Don't pass on key events if mouse pointer is not inside the UI
+    if( !mMouseInsideUI )
+    {
+        return false;
     }
 
     // TODO: this iterates over all elements. We should instead just find the match
