@@ -649,12 +649,13 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             //{
                 std::ostringstream tempTextData;
                 std::string partNumber;
-                
+                std::string partNumberHeader;
                 for (std::size_t col = 0; col < cols; ++col)
                 {
-                    const std::string partNumberHeader = rs.columnName(col);
+                    partNumberHeader = rs.columnName(col);
+                    boost::algorithm::to_lower( partNumberHeader );
                     //std::cout << rs.columnName(col) << std::endl;
-                    if( partNumberHeader == "Part_Number" )
+                    if( partNumberHeader == "part_number" )
                     {
                         partNumber = rs[col].convert<std::string>();
                         m_assemblyPartNumbers.push_back( partNumber );
@@ -1263,8 +1264,8 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
                 for (std::size_t col = 0; col < cols; ++col)
                 {
                     partNumberHeader = rs.columnName(col);
-                    
-                    if( partNumberHeader != "Part_Number" )
+                    boost::algorithm::to_lower( partNumberHeader );
+                    if( partNumberHeader != "part_number" )
                     {
                         tempTextData << rs.columnName(col) << ": " 
                             << rs[col].convert<std::string>() << "\n";
@@ -1587,7 +1588,8 @@ void WarrantyToolGP::QueryTableAndHighlightParts(
         for (std::size_t col = 0; col < cols; ++col)
         {
             partNumberHeader = rs.columnName(col);
-            if( partNumberHeader == "Part_Number" )
+            boost::algorithm::to_lower( partNumberHeader );
+            if( partNumberHeader == "part_number" )
             {
                 partNumber = rs[col].convert<std::string>();
                 //tempText->SetTitle( partNumber );
@@ -1707,7 +1709,8 @@ void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& querySt
         for (std::size_t col = 0; col < cols; ++col)
         {
             partNumberHeader = rs.columnName(col);
-            if( partNumberHeader == "Part_Number" )
+            boost::algorithm::to_lower( partNumberHeader );
+            if( partNumberHeader == "part_number" )
             {
                 partNumber = rs[col].convert<std::string>();
                 //tempText->SetTitle( partNumber );
@@ -1828,13 +1831,16 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
     std::string partNumber;
     std::string partNumberHeader;
+    ves::xplorer::scenegraph::TextTexture* tempText = 0;
+    std::string partText;
+    osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
     while (more)
     {
-        ves::xplorer::scenegraph::TextTexture* tempText = 0;
+        tempText = 0;
         try
         {
             tempText = 
-            new ves::xplorer::scenegraph::TextTexture();
+                new ves::xplorer::scenegraph::TextTexture();
         }
         catch(...)
         {
@@ -1849,7 +1855,8 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
         for (std::size_t col = 0; col < cols; ++col)
         {
             partNumberHeader = rs.columnName(col);
-            if( partNumberHeader == "Part_Number" )
+            boost::algorithm::to_lower( partNumberHeader );
+            if( partNumberHeader == "part_number" )
             {
                 partNumber = rs[col].convert<std::string>();
                 tempText->SetTitle( partNumber );
@@ -1861,13 +1868,13 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
                     << rs[col].convert<std::string>() << "\n";
             }
         }
-        const std::string partText = tempTextData.str();
+        partText = tempTextData.str();
         tempText->UpdateText( partText );
         m_groupedTextTextures->AddTextTexture( partNumber, tempText );
         
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
         highlight( m_cadRootNode, partNumber, true, true, 
-                  osg::Vec3( 0.57255, 0.34118, 1.0 ) );
+                  nullGlowColor );
         
         more = rs.moveNext();
     }
