@@ -246,8 +246,8 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                             << j << ".vtm";
                         
                     ves::xplorer::util::cfdVTKFileHandler* trans = new ves::xplorer::util::cfdVTKFileHandler();
-                    trans->WriteDataSet( tempDataSet, strm.str() );*/
-                    delete trans;
+                    trans->WriteDataSet( tempDataSet, strm.str() );
+                    delete trans;*/
                     tempDataSet->Delete();
                 }
             }
