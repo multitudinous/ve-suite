@@ -155,8 +155,9 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
             // This allows the timesteps to go through the loop with positive values.
             for( int j = numTimeSteps-1; j >= 0; --j )
             {
-                std::cout << "Translating Timestep = " << tempArray->GetItem( i )->GetTuple1( j ) << std::endl;
-                reader->SetTimeValue( tempArray->GetItem( i )->GetTuple1( j ) );
+                float currentTimeStep = tempArray->GetItem( i )->GetTuple1( j );
+                std::cout << "Translating Timestep = " << currentTimeStep << std::endl;
+                reader->SetTimeValue( currentTimeStep );
                 reader->Update();
                 
                 //Now dump geometry if it is available
@@ -167,14 +168,14 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                     //geomFilter->ExtentClippingOn();
                     //geomFilter->PointClippingOn();
                     //geomFilter->CellClippingOn();
-                    geomFilter->Update();
+                    //geomFilter->Update();
                     
                     
                     vtkTriangleFilter* triFilter = vtkTriangleFilter::New();
                     triFilter->SetInputConnection( geomFilter->GetOutputPort() );
                     triFilter->PassVertsOn();
                     triFilter->PassLinesOff();
-                    triFilter->Update();
+                    //triFilter->Update();
                     
                     /*
                     vtkPolyDataNormals* pdNormals = vtkPolyDataNormals::New();
@@ -236,6 +237,17 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                     tempDataSet->Update();
                     vtkTemporalDataSet::SafeDownCast( outputDataset )->
                         SetTimeStep( j, tempDataSet );
+
+                    /*std::ostringstream strm;
+                    strm << EnSightToVTK->GetOutputFileName()
+                            << "_"
+                            << std::setfill( '0' )
+                            << std::setw( 6 )
+                            << j << ".vtm";
+                        
+                    ves::xplorer::util::cfdVTKFileHandler* trans = new ves::xplorer::util::cfdVTKFileHandler();
+                    trans->WriteDataSet( tempDataSet, strm.str() );*/
+                    delete trans;
                     tempDataSet->Delete();
                 }
             }
