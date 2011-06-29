@@ -181,6 +181,12 @@ DataSet::DataSet( )
 ////////////////////////////////////////////////////////////////////////////////
 DataSet::~DataSet()
 {
+    xplorer::data::DatasetPropertySet set;
+    boost::filesystem::path tempPath( fileName );
+    std::string shortName = tempPath.filename().string();
+    set.LoadByKey( "Filename", shortName );
+    set.DeleteFromDatabase();
+
     this->lut->Delete();
     this->lut = NULL;
 

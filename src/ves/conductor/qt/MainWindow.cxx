@@ -1361,11 +1361,18 @@ void MainWindow::UseAsSurfaceData( const std::string& uuid, bool flag )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::UseAsSurfaceDataQueued( const std::string uuid, bool flag )
 {
-    if( !flag )
-        return;
     ves::xplorer::data::CADPropertySet cad;
     cad.SetUUID( uuid );
     cad.LoadFromDatabase();
-    std::string filename = boost::any_cast<std::string>( cad.GetPropertyValue( "Filename" ) );
-    LoadDataFile( filename );
+    std::string filename =
+            boost::any_cast<std::string>( cad.GetPropertyValue( "Filename" ) );
+
+    if( flag )
+    {
+        LoadDataFile( filename );
+    }
+    else
+    {
+        ves::xplorer::ModelHandler::instance()->GetActiveModel()->DeleteDataSet( filename );
+    }
 }
