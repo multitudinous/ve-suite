@@ -68,11 +68,10 @@ namespace ves
 namespace xplorer
 {
 /*!\file DataSetScalarBar.h
-DataSetScalarBar API
-*/
-/*!\class ves::xplorer::DataSetScalarBar
-*   Renders an axis for a given dataset
-*/
+ * DataSetScalarBar API
+ * class ves::xplorer::DataSetScalarBar
+ * Renders an axis for a given dataset
+ */
 class VE_XPLORER_EXPORTS DataSetScalarBar : public GlobalBase
 {
 public:
@@ -88,13 +87,13 @@ public:
     /// Create the scalar bar
     void SetBoundingBox( double* inBBox );
     /// cleanup and add the scalar bar to the dcs
-    void AddScalarBarToGroup( void );
+    void AddScalarBarToGroup();
     /// Get the scalar bar that was created
-    ves::xplorer::scenegraph::DCS* GetScalarBar( void );
+    ves::xplorer::scenegraph::DCS* GetScalarBar();
     ///Create the osg scalar bar
-    osg::ref_ptr< ScalarBar > CreateScalarBar( void );
+    osgSim::ScalarBar* CreateScalarBar();
     // Create a custom scalar printer
-struct MyScalarPrinter: public ScalarBar::ScalarPrinter
+    struct MyScalarPrinter: public ScalarBar::ScalarPrinter
     {
         double min, max, mid;
         void SetMinMax( double minIn, double maxIn )
