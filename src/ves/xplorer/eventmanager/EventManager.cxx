@@ -259,8 +259,12 @@ void EventManager::_ConnectSignal( const std::string& sigName,
         }
         else
         {
-            LOG_ERROR( "_ConnectSignal: Connection to " << sigName << " failed" );
+            LOG_ERROR( "_ConnectSignal: Connection to " << sigName << " failed. Wrong signature perhaps?" );
         }
+    }
+    else
+    {
+        LOG_ERROR( "_ConnectSignal: Signal " << sigName << " not found. Has it been registered? Do the names match?" );
     }
 
     // Copy this slot off for later async connections
