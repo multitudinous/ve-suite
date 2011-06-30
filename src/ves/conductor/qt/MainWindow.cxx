@@ -38,6 +38,7 @@
 #include <QtGui/QPaintEvent>
 #include <QtGui/QToolButton>
 #include <QtCore/QDir>
+#include <QtCore/QSettings>
 
 #include <ves/conductor/qt/ExtendedTabWidget.h>
 
@@ -55,6 +56,7 @@
 #include <ves/conductor/qt/XMLDataBufferEngine.h>
 #include <ves/conductor/qt/extendedWidgets/ExtendedToolBar.h>
 #include <ves/conductor/qt/UITabs.h>
+#include <ves/conductor/qt/RecentFiles.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -228,6 +230,11 @@ MainWindow::MainWindow(QWidget* parent) :
     m_preferencesTab = new ves::conductor::PreferencesTab( 0 );
     m_pluginsTab = new ves::conductor::PluginSelectionTab( this, 0 );
     m_constraintsTab = new ves::conductor::Constraints( 0 );
+
+    m_recentTab = new RecentFiles(0);
+    connect( m_recentTab, SIGNAL(accepted()), this, SLOT(onRecentFileSelected()) );
+    connect( m_recentTab, SIGNAL(rejected()), this, SLOT(onRecentFileRejected()) );
+    ActivateTab( AddTab( m_recentTab, "Recent Files" ) );
 
     ves::conductor::UITabs::instance()->SetChild( this );
 
@@ -565,11 +572,17 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
 {
     // Close out the fileDialog tab and kill the file dialog
     RemoveTab( mFileDialog );
-
     if ( mFileDialog != 0 )
     {
         mFileDialog->close();
         mFileDialog = 0;
+    }
+
+    RemoveTab( m_recentTab );
+    if( m_recentTab != 0 )
+    {
+        m_recentTab->close();
+        m_recentTab = 0;
     }
 
     // Now deal with loading the selected files
@@ -579,6 +592,14 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
 //        {
 //            m_loading = new QLabel;
 //        }
+
+        QSettings settings( QSettings::IniFormat, QSettings::UserScope,
+                                "VE Suite", "VE Xplorer" );
+        QStringList files = settings.value("recentFileList").toStringList();
+        files.removeAll( fileNames.at(index) );
+        files = files << fileNames.at(index);
+        settings.setValue( "recentFileList", files );
+
         QLabel* m_loading = new QLabel();
         //m_loadNotifiers.push_back( m_loading );
         QString text("Loading ");
@@ -1375,4 +1396,50 @@ void MainWindow::UseAsSurfaceDataQueued( const std::string uuid, bool flag )
     {
         ves::xplorer::ModelHandler::instance()->GetActiveModel()->DeleteDataSet( filename );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionRecent_triggered()
+{
+    if( m_recentTab != 0 )
+    {
+        ActivateTab( "Recent Files" );
+    }
+    else
+    {
+        m_recentTab = new RecentFiles(0);
+        connect( m_recentTab, SIGNAL(accepted()), this, SLOT(onRecentFileSelected()) );
+        connect( m_recentTab, SIGNAL(rejected()), this, SLOT(onRecentFileRejected()) );
+        ActivateTab( AddTab( m_recentTab, "Recent Files" ) );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::onRecentFileSelected()
+{
+    QString filename = m_recentTab->GetSelectedFile();
+
+    RemoveTab( m_recentTab );
+    if( m_recentTab != 0 )
+    {
+        m_recentTab->close();
+    }
+    m_recentTab = 0;
+
+    if( filename == "" )
+    {
+        return;
+    }
+
+    QStringList files;
+    files << filename;
+    onFileOpenSelected( files );
+}
+
+void MainWindow::onRecentFileRejected()
+{
+    RemoveTab( m_recentTab );
+    if( m_recentTab != 0 )
+    {
+        m_recentTab->close();
+    }
+    m_recentTab = 0;
 }

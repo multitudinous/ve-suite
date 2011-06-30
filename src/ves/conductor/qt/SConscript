@@ -50,6 +50,9 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'NonScrollGraphicsView.h')]
 cppSources += lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'RecentFiles.h')]
+cppSources += lib_env.qt_moc(source)
+
 source = [pj(buildSrcDir,'extendedWidgets','ExtendedToolBar.h')]
 cppSources += lib_env.qt_moc(source)
 
@@ -109,6 +112,9 @@ cppSources += lib_env.qt_rcc(source)
 ### uic files
 source = [pj(buildSrcDir,'titlebar.ui')]
 cppHeaders = lib_env.qt_uic(source)
+
+source = [pj(buildSrcDir,'RecentFiles.ui')]
+cppHeaders += lib_env.qt_uic(source)
 
 source = [pj(buildSrcDir,'TreeTab.ui')]
 cppHeaders += lib_env.qt_uic(source)

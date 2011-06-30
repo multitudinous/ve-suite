@@ -86,6 +86,7 @@ QToolButton:hover
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
+    <addaction name="actionRecent"/>
     <addaction name="actionRun"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
@@ -520,6 +521,11 @@ QToolButton:hover
    </property>
    <property name="text">
     <string>View</string>
+   </property>
+  </action>
+  <action name="actionRecent">
+   <property name="text">
+    <string>Recent...</string>
    </property>
   </action>
  </widget>

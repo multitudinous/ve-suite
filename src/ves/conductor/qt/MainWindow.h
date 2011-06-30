@@ -49,7 +49,6 @@
 #include <string>
 #include <map>
 
-
 namespace ves 
 { 
 namespace conductor 
@@ -59,6 +58,7 @@ class TreeTab;
 class IconStack;
 class PluginSelectionTab;
 class Constraints;
+class RecentFiles;
 
 namespace qt 
 { 
@@ -137,6 +137,8 @@ protected:
     void UseAsSurfaceData( const std::string& uuid, bool flag );
 
 protected Q_SLOTS:
+
+    void on_actionRecent_triggered();
     
     /// Called when the physics icon is pressed on the toolbar
     /// Autoconnected slot
@@ -291,6 +293,8 @@ protected Q_SLOTS:
     /// Slot corresponding to ActiveModelChanged queued signal
     void QueuedOnActiveModelChanged( const std::string& modelID );
     void QueuedRemoveNotifier( std::string const& filename );
+    void onRecentFileSelected();
+    void onRecentFileRejected();
 
 private: 
     ///Qt window widget
@@ -331,6 +335,8 @@ private:
 
     /// The Constraints Tab
     ves::conductor::Constraints* m_constraintsTab;
+
+    ves::conductor::RecentFiles* m_recentTab;
     
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
