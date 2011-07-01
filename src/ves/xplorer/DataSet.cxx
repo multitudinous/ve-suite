@@ -2004,6 +2004,7 @@ void DataSet::WriteDatabaseEntry()
     GetDCS()->setDescriptions( descriptorsList );
 
     set.SetPropertyValue( "Filename", shortName );
+    set.SetPropertyValue( "LongFilename", fileName );
     set.SetPropertyValue( "StepLength", stepLength );
     set.SetPropertyValue( "MaxTime", maxTime );
     set.SetPropertyValue( "TimeStep", timeStep );
