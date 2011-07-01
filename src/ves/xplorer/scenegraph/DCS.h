@@ -34,13 +34,8 @@
 #define DCS_H
 
 /*!\file DCS.h
- */
-
-/*!\class ves::xplorer::scenegraph::DCS
- *
- */
-
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::DCS
+ * \namespace ves::xplorer::scenegraph
  *
  */
 
