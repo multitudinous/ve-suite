@@ -211,7 +211,8 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     std::string direction;
     if( set->PropertyExists( "Direction" ) )
     {
-        direction = boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction", "enumCurrentString" ) );
+        direction = 
+            boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction", "enumCurrentString" ) );
     }
         
     std::string planes;
@@ -255,6 +256,14 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
         return;
     }
 
+    ///Setup the surface name if needed
+    if( direction == "By Surface" )
+    {
+        const std::string dataSetName = 
+            boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction_Surface", "enumCurrentString" ) );
+        activeObject->SetDataMapSurfaceName( dataSetName );
+    }
+    
     //Need to wire this up to the UI
     //ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->
     //    SetDataSetScalarState( boost::any_cast<bool>( set->GetPropertyValue( "ScalarBar" ) ) );

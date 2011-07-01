@@ -72,7 +72,9 @@ public:
     void UpdateScalarDataRange( PropertyPtr property );
     ///Update method
     void UpdateVectorDataOptions( PropertyPtr property );
-
+    ///Update method for enabling surface tools
+    void UpdateDirectionSelection( PropertyPtr property );
+    
 protected:
     ///Registration of this property set for a child case
     ///\param tableName The table to be registered

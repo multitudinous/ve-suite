@@ -480,8 +480,8 @@ void cfdContourBase::CreateArbSurface()
 
     if( !pd )
     {
-        std::cerr << "ERROR: Activate a polydata file to use this function"
-            << std::endl;
+        std::cerr << "ERROR: Activate a polydata file to use this function "
+            << m_surfDataset << std::endl;
         return;
     }
 

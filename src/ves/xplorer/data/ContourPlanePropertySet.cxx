@@ -128,7 +128,10 @@ void ContourPlanePropertySet::CreateSkeleton()
     //UpdateVectorDataOptions( nullPtr );
 
 
+    //AddProperty( "Direction", boost::any(), "Direction" );
+    //SetPropertyAttribute( "Direction", "isUIGroupOnly", true );
     AddProperty( "Direction", 0, "Direction" );
+    SetPropertyAttribute( "Direction", "setExpanded", true );
     enumValues.clear();
     enumValues.push_back( "x" );
     enumValues.push_back( "y" );
@@ -137,6 +140,23 @@ void ContourPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "By Surface" );
     SetPropertyAttribute( "Direction", "enumValues", enumValues );
 
+    {
+        ///Setup the names of the files to use for data map surfaces
+        enumValues.clear();
+        enumValues = ves::xplorer::data::DatabaseManager::instance()->
+            GetStringVector( "Dataset", "Filename" );
+        if( enumValues.empty() )
+        {
+            enumValues.push_back( "No datasets loaded" );
+        }
+        AddProperty( "Direction_Surface", 0, "Surface" );
+        SetPropertyAttribute( "Direction_Surface", "enumValues", enumValues );
+        mPropertyMap[ "Direction_Surface" ]->SetDisabled();
+        
+        mPropertyMap[ "Direction" ]->
+            SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateDirectionSelection, this, _1 ) );
+    }
+    
     AddProperty( "DataMapping", 0, "Data Mapping");
     enumValues.clear();
     enumValues.push_back( "Map Scalar Data" );

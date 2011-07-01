@@ -208,6 +208,9 @@ public:
     ///Set the property set for this feature
     void SetPropertySet( ves::xplorer::data::PropertySetPtr set );
 
+    ///Set the surface dataset name
+    void SetDataMapSurfaceName( std::string const& surfName );
+    
 protected:
     vtkPolyData* ComputeVolumeFlux( vtkPolyData* inputPD );
     ///active dataset.

@@ -382,3 +382,20 @@ bool VizBasePropertySet::ValidateScalarMinMax( PropertyPtr property, boost::any 
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateDirectionSelection( PropertyPtr property )
+{
+    boost::ignore_unused_variable_warning( property );
+
+    const std::string value = 
+        boost::any_cast<std::string >( GetPropertyAttribute( "Direction", "enumCurrentString" ) );
+
+    if( value == "By Surface" )
+    {
+        mPropertyMap[ "Direction_Surface" ]->SetEnabled();
+    }
+    else
+    {
+        mPropertyMap[ "Direction_Surface" ]->SetDisabled();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
