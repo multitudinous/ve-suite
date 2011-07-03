@@ -144,7 +144,7 @@ void ContourPlanePropertySet::CreateSkeleton()
         ///Setup the names of the files to use for data map surfaces
         enumValues.clear();
         enumValues = ves::xplorer::data::DatabaseManager::instance()->
-            GetStringVector( "Dataset", "Filename" );
+            GetStringVector( "Dataset", "LongFilename" );
         if( enumValues.empty() )
         {
             enumValues.push_back( "No datasets loaded" );

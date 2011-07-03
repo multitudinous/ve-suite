@@ -365,11 +365,15 @@ void VisFeatureMakerBase::SetActiveScalarAndRange( xplorer::data::PropertySetPtr
 }
 //////////////////////////////////////////////////////////////////
 bool VisFeatureMakerBase::SetActiveDataSet( xplorer::data::PropertySetPtr set )
-{
+{    
     std::string dataSetName = boost::any_cast<std::string >( set->GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    xplorer::data::DatasetPropertySet dataset;
+    dataset.LoadByKey( "Filename", dataSetName );
+    const std::string& longFilename = boost::any_cast< std::string >( dataset.GetPropertyValue( "LongFilename" ) );
+    
     //Need to set the active datasetname and get the position of the dataset
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
-    unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );
+    unsigned int i = activeModel->GetIndexOfDataSet( longFilename );
     vprDEBUG( vesDBG, 1 )
     << "|\tVisFeatureMakerBase CHANGE_STEADYSTATE_DATASET " << i
     << std::endl << vprDEBUG_FLUSH;
