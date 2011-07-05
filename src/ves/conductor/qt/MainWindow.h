@@ -280,6 +280,8 @@ protected Q_SLOTS:
     void on_actionRemove_Planet_triggered ( bool );
     void on_actionConfigure_Layers_triggered ( bool );
 
+    void on_actionConstraints_triggered();
+
     void UseAsSurfaceDataQueued( const std::string uuid, bool flag );
 
 Q_SIGNALS:

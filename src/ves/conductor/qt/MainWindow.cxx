@@ -219,6 +219,8 @@ MainWindow::MainWindow(QWidget* parent) :
         m_viewMenuStack->SetExtendedToolBarParent( toolbar );
         m_viewMenuStack->AddAction( ui->actionShowPreferencesTab );
         m_viewMenuStack->AddAction( ui->actionShowPluginsTab );
+        m_viewMenuStack->AddAction( ui->actionRecent );
+        m_viewMenuStack->AddAction( ui->actionConstraints );
     }
         
     // Make sure there is no statusbar on this widget.
@@ -996,7 +998,7 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
         AddTab( mVisualizationTab, "Visualization" );
     }
 
-    AddTab( m_constraintsTab, "Constraints" );
+    //AddTab( m_constraintsTab, "Constraints" );
 
     // Show the scenegraph tree
     AddTab( mScenegraphTreeTab, "Layers" );
@@ -1447,7 +1449,7 @@ void MainWindow::onRecentFileSelected()
     files << filename;
     onFileOpenSelected( files );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onRecentFileRejected()
 {
     RemoveTab( m_recentTab );
@@ -1457,3 +1459,9 @@ void MainWindow::onRecentFileRejected()
     }
     m_recentTab = 0;
 }
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionConstraints_triggered()
+{
+    ActivateTab( AddTab( m_constraintsTab, "Constraints" ) );
+}
+////////////////////////////////////////////////////////////////////////////////

@@ -524,8 +524,24 @@ QToolButton:hover
    </property>
   </action>
   <action name="actionRecent">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/images/refresh-32.png</normaloff>:/images/refresh-32.png</iconset>
+   </property>
    <property name="text">
     <string>Recent...</string>
+   </property>
+  </action>
+  <action name="actionConstraints">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/xpm/ToolBar/BBCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/BBCenterPointJumpButton.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>Constraints</string>
+   </property>
+   <property name="toolTip">
+    <string>Constraints</string>
    </property>
   </action>
  </widget>
