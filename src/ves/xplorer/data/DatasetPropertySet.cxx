@@ -119,8 +119,8 @@ void DatasetPropertySet::CreateSkeleton()
     AddProperty( "Filename", std::string(""), "File name");
     SetPropertyAttribute( "Filename", "userVisible", false );
 
-    AddProperty( "LongFilename", std::string(""), "Long File name");
-    SetPropertyAttribute( "LongFilename", "userVisible", false );
+    //AddProperty( "LongFilename", std::string(""), "Long File name");
+    //SetPropertyAttribute( "LongFilename", "userVisible", false );
 
     std::vector< std::string > stringVector;
     AddProperty( "ScalarNames", stringVector, "Scalar Names" );

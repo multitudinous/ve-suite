@@ -1993,18 +1993,19 @@ void DataSet::WriteDatabaseEntry()
 {
     xplorer::data::DatasetPropertySet set;
 
-    boost::filesystem::path tempPath( fileName );
-    std::string shortName = tempPath.filename().string();
+    //boost::filesystem::path tempPath( fileName );
+    //std::string shortName = tempPath.filename().string();
 
-    set.LoadByKey( "Filename", shortName );
+    //set.LoadByKey( "Filename", shortName );
+    set.LoadByKey( "Filename", fileName );
 
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_DATA_NODE" );
     descriptorsList.push_back( set.GetUUIDAsString() );
     GetDCS()->setDescriptions( descriptorsList );
 
-    set.SetPropertyValue( "Filename", shortName );
-    set.SetPropertyValue( "LongFilename", fileName );
+    //set.SetPropertyValue( "Filename", shortName );
+    set.SetPropertyValue( "Filename", fileName );
     set.SetPropertyValue( "StepLength", stepLength );
     set.SetPropertyValue( "MaxTime", maxTime );
     set.SetPropertyValue( "TimeStep", timeStep );
