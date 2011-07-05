@@ -38,6 +38,7 @@
 #include <ves/xplorer/data/PropertySetPtr.h>
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
+#include <ves/xplorer/Logging.h>
 
 #include <QtGui/QWidget>
 #include <QtCore/QAbstractItemModel>
@@ -157,6 +158,11 @@ private:
 
     boost::signals2::signal< void( osg::NodePath& ) > m_highlightAndSetManipulators;
     ves::util::StringSignal_type m_CADNodeSelected;
+
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 } // namespace conductor

@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#define VES_DEBUG
 #include <ves/conductor/qt/TreeTab.h>
 
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
@@ -70,7 +71,9 @@ namespace conductor
 
 TreeTab::TreeTab(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::TreeTab)
+    ui(new Ui::TreeTab),
+    m_logger( Poco::Logger::get("conductor.TreeTab") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     ui->setupUi(this);
 
@@ -205,6 +208,7 @@ void TreeTab::on_mTreeView_activated( const QModelIndex& index )
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::Select( const QModelIndex& index, bool highlight )
 {
+    LOG_DEBUG( "Select" );
     //Unselect the previously-selected DCS
     if( highlight )
     {
@@ -251,12 +255,14 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
 
     if( !found )
     {
+        LOG_DEBUG( "No matching DCS" );
         // Clear out the PropertyBrowser widget
         ves::xplorer::data::PropertySetPtr nullPtr;
         mBrowser->ParsePropertySet( nullPtr );
         mActiveSet = nullPtr;
         return;
     }
+    LOG_DEBUG( "Node is of type " << type );
 
     ves::xplorer::scenegraph::DCS* newSelectedDCS = static_cast< ves::xplorer::scenegraph::DCS* >( node );
 
@@ -313,6 +319,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
 
     if( type == "CAD" )
     {
+        LOG_DEBUG( "Firing CADNodeSelected signal" );
         m_CADNodeSelected( boost::any_cast< std::string >
                        ( mActiveSet->GetPropertyValue( "NodePath" ) ));
     }

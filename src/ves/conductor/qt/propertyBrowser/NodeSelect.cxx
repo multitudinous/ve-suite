@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
+#define VES_DEBUG
 #include <ves/conductor/qt/propertyBrowser/NodeSelect.h>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QToolButton>
@@ -47,8 +47,11 @@ namespace conductor
 {
 
 NodeSelect::NodeSelect(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+    m_logger( Poco::Logger::get("conductor.NodeSelect") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
+    LOG_DEBUG( "Ctor" );
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
     layout->setSpacing(0);
@@ -73,6 +76,7 @@ NodeSelect::NodeSelect(QWidget *parent)
 
 void NodeSelect::buttonClicked()
 {
+    LOG_DEBUG( "buttonClicked" );
     ves::conductor::UITabs::instance()->ActivateTab( "Layers" );
     CONNECTSIGNALS_1( "%CADNodeSelected",
                      void( std::string const& ),
@@ -82,11 +86,13 @@ void NodeSelect::buttonClicked()
 
 void NodeSelect::onNodeSelected( const std::string& nodePath )
 {
+    LOG_DEBUG( "onNodeSelected" );
     emit nodeSelectedQSignal( nodePath );
 }
 
 void NodeSelect::onNodeSelectedQueued( const std::string nodePath )
 {
+    LOG_DEBUG( "onNodeSelectedQueued, nodePath = " << nodePath );
     m_connections.DropConnections();
     ves::conductor::UITabs::instance()->ActivateTab( "Constraints" );
 
