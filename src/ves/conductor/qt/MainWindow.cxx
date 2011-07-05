@@ -592,14 +592,6 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
 //        {
 //            m_loading = new QLabel;
 //        }
-
-        QSettings settings( QSettings::IniFormat, QSettings::UserScope,
-                                "VE Suite", "VE Xplorer" );
-        QStringList files = settings.value("recentFileList").toStringList();
-        files.removeAll( fileNames.at(index) );
-        files = files << fileNames.at(index);
-        settings.setValue( "recentFileList", files );
-
         QLabel* m_loading = new QLabel();
         //m_loadNotifiers.push_back( m_loading );
         QString text("Loading ");
@@ -628,6 +620,14 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         if( !extension.compare( ".ves" ) )
         {
             // It's a ves file, likely with a network
+
+            QSettings settings( QSettings::IniFormat, QSettings::UserScope,
+                                    "VE Suite", "VE Xplorer" );
+            QStringList files = settings.value("recentProjectList").toStringList();
+            files.removeAll( fileNames.at(index) );
+            files = files << fileNames.at(index);
+            settings.setValue( "recentProjectList", files );
+
             ves::conductor::NetworkLoader* loader =
                     ves::conductor::NetworkLoader::createNetworkLoader();
             loader->LoadVesFile( file.string() );
@@ -641,12 +641,26 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
                 std::find( m_GeometryExtensions.begin(), m_GeometryExtensions.end(), extension );
         if( iter != m_GeometryExtensions.end() )
         {
+            QSettings settings( QSettings::IniFormat, QSettings::UserScope,
+                                    "VE Suite", "VE Xplorer" );
+            QStringList files = settings.value("recentCADList").toStringList();
+            files.removeAll( fileNames.at(index) );
+            files = files << fileNames.at(index);
+            settings.setValue( "recentCADList", files );
+
             LoadGeometryFile( file.string() );
         }
 
         iter = std::find( m_DataExtensions.begin(), m_DataExtensions.end(), extension );
         if( iter != m_DataExtensions.end() )
         {
+            QSettings settings( QSettings::IniFormat, QSettings::UserScope,
+                                    "VE Suite", "VE Xplorer" );
+            QStringList files = settings.value("recentDataList").toStringList();
+            files.removeAll( fileNames.at(index) );
+            files = files << fileNames.at(index);
+            settings.setValue( "recentDataList", files );
+
             LoadDataFile( file.string() );
         }
     }

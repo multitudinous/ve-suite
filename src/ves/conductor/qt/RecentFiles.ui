@@ -13,9 +13,15 @@
   <property name="windowTitle">
    <string>Recent Files</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QListWidget" name="m_recentFilesList">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
@@ -25,11 +31,17 @@
      <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
      </property>
+     <property name="flow">
+      <enum>QListView::TopToBottom</enum>
+     </property>
      <property name="isWrapping" stdset="0">
       <bool>false</bool>
      </property>
      <property name="resizeMode">
       <enum>QListView::Adjust</enum>
+     </property>
+     <property name="viewMode">
+      <enum>QListView::IconMode</enum>
      </property>
     </widget>
    </item>
@@ -39,7 +51,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Open</set>
+      <set>QDialogButtonBox::Open</set>
      </property>
     </widget>
    </item>

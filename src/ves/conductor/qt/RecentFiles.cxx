@@ -35,6 +35,7 @@
 
 #include <QtCore/QSettings>
 #include <QtGui/QPushButton>
+#include <QtGui/QFont>
 
 namespace ves
 {
@@ -53,8 +54,28 @@ RecentFiles::RecentFiles(QWidget *parent) :
 
     QSettings settings( QSettings::IniFormat, QSettings::UserScope,
                             "VE Suite", "VE Xplorer" );
-    QStringList files = settings.value("recentFileList").toStringList();
-    ui->m_recentFilesList->addItems( files );
+
+    QStringList files = settings.value("recentProjectList").toStringList();
+    QListWidget* recent = ui->m_recentFilesList;
+    recent->addItem( tr("Recent Projects") );
+    QFont font = recent->item( 0 )->font();
+    font.setPointSize( font.pointSize() + 2 );
+    font.setWeight( QFont::Bold );
+    recent->item(0)->setFont( font );
+    recent->addItems( files );
+
+    files = settings.value("recentCADList").toStringList();
+    recent->addItem( tr("") );
+    recent->addItem( tr("Recent CAD") );
+    recent->item( (recent->count() - 1) )->setFont( font );
+    recent->addItems( files );
+
+    files = settings.value("recentDataList").toStringList();
+    recent->addItem( tr("") );
+    recent->addItem( tr("Recent Datasets") );
+    recent->item( (recent->count() - 1) )->setFont( font );
+    recent->addItems( files );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 RecentFiles::~RecentFiles()
@@ -81,6 +102,11 @@ const QString& RecentFiles::GetSelectedFile()
     if( selected )
     {
         selectedFile = selected->data(0).toString();
+        if( selectedFile == "Recent Projects" || selectedFile == "Recent CAD"
+            || selectedFile == "Recent Datasets" )
+        {
+            selectedFile = "";
+        }
     }
 
     return selectedFile;
@@ -92,7 +118,9 @@ void RecentFiles::Clear()
                             "VE Suite", "VE Xplorer" );
     QStringList files = settings.value("recentFileList").toStringList();
     files.clear();
-    settings.setValue( "recentFileList", files );
+    settings.setValue( "recentProjectList", files );
+    settings.setValue( "recentCADList", files );
+    settings.setValue( "recentDataList", files );
 
     ui->m_recentFilesList->clear();
 }
