@@ -80,7 +80,6 @@ VizBasePropertySet::VizBasePropertySet()
         reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
         ( eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.DeleteVizFeature" ) )
         ->mSignal;
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 VizBasePropertySet::VizBasePropertySet( const VizBasePropertySet& orig )
