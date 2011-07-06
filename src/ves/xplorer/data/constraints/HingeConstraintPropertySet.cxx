@@ -11,7 +11,7 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 HingeConstraintPropertySet::HingeConstraintPropertySet()
 {
-    mTableName = "FixedConstraint";
+    mTableName = "HingeConstraint";
 
     RegisterPropertySet( mTableName );
 

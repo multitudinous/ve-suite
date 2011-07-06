@@ -11,7 +11,7 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 CardanConstraintPropertySet::CardanConstraintPropertySet()
 {
-    mTableName = "FixedConstraint";
+    mTableName = "CardanConstraint";
 
     RegisterPropertySet( mTableName );
 

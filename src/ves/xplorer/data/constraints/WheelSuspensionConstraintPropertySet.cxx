@@ -11,6 +11,10 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 WheelSuspensionConstraintPropertySet::WheelSuspensionConstraintPropertySet()
 {
+    mTableName = "WheelSuspensionConstraint";
+
+    RegisterPropertySet( mTableName );
+
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////

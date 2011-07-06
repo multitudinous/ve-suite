@@ -11,7 +11,7 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 BoxConstraintPropertySet::BoxConstraintPropertySet()
 {
-    mTableName = "FixedConstraint";
+    mTableName = "BoxConstraint";
 
     RegisterPropertySet( mTableName );
 

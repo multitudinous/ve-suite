@@ -11,7 +11,7 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 SliderConstraintPropertySet::SliderConstraintPropertySet()
 {
-    mTableName = "FixedConstraint";
+    mTableName = "SliderConstraint";
 
     RegisterPropertySet( mTableName );
 

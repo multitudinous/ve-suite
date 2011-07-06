@@ -11,7 +11,7 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 PlanarConstraintPropertySet::PlanarConstraintPropertySet()
 {
-    mTableName = "FixedConstraint";
+    mTableName = "PlanarConstraint";
 
     RegisterPropertySet( mTableName );
 

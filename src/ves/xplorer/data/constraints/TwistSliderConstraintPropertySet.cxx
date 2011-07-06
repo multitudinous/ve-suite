@@ -11,7 +11,7 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 TwistSliderConstraintPropertySet::TwistSliderConstraintPropertySet()
 {
-    mTableName = "FixedConstraint";
+    mTableName = "TwistSliderConstraint";
 
     RegisterPropertySet( mTableName );
 

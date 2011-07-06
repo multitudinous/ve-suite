@@ -11,7 +11,7 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 BallAndSocketConstraintPropertySet::BallAndSocketConstraintPropertySet()
 {
-    mTableName = "FixedConstraint";
+    mTableName = "BallAndSocketConstraint";
 
     RegisterPropertySet( mTableName );
 

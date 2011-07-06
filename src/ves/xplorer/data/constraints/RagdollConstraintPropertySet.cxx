@@ -11,7 +11,7 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 RagdollConstraintPropertySet::RagdollConstraintPropertySet()
 {
-    mTableName = "FixedConstraint";
+    mTableName = "RagdollConstraint";
 
     RegisterPropertySet( mTableName );
 
