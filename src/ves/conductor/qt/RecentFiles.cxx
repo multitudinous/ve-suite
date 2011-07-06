@@ -36,6 +36,10 @@
 #include <QtCore/QSettings>
 #include <QtGui/QPushButton>
 #include <QtGui/QFont>
+#include <QtGui/QColor>
+#include <QtGui/QBrush>
+
+#include <iostream>
 
 namespace ves
 {
@@ -44,13 +48,22 @@ namespace conductor
 ////////////////////////////////////////////////////////////////////////////////
 RecentFiles::RecentFiles(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::RecentFiles)
+    ui(new Ui::RecentFiles),
+    m_lastChanged( 0 )
 {
     ui->setupUi(this);
 
     QPushButton* clearButton = new QPushButton( tr("Clear List") );
     connect( clearButton, SIGNAL(clicked()), this, SLOT(Clear()) );
     ui->buttonBox->addButton( clearButton, QDialogButtonBox::ResetRole );
+
+    QPushButton* openButton = new QPushButton( tr("Open Project...") );
+    connect( openButton, SIGNAL(clicked()), this, SIGNAL(openProject()) );
+    ui->buttonBox->addButton( openButton, QDialogButtonBox::ActionRole );
+
+    QPushButton* newButton = new QPushButton( tr("New Project...") );
+    connect( newButton, SIGNAL(clicked()), this, SIGNAL(newProject()) );
+    ui->buttonBox->addButton( newButton, QDialogButtonBox::ActionRole );
 
     QSettings settings( QSettings::IniFormat, QSettings::UserScope,
                             "VE Suite", "VE Xplorer" );
@@ -125,5 +138,28 @@ void RecentFiles::Clear()
     ui->m_recentFilesList->clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void RecentFiles::on_m_recentFilesList_itemEntered( QListWidgetItem* item )
+{
+    // Restore the color of the most recently changed item
+    if( m_lastChanged )
+    {
+        QFont font = m_lastChanged->font();
+        font.setUnderline( false );
+        m_lastChanged->setFont( font );
+        m_lastChanged->setForeground( QBrush(QColor(0,0,0)) );
+        m_lastChanged = 0;
+    }
+
+    if( item->text() != "Recent Projects" && item->text() != "Recent CAD" &&
+        item->text() != "Recent Datasets" )
+    {
+        QFont font = item->font();
+        font.setUnderline( true );
+        item->setFont( font );
+        item->setForeground( QBrush(QColor(0,0,255)) );
+        m_lastChanged = item;
+    }
+}
+
 }
 }

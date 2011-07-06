@@ -132,7 +132,8 @@ MainWindow::MainWindow(QWidget* parent) :
     mMinervaStackedWidget ( 0 ),
     m_preferencesTab( 0 ),
     m_pluginsTab( 0 ),
-    m_constraintsTab( 0 )
+    m_constraintsTab( 0 ),
+    m_recentTab( 0 )
 {
     setMouseTracking( true );
     ui->setupUi(this);
@@ -233,10 +234,7 @@ MainWindow::MainWindow(QWidget* parent) :
     m_pluginsTab = new ves::conductor::PluginSelectionTab( this, 0 );
     m_constraintsTab = new ves::conductor::Constraints( 0 );
 
-    m_recentTab = new RecentFiles(0);
-    connect( m_recentTab, SIGNAL(accepted()), this, SLOT(onRecentFileSelected()) );
-    connect( m_recentTab, SIGNAL(rejected()), this, SLOT(onRecentFileRejected()) );
-    ActivateTab( AddTab( m_recentTab, "Recent Files" ) );
+    this->on_actionRecent_triggered();
 
     ves::conductor::UITabs::instance()->SetChild( this );
 
@@ -466,6 +464,7 @@ void MainWindow::on_actionQuit_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionOpen_triggered()
 {
+    onRecentFileRejected();
     // Don't allow multiple file dialogs to be opened.
     if( mFileDialog )
     {
@@ -1284,6 +1283,7 @@ void MainWindow::on_actionShowPreferencesTab_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionNew_triggered( const QString& workingDir )
 {
+    onRecentFileRejected();
     // If workingDir is empty, this method was called by clicking the "New File"
     // icon. If workingDir is not empty, this method was called by successful
     // completion of the "Select Working Directory" file dialog, which is
@@ -1424,6 +1424,8 @@ void MainWindow::on_actionRecent_triggered()
     {
         m_recentTab = new RecentFiles(0);
         connect( m_recentTab, SIGNAL(accepted()), this, SLOT(onRecentFileSelected()) );
+        connect( m_recentTab, SIGNAL(newProject()), this, SLOT(on_actionNew_triggered()) );
+        connect( m_recentTab, SIGNAL(openProject()), this, SLOT(on_actionOpen_triggered()) );
         connect( m_recentTab, SIGNAL(rejected()), this, SLOT(onRecentFileRejected()) );
         ActivateTab( AddTab( m_recentTab, "Recent Files" ) );
     }

@@ -33,6 +33,7 @@
 #pragma once
 
 #include <QtGui/QDialog>
+#include <QtGui/QListWidgetItem>
 
 namespace Ui {
     class RecentFiles;
@@ -56,12 +57,18 @@ public:
 protected:
     void changeEvent(QEvent *e);
 
+Q_SIGNALS:
+    void newProject();
+    void openProject();
+
 protected Q_SLOTS:
     void Clear();
+    void on_m_recentFilesList_itemEntered( QListWidgetItem* item );
 
 private:
     Ui::RecentFiles *ui;
     QString selectedFile;
+    QListWidgetItem* m_lastChanged;
 };
 
 }

@@ -10,6 +10,9 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>Recent Files</string>
   </property>
@@ -19,6 +22,9 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QListWidget" name="m_recentFilesList">
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
@@ -43,6 +49,9 @@
      <property name="viewMode">
       <enum>QListView::IconMode</enum>
      </property>
+     <property name="selectionRectVisible">
+      <bool>false</bool>
+     </property>
     </widget>
    </item>
    <item>
@@ -51,7 +60,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Open</set>
+      <set>QDialogButtonBox::NoButton</set>
      </property>
     </widget>
    </item>
@@ -93,7 +102,7 @@
   </connection>
   <connection>
    <sender>m_recentFilesList</sender>
-   <signal>itemDoubleClicked(QListWidgetItem*)</signal>
+   <signal>itemClicked(QListWidgetItem*)</signal>
    <receiver>RecentFiles</receiver>
    <slot>accept()</slot>
    <hints>
