@@ -67,7 +67,7 @@ protected Q_SLOTS:
 
 private:
     Ui::RecentFiles *ui;
-    QString selectedFile;
+    QString m_selectedFile;
     QListWidgetItem* m_lastChanged;
 };
 

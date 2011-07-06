@@ -110,19 +110,19 @@ void RecentFiles::changeEvent(QEvent *e)
 ////////////////////////////////////////////////////////////////////////////////
 const QString& RecentFiles::GetSelectedFile()
 {
-    selectedFile = "";
+    m_selectedFile.clear();
     QListWidgetItem* selected = ui->m_recentFilesList->currentItem();
     if( selected )
     {
-        selectedFile = selected->data(0).toString();
-        if( selectedFile == "Recent Projects" || selectedFile == "Recent CAD"
-            || selectedFile == "Recent Datasets" )
+        m_selectedFile = selected->data(0).toString();
+        if( m_selectedFile == "Recent Projects" || m_selectedFile == "Recent CAD"
+            || m_selectedFile == "Recent Datasets" )
         {
-            selectedFile = "";
+            m_selectedFile.clear();
         }
     }
 
-    return selectedFile;
+    return m_selectedFile;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RecentFiles::Clear()
