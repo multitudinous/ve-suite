@@ -275,8 +275,13 @@ unsigned int PropertySet::GetRecordID() const
 ////////////////////////////////////////////////////////////////////////////////
 bool PropertySet::DeleteFromDatabase()
 {
-    Poco::Data::Session session( ves::xplorer::data::DatabaseManager::
-                                 instance()->GetPool()->get() );
+    Poco::Data::SessionPool* pool = ves::xplorer::data::DatabaseManager::
+                                    instance()->GetPool();
+    if( pool == 0 )
+    {
+        return false;
+    }
+    Poco::Data::Session session( pool->get() );
     bool retval = DeleteFromDatabase( &session );
     return retval;
 }
@@ -347,8 +352,13 @@ bool PropertySet::DeleteFromDatabase( Poco::Data::Session* const session, std::s
 ////////////////////////////////////////////////////////////////////////////////
 bool PropertySet::LoadFromDatabase()
 {
-    Poco::Data::Session session( ves::xplorer::data::DatabaseManager::
-                                 instance()->GetPool()->get() );
+    Poco::Data::SessionPool* pool = ves::xplorer::data::DatabaseManager::
+                                    instance()->GetPool();
+    if( pool == 0 )
+    {
+        return false;
+    }
+    Poco::Data::Session session( pool->get() );
     bool retval = LoadFromDatabase( &session );
     return retval;
 }
@@ -569,8 +579,14 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* const session,
 ////////////////////////////////////////////////////////////////////////////////
 bool PropertySet::LoadByKey( std::string const& KeyName, boost::any KeyValue )
 {
-    Poco::Data::Session session( ves::xplorer::data::DatabaseManager::
-                                 instance()->GetPool()->get() );
+    Poco::Data::SessionPool* pool = ves::xplorer::data::DatabaseManager::
+                                    instance()->GetPool();
+    if( pool == 0 )
+    {
+        return false;
+    }
+
+    Poco::Data::Session session( pool->get() );
     bool retval = LoadByKey( &session, KeyName, KeyValue );
     return retval;
 }
@@ -649,8 +665,13 @@ bool PropertySet::LoadByKey( std::string const& DatabaseName, std::string const&
 ////////////////////////////////////////////////////////////////////////////////
 bool PropertySet::WriteToDatabase()
 {
-    Poco::Data::Session session( ves::xplorer::data::DatabaseManager::
-                                 instance()->GetPool()->get() );
+    Poco::Data::SessionPool* pool = ves::xplorer::data::DatabaseManager::
+                                    instance()->GetPool();
+    if( pool == 0 )
+    {
+        return false;
+    }
+    Poco::Data::Session session( pool->get() );
     bool retval = WriteToDatabase( &session );
     return retval;
 }
