@@ -1,0 +1,12 @@
+##Builds VE-Suite Libraries
+#import os
+#pj = os.path.join
+
+lemonSubdirs = Split("""
+    converter
+    simple
+""")
+
+##Run SConscript files in all of those folders.
+for d in lemonSubdirs:
+   SConscript( dirs = d )

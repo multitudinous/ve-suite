@@ -252,14 +252,24 @@ opts.AddOption( osg_options )
 
 if GetPlatform() == 'win32':
    xerces_options = fp_option.FlagPollBasedOption("xerces",
-         "xerces-c", "2.7", True, True, compileTest=True)
+         "xerces-c", "2.7", True, True, helpText="Xerces-C library", compileTest=True, headerToCheck=pj('xercesc','util','XercesVersion.hpp') )
 else:
    xerces_options = SConsAddons.Options.StandardPackageOption("xercesc",
       "Xerces-C library options, default : xercesc_incdir=<xercesc>/include xercesc_libdir=<xercesc>/lib(64)", 
       pj('xercesc','util','XercesVersion.hpp'), library=['xerces-c'], symbol="main", required=True)
    
 opts.AddOption( xerces_options )
-wxwidgets_options = None
+
+#if GetPlatform() == 'win32':
+lemon_options = fp_option.FlagPollBasedOption("lemon",
+         "lemon", "1.2", False, True, helpText="Lemon graph library", compileTest=True, headerToCheck=pj('lemon','core.h') )
+
+#else:
+#   lemon_options = SConsAddons.Options.StandardPackageOption("lemon",
+#      "Lemon graph library options, default : lemon_incdir=<lemon>/include lemon_libdir=<lemon>/lib(64)", 
+#      pj('lemon','core.h'), library=['emon.a'], symbol="main", required=False)
+   
+opts.AddOption( lemon_options )
 
 if GetPlatform() == 'win32':
    wxwidgets_options = fp_option.FlagPollBasedOption("wxWidgets",
@@ -429,7 +439,7 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'poco_options', 'osgworks_options',
 	    'minerva_options',
         'osgbullet_options', 'osgbulletplus_options',
-        'bdfx_options' )
+        'bdfx_options', 'lemon_options' )
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
