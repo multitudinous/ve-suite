@@ -295,7 +295,7 @@ protected Q_SLOTS:
     /// Slot corresponding to ActiveModelChanged queued signal
     void QueuedOnActiveModelChanged( const std::string& modelID );
     void QueuedRemoveNotifier( std::string const& filename );
-    void onRecentFileSelected();
+    void onRecentFileSelected( QString file );
     void onRecentFileRejected();
 
 private: 

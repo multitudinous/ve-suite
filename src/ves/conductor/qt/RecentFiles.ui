@@ -75,8 +75,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>227</x>
-     <y>278</y>
+     <x>236</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -91,28 +91,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>295</x>
-     <y>284</y>
+     <x>304</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_recentFilesList</sender>
-   <signal>itemClicked(QListWidgetItem*)</signal>
-   <receiver>RecentFiles</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>121</x>
-     <y>103</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>5</x>
-     <y>174</y>
     </hint>
    </hints>
   </connection>

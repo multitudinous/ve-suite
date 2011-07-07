@@ -52,7 +52,7 @@ public:
     explicit RecentFiles(QWidget *parent = 0);
     ~RecentFiles();
 
-    const QString& GetSelectedFile();
+    //const QString& GetSelectedFile();
 
 protected:
     void changeEvent(QEvent *e);
@@ -60,14 +60,15 @@ protected:
 Q_SIGNALS:
     void newProject();
     void openProject();
+    void fileSelected( QString file );
 
 protected Q_SLOTS:
     void Clear();
     void on_m_recentFilesList_itemEntered( QListWidgetItem* item );
+    void onFileListItemAccepted( QListWidgetItem* selected );
 
 private:
     Ui::RecentFiles *ui;
-    QString m_selectedFile;
     QListWidgetItem* m_lastChanged;
 };
 

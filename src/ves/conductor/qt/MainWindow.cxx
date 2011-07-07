@@ -1423,18 +1423,20 @@ void MainWindow::on_actionRecent_triggered()
     else
     {
         m_recentTab = new RecentFiles(0);
-        connect( m_recentTab, SIGNAL(accepted()), this, SLOT(onRecentFileSelected()) );
-        connect( m_recentTab, SIGNAL(newProject()), this, SLOT(on_actionNew_triggered()) );
-        connect( m_recentTab, SIGNAL(openProject()), this, SLOT(on_actionOpen_triggered()) );
-        connect( m_recentTab, SIGNAL(rejected()), this, SLOT(onRecentFileRejected()) );
+        connect( m_recentTab, SIGNAL(fileSelected( QString )),
+                 this, SLOT(onRecentFileSelected(QString)) );
+        connect( m_recentTab, SIGNAL(newProject()),
+                 this, SLOT(on_actionNew_triggered()) );
+        connect( m_recentTab, SIGNAL(openProject()),
+                 this, SLOT(on_actionOpen_triggered()) );
+        connect( m_recentTab, SIGNAL(rejected()),
+                 this, SLOT(onRecentFileRejected()) );
         ActivateTab( AddTab( m_recentTab, "Recent Files" ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::onRecentFileSelected()
+void MainWindow::onRecentFileSelected( QString file )
 {
-    QString filename = m_recentTab->GetSelectedFile();
-
     RemoveTab( m_recentTab );
     if( m_recentTab != 0 )
     {
@@ -1442,13 +1444,15 @@ void MainWindow::onRecentFileSelected()
     }
     m_recentTab = 0;
 
-    if( filename == "" )
+    if( file == "" )
     {
         return;
     }
 
+    // Repackage the QString as a QStringList since that is what
+    // onFileOpenSelected requires.
     QStringList files;
-    files << filename;
+    files << file;
     onFileOpenSelected( files );
 }
 ////////////////////////////////////////////////////////////////////////////////

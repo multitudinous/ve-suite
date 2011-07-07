@@ -65,6 +65,9 @@ RecentFiles::RecentFiles(QWidget *parent) :
     connect( newButton, SIGNAL(clicked()), this, SIGNAL(newProject()) );
     ui->buttonBox->addButton( newButton, QDialogButtonBox::ActionRole );
 
+    connect( ui->m_recentFilesList, SIGNAL(	itemClicked(QListWidgetItem*)),
+             this, SLOT(onFileListItemAccepted(QListWidgetItem*)) );
+
     QSettings settings( QSettings::IniFormat, QSettings::UserScope,
                             "VE Suite", "VE Xplorer" );
 
@@ -108,21 +111,19 @@ void RecentFiles::changeEvent(QEvent *e)
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const QString& RecentFiles::GetSelectedFile()
+void RecentFiles::onFileListItemAccepted( QListWidgetItem* selected )
 {
-    m_selectedFile.clear();
-    QListWidgetItem* selected = ui->m_recentFilesList->currentItem();
+    QString selectedFile = "";
     if( selected )
     {
-        m_selectedFile = selected->data(0).toString();
-        if( m_selectedFile == "Recent Projects" || m_selectedFile == "Recent CAD"
-            || m_selectedFile == "Recent Datasets" )
+        selectedFile = selected->data(0).toString();
+        if( selectedFile == "Recent Projects" || selectedFile == "Recent CAD"
+            || selectedFile == "Recent Datasets" )
         {
-            m_selectedFile.clear();
+            return;
         }
     }
-
-    return m_selectedFile;
+    emit fileSelected( selectedFile );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RecentFiles::Clear()
