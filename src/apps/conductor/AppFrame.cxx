@@ -661,7 +661,14 @@ void AppFrame::StoreRecentFile()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
-{
+{   
+    //kill external processes
+    for( size_t i = 0; i < pids.size(); ++i )
+    {
+        wxProcess::Kill( pids[ i ] );
+    }
+    pids.clear();
+
     m_shuttingDown = true;
     DynamicsDataBuffer::instance()->CleanUp();
     UserPreferencesDataBuffer::instance()->CleanUp();
@@ -684,13 +691,7 @@ void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
 
     //Write the final script file if we need to
     ves::conductor::util::DataLoggerEngine::instance()->CleanUp();
-    
-    for( size_t i = 0; i < pids.size(); ++i )
-    {
-        wxProcess::Kill( pids[ i ] );
-    }
-    pids.clear();
-    
+        
     //We have to mannually destroy these to make sure that things shutdown
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.

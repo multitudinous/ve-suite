@@ -124,6 +124,7 @@ void DynSim::ParseTreeFile( std::string treeFilename )
         underScorePos = entries[i].find_first_of("_");
         m_opcBlocks.push_back( entries[i].substr( underScorePos + 1, 
             entries[0].size() - underScorePos ) );
+        //m_opcBlocks.push_back( entries[i] );
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -1323,10 +1324,12 @@ std::string DynSim::GetAllOPCVariables( const std::string& modname )
 ///////////////////////////////////////////////////////////////////////////////
 void DynSim::AddOPCVariable( const std::string& var )
 {
-    std::vector<std::string>::const_iterator pos = 
-        lower_bound( m_opcVariables.begin(), m_opcVariables.end(), var );  
+    //std::vector<std::string>::const_iterator pos = 
+    //    lower_bound( m_opcVariables.begin(), m_opcVariables.end(), var );
+    bool found = binary_search( m_opcVariables.begin(), m_opcVariables.end(), var );
 
-    if( pos != m_opcVariables.end() || m_opcVariables.empty() )
+    //if( pos != m_opcVariables.end() || m_opcVariables.empty() )
+    if( !found || m_opcVariables.empty() )
     {
         m_opcVariables.push_back( var );
         UpdateOPCList();
