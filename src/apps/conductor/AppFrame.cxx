@@ -662,18 +662,26 @@ void AppFrame::StoreRecentFile()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
 {   
+    //THE ORDER OF SHUTDOWN IS VERY IMPORTANT
+    //PLEASE DO NOT MAKE CHANGES TO THE ORDER
+
+    //tells conductor to not load any new projects
     m_shuttingDown = true;
 
+    //cleans up the networks and plugins
+    //the canvas needs to be cleaned up before the DynamicDataBuffer
     canvas->CleanUpNetworks();
     canvas->CleanUpAllNetworks();
 
-    //kill external processes
+    //kill all external processes
+    //necessary prior to cleaning up the DynamicDataBuffer
     for( size_t i = 0; i < pids.size(); ++i )
     {
         wxProcess::Kill( pids[ i ] );
     }
     pids.clear();
 
+    //clean up the buffers
     DynamicsDataBuffer::instance()->CleanUp();
     UserPreferencesDataBuffer::instance()->CleanUp();
 
@@ -692,11 +700,13 @@ void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
 
     //Write the final script file if we need to
     ves::conductor::util::DataLoggerEngine::instance()->CleanUp();
-        
+    
+    //disconnect the service list from the CE
+    serviceList->DisconnectFromCE();
+
     //We have to mannually destroy these to make sure that things shutdown
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.
-    serviceList->DisconnectFromCE();
     serviceList->CleanUp();
 
     //serviceList = 0;
