@@ -662,6 +662,11 @@ void AppFrame::StoreRecentFile()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
 {   
+    m_shuttingDown = true;
+
+    canvas->CleanUpNetworks();
+    canvas->CleanUpAllNetworks();
+
     //kill external processes
     for( size_t i = 0; i < pids.size(); ++i )
     {
@@ -669,12 +674,8 @@ void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
     }
     pids.clear();
 
-    m_shuttingDown = true;
     DynamicsDataBuffer::instance()->CleanUp();
     UserPreferencesDataBuffer::instance()->CleanUp();
-    canvas->CleanUpNetworks();
-    canvas->CleanUpAllNetworks();
-    serviceList->DisconnectFromCE();
 
     //Shutdown xplorer
     if (( GetDisplayMode() == "Desktop" ) ||
@@ -695,6 +696,7 @@ void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
     //We have to mannually destroy these to make sure that things shutdown
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.
+    serviceList->DisconnectFromCE();
     serviceList->CleanUp();
 
     //serviceList = 0;

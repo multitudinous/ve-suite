@@ -34,7 +34,7 @@
 
 #include "OpcUOPlugin.h"
 #include <ves/conductor/util/OpcUOVarDialog.h>
-#include "DynamicDataDlg.h"
+//#include "DynamicDataDlg.h"
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/DynamicsDataBuffer.h>
@@ -412,5 +412,5 @@ void OpcUOPlugin::OnMonitorVariable ( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 bool OpcUOPlugin::ShowAvailable()
 {
-    return false;
+    return true;
 }
