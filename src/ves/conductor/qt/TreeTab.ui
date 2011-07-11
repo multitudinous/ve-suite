@@ -38,9 +38,6 @@
          </item>
          <item>
           <widget class="QLineEdit" name="m_searchBox">
-           <property name="placeholderText">
-            <string/>
-           </property>
           </widget>
          </item>
          <item>
