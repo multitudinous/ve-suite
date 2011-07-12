@@ -626,7 +626,11 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
                                     "VE Suite", "VE Xplorer" );
             QStringList files = settings.value("recentProjectList").toStringList();
             files.removeAll( fileNames.at(index) );
-            files = files << fileNames.at(index);
+            files.prepend( fileNames.at(index) );
+            while( files.size() > 10 )
+            {
+                files.removeLast();
+            }
             settings.setValue( "recentProjectList", files );
 
             ves::conductor::NetworkLoader* loader =
@@ -646,7 +650,11 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
                                     "VE Suite", "VE Xplorer" );
             QStringList files = settings.value("recentCADList").toStringList();
             files.removeAll( fileNames.at(index) );
-            files = files << fileNames.at(index);
+            files.prepend( fileNames.at(index) );
+            while( files.size() > 10 )
+            {
+                files.removeLast();
+            }
             settings.setValue( "recentCADList", files );
 
             LoadGeometryFile( file.string() );
@@ -659,7 +667,11 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
                                     "VE Suite", "VE Xplorer" );
             QStringList files = settings.value("recentDataList").toStringList();
             files.removeAll( fileNames.at(index) );
-            files = files << fileNames.at(index);
+            files.prepend( fileNames.at(index) );
+            while( files.size() > 10 )
+            {
+                files.removeLast();
+            }
             settings.setValue( "recentDataList", files );
 
             LoadDataFile( file.string() );
