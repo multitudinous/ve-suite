@@ -57,7 +57,7 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
     this->multiblockOutput = false;
     this->multiblock = NULL;
     this->ugrid = NULL;
-    this->numberOfOutputFiles = 0;
+    this->numberOfTimesteps = 0;
     this->numZones = 0;
     this->connectivityShareCount = 0;
     this->numVars = 0;
@@ -95,7 +95,7 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
         if( this->dimension == 0 )
         {
             std::cerr << "Error: input file did not contain coordinate data." << std::endl;
-            this->numberOfOutputFiles = 0; //set to zero so program will gracefully exit
+            this->numberOfTimesteps = 0; //set to zero so program will gracefully exit
             return;
         }
         this->SeeIfDataSharedAcrossZones();
@@ -141,17 +141,10 @@ void tecplotReader::SetMultiBlockOn()
     this->multiblockOutput = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int tecplotReader::GetNumberOfOutputFiles()
+int tecplotReader::GetNumberOfTimesteps()
 {
-    return this->numberOfOutputFiles;
+    return this->numberOfTimesteps;
 }
-////////////////////////////////////////////////////////////////////////////////
-/*
-int * tecplotReader::GetVtkInitArray()
-{
-    return this->timeToInitVtk;
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////
 EntIndex_t tecplotReader::GetNumZonesInCurrentFile( const EntIndex_t startZone )
 {
@@ -170,56 +163,38 @@ EntIndex_t tecplotReader::GetNumZonesInCurrentFile( const EntIndex_t startZone )
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-vtkDataObject* tecplotReader::ExtractMultiBlock()
+vtkDataObject * tecplotReader::GetOutput( const int timestep )
 {
-    this->multiblock = vtkMultiBlockDataSet::New();
-    // Begin at zone 1 and loop among the zones until we complete the dataset...
-    for( EntIndex_t currentZone = 1; currentZone < this->numZones+1; currentZone++ ) // zone numbers are 1-based
+    // Verify that timestep is an appropriate zero-based integer...
+    if( timestep < 0 || timestep > this->numberOfTimesteps - 1 )
     {
-        EntIndex_t numZonesInCurrentFile = this->GetNumZonesInCurrentFile( currentZone );
-std::cout << "creating new multiblock with " << numZonesInCurrentFile << " zones" << std::endl;
-        //this->multiblock->SetNumberOfBlocks( numZonesInCurrentFile );
-
-        this->InitializeVtkData();
-        this->AttachPointsAndDataToGrid();
-std::cout << "setting multiblock " << currentZone-1 << std::endl;
-        this->multiblock->SetBlock( currentZone-1, this->ugrid );
-        // Look at next zone to determine whether to attach points and point & cell data.
-        // If the grid is complete, then return the ugrid...
-        if( this->timeToInitVtk[ currentZone ] )
-        {
-std::cout << "returning multiblock" << std::endl;
-            return this->multiblock;
-        }
-    }
-    return 0;
-}
-////////////////////////////////////////////////////////////////////////////////
-vtkDataObject * tecplotReader::GetOutputFile( const int fileNum )
-{
-    // Verify that fileNum is an appropriate zero-based integer...
-    if( fileNum < 0 || fileNum > this->numberOfOutputFiles - 1 )
-    {
-        std::cerr << "Error: invalid request for file " << fileNum << std::endl;
+        std::cerr << "Error: invalid request for file " << timestep << std::endl;
         return NULL;
     }
 
-    int startZone = this->GetStartingZoneForFile( fileNum );
+    int startZone = this->GetStartingZoneForTimestep( timestep );
+    EntIndex_t numZonesInCurrentFile = this->GetNumZonesInCurrentFile( startZone );
+#ifdef PRINT_HEADERS
+    std::cout << "startZone = " << startZone << ", numZonesInCurrentFile = " << numZonesInCurrentFile << std::endl;
+#endif // PRINT_HEADERS
 
     int parNum = 0;
 
     if( multiblockOutput )
     {
-        if( multiblock )
+#ifdef PRINT_HEADERS
+        std::cout << "creating new multiblock with " << numZonesInCurrentFile << " zones" << std::endl;
+#endif // PRINT_HEADERS
+        if( this->multiblock )
         {
-            multiblock->Delete();
-            multiblock = 0;
+            this->multiblock->Delete();
+            this->multiblock = 0;
         }
         this->multiblock = vtkMultiBlockDataSet::New();
     }
-
+    
     // Begin at startZone and loop among the zones until we complete the file that was requested...
-    for( EntIndex_t currentZone = startZone; currentZone < this->numZones+1; ++currentZone ) // zone numbers are 1-based
+    for( EntIndex_t currentZone = startZone; currentZone < startZone+numZonesInCurrentFile; ++currentZone ) // zone numbers are 1-based
     {
         if( this->timeToInitVtk[ currentZone-1 ] || multiblockOutput )
         {
@@ -251,26 +226,34 @@ vtkDataObject * tecplotReader::GetOutputFile( const int fileNum )
         this->ReadNodalCoordinates( currentZone, numNodalPointsInZone );
         this->ReadNodeAndCellData( currentZone, numElementsInZone, numNodalPointsInZone, parNum );
 
-        // Look at next zone to determine whether to attach points and point & cell data.
-        // If the grid is complete, then attach data and return the ugrid...
-        if( this->timeToInitVtk[ currentZone ] || multiblockOutput )
+        if( multiblockOutput )
         {
             this->AttachPointsAndDataToGrid();
+#ifdef PRINT_HEADERS
+            std::cout << "setting multiblock " << currentZone-1 << std::endl;
+#endif // PRINT_HEADERS
+            this->multiblock->SetBlock( currentZone-1, this->ugrid );
+        }
+
+        // Look at next zone to determine whether all zones for this timestep have been processed.
+        if( this->timeToInitVtk[ currentZone ] )
+        {
             if( multiblockOutput )
             {
-                this->multiblock->SetBlock( currentZone-1, this->ugrid );
+#ifdef PRINT_HEADERS
+                std::cout << "returning multiblock" << std::endl;
+#endif // PRINT_HEADERS
+                return this->multiblock;
             }
             else
             {
+                // If the grid is complete, then attach data and return the ugrid...
+                this->AttachPointsAndDataToGrid();
                 return this->ugrid;
             }
         }
     }
 
-    if( multiblockOutput )
-    {
-        return multiblock;
-    }
     std::cerr << "Error: should not be here" << std::endl;
     return NULL;
 }
@@ -544,7 +527,7 @@ void tecplotReader::ComputeNumberOfOutputFiles()
     if( ! IsOk )
     {
         std::cerr << "Error: The dataset could not be read." << std::endl;
-        this->numberOfOutputFiles = 0;
+        this->numberOfTimesteps = 0;
         return;
     }
 
@@ -552,7 +535,7 @@ void tecplotReader::ComputeNumberOfOutputFiles()
     TecUtilDataSetGetInfo( &dataset_title, &this->numZones, &this->numVars );
 #ifdef PRINT_HEADERS
     std::cout << "The dataset_title is \"" << dataset_title << "\"" << std::endl;
-    std::cout << "Number of zones is " << this->numZones << " and number of variables is " << this->numVars << std::endl;
+    std::cout << "Number of zones in entire dataset is " << this->numZones << " and number of variables is " << this->numVars << std::endl;
 #endif // PRINT_HEADERS
     TecUtilStringDealloc( &dataset_title );
 
@@ -575,7 +558,10 @@ void tecplotReader::ComputeNumberOfOutputFiles()
     // Each zone will be a unique file.
     if( this->numZones > 1 && this->connectivityShareCount == this->numZones )
     {
-        this->numberOfOutputFiles = this->numZones;
+#ifdef PRINT_HEADERS
+        std::cout << "Special case where StrandId is not used. n zones with shared connectivity, so file type is transient." << std::endl;
+#endif // PRINT_HEADERS
+        this->numberOfTimesteps = this->numZones;
         for( int j = 0; j < this->numZones + 1; j++ )
         {
             this->timeToInitVtk[ j ] = 1;
@@ -583,7 +569,7 @@ void tecplotReader::ComputeNumberOfOutputFiles()
     }
 
 #ifdef PRINT_HEADERS
-    std::cout << "NumberOfFiles = " << this->numberOfOutputFiles << std::endl;
+    std::cout << "NumberOfFiles = " << this->numberOfTimesteps << std::endl;
     for( int j = 0; j < this->numZones + 1; j++ )
     {
         std::cout << "timeToInitVtk[ " << j << " ] = " << this->timeToInitVtk[ j ] << std::endl;
@@ -745,7 +731,7 @@ void tecplotReader::CountNumberOfFilesUsingSolnTime()
         << ", solutionTime = " << previousSolutionTime << std::endl;
 #endif // PRINT_HEADERS
 
-    this->numberOfOutputFiles = 1;
+    this->numberOfTimesteps = 1;
     this->timeToInitVtk[ 0 ] = 1;
 
     // Look at the rest of the zones...
@@ -776,7 +762,7 @@ void tecplotReader::CountNumberOfFilesUsingSolnTime()
         // When go from static to transient (or vice versa) or when solution time changes between zones, increment number...
         if( strandIdShowsChangeFromStaticToTransientOrViceVersa || previousSolutionTime != currentSolutionTime )
         {
-            this->numberOfOutputFiles++;
+            this->numberOfTimesteps++;
             this->timeToInitVtk[ currentZone-1 ] = 1;
         }
 
@@ -1428,12 +1414,12 @@ void tecplotReader::AttachPointsAndDataToGrid()
     parameterData = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int tecplotReader::GetStartingZoneForFile( const int fileNum )
+int tecplotReader::GetStartingZoneForTimestep( const int timestep )
 {
-    // Verify that fileNum is an appropriate zero-based integer...
-    if( fileNum < 0 || fileNum > this->numberOfOutputFiles - 1 )
+    // Verify that timestep is an appropriate zero-based integer...
+    if( timestep < 0 || timestep > this->numberOfTimesteps - 1 )
     {
-        std::cerr << "Error: invalid request in GetStartingZoneForFile for file " << fileNum << std::endl;
+        std::cerr << "Error: invalid request in GetStartingZoneForTimestep for file " << timestep << std::endl;
         return 0;
     }
 
@@ -1441,17 +1427,17 @@ int tecplotReader::GetStartingZoneForFile( const int fileNum )
     for( int i = 0; i < this->numZones; i++ )
     {
         sum += this->timeToInitVtk[ i ];
-        if( sum == fileNum+1 )
+        if( sum == timestep+1 )
         {
 #ifdef PRINT_HEADERS
-            std::cout << "StartingZoneForFile " << fileNum << " is " << i+1 << std::endl;
+            std::cout << "StartingZoneForFile " << timestep << " is " << i+1 << std::endl;
 #endif
             return( i+1 );  // zones are 1-based
         }
     }
  
     // should not get here...
-    std::cerr << "Error: invalid request in GetStartingZoneForFile for file " << fileNum << std::endl;
+    std::cerr << "Error: invalid request in GetStartingZoneForTimestep for file " << timestep << std::endl;
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////

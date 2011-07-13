@@ -59,18 +59,16 @@ public:
 
     void SetMultiBlockOn();
 
-    int GetNumberOfOutputFiles();
+    int GetNumberOfTimesteps();
 
-    vtkDataObject* GetOutputFile( const int fileNum );
-
-    vtkDataObject* ExtractMultiBlock();
+    vtkDataObject* GetOutput( const int timestep );
 
 private:
     std::string inputFileNameAndPath;
     bool multiblockOutput;
     vtkMultiBlockDataSet* multiblock;
     vtkUnstructuredGrid* ugrid;
-    int numberOfOutputFiles;
+    int numberOfTimesteps;
     EntIndex_t numZones;
     EntIndex_t connectivityShareCount;
     EntIndex_t numVars;
@@ -128,9 +126,7 @@ private:
     
     void CountNumberOfFilesUsingSolnTime();
     ///???
-    int GetStartingZoneForFile( const int fileNum );
-    ///???
-//    int * GetVtkInitArray();
+    int GetStartingZoneForTimestep( const int timestep );
     ///Test variable index 3 for the Z coord array
     bool TestForZVariable();
     ///???
