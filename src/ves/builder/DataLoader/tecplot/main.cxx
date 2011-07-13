@@ -37,7 +37,8 @@
 #include <vtkMultiBlockDataSet.h>
 #include <vtkXMLMultiBlockDataWriter.h>
 
-#include <boost/lexical_cast.hpp>
+#include <sstream>
+//#include <iomanip>
 
 using namespace ves::builder::DataLoader;
 
@@ -125,7 +126,7 @@ int main( int argc, char** argv )
             }
             else
             {
-                std::cerr << "\nError: Unrecognized flag \'" << argv[ i ] << "\'" << std::endl;
+                std::cerr << "\nError: Unrecognized flag '" << argv[ i ] << "'" << std::endl;
                 std::cerr << "For more information enter: " << argv[ 0 ] << " --help\n" << std::endl;
                 return( 1 );
             }
@@ -175,9 +176,11 @@ int main( int argc, char** argv )
             else
             {
                 // Using a zero-based incremental naming scheme, create an output filename...
-                // Use boost for number-to-string conversion:
+                std::ostringstream ss;
+                ss << std::setw( 3 ) << std::setfill( '0' ) << j;
+                
                 outputFileName = stripExtension( inputFileNameAndPath ) + 
-                    "_" + boost::lexical_cast<std::string>( j ) + fileExtension;
+                    "_" + ss.str() + fileExtension;
             }
 
             // If outputToCurrentDirFlag was set, then write to current location...

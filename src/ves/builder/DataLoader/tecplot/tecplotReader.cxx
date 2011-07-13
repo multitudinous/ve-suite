@@ -44,6 +44,8 @@
 #include <vtkCellData.h>
 #include <vtkIdList.h>
 
+#include <boost/algorithm/string/trim.hpp>
+
 #include <fstream>
 #include <iostream>
 
@@ -230,9 +232,9 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
         {
             this->AttachPointsAndDataToGrid();
 #ifdef PRINT_HEADERS
-            std::cout << "setting multiblock " << currentZone-1 << std::endl;
+            std::cout << "setting multiblock " << currentZone-startZone << std::endl;
 #endif // PRINT_HEADERS
-            this->multiblock->SetBlock( currentZone-1, this->ugrid );
+            this->multiblock->SetBlock( currentZone-startZone, this->ugrid );
         }
 
         // Look at next zone to determine whether all zones for this timestep have been processed.
@@ -387,121 +389,142 @@ vtkFloatArray * tecplotReader::ZeroArray( std::string varName, int numTuples )
     return zero;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void tecplotReader::ReadVectorNameAndUpdateIndex( int currentIndex, int currentVar, 
-    std::string s, std::string & vecName, int * vectorIndex )
-{
-    // if all vectorIndexes are zero, then store candidate vector name and index...
-    if( ( vectorIndex[ 0 ] + vectorIndex[ 1 ] + vectorIndex[ 2 ] ) == 0 )
-    {
-        vecName = s.substr( 2, s.length() );        // use the end part of string s as the vector name
-        vectorIndex[ currentIndex ] = currentVar + 1;
-    }
-    else
-    {
-        // if end of parameter name agrees with that of candidate vector name, then store vector index...
-        if( vecName == s.substr( 2, s.length() ) )
-        {
-            vectorIndex[ currentIndex ] = currentVar + 1;
-        }
-        else
-        {
-            // reset vectorIndex, then store vector name and index...
-            vectorIndex[ 0 ] = vectorIndex[ 1 ] = vectorIndex[ 2 ] = 0;
-            vecName = s.substr( 2, s.length() );    // use the end part of string s as the vector name
-            vectorIndex[ currentIndex ] = currentVar + 1;
-        }
-    }
-    return;
-}
-////////////////////////////////////////////////////////////////////////////////
 void tecplotReader::ProcessAnyVectorData( vtkFloatArray ** vectorData )
 {
     // Now see if any variable names appear to be representing vector quantities...
-    int vectorIndex[ 3 ] = { 0, 0, 0 };
 
     std::string vecName;
+    std::string midName, previousMidName, nextMidName;
 
-    // Look for parameters that are part of a vector quantity...
-    int tecplotVar = 0;
-    for( int i = 0; i < this->numVars; i++ )
+    int repeatCount = 0;
+
+    // skipping first few parameters (point coordiantes), examine variable names
+    for( int i = this->dimension; i < this->numVars; i++ )
     {
-        std::string s( this->m_varName[ i ] );
-        // if the beginning of the variable name looks like a vector component, then...
-        tecplotVar = i + 1;
-        if( s.substr( 0, 2 ) == "X " && (tecplotVar != xIndex) )
+        // extract the middle part of the variable name -- neglect the first and last character
+        std::string varName( this->m_varName[ i ] );
+        midName = varName.substr( 1, varName.length()-2 );
+
+        if( midName.length() > 0 && midName.compare( previousMidName ) == 0 )
         {
-            this->ReadVectorNameAndUpdateIndex( 0, i, s, vecName, vectorIndex );
+            repeatCount++;
         }
-        else if( s.substr( 0, 2 ) == "Y " && (tecplotVar != yIndex) )
+        else 
         {
-            this->ReadVectorNameAndUpdateIndex( 1, i, s, vecName, vectorIndex );
-        }
-        else if( s.substr( 0, 2 ) == "Z " && (tecplotVar != zIndex) )
-        {
-            this->ReadVectorNameAndUpdateIndex( 2, i, s, vecName, vectorIndex );
+            repeatCount = 1;
         }
 
-        // when have enough information to confirm fully populated vector
-        if( ( vectorIndex[ 0 ] > 0 || this->xIndex == 0) &&
-            ( vectorIndex[ 1 ] > 0 || this->yIndex == 0) &&
-            ( vectorIndex[ 2 ] > 0 || this->zIndex == 0) )
+        if( repeatCount == this->dimension ) // might have found a vector, need to do a few more checks
         {
-#ifdef PRINT_HEADERS
-            std::cout << "Found vector '" << vecName << "'" << std::endl;
-#endif // PRINT_HEADERS
+            bool foundVector = false;
 
-            vtkIdType numTuples = vectorData[ vectorIndex[ 0 ]-1-this->dimension ]->GetNumberOfTuples();
-            bool isPointData = true;
-            vtkIdType pointCount = 0;
-            if( numTuples == this->totalNumberOfNodalPoints )
+            if( i == this->numVars-1 ) // if at end of parameter list
             {
-                isPointData = true;
-                pointCount = totalNumberOfNodalPoints;
+                foundVector = true;
             }
-            else if( numTuples == this->totalNumberOfElements )
+            else // look at next parameter name, again neglecting the first and last character
             {
-                isPointData = false;
-                pointCount = totalNumberOfElements;
-            }
-            
-            vtkFloatArray* vector = vtkFloatArray::New();
-            vector->SetName( vecName.c_str() );
-            vector->SetNumberOfTuples( pointCount );
-            vector->SetNumberOfComponents( 3 );
-
-            for( int j = 0; j < pointCount; j++ )
-            {
-                for( int k = 0; k < 3; k++ )
+                std::string nextVarName( this->m_varName[ i+1 ] );
+                nextMidName = nextVarName.substr( 1, varName.length()-2 );
+                // if name is different, then assume we found a vector
+                if( midName.compare( nextMidName ) != 0 )
                 {
-                    if( vectorIndex[ k ] == 0 )
-                    {
-                        vector->InsertComponent( j, k, 0.0 );
-                    }
-                    else
-                    {
-                        //cout << "copying data from " << vectorData[ vectorIndex[ j ]-1-this->dimension ]->GetName() 
-                        //    << ", value = " << parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetValue( i ) << std::endl;
-                        vector->InsertComponent( j, k, vectorData[ vectorIndex[ k ]-1-this->dimension ]->GetValue( j ) );
-                    }
+                    foundVector = true;
                 }
             }
+            
+            if ( foundVector )  // reconstruct vector name
+            {
+                std::string previousVarName( this->m_varName[ i-1 ] );
+                //if first char was same then put it back
+                if( varName.compare( 0, 1, previousVarName, 0, 1 ) == 0 )
+                {
+                    vecName = varName.substr( 0, varName.length()-1 );
+                }
+                //if last char was same then put it back
+                else if( varName.compare( varName.length(), 1, previousVarName, varName.length(), 1 ) == 0 )
+                {
+                    vecName = varName.substr( 1, varName.length()-1 );
+                }
+                else
+                {
+#ifdef PRINT_HEADERS
+                    std::cerr << "Unexpected variable name: Should not get here" << std::endl;
+#endif // PRINT_HEADERS
+                    vecName = midName;
+                }
 
-            if( isPointData )
-            {
-                this->ugrid->GetPointData()->AddArray( vector );
-            }
-            else
-            {
-                this->ugrid->GetCellData()->AddArray( vector );
-            }
-            vector->Delete();
+                // remove leading and trailing whitespace and hyphens
+                boost::trim_left_if( vecName, boost::algorithm::is_any_of("- ") );
+                boost::trim_right_if( vecName, boost::algorithm::is_any_of("- ") );
 
-            // reset vectorIndex to look for next vector
-            for( int j = 0; j < 3; j++ )
-            {
-                vectorIndex[ j ] = 0;
+                int vectorIndex[ 3 ] = { 0, 0, 0 };
+                if( this->dimension == 2 )
+                {
+                    vectorIndex[ 0 ] = i;
+                    vectorIndex[ 1 ] = i + 1;
+                }
+                else if( this->dimension == 3 )
+                {
+                    vectorIndex[ 0 ] = i - 1;
+                    vectorIndex[ 1 ] = i;
+                    vectorIndex[ 2 ] = i + 1;
+                }
+#ifdef PRINT_HEADERS
+                std::cout << "Found vector '" << vecName << "'"
+                          << ", vectorIndex = " << vectorIndex[ 0 ] << " "
+                          << vectorIndex[ 1 ] << " " << vectorIndex[ 2 ] << std::endl;
+#endif // PRINT_HEADERS
+
+                vtkIdType numTuples = vectorData[ vectorIndex[ 0 ]-1-this->dimension ]->GetNumberOfTuples();
+                bool isPointData = true;
+                vtkIdType pointCount = 0;
+                if( numTuples == this->totalNumberOfNodalPoints )
+                {
+                    isPointData = true;
+                    pointCount = totalNumberOfNodalPoints;
+                }
+                else if( numTuples == this->totalNumberOfElements )
+                {
+                    isPointData = false;
+                    pointCount = totalNumberOfElements;
+                }
+                
+                vtkFloatArray* vector = vtkFloatArray::New();
+                vector->SetName( vecName.c_str() );
+                vector->SetNumberOfTuples( pointCount );
+                vector->SetNumberOfComponents( 3 );
+
+                for( int j = 0; j < pointCount; j++ )
+                {
+                    for( int k = 0; k < 3; k++ )
+                    {
+                        if( vectorIndex[ k ] == 0 )
+                        {
+                            vector->InsertComponent( j, k, 0.0 );
+                        }
+                        else
+                        {
+                            //cout << "copying data from " << vectorData[ vectorIndex[ j ]-1-this->dimension ]->GetName() 
+                            //    << ", value = " << parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetValue( i ) << std::endl;
+                            vector->InsertComponent( j, k, vectorData[ vectorIndex[ k ]-1-this->dimension ]->GetValue( j ) );
+                        }
+                    }
+                }
+
+                if( isPointData )
+                {
+                    this->ugrid->GetPointData()->AddArray( vector );
+                }
+                else
+                {
+                    this->ugrid->GetCellData()->AddArray( vector );
+                }
+                vector->Delete();
             }
         }
+
+        previousMidName = midName;
     }
     return;
 }
@@ -1380,14 +1403,14 @@ void tecplotReader::AttachPointsAndDataToGrid()
         if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfNodalPoints )
         {
 #ifdef PRINT_HEADERS
-            std::cout << "ugrid->GetPointData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+            //std::cout << "ugrid->GetPointData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
 #endif
             this->ugrid->GetPointData()->AddArray( this->parameterData[ i ] );
         }
         else if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfElements )
         {
 #ifdef PRINT_HEADERS
-            std::cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
+            //std::cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
 #endif
             vtkCellData* data = this->ugrid->GetCellData();
             //data->Print( std::cout );

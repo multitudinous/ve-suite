@@ -95,8 +95,6 @@ private:
     ///???
     vtkFloatArray* ZeroArray( std::string varName, int numTuples );
     ///???
-    void ReadVectorNameAndUpdateIndex( int currentIndex, int currentVar, std::string s, std::string& vecName, int* vectorIndex );
-    ///???
     void ProcessAnyVectorData( vtkFloatArray** vectorData );
     ///???
     void ComputeNumberOfOutputFiles();
