@@ -6,7 +6,7 @@
         <DataArray type="Float32" Name="data_001" format="ascii" RangeMin="0.5" RangeMax="1">
           1 0.80000001192 0.60000002384 0.89999997616 0.5
         </DataArray>
-        <DataArray type="Float32" Name="data_002" format="ascii" RangeMin="0" RangeMax="0.5">
+        <DataArray type="Float32" Name="data_2" format="ascii" RangeMin="0" RangeMax="0.5">
           0 0.20000000298 0.40000000596 0.10000000149 0.5
         </DataArray>
       </PointData>
