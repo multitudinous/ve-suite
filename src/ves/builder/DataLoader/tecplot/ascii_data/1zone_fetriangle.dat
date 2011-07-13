@@ -1,5 +1,5 @@
 TITLE = "tiny.tec"
-VARIABLES = "X", "Y", "data_001", "data_002"
+VARIABLES = "X", "Y", "data_001", "data_2"
 ZONE  NODES=5,  ELEMENTS=3,  DATAPACKING=POINT,  ZONETYPE=FETRIANGLE
      0.0         0.0        1.0        0.0    
      1.0         0.0        0.8        0.2    
