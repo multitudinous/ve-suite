@@ -262,7 +262,11 @@ function source_retrieval()
   case ${SOURCE_RETRIEVAL_METHOD} in
     svn)
       cd "${DEV_BASE_DIR}";
-      svn co ${SOURCE_URL} "${BASE_DIR}";
+      SVN_CO="svn co"
+      if [ -n "${SOURCE_REVISION:+x}" ]; then
+        SVN_CO="${SVN_CO} -r ${SOURCE_REVISION}";
+      fi
+      ${SVN_CO} ${SOURCE_URL} "${BASE_DIR}"
       ;;
     hg)
       cd "${DEV_BASE_DIR}";
@@ -270,7 +274,11 @@ function source_retrieval()
       ;;
     private-svn)
       cd "${DEV_BASE_DIR}";
-      svn co ${SOURCE_URL} "${BASE_DIR}" --username="${SVN_USERNAME}";
+      SVN_CO="svn co"
+      if [ -n "${SOURCE_REVISION:+x}" ]; then
+        SVN_CO="${SVN_CO} -r ${SOURCE_REVISION}";
+      fi
+      ${SVN_CO} ${SOURCE_URL} "${BASE_DIR}" --username="${SVN_USERNAME}";
       ;;
     wget)
       [ -z "${SOURCE_FORMAT}" ] && ( echo "SOURCE_FORMAT undefined in package $package"; return; )
