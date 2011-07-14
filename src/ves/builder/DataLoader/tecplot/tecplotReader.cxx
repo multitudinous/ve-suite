@@ -92,7 +92,7 @@ tecplotReader::tecplotReader( std::string inputFileNameAndPath )
     if( isFileReadable( this->inputFileNameAndPath ) )
     {
         std::cout << "\nReading file '" << this->inputFileNameAndPath << "'" << std::endl;
-        this->ComputeNumberOfOutputFiles();
+        this->ComputeNumberOfTimesteps();
         this->ComputeDimension();
         if( this->dimension == 0 )
         {
@@ -242,6 +242,50 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
         {
             if( multiblockOutput )
             {
+/*
+//attaching a field to a multiblock is not working. apparently a vtk bug. 
+//see http://www.mail-archive.com/paraview@paraview.org/msg10434.html
+
+                // Get the Solution Time associated with the specified zone.
+                double currentSolutionTime = TecUtilZoneGetSolutionTime( currentZone );
+
+                vtkFieldData * fd = vtkFieldData::New();
+
+                vtkFloatArray * fa = vtkFloatArray::New();
+                fa->SetName( "timestep" );
+                fa->SetNumberOfComponents( 1 );
+                fa->SetNumberOfTuples( 1 );
+                fa->InsertTuple1( 0, currentSolutionTime );
+                fd->AddArray( fa );
+                fa->Delete();
+                
+                this->multiblock->SetFieldData( fd );
+                fd->Delete();
+
+#ifdef PRINT_HEADERS
+                std::cout << "solutionTime = " << currentSolutionTime << std::endl;
+
+                int numFieldArrays = this->multiblock->GetFieldData()->GetNumberOfArrays();
+                std::cout << "numFieldArrays = " << numFieldArrays << std::endl;
+
+                std::cout << "field data name = " << 
+                this->multiblock->GetFieldData()->GetArray( 0 )->GetName()
+                << std::endl;
+
+                std::cout << "GetNumberOfComponents = " << 
+                this->multiblock->GetFieldData()->GetArray( 0 )->GetNumberOfComponents()
+                << std::endl;
+
+                std::cout << "GetNumberOfTuples = " << 
+                this->multiblock->GetFieldData()->GetArray( 0 )->GetNumberOfTuples()
+                << std::endl;
+
+                float value = this->multiblock->GetFieldData()->GetArray( 0 )->GetTuple1( 0 );
+                std::cout << "field data value = " << value << std::endl;
+#endif // PRINT_HEADERS
+
+*/
+
 #ifdef PRINT_HEADERS
                 std::cout << "returning multiblock" << std::endl;
 #endif // PRINT_HEADERS
@@ -529,7 +573,7 @@ void tecplotReader::ProcessAnyVectorData( vtkFloatArray ** vectorData )
     return;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void tecplotReader::ComputeNumberOfOutputFiles()
+void tecplotReader::ComputeNumberOfTimesteps()
 {
     StringList fileName( this->inputFileNameAndPath.c_str(), NULL );
 
@@ -574,7 +618,7 @@ void tecplotReader::ComputeNumberOfOutputFiles()
     this->timeToInitVtk = new int [ this->numZones + 1 ];
 
     // Use tecplot's StrandId and Solution Time to determine corelation between zones and output files...
-    this->CountNumberOfFilesUsingSolnTime();
+    this->CountNumberOfTimestepsUsingSolnTime();
 
     // Look at a special case where StrandId is not used...
     // If n zones and shared connectivity, then the file type is transient.
@@ -592,7 +636,7 @@ void tecplotReader::ComputeNumberOfOutputFiles()
     }
 
 #ifdef PRINT_HEADERS
-    std::cout << "NumberOfFiles = " << this->numberOfTimesteps << std::endl;
+    std::cout << "NumberOfTimesteps = " << this->numberOfTimesteps << std::endl;
     for( int j = 0; j < this->numZones + 1; j++ )
     {
         std::cout << "timeToInitVtk[ " << j << " ] = " << this->timeToInitVtk[ j ] << std::endl;
@@ -742,7 +786,7 @@ void tecplotReader::InitializeVtkData()
     this->totalNumberOfElements = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void tecplotReader::CountNumberOfFilesUsingSolnTime()
+void tecplotReader::CountNumberOfTimestepsUsingSolnTime()
 {
     // Get the StrandID associated with the first zone.
     Strand_t previousStrandID = TecUtilZoneGetStrandID( 1 );

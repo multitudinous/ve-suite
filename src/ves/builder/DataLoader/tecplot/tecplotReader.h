@@ -97,7 +97,7 @@ private:
     ///???
     void ProcessAnyVectorData( vtkFloatArray** vectorData );
     ///???
-    void ComputeNumberOfOutputFiles();
+    void ComputeNumberOfTimesteps();
     ///???
     void ComputeDimension();
     ///???
@@ -122,7 +122,7 @@ private:
     ///???
     void AttachPointsAndDataToGrid();
     
-    void CountNumberOfFilesUsingSolnTime();
+    void CountNumberOfTimestepsUsingSolnTime();
     ///???
     int GetStartingZoneForTimestep( const int timestep );
     ///Test variable index 3 for the Z coord array
