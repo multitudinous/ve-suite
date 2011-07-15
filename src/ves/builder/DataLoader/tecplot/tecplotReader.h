@@ -69,6 +69,9 @@ private:
     vtkMultiBlockDataSet* multiblock;
     vtkUnstructuredGrid* ugrid;
     int numberOfTimesteps;
+    ///Defines the total number of zones in a tecplot files. For example, if the
+    ///tecplot file has 9 zones and 5 timesteps numZones will be 45. The number
+    ///of zones will be all inclusive for all timesteps and all zones.
     EntIndex_t numZones;
     EntIndex_t connectivityShareCount;
     EntIndex_t numVars;

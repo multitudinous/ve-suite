@@ -185,9 +185,15 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
         return NULL;
     }
 
+    ///This will return a non zero number for transient files for everything
+    ///with a time step greater than 0.
     int startZone = this->GetStartingZoneForTimestep( timestep );
+    ///The number of zones for a given/requested timesetp. 
     int endZone = this->GetEndingZoneForTimestep( timestep );
+
     EntIndex_t numZonesInCurrentFile = this->GetNumZonesInCurrentFile( startZone );
+    ///Now we know how many and which zones to process for a given/requested
+    ///timesetp.
 #ifdef PRINT_HEADERS
     std::cout << "startZone = " << startZone << ", numZonesInCurrentFile = " << numZonesInCurrentFile << std::endl;
 #endif // PRINT_HEADERS
@@ -454,8 +460,14 @@ void tecplotReader::ProcessAnyVectorData( vtkFloatArray ** vectorData )
             {
                 foundVector = true;
             }
-            else // look at next parameter name, again neglecting the first and last character
+            else 
             {
+                //look at next parameter name, again neglecting the first and last character
+                //we do this because most vector are comprised of scalars that
+                //either begin/end with u,v,w or x,y,z or 1,2,3. By stripping 
+                //these characters and comparing the middle portion of a scalar
+                //name we can actually determine if 3 scalars make up
+                //a vector.
                 std::string nextVarName( this->m_varName[ i+1 ] );
                 nextMidName = nextVarName.substr( 1, varName.length()-2 );
                 // if name is different, then assume we found a vector
@@ -489,7 +501,7 @@ void tecplotReader::ProcessAnyVectorData( vtkFloatArray ** vectorData )
                 // remove leading and trailing whitespace and hyphens
                 boost::trim_left_if( vecName, boost::algorithm::is_any_of("- ") );
                 boost::trim_right_if( vecName, boost::algorithm::is_any_of("- ") );
-
+                //So that the vector name is reasonable
                 int vectorIndex[ 3 ] = { 0, 0, 0 };
                 if( this->dimension == 2 )
                 {
