@@ -37,40 +37,13 @@
 #include <vtkMultiBlockDataSet.h>
 #include <vtkXMLMultiBlockDataWriter.h>
 
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/filesystem/operations.hpp>
+
 #include <sstream>
 //#include <iomanip>
 
 using namespace ves::builder::DataLoader;
-
-std::string stripExtension( const std::string& s )
-{
-    char sep = '.';
-
-    size_t i = s.rfind(sep, s.length());
-    if( i != std::string::npos )
-    {
-        return( s.substr(0, i ) );
-    }
-
-    return( s );
-} 
-
-std::string extractFileNameFromFullPath( const std::string& s )
-{
-    char sep = '/';
-
-#ifdef WIN32
-    sep = '\\';
-#endif
-
-    size_t i = s.rfind(sep, s.length());
-    if( i != std::string::npos )
-    {
-        return( s.substr(i+1, s.length() - i) );
-    }
-
-    return( s );
-} 
 
 int main( int argc, char** argv )
 {
@@ -171,7 +144,7 @@ int main( int argc, char** argv )
             if( numTimesteps == 1 )
             {
                 outputFileName = 
-                    stripExtension( inputFileNameAndPath ) + fileExtension;
+                    boost::filesystem::path( inputFileNameAndPath ).replace_extension( fileExtension ).string();
             }
             else
             {
@@ -179,14 +152,15 @@ int main( int argc, char** argv )
                 std::ostringstream ss;
                 ss << std::setw( 3 ) << std::setfill( '0' ) << j;
                 
-                outputFileName = stripExtension( inputFileNameAndPath ) + 
+                outputFileName =  
+                    boost::filesystem::path( inputFileNameAndPath ).replace_extension("").string() + 
                     "_" + ss.str() + fileExtension;
             }
 
             // If outputToCurrentDirFlag was set, then write to current location...
             if( outputToCurrentDirFlag )
             {
-                outputFileName = extractFileNameFromFullPath( outputFileName );
+                outputFileName = boost::filesystem::path( outputFileName ).leaf().string();
             }
 
             std::cout << "Writing to file \"" << outputFileName << "\"" << std::endl;

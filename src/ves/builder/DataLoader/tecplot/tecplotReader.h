@@ -86,10 +86,7 @@ private:
     vtkPoints* vertex;
     vtkFloatArray** parameterData;
     int * timeToInitVtk;
-    ///???
-    std::string getExtension( const std::string& s );
-    ///???
-    int isFileReadable( const std::string filename );
+    int * numZonesAtTimestep;
     ///???
     void ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
     ///???
@@ -125,6 +122,8 @@ private:
     void CountNumberOfTimestepsUsingSolnTime();
     ///???
     int GetStartingZoneForTimestep( const int timestep );
+    ///???
+    int GetEndingZoneForTimestep( const int timestep );
     ///Test variable index 3 for the Z coord array
     bool TestForZVariable();
     ///???
