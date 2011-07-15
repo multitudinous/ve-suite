@@ -312,9 +312,11 @@ int main(int argc, char *argv[])
     }
     std::cout << std::endl;
     std::cout << "We have a directed graph with " 
-        << lemon::countNodes(g) << " nodes "
-        << "and " << lemon::countArcs(g) << " arc." << std::endl;
+        << lemon::countNodes(g) << " node(s) "
+        << "and " << lemon::countArcs(g) << " arc(s)." << std::endl;
 
+    std::cout << "The LEMON graph file: " << std::endl;
+    lemon::digraphWriter( g, std::cout ).run();
     /*// Read the input file
     SmartDigraph g;
     SmartDigraph::ArcMap<double> cap(g);
