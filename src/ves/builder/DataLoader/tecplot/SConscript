@@ -43,8 +43,7 @@ lib_env.AppendUnique( LIBPATH = [pj(TECSDKHOME,'lib',libdir)],
 if GetPlatform() == 'darwin':
     lib_env.AppendUnique( CPPDEFINES = ['MAC64','DARWIN'] )
 
-#boost_options.apply( lib_env )
-
+boost_options.apply( lib_env )
 vtk_options.apply( lib_env )
 
 prog = ves_pkg.createProgram('tecplot2VTK' + lib_env["PROGSUFFIX"], lib_env, 'bin')
