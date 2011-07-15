@@ -23,6 +23,7 @@
 #include <lemon/list_graph.h>
 #include <lemon/smart_graph.h>
 #include <lemon/lgf_reader.h>
+#include <lemon/static_graph.h>
 #include <lemon/lp.h>
 
 #include <boost/filesystem/operations.hpp>
@@ -128,6 +129,18 @@ void ParseSystem( ves::open::xml::model::SystemPtr system )
         {
             ParseSystem( system->GetModel( j )->GetSubSystem() );
         }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void EnableNodesAndArcs( lemon::ListDigraph& g, lemon::SubDigraph<lemon::ListDigraph>& fg, lemon::ListDigraph::Node& n, lemon::ListDigraph::NodeMap< bool >& nodeMap, lemon::ListDigraph::ArcMap< bool >& arcMap )
+{
+    nodeMap[ n ] = true;
+    
+    for( lemon::ListDigraph::OutArcIt m( g, n ); m != INVALID; ++m )
+    {
+        fg.enable( m );
+        lemon::ListDigraph::Node tempNode = g.target( m );
+        EnableNodesAndArcs( g, fg, tempNode, nodeMap, arcMap );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -269,19 +282,155 @@ int main(int argc, char *argv[])
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD", new ves::open::xml::cad::CADCreator() );
 
     // Check the arguments
-    if (argc < 2) 
+    /*if (argc < 2) 
     {
         std::cerr << "Usage:" << std::endl;
         std::cerr << "  ves_lemon_converter <input_ves_file>" << std::endl;
         return 0;
-    }
+    }*/
 
-    std::string vesFilename( argv[ 1 ] );
+    //std::string vesFilename( argv[ 1 ] );
     
     lemon::ListDigraph g;
     lemon::ListDigraph::NodeMap< std::string > modelIDMap( g );
     
-    LoadVESData( vesFilename, g, modelIDMap );
+    //Setup the nodes
+    lemon::ListDigraph::Node spatial = g.addNode();
+    modelIDMap[ spatial ] = "spatial";
+    
+    lemon::ListDigraph::Node soil = g.addNode();
+    modelIDMap[ soil ] = "soil";
+    lemon::ListDigraph::Node climate = g.addNode();
+    modelIDMap[ climate ] = "climate";
+    lemon::ListDigraph::Node management = g.addNode();
+    modelIDMap[ management ] = "management";
+   
+    lemon::ListDigraph::Node schedule1 = g.addNode();
+    modelIDMap[ schedule1 ] = "scheduler1";
+
+    lemon::ListDigraph::Node weps = g.addNode();
+    modelIDMap[ weps ] = "weps";
+    lemon::ListDigraph::Node rusle2 = g.addNode();
+    modelIDMap[ rusle2 ] = "rusle2";
+    lemon::ListDigraph::Node inlsoilerosion = g.addNode();
+    modelIDMap[ inlsoilerosion ] = "inlsoilerosion";
+    lemon::ListDigraph::Node daycent = g.addNode();
+    modelIDMap[ daycent ] = "daycent";
+
+    //Setup the arcs
+    //ListDigraph::Arc  a1 = 
+        g.addArc( spatial, soil );
+    //ListDigraph::Arc  b1 = 
+        g.addArc( spatial, climate );
+    //ListDigraph::Arc  c1 = 
+        g.addArc( spatial, management );
+
+    //ListDigraph::Arc  d1 = 
+        g.addArc( soil, weps );
+    //ListDigraph::Arc  e1 = 
+        g.addArc( soil, rusle2 );
+    //ListDigraph::Arc  e1 = 
+        g.addArc( soil, schedule1 );
+
+    //ListDigraph::Arc  f1 = 
+        g.addArc( climate, weps );
+    //ListDigraph::Arc  g1 = 
+        g.addArc( climate, rusle2 );
+    //ListDigraph::Arc  g1 = 
+        g.addArc( climate, schedule1 );
+
+    //ListDigraph::Arc  h1 = 
+        g.addArc( management, weps );
+    //ListDigraph::Arc  i1 = 
+        g.addArc( management, rusle2 );
+    //ListDigraph::Arc  i1 = 
+        g.addArc( management, schedule1 );
+
+    //ListDigraph::Arc  jj1 = 
+        g.addArc( schedule1, weps );
+    //ListDigraph::Arc  kk1 = 
+        g.addArc( schedule1, inlsoilerosion );
+    //ListDigraph::Arc  jjj1 = 
+        g.addArc( schedule1, rusle2 );
+    //ListDigraph::Arc  ll1 = 
+        g.addArc( schedule1, daycent );
+    
+    ListDigraph::Arc  j1 = g.addArc( weps, inlsoilerosion );
+    ListDigraph::Arc  k1 = g.addArc( rusle2, inlsoilerosion );
+    ListDigraph::Arc  jj1 = g.addArc( weps, rusle2 );
+
+    ListDigraph::Arc  l1 = g.addArc( inlsoilerosion, daycent );
+
+    std::cout << "Number of arcs in the base graph = " << lemon::countArcs( g ) << std::endl;
+
+    //Setup the info blocks to enable variable looping
+    lemon::ListDigraph::NodeMap<bool> filterInfoNodes(g, true);
+    lemon::ListDigraph::ArcMap<bool> filterInfoArcs(g, true);
+    lemon::SubDigraph<lemon::ListDigraph> infoSubgraph(g, filterInfoNodes, filterInfoArcs );
+ 
+    ///Find all of the scheduler blocks and turn all of the outgoing
+    ///scheduler links off for the info flow graph
+    for( lemon::ListDigraph::NodeIt n( g ); n != INVALID; ++n )
+    {
+        if( modelIDMap[ n ] == "scheduler1" )
+        {
+            for( lemon::ListDigraph::OutArcIt m( g, n ); m != INVALID; ++m )
+            {
+                filterInfoArcs[ m ] = false;
+            }
+        }
+    }
+    std::cout << "Number of arcs in the info graph = " << lemon::countArcs( infoSubgraph ) << std::endl;
+
+    //Setup the info blocks to enable variable looping
+    lemon::ListDigraph::NodeMap<bool> filterSchedulerNodes(g, false);
+    lemon::ListDigraph::ArcMap<bool> filterSchedulerArcs(g, false);
+    lemon::SubDigraph<lemon::ListDigraph> schedulerSubgraph(g, filterSchedulerNodes, filterSchedulerArcs );
+    
+    ///Find all of the scheduler blocks and turn all of the outgoing
+    ///scheduler links off for the info flow graph
+    for( lemon::ListDigraph::NodeIt n( g ); n != INVALID; ++n )
+    {
+        if( modelIDMap[ n ] == "scheduler1" )
+        {
+            EnableNodesAndArcs( g, schedulerSubgraph, n, filterSchedulerNodes, filterSchedulerArcs );
+        }
+    }
+    std::cout << "Number of arcs in the scheduler graph = " << lemon::countArcs( schedulerSubgraph ) << std::endl;
+    std::cout << "Number of nodes in the scheduler graph = " << lemon::countNodes( schedulerSubgraph ) << std::endl;
+
+    lemon::StaticDigraph tmp_graph;
+    lemon::StaticDigraph::NodeMap< lemon::ListDigraph::Node > nr(tmp_graph);
+    
+    lemon::digraphCopy( schedulerSubgraph, tmp_graph).nodeCrossRef(nr).run();
+    
+    lemon::StaticDigraph::NodeMap<int> orderScheduler( tmp_graph );
+    
+    lemon::topologicalSort( tmp_graph, orderScheduler );
+    
+    std::map< int, lemon::StaticDigraph::Node > scheduleOrderMap;
+    for( lemon::StaticDigraph::NodeIt n( tmp_graph ); n != INVALID; ++n )
+    {
+        std::cout << "New node " << modelIDMap[nr[n]] << std::endl;
+        std::cout << "Execution order " << orderScheduler[n] << std::endl;
+        scheduleOrderMap[ orderScheduler[n] ] = n;
+        std::cout << "Out arcs = " << lemon::countOutArcs( tmp_graph, n ) << std::endl;
+        std::cout << "In arcs = " << lemon::countInArcs( tmp_graph, n ) << std::endl;
+        std::cout << std::endl;
+    }
+    
+    for( std::map< int, lemon::StaticDigraph::Node >::const_iterator it = scheduleOrderMap.begin(); it != scheduleOrderMap.end(); ++it )
+    {
+        std::cout << modelIDMap[nr[it->second]] << " ";
+        if( lemon::countOutArcs( tmp_graph, it->second ) == 0 )
+        {
+            std::cout << "| ";
+        }
+    }
+    
+    std::cout << std::endl;
+    
+    //LoadVESData( vesFilename, g, modelIDMap );
     
     std::cout << "Is a DAG " << lemon::dag( g ) << std::endl;
     //std::cout << "Is a acyclic " << lemon::acyclic( g ) << std::endl;
@@ -294,12 +443,12 @@ int main(int argc, char *argv[])
     std::map< int, lemon::ListDigraph::Node > orderMap;
     for( lemon::ListDigraph::NodeIt n( g ); n != INVALID; ++n )
     {
-        std::cout << "New node" << std::endl;
-        std::cout << order[n] << std::endl;
-        std::cout << modelIDMap[n] << std::endl;
+        std::cout << "New node " << modelIDMap[n] << std::endl;
+        std::cout << "Execution order " << order[n] << std::endl;
         orderMap[ order[n] ] = n;
-        std::cout << lemon::countOutArcs( g, n ) << std::endl;
-        std::cout << lemon::countInArcs( g, n ) << std::endl;
+        std::cout << "Out arcs = " << lemon::countOutArcs( g, n ) << std::endl;
+        std::cout << "In arcs = " << lemon::countInArcs( g, n ) << std::endl;
+        std::cout << std::endl;
     }
     
     for( std::map< int, lemon::ListDigraph::Node >::const_iterator it = orderMap.begin(); it != orderMap.end(); ++it )
@@ -312,13 +461,28 @@ int main(int argc, char *argv[])
     }
     std::cout << std::endl;
     std::cout << "We have a directed graph with " 
-        << lemon::countNodes(g) << " node(s) "
-        << "and " << lemon::countArcs(g) << " arc(s)." << std::endl;
+        << lemon::countNodes(g) << " nodes "
+        << "and " << lemon::countArcs(g) << " arc." << std::endl;
 
-    std::cout << "The LEMON graph file: " << std::endl;
-    lemon::digraphWriter( g, std::cout ).
-        attribute("caption", vesFilename).
+    lemon::digraphWriter(g, std::cout).
+        //attribute( "node names", modelIDMap ).
         run();
+
+    /*lemon::ListDigraph::NodeMap<bool> filter(g2, true);
+    lemon::FilterNodes<lemon::ListDigraph> subgraph(g2, filter);
+    std::cout << lemon::countNodes(subgraph) << ", ";
+    
+    filter[x] = false;
+    std::cout << lemon::countNodes(subgraph) << ", ";
+    
+    subgraph.enable(x);
+    subgraph.disable(y);
+    subgraph.status(z, !subgraph.status(z));
+    std::cout << lemon::countNodes(subgraph) << std::endl;*/
+    
+    
+    
+    
     /*// Read the input file
     SmartDigraph g;
     SmartDigraph::ArcMap<double> cap(g);
