@@ -188,14 +188,11 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
     int startZone = this->GetStartingZoneForTimestep( timestep );
     int endZone = this->GetEndingZoneForTimestep( timestep );
 
-    ///The number of zones for a given/requested timestep. 
-    EntIndex_t numZonesInCurrentFile = this->GetNumZonesInCurrentFile( startZone );
-
     ///Now we know how many and which zones to process for a given/requested
     ///timestep.
 
 #ifdef PRINT_HEADERS
-    std::cout << "startZone = " << startZone << ", numZonesInCurrentFile = " << numZonesInCurrentFile << std::endl;
+    std::cout << "startZone = " << startZone << ", endZone = " << endZone << std::endl;
 #endif // PRINT_HEADERS
 
     int parNum = 0;
@@ -203,7 +200,7 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
     if( multiblockOutput )
     {
 #ifdef PRINT_HEADERS
-        std::cout << "creating new multiblock with " << numZonesInCurrentFile << " zones" << std::endl;
+        std::cout << "creating new multiblock with " << endZone-startZone+1 << " zones" << std::endl;
 #endif // PRINT_HEADERS
         if( this->multiblock )
         {
@@ -214,7 +211,7 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
     }
     
     // Begin at startZone and loop among the zones until we complete the file that was requested...
-    for( EntIndex_t currentZone = startZone; currentZone < startZone+numZonesInCurrentFile; ++currentZone ) // zone numbers are 1-based
+    for( EntIndex_t currentZone = startZone; currentZone <= endZone; ++currentZone ) // zone numbers are 1-based
     {
         if( currentZone == startZone || multiblockOutput )
         {
@@ -647,9 +644,9 @@ void tecplotReader::ComputeNumberOfTimesteps()
 
     for( int timestep = 0; timestep < this->numberOfTimesteps; timestep++ )
     {
+        // Store the number of zones for a given timestep. 
         int startZone = this->GetStartingZoneForTimestep( timestep );
-        EntIndex_t numZonesInCurrentFile = this->GetNumZonesInCurrentFile( startZone );
-        this->numZonesAtTimestep[ timestep ] = numZonesInCurrentFile;
+        this->numZonesAtTimestep[ timestep ] = this->GetNumZonesInCurrentFile( startZone );
     }
 
 #ifdef PRINT_HEADERS
