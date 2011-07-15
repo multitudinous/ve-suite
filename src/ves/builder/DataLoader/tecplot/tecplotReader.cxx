@@ -185,15 +185,15 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
         return NULL;
     }
 
-    ///This will return a non zero number for transient files for everything
-    ///with a time step greater than 0.
     int startZone = this->GetStartingZoneForTimestep( timestep );
-    ///The number of zones for a given/requested timesetp. 
     int endZone = this->GetEndingZoneForTimestep( timestep );
 
+    ///The number of zones for a given/requested timestep. 
     EntIndex_t numZonesInCurrentFile = this->GetNumZonesInCurrentFile( startZone );
+
     ///Now we know how many and which zones to process for a given/requested
-    ///timesetp.
+    ///timestep.
+
 #ifdef PRINT_HEADERS
     std::cout << "startZone = " << startZone << ", numZonesInCurrentFile = " << numZonesInCurrentFile << std::endl;
 #endif // PRINT_HEADERS
@@ -1466,14 +1466,14 @@ void tecplotReader::AttachPointsAndDataToGrid()
         {
 #ifdef PRINT_HEADERS
             //std::cout << "ugrid->GetPointData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
-#endif
+#endif // PRINT_HEADERS
             this->ugrid->GetPointData()->AddArray( this->parameterData[ i ] );
         }
         else if( this->parameterData[ i ]->GetNumberOfTuples() == this->totalNumberOfElements )
         {
 #ifdef PRINT_HEADERS
             //std::cout << "ugrid->GetCellData()->AddArray( this->parameterData[ " << i << " ] );" << std::endl;
-#endif
+#endif // PRINT_HEADERS
             vtkCellData* data = this->ugrid->GetCellData();
             //data->Print( std::cout );
             //parameterData[ i ]->Print( std::cout );
@@ -1515,8 +1515,8 @@ int tecplotReader::GetStartingZoneForTimestep( const int timestep )
         if( sum == timestep+1 )
         {
 #ifdef PRINT_HEADERS
-            std::cout << "StartingZoneForFile " << timestep << " is " << i+1 << std::endl;
-#endif
+            //std::cout << "StartingZoneForFile " << timestep << " is " << i+1 << std::endl;
+#endif // PRINT_HEADERS
             return( i+1 );  // zones are 1-based
         }
     }
@@ -1544,7 +1544,9 @@ bool tecplotReader::TestForZVariable()
     // variable numbers are 1-based
     TecUtilVarGetName( 3, &this->m_varName[ 2 ] ); 
     std::string zVar( this->m_varName[ 2 ] );
+#ifdef PRINT_HEADERS
     std::cout << "The 3rd variable name is " << zVar << "." << std::endl;
+#endif // PRINT_HEADERS
     if( zVar[ 0 ] == 'Z' )
     {
         return true;
