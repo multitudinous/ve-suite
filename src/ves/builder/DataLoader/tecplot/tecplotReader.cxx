@@ -178,14 +178,21 @@ EntIndex_t tecplotReader::GetNumZonesInCurrentFile( const EntIndex_t startZone )
 ////////////////////////////////////////////////////////////////////////////////
 vtkDataObject * tecplotReader::GetOutput( const int timestep )
 {
-    // Verify that timestep is an appropriate zero-based integer...
+    // Verify that timestep is an appropriate zero-based integer.
+    // Timestep will always be 1 for static files and 1 or more for transient files
     if( timestep < 0 || timestep > this->numberOfTimesteps - 1 )
     {
         std::cerr << "Error: invalid request for file " << timestep << std::endl;
         return NULL;
     }
 
+    // Get the start and end zones for this particular timestep. 
+    // Because zones are 1-based, these will be non-zero numbers for all static and transient files
     int startZone = this->GetStartingZoneForTimestep( timestep );
+    if( startZone == 0 )
+    {
+        return NULL;
+    }
     int endZone = this->GetEndingZoneForTimestep( timestep );
 
     ///Now we know how many and which zones to process for a given/requested
@@ -477,13 +484,14 @@ void tecplotReader::ProcessAnyVectorData( vtkFloatArray ** vectorData )
             if ( foundVector )  // reconstruct vector name
             {
                 std::string previousVarName( this->m_varName[ i-1 ] );
+
                 //if first char was same then put it back
                 if( varName.compare( 0, 1, previousVarName, 0, 1 ) == 0 )
                 {
                     vecName = varName.substr( 0, varName.length()-1 );
                 }
                 //if last char was same then put it back
-                else if( varName.compare( varName.length(), 1, previousVarName, varName.length(), 1 ) == 0 )
+                else if( varName.compare( varName.length()-1, 1, previousVarName, varName.length()-1, 1 ) == 0 )
                 {
                     vecName = varName.substr( 1, varName.length()-1 );
                 }
