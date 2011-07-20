@@ -497,7 +497,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             dvp->GetData( upAxis );
 
             bool isNegative = false;
-            if( forwardAxis[ 0 ] == "-" )
+            if( forwardAxis[ 0 ] == '-' )
             {
                 isNegative = true;
                 //remove the first character if it is negative
@@ -523,7 +523,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             }
             
             isNegative = false;
-            if( upAxis[ 0 ] == "-" )
+            if( upAxis[ 0 ] == '-' )
             {
                 isNegative = true;
                 //remove the first character if it is negative
