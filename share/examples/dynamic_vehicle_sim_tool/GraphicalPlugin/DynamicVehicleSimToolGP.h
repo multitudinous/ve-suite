@@ -48,6 +48,7 @@
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Point.h>
+#include <gmtl/Vec.h>
 
 namespace ves
 {
@@ -170,6 +171,11 @@ private:
     bool m_needInitialized;
     ///Frame count
     unsigned int m_frameCount;
+    ///The forward vector for the cad
+    gmtl::Vec3d m_forwardVector;
+    ///The up vector for the cad
+    gmtl::Vec3d m_upVector;
+    
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( DynamicVehicleSimToolGP )

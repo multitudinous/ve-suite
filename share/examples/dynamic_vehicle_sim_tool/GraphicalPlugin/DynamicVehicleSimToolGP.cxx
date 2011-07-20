@@ -465,19 +465,88 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         
         if( simState == "Manual" )
         {
-            gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
-            m_initialNavMatrix = gmtl::invert( sipLoc ) * mSceneManager->GetNavDCS()->GetMat();
+            gmtl::Matrix44d sipLoc = 
+                gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
+            m_initialNavMatrix = 
+                gmtl::invert( sipLoc ) * mSceneManager->GetNavDCS()->GetMat();
             mSceneManager->GetNavDCS()->SetMat( m_initialNavMatrix );
         }
         else
         {
-            ves::open::xml::DataValuePairPtr dvp1 = 
+            dvp1 = 
                 m_currentCommand->GetDataValuePair( "Filename" );
             dvp1->GetData( m_birdFilename );
 
             ReadBirdRegistrationFile();
             
             CalculateRegistrationVariables();
+        }
+
+        ///Set default values for the forward and up vector in case we are
+        ///not defining a forward and up vector from older dvst ves files.
+        m_forwardVector.set( 0, 1, 0 );
+        m_upVector.set( 0, 0, 1 );
+        dvp = m_currentCommand->GetDataValuePair( "Forward" );
+        if( dvp )
+        {
+            std::string forwardAxis;
+            dvp->GetData( forwardAxis );
+
+            dvp = m_currentCommand->GetDataValuePair( "Up" );
+            std::string upAxis;
+            dvp->GetData( upAxis );
+
+            bool isNegative = false;
+            if( forwardAxis[ 0 ] == "-" )
+            {
+                isNegative = true;
+                //remove the first character if it is negative
+                forwardAxis.erase( 0, 1 );
+            }
+            
+            if( forwardAxis == "X" )
+            {
+                m_forwardVector.set( 1, 0, 0 );
+            }
+            else if( forwardAxis == "Y" )
+            {
+                m_forwardVector.set( 0, 1, 0 );
+            }
+            else if( forwardAxis == "Z" )
+            {
+                m_forwardVector.set( 0, 0, 1 );                
+            }
+            
+            if( isNegative )
+            {
+                m_forwardVector *= -1.0f;
+            }
+            
+            isNegative = false;
+            if( upAxis[ 0 ] == "-" )
+            {
+                isNegative = true;
+                //remove the first character if it is negative
+                upAxis.erase( 0, 1 );
+            }
+
+            if( upAxis == "X" )
+            {
+                m_upVector.set( 1, 0, 0 );
+            }
+            else if( upAxis == "Y" )
+            {
+                m_upVector.set( 0, 1, 0 );
+            }
+            else if( upAxis == "Z" )
+            {
+                m_upVector.set( 0, 0, 1 );                
+            }
+            
+            if( isNegative )
+            {
+                m_upVector *= -1.0f;
+            }
         }
 
         return;
@@ -915,12 +984,32 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     
     //GMTL is columan major order so this is why the data is laid out in columns
     //http://www.fastgraph.com/makegames/3drotation/
+    ///With this matrix setup we are making Y forward. 
     gmtl::Matrix44d transMat;
     transMat.set( rightVec[ 0 ], forwardVec[ 0 ], upVec[ 0 ],  centroid[ 0 ],
                   rightVec[ 1 ], forwardVec[ 1 ], upVec[ 1 ], -centroid[ 2 ],
                   rightVec[ 2 ], forwardVec[ 2 ], upVec[ 2 ],  centroid[ 1 ],
                              0.,         0.,              0.,             1. );
+    //This link also helps detail this matrix construction
+    //http://www.puregamer.co.uk/blog/vector-rotation-matrix-generation.html
     
+    ///Now lets setup the CAD specific matrix to let the dvst know what the
+    ///orientation of the CAD is.
+    gmtl::Vec3d rightCADVec;
+    rightCADVec.set( 
+        (m_forwardVector[1]*m_upVector[2]) - (m_forwardVector[2]*m_upVector[1]),
+        (m_forwardVector[2]*m_upVector[0]) - (m_forwardVector[0]*m_upVector[2]),
+        (m_forwardVector[0]*m_upVector[1]) - (m_forwardVector[1]*m_upVector[0]) );
+    gmtl::normalize( rightCADVec );
+
+    gmtl::Matrix44d cadOrientationMat;
+    cadOrientationMat.set( 
+        rightCADVec[ 0 ], m_forwardVector[ 0 ], m_upVector[ 0 ],  0.,
+        rightCADVec[ 1 ], m_forwardVector[ 1 ], m_upVector[ 1 ],  0.,
+        rightCADVec[ 2 ], m_forwardVector[ 2 ], m_upVector[ 2 ],  0.,
+                      0.,                   0.,              0.,  1. );
+    //gmtl::invert( cadOrientationMat );
+
     //Get the SIP offsets from the birds to the centroid
     //X is to the rear, y is up, z is to the left
     //fbirdd = (sip[0]*u.mm-1048.1*u.mm,sip[1]*u.mm+686.8*u.mm,sip[2]*u.mm+13.3*u.mm)
@@ -979,13 +1068,21 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     //Now we convert the sip matrix back through the transform mat to move it 
     //to the VR Juggler coord
     std::cout << "Bird coord " << std::endl << transMat << std::endl << std::flush;
-    //std::cout << m_sip << std::endl;
+    std::cout << "Measured SIP " << m_sip << std::endl;
 
 //#ifndef DVST_TEST
     gmtl::Matrix44d registerMat = transMat * measuredSIPCentroidMat;
-    std::cout << "Reg matrix " << std::endl << registerMat << std::endl << std::flush;
+    std::cout << "Reg matrix " << std::endl 
+        << registerMat << std::endl << std::flush;
+
     m_initialNavMatrix = registerMat * sipLoc;
-    std::cout << "Init nav matrix " << std::endl << m_initialNavMatrix << std::endl << std::flush;
+    std::cout << "Init nav matrix " << std::endl 
+        << m_initialNavMatrix << std::endl << std::flush;
+
+    m_initialNavMatrix = m_initialNavMatrix * cadOrientationMat;
+    std::cout << "Init nav matrix with CAD correction" << std::endl 
+        << m_initialNavMatrix << std::endl << std::flush;
+
 /*#else
     gmtl::AxisAngled viewCorrection( gmtl::Math::deg2Rad( 90.0 ), 0, 0, 1 );
     gmtl::Matrix44d myMat = gmtl::makeRot< gmtl::Matrix44d >( viewCorrection );
@@ -993,8 +1090,9 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     //gmtl::invert( registerMat );
 
     m_initialNavMatrix = registerMat * myMat;
-#endif*/
     //std::cout << m_initialNavMatrix << std::endl;
+#endif*/
+
     ///Now apply the nave matrix to update the view
     mSceneManager->GetNavDCS()->SetMat( m_initialNavMatrix );
 }
