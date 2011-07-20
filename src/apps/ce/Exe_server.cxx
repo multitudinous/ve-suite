@@ -124,6 +124,7 @@ int main( int argc, char* argv[] )
         CosNaming::Name name( 1 );
         name.length( 1 );
         name[0].id = CORBA::string_dup( "Executive" );
+        //name[0].kind = CORBA::string_dup( "VE-CE" );
 
         std::cout << " VE_CE : Trying to Register to Naming Service" << std::endl;
         //Bind the object

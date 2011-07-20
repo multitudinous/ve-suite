@@ -239,7 +239,8 @@ void GraphicalPluginManager::UnbindORB()
     CosNaming::Name UIname( 1 );
     UIname.length( 1 );
     UIname[0].id = CORBA::string_dup(( ui_i->UIName_ ).c_str() );
-
+    //UIname[0].id = CORBA::string_dup( "Executive" );
+    //UIname[0].kind = CORBA::string_dup( "VE-CE" );
     try
     {
         this->naming_context->unbind( UIname );
@@ -609,7 +610,8 @@ void GraphicalPluginManager::ConnectToCE()
         CosNaming::Name name( 1 );
         name.length( 1 );
         name[0].id = CORBA::string_dup( "Executive" );
-        
+        //name[0].kind = CORBA::string_dup( "VE-CE" );
+
         CORBA::Object_var exec_object = this->naming_context->resolve( name );
         _exec = Body::Executive::_narrow( exec_object.in() );
         

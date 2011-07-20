@@ -232,7 +232,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
         name.length( 1 );
         //Now get the reference of the VE server
         name[0].id   = CORBA::string_dup( "Master" );
-        name[0].kind = CORBA::string_dup( "VE_Xplorer" );
+        name[0].kind = CORBA::string_dup( "VE-Xplorer" );
         CORBA::Object_var naming_context_object =
             m_orb->resolve_initial_references( "NameService" );
         CosNaming::NamingContext_var naming_context1 =
@@ -268,8 +268,8 @@ bool CORBAServiceList::ConnectToXplorer( void )
         CosNaming::Name xplorerCom( 1 );
         xplorerCom.length( 1 );
         //Now get the reference of the VE server
-        xplorerCom[0].id   = CORBA::string_dup( "Test" );
-        xplorerCom[0].kind = CORBA::string_dup( "VE_Xplorer" );
+        xplorerCom[0].id   = CORBA::string_dup( "VE-Xplorer Client 1" );
+        xplorerCom[0].kind = CORBA::string_dup( "VE-Xplorer" );
         CORBA::Object_var naming_context_object =
             m_orb->resolve_initial_references( "NameService" );
         CosNaming::NamingContext_var naming_context1 =
@@ -321,7 +321,7 @@ bool CORBAServiceList::ConnectToNamingService( void )
         //resource factory args, server strategy factory args, client args
         //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), 0 );
         // First initialize the ORB,
-        m_orb = CORBA::ORB_init( argc, argv, "" ); // the ORB name, it can be anything!
+        m_orb = CORBA::ORB_init( argc, argv, "ves_conductor" ); // the ORB name, it can be anything!
         //delete the left over char*
         for( int i = 0; i < argc; ++ i )
         {
