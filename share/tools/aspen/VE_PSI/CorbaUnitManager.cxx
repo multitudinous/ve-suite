@@ -53,7 +53,7 @@ void CorbaUnitManager::CheckCORBAWorkThread( )
             this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CorbaUnitManager::RunORB()
+bool CorbaUnitManager::RunORB()
 {
     try
     {
@@ -96,7 +96,7 @@ void CorbaUnitManager::RunORB()
         strcpy( argv[ i ], cmdargs.at( i ) );
     }
 
-    std::string UNITNAME = "VE-PSI";
+    //std::string UNITNAME = "VE-PSI";
     std::cout<<"Unit name is :"<<unitName<<std::endl;
 
     try 
@@ -115,6 +115,20 @@ void CorbaUnitManager::RunORB()
         name[0].id = CORBA::string_dup ("Executive");
 
         CORBA::Object_var exec_object = naming_context->resolve(name);
+
+        int num = 1000;
+        CosNaming::BindingList_var bindingList;
+        CosNaming::BindingIterator_var bindingIter;
+        naming_context->list(num, bindingList, bindingIter);
+        
+        for( CORBA::ULong i = 0; i<bindingList->length(); i++)
+        {
+            std::string temp = bindingList[i].binding_name[ CORBA::ULong(0) ].id.inout();
+            if( temp.compare( unitName ) == 0 )
+            {
+                return false;
+            }
+        }
 
         //Now downcast the object reference to the appropriate type
         exec = Body::Executive::_narrow(exec_object.in());
@@ -155,12 +169,12 @@ void CorbaUnitManager::RunORB()
         ACE_TRY_CHECK;
 
         //Create the Servant
-        unit_i = new VEPSI_i(/*exec.in(),*/ UNITNAME, /*parser,*/ parent, this, std::string(workingDir) );
+        unit_i = new VEPSI_i(/*exec.in(),*/ unitName, /*parser,*/ parent, this, std::string(workingDir) );
         unit_i_instantiated = true;
         //Activate it to obtain the object reference
 
         PortableServer::ObjectId_var id =
-        PortableServer::string_to_ObjectId( CORBA::string_dup( UNITNAME.c_str() ) );
+        PortableServer::string_to_ObjectId( CORBA::string_dup( unitName.c_str() ) );
         child_poa->activate_object_with_id (id.in (),
                               unit_i
                               ACE_ENV_ARG_PARAMETER);
@@ -172,7 +186,7 @@ void CorbaUnitManager::RunORB()
 
         CosNaming::Name Unitname(1);
         Unitname.length(1);
-        Unitname[0].id = CORBA::string_dup (UNITNAME.c_str());
+        Unitname[0].id = CORBA::string_dup (unitName.c_str());
         //Bind the object
         try
         {
@@ -187,11 +201,13 @@ void CorbaUnitManager::RunORB()
         //Call the Executive CORBA call to register it to the Executive
         exec->RegisterUnit(unit_i->UnitName_.c_str(), unit.in(), 0); //0 means a normal module
         m_running = true;
+        return true;
     }
     catch (CORBA::Exception &)
     {
         std::cerr << "CORBA exception raised!" << std::endl;
         orb->destroy();
+        return false;
     }
 }
 /////////////////////////////////////////////////////////////
@@ -223,10 +239,10 @@ void CorbaUnitManager::CheckCORBAWork( void )
 }
 
 /////////////////////////////////////////////////////////////
-AspenPlus * CorbaUnitManager::CreateParser( void )
-{
-    return new AspenPlus();
-}
+//AspenPlus * CorbaUnitManager::CreateParser( void )
+//{
+//    return new AspenPlus();
+//}
 
 /////////////////////////////////////////////////////////////
 //DynParser * CorbaUnitManager::CreateParser( void )

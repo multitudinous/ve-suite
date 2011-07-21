@@ -61,6 +61,7 @@ using namespace ves::conductor;
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( APPlugin, ves::conductor::UIPluginBase )
+    EVT_MENU( APPLUGIN_SET_UNIT, APPlugin::OnUnitName )
     EVT_MENU( APPLUGIN_OPEN_SIM, APPlugin::OnOpen )
     EVT_MENU( APPLUGIN_SHOW_ASPEN_SIMULATION, APPlugin::ShowAspenSimulation )
     EVT_MENU( APPLUGIN_HIDE_ASPEN_SIMULATION, APPlugin::HideAspenSimulation )
@@ -82,8 +83,8 @@ APPlugin::APPlugin() :
 {
     mPluginName = wxString( "AspenPlus", wxConvUTF8 );
     mDescription = wxString( "Aspen Plus Plugin", wxConvUTF8 );
-    GetVEModel()->SetPluginType( "APPlugin" );
-    GetVEModel()->SetVendorName( "ASPENUNIT" );
+    m_pluginType = "APPlugin";
+    m_unitName = "VE-PSI";
 
     iconFilename = "aspen.xpm";
     wxImage my_img( aspen );
@@ -124,6 +125,21 @@ wxString APPlugin::GetConductorName()
     return wxString( "Aspen_Plus_AP", wxConvUTF8 );
 }
 /////////////////////////////////////////////////////////////////////////////
+void APPlugin::OnUnitName( wxCommandEvent& event )
+{    
+    UIPLUGIN_CHECKID( event )
+    wxTextEntryDialog newUnitName( 0,
+                                 _( "Enter the name for your unit:" ),
+                                 _( "Set Unit Name..." ),
+                                 "VE-PSI", wxOK | wxCANCEL );
+    //check for existing unit
+
+    if( newUnitName.ShowModal() == wxID_OK )
+    {
+        SetUnitName( newUnitName.GetValue().c_str() );
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
 void APPlugin::OnOpen( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
@@ -145,6 +161,10 @@ void APPlugin::OnOpen( wxCommandEvent& event )
         }
     }
 
+    //set the unit name
+    GetVEModel()->SetVendorName( m_unitName );
+    mAspenMenu->Enable( APPLUGIN_SET_UNIT, false );
+
     APOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
@@ -159,6 +179,7 @@ void APPlugin::OnOpen( wxCommandEvent& event )
 
     CommandPtr returnState ( new Command() );
     returnState->SetCommandName( "getNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "getNetwork" );
     returnState->AddDataValuePair( data );
@@ -217,18 +238,17 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     //main aspen plus plugin
     ves::open::xml::model::SystemPtr tempSystem;
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
-    ves::open::xml::model::ModelPtr aspenPlusModel;
     //set a null pointer as the top most parent model on topmost level
     for( size_t modelCount = 0; 
         modelCount < tempSystem->GetNumberOfModels(); 
         ++modelCount )
     {
         //Not sure why we set a null pointer here...
-        tempSystem->GetModel( modelCount )->SetParentModel( aspenPlusModel );
+        tempSystem->GetModel( modelCount )->SetParentModel( m_veModel );
     }
     //Now we get this plugins veopen model and set its subsystem as the
     //flowsheet we just queried from VE-PSI
-    GetVEModel()->SetSubSystem( tempSystem );
+    m_veModel->SetSubSystem( tempSystem );
     mDataBufferEngine->ParseSystem( tempSystem );
 
     //Now let the rest of VE-Conductor know about the new network
@@ -250,6 +270,7 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     ///
     CommandPtr aspenBKPFile( new Command() );
     aspenBKPFile->SetCommandName( "Aspen_Plus_Preferences" );
+    aspenBKPFile->AddDataValuePair( vendorData );
     data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "BKPFileName",
                    ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
@@ -261,6 +282,8 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     GlobalNameUpdate( event );
 
     //mAspenMenu->Enable( APPLUGIN_CLOSE_ASPEN_SIMULATION, true );
+    mAspenMenu->Enable( APPLUGIN_SET_UNIT, false );
+    mAspenMenu->Enable( APPLUGIN_OPEN_SIM, false );
     mAspenMenu->Enable( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( APPLUGIN_SHOW_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( APPLUGIN_HIDE_ASPEN_SIMULATION, true );
@@ -277,6 +300,7 @@ void APPlugin::ShowAspenSimulation( wxCommandEvent& event )
     //Log( "Show Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "showSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "showSimulation" );
     returnState->AddDataValuePair( data );
@@ -299,6 +323,7 @@ void APPlugin::HideAspenSimulation( wxCommandEvent& event )
     //Log( "Hide Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "hideSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "hideSimulation" );
     returnState->AddDataValuePair( data );
@@ -320,6 +345,7 @@ void APPlugin::DisconnectAspenSimulation( void )
     //Log( "Close Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "closeSimulation" );
     returnState->AddDataValuePair( data );
@@ -376,6 +402,7 @@ void APPlugin::RunAspenNetwork( wxCommandEvent& event )
     //Log( "Run Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "runNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "runNetwork" );
     returnState->AddDataValuePair( data );
@@ -397,6 +424,7 @@ void APPlugin::ReinitializeAspenSimulation( wxCommandEvent& event )
     //Log( "Reinitialize Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "reinitNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "reinitNetwork" );
     returnState->AddDataValuePair( data );
@@ -418,6 +446,7 @@ void APPlugin::StepAspenNetwork( wxCommandEvent& event )
     //Log( "Run Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "stepNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "runNetwork" );
     returnState->AddDataValuePair( data );
@@ -439,6 +468,7 @@ void APPlugin::SaveSimulation( wxCommandEvent& event )
     //Log( "Saving Simulation...\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "saveSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "saveSimulation" );
     returnState->AddDataValuePair( data );
@@ -478,6 +508,7 @@ void APPlugin::SaveAsSimulation( wxCommandEvent& event )
 
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "saveAsSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "saveAsSimulation" );
     returnState->AddDataValuePair( data );
@@ -500,6 +531,7 @@ void APPlugin::SaveAsSimulation( wxCommandEvent& event )
 
     CommandPtr aspenAPWFile( new Command() );
     aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
+    aspenAPWFile->AddDataValuePair( vendorData );
     data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "BKPFileName",
                    ConvertUnicode( saveFileName.GetFullName().c_str() ) );
@@ -523,6 +555,8 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         UIPLUGINBASE_SHOW_ICON_CHOOSER, false );
 
     mAspenMenu = new wxMenu();
+    mAspenMenu->Append( APPLUGIN_SET_UNIT, _( "Unit Name" ) );
+    mAspenMenu->Enable( APPLUGIN_SET_UNIT, true );
     mAspenMenu->Append( APPLUGIN_OPEN_SIM, _( "Open" ) );
         mAspenMenu->Enable( APPLUGIN_OPEN_SIM, true );
     //mAspenMenu->Append( APPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close" ) );
@@ -564,4 +598,9 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, false );
     }
     return baseMenu;
+}
+
+void APPlugin::SetUnitName( std::string name )
+{
+    m_unitName = name;
 }

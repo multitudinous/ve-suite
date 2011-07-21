@@ -35,6 +35,7 @@ BOOL VE_PSIDlg::OnInitDialog()
     CString path = AfxGetApp()->GetProfileString( _T("Aspen"), _T("Path"), _T("C:\\") );
     CString name = AfxGetApp()->GetProfileString( _T("Aspen"), _T("Name"), _T("localhost") );
     CString port = AfxGetApp()->GetProfileString( _T("Aspen"), _T("Port"), _T("1239") );
+    CString unitName = AfxGetApp()->GetProfileString( _T("Aspen"), _T("Unit Name"), _T("VE-PSI") );
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
     Display->SetWindowTextA(name);
@@ -42,6 +43,8 @@ BOOL VE_PSIDlg::OnInitDialog()
     Display->SetWindowTextA(port);
     Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
     Display->SetWindowTextA( path );
+    Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT6));
+    Display->SetWindowTextA( unitName );
 
     initialized = false;
     return TRUE;
@@ -154,26 +157,38 @@ void VE_PSIDlg::OnBnClickedOk()
         Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
         CString dir;
         Display->GetWindowText(dir);
+        Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT6));
+        CString unitName;
+        Display->GetWindowText(unitName);
 
         commManager = new CorbaUnitManager(this);
         commManager->SetComputerNameUnitNameAndPort( std::string( dir.GetString() ), 
-            std::string( name.GetString() ) , std::string( port.GetString() ), "AspenUnit" );
-        commManager->RunORB();
-        unitObject = commManager->GetUnitObject();
-        if ( !unitObject )
+            std::string( name.GetString() ) , std::string( port.GetString() ),
+            std::string( unitName.GetString() ) );
+        if ( commManager->RunORB() )
         {
-            AfxMessageBox( _T("Unable to connect to VE-CE" ));
-            commManager->DestroyORB();
-            delete commManager;
-            commManager = NULL;
-            initialized = false;
-            return;
-        }
+            unitObject = commManager->GetUnitObject();
+            if ( !unitObject )
+            {
+                AfxMessageBox( _T("Unable to connect to VE-CE" ));
+                commManager->DestroyORB();
+                delete commManager;
+                commManager = NULL;
+                initialized = false;
+                return;
+            }
 
+            {
+                initialized = true;
+                GetDlgItem(IDOK)->EnableWindow(FALSE);
+                commManager->CheckCORBAWorkThread();
+            }
+        }
+        else
         {
-            initialized = true;
-            GetDlgItem(IDOK)->EnableWindow(FALSE);
-            commManager->CheckCORBAWorkThread();
+            CEdit * log = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT1));
+            log->SetSel(-1, -1);
+            log->ReplaceSel("Unit name already exist.\r\nRename your unit!\r\n");
         }
     }
 }

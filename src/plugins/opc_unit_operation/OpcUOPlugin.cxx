@@ -67,12 +67,10 @@ OpcUOPlugin::OpcUOPlugin() :
 {
     mPluginName = wxString( "OpcUO", wxConvUTF8 );
     mDescription = wxString( "OPC Unit Operation Plugin", wxConvUTF8 );
-    GetVEModel()->SetPluginType( "OpcUOPlugin" );
+    m_pluginType = "OpcUOPlugin";
     m_monValue = "NA";
     m_monValueExists = false;
     m_monitoring = false;
-    //StartTimer( 1000 );
-    //m_timer=NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 OpcUOPlugin::~OpcUOPlugin()
@@ -162,8 +160,16 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         return baseMenu;
     }
     
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    //set the vendor name of the current plugin to the parents
+    if( GetVEModel()->GetParentModel() )
+    {
+        m_unitName = m_veModel->GetParentModel()->GetVendorName();
+        m_veModel->SetVendorName( m_unitName );
+        vendorData = DataValuePairPtr( new DataValuePair() );
+        vendorData->SetData( "vendorUnit", m_unitName );
+    }
 
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
     mOpcMenu = new wxMenu();
     //mOpcMenu->Append( OPCUOPLUGIN_SHOW_VALUE, _( "Value" ) );
     //mOpcMenu->Enable( OPCUOPLUGIN_SHOW_VALUE, true );
@@ -334,6 +340,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
     //mPluginName = GetVEModel()->GetPluginName().c_str();
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getAllOPCVariables" );
+    returnState->AddDataValuePair( vendorData );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), ConvertUnicode( mPluginName.c_str() ) );
     returnState->AddDataValuePair( data );
@@ -412,5 +419,5 @@ void OpcUOPlugin::OnMonitorVariable ( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 bool OpcUOPlugin::ShowAvailable()
 {
-    return true;
+    return false;
 }

@@ -64,12 +64,10 @@ ADUOPlugin::ADUOPlugin() :
 {
     mPluginName = wxString( "AspenDynamicsUO", wxConvUTF8 );
     mDescription = wxString( "Aspen Dynamics Unit Operation Plugin", wxConvUTF8 );
-    GetVEModel()->SetPluginType( "ADUOPlugin" );
+    m_pluginType = "ADUOPlugin";
     m_monValue = "NA";
     m_monValueExists = false;
     m_monitoring = false;
-    //StartTimer( 1000 );
-    //m_timer=NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADUOPlugin::~ADUOPlugin()
@@ -121,7 +119,7 @@ void ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
     //compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();
+    ves::open::xml::model::ModelPtr parentTraverser = m_veModel;
 
     if( parentTraverser != NULL )
     {
@@ -137,6 +135,7 @@ void ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getModuleParamList" );
+    returnState->AddDataValuePair( vendorData );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), compName );
     returnState->AddDataValuePair( data );
@@ -186,8 +185,16 @@ wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         return baseMenu;
     }
     
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    //set the vendor name of the current plugin to the parents
+    if( GetVEModel()->GetParentModel() )
+    {
+        m_unitName = GetVEModel()->GetParentModel()->GetVendorName();
+        m_veModel->SetVendorName( m_unitName );
+        vendorData = DataValuePairPtr( new DataValuePair() );
+        vendorData->SetData( "vendorUnit", m_unitName );
+    }
 
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Name" ) );
     mAspenMenu->Enable( ADUOPLUGIN_SHOW_ASPEN_NAME, true );

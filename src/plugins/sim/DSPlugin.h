@@ -34,6 +34,8 @@
 #define DSPLUGIN_H
 
 #include <ves/conductor/UIPluginBase.h>
+#include <ves/open/xml/DataValuePairPtr.h>
+
 
 #include <wx/event.h>
 #include <wx/wx.h>
@@ -75,14 +77,25 @@ public:
     void SetSelectVariables( std::vector< std::string> selectedVariables );
 
 protected:
+    ///???
+    std::string m_unitName;
+    ///???
+    ves::open::xml::DataValuePairPtr vendorData;
+    ///???
     wxMenu* mDynSimMenu;
+    ///???
     std::vector< std::string > m_opcList;
+    ///???
     std::vector< std::string > m_selectedOpcList;
+    ///???
     wxTimer * m_timer;
     
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
     
+    ///???
+    void OnUnitName( wxCommandEvent& event );
+
     ///???
     void OnOpen( wxCommandEvent& event );
     
@@ -100,6 +113,9 @@ protected:
     
     ///???
     void QueryForAllVariables( wxCommandEvent& event );
+
+    ///???
+    void SetUnitName( std::string name );
 
     DECLARE_EVENT_TABLE()
 };

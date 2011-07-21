@@ -65,6 +65,12 @@ public:
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
     virtual bool ShowAvailable();
     
+protected:
+    ///???
+    std::string m_unitName;
+    ///???
+    ves::open::xml::DataValuePairPtr vendorData;
+
 private:
     wxMenu* mAspenMenu;
 

@@ -72,7 +72,7 @@ APUOPlugin::APUOPlugin() :
 {
     mPluginName = wxString( "AspenPlusUO", wxConvUTF8 );
     mDescription = wxString( "Aspen Plus Unit Operation Plugin", wxConvUTF8 );
-    GetVEModel()->SetPluginType( "APUOPlugin" );
+    m_pluginType = "APUOPlugin" ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
     compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();
+    ves::open::xml::model::ModelPtr parentTraverser = m_veModel;
     if( parentTraverser != NULL )
     {
         while( parentTraverser->GetParentModel() != NULL &&
@@ -135,6 +135,7 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getInputModuleParamList" );
+    returnState->AddDataValuePair( vendorData );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), compName );
     returnState->AddDataValuePair( data );
@@ -202,7 +203,7 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
     compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = GetVEModel();
+    ves::open::xml::model::ModelPtr parentTraverser = m_veModel;
     if( parentTraverser != NULL )
     {
         while( parentTraverser->GetParentModel() != NULL &&
@@ -217,6 +218,7 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getOutputModuleParamList" );
+    returnState->AddDataValuePair( vendorData );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), compName );
     returnState->AddDataValuePair( data );
@@ -307,8 +309,16 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         return baseMenu;
     }
     
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    //set the vendor name of the current plugin to the parents
+    if( GetVEModel()->GetParentModel() == NULL )
+    {
+        m_unitName = m_veModel->GetParentModel()->GetVendorName();
+        m_veModel->SetVendorName( m_unitName );
+        vendorData = DataValuePairPtr( new DataValuePair() );
+        vendorData->SetData( "vendorUnit", m_unitName );
+    }
 
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( APUOPLUGIN_SHOW_ASPEN_NAME, _( "Name" ) );
     mAspenMenu->Enable( APUOPLUGIN_SHOW_ASPEN_NAME, true );

@@ -71,6 +71,12 @@ public:
     ///???
     void DrawPlugin( wxDC* dc );
 
+protected:
+    ///???
+    std::string m_unitName;
+    ///???
+    ves::open::xml::DataValuePairPtr vendorData;
+
 private:
     wxTimer * m_timer;
     std::string m_monValue;

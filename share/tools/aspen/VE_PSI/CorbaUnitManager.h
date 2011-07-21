@@ -17,7 +17,7 @@ public:
    ~CorbaUnitManager();
    void SetComputerNameUnitNameAndPort( std::string dir, std::string name, std::string port, std::string uname );
    void SetRunORBFlag( bool run );
-   void RunORB( void );
+   bool RunORB( void );
    void DestroyORB( void );
    VEPSI_i* GetUnitObject( void );
    void CheckCORBAWork( void );
