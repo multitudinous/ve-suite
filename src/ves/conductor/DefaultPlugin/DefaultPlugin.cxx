@@ -37,6 +37,7 @@
 
 #include <ves/open/xml/model/Point.h>
 #include <iostream>
+#include <ves/conductor/xpm/square.xpm>
 
 using namespace ves::conductor;
 #include <wx/dc.h>
@@ -64,6 +65,11 @@ DefaultPlugin::DefaultPlugin()
 
     dlg = 0;
     mPluginName = _( "DefaultPlugin" );
+    iconFilename = "square.xpm";
+    wxImage my_img( square_xpm );
+    SetImage( my_img );
+    //GetVEModel();
+
 //#define TESTPORT
 #ifdef TESTPORT
     VE_Model::Port* Aport = new VE_Model::Port();
@@ -135,4 +141,9 @@ wxString DefaultPlugin::GetDesc()
     wxString result = _( "DefaultPlugin for VE-Conductor" ); //your description
 
     return result;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool DefaultPlugin::ShowAvailable()
+{
+    return true;
 }

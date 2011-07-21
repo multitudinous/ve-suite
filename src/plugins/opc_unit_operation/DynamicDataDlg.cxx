@@ -46,7 +46,7 @@ BEGIN_EVENT_TABLE(DynamicDataDlg,wxDialog)
     EVT_CLOSE(DynamicDataDlg::OnClose)
     EVT_BUTTON(ID_CLOSEBUTTON, DynamicDataDlg::closeButtonClick )
     //EVT_BUTTON(ID_SETBUTTON,DynamicDataDlg::setButtonClick)
-    EVT_TIMER( TIMER_ID, DynamicDataDlg::OnTimer )
+    //EVT_TIMER( TIMER_ID, DynamicDataDlg::OnTimer )
 END_EVENT_TABLE()
 
 DynamicDataDlg::DynamicDataDlg(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
@@ -106,13 +106,14 @@ void DynamicDataDlg::SetName( std::string name )
     compName = name;
 }
 
-void DynamicDataDlg::ReadValue( )
+/*void DynamicDataDlg::ReadValue( )
 {
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getOPCValue" );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     //hardcode the "D1_"  This will need to be parsed from the .tree file
     data->SetData( std::string( "ModuleName" ), "D1_"+compName );
+    //data->SetData( std::string( "ModuleName" ), compName );
     returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
@@ -143,4 +144,4 @@ void DynamicDataDlg::ReadValue( )
 void DynamicDataDlg::OnTimer( wxTimerEvent& event )
 {
     ReadValue();
-}
+}*/
