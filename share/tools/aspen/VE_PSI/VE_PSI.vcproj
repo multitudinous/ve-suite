@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="VE_AspenUnit"
+	Name="VE_PSI"
 	ProjectGUID="{B9333CB0-720E-4B53-B4D7-CD2F0165872D}"
-	RootNamespace="VE_AspenUnit"
+	RootNamespace="VE_PSI"
 	Keyword="MFCProj"
 	TargetFrameworkVersion="131072"
 	>
@@ -106,7 +106,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(VESINSTALL)/bin"
-			IntermediateDirectory="./share/tools/aspen/VE_AspenUnit/$(ConfigurationName)"
+			IntermediateDirectory="./share/tools/aspen/VE_PSI/$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="2"
@@ -257,28 +257,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\AspenUnit_i.cxx"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\bkpparser.cxx"
 				>
 				<FileConfiguration
@@ -305,7 +283,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\VE_AspenUnit.cxx"
+				RelativePath=".\VE_PSI.cxx"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -327,7 +305,29 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\VE_AspenUnitDlg.cxx"
+				RelativePath=".\VE_PSIDlg.cxx"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\VEPSI_i.cxx"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -355,10 +355,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\AspenUnit_i.h"
-				>
-			</File>
-			<File
 				RelativePath=".\bkpparser.h"
 				>
 			</File>
@@ -371,11 +367,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\VE_AspenUnit.h"
+				RelativePath=".\VE_PSI.h"
 				>
 			</File>
 			<File
-				RelativePath=".\VE_AspenUnitDlg.h"
+				RelativePath=".\VE_PSIDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VEPSI_i.h"
 				>
 			</File>
 		</Filter>
@@ -385,15 +385,19 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\res\VE_AspenUnit.ico"
+				RelativePath=".\res\VE-PSI_Icon.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\VE_AspenUnit.rc"
+				RelativePath=".\res\VE_PSI.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\res\VE_AspenUnit.rc2"
+				RelativePath=".\VE_PSI.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\res\VE_PSI.rc2"
 				>
 			</File>
 		</Filter>
@@ -405,7 +409,7 @@
 	<Globals>
 		<Global
 			Name="RESOURCE_FILE"
-			Value="VE_AspenUnit.rc"
+			Value="VE_PSI.rc"
 		/>
 	</Globals>
 </VisualStudioProject>
