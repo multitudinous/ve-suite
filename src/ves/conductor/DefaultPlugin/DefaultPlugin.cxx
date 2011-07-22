@@ -68,7 +68,6 @@ DefaultPlugin::DefaultPlugin()
     iconFilename = "square.xpm";
     wxImage my_img( square_xpm );
     SetImage( my_img );
-    //GetVEModel();
 
 //#define TESTPORT
 #ifdef TESTPORT
