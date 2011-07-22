@@ -1262,10 +1262,10 @@ void AppFrame::Run( wxCommandEvent& WXUNUSED( event ) )
     wxFileDialog dialog
     (
         this,
-        wxT( "Open File dialog" ),
+        wxT( "Execute Application" ),
         wxT( "" ),
         wxT( "" ),
-        wxT( "Exe files (*.exe)|*.exe" ),
+        wxT( "Exe and Bat Files (*.exe;*.bat)|*.exe;*.bat" ),
         wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW
     );
 
