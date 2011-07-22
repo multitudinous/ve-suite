@@ -478,75 +478,75 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             dvp1->GetData( m_birdFilename );
 
             ReadBirdRegistrationFile();
+
+            ///Set default values for the forward and up vector in case we are
+            ///not defining a forward and up vector from older dvst ves files.
+            m_forwardVector.set( 0, 1, 0 );
+            m_upVector.set( 0, 0, 1 );
+            dvp = m_currentCommand->GetDataValuePair( "Forward" );
+            if( dvp )
+            {
+                std::string forwardAxis;
+                dvp->GetData( forwardAxis );
+
+                dvp = m_currentCommand->GetDataValuePair( "Up" );
+                std::string upAxis;
+                dvp->GetData( upAxis );
+
+                bool isNegative = false;
+                if( forwardAxis[ 0 ] == '-' )
+                {
+                    isNegative = true;
+                    //remove the first character if it is negative
+                    forwardAxis.erase( 0, 1 );
+                }
+            
+                if( forwardAxis == "X" )
+                {
+                    m_forwardVector.set( 1, 0, 0 );
+                }
+                else if( forwardAxis == "Y" )
+                {
+                    m_forwardVector.set( 0, 1, 0 );
+                }
+                else if( forwardAxis == "Z" )
+                {
+                    m_forwardVector.set( 0, 0, 1 );                
+                }
+            
+                if( isNegative )
+                {
+                    m_forwardVector *= -1.0f;
+                }
+            
+                isNegative = false;
+                if( upAxis[ 0 ] == '-' )
+                {
+                    isNegative = true;
+                    //remove the first character if it is negative
+                    upAxis.erase( 0, 1 );
+                }
+
+                if( upAxis == "X" )
+                {
+                    m_upVector.set( 1, 0, 0 );
+                }
+                else if( upAxis == "Y" )
+                {
+                    m_upVector.set( 0, 1, 0 );
+                }
+                else if( upAxis == "Z" )
+                {
+                    m_upVector.set( 0, 0, 1 );                
+                }
+            
+                if( isNegative )
+                {
+                    m_upVector *= -1.0f;
+                }
+            }
             
             CalculateRegistrationVariables();
-        }
-
-        ///Set default values for the forward and up vector in case we are
-        ///not defining a forward and up vector from older dvst ves files.
-        m_forwardVector.set( 0, 1, 0 );
-        m_upVector.set( 0, 0, 1 );
-        dvp = m_currentCommand->GetDataValuePair( "Forward" );
-        if( dvp )
-        {
-            std::string forwardAxis;
-            dvp->GetData( forwardAxis );
-
-            dvp = m_currentCommand->GetDataValuePair( "Up" );
-            std::string upAxis;
-            dvp->GetData( upAxis );
-
-            bool isNegative = false;
-            if( forwardAxis[ 0 ] == '-' )
-            {
-                isNegative = true;
-                //remove the first character if it is negative
-                forwardAxis.erase( 0, 1 );
-            }
-            
-            if( forwardAxis == "X" )
-            {
-                m_forwardVector.set( 1, 0, 0 );
-            }
-            else if( forwardAxis == "Y" )
-            {
-                m_forwardVector.set( 0, 1, 0 );
-            }
-            else if( forwardAxis == "Z" )
-            {
-                m_forwardVector.set( 0, 0, 1 );                
-            }
-            
-            if( isNegative )
-            {
-                m_forwardVector *= -1.0f;
-            }
-            
-            isNegative = false;
-            if( upAxis[ 0 ] == '-' )
-            {
-                isNegative = true;
-                //remove the first character if it is negative
-                upAxis.erase( 0, 1 );
-            }
-
-            if( upAxis == "X" )
-            {
-                m_upVector.set( 1, 0, 0 );
-            }
-            else if( upAxis == "Y" )
-            {
-                m_upVector.set( 0, 1, 0 );
-            }
-            else if( upAxis == "Z" )
-            {
-                m_upVector.set( 0, 0, 1 );                
-            }
-            
-            if( isNegative )
-            {
-                m_upVector *= -1.0f;
-            }
         }
 
         return;
@@ -1008,7 +1008,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
         rightCADVec[ 1 ], m_forwardVector[ 1 ], m_upVector[ 1 ],  0.,
         rightCADVec[ 2 ], m_forwardVector[ 2 ], m_upVector[ 2 ],  0.,
                       0.,                   0.,              0.,  1. );
-    //gmtl::invert( cadOrientationMat );
+    gmtl::invert( cadOrientationMat );
 
     //Get the SIP offsets from the birds to the centroid
     //X is to the rear, y is up, z is to the left
