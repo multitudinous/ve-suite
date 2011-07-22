@@ -421,9 +421,17 @@ void Link::DrawLinkLine( wxDC* dc )
 /////////////////////////////////////////////////////////////////////////////
 void Link::DrawName( wxDC* dc )
 {
-    wxPoint middle = cons[ cons.size()/2 ];
-    //dc->GetTextExtent( linkName, &w, &h );
-    dc->DrawText( linkName, middle.x, middle.y );
+    if(cons.size() != 2)
+    {
+        wxPoint middle = cons[ cons.size()/2 ];
+        //dc->GetTextExtent( linkName, &w, &h );
+        dc->DrawText( linkName, middle.x, middle.y );
+    }
+    else
+    {
+        wxPoint middle = cons[0] + cons[1];
+        dc->DrawText( linkName, middle.x/2, middle.y/2 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnShowLinkContent( wxCommandEvent& event )
