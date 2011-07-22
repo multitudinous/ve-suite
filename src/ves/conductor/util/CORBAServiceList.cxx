@@ -231,7 +231,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
         CosNaming::Name name( 1 );
         name.length( 1 );
         //Now get the reference of the VE server
-        name[0].id   = CORBA::string_dup( "Master" );
+        name[0].id   = CORBA::string_dup( "Master Node" );
         name[0].kind = CORBA::string_dup( "VE-Xplorer" );
         CORBA::Object_var naming_context_object =
             m_orb->resolve_initial_references( "NameService" );
