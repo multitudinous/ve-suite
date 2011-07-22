@@ -1251,6 +1251,7 @@ std::map< std::string, char** > GetPreCompiledIconMap()
     tempIconMap[ "scalartb_bw"] =                                         scalartb_bw_xpm;
     tempIconMap[ "selection32x32"] =                                      selection32x32_xpm;
     tempIconMap[ "square"] =                                              square_xpm;
+    tempIconMap[ "DefaultPlugin"] =                                       square_xpm;
     tempIconMap[ "streamlines"] =                                         streamlines_xpm;
     tempIconMap[ "vector"] =                                              vector_xpm;
     tempIconMap[ "vectortb"] =                                            vectortb_xpm;
