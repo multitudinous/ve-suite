@@ -94,7 +94,7 @@ private:
     //wxArrayString componentList;
     int maxRows;
     std::pair< unsigned int, std::string > iconInfo;
-    void InitializeAspenIcons();
+    void InitializeIcons();
 
     //void OnClose( wxCloseEvent& event );
     void CreateGUIControls();
@@ -108,7 +108,7 @@ private:
 }
 }
 
-//Form to get the function for aspen plus icons
+//Form to get the function for icons
 //GetVESuite_Valve_Valve_VALVE1
 #define GET_ICON_STREAM(name)  \
     name();

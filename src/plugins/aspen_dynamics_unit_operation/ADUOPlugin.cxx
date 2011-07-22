@@ -65,6 +65,9 @@ ADUOPlugin::ADUOPlugin() :
     mPluginName = wxString( "AspenDynamicsUO", wxConvUTF8 );
     mDescription = wxString( "Aspen Dynamics Unit Operation Plugin", wxConvUTF8 );
     m_pluginType = "ADUOPlugin";
+    iconFilename = "square";
+    wxImage my_img( square_xpm );
+    SetImage( my_img );
     m_monValue = "NA";
     m_monValueExists = false;
     m_monitoring = false;
@@ -319,5 +322,5 @@ void ADUOPlugin::OnMonitorVariable( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 bool ADUOPlugin::ShowAvailable()
 {
-    return false;
+    return true;
 }

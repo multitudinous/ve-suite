@@ -86,7 +86,7 @@ APPlugin::APPlugin() :
     m_pluginType = "APPlugin";
     m_unitName = "VE-PSI";
 
-    iconFilename = "aspen.xpm";
+    iconFilename = "aspen";
     wxImage my_img( aspen );
     SetImage( my_img );
 }

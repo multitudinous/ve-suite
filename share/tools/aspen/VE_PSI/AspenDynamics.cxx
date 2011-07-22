@@ -528,13 +528,13 @@ void AspenDynamics::ParseFile(const char * dynFile)
             float width =
                 imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
                 "_"+BlockInfoList[sheetIter->first][tempBlockId].type+
-                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon+
-                ".xpm"].first;
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon
+                /*+".xpm"*/].first;
             float height = 
                 imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
                 "_"+BlockInfoList[sheetIter->first][tempBlockId].type+
-                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon+
-                ".xpm"].second;
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon
+                /*+".xpm"*/].second;
             iconLocations[sheetIter->first][ tempBlockId ] =
                 std::pair< float, float >( scaledXCoords -
                 ( width * widthOffset * 
@@ -1151,7 +1151,7 @@ std::string AspenDynamics::CreateNetwork( void )
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
             +"_"+BlockInfoList["_main_sheet"][blockIter->first].type+"_"
-            +BlockInfoList["_main_sheet"][blockIter->first].icon + ".xpm" );
+            +BlockInfoList["_main_sheet"][blockIter->first].icon /*+ ".xpm"*/ );
         tempModel->
             SetIconRotation(BlockInfoList["_main_sheet"][blockIter->first].
             rotation);
@@ -1305,7 +1305,7 @@ void AspenDynamics::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
             "_" + BlockInfoList[networkName][blockIter->first].type+"_" +
-            BlockInfoList[networkName][blockIter->first].icon + ".xpm");
+            BlockInfoList[networkName][blockIter->first].icon /*+ ".xpm"*/);
         tempModel->
             SetIconRotation(
             BlockInfoList[networkName][blockIter->first].rotation );
@@ -2073,13 +2073,13 @@ void AspenDynamics::ReadGraphicsInformation( std::ifstream &file )
             float width =
                 imageData[BlockInfoList[currentLevelName][tempBlockId].type+
                 "_"+BlockInfoList[currentLevelName][tempBlockId].type+
-                "_"+BlockInfoList[currentLevelName][tempBlockId].icon+
-                ".xpm"].first;
+                "_"+BlockInfoList[currentLevelName][tempBlockId].icon
+                /*+".xpm"*/].first;
             float height =
                 imageData[BlockInfoList[currentLevelName][tempBlockId].type+
                 "_"+BlockInfoList[currentLevelName][tempBlockId].type+
-                "_"+BlockInfoList[currentLevelName][tempBlockId].icon+
-                ".xpm"].second;
+                "_"+BlockInfoList[currentLevelName][tempBlockId].icon
+                /*+".xpm"*/].second;
             iconLocations[currentLevelName][ tempBlockId ] =
                 std::pair< float, float >( scaledXCoords -
                 ( width * widthOffset * 

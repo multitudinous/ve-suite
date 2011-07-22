@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef ASPEN_PLUS_2D_ICONS_H
-#define ASPEN_PLUS_2D_ICONS_H
+#ifndef PRE_COMPILED_ICONS_H
+#define PRE_COMPILED_ICONS_H
 
 #include <ves/VEConfig.h>
 #include <map>
 #include <string>
 
-VE_GUIPLUGINS_EXPORTS std::map< std::string, char** > GetAspenPlusIconMap();
+VE_GUIPLUGINS_EXPORTS std::map< std::string, char** > GetPreCompiledIconMap();
 
 #endif

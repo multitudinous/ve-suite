@@ -87,7 +87,7 @@ ADPlugin::ADPlugin() :
     m_pluginType = "ADPlugin";
     m_unitName = "VE-PSI";
 
-    iconFilename = "dynamics.xpm";
+    iconFilename = "dynamics";
     wxImage my_img( dynamics );
     SetImage( my_img );
     mIsSheetOpen = false;

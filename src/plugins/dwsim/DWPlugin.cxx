@@ -85,7 +85,7 @@ DWPlugin::DWPlugin() :
     m_pluginType = "DWPlugin";
     m_unitName = "VE-PSI";
 
-    iconFilename = "dwsim.xpm";
+    iconFilename = "dwsim";
     wxImage my_img( dwsim );
     SetImage( my_img );
     mIsSheetOpen = false;

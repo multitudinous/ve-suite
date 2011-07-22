@@ -73,6 +73,9 @@ APUOPlugin::APUOPlugin() :
     mPluginName = wxString( "AspenPlusUO", wxConvUTF8 );
     mDescription = wxString( "Aspen Plus Unit Operation Plugin", wxConvUTF8 );
     m_pluginType = "APUOPlugin" ;
+    iconFilename = "square";
+    wxImage my_img( square_xpm );
+    SetImage( my_img );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -337,5 +340,5 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 ////////////////////////////////////////////////////////////////////////////////
 bool APUOPlugin::ShowAvailable()
 {
-    return false;
+    return true;
 }

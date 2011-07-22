@@ -68,6 +68,9 @@ OpcUOPlugin::OpcUOPlugin() :
     mPluginName = wxString( "OpcUO", wxConvUTF8 );
     mDescription = wxString( "OPC Unit Operation Plugin", wxConvUTF8 );
     m_pluginType = "OpcUOPlugin";
+    iconFilename = "square";
+    wxImage my_img( square_xpm );
+    SetImage( my_img );
     m_monValue = "NA";
     m_monValueExists = false;
     m_monitoring = false;
@@ -419,5 +422,5 @@ void OpcUOPlugin::OnMonitorVariable ( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 bool OpcUOPlugin::ShowAvailable()
 {
-    return false;
+    return true;
 }

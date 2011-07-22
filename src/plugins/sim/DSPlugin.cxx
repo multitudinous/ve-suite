@@ -86,7 +86,7 @@ DSPlugin::DSPlugin() :
     m_pluginType = "DSPlugin";
     m_unitName = "VE-PSI";
 
-    iconFilename = "sim.xpm";
+    iconFilename = "sim";
     wxImage my_img( sim );
     SetImage( my_img );
 
