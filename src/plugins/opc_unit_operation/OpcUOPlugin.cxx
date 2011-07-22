@@ -172,7 +172,7 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         vendorData->SetData( "vendorUnit", m_unitName );
     }
 
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
     mOpcMenu = new wxMenu();
     //mOpcMenu->Append( OPCUOPLUGIN_SHOW_VALUE, _( "Value" ) );
     //mOpcMenu->Enable( OPCUOPLUGIN_SHOW_VALUE, true );

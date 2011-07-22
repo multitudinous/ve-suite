@@ -86,7 +86,7 @@ wxMenu* DSUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         vendorData->SetData( "vendorUnit", m_unitName );
     }
 
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
 
     mDynSimMenu = new wxMenu();
     baseMenu->Insert( 0, DSUOPLUGIN_DYNSIM_MENU,   _( "DynSim" ), mDynSimMenu,

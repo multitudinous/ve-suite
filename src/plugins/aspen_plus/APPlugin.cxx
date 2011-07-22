@@ -161,10 +161,6 @@ void APPlugin::OnOpen( wxCommandEvent& event )
         }
     }
 
-    //set the unit name
-    GetVEModel()->SetVendorName( m_unitName );
-    mAspenMenu->Enable( APPLUGIN_SET_UNIT, false );
-
     APOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
@@ -172,6 +168,11 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     {
         return;
     }
+
+    //set the unit name
+    GetVEModel()->SetVendorName( m_unitName );
+    vendorData = DataValuePairPtr( new DataValuePair() );
+    vendorData->SetData( "vendorUnit", m_unitName );
 
     wxFileName bkpFileName;
     bkpFileName.ClearExt();

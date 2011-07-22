@@ -132,7 +132,6 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
 
     //set the unit name
     GetVEModel()->SetVendorName( m_unitName );
-    mDynSimMenu->Enable( DSPLUGIN_SET_UNIT, false );
     vendorData = DataValuePairPtr( new DataValuePair() );
     vendorData->SetData( "vendorUnit", m_unitName );
 

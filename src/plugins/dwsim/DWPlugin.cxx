@@ -138,10 +138,6 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
         }
     }
 
-    //set the unit name
-    GetVEModel()->SetVendorName( m_unitName );
-    mMenu->Enable( APPLUGIN_SET_UNIT, false );
-
     DWOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
@@ -149,6 +145,11 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
     {
         return;
     }
+
+    //set the unit name
+    GetVEModel()->SetVendorName( m_unitName );
+    vendorData = DataValuePairPtr( new DataValuePair() );
+    vendorData->SetData( "vendorUnit", m_unitName );
 
     wxFileName dwFileName;
     dwFileName.ClearExt();
@@ -281,7 +282,7 @@ wxMenu* DWPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         return baseMenu;
     }
 
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
 
     mMenu = new wxMenu();
     mMenu->Append( DWPLUGIN_SET_UNIT, _( "Unit Name" ) );

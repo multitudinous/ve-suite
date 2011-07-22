@@ -197,7 +197,7 @@ wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         vendorData->SetData( "vendorUnit", m_unitName );
     }
 
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( ADUOPLUGIN_SHOW_ASPEN_NAME, _( "Name" ) );
     mAspenMenu->Enable( ADUOPLUGIN_SHOW_ASPEN_NAME, true );

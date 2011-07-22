@@ -145,10 +145,6 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
         }
     }
 
-    //set the unit name
-    GetVEModel()->SetVendorName( m_unitName );
-    mAspenMenu->Enable( ADPLUGIN_SET_UNIT, false );
-
     ADOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
@@ -156,6 +152,11 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     {
         return;
     }
+
+    //set the unit name
+    GetVEModel()->SetVendorName( m_unitName );
+    vendorData = DataValuePairPtr( new DataValuePair() );
+    vendorData->SetData( "vendorUnit", m_unitName );
 
     wxFileName dynFileName;
     dynFileName.ClearExt();
@@ -512,7 +513,7 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         return baseMenu;
     }
 
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
 
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( ADPLUGIN_SET_UNIT, _( "Unit Name" ) );
