@@ -261,6 +261,10 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
 
     mDynSimMenu->Enable( DSPLUGIN_SET_UNIT, false );
     mDynSimMenu->Enable( DSPLUGIN_OPEN_SIM, false );
+    mDynSimMenu->Enable( DSPLUGIN_CREATE_OPC_LIST, true );
+    mDynSimMenu->Enable( DSPLUGIN_CONNECT, true );
+    mDynSimMenu->Enable( DSPLUGIN_ADDVAR, true );
+    mDynSimMenu->Enable( DSPLUGIN_ALLVAR, true );
     
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -285,13 +289,13 @@ wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mDynSimMenu->Append( DSPLUGIN_OPEN_SIM, _( "Open" ) );
     mDynSimMenu->Enable( DSPLUGIN_OPEN_SIM, true );
     mDynSimMenu->Append( DSPLUGIN_CREATE_OPC_LIST, _( "Create List") );
-    mDynSimMenu->Enable( DSPLUGIN_CREATE_OPC_LIST, true );
+    mDynSimMenu->Enable( DSPLUGIN_CREATE_OPC_LIST, false );
     mDynSimMenu->Append( DSPLUGIN_CONNECT, _( "Connect to OPC") );
-    mDynSimMenu->Enable( DSPLUGIN_CONNECT, true );
+    mDynSimMenu->Enable( DSPLUGIN_CONNECT, false );
     mDynSimMenu->Append( DSPLUGIN_ADDVAR, _( "ADD VAR") );
-    mDynSimMenu->Enable( DSPLUGIN_ADDVAR, true );
+    mDynSimMenu->Enable( DSPLUGIN_ADDVAR, false );
     mDynSimMenu->Append( DSPLUGIN_ALLVAR, _( "ALL VAR") );
-    mDynSimMenu->Enable( DSPLUGIN_ALLVAR, true );
+    mDynSimMenu->Enable( DSPLUGIN_ALLVAR, false );
     baseMenu->Insert( 0, DSPLUGIN_DYNSIM_MENU,   _( "DynSim" ), mDynSimMenu,
                     _( "Used in conjunction with DynSim" ) );
     baseMenu->Enable( DSPLUGIN_DYNSIM_MENU, true );
