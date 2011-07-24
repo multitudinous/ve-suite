@@ -489,14 +489,16 @@ int main(int argc, char *argv[])
 
         {
             std::cout << "digraph info_dot {" << std::endl;
+            std::cout << "  size=\"8,6\"; ratio=fill;" << std::endl;
             std::cout << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
             for( lemon::StaticDigraph::NodeIt n(tmp_graph); n!=INVALID; ++n)
             {
                 std::cout << "  n" << tmp_graph.id(n) 
-                << " [ label=\"" << modelIDMap[nr[n]] << "\" ]; " << std::endl; 
+                << " [ label=\"" << staticModelIDMap[n] << "\" ]; " << std::endl; 
             }
             std::cout << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
-            for(lemon::StaticDigraph::ArcIt e(tmp_graph); e!=INVALID; ++e) {
+            for(lemon::StaticDigraph::ArcIt e(tmp_graph); e!=INVALID; ++e) 
+            {
                 std::cout << "  n" << tmp_graph.id(tmp_graph.source(e)) << " -> " << " n" << tmp_graph.id(tmp_graph.target(e)) <<std::endl;
                 //<< " [ label=\"" << g.id(e) 
                 //<< ", length:" << length[e] << "\" ]; " << std::endl;
@@ -575,7 +577,8 @@ int main(int argc, char *argv[])
                 << " [ label=\"" << modelIDMap[nr[n]] << "\" ]; " << std::endl; 
             }
             std::cout << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
-            for(lemon::StaticDigraph::ArcIt e(tmp_graph); e!=INVALID; ++e) {
+            for(lemon::StaticDigraph::ArcIt e(tmp_graph); e!=INVALID; ++e)
+            {
                 std::cout << "  n" << tmp_graph.id(tmp_graph.source(e)) << " -> " << " n" << tmp_graph.id(tmp_graph.target(e)) <<std::endl;
                 //<< " [ label=\"" << g.id(e) 
                 //<< ", length:" << length[e] << "\" ]; " << std::endl;
@@ -624,17 +627,47 @@ int main(int argc, char *argv[])
 
     {
         std::cout << "digraph complete_dot {" << std::endl;
+        std::cout << "  size=\"8,6\"; ratio=fill;" << std::endl;
         std::cout << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
         for( lemon::ListDigraph::NodeIt n(g); n!=INVALID; ++n)
         {
-            std::cout << "  n" << g.id(n) 
-            << " [ label=\"" << modelIDMap[n] << "\" ]; " << std::endl; 
+            const std::string nodeName = modelIDMap[n];
+            boost::iterator_range<std::string::const_iterator>::iterator stringIter = boost::find_first( nodeName, "scheduler" ).begin();
+            
+            if( stringIter != nodeName.end() )
+            {
+                std::cout << "  n" << g.id(n) 
+                << " [ label=\"" << nodeName << "\", color=orange ]; " << std::endl;
+            }
+            else
+            {
+                std::cout << "  n" << g.id(n) 
+                << " [ label=\"" << nodeName << "\" ]; " << std::endl;
+            }
         }
         std::cout << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
-        for(lemon::ListDigraph::ArcIt e(g); e!=INVALID; ++e) {
-            std::cout << "  n" << g.id(g.source(e)) << " -> " << " n" << g.id(g.target(e)) <<std::endl;
-            //<< " [ label=\"" << g.id(e) 
-            //<< ", length:" << length[e] << "\" ]; " << std::endl;
+        for(lemon::ListDigraph::ArcIt e(g); e!=INVALID; ++e) 
+        {
+            const std::string sourceName = 
+                modelIDMap[g.source(e)];
+            const std::string targetName = 
+                modelIDMap[g.target(e)];
+            
+            boost::iterator_range<std::string::const_iterator>::iterator stringIter1 = boost::find_first( sourceName, "scheduler" ).begin();
+            boost::iterator_range<std::string::const_iterator>::iterator stringIter2 = boost::find_first( targetName, "scheduler" ).begin();
+            
+            if( stringIter1 != sourceName.end() )
+            {
+                std::cout << "  n" << g.id(g.source(e)) << " -> " << " n" << g.id(g.target(e)) << " [ color=orange ];" <<std::endl;
+            }
+            else if( stringIter2 != targetName.end() )
+            {
+                std::cout << "  n" << g.id(g.source(e)) << " -> " << " n" << g.id(g.target(e)) << " [ color=blue ];" <<std::endl;
+            }
+            else
+            {
+                std::cout << "  n" << g.id(g.source(e)) << " -> " << " n" << g.id(g.target(e)) <<std::endl;
+            }
         } 
         std::cout << "}" << std::endl;
     }  
