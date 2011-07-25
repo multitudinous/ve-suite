@@ -99,18 +99,14 @@ void VjObsWrapper::GetUpdateClusterStateVariables( void )
 VjObsWrapper::~VjObsWrapper( void )
 {
     CosNaming::Name name( 1 );
-
     name.length( 1 );
-    name[0].id   = CORBA::string_dup( "Master" );
+    name[0].id   = CORBA::string_dup( "Master Node" );
     name[0].kind = CORBA::string_dup( "VE-Xplorer" );
 
     try
     {
-        //vprDEBUG(vesDBG,0)
-        //<< "naming_context->unbind for CORBA Object  "
-        //<< std::endl << vprDEBUG_FLUSH;
-        if( !CORBA::is_nil( naming_context ) )
-            naming_context->unbind( name );
+        //if( !CORBA::is_nil( naming_context ) )
+        naming_context->unbind( name );
     }
     catch ( CosNaming::NamingContext::InvalidName& )
     {

@@ -250,9 +250,9 @@ void App::exit()
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
     std::cout << "|\tApp is now exiting." << std::endl;
+    ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
     m_vjobsWrapper->Cleanup();
     GraphicalPluginManager::instance()->UnloadPlugins();
-    ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
 #ifdef MINERVA_GIS_SUPPORT
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 #endif
