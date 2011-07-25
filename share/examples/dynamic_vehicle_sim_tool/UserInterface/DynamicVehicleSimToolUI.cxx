@@ -34,6 +34,7 @@
 // --- My Includes --- //
 #include "DynamicVehicleSimToolUI.h"
 #include "DynamicVehicleSimToolUIDialog.h"
+#include "Icons/TractorIcon.xpm"
 
 // --- wxWidgets Includes --- //
 #include <wx/wx.h>
@@ -47,9 +48,9 @@ DynamicVehicleSimToolUI::DynamicVehicleSimToolUI()
 {
     mPluginName = wxT( "DeereVehicleSim" );
 
-    wxImage my_img( _("Icons/TractorIcon.png") );
+    wxImage my_img( TractorIcon_xpm );
     SetImage( my_img );
-    mDescription = wxT( "The generic tool to display product data." );
+    mDescription = wxT( "The generic tool to work with Deere vehicle simulators." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolUI::~DynamicVehicleSimToolUI()
