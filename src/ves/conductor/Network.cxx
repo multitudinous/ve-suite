@@ -1895,20 +1895,25 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         tempPlugin->SetNetwork( this );
         tempPlugin->SetCanvas( parent );
         tempPlugin->SetDCScale( &userScale );
-        ///Add event handler for the plugins
-//        PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString( model->GetPluginName().c_str(), wxConvUTF8 ) );
         tempPlugin->SetPluginType( model->GetPluginType() );
         tempPlugin->SetCORBAService( mServiceList );
         tempPlugin->SetXMLDataBufferEngine( mDataBufferEngine );
         tempPlugin->SetUserPreferencesDataBuffer( mUserPrefBuffer );
         tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
-        if(  model->GetPluginName() != "DefaultPlugin" )
+        ///We re going to favor a plugin that sets the icon in code over 
+        ///what be be by default in the ves model element
+        if( !tempPlugin->GetIconImage() )
         {
             tempPlugin->SetImageIcon( model->GetIconFilename(),
-                                      model->GetIconRotation(),
-                                      model->GetIconMirror(),
-                                      model->GetIconScale() );        
+                        model->GetIconRotation(),
+                        model->GetIconMirror(),
+                        model->GetIconScale() );  
+        }
+
+        ///If we should not draw this plugin name
+        if(  model->GetPluginName() != "DefaultPlugin" )
+        {
             //flag it if the name shouldnt be drawn
             if( model->GetIconHiddenFlag() == 1 )
             {
@@ -1921,7 +1926,6 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         modules[ num ] = temp_mod;
         modules[ num ].SetPlugin( tempPlugin );
         modules[ num ].GetPlugin()->SetID( num );
-        //modules[ num ].SetClassName( model->GetModelName() );
         modules[ num ].GetPlugin()->SetVEModel( model );
         if( model->GetSubSystem() )
         {
@@ -1929,13 +1933,6 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         }
         //Second, calculate the polyes
         wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
-        /*int polynum = modules[ num ].GetPlugin()->GetNumPoly();
-        POLY tmpPoly;
-        tmpPoly.resize( polynum );
-        modules[ num ].GetPlugin()->GetPoly( tmpPoly );
-        ves::conductor::util::Polygon tempPoly;
-        *( tempPoly.GetPolygon() ) = tmpPoly;*/
-        //tempPoly.TransPoly( bbox.x, bbox.y, *( modules[ num ].GetPlugin()->GetPolygon() ) ); //Make the network recognize its polygon
         
         if( bbox.x + bbox.width > networkSize.first )
         {

@@ -47,19 +47,6 @@ IMPLEMENT_DYNAMIC_CLASS( DefaultPlugin, UIPluginBase )
 DefaultPlugin::DefaultPlugin()
         : UIPluginBase()
 {
-    //wxImage my_img( square_xpm );
-    //icon_w = (int)my_img.GetWidth()*0.30f;
-    //icon_h = (int)my_img.GetHeight()*0.30f;
-
-    //my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
-
-    //n_pts = 4;
-
-    //poly[0]=wxPoint(0,0);
-    //poly[1]=wxPoint(icon_w,0);
-    //poly[2]=wxPoint(icon_w,icon_h);
-    //poly[3]=wxPoint(0,icon_h);
-
     height = 100;
     //RegistVar("height", &height );
 
