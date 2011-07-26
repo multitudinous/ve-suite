@@ -1,0 +1,20 @@
+##Builds utility
+import os, sys, string
+pj = os.path.join
+
+Import('ves_pkg LIBDIR PREFIX buildDir xerces_options GetPlatform')
+
+srcs = Split("""
+   scenario_builder.cxx 
+""")
+
+env = ves_pkg.getEnv().Clone()
+env.Append(LIBS = ['ves_open_xml'])
+env.Append(LIBPATH = [ pj('#', buildDir,'src','ves', 'open', 'xml')])
+
+xerces_options.apply( env )
+   
+ce_prog = ves_pkg.createProgram('ves_scenario_builder' + env["PROGSUFFIX"], env, 'bin')
+ce_prog.addSources( srcs )
+ce_prog.build()
+
