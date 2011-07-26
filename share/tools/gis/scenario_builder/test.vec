@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 <commands name="Commands" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="verg_model.xsd">
 
-  <Command commandName="iaf scenario builder">
-    <parameter dataName="climateModel" id="c4aa1151-52af-4ffc-ba61-9cf8d63f6720">
-      <dataValue type="xs:string">LookUpTable</dataValue>
+  <Command commandName="iaf scenario">
+    <parameter dataName="climateModel" id="351a544e-ab0a-4b5c-850d-fe5eeff8ea9e">
+      <dataValue type="xs:string">ClimateModelOfChoice</dataValue>
     </parameter>
-    <parameter dataName="location" id="6d5db230-6214-4728-be2b-5849f90c12b0">
-      <dataValue type="xs:string">FarmNameOrGISLocation</dataValue>
+    <parameter dataName="location" id="4fd34837-09a8-4dd6-b78e-5f9b9b867988">
+      <dataValue type="xs:string">LocationOfAFarm</dataValue>
     </parameter>
-    <parameter dataName="management" id="08c60a50-fc7c-499d-a0ce-d9d527459dd0">
+    <parameter dataName="management" id="ff447f04-de48-498c-a563-d078def4d92c">
       <genericObject commandName="managementInputs" objectType="Command">
-        <parameter dataName="rotation" id="154eb05e-5fff-4478-8cfd-b54f3efd1d52">
+        <parameter dataName="rotation" id="2f8c5b67-9cab-46ef-88c5-5ed891e611e6">
           <dataValue type="xs:string">CG</dataValue>
         </parameter>
-        <parameter dataName="tillage" id="0303bd36-e3d6-4063-8c34-776c19ba48b9">
+        <parameter dataName="tillage" id="ad149b8b-c8b8-4d7d-8612-03201e373b8b">
           <dataValue type="xs:string">CH+FC</dataValue>
         </parameter>
-        <parameter dataName="removalRate" id="bc5746cd-53f3-4920-8bb9-634abe48b2e1">
+        <parameter dataName="removalRate" id="d0741df4-48f9-47c3-aae5-c6a4c04f80f6">
           <dataValue type="xs:string">25-35</dataValue>
         </parameter>
       </genericObject>

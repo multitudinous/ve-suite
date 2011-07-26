@@ -30,67 +30,56 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#pragma once
+
 #include <string>
 
-#include "Scenario.h"
-
 #include <ves/open/xml/CommandPtr.h>
-#include <ves/open/xml/Command.h>
-#include <ves/open/xml/XMLReaderWriter.h>
-#include <ves/open/xml/XMLObjectFactory.h>
-#include <ves/open/xml/XMLCreator.h>
 
-/*
-1 scenerio string
-2. based on markup run create functions
-3. xmlobject data transfer
-
-- per shape file
--- how many objects do I have in the shape file
-- user defined
--- how many objects do I have in the shape file
-
-- xls file
--- farm location
--- rotation
--- tillage
--- removal rate
-- climate 
--- model descriptor
-- soil is soil
-*/
-
-
-XERCES_CPP_NAMESPACE_USE
-
-int main( int argc, char* argv[] )
+namespace iaf
 {
-    try
-    {
-        XMLPlatformUtils::Initialize();
-    }
-    catch(const XMLException &toCatch)
-    {
-        std::cerr << "Error during Xerces-c Initialization.\n"
-            << "  Exception message:"
-            << XMLString::transcode(toCatch.getMessage()) << std::endl;
-        return false;
-    }
+namespace scenario
+{
+class Scenario
+{
+public:
+    ///Constructor
+    Scenario();
+    ///Destructor
+    ~Scenario();
+    ///Copy Constructor
+    Scenario( const Scenario& );
+    ///equal operator
+    Scenario& operator= ( const Scenario& );
     
-    ///Initialize VE-Open
-    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new ves::open::xml::XMLCreator() );
+    void SetTillage( std::string const& tillage );
+    std::string& GetTillage();
 
-    iaf::scenario::Scenario* tempScenario = new iaf::scenario::Scenario();
-    tempScenario->SetLocation( "LocationOfAFarm" );
-    tempScenario->SetRotation( "CG" );
-    tempScenario->SetRemovalRate( "25-35" );
-    tempScenario->SetClimateModel( "ClimateModelOfChoice" );
-    tempScenario->SetTillage( "CH+FC" );
+    void SetRotation( std::string const& rotation );
+    std::string& GetRotation();
 
-    tempScenario->GetXMLScenario();
+    void SetRemovalRate( std::string const& rate );
+    std::string& GetRemovalRate();
     
-    delete tempScenario;
+    void SetClimateModel( std::string const& model );
+    std::string& GetClimateModel();
     
-    return 0;
+    void SetLocation( std::string const& location );
+    std::string& GetLocation();
+    
+    ves::open::xml::CommandPtr GetXMLScenario();
+
+private:
+    ///The tillage operations
+    std::string m_tillage;
+    ///The crop roation scheme
+    std::string m_rotation;
+    ///The crop removal rate
+    std::string m_removalRate;
+    ///The climate model being used
+    std::string m_climateModel;
+    ///The farm/selection/map unit location
+    std::string m_location;
+};
 }
-
+}

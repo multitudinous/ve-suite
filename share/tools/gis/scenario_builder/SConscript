@@ -1,12 +1,15 @@
 ##Builds utility
 import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
 pj = os.path.join
 
-Import('ves_pkg LIBDIR PREFIX buildDir xerces_options GetPlatform')
+Import('ves_pkg LIBDIR PREFIX buildDir xerces_options GetPlatform RootDir')
 
-srcs = Split("""
-   scenario_builder.cxx 
-""")
+openDir = os.path.abspath( pj( RootDir, 'share', 'tools', 'gis', 'scenario_builder' ) )
+
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
 
 env = ves_pkg.getEnv().Clone()
 env.Append(LIBS = ['ves_open_xml'])
@@ -15,6 +18,7 @@ env.Append(LIBPATH = [ pj('#', buildDir,'src','ves', 'open', 'xml')])
 xerces_options.apply( env )
    
 ce_prog = ves_pkg.createProgram('ves_scenario_builder' + env["PROGSUFFIX"], env, 'bin')
-ce_prog.addSources( srcs )
+ce_prog.addSources( sources )
+ce_prog.addHeaders( headers )
 ce_prog.build()
 
