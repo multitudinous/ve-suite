@@ -257,5 +257,6 @@ EventHandler::RasterLayer* EventHandler::_createFileSystemLayerFromCommand ( Com
     }
   }
 
+  vprDEBUG( vesDBG, 0 ) << "|\tUnable to create layer from file." << std::endl << vprDEBUG_FLUSH;
   return 0x0;
 }

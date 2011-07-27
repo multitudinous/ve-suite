@@ -77,6 +77,9 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <osg/CoordinateSystemNode>
+#include <osg/Program>
+#include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
 
 #include <gmtl/Generate.h>
 
@@ -272,7 +275,21 @@ void MinervaManager::AddEarthToScene()
 
   _scene = _body->scene();
 
-  _scene->getOrCreateStateSet()->setRenderBinDetails ( -100, "RenderBin" );
+    osg::ref_ptr< osg::StateSet > tempStateSet = _scene->getOrCreateStateSet();
+    tempStateSet->setRenderBinDetails ( 0, "RenderBin" );
+
+    std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
+    osg::ref_ptr< osg::Shader > fragShader = 
+        osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+        
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragShader.get() );
+        
+    tempStateSet->setAttributeAndModes( program.get(),
+                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        
+    //drawable_stateset->addUniform( new osg::Uniform( "opacityVal", 1.0f ) );  
+    //drawable_stateset->addUniform( new osg::Uniform( "tex", 0 ) );
 
   osg::ref_ptr<osg::Group> root ( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
   if ( root.valid() )
