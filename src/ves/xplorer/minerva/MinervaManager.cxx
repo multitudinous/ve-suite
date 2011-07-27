@@ -278,7 +278,18 @@ void MinervaManager::AddEarthToScene()
 
   _scene = _body->scene();
 
-  _scene->getOrCreateStateSet()->setRenderBinDetails ( -100, "RenderBin" );
+    osg::ref_ptr< osg::StateSet > tempStateSet = _scene->getOrCreateStateSet();
+    tempStateSet->setRenderBinDetails ( 0, "RenderBin" );
+
+    std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
+    osg::ref_ptr< osg::Shader > fragShader = 
+        osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+        
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragShader.get() );
+        
+    tempStateSet->setAttributeAndModes( program.get(),
+                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
   osg::ref_ptr<osg::Group> root ( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
   if ( root.valid() )
