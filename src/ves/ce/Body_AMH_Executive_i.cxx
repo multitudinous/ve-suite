@@ -694,6 +694,7 @@ void Body_AMH_Executive_i::Query(
 {
     //boost::ignore_unused_variable_warning( _tao_rh );
     m_mutex.acquire();
+    
     // read the command to get the module name and module id
     XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
@@ -701,10 +702,40 @@ void Body_AMH_Executive_i::Query(
     networkWriter.ReadXMLData( commands, "Command", "vecommand" );
     std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
     
-    //std::string moduleName;
     std::string vendorUnit;
     unsigned int moduleId;
     CommandPtr tempCommand =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
+
+    //if requesting unit list - send a list of the currently connected units
+    if( tempCommand->GetCommandName().compare("GetUnitList") == 0 )
+    {
+        CommandPtr returnState ( new Command() );
+        returnState->SetCommandName( "UnitList" );
+        DataValuePairPtr data( new DataValuePair() );
+        std::vector< std::string > list;
+        
+        //loop over units
+        for( std::map< std::string, Body::Unit_var >::const_iterator iter = 
+            m_modUnits.begin(); iter != m_modUnits.end(); ++iter )
+        {
+            list.push_back(iter->first);
+        }
+
+        data->SetData( "List",  list );
+        returnState->AddDataValuePair( data );
+
+        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+        nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+        XMLReaderWriter commandWriter;
+        std::string status = "returnString";
+        commandWriter.UseStandaloneDOMDocumentManager();
+        commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+        //return the list
+        _tao_rh->Query( status.c_str() );
+        return;
+    }
+
     CommandPtr passCommand( new Command() );
     passCommand->SetCommandName( tempCommand->GetCommandName() );
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();

@@ -58,6 +58,7 @@
 #include <wx/filedlg.h>
 #include <wx/filename.h>
 #include <wx/grid.h>
+#include <wx/choicdlg.h>
 
 using namespace ves::open::xml::model;
 using namespace ves::open::xml;
@@ -106,15 +107,47 @@ wxString DSPlugin::GetConductorName()
 void DSPlugin::OnUnitName( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    wxTextEntryDialog newUnitName( 0,
-                                 _( "Enter the name for your unit:" ),
-                                 _( "Set Unit Name..." ),
-                                 "VE-PSI", wxOK | wxCANCEL );
-    //check for existing unit
 
-    if( newUnitName.ShowModal() == wxID_OK )
+    //query ce for the list of available units
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+    returnState->SetCommandName( "GetUnitList" );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >
+        ( returnState, "vecommand" ) );
+    XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    std::string unitList = serviceList->Query( status );
+
+    //parse return message
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( unitList, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+        networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd =
+        boost::dynamic_pointer_cast<ves::open::xml::Command>
+        ( objectVector.at( 0 ) );
+
+    std::vector< std::string > data;
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+    pair->GetData( data );
+    
+    //populate the array with the unit names
+    wxArrayString choices;
+    for( int i = 0; i < data.size(); i++ )
     {
-        SetUnitName( newUnitName.GetValue().c_str() );
+        choices.Add(wxString(data[i].c_str()));
+    }
+
+    //create the dialog and get the selection
+    wxSingleChoiceDialog scd(0,wxT("Currently connected units:"),
+        wxT("Select a unit"),choices);
+    if( scd.ShowModal() == wxID_OK )
+    {
+        SetUnitName( scd.GetStringSelection().c_str() );
     }
 }
 /////////////////////////////////////////////////////////////////////////////
