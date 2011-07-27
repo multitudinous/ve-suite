@@ -10,9 +10,6 @@ srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'ce') )
 srcs = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
-srcs.remove( "Executive_i.cxx" )
-headers.remove( "Executive_i.h" )
-
 env = ves_pkg.getEnv().Clone()
 env.Append(LIBS = ['ves_open_xml', 'ves_ce_util', 'ves_open_module','ves_ce'])
 env.Append(LIBPATH = [
