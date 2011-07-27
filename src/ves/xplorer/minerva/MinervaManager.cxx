@@ -77,6 +77,8 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <osg/CoordinateSystemNode>
+#include <osgDB/ReadFile>
+#include <osgDB/FileUtils>
 
 #include <gmtl/Generate.h>
 
@@ -279,7 +281,7 @@ void MinervaManager::AddEarthToScene()
   _scene = _body->scene();
 
     osg::ref_ptr< osg::StateSet > tempStateSet = _scene->getOrCreateStateSet();
-    tempStateSet->setRenderBinDetails ( 0, "RenderBin" );
+    //tempStateSet->setRenderBinDetails ( 0, "RenderBin" );
 
     std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
     osg::ref_ptr< osg::Shader > fragShader = 
