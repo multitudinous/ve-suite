@@ -256,61 +256,63 @@ void MinervaManager::PreFrameUpdate()
 
 void MinervaManager::AddEarthToScene()
 {
-  // Make sure.
-  this->Clear();
+    // Make sure.
+    this->Clear();
 
-  vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager adding earth to the scene." << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager adding earth to the scene." 
+        << std::endl << vprDEBUG_FLUSH;
 
-  _manager = new Usul::Jobs::Manager ( "VE-Suite Minerva Job Manager", 4 );
+    _manager = new Usul::Jobs::Manager ( "VE-Suite Minerva Job Manager", 4 );
 
-  using Minerva::Core::TileEngine::MeshSize;
-  using Minerva::Core::TileEngine::ImageSize;
+    using Minerva::Core::TileEngine::MeshSize;
+    using Minerva::Core::TileEngine::ImageSize;
 
-  const MeshSize meshSize ( 32, 32 );
-  const ImageSize imageSize ( 256, 256 );
-  //const ImageSize imageSize ( 512, 512 );
-  const double splitDistance ( osg::WGS_84_RADIUS_EQUATOR * 3.0 );
+    const MeshSize meshSize ( 32, 32 );
+    const ImageSize imageSize ( 256, 256 );
+    //const ImageSize imageSize ( 512, 512 );
+    const double splitDistance ( osg::WGS_84_RADIUS_EQUATOR * 3.0 );
 
-  _body = Minerva::Core::Functions::makeEarth ( _manager, meshSize, imageSize, splitDistance );
+    _body = Minerva::Core::Functions::makeEarth ( _manager, meshSize, imageSize, splitDistance );
 
-  Usul::Pointers::reference ( _body );
+    Usul::Pointers::reference ( _body );
 
-  // Set the log to print to vprDBG.
-  _body->logSet ( new Log );
+    // Set the log to print to vprDBG.
+    _body->logSet ( new Log );
 
-  _scene = _body->scene();
+    _scene = _body->scene();
 
     osg::ref_ptr< osg::StateSet > tempStateSet = _scene->getOrCreateStateSet();
-    //tempStateSet->setRenderBinDetails ( 0, "RenderBin" );
 
     std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
     osg::ref_ptr< osg::Shader > fragShader = 
-        osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
-        
+    osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+
     osg::ref_ptr< osg::Program > program = new osg::Program();
     program->addShader( fragShader.get() );
-        
+
     tempStateSet->setAttributeAndModes( program.get(),
-                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-  osg::ref_ptr<osg::Group> root ( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
-  if ( root.valid() )
-  {
-    root->addChild ( _scene.get() );
-  }
-
-  for ( Models::iterator iter = _models.begin(); iter != _models.end(); ++iter )
-  {
-    ModelWrapper::RefPtr model ( iter->second );
-    if ( model.valid() )
+    osg::ref_ptr<osg::Group> root = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
+    if( root.valid() )
     {
-      Minerva::Core::Data::DataObject::RefPtr dataObject ( new Minerva::Core::Data::DataObject );
-      model->SetParent ( dataObject.get() );
-
-      _body->vectorData()->add ( dataObject.get() );
-      this->UpdateModel ( model );
+        root->addChild ( _scene.get() );
     }
-  }
+
+    for( Models::const_iterator iter = _models.begin(); iter != _models.end(); ++iter )
+    {
+        ModelWrapper::RefPtr model( iter->second );
+        if ( model.valid() )
+        {
+            Minerva::Core::Data::DataObject::RefPtr dataObject = 
+                new Minerva::Core::Data::DataObject();
+            model->SetParent( dataObject.get() );
+
+            _body->vectorData()->add ( dataObject.get() );
+            this->UpdateModel( model );
+        }
+    }
 }
 
 
@@ -357,12 +359,12 @@ void MinervaManager::Clear()
         _manager = 0x0;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void MinervaManager::ClearModels()
 {
-    for ( Models::iterator iter = _models.begin(); iter != _models.end(); ++iter )
+    for( Models::iterator iter = _models.begin(); iter != _models.end(); ++iter )
     {
-        Usul::Pointers::unreference ( iter->second );
+        Usul::Pointers::unreference( iter->second );
         iter->second = 0x0;
     }
     _models.clear();
@@ -662,3 +664,4 @@ Minerva::Core::TileEngine::Body* MinervaManager::GetTileEngineBody()
 {
     return _body;
 }
+////////////////////////////////////////////////////////////////////////////////
