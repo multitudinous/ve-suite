@@ -55,6 +55,8 @@
 #include <ves/open/xml/shader/ShaderCreator.h>
 #include <ves/open/xml/model/ModelCreator.h>
 
+#include "Scheduler.h"
+
 using namespace lemon;
 
 
@@ -238,7 +240,7 @@ int main(int argc, char *argv[])
     //std::string vesFilename( argv[ 1 ] );
     
     lemon::ListDigraph g;
-    lemon::ListDigraph::NodeMap< std::string > modelIDMap( g );
+    std::map< lemon::ListDigraph::Node, std::string > modelIDMap;
     
     //Setup the nodes
     lemon::ListDigraph::Node spatial = g.addNode();
@@ -324,6 +326,15 @@ int main(int argc, char *argv[])
 
     std::cout << "Number of arcs in the base graph = " << lemon::countArcs( g ) << std::endl;
 
+
+    iaf::scheduler::Scheduler testExec;
+    testExec.SetGraph( g, modelIDMap );
+    //testExec.SetModelIDMap( modelIDMap );
+
+    testExec.DumpCompleteGraph();
+    testExec.MakeInfoGraph();
+    testExec.MakeSchedulerGraph();
+    
     XMLPlatformUtils::Terminate();
 
     return 0;

@@ -1,9 +1,11 @@
+#include "Scheduler.h"
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/algorithm/string/find.hpp>
 
-#include "Scheduler.h"
+#include <fstream>
+
 
 namespace iaf
 {
@@ -20,19 +22,20 @@ Scheduler::~Scheduler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scheduler::SetGraph( lemon::ListDigraph& g, lemon::ListDigraph::NodeMap< std::string >& modelIDMap )
+void Scheduler::SetGraph( lemon::ListDigraph& g, std::map< lemon::ListDigraph::Node, std::string >& modelIDMap )
 {
-    lemon::digraphCopy( g, m_g ).run();
+    lemon::ListDigraph::NodeMap< lemon::ListDigraph::Node > nr(m_g);
+    lemon::digraphCopy( g, m_g ).nodeCrossRef(nr).run();
+    for( lemon::ListDigraph::NodeIt n( m_g ); n != lemon::INVALID; ++n )
+    {
+        m_modelIDMap[ n ] = modelIDMap[ nr[ n ] ];
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scheduler::SetModelIDMap( std::map< lemon::ListDigraph::Node, std::string >& modelIDMap )
+/*void Scheduler::SetModelIDMap( std::map< lemon::ListDigraph::Node, std::string >& modelIDMap )
 {
     m_modelIDMap = modelIDMap;
-    /*for( lemon::ListDigraph::NodeIt n( m_g ); n != lemon::INVALID; ++n )
-    {
-        m_modelIDMap[ n ] = modelIDMap[ n ];
-    }*/
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::EnableNodesAndArcs( lemon::ListDigraph& g, 
                                    lemon::SubDigraph<lemon::ListDigraph>& fg, 
@@ -156,27 +159,32 @@ void Scheduler::MakeInfoGraph()
         
         std::cout << std::endl;
         
-        lemon::digraphWriter(tmp_graph, std::cout).
-        nodeMap( "node names", staticm_modelIDMap ).
-        run();        
+        {
+            std::ofstream lgfFile( "info.lgf" );
+            lemon::digraphWriter(tmp_graph, lgfFile).
+                nodeMap( "node names", staticm_modelIDMap ).
+                run();        
+        }
         
         {
-            std::cout << "digraph info_dot {" << std::endl;
-            std::cout << "  size=\"8,6\"; ratio=fill;" << std::endl;
-            std::cout << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
+            std::ofstream dotFile( "info.dot" );
+            dotFile << "digraph info_dot {" << std::endl;
+            dotFile << "  size=\"8,6\"; ratio=fill;" << std::endl;
+            dotFile << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
             for( lemon::StaticDigraph::NodeIt n(tmp_graph); n!=lemon::INVALID; ++n)
             {
-                std::cout << "  n" << tmp_graph.id(n) 
+                dotFile << "  n" << tmp_graph.id(n) 
                 << " [ label=\"" << staticm_modelIDMap[n] << "\" ]; " << std::endl; 
             }
-            std::cout << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
+            dotFile << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
             for(lemon::StaticDigraph::ArcIt e(tmp_graph); e!=lemon::INVALID; ++e) 
             {
-                std::cout << "  n" << tmp_graph.id(tmp_graph.source(e)) << " -> " << " n" << tmp_graph.id(tmp_graph.target(e)) <<std::endl;
+                dotFile << "  n" << tmp_graph.id(tmp_graph.source(e)) 
+                    << " -> " << " n" << tmp_graph.id(tmp_graph.target(e)) <<std::endl;
                 //<< " [ label=\"" << g.id(e) 
                 //<< ", length:" << length[e] << "\" ]; " << std::endl;
             } 
-            std::cout << "}" << std::endl;
+            dotFile << "}" << std::endl;
         }        
     }
     
@@ -242,27 +250,32 @@ void Scheduler::MakeSchedulerGraph()
         
         std::cout << std::endl;
         
-        lemon::digraphWriter(tmp_graph, std::cout).
-        nodeMap( "node names", staticm_modelIDMap ).
-        run();
+        {
+            std::ofstream lgfFile( "schedule.lgf" );
+            lemon::digraphWriter(tmp_graph, lgfFile).
+                nodeMap( "node names", staticm_modelIDMap ).
+                run();
+        }
         
         
         {
-            std::cout << "digraph scheduler_dot {" << std::endl;
-            std::cout << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
+            std::ofstream dotFile( "schedule.dot" );
+            dotFile << "digraph scheduler_dot {" << std::endl;
+            dotFile << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
             for( lemon::StaticDigraph::NodeIt n(tmp_graph); n!=lemon::INVALID; ++n)
             {
-                std::cout << "  n" << tmp_graph.id(n) 
+                dotFile << "  n" << tmp_graph.id(n) 
                 << " [ label=\"" << m_modelIDMap[nr[n]] << "\" ]; " << std::endl; 
             }
-            std::cout << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
+            dotFile << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
             for(lemon::StaticDigraph::ArcIt e(tmp_graph); e!=lemon::INVALID; ++e)
             {
-                std::cout << "  n" << tmp_graph.id(tmp_graph.source(e)) << " -> " << " n" << tmp_graph.id(tmp_graph.target(e)) <<std::endl;
+                dotFile << "  n" << tmp_graph.id(tmp_graph.source(e)) << " -> " 
+                    << " n" << tmp_graph.id(tmp_graph.target(e)) <<std::endl;
                 //<< " [ label=\"" << g.id(e) 
                 //<< ", length:" << length[e] << "\" ]; " << std::endl;
             } 
-            std::cout << "}" << std::endl;
+            dotFile << "}" << std::endl;
         }        
     }        
 }
@@ -301,14 +314,18 @@ void Scheduler::DumpCompleteGraph()
     << lemon::countNodes( m_g ) << " node(s) "
     << "and " << lemon::countArcs( m_g ) << " arc(s)." << std::endl;
     
-    lemon::digraphWriter( m_g, std::cout).
-        //nodeMap( "node names", m_modelIDMap ).
-        run();
+    {
+        std::ofstream lgfFile( "complete.lgf" );       
+        lemon::digraphWriter( m_g, lgfFile).
+            //nodeMap( "node names", m_modelIDMap ).
+            run();
+    }
     
     {
-        std::cout << "digraph complete_dot {" << std::endl;
-        std::cout << "  size=\"8,6\"; ratio=fill;" << std::endl;
-        std::cout << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
+        std::ofstream dotFile( "complete.dot" );
+        dotFile << "digraph complete_dot {" << std::endl;
+        dotFile << "  size=\"8,6\"; ratio=fill;" << std::endl;
+        dotFile << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
         for( lemon::ListDigraph::NodeIt n( m_g ); n!=lemon::INVALID; ++n)
         {
             const std::string nodeName = m_modelIDMap[n];
@@ -316,16 +333,16 @@ void Scheduler::DumpCompleteGraph()
             
             if( stringIter != nodeName.end() )
             {
-                std::cout << "  n" <<  m_g.id(n) 
+                dotFile << "  n" <<  m_g.id(n) 
                 << " [ label=\"" << nodeName << "\", color=orange ]; " << std::endl;
             }
             else
             {
-                std::cout << "  n" <<  m_g.id(n) 
+                dotFile << "  n" <<  m_g.id(n) 
                 << " [ label=\"" << nodeName << "\" ]; " << std::endl;
             }
         }
-        std::cout << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
+        dotFile << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
         for(lemon::ListDigraph::ArcIt e( m_g ); e!=lemon::INVALID; ++e) 
         {
             const std::string sourceName = 
@@ -338,18 +355,18 @@ void Scheduler::DumpCompleteGraph()
             
             if( stringIter1 != sourceName.end() )
             {
-                std::cout << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" << m_g.id(m_g.target(e)) << " [ color=orange ];" <<std::endl;
+                dotFile << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" << m_g.id(m_g.target(e)) << " [ color=orange ];" <<std::endl;
             }
             else if( stringIter2 != targetName.end() )
             {
-                std::cout << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" << m_g.id(m_g.target(e)) << " [ color=blue ];" <<std::endl;
+                dotFile << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" << m_g.id(m_g.target(e)) << " [ color=blue ];" <<std::endl;
             }
             else
             {
-                std::cout << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" << m_g.id(m_g.target(e)) <<std::endl;
+                dotFile << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" << m_g.id(m_g.target(e)) <<std::endl;
             }
         } 
-        std::cout << "}" << std::endl;
+        dotFile << "}" << std::endl;
     }          
 }
 ////////////////////////////////////////////////////////////////////////////////

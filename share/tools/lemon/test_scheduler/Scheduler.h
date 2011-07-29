@@ -21,9 +21,9 @@ public:
     ~Scheduler();
     
     ///Set the graph to be used by the scheduler
-    void SetGraph( lemon::ListDigraph& g, lemon::ListDigraph::NodeMap< std::string >& modelIDMap );
+    void SetGraph( lemon::ListDigraph& g, std::map< lemon::ListDigraph::Node, std::string >& modelIDMap );
     ///Set the model name map
-    void SetModelIDMap( std::map< lemon::ListDigraph::Node, std::string >& modelIDMap );
+    //void SetModelIDMap( std::map< lemon::ListDigraph::Node, std::string >& modelIDMap );
 
     void DumpCompleteGraph();
     void MakeSchedulerGraph();
@@ -41,7 +41,6 @@ private:
     lemon::ListDigraph m_infoSubgraph;
     lemon::ListDigraph m_g;
     std::map< lemon::ListDigraph::Node, std::string > m_modelIDMap;
-
 };
 }
 }
