@@ -56,6 +56,7 @@
 #include <ves/open/xml/model/ModelCreator.h>
 
 #include "Scheduler.h"
+#include "ModelNode.h"
 
 using namespace lemon;
 
@@ -241,32 +242,43 @@ int main(int argc, char *argv[])
     
     lemon::ListDigraph g;
     std::map< lemon::ListDigraph::Node, std::string > modelIDMap;
+    std::map< std::string, iaf::scheduler::ModelNode* > modelMap;
     
     //Setup the nodes
     lemon::ListDigraph::Node spatial = g.addNode();
     modelIDMap[ spatial ] = "spatial";
+    modelMap[ "spatial" ] = new iaf::scheduler::ModelNode();
     
     lemon::ListDigraph::Node schedule1 = g.addNode();
     modelIDMap[ schedule1 ] = "scheduler1";
+    modelMap[ "scheduler1" ] = new iaf::scheduler::ModelNode();
 
     lemon::ListDigraph::Node soil = g.addNode();
     modelIDMap[ soil ] = "soil";
+    modelMap[ "soil" ] = new iaf::scheduler::ModelNode();
     lemon::ListDigraph::Node climate = g.addNode();
     modelIDMap[ climate ] = "climate";
+    modelMap[ "climate" ] = new iaf::scheduler::ModelNode();
     lemon::ListDigraph::Node management = g.addNode();
     modelIDMap[ management ] = "management";
-   
+    modelMap[ "management" ] = new iaf::scheduler::ModelNode();
+
     lemon::ListDigraph::Node schedule2 = g.addNode();
     modelIDMap[ schedule2 ] = "scheduler2";
+    modelMap[ "scheduler2" ] = new iaf::scheduler::ModelNode();
 
     lemon::ListDigraph::Node weps = g.addNode();
     modelIDMap[ weps ] = "weps";
+    modelMap[ "weps" ] = new iaf::scheduler::ModelNode();
     lemon::ListDigraph::Node rusle2 = g.addNode();
     modelIDMap[ rusle2 ] = "rusle2";
+    modelMap[ "rusle2" ] = new iaf::scheduler::ModelNode();
     lemon::ListDigraph::Node inlsoilerosion = g.addNode();
     modelIDMap[ inlsoilerosion ] = "inlsoilerosion";
+    modelMap[ "inlsoilerosion" ] = new iaf::scheduler::ModelNode();
     lemon::ListDigraph::Node daycent = g.addNode();
     modelIDMap[ daycent ] = "daycent";
+    modelMap[ "daycent" ] = new iaf::scheduler::ModelNode();
 
     //Setup the arcs
     //ListDigraph::Arc  a1 = 
@@ -328,12 +340,13 @@ int main(int argc, char *argv[])
 
 
     iaf::scheduler::Scheduler testExec;
-    testExec.SetGraph( g, modelIDMap );
-    //testExec.SetModelIDMap( modelIDMap );
+    testExec.SetGraph( g, modelIDMap, modelMap );
 
     testExec.DumpCompleteGraph();
     testExec.MakeInfoGraph();
     testExec.MakeSchedulerGraph();
+    
+    testExec.RunModels();
     
     XMLPlatformUtils::Terminate();
 

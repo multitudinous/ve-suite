@@ -22,8 +22,9 @@ Scheduler::~Scheduler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scheduler::SetGraph( lemon::ListDigraph& g, std::map< lemon::ListDigraph::Node, std::string >& modelIDMap )
+void Scheduler::SetGraph( lemon::ListDigraph& g, std::map< lemon::ListDigraph::Node, std::string >& modelIDMap, std::map< std::string, iaf::scheduler::ModelNode* >& modelMap )
 {
+    m_modelMap = modelMap;
     lemon::ListDigraph::NodeMap< lemon::ListDigraph::Node > nr(m_g);
     lemon::digraphCopy( g, m_g ).nodeCrossRef(nr).run();
     for( lemon::ListDigraph::NodeIt n( m_g ); n != lemon::INVALID; ++n )
@@ -242,6 +243,7 @@ void Scheduler::MakeSchedulerGraph()
         {
             std::cout << m_modelIDMap[nr[it->second]] << " ";
             staticm_modelIDMap[ it->second ] = m_modelIDMap[nr[it->second]];
+            m_scheduleModelMap[ it->first ] = nr[ it->second ];
             if( lemon::countOutArcs( tmp_graph, it->second ) == 0 )
             {
                 std::cout << "| ";
@@ -370,5 +372,16 @@ void Scheduler::DumpCompleteGraph()
     }          
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Scheduler::RunModels()
+{
+    for( std::map< int, lemon::ListDigraph::Node >::const_iterator iter = m_scheduleModelMap.begin(); iter != m_scheduleModelMap.end(); ++iter )
+    {
+        std::cout << "Execute model " << iter->first << " " << m_modelIDMap[ iter->second ] << std::endl;
+        iaf::scheduler::ModelNode* tempModel = m_modelMap[ m_modelIDMap[ iter->second ] ];
+        tempModel->Preprocess();
+        tempModel->RunModel();
+        tempModel->Postprocess();
+    }
+}
 }
 }

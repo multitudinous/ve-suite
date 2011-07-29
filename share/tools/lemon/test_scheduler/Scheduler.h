@@ -10,6 +10,8 @@
 
 #include <vector>
 
+#include "ModelNode.h"
+
 namespace iaf
 {
 namespace scheduler
@@ -17,19 +19,24 @@ namespace scheduler
 class Scheduler
 {
 public:
+    ///Constructor
     Scheduler();
+    ///Destructor
     ~Scheduler();
     
     ///Set the graph to be used by the scheduler
-    void SetGraph( lemon::ListDigraph& g, std::map< lemon::ListDigraph::Node, std::string >& modelIDMap );
-    ///Set the model name map
-    //void SetModelIDMap( std::map< lemon::ListDigraph::Node, std::string >& modelIDMap );
-
+    void SetGraph( lemon::ListDigraph& g, std::map< lemon::ListDigraph::Node, std::string >& modelIDMap, std::map< std::string, iaf::scheduler::ModelNode* >& modelMap );
+    ///Dump the complete graph of the users to a file
     void DumpCompleteGraph();
-    void MakeSchedulerGraph();
+    ///Must run this before the scheduler graph -- only because we need the scheduler nodes defined
     void MakeInfoGraph();
+    ///Make the model execution graph
+    void MakeSchedulerGraph();
+
+    void RunModels();
 
 private:
+    ///Helps break down the graph the user provides
     void EnableNodesAndArcs( lemon::ListDigraph& g, 
                             lemon::SubDigraph<lemon::ListDigraph>& fg, 
                             std::vector< lemon::ListDigraph::Node >& scheduleNodes, 
@@ -41,6 +48,9 @@ private:
     lemon::ListDigraph m_infoSubgraph;
     lemon::ListDigraph m_g;
     std::map< lemon::ListDigraph::Node, std::string > m_modelIDMap;
+    
+    std::map< std::string, iaf::scheduler::ModelNode* > m_modelMap;
+    std::map< int, lemon::ListDigraph::Node > m_scheduleModelMap;
 };
 }
 }
