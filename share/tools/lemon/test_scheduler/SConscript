@@ -1,0 +1,28 @@
+#Builds lemon converter
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import( 'baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform boost_options' )
+Import( 'xerces_options lemon_options poco_options' )
+openDir = os.path.abspath( pj( RootDir, 'share', 'tools', 'lemon', 'test_scheduler' ) )
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
+
+env = ves_pkg.getEnv().Clone()
+env.Append( LIBS = [ 'ves_open_xml' ] )
+env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open','xml' ) ] )
+
+lemon_options.apply( env )
+boost_options.apply( env )
+xerces_options.apply( env )
+#mysqlpp_options.apply( env )
+#poco_options.apply( env )
+
+prog = ves_pkg.createProgram( 'ves_test_executive' + env[ "PROGSUFFIX" ], env, 'bin' )
+prog.addSources( sources )
+prog.addHeaders( headers )
+prog.build()

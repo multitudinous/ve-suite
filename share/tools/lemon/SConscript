@@ -6,6 +6,7 @@ lemonSubdirs = Split("""
     converter
     simple
     gis_scheduler
+    test_scheduler
 """)
 
 ##Run SConscript files in all of those folders.

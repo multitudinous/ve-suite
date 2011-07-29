@@ -671,34 +671,7 @@ int main(int argc, char *argv[])
         } 
         std::cout << "}" << std::endl;
     }  
-    /*lemon::ListDigraph::NodeMap<bool> filter(g2, true);
-    lemon::FilterNodes<lemon::ListDigraph> subgraph(g2, filter);
-    std::cout << lemon::countNodes(subgraph) << ", ";
-    
-    filter[x] = false;
-    std::cout << lemon::countNodes(subgraph) << ", ";
-    
-    subgraph.enable(x);
-    subgraph.disable(y);
-    subgraph.status(z, !subgraph.status(z));
-    std::cout << lemon::countNodes(subgraph) << std::endl;*/
-    
-    
-    
-    
-    /*// Read the input file
-    SmartDigraph g;
-    SmartDigraph::ArcMap<double> cap(g);
-    SmartDigraph::Node s, t;
 
-    digraphReader(g, argv[1])
-        .arcMap("capacity", cap)
-        .node("source", s)
-        .node("target", t)
-        .run();
-
-    // Solve the problem and print the result
-    std::cout << "Max flow value: " << maxFlow(g, cap, s, t) << std::endl;*/
     XMLPlatformUtils::Terminate();
 
     return 0;
