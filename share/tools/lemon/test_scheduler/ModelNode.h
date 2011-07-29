@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace iaf
 {
 namespace scheduler
@@ -16,8 +18,10 @@ public:
         
     void Postprocess();
 
-private:
+    void SetModelName( std::string const& name );
     
+private:
+    std::string m_modelName;
 };
 }
 }

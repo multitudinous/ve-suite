@@ -376,7 +376,7 @@ void Scheduler::RunModels()
 {
     for( std::map< int, lemon::ListDigraph::Node >::const_iterator iter = m_scheduleModelMap.begin(); iter != m_scheduleModelMap.end(); ++iter )
     {
-        std::cout << "Execute model " << iter->first << " " << m_modelIDMap[ iter->second ] << std::endl;
+        std::cout << "Execute model " << iter->first << std::endl;// << " " << m_modelIDMap[ iter->second ] << std::endl;
         iaf::scheduler::ModelNode* tempModel = m_modelMap[ m_modelIDMap[ iter->second ] ];
         tempModel->Preprocess();
         tempModel->RunModel();

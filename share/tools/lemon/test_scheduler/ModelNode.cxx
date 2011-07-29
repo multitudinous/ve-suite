@@ -19,17 +19,22 @@ ModelNode::~ModelNode()
 ////////////////////////////////////////////////////////////////////////////////
 void ModelNode::Preprocess()
 {
-    std::cout << "Setup the inputs for this model" << std::endl;
+    std::cout << "Setup the inputs for this model " << m_modelName << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelNode::RunModel()
 {
-    std::cout << "Run this model" << std::endl;
+    std::cout << "Run this model " << m_modelName << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelNode::Postprocess()
 {
-    std::cout << "Package the results for this model" << std::endl;
+    std::cout << "Package the results for this model " << m_modelName << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ModelNode::SetModelName( std::string const& name )
+{
+    m_modelName = name;
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
