@@ -51,6 +51,9 @@ private:
     
     std::map< std::string, iaf::scheduler::ModelNode* > m_modelMap;
     std::map< int, lemon::ListDigraph::Node > m_scheduleModelMap;
+    std::map< std::string, lemon::ListDigraph::Node > m_infoNameMap;
+    std::map< lemon::ListDigraph::Node, lemon::ListDigraph::Node > m_infoToGNameMap;
+
 };
 }
 }

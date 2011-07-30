@@ -151,7 +151,6 @@ void Scheduler::MakeInfoGraph()
         {
             std::cout << m_modelIDMap[nr[it->second]] << " ";
             staticm_modelIDMap[ it->second ] = m_modelIDMap[nr[it->second]];
-            
             if( lemon::countOutArcs( tmp_graph, it->second ) == 0 )
             {
                 std::cout << "| ";
@@ -189,8 +188,15 @@ void Scheduler::MakeInfoGraph()
         }        
     }
     
-    //m_infoSubgraph = lemon::subDigraph(g, filterInfoNodes, filterInfoArcs );
-    lemon::digraphCopy( infoSubgraph, m_infoSubgraph ).run();
+    {
+        lemon::ListDigraph::NodeMap< lemon::ListDigraph::Node > nr(m_infoSubgraph);
+        lemon::digraphCopy( infoSubgraph, m_infoSubgraph ).nodeCrossRef(nr).run();
+        for( lemon::ListDigraph::NodeIt n( m_infoSubgraph ); n != lemon::INVALID; ++n )
+        {
+            m_infoNameMap[ m_modelIDMap[ nr[ n ] ] ] = n;
+            m_infoToGNameMap[ n ] = nr[ n ];
+        }
+    }
 
     std::cout << "Number of arcs in the info graph = " << lemon::countArcs( m_infoSubgraph ) << std::endl;        
 }
@@ -376,12 +382,27 @@ void Scheduler::RunModels()
 {
     for( std::map< int, lemon::ListDigraph::Node >::const_iterator iter = m_scheduleModelMap.begin(); iter != m_scheduleModelMap.end(); ++iter )
     {
-        std::cout << "Execute model " << iter->first << std::endl;// << " " << m_modelIDMap[ iter->second ] << std::endl;
+        std::cout << "Execute model " << iter->first << " " << m_modelIDMap[ iter->second ] << std::endl << std::endl;
+        std::map< std::string, lemon::ListDigraph::Node >::const_iterator infoIter = m_infoNameMap.find( m_modelIDMap[ iter->second ] );
+        if( infoIter != m_infoNameMap.end() )
+        {
+            lemon::ListDigraph::Node tempInfoNode = infoIter->second;
+            for( lemon::ListDigraph::InArcIt m( m_infoSubgraph, tempInfoNode ); m != lemon::INVALID; ++m )
+            {
+                lemon::ListDigraph::Node tempGNode = m_infoToGNameMap[ m_infoSubgraph.source( m ) ];
+                iaf::scheduler::ModelNode* tempModel = m_modelMap[ m_modelIDMap[ tempGNode ] ];
+                std::string results = tempModel->GetResults();
+                std::cout << m_modelIDMap[ tempGNode ] << " " << results << std::endl;
+            }
+        }
+        std::cout << std::endl;
         iaf::scheduler::ModelNode* tempModel = m_modelMap[ m_modelIDMap[ iter->second ] ];
         tempModel->Preprocess();
         tempModel->RunModel();
         tempModel->Postprocess();
+        std::cout << "-------------------------" << std::endl;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 }
 }

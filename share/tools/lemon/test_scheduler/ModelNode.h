@@ -20,6 +20,8 @@ public:
 
     void SetModelName( std::string const& name );
     
+    std::string GetResults();
+    
 private:
     std::string m_modelName;
 };
