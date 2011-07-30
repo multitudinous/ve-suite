@@ -1,22 +1,35 @@
-/* -*- mode: C++; indent-tabs-mode: nil; -*-
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * This file is a part of LEMON, a generic C++ optimization library.
+ * VE-Suite is (C) Copyright 1998-2011 by Iowa State University
  *
- * Copyright (C) 2003-2010
- * Egervary Jeno Kombinatorikus Optimalizalasi Kutatocsoport
- * (Egervary Research Group on Combinatorial Optimization, EGRES).
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
  *
- * Permission to use, modify and distribute this software is granted
- * provided that this copyright notice appears in all copies. For
- * precise terms see the accompanying LICENSE file.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * This software is provided "AS IS" with no warranty of any kind,
- * express or implied, and with no claim as to its suitability for any
- * purpose.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
  *
- */
-
-
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <iostream>
 
 #include <lemon/connectivity.h>
@@ -29,6 +42,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/algorithm/string/find.hpp>
+#include <boost/concept_check.hpp>
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -64,6 +78,7 @@ using namespace lemon;
 ////////////////////////////////////////////////////////////////////////////////
 bool AddSubSystem( ves::open::xml::model::SystemPtr system )
 {
+    boost::ignore_unused_variable_warning( system );
     /*std::map< std::string, ves::open::xml::model::SystemPtr >::const_iterator 
     iter = m_systemMap.find( system->GetID() );
     if( iter != m_systemMap.end() )
@@ -223,6 +238,8 @@ int main(int argc, char *argv[])
         return false;
     }
     
+    boost::ignore_unused_variable_warning( argc );
+    boost::ignore_unused_variable_warning( argv );
 
     ///Initialize VE-Open
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new ves::open::xml::XMLCreator() );
