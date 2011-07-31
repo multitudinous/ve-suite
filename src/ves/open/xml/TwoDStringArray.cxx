@@ -142,7 +142,7 @@ std::vector< std::vector< std::string > > TwoDStringArray::GetArray( void )
     return tempData;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void TwoDStringArray::_updateVEElement( const std::string& input )
+void TwoDStringArray::_updateVEElement( const std::string& )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
