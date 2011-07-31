@@ -7,9 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
-
-/////////////////////////////////////////////////////////////////////////////
+#include "afxres.h" /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
@@ -69,25 +67,27 @@ IDR_MAINFRAME           ICON                    "res\\VE-PSI_Icon.ico"
 // Dialog
 //
 
-IDD_VE_ASPENUNIT_DIALOG DIALOGEX 0, 0, 172, 273
+IDD_VE_ASPENUNIT_DIALOG DIALOGEX 0, 0, 172, 254
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "VE-PSI"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "Start",IDOK,33,62,50,14
-    PUSHBUTTON      "Shutdown",IDCANCEL,87,62,55,14
-    LTEXT           "Flowsheet",IDC_STATIC,9,93,34,8
+    PUSHBUTTON      "Start",IDOK,33,79,50,14
+    PUSHBUTTON      "Shutdown",IDCANCEL,87,79,55,14
+    LTEXT           "Flowsheet",IDC_STATIC,10,104,34,8
     LTEXT           "PC Name",IDC_STATIC,7,28,30,8
     LTEXT           "Port",IDC_STATIC,7,46,13,8
-    EDITTEXT        IDC_EDIT2,45,90,117,14,ES_AUTOHSCROLL | ES_READONLY,WS_EX_RTLREADING
+    EDITTEXT        IDC_EDIT2,46,101,117,14,ES_AUTOHSCROLL | ES_READONLY,WS_EX_RTLREADING
     EDITTEXT        IDC_EDIT3,41,25,124,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_EDIT4,41,43,124,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT1,12,107,147,152,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY | ES_WANTRETURN | WS_VSCROLL
-    GROUPBOX        "Log",IDC_STATIC,7,79,158,187
+    EDITTEXT        IDC_EDIT1,13,118,147,122,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY | ES_WANTRETURN | WS_VSCROLL
+    GROUPBOX        "Log",IDC_STATIC,7,93,158,154
     EDITTEXT        IDC_EDIT5,41,7,104,14,ES_AUTOHSCROLL
     LTEXT           "Directory",IDC_STATIC,7,10,30,8
     PUSHBUTTON      "...",IDC_BUTTON2,146,7,19,14
+    LTEXT           "Unit Name",IDC_STATIC,7,64,33,8
+    EDITTEXT        IDC_EDIT6,41,61,124,14,ES_AUTOHSCROLL
 END
 
 
@@ -143,7 +143,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 165
         TOPMARGIN, 7
-        BOTTOMMARGIN, 266
+        BOTTOMMARGIN, 247
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -168,8 +168,6 @@ LANGUAGE 9, 1
 #pragma code_page(1252)
 #include "res\VE-PSI_Icon.rc2"  // non-Microsoft Visual C++ edited resources
 #include "afxres.rc"     // Standard components
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
+#endif /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

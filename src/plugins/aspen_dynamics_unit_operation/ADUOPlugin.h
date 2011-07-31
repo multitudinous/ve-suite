@@ -36,6 +36,7 @@
 #include <ves/conductor/UIPluginBase.h>
 
 #include <wx/event.h>
+#include <wx/image.h>
 
 class wxMenu;
 

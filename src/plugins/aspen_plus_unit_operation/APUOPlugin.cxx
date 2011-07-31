@@ -73,6 +73,9 @@ APUOPlugin::APUOPlugin() :
     mPluginName = wxString( "AspenPlusUO", wxConvUTF8 );
     mDescription = wxString( "Aspen Plus Unit Operation Plugin", wxConvUTF8 );
     m_pluginType = "APUOPlugin" ;
+    iconFilename = "square";
+    wxImage my_img( square_xpm );
+    SetImage( my_img );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -318,7 +321,7 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         vendorData->SetData( "vendorUnit", m_unitName );
     }
 
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( APUOPLUGIN_SHOW_ASPEN_NAME, _( "Name" ) );
     mAspenMenu->Enable( APUOPLUGIN_SHOW_ASPEN_NAME, true );
@@ -337,5 +340,5 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 ////////////////////////////////////////////////////////////////////////////////
 bool APUOPlugin::ShowAvailable()
 {
-    return false;
+    return true;
 }

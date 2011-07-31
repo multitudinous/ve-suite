@@ -86,7 +86,7 @@ APPlugin::APPlugin() :
     m_pluginType = "APPlugin";
     m_unitName = "VE-PSI";
 
-    iconFilename = "aspen.xpm";
+    iconFilename = "aspen";
     wxImage my_img( aspen );
     SetImage( my_img );
 }
@@ -161,10 +161,6 @@ void APPlugin::OnOpen( wxCommandEvent& event )
         }
     }
 
-    //set the unit name
-    GetVEModel()->SetVendorName( m_unitName );
-    mAspenMenu->Enable( APPLUGIN_SET_UNIT, false );
-
     APOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
@@ -172,6 +168,11 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     {
         return;
     }
+
+    //set the unit name
+    GetVEModel()->SetVendorName( m_unitName );
+    vendorData = DataValuePairPtr( new DataValuePair() );
+    vendorData->SetData( "vendorUnit", m_unitName );
 
     wxFileName bkpFileName;
     bkpFileName.ClearExt();

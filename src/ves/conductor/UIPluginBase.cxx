@@ -48,11 +48,11 @@
 #include <ves/conductor/IconChooser.h>
 #include <ves/conductor/paraThread.h>
 #include <ves/conductor/vistab.h>
-#include <ves/conductor/AspenPlus2DIcons.h>
+#include <ves/conductor/PreCompiledIcons.h>
 
 #include <ves/conductor/util/OrbThread.h>
 #include <ves/conductor/util/ParamsDlg.h>
-#include <ves/conductor/util/AspenDynamicsDialog.h>
+//#include <ves/conductor/util/AspenDynamicsDialog.h>
 #include <ves/conductor/util/SoundsPane.h>
 
 // EPRI TAG
@@ -1073,14 +1073,14 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
     }
 
     wxImage image;
-    //Try to find the default aspen icons
+    //Try to find the default icons
     std::string fullPath = path;
-    std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
-    std::map< std::string, char** >::iterator aspenIconIter;
-    aspenIconIter = aspenPlusIconMap.find( fullPath );
-    if( aspenIconIter != aspenPlusIconMap.end() )
+    std::map< std::string, char** > preCompiledIconMap = GetPreCompiledIconMap();
+    std::map< std::string, char** >::iterator iconIter;
+    iconIter = preCompiledIconMap.find( fullPath );
+    if( iconIter != preCompiledIconMap.end() )
     {
-        wxImage xpmImage( aspenIconIter->second );
+        wxImage xpmImage( iconIter->second );
         image = xpmImage;
     }
     else

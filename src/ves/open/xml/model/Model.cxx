@@ -61,7 +61,7 @@ Model::Model()
         mIconRotation( 0.0f ),
         mIconHiddenFlag( 0 ),
         mIconMirror( 0 ),
-        //mParentModel( ModelPtr() ),
+        mParentModel( ModelPtr() ),
         m_parentSystem( SystemPtr() )
 {
     mIconLocation = PointPtr( new Point() );

@@ -905,7 +905,7 @@ std::string DynSim::CreateVESNetwork()
             }
             
             tempModel->SetVendorName( m_unitName );
-            tempModel->SetIconFilename( "sim.xpm" );
+            tempModel->SetIconFilename( "sim");//.xpm" );
             tempModel->SetIconRotation( 0 );
             tempModel->SetIconScale( 1 );
             tempModel->SetIconMirror( 0 );

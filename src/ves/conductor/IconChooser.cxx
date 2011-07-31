@@ -50,7 +50,7 @@
 #include <ves/conductor/IconChooser.h>
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/UIPluginBase.h>
-#include <ves/conductor/AspenPlus2DIcons.h>
+#include <ves/conductor/PreCompiledIcons.h>
 
 #include <ves/conductor/xpm/contour.xpm>
 //#include <ves/conductor/xpm/cad_tree_selected.xpm>
@@ -165,7 +165,7 @@ void IconChooser::CreateGUIControls()
         }
     }
 
-    //InitializeAspenIcons();
+    //InitializeIcons();
 
     SetTitle( wxT( "VE Icon Chooser" ) );
     SetIcon( wxNullIcon );
@@ -319,7 +319,7 @@ void IconChooser::IconDirectoryClick( wxCommandEvent& event )
     AddIconsDir( WxDirDialog->GetPath() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IconChooser::InitializeAspenIcons()
+void IconChooser::InitializeIcons()
 {
     //create the image for the button and scale it
     ::wxInitAllImageHandlers();
@@ -345,7 +345,7 @@ void IconChooser::InitializeAspenIcons()
     okButton->SetPosition( wxPoint( 450, maxRows*80 + 30 ) );
     cancelButton->SetPosition( wxPoint( 535, maxRows*80 + 30 ) );
 
-    std::map< std::string, char** > tempIconMap = GetAspenPlusIconMap();
+    std::map< std::string, char** > tempIconMap = GetPreCompiledIconMap();
 
     for( std::map< std::string, char** >::iterator
             iconMapIter = tempIconMap.begin();

@@ -38,7 +38,7 @@
 #include <ves/conductor/Network.h>
 #include <ves/conductor/Canvas.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
-#include <ves/conductor/AspenPlus2DIcons.h>
+#include <ves/conductor/PreCompiledIcons.h>
 #include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/ConductorLibEnums.h>
 #include <plugins/ConductorPluginEnums.h>
@@ -153,8 +153,8 @@ void HierarchyTree::PopulateTree()
     std::vector< ves::open::xml::model::ModelPtr > topLevelModels = 
         tempSys->GetModels();
     
-    std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
-    std::map< std::string, char** >::iterator aspenIconIter;
+    std::map< std::string, char** > preCompiledIconMap = GetPreCompiledIconMap();
+    std::map< std::string, char** >::iterator iconIter;
     std::string fullPath;
     std::multimap< std::string, ves::open::xml::model::ModelPtr > alphaTree;
 
@@ -193,10 +193,10 @@ void HierarchyTree::PopulateTree()
             //Add the icon to the image list
             fullPath = iter->second->GetIconFilename();
             wxString tempIconName( fullPath.c_str(), wxConvUTF8 );
-            aspenIconIter = aspenPlusIconMap.find( fullPath );
-            if( aspenIconIter != aspenPlusIconMap.end() )
+            iconIter = preCompiledIconMap.find( fullPath );
+            if( iconIter != preCompiledIconMap.end() )
             {
-                AddtoImageList( wxBitmap( wxBitmap( aspenIconIter->second ).
+                AddtoImageList( wxBitmap( wxBitmap( iconIter->second ).
                     ConvertToImage().Rescale( iconsize, iconsize ) ) );
             }
             else
@@ -235,8 +235,8 @@ void HierarchyTree::PopulateTree()
 void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
     std::vector< ves::open::xml::model::ModelPtr > models, std::string id )
 {
-    std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
-    std::map< std::string, char** >::iterator aspenIconIter;
+    std::map< std::string, char** > preCompiledIconMap = GetPreCompiledIconMap();
+    std::map< std::string, char** >::iterator iconIter;
     std::string fullPath;
 
     //loop over subsystem models
@@ -263,10 +263,10 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             //Add the icon to the image list
             fullPath = models[i]->GetIconFilename();// + ".xpm";
             wxString tempIconName( fullPath.c_str(), wxConvUTF8 );
-            aspenIconIter = aspenPlusIconMap.find( fullPath );
-            if( aspenIconIter != aspenPlusIconMap.end() )
+            iconIter = preCompiledIconMap.find( fullPath );
+            if( iconIter != preCompiledIconMap.end() )
             {
-                AddtoImageList( wxBitmap( wxBitmap( aspenIconIter->second ).
+                AddtoImageList( wxBitmap( wxBitmap( iconIter->second ).
                     ConvertToImage().Rescale( iconsize, iconsize ) ) );
             }
             else
@@ -516,15 +516,15 @@ void HierarchyTree::ChangeLeafIcon( unsigned int itemId, std::string path )
             return;
         }
 
-        //look in the aspen icon map
+        //look in the precompiled icon map
         std::string fullPath = path + ".xpm";
-        std::map< std::string, char** > aspenPlusIconMap =
-            GetAspenPlusIconMap();
-        std::map< std::string, char** >::iterator aspenIconIter;
-        aspenIconIter = aspenPlusIconMap.find( fullPath );
-        if( aspenIconIter != aspenPlusIconMap.end() )
+        std::map< std::string, char** > preCompiledIconMap =
+            GetPreCompiledIconMap();
+        std::map< std::string, char** >::iterator iconIter;
+        iconIter = preCompiledIconMap.find( fullPath );
+        if( iconIter != preCompiledIconMap.end() )
         {
-            AddtoImageList( wxBitmap( wxBitmap( aspenIconIter->second ).
+            AddtoImageList( wxBitmap( wxBitmap( iconIter->second ).
                 ConvertToImage().Rescale(iconsize, iconsize)));
             SetItemImage(selected, images->GetImageCount()-1);
         }

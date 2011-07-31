@@ -67,6 +67,9 @@ OpcUOPlugin::OpcUOPlugin() :
     mPluginName = wxString( "OpcUO", wxConvUTF8 );
     mDescription = wxString( "OPC Unit Operation Plugin", wxConvUTF8 );
     m_pluginType = "OpcUOPlugin";
+    iconFilename = "square";
+    wxImage my_img( square_xpm );
+    SetImage( my_img );
     m_monValue = "NA";
     m_monValueExists = false;
     m_monitoring = false;
@@ -168,7 +171,7 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         vendorData->SetData( "vendorUnit", m_unitName );
     }
 
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
     mOpcMenu = new wxMenu();
     //mOpcMenu->Append( OPCUOPLUGIN_SHOW_VALUE, _( "Value" ) );
     //mOpcMenu->Enable( OPCUOPLUGIN_SHOW_VALUE, true );
@@ -409,5 +412,5 @@ void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 bool OpcUOPlugin::ShowAvailable()
 {
-    return false;
+    return true;
 }

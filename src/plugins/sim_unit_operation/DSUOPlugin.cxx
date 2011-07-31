@@ -56,6 +56,9 @@ DSUOPlugin::DSUOPlugin() :
     mPluginName = wxString( "DSUO", wxConvUTF8 );
     mDescription = wxString( "DynSim Unit Operation Plugin", wxConvUTF8 );
     m_pluginType = "DSUOPlugin";
+    iconFilename = "square";
+    wxImage my_img( square_xpm );
+    SetImage( my_img );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DSUOPlugin::~DSUOPlugin()
@@ -83,7 +86,7 @@ wxMenu* DSUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         vendorData->SetData( "vendorUnit", m_unitName );
     }
 
-    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
+    baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
 
     mDynSimMenu = new wxMenu();
     baseMenu->Insert( 0, DSUOPLUGIN_DYNSIM_MENU,   _( "DynSim" ), mDynSimMenu,
@@ -94,5 +97,5 @@ wxMenu* DSUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 ////////////////////////////////////////////////////////////////////////////////
 bool DSUOPlugin::ShowAvailable()
 {
-    return false;
+    return true;
 }

@@ -538,13 +538,13 @@ void AspenPlus::ParseFile( const char * bkpFile )
             float width =
                 imageData[ blockInfoIter->second.type+
                 "_"+blockInfoIter->second.type+
-                "_"+blockInfoIter->second.icon+
-                ".xpm"].first;
+                "_"+blockInfoIter->second.icon
+                /*+".xpm"*/].first;
             float height = 
                 imageData[ blockInfoIter->second.type+
                 "_"+blockInfoIter->second.type+
-                "_"+blockInfoIter->second.icon+
-                ".xpm"].second;
+                "_"+blockInfoIter->second.icon
+                /*+".xpm"*/].second;
 
             blockInfoIter->second.width = width;
             blockInfoIter->second.height = height;
@@ -1289,7 +1289,7 @@ std::string AspenPlus::CreateNetwork( void )
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
             +"_"+BlockInfoList["_main_sheet"][blockIter->first].type+"_"
-            +BlockInfoList["_main_sheet"][blockIter->first].icon + ".xpm");
+            +BlockInfoList["_main_sheet"][blockIter->first].icon /*+ ".xpm"*/);
         tempModel->
             SetIconRotation(BlockInfoList["_main_sheet"][blockIter->first].
             rotation);
@@ -1457,7 +1457,7 @@ void AspenPlus::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
             "_" + BlockInfoList[networkName][blockIter->first].type+"_" +
-            BlockInfoList[networkName][blockIter->first].icon + ".xpm" );
+            BlockInfoList[networkName][blockIter->first].icon /*+ ".xpm"*/ );
         tempModel->
             SetIconRotation(
             BlockInfoList[networkName][blockIter->first].rotation );
