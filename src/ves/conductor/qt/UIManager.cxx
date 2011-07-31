@@ -458,9 +458,12 @@ void UIManager::Initialize( osg::Group* parentNode )
         osg::ref_ptr< osg::Depth > depth = new osg::Depth();
         depth->setFunction( osg::Depth::ALWAYS );
         depth->setWriteMask( false );
-        stateset->setRenderBinDetails( 99, "RenderBin" );
+        stateset->setRenderBinDetails( 99, "DepthSortedBin" );
         stateset->setAttributeAndModes( depth.get(), glModeValue );
-        stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
+        //stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF | 
+        //                                    osg::StateAttribute::PROTECTED | 
+        //                                    osg::StateAttribute::OVERRIDE );
+        mUIGroup->setCullingActive( false );
         //stateset->setMode( GL_LIGHTING, glModeValue);
     }
 
