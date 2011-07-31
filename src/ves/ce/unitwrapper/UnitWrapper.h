@@ -62,22 +62,26 @@ public:
 protected:
     Body::Executive_var executive_;
     unsigned int return_state;
-    ///??
+    ///The name of the unit
     std::string UnitName_;
-    //::Types::ArrayLong_var id_;
-    ///??
+    ///The id of the unit
     CORBA::Long activeId;
-    ///??
+    ///The status of the unit
     std::string status_;
-    ///??
+    ///???
     std::string data_;
-    ///??
+    ///This holds the models for the unit. Here is how it is created:
+    ///1. On submit job in AppFrame void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) ) this is called SetIDOnAllActiveModules
+    ///2. This then calls setid on all units void Body_AMH_Executive_i::SetID (
+    ///3. This then calls void UnitWrapper::SetID(::CORBA::Long id)
+    ///4. This is where things are created in the xml model map.
+    ///5. Then in setparams it is used.
     std::map< std::string, ves::open::xml::model::ModelPtr > xmlModelMap;
     ///??
     std::map< std::string, std::vector< ves::open::xml::XMLObjectPtr > > inputsMap;
     ///??
     std::map< std::string, std::vector< ves::open::xml::XMLObjectPtr > > resultsMap;
-    ///??
+    ///The event handlers for the unit
     std::map< std::string, VE_CE::EventHandler* > eventHandlerMap;
 
 public:
