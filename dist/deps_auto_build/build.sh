@@ -221,6 +221,7 @@ function unsetvars()
   unset INNO_PARAMS
   unset POST_RETRIEVAL_METHOD
   unset POST_BUILD_METHOD
+  unset SOURCE_REVISION
 }
 
 #
