@@ -170,18 +170,19 @@ UIPluginBase::UIPluginBase() :
     mPluginName = wxString( "DefaultPlugin", wxConvUTF8 );
     mDescription = wxString( "Default Plugin", wxConvUTF8 );
 
-    wxImage my_img( square_xpm );
+    /*wxImage my_img( square_xpm );
     mIconW = static_cast< int >( my_img.GetWidth() );//*0.30f );
     mIconH = static_cast< int >( my_img.GetHeight() );//*0.30f );
     //mMyIcon=new wxBitmap(my_img.Scale(mIconW, mIconH));
-    mMyIcon = new wxBitmap( my_img );
+    mMyIcon = new wxBitmap( my_img );*/
+    mMyIcon = 0;
 
     n_pts = 4;
     poly = new wxPoint[n_pts];
-    poly[0] = wxPoint( 0, 0 );
-    poly[1] = wxPoint( mIconW - 1, 0 );
-    poly[2] = wxPoint( mIconW - 1, mIconH - 1 );
-    poly[3] = wxPoint( 0, mIconH - 1 );
+    //poly[0] = wxPoint( 0, 0 );
+    //poly[1] = wxPoint( mIconW - 1, 0 );
+    //poly[2] = wxPoint( mIconW - 1, mIconH - 1 );
+    //poly[3] = wxPoint( 0, mIconH - 1 );
 
     defaultIconMap[ "contour.xpm" ] = wxImage( contour_xpm );
     defaultIconMap[ "isosurface.xpm" ] = wxImage( isosurface_xpm );
@@ -1146,7 +1147,7 @@ void UIPluginBase::SetImage( wxImage& image )
     return;
 }
 ////////////////////////////////////////////////////////////////////////////////
-wxBitmap* UIPluginBase::GetIconImage( )
+wxBitmap* UIPluginBase::GetIconImage()
 {
     return mMyIcon;
 }

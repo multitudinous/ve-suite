@@ -321,9 +321,9 @@ void App::exit()
     VPR_PROFILE_RESULTS();
     ves::xplorer::data::DatabaseManager::instance()->Shutdown();
     std::cout << "|\tApp is now exiting." << std::endl;
+    ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
     m_vjobsWrapper->Cleanup();
     GraphicalPluginManager::instance()->UnloadPlugins();
-    ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
 #ifdef MINERVA_GIS_SUPPORT
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 #endif

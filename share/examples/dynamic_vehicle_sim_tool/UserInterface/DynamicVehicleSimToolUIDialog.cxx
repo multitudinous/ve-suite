@@ -592,14 +592,17 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
         m_sipLocZ->ChangeValue( wxString::Format( _("%f"), sipVal ) );
 
         ves::open::xml::DataValuePairPtr fowardVecDVP = toolCommand->GetDataValuePair( "Forward" );
-        std::string forwardVecString;
-        fowardVecDVP->GetData( forwardVecString );
-        m_forwardVectorChoice->SetStringSelection( wxString( forwardVecString.c_str(), wxConvUTF8 ) );
+        if( fowardVecDVP )
+        {
+            std::string forwardVecString;
+            fowardVecDVP->GetData( forwardVecString );
+            m_forwardVectorChoice->SetStringSelection( wxString( forwardVecString.c_str(), wxConvUTF8 ) );
 
-        ves::open::xml::DataValuePairPtr upVecDVP = toolCommand->GetDataValuePair( "Up" );
-        std::string upVecString;
-        upVecDVP->GetData( upVecString );
-        m_upVectorChoice->SetStringSelection( wxString( upVecString.c_str(), wxConvUTF8 ) );
+            ves::open::xml::DataValuePairPtr upVecDVP = toolCommand->GetDataValuePair( "Up" );
+            std::string upVecString;
+            upVecDVP->GetData( upVecString );
+            m_upVectorChoice->SetStringSelection( wxString( upVecString.c_str(), wxConvUTF8 ) );
+        }
     }
 
     toolCommand = tempModel->GetInput( "Geometry Data Map" );
