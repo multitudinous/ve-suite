@@ -54,12 +54,12 @@ void Body_Unit_i::StartCalc()
             << inputsVec.at( i )->GetCommandName() << std::endl;
 
         double inputOne;
-    double inputTwo;
+        //double inputTwo;
         size_t tempValue = inputsVec.at( i )->GetNumberOfDataValuePairs();
         for( size_t j=0; j<tempValue; ++j )
         {
             std::string tempString;
-            double tempDouble;
+            //double tempDouble;
             //CommandPtr tempCommand( new Command );
             //tempCommand = boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->
             //    GetDataValuePair( j )->GetDataXMLObject() );
@@ -143,7 +143,7 @@ void Body_Unit_i::StartCalc()
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::error (std::string msg)
 {
-
+    std::cout << msg << std::endl;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::warning (std::string msg)

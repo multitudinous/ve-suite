@@ -29,12 +29,12 @@ namespace model
 class Body_Unit_i : public UnitWrapper
 {
 public:
-    Body_Unit_i (Body::Executive_ptr exec, std::string name );
-    virtual ~Body_Unit_i (void);
+    Body_Unit_i(Body::Executive_ptr exec, std::string name );
+    virtual ~Body_Unit_i();
 
 protected:
     void error(std::string msg);
-    void warning(std::string msg);
+    void warning(std::string const msg);
 
     std::string mTextOne;
 

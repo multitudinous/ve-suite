@@ -47,7 +47,7 @@ void Body_Unit_i::StartCalc()
         << xmlModelMap[ strm.str() ] << std::endl;
 
     double inputOne;
-    double inputTwo;
+    //double inputTwo;
 
     for( size_t i = 0; i < inputsVec.size(); ++i )
     {
@@ -99,12 +99,12 @@ void Body_Unit_i::StartCalc()
     //executive_->SetModuleMessage(activeId,msg.c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::error (std::string msg)
+void Body_Unit_i::error( std::string const msg )
 {
-
+    std::cout << msg << std::endl;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::warning (std::string msg)
+void Body_Unit_i::warning( std::string msg )
 {
     msg+="\n";
     executive_->SetModuleMessage(activeId, msg.c_str());
