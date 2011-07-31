@@ -44,6 +44,7 @@
 #include <ves/open/xml/shader/ShaderCreator.h>
 #include <ves/open/xml/model/ModelCreator.h>
 #include <ves/open/xml/cad/CADCreator.h>
+#include <ves/open/xml/DOMDocumentManager.h>
 #include <fstream>
 #include <iostream>
 
@@ -1594,64 +1595,14 @@ char* VEPSI_i::readInputFile( ves::open::xml::CommandPtr cmd )
     ///Parse Output XML File
     std::string filename = mWorkingDir + mFileName + ".input.xml";
     
-    ///initialize XML parser
-    XercesDOMParser* mParser = new XercesDOMParser();
-    mParser->setValidationScheme( XercesDOMParser::Val_Always );  // optional.
-    mParser->setDoNamespaces( true );  // optional
-    ErrorHandler* mErrHandler = ( ErrorHandler* ) new HandlerBase();
-    mParser->setErrorHandler( mErrHandler );
-
-    if( !std::ifstream( filename.c_str() ).good() )
-    {
-        std::cerr << "Could not open file : " << filename.c_str() << std::endl;
-        return NULL;
-    }
-
-    ///Catch Exceptions
-    char* message = 0;
-    try
-    {
-        mParser->parse( filename.c_str() );
-    }
-    catch ( const XMLException& toCatch )
-    {
-        message = XMLString::transcode( toCatch.getMessage() );
-        std::cerr << "Exception message is: \n" << message << "\n";
-        XMLString::release( &message );
-        delete mParser;
-        mParser = 0;
-        delete mErrHandler;
-        mErrHandler = 0;
-
-        return NULL;
-    }
-    catch ( const DOMException& toCatch )
-    {
-        message = XMLString::transcode( toCatch.msg );
-        std::cerr << "Exception message is: \n" << message << "\n";
-        XMLString::release( &message );
-        delete mParser;
-        mParser = 0;
-        delete mErrHandler;
-        mErrHandler = 0;
-
-        return NULL;
-    }
-    catch ( ... )
-    {
-        std::cerr << "DOMDocumentManager::Load Unexpected Exception" 
-            << std::endl;
-        delete mParser;
-        mParser = 0;
-        delete mErrHandler;
-        mErrHandler = 0;
-        return NULL;
-    }
+    ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
+    mDomDocManager->SetParseXMLFileOn();
+    mDomDocManager->Load( filename );
 
     ///get input parameter entry
     std::map< std::string, std::vector< std::string > > inList;
 
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mParser->getDocument();
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument();
     DOMElement* root_elem = mCommandDocument->getDocumentElement();
     DOMNodeList* inputList = 
         root_elem->getElementsByTagName (
@@ -1789,64 +1740,14 @@ char* VEPSI_i::readOutputFile( ves::open::xml::CommandPtr cmd )
     ///Parse Output XML File
     std::string filename = mWorkingDir + mFileName + ".output.xml";
     
-    ///initialize XML parser
-    XercesDOMParser* mParser = new XercesDOMParser();
-    mParser->setValidationScheme( XercesDOMParser::Val_Always );  // optional.
-    mParser->setDoNamespaces( true );  // optional
-    ErrorHandler* mErrHandler = ( ErrorHandler* ) new HandlerBase();
-    mParser->setErrorHandler( mErrHandler );
-
-    if( !std::ifstream( filename.c_str() ).good() )
-    {
-        std::cerr << "Could not open file : " << filename.c_str() << std::endl;
-        return NULL;
-    }
-
-    ///Catch Exceptions
-    char* message = 0;
-    try
-    {
-        mParser->parse( filename.c_str() );
-    }
-    catch ( const XMLException& toCatch )
-    {
-        message = XMLString::transcode( toCatch.getMessage() );
-        std::cerr << "Exception message is: \n" << message << "\n";
-        XMLString::release( &message );
-        delete mParser;
-        mParser = 0;
-        delete mErrHandler;
-        mErrHandler = 0;
-
-        return NULL;
-    }
-    catch ( const DOMException& toCatch )
-    {
-        message = XMLString::transcode( toCatch.msg );
-        std::cerr << "Exception message is: \n" << message << "\n";
-        XMLString::release( &message );
-        delete mParser;
-        mParser = 0;
-        delete mErrHandler;
-        mErrHandler = 0;
-
-        return NULL;
-    }
-    catch ( ... )
-    {
-        std::cerr << "DOMDocumentManager::Load Unexpected Exception" 
-            << std::endl;
-        delete mParser;
-        mParser = 0;
-        delete mErrHandler;
-        mErrHandler = 0;
-        return NULL;
-    }
+    ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
+    mDomDocManager->SetParseXMLFileOn();
+    mDomDocManager->Load( filename );
 
     ///get output parameter entry
     std::map< std::string, std::vector< std::string > > outList;
 
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mParser->getDocument();
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument();
     DOMElement* root_elem = mCommandDocument->getDocumentElement();
     DOMNodeList* outputList = 
         root_elem->getElementsByTagName (
@@ -1982,64 +1883,14 @@ char* VEPSI_i::readOutputFile( ves::open::xml::CommandPtr cmd )
 char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
 {
     ///Parse Output XML File
-    /*std::string filename = mWorkingDir + mFileName + ".input.xml";
+    std::string filename = mWorkingDir + mFileName + ".input.xml";
     
-    ///initialize XML parser
-    XercesDOMParser* mParser = new XercesDOMParser();
-    mParser->setValidationScheme( XercesDOMParser::Val_Always );  // optional.
-    mParser->setDoNamespaces( true );  // optional
-    ErrorHandler* mErrHandler = ( ErrorHandler* ) new HandlerBase();
-    mParser->setErrorHandler( mErrHandler );
-
-    if( !std::ifstream( filename.c_str() ).good() )
-    {
-        std::cerr << "Could not open file : " << filename.c_str() << std::endl;
-        return NULL;
-    }
-
-    ///Catch Exceptions
-    char* message = 0;
-    try
-    {
-        mParser->parse( filename.c_str() );
-    }
-    catch ( const XMLException& toCatch )
-    {
-        message = XMLString::transcode( toCatch.getMessage() );
-        std::cerr << "Exception message is: \n" << message << "\n";
-        XMLString::release( &message );
-        delete mParser;
-        mParser = 0;
-        delete mErrHandler;
-        mErrHandler = 0;
-
-        return NULL;
-    }
-    catch ( const DOMException& toCatch )
-    {
-        message = XMLString::transcode( toCatch.msg );
-        std::cerr << "Exception message is: \n" << message << "\n";
-        XMLString::release( &message );
-        delete mParser;
-        mParser = 0;
-        delete mErrHandler;
-        mErrHandler = 0;
-
-        return NULL;
-    }
-    catch ( ... )
-    {
-        std::cerr << "DOMDocumentManager::Load Unexpected Exception" 
-            << std::endl;
-        delete mParser;
-        mParser = 0;
-        delete mErrHandler;
-        mErrHandler = 0;
-        return NULL;
-    }
+    ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
+    mDomDocManager->SetParseXMLFileOn();
+    mDomDocManager->Load( filename );
 
     ///get input parameter entry
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mParser->getDocument();
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument(); //= mParser->getDocument();
     DOMElement* root_elem = mCommandDocument->getDocumentElement();
     DOMNodeList* inputList = 
         root_elem->getElementsByTagName (
@@ -2051,7 +1902,16 @@ char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
     ves::open::xml::DataValuePairPtr
         dvp( new ves::open::xml::DataValuePair() );
     
-    ///may need simulationobjects tag first
+    ///populate map of variables to change
+    std::map< std::string, std::map< std::string, std::string > > tempMap;
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        tempMap[temp_vector[0]][temp_vector[1]] = temp_vector[2];
+    }
 
     //get object entries
     DOMNodeList*objList = 
@@ -2060,7 +1920,6 @@ char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
         );
 
     int objCount = objList->getLength();
-    //ves::open::xml::XMLObject* convert = new ves::open::xml::XMLObject();
     for( int i = 0; i < objCount; i++)
     {
         //get object name
@@ -2068,42 +1927,44 @@ char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
         DOMElement* element =
             dynamic_cast<DOMElement*> ( objNode );
         std::string objName;
-        //ves::open::xml::XMLObject::GetAttribute( element, "Name", objName );
         dvp->GetAttribute( element, "Name", objName );
 
-        if( objName.compare("e2") == 0 )
+        //loop over names name
+        if( tempMap.find(objName) != tempMap.end() )
         {
             //get properties
-            //THIS GETS ALL THE PROPERTIES NOT OBJECT SPECIFIC
-            //NEED TO GET ONLY THE PROPERTIES OF THE CURRENT OBJECT
             DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
             DOMNodeList* propList = 
                 obj_element->getElementsByTagName (
                 XMLString::transcode("Property")
                 );
             int propCount = propList->getLength();
+
+            //loop over properties and change those requested
             for( int j = 0; j < propCount; j++)
             {
                 DOMNode* propNode = propList->item( j );
                 DOMElement* prop_element =
                     dynamic_cast<DOMElement*> ( propNode );
-                prop tempProp;
 
                 //prop id
                 std::string id;
                 dvp->GetAttribute( prop_element, "ID", id );
                 
-                if( id.compare("PROP_ES_0")==0)
-                {
+                //if( id.compare("PROP_ES_0")==0)
+                if( tempMap[objName].find(id) != tempMap[objName].end() )
+                {                   
+                    //set input
+                    dvp->SetAttribute( "Value", tempMap[objName][id], prop_element );
                     
-                    dvp->SetAttribute( "Value", "9", prop_element );
-                    double value;
-                    dvp->GetAttribute( prop_element, "Value", value );
-                    //save out file
+                    //save inputs file
+                    mDomDocManager->SetOuputXMLFile( filename );
+                    mDomDocManager->SetWriteXMLFileOn();
+                    mDomDocManager->WriteAndReleaseCommandDocument();
                     return NULL;
                 }
             }
         }
-    }*/
-return NULL;
+    }
+    return NULL;
 }
