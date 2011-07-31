@@ -420,6 +420,15 @@ void DynamicVehicleSimToolUIDialog::UpdateModelData()
     m_sipLocZ->GetValue().ToDouble( &sipVal );
     sipValZ->SetData( "SIP Z", sipVal );
     regCommand->AddDataValuePair( sipValZ );
+
+    ves::open::xml::DataValuePairPtr fowardVecDVP( new ves::open::xml::DataValuePair() );
+    fowardVecDVP->SetData( "Forward", ConvertUnicode( m_forwardVectorChoice->GetStringSelection().c_str() ) );
+    regCommand->AddDataValuePair( fowardVecDVP );
+
+    ves::open::xml::DataValuePairPtr upVecDVP( new ves::open::xml::DataValuePair() );
+    upVecDVP->SetData( "Up", ConvertUnicode( m_upVectorChoice->GetStringSelection().c_str() ) );
+    regCommand->AddDataValuePair( upVecDVP );
+
     tempModel->SetInput( regCommand );
     //mServiceList->SendCommandStringToXplorer( toolCommand );
 
@@ -581,6 +590,16 @@ void DynamicVehicleSimToolUIDialog::PopulateDialogs()
         sipValDVP = toolCommand->GetDataValuePair( "SIP Z" );
         sipValDVP->GetData( sipVal );
         m_sipLocZ->ChangeValue( wxString::Format( _("%f"), sipVal ) );
+
+        ves::open::xml::DataValuePairPtr fowardVecDVP = toolCommand->GetDataValuePair( "Forward" );
+        std::string forwardVecString;
+        fowardVecDVP->GetData( forwardVecString );
+        m_forwardVectorChoice->SetStringSelection( wxString( forwardVecString.c_str(), wxConvUTF8 ) );
+
+        ves::open::xml::DataValuePairPtr upVecDVP = toolCommand->GetDataValuePair( "Up" );
+        std::string upVecString;
+        upVecDVP->GetData( upVecString );
+        m_upVectorChoice->SetStringSelection( wxString( upVecString.c_str(), wxConvUTF8 ) );
     }
 
     toolCommand = tempModel->GetInput( "Geometry Data Map" );
@@ -653,6 +672,14 @@ void DynamicVehicleSimToolUIDialog::OnRegisterButton( wxCommandEvent& WXUNUSED( 
     m_sipLocZ->GetValue().ToDouble( &sipVal );
     sipValZ->SetData( "SIP Z", sipVal );
     command->AddDataValuePair( sipValZ );
+
+    ves::open::xml::DataValuePairPtr fowardVecDVP( new ves::open::xml::DataValuePair() );
+    fowardVecDVP->SetData( "Forward", ConvertUnicode( m_forwardVectorChoice->GetStringSelection().c_str() ) );
+    command->AddDataValuePair( fowardVecDVP );
+
+    ves::open::xml::DataValuePairPtr upVecDVP( new ves::open::xml::DataValuePair() );
+    upVecDVP->SetData( "Up", ConvertUnicode( m_upVectorChoice->GetStringSelection().c_str() ) );
+    command->AddDataValuePair( upVecDVP );
 
     const std::string commandName = "DVST Registration Update";
     command->SetCommandName( commandName );

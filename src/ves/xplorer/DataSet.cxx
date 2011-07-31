@@ -812,7 +812,7 @@ void DataSet::GetBounds( double* bounds )
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetActiveScalar( const std::string& tempActiveScalar )
 {
-    if( tempActiveScalar.empty() )
+    if( tempActiveScalar.empty() || scalarName.empty() )
     {
         this->activeScalar = -1;
         return;

@@ -106,7 +106,7 @@ VjObsWrapper::~VjObsWrapper( void )
 
     name.length( 1 );
     name[0].id   = CORBA::string_dup( "Master" );
-    name[0].kind = CORBA::string_dup( "VE_Xplorer" );
+    name[0].kind = CORBA::string_dup( "VE-Xplorer" );
 
     try
     {
@@ -265,8 +265,8 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         CosNaming::Name name;
         name.length( 1 );
 
-        name[0].id   = ( const char* ) "Master";
-        name[0].kind = ( const char* ) "VE_Xplorer";
+        name[0].id   = CORBA::string_dup( "Master Node" );
+        name[0].kind = CORBA::string_dup( "VE-Xplorer" );
         //Bind the object
         try
         {
@@ -283,8 +283,8 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         CosNaming::Name xplorerName;
         xplorerName.length( 1 );
 
-        xplorerName[0].id   = ( const char* ) "Test";
-        xplorerName[0].kind = ( const char* ) "VE_Xplorer";
+        xplorerName[0].id   = CORBA::string_dup( "VE-Xplorer Client 1" );
+        xplorerName[0].kind = CORBA::string_dup( "VE-Xplorer" );
         //Bind the object
         try
         {

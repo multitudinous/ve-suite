@@ -103,7 +103,7 @@ void DataSetScalarBar::AddScalarBarToGroup( void )
     }
 
     //Now add the lines
-    tempDCS->addChild( CreateScalarBar().get() );
+    tempDCS->addChild( CreateScalarBar() );
     // set position of scalar bar
     std::vector< double > trans;
     trans.push_back( bbox[ 0 ] );
@@ -117,7 +117,7 @@ ves::xplorer::scenegraph::DCS* DataSetScalarBar::GetScalarBar( void )
     return scalarBarDCS.get();
 }
 //////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )
+ScalarBar* DataSetScalarBar::CreateScalarBar( void )
 {
     DataSet* activeDataSet = 0;
     if( ModelHandler::instance()->GetActiveModel() )
@@ -134,6 +134,10 @@ osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )
     }
 
     int activeScalarNum = activeDataSet->GetActiveScalar();
+    if( activeScalarNum == -1 )
+    {
+        return 0;
+    }
     std::string activeScalarName = activeDataSet->GetScalarName( activeScalarNum );
 
     // Create a custom color set
@@ -157,7 +161,7 @@ osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )
     myPrinter->SetMinMax( scalarRange[ 0 ], scalarRange[ 1 ] );
     //std::cout << scalarRange[ 0 ] << " " <<  scalarRange[ 1 ] <<std::endl;
     ColorRange* cr = new ColorRange( scalarRange[ 0 ], scalarRange[ 1 ], cs );
-    osg::ref_ptr< ScalarBar > sb = new ScalarBar( 100, 3, cr, activeScalarName,
+    ScalarBar* sb = new ScalarBar( 100, 3, cr, activeScalarName,
                                                   ScalarBar::VERTICAL, 0.1f, myPrinter );
     //sb->setScalarPrinter(new MyScalarPrinter);
     sb->setTextProperties( textProps );

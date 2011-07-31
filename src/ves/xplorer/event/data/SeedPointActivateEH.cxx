@@ -117,11 +117,15 @@ void SeedPointActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
         if( _activeModel )
         {
             ///what happens if texture is somehow added first? Is that possible?
-            CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-            DataValuePairPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
-            DataValuePairPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
+            CommandPtr command = 
+                boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+            DataValuePairPtr seedPointsFlag = 
+                command->GetDataValuePair( "OnOff" );
+            DataValuePairPtr activeDataset = 
+                command->GetDataValuePair( "Active Dataset" );
             std::string datasetname;
             activeDataset->GetData( datasetname );
+
             ActivateSeedPoints( datasetname, (( seedPointsFlag->GetUIntData() == 1 ) ? true : false) );
         }
     }
@@ -160,10 +164,8 @@ void SeedPointActivateEventHandler::ActivateSeedPoints( const std::string& dataS
     _activeModel->SetActiveDataSet( _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) ) );
     ves::xplorer::scenegraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
     ves::xplorer::scenegraph::DCS* seedPointDCS = ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS();
-    
-    seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
-    seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
-    seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
+    seedPointDCS->SetMat( tempDCS->GetMat() );
+
     ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->Toggle( seedPointDisplay );
 }
 ////////////////////////////////////////////////////////////////////////////////

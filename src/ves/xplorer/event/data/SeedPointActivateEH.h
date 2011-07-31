@@ -46,9 +46,8 @@ namespace xplorer
 namespace event
 {
 /*!\file SeedPointActivateEH.h
-  SeedPointActivateEventHandler API
-  */
-/*!\class SeedPoint ActivateEventHandler
+ * SeedPointActivateEventHandler API
+ * \class SeedPoint ActivateEventHandler
  * Turn on/off display of seed points.
  */
 class VE_XPLORER_EXPORTS SeedPointActivateEventHandler: public EventHandler

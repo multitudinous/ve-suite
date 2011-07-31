@@ -59,6 +59,8 @@ protected:
     wxTextCtrl* m_sipLocX;
     wxTextCtrl* m_sipLocY;
     wxTextCtrl* m_sipLocZ;
+    wxChoice* m_forwardVectorChoice;
+    wxChoice* m_upVectorChoice;
     wxChoice* m_registrationChoice;
     wxButton* m_registrationButton;
     wxStdDialogButtonSizer* m_sdbSizer1;

@@ -86,7 +86,7 @@ void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances )
     geom.setUseVertexBufferObjects( true );
 
     //osgwTools::makeGeodesicSphere( 1.0, 0.0, &geom );
-    osgwTools::makeAltAzSphere( 0.5, 4., 6., &geom );
+    osgwTools::makeAltAzSphere( float( 0.5 ), float( 4.0 ), float( 6.0 ), &geom );
     unsigned int numPrim = geom.getNumPrimitiveSets();
     for( unsigned int i = 0; i < numPrim; ++i )
     {
@@ -186,7 +186,7 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
         
         osg::ref_ptr< ves::xplorer::scenegraph::VTKParticleTextureCreator > rawVTKData = 
             new ves::xplorer::scenegraph::VTKParticleTextureCreator();
-        rawVTKData->SetScalarData( m_dataCollection.at( i ) );
+        rawVTKData->SetScalarData( m_lineDataCollection.at( i ) );
         rawVTKData->SetActiveVectorAndScalar( m_activeVector, m_activeScalar );
         rawVTKData->SetPointQueue( tempLine );
         rawVTKData->loadData();
@@ -731,10 +731,21 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
     {   
         //Iterate through all points
         std::deque< ves::xplorer::scenegraph::VTKParticleTextureCreator::Point > tempQueue;
+        ///Add a pair for each scalar for each line
+        std::vector< std::pair< std::string, std::vector< double > > > tempLineData;
+        for( size_t k = 0; k < m_dataCollection.at( 0 ).size(); ++k )
+        {
+            std::vector< double > tempVec;
+            tempLineData.push_back( std::make_pair< std::string, std::vector< double > >( m_dataCollection.at( 0 ).at( k ).first, tempVec ) );
+        }
+
         for( size_t j = 0; j < m_transientDataSet.size(); ++j )
         {
             std::vector< std::pair< vtkIdType, double* > >* activeCellGroups = 
                 &m_pointCollection.at( j );
+            std::vector< std::pair< std::string, std::vector< double > > >* dataCollection = 
+                &m_dataCollection.at( j );
+
             if( i < activeCellGroups->size() )
             {
                 vtkIdType cellid = activeCellGroups->at( i ).first;
@@ -747,13 +758,21 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
                 //is always moving forward
                 delete [] pointid;
                 activeCellGroups->at( i ).second = 0;
+                for( size_t k = 0; k < dataCollection->size(); ++k )
+                {
+                    tempLineData.at( k ).second.push_back( dataCollection->at( k ).second.at( i ) );
+                }
             }
             else
             {
                 tempPoint.vertId = i;
                 tempPoint.x[ 0 ] = 0.;
                 tempPoint.x[ 1 ] = 0.;
-                tempPoint.x[ 2 ] = 0.;                
+                tempPoint.x[ 2 ] = 0.;
+                for( size_t k = 0; k < dataCollection->size(); ++k )
+                {
+                    tempLineData.at( k ).second.push_back( 0.0 );
+                }
             }
             tempQueue.push_back( tempPoint );
             //std::cout << tempCellGroups->at( i ).first << " " 
@@ -786,7 +805,7 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
             }            
         }
         m_streamlineList.push_back( tempQueue );
-
+        m_lineDataCollection.push_back( tempLineData );
         //std::cout << std::endl;
         //std::cout << std::endl;
         //std::cout << std::endl;
@@ -804,13 +823,13 @@ ves::xplorer::scenegraph::Geode* OSGParticleStage::createInstanced(
     }*/
     ///Clean up memory now that we have transferred it to the streamline list
     m_pointCollection.clear();    
-
+    m_dataCollection.clear();
     ves::xplorer::scenegraph::Geode* geode = new ves::xplorer::scenegraph::Geode();
     
     createStreamLines( geode );
     
     m_streamlineList.clear();
-    m_dataCollection.clear();
+    m_lineDataCollection.clear();
 
     return geode;
 }

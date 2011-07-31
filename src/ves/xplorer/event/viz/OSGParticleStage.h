@@ -105,6 +105,8 @@ private:
     std::vector< std::vector< std::pair< vtkIdType, double* > > >  m_pointCollection;
     ///The raw data for the respective points
     std::vector< std::vector< std::pair< std::string, std::vector< double > > > >  m_dataCollection;
+    ///Streamline ordered raw data for the respective lines
+    std::vector< std::vector< std::pair< std::string, std::vector< double > > > >  m_lineDataCollection;
     ///Container holding all of the datasets for these particles
     std::vector< ves::xplorer::DataSet* > m_transientDataSet;
     ///The active vector for the particles

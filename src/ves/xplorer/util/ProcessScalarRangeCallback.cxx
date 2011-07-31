@@ -154,10 +154,18 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ProcessScalarRangeCallback::GetScalarRange( const std::string& scalarName, double*& range )
 {
+    std::map<std::string, double* >::const_iterator scalarRangeInfo = m_scalarRanges.find( scalarName );
+    if( scalarRangeInfo == m_scalarRanges.end() )
+    {
+        range[0] = 0.0;
+        range[1] = 0.0;
+        return;
+    }
+
     try
     {
-        range[0] = m_scalarRanges[scalarName][0];
-        range[1] = m_scalarRanges[scalarName][1];
+        range[0] = scalarRangeInfo->second[0];
+        range[1] = scalarRangeInfo->second[1];
     }
     catch ( ... )
     {
@@ -165,4 +173,4 @@ void ProcessScalarRangeCallback::GetScalarRange( const std::string& scalarName, 
         std::cout << "ProcessScalarRangeCallback::GetScalarRange" << std::endl;
     }
 }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
