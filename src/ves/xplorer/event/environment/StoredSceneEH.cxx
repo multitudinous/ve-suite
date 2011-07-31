@@ -82,7 +82,6 @@ void StoredSceneEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXML
         {
             command->GetDataValuePair( "LOAD_PFB_FILE" )->GetData( whichChild );
             ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->LoadScene( whichChild );
-
         }
         else if( command->GetDataValuePair( "CLEAR_PFB_FILE" ) )
         {
@@ -93,9 +92,8 @@ void StoredSceneEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXML
             ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->RecordScene();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
-        std::cout << "Error!!" << std::endl;
-        std::cout << "StoredSceneEventHandler::_operateOnNode()" << std::endl;
+        std::cout << "ERROR: StoredSceneEventHandler::_operateOnNode()" << std::endl;
     }
 }

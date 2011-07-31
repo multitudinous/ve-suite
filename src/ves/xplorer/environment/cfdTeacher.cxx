@@ -180,7 +180,6 @@ void cfdTeacher::RecordScene()
 
     std::string dirString = dirStringStream.str();
     pfb_filename = dirString.c_str();
-    pfbFileNames.push_back( pfb_filename );
 
     vprDEBUG( vesDBG, 0 ) << "|\tScene stored as " << pfb_filename
         << std::endl << vprDEBUG_FLUSH;
@@ -237,6 +236,8 @@ void cfdTeacher::writePFBFile( osg::Node* graph, std::string fileName )
     if( status )
     {
         std::cout << "|\tSuccessfully written " << fileName << std::endl;
+        pfbFileNames.push_back( fileName );
+        return;
     }
     else
     {
@@ -246,6 +247,7 @@ void cfdTeacher::writePFBFile( osg::Node* graph, std::string fileName )
         if( status )
         {
             std::cout << "|\tSuccessfully written " << fileName << std::endl;
+            pfbFileNames.push_back( fileName );
             return;
         }
         std::cout << "|\tThere were errors writing " << fileName << std::endl;
