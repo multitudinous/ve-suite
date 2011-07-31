@@ -68,6 +68,7 @@ BEGIN_EVENT_TABLE( DWPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( DWPLUGIN_INPUTS, DWPlugin::GetInputs )
     EVT_MENU( DWPLUGIN_OUTPUTS, DWPlugin::GetOutputs )
     //EVT_MENU( DWPLUGIN_SET_INPUTS, DWPlugin::SetInputs )
+    EVT_MENU( DWPLUGIN_RUN_NETWORK, DWPlugin::RunSimulation )
     EVT_MENU( DWPLUGIN_CLOSE_SIMULATION, DWPlugin::OnCloseSimulation )
 END_EVENT_TABLE()
 
