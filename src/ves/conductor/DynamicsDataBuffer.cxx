@@ -55,18 +55,18 @@ DynamicsDataBuffer::DynamicsDataBuffer( void )
     ves::open::xml::CommandPtr nullCommand( new Command() );
     nullCommand->SetCommandName( "NULL" );
     commandMap[ "NULL" ] = nullCommand;
-    m_thread = 0;
-    m_enabled = false;
+    //m_thread = 0;
+    //m_enabled = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DynamicsDataBuffer::~DynamicsDataBuffer()
 {
-    CleanUp();
+    //CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::CleanUp( void )
 {
-    Disable();
+    //Disable();
     vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
     commandMap.clear();
 }
@@ -172,12 +172,12 @@ void DynamicsDataBuffer::Enable( )
 ///////////////////////////////////////////////////////////////////////////////
 void DynamicsDataBuffer::Disable( )
 {
-    if( m_enabled )
-    {
-        m_enabled = false;
-        m_thread->join();
-        delete m_thread;
-    }
+    //if( m_enabled )
+    //{
+        //m_enabled = false;
+        //m_thread->join();
+        //delete m_thread;
+    //}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
