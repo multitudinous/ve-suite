@@ -69,6 +69,10 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="${PNG_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.a" )
     CMAKE_PARAMS+=( -DINVENTOR_LIBRARY_RELEASE="${COIN3D_INSTALL_DIR}/lib/libCoin.dylib" )
+    CMAKE_PARAMS+=( -DFBX_ROOT="/Applications/Autodesk/FBXSDK20102" )
+    CMAKE_PARAMS+=( -DFBX_LIBRARY="/Applications/Autodesk/FBXSDK20102/lib/libfbxsdk_gcc4_ub.a" )
+    CMAKE_PARAMS+=( -DFBX_LIBRARY_DEBUG="/Applications/Autodesk/FBXSDK20102/lib/libfbxsdk_gcc4_ubd.a" )
+    CMAKE_PARAMS+=( -DFBX_INCLUDE_DIR="/Applications/Autodesk/FBXSDK20102/include" )
     ;;
   Linux)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
