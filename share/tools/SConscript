@@ -7,6 +7,9 @@ toolsSubdirs = Split("""
     daycent
     dds_texture_correction
 """)
+
+toolsSubdirs.append( "gis/scenario_builder" )
+
 # not needed anymore since we have screen capture working in xplorer
 #desktop_wallpaper
 
