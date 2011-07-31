@@ -51,6 +51,13 @@
 #include <vpr/System.h>
 #include <boost/bind.hpp>
 
+#include <ves/open/xml/XMLObject.h>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <ves/open/xml/util/Convert.h>
+
 // Implementation skeleton constructor
 VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog, 
                          CorbaUnitManager* parent, std::string dir )
@@ -105,14 +112,21 @@ VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog,
     mQueryCommandNames.insert( "setLinkParam");
     mQueryCommandNames.insert( "addVariable");
 
+    //DynSim and OPC
     mQueryCommandNames.insert( "getOPCValue");
     mQueryCommandNames.insert( "getOPCValues");
     mQueryCommandNames.insert( "setOPCValues");
     mQueryCommandNames.insert( "connectToOPC");
     mQueryCommandNames.insert( "getAllOPCVariables");
 
+    //DWSIM
+    mQueryCommandNames.insert( "readInputs");
+    mQueryCommandNames.insert( "readOutputs");
+    mQueryCommandNames.insert( "setInputs");
+
     dynFlag = false;
     bkpFlag = false;
+    dwFlag = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton destructor
@@ -224,15 +238,45 @@ void VEPSI_i::StartCalc (
     ::Error::EUnknown
   ))
 {
-      if( bkpFlag )
+    if( bkpFlag )
     {
         bkp->aspendoc->runSolver( false );
     }
-    
-    if( dynFlag )
+    else if( dynFlag )
     {
         dyn->dyndoc->RunSolver( );
     }
+    else if( dwFlag )
+    {
+        //execute the dwsim from the command line
+        //temporary solution
+        //std::string dwFile = "\"C:\\Documents and Settings\\tjordan\\Desktop\\DWSIM_examples\\test.dwsim\"";//mWorkingDir + filename + ".dwsim";
+        //std::string inFile = "\"C:\\Documents and Settings\\tjordan\\Desktop\\DWSIM_examples\\test.input.xml\"";//mWorkingDir + filename + ".input.xml";
+        //std::string outFile = "\"C:\\Documents and Settings\\tjordan\\Desktop\\DWSIM_examples\\test.output.xml\"";//mWorkingDir + filename + ".output.xml";
+        
+        std::string dwExe = "C:\\Program Files (x86)\\DWSIM\\DWSIM.EXE";
+        std::string dwFile = "\"" + mWorkingDir + mFileName + ".dwsim\"";
+        std::string inFile = "\"" + mWorkingDir + mFileName + ".input.xml\"";
+        std::string outFile = "\"" + mWorkingDir + mFileName + ".output.xml\"";
+                
+        std::string command = "\"" + dwExe + "\"" + " -commandline " +
+            " -nosplash " + " -show 1 " + " -locale \"en-US\" " +
+            " -simfile " + dwFile + " -input " + inFile + " -output " + outFile;
+        
+        LPSTR cmd = strdup( command.c_str() );
+        LPSTR exe = strdup( dwExe.c_str() );
+
+        BOOL bRet ;
+        STARTUPINFO sui ;
+        PROCESS_INFORMATION pi ;
+        sui.cb = sizeof (STARTUPINFO);
+        GetStartupInfo (&sui);
+        sui.dwFlags = STARTF_USESHOWWINDOW ;
+        sui.wShowWindow = SW_SHOW ;
+        bRet = CreateProcess( exe, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &sui, &pi );
+        WaitForSingleObject(pi.hProcess, INFINITE);
+    }
+    
     AspenLog->SetSel( -1, -1 );
     AspenLog->ReplaceSel( "Simulation Complete\r\n" );
     //executive_->SetModuleMessage(cur_id_,"Simulation completed.\n");
@@ -689,6 +733,29 @@ char * VEPSI_i::Query ( const char * query_str
         return returnValue;
     }
 
+    //DWSIM
+    else if ( cmdname == "readInputs" )
+    {
+        returnValue = readInputFile( cmd );
+        _mutex.release();
+        mQuerying = false;
+        return returnValue;
+    }
+    else if ( cmdname == "readOutputs" )
+    {
+        returnValue = readOutputFile( cmd );
+        _mutex.release();
+        mQuerying = false;
+        return returnValue;
+    }
+    else if ( cmdname == "setInputs" )
+    {
+        returnValue = setInputs( cmd );
+        _mutex.release();
+        mQuerying = false;
+        return returnValue;
+    }
+
     else
     {
         mQuerying = false;
@@ -881,7 +948,7 @@ char* VEPSI_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
     //this command has no params
     std::string filename = cmd->GetDataValuePair(1)->GetDataString();
 
-    std::string extension = filename.substr( filename.size() - 4, 4 );
+    std::string extension = filename.substr( filename.size() - 5, 5 );
  
     if( extension.find( "bkp" ) != std::string::npos )
     {
@@ -912,6 +979,7 @@ char* VEPSI_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 
         bkpFlag = true;
         dynFlag = false;
+        dwFlag = false;
         Display->SetWindowText(filename.c_str());
         bkp = new AspenPlus();
         bkp->SetWorkingDir( mWorkingDir );
@@ -934,10 +1002,59 @@ char* VEPSI_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
         
         bkpFlag = false;
         dynFlag = true;
+        dwFlag = false;
         Display->SetWindowText(filename.c_str());
         dyn = new AspenDynamics();
         dyn->SetWorkingDir( mWorkingDir );
         dyn->OpenFile(filename.c_str());
+    }
+    else if( extension.find( "dwsim" ) != std::string::npos )
+    {   
+        filename.resize( filename.size() - 6 );
+        
+        //make sure dynf file exists
+        std::ifstream dwFile( ( mWorkingDir + filename + ".dwsim" ).c_str(),
+            std::ios::binary);
+        if( !dwFile.is_open() )
+        {
+            //no dyn file
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel("DWSIM File Does NOT exist.\r\n");
+            return CORBA::string_dup( "DWDNE" );
+        }
+        dwFile.close();
+        
+        //check for input and output xml files
+        std::ifstream inFile( ( mWorkingDir + filename + ".input.xml" ).c_str(),
+            std::ios::binary);
+        if( !inFile.is_open() )
+        {
+            //no dyn file
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel("Input File Does NOT exist.\r\n");
+            return CORBA::string_dup( "DWInDNE" );
+        }
+        inFile.close();
+
+        std::ifstream outFile( ( mWorkingDir + filename + ".output.xml" ).c_str(),
+            std::ios::binary);
+        if( !outFile.is_open() )
+        {
+            //no dyn file
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel("Output File Does NOT exist.\r\n");
+            return CORBA::string_dup( "DWOutDNE" );
+        }
+        outFile.close();
+
+        bkpFlag = false;
+        dynFlag = false;
+        dwFlag = true;
+        Display->SetWindowText(filename.c_str());
+        mFileName = filename;
+        //dyn = new AspenDynamics();
+        //dyn->SetWorkingDir( mWorkingDir );
+        //dyn->OpenFile(filename.c_str());
     }
     return CORBA::string_dup("Simulation Opened.");
 }
@@ -1468,4 +1585,525 @@ char* VEPSI_i::getAllOPCVariables( ves::open::xml::CommandPtr cmd )
     std::string modname = curPair->GetDataString( );
     std::string netPak = dynSim->GetAllOPCVariables( modname.c_str() );
     return CORBA::string_dup( netPak.c_str( ) );
+}
+
+///DWSIM Functions
+///////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::readInputFile( ves::open::xml::CommandPtr cmd )
+{   
+    ///Parse Output XML File
+    std::string filename = mWorkingDir + mFileName + ".input.xml";
+    
+    ///initialize XML parser
+    XercesDOMParser* mParser = new XercesDOMParser();
+    mParser->setValidationScheme( XercesDOMParser::Val_Always );  // optional.
+    mParser->setDoNamespaces( true );  // optional
+    ErrorHandler* mErrHandler = ( ErrorHandler* ) new HandlerBase();
+    mParser->setErrorHandler( mErrHandler );
+
+    if( !std::ifstream( filename.c_str() ).good() )
+    {
+        std::cerr << "Could not open file : " << filename.c_str() << std::endl;
+        return NULL;
+    }
+
+    ///Catch Exceptions
+    char* message = 0;
+    try
+    {
+        mParser->parse( filename.c_str() );
+    }
+    catch ( const XMLException& toCatch )
+    {
+        message = XMLString::transcode( toCatch.getMessage() );
+        std::cerr << "Exception message is: \n" << message << "\n";
+        XMLString::release( &message );
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
+
+        return NULL;
+    }
+    catch ( const DOMException& toCatch )
+    {
+        message = XMLString::transcode( toCatch.msg );
+        std::cerr << "Exception message is: \n" << message << "\n";
+        XMLString::release( &message );
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
+
+        return NULL;
+    }
+    catch ( ... )
+    {
+        std::cerr << "DOMDocumentManager::Load Unexpected Exception" 
+            << std::endl;
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
+        return NULL;
+    }
+
+    ///get input parameter entry
+    std::map< std::string, std::vector< std::string > > inList;
+
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mParser->getDocument();
+    DOMElement* root_elem = mCommandDocument->getDocumentElement();
+    DOMNodeList* inputList = 
+        root_elem->getElementsByTagName (
+        XMLString::transcode("InputParameters")
+        );
+    DOMNode* node = inputList->item( 0 );
+    DOMElement* input_element = dynamic_cast< DOMElement* > ( node );
+    
+    ves::open::xml::DataValuePairPtr
+        dvp( new ves::open::xml::DataValuePair() );
+    
+    ///may need simulationobjects tag first
+
+    //get object entries
+    DOMNodeList*objList = 
+        input_element->getElementsByTagName (
+        XMLString::transcode("Object")
+        );
+
+    int objCount = objList->getLength();
+    //ves::open::xml::XMLObject* convert = new ves::open::xml::XMLObject();
+    for( int i = 0; i < objCount; i++)
+    {
+        //get object name
+        DOMNode* objNode = objList->item( i );
+        DOMElement* element =
+            dynamic_cast<DOMElement*> ( objNode );
+        std::string objName;
+        //ves::open::xml::XMLObject::GetAttribute( element, "Name", objName );
+        dvp->GetAttribute( element, "Name", objName );
+
+        //get properties
+        //THIS GETS ALL THE PROPERTIES NOT OBJECT SPECIFIC
+        //NEED TO GET ONLY THE PROPERTIES OF THE CURRENT OBJECT
+        DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
+        DOMNodeList* propList = 
+            obj_element->getElementsByTagName (
+            XMLString::transcode("Property")
+            );
+        int propCount = propList->getLength();
+        for( int j = 0; j < propCount; j++)
+        {
+            DOMNode* propNode = propList->item( j );
+            DOMElement* prop_element =
+                dynamic_cast<DOMElement*> ( propNode );
+            //prop tempProp;
+            std::vector< std::string > tempProp;
+
+            //prop id
+            std::string id;
+            dvp->GetAttribute( prop_element, "ID", id );
+            if( id.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.id = id;
+                tempProp.push_back( id );
+            }
+            
+            //prop name
+            std::string name;
+            dvp->GetAttribute( prop_element, "Name", name );
+            if( name.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.name = name;
+                tempProp.push_back( name );
+            }
+
+            //prop value
+            //double value;
+            std::string value;
+            dvp->GetAttribute( prop_element, "Value", value );
+            if( value.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.value = value;
+                tempProp.push_back( value );
+            }
+            
+            //prop unit
+            std::string unit;
+            dvp->GetAttribute( prop_element, "Unit", unit );
+            if( unit.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.unit = unit;
+                tempProp.push_back( unit );
+            }
+                        
+            inList[objName+"."+id] =( tempProp );
+        }
+    }
+    
+    //Construct return packet
+    ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
+    varsAndValues->SetCommandName("DWSIM_Data");
+    //std::map< std::string, std::vector< std::vector< std::string > > >::iterator inIter;
+    std::map< std::string, std::vector< std::string > >::iterator inIter;
+    for( inIter = inList.begin(); inIter != inList.end(); ++inIter)
+    {
+        //for( int j = 0; j < inIter->second.size(); j++ )
+        //{
+            ves::open::xml::DataValuePairPtr
+                entry( new ves::open::xml::DataValuePair() );
+            entry->SetData( inIter->first, inIter->second );
+            varsAndValues->AddDataValuePair( entry );
+        //}
+    }
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
+        ( varsAndValues, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return CORBA::string_dup( status.c_str( ) );
+}
+///////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::readOutputFile( ves::open::xml::CommandPtr cmd )
+{
+    ///Parse Output XML File
+    std::string filename = mWorkingDir + mFileName + ".output.xml";
+    
+    ///initialize XML parser
+    XercesDOMParser* mParser = new XercesDOMParser();
+    mParser->setValidationScheme( XercesDOMParser::Val_Always );  // optional.
+    mParser->setDoNamespaces( true );  // optional
+    ErrorHandler* mErrHandler = ( ErrorHandler* ) new HandlerBase();
+    mParser->setErrorHandler( mErrHandler );
+
+    if( !std::ifstream( filename.c_str() ).good() )
+    {
+        std::cerr << "Could not open file : " << filename.c_str() << std::endl;
+        return NULL;
+    }
+
+    ///Catch Exceptions
+    char* message = 0;
+    try
+    {
+        mParser->parse( filename.c_str() );
+    }
+    catch ( const XMLException& toCatch )
+    {
+        message = XMLString::transcode( toCatch.getMessage() );
+        std::cerr << "Exception message is: \n" << message << "\n";
+        XMLString::release( &message );
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
+
+        return NULL;
+    }
+    catch ( const DOMException& toCatch )
+    {
+        message = XMLString::transcode( toCatch.msg );
+        std::cerr << "Exception message is: \n" << message << "\n";
+        XMLString::release( &message );
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
+
+        return NULL;
+    }
+    catch ( ... )
+    {
+        std::cerr << "DOMDocumentManager::Load Unexpected Exception" 
+            << std::endl;
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
+        return NULL;
+    }
+
+    ///get output parameter entry
+    std::map< std::string, std::vector< std::string > > outList;
+
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mParser->getDocument();
+    DOMElement* root_elem = mCommandDocument->getDocumentElement();
+    DOMNodeList* outputList = 
+        root_elem->getElementsByTagName (
+        XMLString::transcode("OutputParameters")
+        );
+    DOMNode* node = outputList->item( 0 );
+    DOMElement* output_element = dynamic_cast< DOMElement* > ( node );
+    
+    ves::open::xml::DataValuePairPtr
+        dvp( new ves::open::xml::DataValuePair() );
+    
+    ///may need simulationobjects tag first
+
+    //get object entries
+    DOMNodeList*objList = 
+        output_element->getElementsByTagName (
+        XMLString::transcode("Object")
+        );
+
+    int objCount = objList->getLength();
+    //ves::open::xml::XMLObject* convert = new ves::open::xml::XMLObject();
+    for( int i = 0; i < objCount; i++)
+    {
+        //get object name
+        DOMNode* objNode = objList->item( i );
+        DOMElement* element =
+            dynamic_cast<DOMElement*> ( objNode );
+        std::string objName;
+        //ves::open::xml::XMLObject::GetAttribute( element, "Name", objName );
+        dvp->GetAttribute( element, "Name", objName );
+
+        //get properties
+        //THIS GETS ALL THE PROPERTIES NOT OBJECT SPECIFIC
+        //NEED TO GET ONLY THE PROPERTIES OF THE CURRENT OBJECT
+        DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
+        DOMNodeList* propList = 
+            obj_element->getElementsByTagName (
+            XMLString::transcode("Property")
+            );
+        int propCount = propList->getLength();
+        for( int j = 0; j < propCount; j++)
+        {
+            DOMNode* propNode = propList->item( j );
+            DOMElement* prop_element =
+                dynamic_cast<DOMElement*> ( propNode );
+            //prop tempProp;
+            std::vector< std::string > tempProp;
+
+            //prop id
+            std::string id;
+            dvp->GetAttribute( prop_element, "ID", id );
+            if( id.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.id = id;
+                tempProp.push_back( id );
+            }
+            
+            //prop name
+            std::string name;
+            dvp->GetAttribute( prop_element, "Name", name );
+            if( name.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.name = name;
+                tempProp.push_back( name );
+            }
+
+            //prop value
+            //double value;
+            std::string value;
+            dvp->GetAttribute( prop_element, "Value", value );
+            if( value.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.value = value;
+                tempProp.push_back( value );
+            }
+            
+            //prop unit
+            std::string unit;
+            dvp->GetAttribute( prop_element, "Unit", unit );
+            if( unit.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.unit = unit;
+                tempProp.push_back( unit );
+            }
+                        
+            outList[objName+"."+id] =( tempProp );
+        }
+    }
+    
+    //Construct return packet
+    ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
+    varsAndValues->SetCommandName("DWSIM_Data");
+    //std::map< std::string, std::vector< std::vector< std::string > > >::iterator inIter;
+    std::map< std::string, std::vector< std::string > >::iterator inIter;
+    for( inIter = outList.begin(); inIter != outList.end(); ++inIter)
+    {
+        //for( int j = 0; j < inIter->second.size(); j++ )
+        //{
+            ves::open::xml::DataValuePairPtr
+                entry( new ves::open::xml::DataValuePair() );
+            entry->SetData( inIter->first, inIter->second );
+            varsAndValues->AddDataValuePair( entry );
+        //}
+    }
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
+        ( varsAndValues, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return CORBA::string_dup( status.c_str( ) );
+}
+///////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
+{
+    ///Parse Output XML File
+    /*std::string filename = mWorkingDir + mFileName + ".input.xml";
+    
+    ///initialize XML parser
+    XercesDOMParser* mParser = new XercesDOMParser();
+    mParser->setValidationScheme( XercesDOMParser::Val_Always );  // optional.
+    mParser->setDoNamespaces( true );  // optional
+    ErrorHandler* mErrHandler = ( ErrorHandler* ) new HandlerBase();
+    mParser->setErrorHandler( mErrHandler );
+
+    if( !std::ifstream( filename.c_str() ).good() )
+    {
+        std::cerr << "Could not open file : " << filename.c_str() << std::endl;
+        return NULL;
+    }
+
+    ///Catch Exceptions
+    char* message = 0;
+    try
+    {
+        mParser->parse( filename.c_str() );
+    }
+    catch ( const XMLException& toCatch )
+    {
+        message = XMLString::transcode( toCatch.getMessage() );
+        std::cerr << "Exception message is: \n" << message << "\n";
+        XMLString::release( &message );
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
+
+        return NULL;
+    }
+    catch ( const DOMException& toCatch )
+    {
+        message = XMLString::transcode( toCatch.msg );
+        std::cerr << "Exception message is: \n" << message << "\n";
+        XMLString::release( &message );
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
+
+        return NULL;
+    }
+    catch ( ... )
+    {
+        std::cerr << "DOMDocumentManager::Load Unexpected Exception" 
+            << std::endl;
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
+        return NULL;
+    }
+
+    ///get input parameter entry
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mParser->getDocument();
+    DOMElement* root_elem = mCommandDocument->getDocumentElement();
+    DOMNodeList* inputList = 
+        root_elem->getElementsByTagName (
+        XMLString::transcode("InputParameters")
+        );
+    DOMNode* node = inputList->item( 0 );
+    DOMElement* input_element = dynamic_cast< DOMElement* > ( node );
+    
+    ves::open::xml::DataValuePairPtr
+        dvp( new ves::open::xml::DataValuePair() );
+    
+    ///may need simulationobjects tag first
+
+    //get object entries
+    DOMNodeList*objList = 
+        input_element->getElementsByTagName (
+        XMLString::transcode("Object")
+        );
+
+    int objCount = objList->getLength();
+    //ves::open::xml::XMLObject* convert = new ves::open::xml::XMLObject();
+    for( int i = 0; i < objCount; i++)
+    {
+        //get object name
+        DOMNode* objNode = objList->item( i );
+        DOMElement* element =
+            dynamic_cast<DOMElement*> ( objNode );
+        std::string objName;
+        //ves::open::xml::XMLObject::GetAttribute( element, "Name", objName );
+        dvp->GetAttribute( element, "Name", objName );
+
+        if( objName.compare("e2") == 0 )
+        {
+            //get properties
+            //THIS GETS ALL THE PROPERTIES NOT OBJECT SPECIFIC
+            //NEED TO GET ONLY THE PROPERTIES OF THE CURRENT OBJECT
+            DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
+            DOMNodeList* propList = 
+                obj_element->getElementsByTagName (
+                XMLString::transcode("Property")
+                );
+            int propCount = propList->getLength();
+            for( int j = 0; j < propCount; j++)
+            {
+                DOMNode* propNode = propList->item( j );
+                DOMElement* prop_element =
+                    dynamic_cast<DOMElement*> ( propNode );
+                prop tempProp;
+
+                //prop id
+                std::string id;
+                dvp->GetAttribute( prop_element, "ID", id );
+                
+                if( id.compare("PROP_ES_0")==0)
+                {
+                    
+                    dvp->SetAttribute( "Value", "9", prop_element );
+                    double value;
+                    dvp->GetAttribute( prop_element, "Value", value );
+                    //save out file
+                    return NULL;
+                }
+            }
+        }
+    }*/
+return NULL;
 }

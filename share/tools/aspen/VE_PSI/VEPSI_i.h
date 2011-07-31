@@ -238,12 +238,16 @@ public:
   char* setOPCValues( ves::open::xml::CommandPtr cmd );
   void connectWithList( ves::open::xml::CommandPtr cmd );
   void connectToOPC( ves::open::xml::CommandPtr cmd );
+  char* readInputFile( ves::open::xml::CommandPtr cmd );
+  char* readOutputFile( ves::open::xml::CommandPtr cmd );
+  char* setInputs( ves::open::xml::CommandPtr cmd );
 
   bool connected;
 
 private:
   bool bkpFlag;
   bool dynFlag;
+  bool dwFlag;
   bool dynSimFlag;
   vpr::Thread* m_thread;
 };
