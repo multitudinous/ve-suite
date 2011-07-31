@@ -59,7 +59,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 ///////////////////////////////////////////////////////////////////////////////
-DynSim::DynSim()
+DynSim::DynSim( std::string unitName )
 {
     try
     {
@@ -72,6 +72,7 @@ DynSim::DynSim()
     //    << XMLString::transcode( toCatch.getMessage() ) << XERCES_STD_QUALIFIER endl;
     //    return 1;
     }
+    m_unitName = unitName;
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::string DynSim::CreateNetwork( std::string filename )
@@ -733,7 +734,7 @@ std::string DynSim::CreateVESNetwork()
         flowSheetModel->SetModelID( sheetIter->second.id );
         flowSheetModel->SetPluginName( sheetIter->second.name );
         flowSheetModel->SetPluginType( "SimUOPlugin" );
-        flowSheetModel->SetVendorName( "DYNSIMUNIT" );
+        flowSheetModel->SetVendorName( m_unitName );
         std::string DSS_V (DSS_VERSION);
         flowSheetModel->SetIconFilename( DSS_V + "/Images/ClassIcons/" + sheetIter->second.cls + ".gif" );
         //flowSheetModel->SetIconFilename( sheetIter->second.cls );
@@ -852,7 +853,7 @@ std::string DynSim::CreateVESNetwork()
                 tempModel->SetPluginType( "OpcUOPlugin" );
             }
             
-            tempModel->SetVendorName( "DYNSIMUNIT" );
+            tempModel->SetVendorName( m_unitName );
             //tempModel->SetIconFilename( blockIter->second.cls );
             tempModel->SetIconFilename( GetDynSimIconPath( blockIter->second.cls, blockIter->second.imageType ) );
             tempModel->SetIconRotation( 0 );
@@ -903,7 +904,7 @@ std::string DynSim::CreateVESNetwork()
                 tempModel->SetPluginType( "OpcUOPlugin" );
             }
             
-            tempModel->SetVendorName( "DYNSIMUNIT" );
+            tempModel->SetVendorName( m_unitName );
             tempModel->SetIconFilename( "sim.xpm" );
             tempModel->SetIconRotation( 0 );
             tempModel->SetIconScale( 1 );

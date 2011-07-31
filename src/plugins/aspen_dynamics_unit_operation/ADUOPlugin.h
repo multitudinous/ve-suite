@@ -68,6 +68,12 @@ public:
     ///???
     void DrawPlugin( wxDC* dc );
 
+protected:
+    ///???
+    std::string m_unitName;
+    ///???
+    ves::open::xml::DataValuePairPtr vendorData;
+
 private:
     bool m_monValueExists;
     bool m_monitoring;

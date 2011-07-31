@@ -65,10 +65,19 @@ public:
     wxString GetConductorName();
 
 protected:
+    ///???
+    std::string m_unitName;
+    ///???
+    ves::open::xml::DataValuePairPtr vendorData;
+
+protected:
     wxMenu* mAspenMenu;
 
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+
+    ///???
+    void OnUnitName( wxCommandEvent& event );
 
     ///???
     void OnOpen( wxCommandEvent& event );
@@ -105,6 +114,9 @@ protected:
 
     ///???
     void OnDisconnectAspenSimulation( wxCommandEvent& event );
+
+    ///???
+    void SetUnitName( std::string name );
 
     ///???
     bool IsBKPOpen();

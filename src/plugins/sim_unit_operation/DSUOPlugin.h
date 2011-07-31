@@ -61,17 +61,23 @@ public:
     ///Destructor
     virtual ~DSUOPlugin();
 
-    ///
+    ///???
     wxString GetConductorName();
     
-    ///
+    ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
     virtual bool ShowAvailable();
 
-    ///
+    ///???
     wxMenu* mDynSimMenu;
 
-    ///
+protected:
+    ///???
+    std::string m_unitName;
+    ///???
+    ves::open::xml::DataValuePairPtr vendorData;
+
+    ///???
     DECLARE_EVENT_TABLE()
 };
 }

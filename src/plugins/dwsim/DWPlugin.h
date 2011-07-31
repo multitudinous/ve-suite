@@ -65,9 +65,18 @@ public:
     ///???
     wxString GetConductorName();
 
+protected:
+    ///???
+    std::string m_unitName;
+    ///???
+    ves::open::xml::DataValuePairPtr vendorData;
+
 private:
     wxMenu* mMenu;
     bool mIsSheetOpen;
+
+    ///???
+    void OnUnitName( wxCommandEvent& event );
 
     ///???
     void OnOpen( wxCommandEvent& event );
@@ -110,6 +119,9 @@ private:
     
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
+
+    ///???
+    void SetUnitName( std::string name );
 
     typedef struct                                                     
     {

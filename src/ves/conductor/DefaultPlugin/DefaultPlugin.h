@@ -60,6 +60,7 @@ public:
     virtual wxString GetConductorName();
     ///This returns the description of the module, This should be a short description
     virtual wxString GetDesc();
+    virtual bool ShowAvailable();
 
 public:
     long int height;

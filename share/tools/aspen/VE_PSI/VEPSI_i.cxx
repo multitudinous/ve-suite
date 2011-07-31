@@ -783,8 +783,7 @@ char* VEPSI_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         dynFlag = false;
         dynSimFlag = false;
         filename.resize( filename.size() - 4 );
-        bkp = new AspenPlus();
-        bkp->SetWorkingDir( mWorkingDir );
+        bkp = new AspenPlus( mWorkingDir, UnitName_ );
     }
     else if( extension.find( "dynf" ) != std::string::npos )
     {
@@ -792,8 +791,7 @@ char* VEPSI_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         dynFlag = true;
         dynSimFlag = false;
         filename.resize( filename.size() - 5 );
-        dyn = new AspenDynamics();
-        dyn->SetWorkingDir( mWorkingDir );
+        dyn = new AspenDynamics( mWorkingDir, UnitName_ );
     }
     else if( extension.find( "xml" ) != std::string::npos )
     {
@@ -801,7 +799,7 @@ char* VEPSI_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         dynFlag = false;
         dynSimFlag = true;
         filename.resize( filename.size() - 4 );
-        dynSim = new DynSim();
+        dynSim = new DynSim( UnitName_ );
     }
     
     if( bkpFlag )
@@ -982,8 +980,7 @@ char* VEPSI_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
         dynFlag = false;
         dwFlag = false;
         Display->SetWindowText(filename.c_str());
-        bkp = new AspenPlus();
-        bkp->SetWorkingDir( mWorkingDir );
+        bkp = new AspenPlus( mWorkingDir, UnitName_ );
         bkp->OpenSim(filename.c_str());
     }
     else if( extension.find( "dynf" ) != std::string::npos )
@@ -1005,8 +1002,7 @@ char* VEPSI_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
         dynFlag = true;
         dwFlag = false;
         Display->SetWindowText(filename.c_str());
-        dyn = new AspenDynamics();
-        dyn->SetWorkingDir( mWorkingDir );
+        dyn = new AspenDynamics( mWorkingDir, UnitName_ );
         dyn->OpenFile(filename.c_str());
     }
     else if( extension.find( "dwsim" ) != std::string::npos )

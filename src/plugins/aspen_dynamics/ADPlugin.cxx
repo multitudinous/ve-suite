@@ -63,6 +63,7 @@ using namespace ves::conductor;
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( ADPlugin, ves::conductor::UIPluginBase )
+    EVT_MENU( ADPLUGIN_SET_UNIT, ADPlugin::OnUnitName )
     EVT_MENU( ADPLUGIN_OPEN_SIM, ADPlugin::OnOpen )
     EVT_MENU( ADPLUGIN_SHOW_ASPEN_SIMULATION, ADPlugin::ShowAspenSimulation )
     EVT_MENU( ADPLUGIN_HIDE_ASPEN_SIMULATION, ADPlugin::HideAspenSimulation )
@@ -83,8 +84,8 @@ ADPlugin::ADPlugin() :
 {
     mPluginName = wxString( "AspenDynamics", wxConvUTF8 );
     mDescription = wxString( "Aspen Dynamics Plugin", wxConvUTF8 );
-    GetVEModel()->SetPluginType( "ADPlugin" );
-    GetVEModel()->SetVendorName( "ASPENUNIT" );
+    m_pluginType = "ADPlugin";
+    m_unitName = "VE-PSI";
 
     iconFilename = "dynamics.xpm";
     wxImage my_img( dynamics );
@@ -103,6 +104,21 @@ ADPlugin::~ADPlugin()
 wxString ADPlugin::GetConductorName()
 {
     return wxString( "Aspen_Dynamics_AD", wxConvUTF8 );
+}
+/////////////////////////////////////////////////////////////////////////////
+void ADPlugin::OnUnitName( wxCommandEvent& event )
+{    
+    UIPLUGIN_CHECKID( event )
+    wxTextEntryDialog newUnitName( 0,
+                                 _( "Enter the name for your unit:" ),
+                                 _( "Set Unit Name..." ),
+                                 "VE-PSI", wxOK | wxCANCEL );
+    //check for existing unit
+
+    if( newUnitName.ShowModal() == wxID_OK )
+    {
+        SetUnitName( newUnitName.GetValue().c_str() );
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 void ADPlugin::OnOpen( wxCommandEvent& event )
@@ -129,6 +145,10 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
         }
     }
 
+    //set the unit name
+    GetVEModel()->SetVendorName( m_unitName );
+    mAspenMenu->Enable( ADPLUGIN_SET_UNIT, false );
+
     ADOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
@@ -143,6 +163,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
 
     CommandPtr returnState ( new Command() );
     returnState->SetCommandName( "getNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "getNetwork" );
     returnState->AddDataValuePair( data );
@@ -185,15 +206,14 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
         networkWriter.GetLoadedXMLObjects();
     ves::open::xml::model::SystemPtr tempSystem;
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
-    ves::open::xml::model::ModelPtr aspenPlusModel;
     //set parent model on topmost level
     for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++)
     {
-        tempSystem->GetModel( modelCount )->SetParentModel( aspenPlusModel );
+        tempSystem->GetModel( modelCount )->SetParentModel( m_veModel );
     }
 
     //aspenPlusModel->SetSubSystem( tempSystem );
-    GetVEModel()->SetSubSystem( tempSystem );
+    m_veModel->SetSubSystem( tempSystem );
     mDataBufferEngine->ParseSystem( tempSystem );
 
     Network * network = m_canvas->GetActiveNetwork();
@@ -219,6 +239,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     ///
     CommandPtr aspenDynFile( new Command() );
     aspenDynFile->SetCommandName( "Aspen_Dynamics_Preferences" );
+    aspenDynFile->AddDataValuePair( vendorData );
     data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "DYNFileName",
         ConvertUnicode( dynFileName.GetFullName().c_str() ) );
@@ -229,6 +250,8 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
 
+    mAspenMenu->Enable( ADPLUGIN_SET_UNIT, false );
+    mAspenMenu->Enable( ADPLUGIN_OPEN_SIM, false );
     mAspenMenu->Enable( ADPLUGIN_CLOSE_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( ADPLUGIN_SHOW_ASPEN_SIMULATION, true );
     mAspenMenu->Enable( ADPLUGIN_HIDE_ASPEN_SIMULATION, true );
@@ -256,6 +279,7 @@ void ADPlugin::ShowAspenSimulation( wxCommandEvent& event  )
     //Log( "Show Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "showSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "showSimulation" );
     returnState->AddDataValuePair( data );
@@ -278,6 +302,7 @@ void ADPlugin::HideAspenSimulation( wxCommandEvent& event )
     //Log( "Hide Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "hideSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "hideSimulation" );
     returnState->AddDataValuePair( data );
@@ -299,6 +324,7 @@ void ADPlugin::CloseAspenSimulation( void )
     //Log( "Close Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "closeSimulation" );
     returnState->AddDataValuePair( data );
@@ -342,6 +368,7 @@ void ADPlugin::RunAspenNetwork( wxCommandEvent& event )
     //Log( "Run Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "runNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "runNetwork" );
     returnState->AddDataValuePair( data );
@@ -363,6 +390,7 @@ void ADPlugin::ReinitializeAspenSimulation( wxCommandEvent& event )
     //Log( "Reinitialize Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "reinitNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "reinitNetwork" );
     returnState->AddDataValuePair( data );
@@ -384,6 +412,7 @@ void ADPlugin::StepAspenNetwork( wxCommandEvent& event )
     //Log( "Run Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "stepNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "runNetwork" );
     returnState->AddDataValuePair( data );
@@ -405,6 +434,7 @@ void ADPlugin::SaveSimulation( wxCommandEvent& event )
     //Log( "Saving Simulation...\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "saveSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "saveSimulation" );
     returnState->AddDataValuePair( data );
@@ -444,6 +474,7 @@ void ADPlugin::SaveAsSimulation( wxCommandEvent& event )
 
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "saveAsSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "saveAsSimulation" );
     returnState->AddDataValuePair( data );
@@ -466,6 +497,7 @@ void ADPlugin::SaveAsSimulation( wxCommandEvent& event )
 
     CommandPtr aspenAPWFile( new Command() );
     aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
+    aspenAPWFile->AddDataValuePair( vendorData );
     data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "BKPFileName",
                    ConvertUnicode( saveFileName.GetFullName().c_str() ) );
@@ -483,6 +515,8 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
 
     mAspenMenu = new wxMenu();
+    mAspenMenu->Append( ADPLUGIN_SET_UNIT, _( "Unit Name" ) );
+    mAspenMenu->Enable( ADPLUGIN_SET_UNIT, true );
     mAspenMenu->Append( ADPLUGIN_OPEN_SIM, _( "Open" ) );
     mAspenMenu->Enable( ADPLUGIN_OPEN_SIM, true );
     mAspenMenu->Append( ADPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close" ) );
@@ -521,4 +555,9 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     }
 
     return baseMenu;
+}
+
+void ADPlugin::SetUnitName( std::string name )
+{
+    m_unitName = name;
 }

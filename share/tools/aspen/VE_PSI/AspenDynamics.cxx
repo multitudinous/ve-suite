@@ -18,7 +18,7 @@
 #include "AspenIconData.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-AspenDynamics::AspenDynamics()
+AspenDynamics::AspenDynamics( std::string workingDir, std::string unitName )
 {
     try
     {
@@ -33,7 +33,8 @@ AspenDynamics::AspenDynamics()
         exit(1);
     }
     dyndoc = new AspenDynamicsInterface::AspenDynamicsInterface();
-    workingDir = "";
+    m_workingDir = workingDir;
+    m_unitName = unitName;
     redundantID = 0;
 }
 
@@ -47,8 +48,8 @@ void AspenDynamics::OpenFile(const char * file)
 {
     std::string fileName(file);
     std::string dynfExt(".dynf");
-    NewParseFile( ( workingDir + fileName + dynfExt ).c_str());
-    CString filename = ( workingDir + fileName + dynfExt ).c_str();
+    NewParseFile( ( m_workingDir + fileName + dynfExt ).c_str());
+    CString filename = ( m_workingDir + fileName + dynfExt ).c_str();
     dyndoc->Open( filename );
 }
 
@@ -1146,7 +1147,7 @@ std::string AspenDynamics::CreateNetwork( void )
         tempModel->SetModelID( blockIter->second );
         tempModel->SetPluginName( blockIter->first );
         tempModel->SetPluginType( "ADUOPlugin" );
-        tempModel->SetVendorName( "DYNAMICSUNIT" );
+        tempModel->SetVendorName( m_unitName );
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
             +"_"+BlockInfoList["_main_sheet"][blockIter->first].type+"_"
@@ -1300,7 +1301,7 @@ void AspenDynamics::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         tempModel->SetModelID( blockIter->second );
         tempModel->SetPluginName( blockIter->first );
         tempModel->SetPluginType( "ADUOPlugin" );
-        tempModel->SetVendorName( "DYNAMICSUNIT" );
+        tempModel->SetVendorName( m_unitName );
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
             "_" + BlockInfoList[networkName][blockIter->first].type+"_" +
@@ -1388,7 +1389,7 @@ void AspenDynamics::ParseSubSystem( ves::open::xml::model::ModelPtr model,
 ///////////////////////////////////////////////////////////////////////////////
 void AspenDynamics::SetWorkingDir( std::string dir )
 {
-    workingDir = dir;
+    m_workingDir = dir;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

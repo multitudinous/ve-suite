@@ -53,7 +53,8 @@ private:
     std::map<std::string, std::map< std::string, int > >models;
     std::map< std::string, std::pair< int, int > > streamPortIDS;
     int redundantID;
-    std::string workingDir;
+    std::string m_workingDir;
+    std::string m_unitName;
 
     void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName );
     void ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName);
@@ -70,7 +71,7 @@ private:
     void FindNextEntry( std::ifstream &file );
 
 public:
-    AspenDynamics();
+    AspenDynamics( std::string workingDir, std::string unitName );
     ~AspenDynamics();
     void ParseFile( const char * file);
     std::string CreateNetwork( void );    

@@ -64,6 +64,7 @@ using namespace ves::conductor;
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( DWPlugin, ves::conductor::UIPluginBase )
+    EVT_MENU( DWPLUGIN_SET_UNIT, DWPlugin::OnUnitName )
     EVT_MENU( DWPLUGIN_OPEN_SIM, DWPlugin::OnOpen )
     EVT_MENU( DWPLUGIN_INPUTS, DWPlugin::GetInputs )
     EVT_MENU( DWPLUGIN_OUTPUTS, DWPlugin::GetOutputs )
@@ -81,8 +82,8 @@ DWPlugin::DWPlugin() :
 {
     mPluginName = wxString( "DWSIM", wxConvUTF8 );
     mDescription = wxString( "DWSIM Plugin", wxConvUTF8 );
-    GetVEModel()->SetPluginType( "DWPlugin" );
-    GetVEModel()->SetVendorName( "VEPSI" );
+    m_pluginType = "DWPlugin";
+    m_unitName = "VE-PSI";
 
     iconFilename = "dwsim.xpm";
     wxImage my_img( dwsim );
@@ -103,9 +104,24 @@ wxString DWPlugin::GetConductorName()
     return wxString( "DWSIM", wxConvUTF8 );
 }
 /////////////////////////////////////////////////////////////////////////////
+void DWPlugin::OnUnitName( wxCommandEvent& event )
+{    
+    wxTextEntryDialog newUnitName( 0,
+                                 _( "Enter the name for your unit:" ),
+                                 _( "Set Unit Name..." ),
+                                 "VE-PSI", wxOK | wxCANCEL );
+    //check for existing unit
+
+    if( newUnitName.ShowModal() == wxID_OK )
+    {
+        SetUnitName( newUnitName.GetValue().c_str() );
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
 void DWPlugin::OnOpen( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
+
     if( mIsSheetOpen )
     {
         wxMessageDialog md( m_canvas, 
@@ -122,6 +138,10 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
         }
     }
 
+    //set the unit name
+    GetVEModel()->SetVendorName( m_unitName );
+    mMenu->Enable( APPLUGIN_SET_UNIT, false );
+
     DWOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
@@ -136,6 +156,7 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
 
     CommandPtr returnState ( new Command() );
     returnState->SetCommandName( "openSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "openSimulation" );
     returnState->AddDataValuePair( data );
@@ -171,6 +192,7 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
 
     CommandPtr dwsimFile( new Command() );
     dwsimFile->SetCommandName( "DWSIM_Preferences" );
+    dwsimFile->AddDataValuePair( vendorData );
     data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "DWFileName",
         ConvertUnicode( dwFileName.GetFullName().c_str() ) );
@@ -181,6 +203,8 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
 
+    mMenu->Enable( DWPLUGIN_SET_UNIT, false );
+    mMenu->Enable( DWPLUGIN_OPEN_SIM, false );
     mMenu->Enable( DWPLUGIN_CLOSE_SIMULATION, true );
     mMenu->Enable( DWPLUGIN_RUN_NETWORK, true );
     mMenu->Enable( DWPLUGIN_INPUTS, true );
@@ -195,6 +219,7 @@ void DWPlugin::CloseSimulation( void )
 {    
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "closeSimulation" );
     returnState->AddDataValuePair( data );
@@ -232,6 +257,7 @@ void DWPlugin::RunSimulation( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "runNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "runNetwork" );
     returnState->AddDataValuePair( data );
@@ -258,6 +284,8 @@ wxMenu* DWPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
 
     mMenu = new wxMenu();
+    mMenu->Append( DWPLUGIN_SET_UNIT, _( "Unit Name" ) );
+    mMenu->Enable( DWPLUGIN_SET_UNIT, true );
     mMenu->Append( DWPLUGIN_OPEN_SIM, _( "Open" ) );
     mMenu->Enable( DWPLUGIN_OPEN_SIM, true );
     mMenu->Append( DWPLUGIN_INPUTS, _( "Inputs" ) );
@@ -305,6 +333,7 @@ void DWPlugin::GetInputs( wxCommandEvent& event )
     //read inputs.xml
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "readInputs" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "readInputs" );
     returnState->AddDataValuePair( data );
@@ -355,6 +384,7 @@ void DWPlugin::GetOutputs( wxCommandEvent& event )
     //read outputs.xml
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "readOutputs" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "readOutputs" );
     returnState->AddDataValuePair( data );
@@ -420,3 +450,7 @@ void DWPlugin::GetOutputs( wxCommandEvent& event )
 
     //create a dialog - can be editted
 }*/
+void DWPlugin::SetUnitName( std::string name )
+{
+    m_unitName = name;
+}

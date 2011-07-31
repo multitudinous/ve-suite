@@ -55,7 +55,7 @@ DSUOPlugin::DSUOPlugin() :
 {
     mPluginName = wxString( "DSUO", wxConvUTF8 );
     mDescription = wxString( "DynSim Unit Operation Plugin", wxConvUTF8 );
-    GetVEModel()->SetPluginType( "DSUOPlugin" );
+    m_pluginType = "DSUOPlugin";
 }
 ////////////////////////////////////////////////////////////////////////////////
 DSUOPlugin::~DSUOPlugin()
@@ -74,6 +74,15 @@ wxMenu* DSUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         return baseMenu;
     }
     
+    //set the vendor name of the current plugin to the parents
+    if( GetVEModel()->GetParentModel() )
+    {
+        m_unitName = m_veModel->GetParentModel()->GetVendorName();
+        m_veModel->SetVendorName( m_unitName );
+        vendorData = DataValuePairPtr( new DataValuePair() );
+        vendorData->SetData( "vendorUnit", m_unitName );
+    }
+
     baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, false );
 
     mDynSimMenu = new wxMenu();

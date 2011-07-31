@@ -50,7 +50,7 @@ using namespace GBDAAutomation;
 class DynSim
 {
 public:
-    DynSim();
+    DynSim( std::string unitName );
     ///Open the supplied file name in dynsim
     ///\param filename This must be a fully qualified path reference to a file.
     std::string CreateNetwork( std::string filename );
@@ -138,6 +138,7 @@ private:
     std::string m_opcFlowsheetName;
     std::vector< std::string > m_opcBlocks;
     std::vector< std::string > m_opcVariables;
+    std::string m_unitName;
 
     
     CComSafeArray<long> * serverID;

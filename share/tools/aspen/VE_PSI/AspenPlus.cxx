@@ -17,12 +17,13 @@
 #include "AspenIconData.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-AspenPlus::AspenPlus()
+AspenPlus::AspenPlus( std::string workingDir, std::string unitName )
     :
     aspendoc( new CASI::CASIDocument() ),
     redundantID( 0 )
 {
-    workingDir = "";
+    m_workingDir = workingDir;
+    m_unitName = unitName;
 }
 ///////////////////////////////////////////////////////////////////////////////
 AspenPlus::~AspenPlus()
@@ -35,9 +36,9 @@ void AspenPlus::OpenSimAndParse(const char * file)
     std::string fileName(file);
     std::string bkpExt(".bkp");
     std::string apwExt(".apw");
-    ParseFile( ( workingDir + fileName + bkpExt ).c_str());
+    ParseFile( ( m_workingDir + fileName + bkpExt ).c_str());
     CString filename = file;
-    aspendoc->open( ( workingDir + fileName + apwExt ).c_str());
+    aspendoc->open( ( m_workingDir + fileName + apwExt ).c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AspenPlus::OpenSim(const char * file)
@@ -45,7 +46,7 @@ void AspenPlus::OpenSim(const char * file)
     std::string fileName(file);
     std::string apwExt(".apw");
     CString filename = file;
-    aspendoc->open( ( workingDir + fileName + apwExt ).c_str());
+    aspendoc->open( ( m_workingDir + fileName + apwExt ).c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
 void AspenPlus::closeFile()
@@ -1284,7 +1285,7 @@ std::string AspenPlus::CreateNetwork( void )
         tempModel->SetModelID( blockIter->second );
         tempModel->SetPluginName( blockIter->first );
         tempModel->SetPluginType( "APUOPlugin" );
-        tempModel->SetVendorName( "ASPENUNIT" );
+        tempModel->SetVendorName( m_unitName );
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
             +"_"+BlockInfoList["_main_sheet"][blockIter->first].type+"_"
@@ -1452,7 +1453,7 @@ void AspenPlus::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         tempModel->SetModelID( blockIter->second );
         tempModel->SetPluginName( blockIter->first );
         tempModel->SetPluginType( "APUOPlugin" );
-        tempModel->SetVendorName( "ASPENUNIT" );
+        tempModel->SetVendorName( m_unitName );
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
             "_" + BlockInfoList[networkName][blockIter->first].type+"_" +
@@ -2188,5 +2189,5 @@ std::string AspenPlus::GetStreamOutputModuleParamProperties(
 ///////////////////////////////////////////////////////////////////////////////
 void AspenPlus::SetWorkingDir( const std::string& dir )
 {
-    workingDir = dir;
+    m_workingDir = dir;
 }

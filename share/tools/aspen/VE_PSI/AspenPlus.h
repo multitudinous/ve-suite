@@ -83,14 +83,15 @@ private:
 
    void StripCharacters( std::string& data, const std::string& character );   
 
-   std::string workingDir;
+   std::string m_workingDir;
    int redundantID;
+   std::string m_unitName;
 
 public:
     CASI::CASIDocument * aspendoc;
 
     //constructor
-    AspenPlus();  
+    AspenPlus( std::string workingDir, std::string unitName );  
     //deconstrutor                                                     
     ~AspenPlus();                                                     
     void OpenSimAndParse(const char *);   

@@ -65,6 +65,7 @@ using namespace ves::conductor;
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( DSPlugin, ves::conductor::UIPluginBase )
+    EVT_MENU( DSPLUGIN_SET_UNIT, DSPlugin::OnUnitName )
     EVT_MENU( DSPLUGIN_OPEN_SIM, DSPlugin::OnOpen )
     EVT_MENU( DSPLUGIN_CREATE_OPC_LIST, DSPlugin::OnCreateOPCList )
     EVT_MENU( DSPLUGIN_CONNECT, DSPlugin::OnConnect )
@@ -82,8 +83,8 @@ DSPlugin::DSPlugin() :
 {
     mPluginName = wxString( "DynSim", wxConvUTF8 );
     mDescription = wxString( "DynSim Plugin", wxConvUTF8 );
-    GetVEModel()->SetPluginType( "DSPlugin" );
-    GetVEModel()->SetVendorName( "SIMSCI" );
+    m_pluginType = "DSPlugin";
+    m_unitName = "VE-PSI";
 
     iconFilename = "sim.xpm";
     wxImage my_img( sim );
@@ -102,11 +103,26 @@ wxString DSPlugin::GetConductorName()
     return wxString( "DynSim_DS", wxConvUTF8 );
 }
 /////////////////////////////////////////////////////////////////////////////
+void DSPlugin::OnUnitName( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    wxTextEntryDialog newUnitName( 0,
+                                 _( "Enter the name for your unit:" ),
+                                 _( "Set Unit Name..." ),
+                                 "VE-PSI", wxOK | wxCANCEL );
+    //check for existing unit
+
+    if( newUnitName.ShowModal() == wxID_OK )
+    {
+        SetUnitName( newUnitName.GetValue().c_str() );
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnOpen( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
 
-        DSOpenDialog fd( m_canvas );
+    DSOpenDialog fd( m_canvas );
     fd.SetPopulateFilenames( );
 
     if( fd.ShowModal() != wxID_OK )
@@ -114,12 +130,19 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
         return;
     }
 
+    //set the unit name
+    GetVEModel()->SetVendorName( m_unitName );
+    mDynSimMenu->Enable( DSPLUGIN_SET_UNIT, false );
+    vendorData = DataValuePairPtr( new DataValuePair() );
+    vendorData->SetData( "vendorUnit", m_unitName );
+
     wxFileName xmlFileName;
     xmlFileName.ClearExt();
     xmlFileName.SetName( fd.GetFilename() + wxT(".xml") );
 
     CommandPtr returnState ( new Command() );
     returnState->SetCommandName( "getNetwork" );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "getNetwork" );
     returnState->AddDataValuePair( data );
@@ -173,12 +196,11 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
 
     ves::open::xml::model::SystemPtr tempSystem;
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
-    ves::open::xml::model::ModelPtr dynSimModel;
     //set parent model on topmost level
     for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++)
     {
         ModelPtr tempModel = tempSystem->GetModel( modelCount );
-        tempModel->SetParentModel( dynSimModel );
+        tempModel->SetParentModel( m_veModel );
         
         //go through models to find opc
         SystemPtr tempSubSystem = tempModel->GetSubSystem();
@@ -198,7 +220,7 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
     }
 
     //dynSimModel->SetSubSystem( tempSystem );
-    GetVEModel()->SetSubSystem( tempSystem );
+    m_veModel->SetSubSystem( tempSystem );
     mDataBufferEngine->ParseSystem( tempSystem );
 
     //Network * network = m_canvas->GetActiveNetwork();
@@ -209,7 +231,6 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
     m_canvas->AddSubNetworks( );
 
     //m_subNetwork = m_canvas->GetNetwork( );
-
 #if 0
     std::ofstream netdump ("netdump.txt");
     netdump << nw_str;
@@ -227,6 +248,7 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
     ///
     CommandPtr dynSimXMLFile( new Command() );
     dynSimXMLFile->SetCommandName( "sim_Preferences" );
+    dynSimXMLFile->AddDataValuePair( vendorData );
     data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "XMLFileName",
                    ConvertUnicode( xmlFileName.GetFullName().c_str() ) );
@@ -236,6 +258,10 @@ void DSPlugin::OnOpen( wxCommandEvent& event )
     SetName( fd.GetFilename() );
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
+
+    mDynSimMenu->Enable( DSPLUGIN_SET_UNIT, false );
+    mDynSimMenu->Enable( DSPLUGIN_OPEN_SIM, false );
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
@@ -254,6 +280,8 @@ wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         UIPLUGINBASE_SHOW_ICON_CHOOSER, false );
 
     mDynSimMenu = new wxMenu();
+    mDynSimMenu->Append( DSPLUGIN_SET_UNIT, _( "Unit Name" ) );
+    mDynSimMenu->Enable( DSPLUGIN_SET_UNIT, true );
     mDynSimMenu->Append( DSPLUGIN_OPEN_SIM, _( "Open" ) );
     mDynSimMenu->Enable( DSPLUGIN_OPEN_SIM, true );
     mDynSimMenu->Append( DSPLUGIN_CREATE_OPC_LIST, _( "Create List") );
@@ -272,6 +300,7 @@ wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 ////////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnCreateOPCList( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //create dialog with list of available opc variables
     OPCDlg * opcDlg = new OPCDlg( m_canvas );
 
@@ -285,8 +314,10 @@ void DSPlugin::OnCreateOPCList( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void DSPlugin::OnConnect( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("connectToOPC");
+    monitor->AddDataValuePair( vendorData );
 
     //ves::open::xml::DataValuePairPtr
     //    variables( new ves::open::xml::DataValuePair() );
@@ -306,6 +337,8 @@ void DSPlugin::OnConnect( wxCommandEvent& event )
     std::string nw_str = serviceList->Query( status );
 
     DynamicsDataBuffer::instance()->Enable();
+
+    mDynSimMenu->Enable( DSPLUGIN_CONNECT, false );
 
     //m_timer->Start( 4000 );
 }
@@ -394,6 +427,7 @@ void DSPlugin::QueryForAllVariables( wxCommandEvent& event )
         std::string pluginName = m_opcList[i].c_str();
         ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
         returnState->SetCommandName( "getAllOPCVariables" );
+        returnState->AddDataValuePair( vendorData );
         ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
         data->SetData( std::string( "ModuleName" ), pluginName.c_str() );
         returnState->AddDataValuePair( data );
@@ -434,4 +468,8 @@ void DSPlugin::QueryForAllVariables( wxCommandEvent& event )
     //populate dialog
     params->ShowModal();
     params->Destroy();
+}
+void DSPlugin::SetUnitName( std::string name )
+{
+    m_unitName = name;
 }
