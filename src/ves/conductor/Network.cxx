@@ -2088,7 +2088,7 @@ void Network::SetIDOnAllActiveModules( void )
     std::map< unsigned int, Module >::iterator iter;
     for( iter = modules.begin(); iter != modules.end(); ++iter )
     {
-        std::string moduleName = ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() );
+        std::string moduleName = iter->second.GetPlugin()->GetVEModel()->GetVendorName();
         int moduleId = iter->first;
         mServiceList->SetID( moduleId, moduleName );
     }
