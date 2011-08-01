@@ -1724,8 +1724,6 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     bbox = cur_module->GetBBox();
     modules[id].SetPlugin( cur_module );
 
-    //This name is now set in the plugin by the user
-    modules[id].GetPlugin()->SetPluginType( cls_name );
     modules[id].GetPlugin()->SetID( id );
     modules[id].GetPlugin()->SetCORBAService( mServiceList );
     modules[id].GetPlugin()->SetXMLDataBufferEngine( mDataBufferEngine );
@@ -1741,6 +1739,12 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     
     ///Add the plugin model pointer to the respective system
     systemPtr->AddModel( modules[id].GetPlugin()->GetVEModel() );
+
+    if( modules[id].GetPlugin()->GetVEModel()->GetPluginType().empty() )
+    {
+        //This name is now set in the plugin by the user
+        modules[id].GetPlugin()->SetPluginType( cls_name );
+    }
 
     sbboxes.push_back( bbox );
     ///Add vemodels to the hierarchy tree
