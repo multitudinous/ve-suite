@@ -73,6 +73,8 @@
 #include <sstream>
 #include <string>
 
+#include <boost/concept_check.hpp>
+
 const int maxProxies = 32766;
 
 //#define PRINT_CONTACT_STATISTICS 1
@@ -353,6 +355,9 @@ static bool CustomMaterialCombinerCallback(
     const btCollisionObject* colObj0, int partId0, int index0,
     const btCollisionObject* colObj1, int partId1, int index1 )
 {
+    boost::ignore_unused_variable_warning( partId0 );
+    boost::ignore_unused_variable_warning( index0 );
+
     btAdjustInternalEdgeContacts( cp,colObj1, colObj0, partId1, index1 );
     //btAdjustInternalEdgeContacts(
         //cp, colObj1, colObj0, partId1, index1, BT_TRIANGLE_CONVEX_BACKFACE_MODE );
