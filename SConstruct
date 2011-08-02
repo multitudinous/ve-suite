@@ -235,7 +235,8 @@ else:
                          'vtkParallel','vtksys', 'vtkverdict',
                          'vtkexoIIc','vtkftgl','vtkDICOMParser','vtkexpat',
                          'vtkNetCDF','vtkjpeg','vtktiff','vtkpng',
-                         'vtkmetaio','vtksqlite','vtkfreetype'], 
+                         'vtkmetaio','vtksqlite','vtkfreetype',
+                         'vtkNetCDF_cxx','VPIC','Cosmo'], 
         symbol="main", required=True)
     if ARGUMENTS.has_key("vtk"):
         vtkBaseDir = ARGUMENTS["vtk"]

@@ -25,9 +25,9 @@ gadgeteer_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
-xerces_options.apply( lib_env )
 tao_options.apply( lib_env )
 osgworks_options.apply( lib_env )
+xerces_options.apply( lib_env )
 
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
