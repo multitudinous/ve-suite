@@ -33,21 +33,20 @@
 #include "AspenPlus.h"
 #include "AspenDynamics.h"
 #include "DynSim.h"
-#include <ves/open/moduleS.h>
 #include <ves/open/xml/CommandPtr.h>
 #include "VE_PSI.h"
 #include "VE_PSIDlg.h"
 #include "CorbaUnitManager.h"
 #include <vpr/Thread/Thread.h>
 #include <set>
+#include <ves/ce/unitwrapper/UnitWrapper.h>
 
-class  VEPSI_i : public virtual POA_Body::Unit
+class  VEPSI_i : public UnitWrapper
 {
 public:
     // Constructor 
     VEPSI_i (std::string name, VE_PSIDlg * dialog,
         CorbaUnitManager * parent, std::string dir );
-    //VEPSI_i() {};
     //Destructor 
     virtual ~VEPSI_i (void);
 
@@ -59,7 +58,6 @@ public:
     std::string data_;
 
 protected:
-    //Body::Executive_var executive_;
     unsigned int return_state;
     VE_PSIDlg * theDialog;
     CorbaUnitManager * theParent;
@@ -84,120 +82,6 @@ public:
   
   virtual
   void StartCalc (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-  void StopCalc (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-  void PauseCalc (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-  void Resume (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-  char * GetStatusMessage (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-  char * GetUserData (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-      void SetParams (CORBA::Long id,
-      const char * param
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-  void SetID (
-      ::CORBA::Long id
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-  virtual
-  void SetCurID (
-      ::CORBA::Long id
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-      ::Types::ArrayLong* GetID (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-      ::CORBA::Long GetCurID (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-  virtual void VEPSI_i::DeleteModuleInstance(CORBA::Long id) 
-    ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ));
-
-  virtual
-  void SetName (
-      const char * name
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-  
-  virtual
-  char * GetName (
       
     )
     ACE_THROW_SPEC ((
