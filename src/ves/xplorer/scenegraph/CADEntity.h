@@ -59,14 +59,8 @@ class PhysicsSimulator;
 class PhysicsRigidBody;
 
 /*!\file CADEntity.h
- *
- */
-
-/*!\class ves::xplorer::scenegraph::CADEntity
- *
- */
-
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::CADEntity
+ * \namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS CADEntity

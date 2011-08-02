@@ -37,6 +37,7 @@
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/Clone.h>
+#include <ves/xplorer/scenegraph/util/AnimationNonInterpolatedPath.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -194,30 +195,31 @@ bool CADAnimationEventHandler::ReadData( std::string const& animFile )
 ////////////////////////////////////////////////////////////////////////////////
 osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string component)
 {
-   osg::AnimationPath* animationPath=new osg::AnimationPath;
-   animationPath->setLoopMode(osg::AnimationPath::NO_LOOPING);
+    osg::AnimationPath* animationPath = 
+        new ves::xplorer::scenegraph::util::AnimationNonInterpolatedPath();
+    animationPath->setLoopMode(osg::AnimationPath::NO_LOOPING);
 
-   std::string x = component + "X";
-   std::string y = component + "Y";
-   std::string z = component + "Z";
-   std::string roll = component + "Roll";
-   std::string pitch = component + "Pitch";
-   std::string yaw = component + "Yaw";
+    std::string x = component + "X";
+    std::string y = component + "Y";
+    std::string z = component + "Z";
+    std::string roll = component + "Roll";
+    std::string pitch = component + "Pitch";
+    std::string yaw = component + "Yaw";
 
-   osg::Vec3 scale(1,1,1);
-   osg::Vec3 xaxis(1,0,0);
-   osg::Vec3 yaxis(0,1,0);
-   osg::Vec3 zaxis(0,0,1);
-   osg::Quat quat;
+    osg::Vec3 scale(1,1,1);
+    osg::Vec3 xaxis(1,0,0);
+    osg::Vec3 yaxis(0,1,0);
+    osg::Vec3 zaxis(0,0,1);
+    osg::Quat quat;
 
-   osg::Vec3 trans;
+    osg::Vec3 trans;
 
-   std::map< std::string, std::vector< float > > activeObj;
-   activeObj = objectOne;
+    std::map< std::string, std::vector< float > > activeObj;
+    activeObj = objectOne;
 
-   unsigned int numTimeSteps = activeObj[ "time" ].size();
-   for( unsigned int i=0;i< numTimeSteps; ++i )
-   {
+    unsigned int numTimeSteps = activeObj[ "time" ].size();
+    for( unsigned int i=0;i< numTimeSteps; ++i )
+    {
       trans = osg::Vec3( activeObj[ x ].at( i ),
                          activeObj[ y ].at( i ),
                          activeObj[ z ].at( i ));
@@ -227,10 +229,10 @@ osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string co
                         osg::DegreesToRadians( activeObj[ yaw ].at( i ) ),   zaxis );
       float time = activeObj[ "time" ].at( i );
       animationPath->insert( time, osg::AnimationPath::ControlPoint(trans,quat,scale) );
-   }
-   std::cout << "|\tRead " << numTimeSteps << " timesteps." << std::endl;
+    }
+    std::cout << "|\tRead " << numTimeSteps << " timesteps." << std::endl;
 
-   return animationPath;
+    return animationPath;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADAnimationEventHandler::CreateAnimatedCAD( std::string const& nodeType, 
