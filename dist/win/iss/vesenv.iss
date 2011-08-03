@@ -2,17 +2,19 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define VEVERSION "3.0.0"
 #define SVNVERSION "14920"
-#define x64 "1"
+;#define x64 "1"
 ; Lib directory for x64 or x86
 #ifdef x64
 #define LIBDIR "lib64"
 #define BUILDDIR "x64"
 #define DISTDIR "Win64"
+#define OGGBUILDDIR "x64"
 #define MSVCVERSION "msvc-9.0-sp1-x64"
 #else
 #define LIBDIR "lib"
 #define BUILDDIR "x86"
 #define DISTDIR "Win32"
+#define OGGBUILDDIR "Win32"
 #define MSVCVERSION "msvc-9.0-sp1-x86"
 #endif
 ; Define the group name for all the windows links to be
@@ -84,7 +86,7 @@
 ;and less version dependent when running this installer
 #define APRINSTALL "C:\Projects\ves-windows\workapr"
 ; Minerva deps
-#define MINERVASRCHOME "C:\dev\deps\minervagis-svn\install-win32"
+#define MINERVASRCHOME "C:\dev\deps\auto_deps\minervagis\install-win32"
 ; #define FWTOOLS "C:\Program Files\FWTools2.3.0"
 #define PROJHOME "C:\dev\deps\proj-4.7.0\install-win32"
 #define GDALHOME "C:\dev\deps\gdal-1.6.3\install-win32"
@@ -131,3 +133,7 @@
 #define BACKDROPFXSRCHOME "C:\dev\skewmatrix-redmine-svn\skewmatrix\backdropFX\trunk\install-win32"
 ; osgEphemeris
 #define OSGEPHEMERISSRCHOME "C:\dev\skewmatrix-redmine-svn\skewmatrix\external\osgEphemeris\install-win32"
+; LEmon deps
+#define LEMONINSTALLHOME "C:\Users\mccdo\Desktop\lemon_test_build\lemon-1.2.1\install-win32"
+#define CBCSRCHOME "C:\Users\mccdo\Desktop\lemon_test_build\Cbc-2.7.1-win32-msvc9"
+#define GLPKSRCHOME "C:\Users\mccdo\Desktop\lemon_test_build\glpk-4.45"

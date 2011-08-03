@@ -1,0 +1,13 @@
+prefix=${fp_file_cwd}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Lemon
+Description: Lemon graph library
+Provides: lemon
+Requires:
+Version: 1.2.1
+Libs: /libpath:"${libdir}" glpk_4_45.lib lemon.lib
+Cflags: /I"${includedir}"
+Arch: noarch
