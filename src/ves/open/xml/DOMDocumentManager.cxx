@@ -405,7 +405,7 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
 // Duplicate of the WriteAndReleaseCommandDocument without header
 // This function is necessary for DWSim because it doesn't accept XML with a header
 // in the input file
-const std::string DOMDocumentManager::WriteAndReleaseCommandDocumentRoot( void )
+const std::string DOMDocumentManager::WriteAndReleaseRootElement( void )
 {
     DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(
                               Convert( "LS" ).toXMLString() );

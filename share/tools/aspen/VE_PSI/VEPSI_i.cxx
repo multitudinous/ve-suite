@@ -325,7 +325,7 @@ void VEPSI_i::StartCalc (
                             //save inputs file
                             mDomDocManager->SetOuputXMLFile( inFile );
                             mDomDocManager->SetWriteXMLFileOn();
-                            mDomDocManager->WriteAndReleaseCommandDocumentRoot();
+                            mDomDocManager->WriteAndReleaseRootElement();
                             break;
                         }
                     }
