@@ -105,10 +105,64 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
 
     //QDir pluginsPath = qApp->applicationDirPath();
     //pluginsPath.cd("conductor/plugins");
-    QString tempDir( pluginsDir.c_str() );
-    QDir pluginsPath( tempDir );
+    DiscoverPlugins( pluginsDir.c_str() );
+
+    //Also attempt to discover plugins in the Plugins subfolder of the current
+    //directory
+    QString currentDir( QDir::currentPath() );
+    currentDir = currentDir + "/Plugins";
+    DiscoverPlugins( currentDir.toStdString() );
     
-    std::cout << "|\tConductor is searching for plugins in " 
+    qRegisterMetaType<std::string>();
+    qRegisterMetaType<ves::xplorer::plugin::PluginBase>();
+
+    connect( this, SIGNAL( CreateUIPluginQSignal( const std::string& ,
+                                         ves::xplorer::plugin::PluginBase* ) ),
+                              this, SLOT( qCreateUIPlugin( const std::string& ,
+                                         ves::xplorer::plugin::PluginBase*  ) ),
+                              Qt::QueuedConnection );
+
+    connect( this, SIGNAL( FileLoadedQSignal( const std::string&  ) ),
+                              this, SLOT( qFileLoadedSlot( const std::string& ) ),
+                              Qt::QueuedConnection );
+
+    CONNECTSIGNALS_2( "%CreatePlugin",
+                      void ( const std::string&, ves::xplorer::plugin::PluginBase* ),
+                      &PluginSelectionTab::CreateUIPlugin, m_connections,
+                      any_SignalType, normal_Priority);
+
+    CONNECTSIGNALS_1( "%VesFileLoading%",
+                      void( const std::string& ),
+                      &PluginSelectionTab::FileLoadedSlot,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_1( "%WorkingDirectoryChanged%",
+                      void( const std::string& ),
+                      &PluginSelectionTab::DiscoverPlugins,
+                      m_connections, any_SignalType, normal_Priority );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
+{
+    QString tempDir( dir.c_str() );
+    QDir pluginsPath( tempDir );
+    if( !pluginsPath.exists() )
+    {
+        return;
+    }
+
+    // Recursively search all subdirectories of the passed directory
+    QStringList subdirs = pluginsPath.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    QStringList::iterator dir_iter = subdirs.begin();
+    while( dir_iter != subdirs.end() )
+    {
+        std::string compoundpath = dir + "/" + ((*dir_iter).toStdString());
+        std::cout << "Traversing to " << compoundpath << std::endl << std::flush;
+        DiscoverPlugins( compoundpath );
+        dir_iter++;
+    }
+
+    std::cout << "|\tConductor is searching for plugins in "
         << pluginsPath.canonicalPath().toStdString() << std::endl << std::flush;
 
     // Walk through all files in Plugins/UI directory
@@ -116,7 +170,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
     QStringList::iterator iter = files.begin();
     if( iter == files.end() )
     {
-        std::cout << "|\tConductor found no plugins." 
+        std::cout << "|\tConductor found no plugins."
             << std::endl << std::flush;
     }
 
@@ -147,6 +201,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
                     // Set the plugin's full path as extra data in the item so that later
                     // we can create new instances of this plugin.
                     item->setData( Qt::UserRole, loader.fileName() );
+                    std::cout << "Adding plugin with filename " << loader.fileName().toStdString() << std::endl;
                     //item->setFlags( item->flags() | Qt::ItemIsEditable );
                     ui->m_availablePlugins->addItem( item );
                 }
@@ -167,28 +222,6 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
         }
         ++iter;
     }
-    qRegisterMetaType<std::string>();
-    qRegisterMetaType<ves::xplorer::plugin::PluginBase>();
-
-    connect( this, SIGNAL( CreateUIPluginQSignal( const std::string& ,
-                                         ves::xplorer::plugin::PluginBase* ) ),
-                              this, SLOT( qCreateUIPlugin( const std::string& ,
-                                         ves::xplorer::plugin::PluginBase*  ) ),
-                              Qt::QueuedConnection );
-
-    connect( this, SIGNAL( FileLoadedQSignal( const std::string&  ) ),
-                              this, SLOT( qFileLoadedSlot( const std::string& ) ),
-                              Qt::QueuedConnection );
-
-    CONNECTSIGNALS_2( "%CreatePlugin",
-                      void ( const std::string&, ves::xplorer::plugin::PluginBase* ),
-                      &PluginSelectionTab::CreateUIPlugin, m_connections,
-                      any_SignalType, normal_Priority);
-
-    CONNECTSIGNALS_1( "%VesFileLoading%",
-                      void( const std::string& ),
-                      &PluginSelectionTab::FileLoadedSlot,
-                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 PluginSelectionTab::~PluginSelectionTab()
@@ -221,6 +254,7 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
     }
     // Get plugin filename from the current item
     QString fileName = item->data( Qt::UserRole ).toString();
+    std::cout << "Creating instance of " << fileName.toStdString() << std::endl << std::flush;
 
     QPluginLoader loader( fileName );
     QObject *plugin = loader.instance();
@@ -458,7 +492,11 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
         UIPluginInterface* interface = factory->CreateInstance();
 
         // Set its name as interfaceName_index
-        int index = ui->m_instantiatedPlugins->count();
+        //int index = ui->m_instantiatedPlugins->count();
+        QList<QListWidgetItem *> results =
+                ui->m_instantiatedPlugins->findItems( QString::fromStdString( interface->GetName() ),
+                                                      Qt::MatchStartsWith );
+        int index = results.count();
         std::stringstream nameSS;
         nameSS << interface->GetName();
         nameSS << "_";

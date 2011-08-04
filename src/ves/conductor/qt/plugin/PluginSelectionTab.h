@@ -69,6 +69,7 @@ public:
     explicit PluginSelectionTab( MainWindow* mainWindow, QWidget *parent = 0 );
     ~PluginSelectionTab();
     void ClearActivePlugins();
+    void DiscoverPlugins( std::string const& dir );
 
 protected:
     void changeEvent(QEvent *e);
