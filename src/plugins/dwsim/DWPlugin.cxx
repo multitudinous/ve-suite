@@ -35,6 +35,7 @@
 #include "DWPlugin.h"
 #include "DWOpenDialog.h"
 #include "DWVarDialog.h"
+#include "DWPortDialog.h"
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
 
@@ -68,6 +69,8 @@ BEGIN_EVENT_TABLE( DWPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( DWPLUGIN_OPEN_SIM, DWPlugin::OnOpen )
     EVT_MENU( DWPLUGIN_INPUTS, DWPlugin::GetInputs )
     EVT_MENU( DWPLUGIN_OUTPUTS, DWPlugin::GetOutputs )
+    EVT_MENU( DWPLUGIN_INPUT_PORT, DWPlugin::SetInputPortData )
+    EVT_MENU( DWPLUGIN_OUTPUT_PORT, DWPlugin::SetOutputPortData )
     //EVT_MENU( DWPLUGIN_SET_INPUTS, DWPlugin::SetInputs )
     EVT_MENU( DWPLUGIN_RUN_NETWORK, DWPlugin::RunSimulation )
     EVT_MENU( DWPLUGIN_CLOSE_SIMULATION, DWPlugin::OnCloseSimulation )
@@ -311,7 +314,24 @@ void DWPlugin::RunSimulation( wxCommandEvent& event )
 wxMenu* DWPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 {
     if( mMenu )
-    {
+    {    
+        if(inputPort.size() == 0)
+        {
+            mMenu->Enable( DWPLUGIN_INPUT_PORT, false );
+        }
+        else
+        {
+            mMenu->Enable( DWPLUGIN_INPUT_PORT, true );
+        }
+
+        if(outputPort.size() == 0)
+        {
+            mMenu->Enable( DWPLUGIN_OUTPUT_PORT, false );
+        }
+        else
+        {
+            mMenu->Enable( DWPLUGIN_OUTPUT_PORT, true );
+        }
         return baseMenu;
     }
 
@@ -332,6 +352,10 @@ wxMenu* DWPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mMenu->Enable( DWPLUGIN_RUN_NETWORK, false );
     mMenu->Append( DWPLUGIN_CLOSE_SIMULATION, _( "Close" ) );
     mMenu->Enable( DWPLUGIN_CLOSE_SIMULATION, false );
+    mMenu->Append( DWPLUGIN_INPUT_PORT, _( "Input Port" ) );
+    mMenu->Enable( DWPLUGIN_INPUT_PORT, false );
+    mMenu->Append( DWPLUGIN_OUTPUT_PORT, _( "Output Port" ) );
+    mMenu->Enable( DWPLUGIN_OUTPUT_PORT, false );
     baseMenu->Insert( 0, DWPLUGIN_MENU,   _( "DWSIM" ), mMenu,
                     _( "Used in conjunction with DWSIM" ) );
     baseMenu->Enable( DWPLUGIN_MENU, true );
@@ -487,4 +511,102 @@ void DWPlugin::GetOutputs( wxCommandEvent& event )
 void DWPlugin::SetUnitName( std::string name )
 {
     m_unitName = name;
+}
+void DWPlugin::SetOutputPortData( wxCommandEvent& event )
+{
+    //read outputs.xml
+    CommandPtr returnState( new Command() );
+    returnState->SetCommandName( "readInputFileOutputs" );
+    returnState->AddDataValuePair( vendorData );
+    DataValuePairPtr data( new DataValuePair() );
+    data->SetData( "NetworkQuery", "readInputFileOutputs" );
+    returnState->AddDataValuePair( data );
+
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+
+    XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    std::string nw_str = serviceList->Query( status ) + "\n";
+
+    //create a dialog
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+        networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd =
+        boost::dynamic_pointer_cast<ves::open::xml::Command>
+        ( objectVector.at( 0 ) );
+
+
+    DWPortDialog* params = new DWPortDialog( GetPluginParent(), false );
+    params->SetServiceList( serviceList );
+    int numdvps = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < numdvps; i++ )
+    {
+        std::string name;
+        std::vector< std::string > in_prop;
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        name = pair->GetDataName( );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        params->SetData( wxString( name.c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
+            wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
+    }
+    params->UpdateSizes();
+    params->ShowModal();
+    params->Destroy();
+}
+void DWPlugin::SetInputPortData( wxCommandEvent& event )
+{
+    //read inputs.xml
+    CommandPtr returnState( new Command() );
+    returnState->SetCommandName( "readInputs" );
+    returnState->AddDataValuePair( vendorData );
+    DataValuePairPtr data( new DataValuePair() );
+    data->SetData( "NetworkQuery", "readInputs" );
+    returnState->AddDataValuePair( data );
+
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+
+    XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    std::string nw_str = serviceList->Query( status ) + "\n";
+
+    //create a dialog - can be editted
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+        networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd =
+        boost::dynamic_pointer_cast<ves::open::xml::Command>
+        ( objectVector.at( 0 ) );
+    DWPortDialog* params = new DWPortDialog( GetPluginParent(), true );
+    params->SetServiceList( serviceList );
+    int numdvps = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < numdvps; i++ )
+    {
+        std::string name;
+        std::vector< std::string > in_prop;
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        name = pair->GetDataName( );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        params->SetData( wxString( name.c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
+            wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
+    }
+    params->UpdateSizes();
+    params->ShowModal();
+    params->Destroy();
 }

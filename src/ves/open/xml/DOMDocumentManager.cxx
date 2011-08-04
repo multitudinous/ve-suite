@@ -401,3 +401,85 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
    //The xml readerwirter would handle the write for the venetwork
    //to process models seperately
 }*/
+/////////////////////////////////////////////////////
+// Duplicate of the WriteAndReleaseCommandDocument without header
+// This function is necessary for DWSim because it doesn't accept XML with a header
+// in the input file
+const std::string DOMDocumentManager::WriteAndReleaseCommandDocumentRoot( void )
+{
+    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(
+                              Convert( "LS" ).toXMLString() );
+#if _XERCES_VERSION >= 30001
+    DOMLSSerializer* theSerializer = static_cast< DOMImplementationLS* >( impl )->createLSSerializer();
+    DOMLSOutput* theOutputDesc = static_cast< DOMImplementationLS* >( impl )->createLSOutput();
+    theOutputDesc->setEncoding( Convert( "ISO-8859-1" ).toXMLString() );
+    DOMConfiguration* serializerConfig=theSerializer->getDomConfig();
+#else
+    DOMWriter* theSerializer = static_cast< DOMImplementationLS* >( impl )->createDOMWriter();
+#endif
+
+    char* message = 0;
+    char* tempResultString = 0;
+    std::string result;
+
+    try
+    {
+        if( mWriteXMLFile )
+        {
+            //take a string passed in as the filename to write out
+            LocalFileFormatTarget outputXML( mOutputXMLFile.c_str() );
+#if _XERCES_VERSION >= 30001
+            theOutputDesc->setByteStream( &outputXML );
+            serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
+            theSerializer->write( mCommandDocument->getDocumentElement(), theOutputDesc  );
+#else
+            theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
+            theSerializer->writeNode( &outputXML, *(mCommandDocument->getDocumentElement()) );
+#endif
+        }
+        else
+        {
+            // do the serialization through DOMWriter::writeNode();
+#if _XERCES_VERSION >= 30001
+            XMLCh* xXml = theSerializer->writeToString( mCommandDocument->getDocumentElement() );
+#else 
+            XMLCh* xXml = theSerializer->writeToString( *(mCommandDocument->getDocumentElement()) );
+#endif
+            tempResultString = XMLString::transcode( xXml );
+            result = tempResultString;
+            XMLString::release( &tempResultString );
+            XMLString::release( &xXml );
+        }
+    }
+    catch ( const XMLException& toCatch )
+    {
+        message = XMLString::transcode( toCatch.getMessage() );
+        std::cout << "Exception message is: \n"
+        << message << std::endl;
+        XMLString::release( &message );
+        //rv=false;
+        return NULL;
+    }
+    catch ( const DOMException& toCatch )
+    {
+        message = XMLString::transcode( toCatch.msg );
+        std::cout << "Exception message is: \n"
+        << message << std::endl;
+        XMLString::release( &message );
+        //rv=false;
+        return NULL;
+    }
+    catch ( ... )
+    {
+        std::cout << "Unexpected Exception " << std::endl;
+        //rv=false;
+        return NULL;
+    }
+
+    theSerializer->release();
+#if _XERCES_VERSION >= 30001
+    theOutputDesc->release();
+#endif
+    //rv=true;
+    return result;
+}

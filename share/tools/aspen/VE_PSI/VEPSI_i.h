@@ -124,7 +124,11 @@ public:
   void connectToOPC( ves::open::xml::CommandPtr cmd );
   char* readInputFile( ves::open::xml::CommandPtr cmd );
   char* readOutputFile( ves::open::xml::CommandPtr cmd );
+  char* readInputFileOutputs( ves::open::xml::CommandPtr cmd );
   char* setInputs( ves::open::xml::CommandPtr cmd );
+  void setInputPort( ves::open::xml::CommandPtr cmd );
+  void setOutputPort( ves::open::xml::CommandPtr cmd );
+
 
   bool connected;
 
@@ -134,6 +138,8 @@ private:
   bool dwFlag;
   bool dynSimFlag;
   vpr::Thread* m_thread;
+  std::pair< std::string, std::pair< std::string, std::string > >  mPortInput;
+  std::pair< std::string, std::pair< std::string, std::string > > mPortOutput;
 };
 
 

@@ -105,6 +105,7 @@ public:
 
     /// Functions used to create a document and then return it in a std::string
     const std::string WriteAndReleaseCommandDocument( void );
+    const std::string WriteAndReleaseCommandDocumentRoot( void );
     ///Create the command document.
     ///\param type The type of document to be encoded in the header of the xml document either: Network, Shader, Command
     void CreateCommandDocument( const std::string& type );

@@ -113,7 +113,10 @@ VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog,
     //DWSIM
     mQueryCommandNames.insert( "readInputs");
     mQueryCommandNames.insert( "readOutputs");
+    mQueryCommandNames.insert( "readInputFileOutputs");
     mQueryCommandNames.insert( "setInputs");
+    mQueryCommandNames.insert( "setOutputPort");
+    mQueryCommandNames.insert( "setInputPort");
 
     dynFlag = false;
     bkpFlag = false;
@@ -240,21 +243,23 @@ void VEPSI_i::StartCalc (
     else if( dwFlag )
     {
         std::string inFile = mWorkingDir + mFileName + ".input.xml";
+        std::string outFile = mWorkingDir + mFileName + ".output.xml";
 
-        //check for inputs
         std::ostringstream strm;
         strm << activeId;
-        const std::vector< ves::open::xml::CommandPtr > inputsVec = xmlModelMap[ strm.str() ]->GetInputs();
-        if (inputsVec.size() != 0)
+
+        //check for inputs
+        //const std::vector< ves::open::xml::CommandPtr > inputsVec = xmlModelMap[ strm.str() ]->GetInputs();
+        //if (inputsVec.size() != 0)
+        if( !mPortInput.first.empty() )
         {
             //grab the value from one output variable
-            double value;
+            std::string value;
             ves::open::xml::CommandPtr tempCmd =
                 boost::dynamic_pointer_cast<ves::open::xml::Command>
                 ( xmlModelMap[ strm.str() ]->GetInput( "Upstream Model Results" )->
                     GetDataValuePair( "DWSim Output" )->GetDataXMLObject() );
-            tempCmd->GetDataValuePair( "8" )->GetData( value );
-
+            tempCmd->GetDataValuePair( 0 )->GetData( value );
 
             //write to xml file
             ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
@@ -262,7 +267,7 @@ void VEPSI_i::StartCalc (
             mDomDocManager->Load( inFile );
 
             ///get input parameter entry
-            XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument(); //= mParser->getDocument();
+            XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument();
             DOMElement* root_elem = mCommandDocument->getDocumentElement();
             DOMNodeList* inputList = 
                 root_elem->getElementsByTagName (
@@ -291,7 +296,7 @@ void VEPSI_i::StartCalc (
                 dvp->GetAttribute( element, "Name", objName );
 
                 //loop over names name
-                if( objName.compare("2") == 0 )
+                if( objName.compare(mPortInput.first) == 0 )
                 {
                     //get properties
                     DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
@@ -312,7 +317,7 @@ void VEPSI_i::StartCalc (
                         std::string id;
                         dvp->GetAttribute( prop_element, "ID", id );
                         
-                        if( id.compare("PROP_MS_0")==0)
+                        if( id.compare(mPortInput.second.first)==0)
                         {                   
                             //set input
                             dvp->SetAttribute( "Value", value, prop_element );
@@ -320,7 +325,7 @@ void VEPSI_i::StartCalc (
                             //save inputs file
                             mDomDocManager->SetOuputXMLFile( inFile );
                             mDomDocManager->SetWriteXMLFileOn();
-                            mDomDocManager->WriteAndReleaseCommandDocument();
+                            mDomDocManager->WriteAndReleaseCommandDocumentRoot();
                             break;
                         }
                     }
@@ -328,13 +333,12 @@ void VEPSI_i::StartCalc (
             }
         }
 
-        
+        //create the sys call
         std::string dwExe = "C:\\Program Files (x86)\\DWSIM\\DWSIM.EXE";
         std::string dwFile = "\"" + mWorkingDir + mFileName + ".dwsim\"";
-        std::string outFile = "\"" + mWorkingDir + mFileName + ".output.xml\"";
-        inFile = "\"" + inFile + "\"";
-
-        //execute the dwsim from the command line            
+        std::string outFileSys = "\"" + outFile + "\"";
+        std::string inFileSys = "\"" + inFile + "\"";
+          
         std::string syscall = "\"" + dwExe + "\"" + " -commandline " +
             " -nosplash " + " -show 1 " + " -locale \"en-US\" " +
             " -simfile " + dwFile + " -input " + inFile + " -output " + outFile;
@@ -342,6 +346,7 @@ void VEPSI_i::StartCalc (
         LPSTR cmd = strdup( syscall.c_str() );
         LPSTR exe = strdup( dwExe.c_str() );
 
+        //execute the dwsim from the command line  
         BOOL bRet ;
         STARTUPINFO sui ;
         PROCESS_INFORMATION pi ;
@@ -352,17 +357,90 @@ void VEPSI_i::StartCalc (
         bRet = CreateProcess( exe, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &sui, &pi );
         WaitForSingleObject(pi.hProcess, INFINITE);
 
-        //read the results xml file
-        //grab the results you want
-        //write them as dvps to the command to the currentmodel
-        ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-        command->SetCommandName( "DWSim Output" );
-        ves::open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair() );
-        //read the result file for "8"'s value
-        double temp = 350.0;
-        dvp->SetData( "8", temp );
-        command->AddDataValuePair( dvp );
-        xmlModelMap[ strm.str() ]->SetResult( command );        
+        if( !mPortOutput.first.empty() )
+        {
+            std::string value;
+            //read the results xml file
+            //grab the results you want
+            ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
+            mDomDocManager->SetParseXMLFileOn();
+            mDomDocManager->Load( outFile );
+
+            ///get input parameter entry
+            XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument();
+            DOMElement* root_elem = mCommandDocument->getDocumentElement();
+            DOMNodeList* inputList = 
+                root_elem->getElementsByTagName (
+                XMLString::transcode("OutputParameters")
+                );
+            DOMNode* node = inputList->item( 0 );
+            DOMElement* input_element = dynamic_cast< DOMElement* > ( node );
+            
+            ves::open::xml::DataValuePairPtr
+                dvp( new ves::open::xml::DataValuePair() );
+
+            //get object entries
+            DOMNodeList*objList = 
+                input_element->getElementsByTagName (
+                XMLString::transcode("Object")
+                );
+
+            int objCount = objList->getLength();
+            for( int i = 0; i < objCount; i++)
+            {
+                //get object name
+                DOMNode* objNode = objList->item( i );
+                DOMElement* element =
+                    dynamic_cast<DOMElement*> ( objNode );
+                std::string objName;
+                dvp->GetAttribute( element, "Name", objName );
+
+                //loop over names name
+                if( objName.compare(mPortOutput.first) == 0 )
+                {
+                    //get properties
+                    DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
+                    DOMNodeList* propList = 
+                        obj_element->getElementsByTagName (
+                        XMLString::transcode("Property")
+                        );
+                    int propCount = propList->getLength();
+
+                    //loop over properties and change those requested
+                    for( int j = 0; j < propCount; j++)
+                    {
+                        DOMNode* propNode = propList->item( j );
+                        DOMElement* prop_element =
+                            dynamic_cast<DOMElement*> ( propNode );
+
+                        //prop id
+                        std::string id;
+                        dvp->GetAttribute( prop_element, "ID", id );
+                        
+                        if( id.compare(mPortOutput.second.first) == 0 )
+                        {                   
+                            //set input
+                            //dvp->SetAttribute( "Value", value, prop_element );
+                            dvp->GetAttribute( prop_element, "Value", value);
+                            
+                            //save inputs file
+                            //mDomDocManager->SetOuputXMLFile( inFile );
+                            //mDomDocManager->SetWriteXMLFileOn();
+                            //mDomDocManager->WriteAndReleaseCommandDocumentRoot();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //write them as dvps to the command to the currentmodel
+            ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+            command->SetCommandName( "DWSim Output" );
+            ves::open::xml::DataValuePairPtr outputDVP( new ves::open::xml::DataValuePair() );
+            outputDVP->SetData( mPortOutput.first, value );
+            command->AddDataValuePair( outputDVP );
+            xmlModelMap[ strm.str() ]->SetResult( command );      
+        }
     }
     AspenLog->SetSel( -1, -1 );
     AspenLog->ReplaceSel( "Simulation Complete\r\n" );
@@ -675,12 +753,33 @@ char * VEPSI_i::Query ( const char * query_str
             mQuerying = false;
             return returnValue;
         }
+        else if ( cmdname == "readInputFileOutputs" )
+        {
+            returnValue = readInputFileOutputs( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return returnValue;
+        }
         else if ( cmdname == "setInputs" )
         {
             returnValue = setInputs( cmd );
             _mutex.release();
             mQuerying = false;
             return returnValue;
+        }
+        else if ( cmdname == "setInputPort" )
+        {
+            setInputPort( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return( "NULL" );
+        }
+        else if ( cmdname == "setOutputPort" )
+        {
+            setOutputPort( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return( "NULL" );
         }
 
         else
@@ -1803,6 +1902,151 @@ char* VEPSI_i::readOutputFile( ves::open::xml::CommandPtr cmd )
     return CORBA::string_dup( status.c_str( ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::readInputFileOutputs( ves::open::xml::CommandPtr cmd )
+{
+    ///Parse Output XML File
+    std::string filename = mWorkingDir + mFileName + ".input.xml";
+    
+    ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
+    mDomDocManager->SetParseXMLFileOn();
+    mDomDocManager->Load( filename );
+
+    ///get output parameter entry
+    std::map< std::string, std::vector< std::string > > outList;
+
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument();
+    DOMElement* root_elem = mCommandDocument->getDocumentElement();
+    DOMNodeList* outputList = 
+        root_elem->getElementsByTagName (
+        XMLString::transcode("OutputParameters")
+        );
+    DOMNode* node = outputList->item( 0 );
+    DOMElement* output_element = dynamic_cast< DOMElement* > ( node );
+    
+    ves::open::xml::DataValuePairPtr
+        dvp( new ves::open::xml::DataValuePair() );
+    
+    ///may need simulationobjects tag first
+
+    //get object entries
+    DOMNodeList*objList = 
+        output_element->getElementsByTagName (
+        XMLString::transcode("Object")
+        );
+
+    int objCount = objList->getLength();
+    //ves::open::xml::XMLObject* convert = new ves::open::xml::XMLObject();
+    for( int i = 0; i < objCount; i++)
+    {
+        //get object name
+        DOMNode* objNode = objList->item( i );
+        DOMElement* element =
+            dynamic_cast<DOMElement*> ( objNode );
+        std::string objName;
+        //ves::open::xml::XMLObject::GetAttribute( element, "Name", objName );
+        dvp->GetAttribute( element, "Name", objName );
+
+        //get properties
+        //THIS GETS ALL THE PROPERTIES NOT OBJECT SPECIFIC
+        //NEED TO GET ONLY THE PROPERTIES OF THE CURRENT OBJECT
+        DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
+        DOMNodeList* propList = 
+            obj_element->getElementsByTagName (
+            XMLString::transcode("Property")
+            );
+        int propCount = propList->getLength();
+        for( int j = 0; j < propCount; j++)
+        {
+            DOMNode* propNode = propList->item( j );
+            DOMElement* prop_element =
+                dynamic_cast<DOMElement*> ( propNode );
+            //prop tempProp;
+            std::vector< std::string > tempProp;
+
+            //prop id
+            std::string id;
+            dvp->GetAttribute( prop_element, "ID", id );
+            if( id.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.id = id;
+                tempProp.push_back( id );
+            }
+            
+            //prop name
+            std::string name;
+            dvp->GetAttribute( prop_element, "Name", name );
+            if( name.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.name = name;
+                tempProp.push_back( name );
+            }
+
+            //prop value
+            //double value;
+            std::string value;
+            dvp->GetAttribute( prop_element, "Value", value );
+            if( value.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.value = value;
+                tempProp.push_back( value );
+            }
+            
+            //prop unit
+            std::string unit;
+            dvp->GetAttribute( prop_element, "Unit", unit );
+            if( unit.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.unit = unit;
+                tempProp.push_back( unit );
+            }
+                        
+            outList[objName+"."+id] =( tempProp );
+        }
+    }
+    
+    //Construct return packet
+    ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
+    varsAndValues->SetCommandName("DWSIM_Data");
+    //std::map< std::string, std::vector< std::vector< std::string > > >::iterator inIter;
+    std::map< std::string, std::vector< std::string > >::iterator inIter;
+    for( inIter = outList.begin(); inIter != outList.end(); ++inIter)
+    {
+        //for( int j = 0; j < inIter->second.size(); j++ )
+        //{
+            ves::open::xml::DataValuePairPtr
+                entry( new ves::open::xml::DataValuePair() );
+            entry->SetData( inIter->first, inIter->second );
+            varsAndValues->AddDataValuePair( entry );
+        //}
+    }
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
+        ( varsAndValues, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return CORBA::string_dup( status.c_str( ) );
+}
+///////////////////////////////////////////////////////////////////////////////
 char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
 {
     std::string filename = mWorkingDir + mFileName + ".input.xml";
@@ -1889,4 +2133,33 @@ char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
         }
     }
     return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void VEPSI_i::setInputPort( ves::open::xml::CommandPtr cmd )
+{
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        mPortInput.first = temp_vector[0];
+        mPortInput.second.first = temp_vector[1];
+        mPortInput.second.second = temp_vector[2];
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void VEPSI_i::setOutputPort( ves::open::xml::CommandPtr cmd )
+{
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        mPortOutput.first = temp_vector[0];
+        mPortOutput.second.first = temp_vector[1];
+        mPortOutput.second.second = temp_vector[2];
+    }
 }
