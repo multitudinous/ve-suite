@@ -109,6 +109,10 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 #else
     chdir( newWorkingDir.c_str() );
 #endif
+    using namespace ves::xplorer;
+    reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
+    ( eventmanager::EventFactory::instance()->GetSignal( "WorkingDirectoryChanged" ) )
+    ->mSignal->operator()( newWorkingDir );
     //A new working directory also means that 
     //the STORED scenes are no longer valid
     //ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();

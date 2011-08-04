@@ -90,6 +90,8 @@ private:
     ves::util::StringSignal_type m_vesFileLoadingSignal;
     /// Signal indicating a new ves file has successfully loaded.
     ves::util::StringSignal_type m_vesFileLoadedSignal;
+    /// Signal indicating working directory has changed
+    ves::util::StringSignal_type m_workingDirChangedSignal;
 
     //--------------------------------------
 

@@ -1333,6 +1333,10 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     std::cout << "Setting working directory to " << workingDir.toStdString() << std::endl << std::flush;
     QDir::setCurrent( workingDir );
 
+    reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
+    ( eventmanager::EventFactory::instance()->GetSignal( "WorkingDirectoryChanged" ) )
+    ->mSignal->operator()( workingDir.toStdString() );
+
     // Close out the fileDialog tab and kill the file dialog
     RemoveTab( mFileDialog );
 

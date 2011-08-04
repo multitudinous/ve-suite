@@ -53,6 +53,14 @@ EventFactory::EventFactory():
             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "VesFileLoaded" ] = swb;
     }
+    //Working Directory has changed
+    {
+        SignalWrapperBase* swb =
+                new SignalWrapper< ves::util::StringSignal_type >( &m_workingDirChangedSignal );
+        evm->RegisterSignal( swb, "WorkingDirectoryChanged",
+            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "WorkingDirectoryChanged" ] = swb;
+    }
 }
 
 EventFactory::~EventFactory()
