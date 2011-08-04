@@ -1,4 +1,5 @@
 ##Builds WarrantyTool UserInterface Plugin
+SConscript('qtVersion/SConscript')
 import os, sys, string
 import SConsAddons.Util as sca_util
 import distutils.util
@@ -9,6 +10,7 @@ host_type = distutils.util.get_platform()
 Import( 'baseEnv ves_pkg buildDir RootDir vpr_options wxwidgets_options' )
 Import( 'tao_options xerces_options GetPlatform poco_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'WarrantyTool', 'UserInterface' ) )
+
 if not wxwidgets_options.isAvailable():
     Return()
 

@@ -1,0 +1,121 @@
+##Builds WarrantyToolPlugin
+import os, sys, string
+import SConsAddons.Util as sca_util
+import glob
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
+Import('tao_options xerces_options osgworks_options osgbulletplus_options LIBDIR')
+Import('bullet_options osgbullet_options osgal_options vtk_options bdfx_options')
+
+srcDir = os.path.abspath( pj(RootDir, 'share', 'examples', 'WarrantyTool', 'UserInterface','qtVersion') )
+buildSrcDir = pj('#',buildDir,'share', 'examples', 'WarrantyTool', 'UserInterface','qtVersion')
+
+lib_env = ves_pkg.getEnv().Clone()
+
+##### Moc section must come before uic section to prevent issues with undefined
+##### symbols and vtables
+### moc files
+
+
+source = [pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.h')]
+cppSources = lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'WarrantyToolPlugin.h')]
+cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'WarrantyToolPluginFactory.h')]
+cppSources += lib_env.qt_moc(source)
+
+
+###
+
+### rcc files
+source = [pj(buildSrcDir,'WarrantyToolPluginIcons.qrc')]
+cppSources += lib_env.qt_rcc(source)
+###
+
+### uic files
+source = [pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.ui')]
+cppHeaders = lib_env.qt_uic(source)
+####
+
+lib_env.Depends( cppSources, cppHeaders)
+
+openDir = os.path.abspath( pj(RootDir,buildDir,'share', 'examples', 'WarrantyTool', 'UserInterface','qtVersion') )
+cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)
+cppHeaders1 = map(lambda s: pj(openDir, '%s' ) %(s), cppHeaders)
+    
+headers = cppHeaders1
+#eaders += sca_util.getHeadersRecursive( srcDir )
+sources = cppSources1
+sources += sca_util.getSourcesRecursive( srcDir )
+
+lib_env.Append(LIBS = ['ves_xplorer',
+                       'ves_xplorer_data',
+                       'ves_xplorer_eventmanager',
+                       'ves_conductor_qtui',
+                       'ves_open_xml'
+                      ])
+lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'xplorer'),
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
+                           pj('#', buildDir, 'src', 'ves', 'conductor', 'qt'),
+                           pj('#', buildDir, 'src', 'ves', 'open', 'xml'),
+                         ])
+
+if GetPlatform() != 'darwin':
+    Import('qt_options')
+    qt_options.apply(lib_env)
+    lib_env.AppendUnique( CPPDEFINES = ['QT_ON','QT_QTPROPERTYBROWSER_IMPORT'] )
+else:
+    import qt46
+    qt46.applyQtBuildFlags(lib_env)
+
+if GetPlatform() == 'win32':
+    lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
+
+#disable profiling by default
+if lib_env['VPRProfile'] == 'no':
+   lib_env.AppendUnique( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
+
+osg_options.apply( lib_env )
+vpr_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
+poco_options.apply( lib_env )
+vtk_options.apply( lib_env )
+osgworks_options.apply( lib_env )
+osgbullet_options.apply( lib_env )
+osgbulletplus_options.apply( lib_env )
+bdfx_options.apply( lib_env )
+
+if osgal_options.isAvailable():
+   osgal_options.apply( lib_env )
+   lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+
+lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_WarrantyToolPlugin_LIBRARY'])
+#lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
+lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external') ] )
+
+#create a bundle instead of a shared library
+if GetPlatform() == 'darwin':
+   lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'
+   lib_env['SHLIBSUFFIX'] = '.bundle'
+   
+#Required on Linux to force linker to export all symbols in plugin
+#lib_env['SHLINKFLAGS'] = '--export-dynamic $LINKFLAGS'
+
+lib_env.AppendUnique( CPPDEFINES = ['QT_PLUGIN'] )
+
+#lib = ves_pkg.createLoadableModule('ves_WarrantyToolPlugin_qtui', lib_env,
+#           installPrefix = pj( LIBDIR, 'conductor', 'plugins' ) )
+           
+lib = ves_pkg.createLoadableModule( 'WarrantyUIqt', lib_env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'WarrantyTool', 'Plugins', 'UI', host_type ) )
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'share', 'examples', 'WarrantyTool', 'UserInterface','qtVersion'))
+lib.build()
