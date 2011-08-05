@@ -376,7 +376,7 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
             ui->m_displayTextChkList->item(index)->setCheckState( Qt::Unchecked );
         }
         QList<QListWidgetItem *> partNums =
-                ui->m_displayTextChkList->findItems( "part_number", Qt::MatchExactly );
+                ui->m_displayTextChkList->findItems( "part_number", Qt::MatchFixedString );
         if( !partNums.empty() )
         {
             delete partNums.at( 0 );
@@ -476,8 +476,8 @@ void WarrantyToolPlugin_UIDialog::OnPartNumberEntry( wxCommandEvent& WXUNUSED( e
 }
 ////////////////////////////////////////////////////////////////////////////////
 */
-void WarrantyToolPlugin_UIDialog::on_m_displayTextChkList_currentItemChanged
-        ( QListWidgetItem* current, QListWidgetItem* previous )
+void WarrantyToolPlugin_UIDialog::on_m_displayTextChkList_itemClicked
+        ( QListWidgetItem* item )
 {
     UpdateQueryDisplay();
 }

@@ -68,8 +68,7 @@ protected slots:
     void on_m_applyButton_clicked( );
     /// Called whenever a checkbox is toggled in the "Text Display Selection"
     /// widget. (Autoconnected)
-    void on_m_displayTextChkList_currentItemChanged
-            ( QListWidgetItem* current, QListWidgetItem* previous );
+    void on_m_displayTextChkList_itemClicked( QListWidgetItem* item );
     /// Called when Create Table checkbox is toggled. (Autoconnected)
     void on_m_createTableFromQuery_toggled();
     void InputTextChanged ( const QString& text );
