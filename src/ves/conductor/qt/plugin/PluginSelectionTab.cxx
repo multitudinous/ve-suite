@@ -180,11 +180,11 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
         QString fileName = (*iter);
         QPluginLoader loader;
         loader.setFileName( pluginsPath.absoluteFilePath(fileName) );
-        std::cout << "|\tChecking whether " << fileName.toStdString()
-                << " is a plugin...";
+        //std::cout << "|\tChecking whether " << fileName.toStdString()
+        //        << " is a plugin...";
         if( loader.load() )
         {
-            std::cout << "yes." << std::endl << std::flush;
+            //std::cout << "yes." << std::endl << std::flush;
 
             // Get root object, which should be a UIPluginFactory
             QObject *plugin = loader.instance();
@@ -194,29 +194,30 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
                 if( factory )
                 {
                     std::cout << "|\tConductor successfully loaded plugin " << fileName.toStdString()
-                            << " containing plugin: " << factory->GetFactoryName() << "-- "
+                            << " containing plugin: " << factory->GetFactoryClassName() << "-- "
                             << factory->GetDescription() << std::endl;
-                    QString name = QString::fromStdString( factory->GetFactoryName() );
+                    QString displayName = QString::fromStdString( factory->GetFactoryDisplayName() );
                     QList< QListWidgetItem* > existing = ui->m_availablePlugins->findItems(
-                            name, Qt::MatchFixedString | Qt::MatchCaseSensitive );
+                            displayName, Qt::MatchFixedString | Qt::MatchCaseSensitive );
                     if( existing.count() > 0 )
                     {
                         std::cout << "|\tPlugin already exists in list" << std::endl;
                     }
                     else
                     {
-                        QListWidgetItem* item = new QListWidgetItem( factory->GetIcon(), name, ui->m_availablePlugins );
+                        QListWidgetItem* item = new QListWidgetItem( factory->GetIcon(), displayName, ui->m_availablePlugins );
                         // Set the plugin's full path as extra data in the item so that later
                         // we can create new instances of this plugin.
-                        item->setData( Qt::UserRole, loader.fileName() );
+                        item->setData( Qt::UserRole, QString::fromStdString(factory->GetFactoryClassName()) );
+                        item->setData( Qt::UserRole + 1, loader.fileName() );
                         std::cout << "|\tAdding plugin with filename " << loader.fileName().toStdString() << std::endl;
                         ui->m_availablePlugins->addItem( item );
                      }
                 }
                 else
                 {
-                    std::cout << "|\tFailed to cast plugin " << fileName.toStdString() <<
-                            " as a UIPluginFactory." << std::endl << std::flush;
+                    //std::cout << "|\tFailed to cast plugin " << fileName.toStdString() <<
+                    //        " as a UIPluginFactory." << std::endl << std::flush;
                 }
             }
             else
@@ -226,7 +227,7 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
         }
         else
         {
-            std::cout << "no. " << loader.errorString().toStdString() << std::endl << std::flush;
+            //std::cout << "no. " << loader.errorString().toStdString() << std::endl << std::flush;
         }
         ++iter;
     }
@@ -261,7 +262,7 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
         return;
     }
     // Get plugin filename from the current item
-    QString fileName = item->data( Qt::UserRole ).toString();
+    QString fileName = item->data( Qt::UserRole + 1 ).toString();
     std::cout << "Creating instance of " << fileName.toStdString() << std::endl << std::flush;
 
     QPluginLoader loader( fileName );
@@ -293,8 +294,8 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
                 mDataBufferEngine->GetTopSystemId() ) );
 
         ModelPtr mod( new Model );
-        mod->SetPluginType( factory->GetFactoryName() );
-        mod->SetPluginName( factory->GetFactoryName() );
+        mod->SetPluginType( factory->GetFactoryClassName() );
+        mod->SetPluginName( factory->GetFactoryDisplayName() );
         //mod->SetVendorName( "DefaultPlugin" );
         mod->SetParentSystem( system );
 
@@ -411,10 +412,10 @@ void PluginSelectionTab::on_m_removePluginButton_clicked()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::CreateUIPlugin( const std::string& pluginFactoryName,
+void PluginSelectionTab::CreateUIPlugin( const std::string& pluginFactoryClassName,
                                          ves::xplorer::plugin::PluginBase* xplorerPlugin)
 {
-    CreateUIPluginQSignal( pluginFactoryName, xplorerPlugin );
+    CreateUIPluginQSignal( pluginFactoryClassName, xplorerPlugin );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
@@ -453,35 +454,48 @@ void PluginSelectionTab::FileLoadedSlot( const std::string& fileName )
     FileLoadedQSignal( fileName );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
+void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassName,
                       ves::xplorer::plugin::PluginBase* xplorerPlugin )
 {
-    QString pluginName;
-    pluginName = pluginName.fromStdString( pluginFactoryName );
+    QString pluginName = QString::fromStdString( pluginFactoryClassName );
 
     // See if this plugin exists in the available UI plugins list
-    QList<QListWidgetItem *> results = ui->m_availablePlugins->findItems( pluginName, Qt::MatchFixedString );
-    if( results.empty() )
+    int index = 0;
+    bool found = false;
+    while( !found && (index < ui->m_availablePlugins->count()) )
     {
-        std::cerr << "ERROR -- PluginSelectionTab::InstantiatePlugin: No available UI plugin named "
-                << pluginFactoryName << std::endl << std::flush;
+        std::cout << "Matches " << ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString().toStdString() << " ?" << std::endl << std::flush;
+        if( ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString() == pluginName )
+        {
+            found = true;
+            break;
+        }
+        index++;
+    }
+    //QList<QListWidgetItem *> results = ui->m_availablePlugins->findItems( pluginName, Qt::MatchFixedString );
+    //if( results.empty() )
+    if( !found )
+    {
+        std::cerr << "ERROR -- PluginSelectionTab::qCreateUIPlugin: No available UI plugin named "
+                << pluginFactoryClassName << std::endl << std::flush;
         return;
     }
     else
     {
         std::cout << "|Found UI plugin lib matching name " 
-            << pluginFactoryName << std::endl << std::flush;
+            << pluginFactoryClassName << std::endl << std::flush;
     }
 
     // Create an instance of the plugin from its factory
-    QListWidgetItem* item = results.at(0);
-    if( !item )
-    {
-        return;
-    }
+    //QListWidgetItem* item = results.at(0);
+    QListWidgetItem* item = ui->m_availablePlugins->item( index );
+//    if( !item )
+//    {
+//        return;
+//    }
 
     // Get plugin filename from the current item
-    QString fileName = item->data( Qt::UserRole ).toString();
+    QString fileName = item->data( Qt::UserRole + 1 ).toString();
 
     QPluginLoader loader( fileName );
     QObject *plugin = loader.instance();
@@ -489,12 +503,12 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
     {
         return;
     }
-    std::cout << "|\tPlugin instance valid" << std::endl << std::flush;
+    //std::cout << "|\tPlugin instance valid" << std::endl << std::flush;
     UIPluginFactory* factory =
             qobject_cast< UIPluginFactory* >(plugin);
     if( factory )
     {
-        std::cout << "|\tFactory instance valid" << std::endl << std::flush;
+        //std::cout << "|\tFactory instance valid" << std::endl << std::flush;
         // Create new instance of the UIPluginInterface object
         // this factory contains.
         UIPluginInterface* interface = factory->CreateInstance();
@@ -511,8 +525,8 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
         nameSS << index;
         interface->SetName( nameSS.str() );
 
-        std::cout << "|\tSetting interface name to " 
-            << nameSS.str() << std::endl << std::flush;
+        //std::cout << "|\tSetting interface name to "
+        //    << nameSS.str() << std::endl << std::flush;
 
         // Give the UI plugin a pointer to the xplorer plugin. This
         // will give the UI plugin access to things like the correct model.
@@ -544,8 +558,6 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryName,
 
         // Store the new interface
         m_itemInterfaceMap[ newItem ] = interface;
-        std::cout << "|\tMap size: " << m_itemInterfaceMap.size() 
-            << std::endl << std::flush;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -43,9 +43,14 @@ UIPluginInterface* DefaultPluginFactory::CreateInstance()
     return new DefaultPlugin;
 }
 
-std::string DefaultPluginFactory::GetFactoryName()
+std::string DefaultPluginFactory::GetFactoryClassName()
 {
     return std::string( "DefaultPlugin" );
+}
+
+std::string DefaultPluginFactory::GetFactoryDisplayName()
+{
+    return std::string( "Default Plugin" );
 }
 
 double DefaultPluginFactory::GetVersion()

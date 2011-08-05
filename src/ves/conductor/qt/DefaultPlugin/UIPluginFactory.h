@@ -72,8 +72,14 @@ public:
     // queried without having to instantiate the underlying plugin class.
 
     ///Returns the name of the factory -- each instance of the plugin may have
-    ///a different name, but the factory will only have one name.
-    virtual std::string GetFactoryName() = 0;
+    ///a different name, but the factory will only have one name. This name must
+    ///correspond to the plugin type of the graphical plugin
+    virtual std::string GetFactoryClassName() = 0;
+
+    /// Returns the name to display in the available plugins list. This can be
+    /// the same as the FactoryClassName, but may be different. It is best
+    /// to choose a somewhat descriptive name for display.
+    virtual std::string GetFactoryDisplayName() = 0;
 
     ///Returns the version number of the module
     virtual double GetVersion() = 0;

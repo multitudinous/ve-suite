@@ -50,7 +50,9 @@ public:
 
     virtual UIPluginInterface* CreateInstance();
 
-    virtual std::string GetFactoryName();
+    virtual std::string GetFactoryClassName();
+
+    virtual std::string GetFactoryDisplayName();
 
     ///Returns the version number of the module
     virtual double GetVersion();

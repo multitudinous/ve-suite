@@ -43,9 +43,14 @@ UIPluginInterface* WarrantyToolPluginFactory::CreateInstance()
     return new WarrantyToolPlugin;
 }
 
-std::string WarrantyToolPluginFactory::GetFactoryName()
+std::string WarrantyToolPluginFactory::GetFactoryClassName()
 {
-    return std::string( "DeereAnalytics" );
+    return std::string( "WarrantyToolUI" );
+}
+
+std::string WarrantyToolPluginFactory::GetFactoryDisplayName()
+{
+    return std::string( "Deere Analytics" );
 }
 
 double WarrantyToolPluginFactory::GetVersion()
