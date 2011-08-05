@@ -195,15 +195,23 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
                 {
                     std::cout << "|\tConductor successfully loaded plugin " << fileName.toStdString()
                             << " containing plugin: " << factory->GetFactoryName() << "-- "
-                            << factory->GetDescription() << std::endl << std::flush;
-                    QString name;
-                    QListWidgetItem* item = new QListWidgetItem( factory->GetIcon(), name.fromStdString( factory->GetFactoryName() ), ui->m_availablePlugins );
-                    // Set the plugin's full path as extra data in the item so that later
-                    // we can create new instances of this plugin.
-                    item->setData( Qt::UserRole, loader.fileName() );
-                    std::cout << "Adding plugin with filename " << loader.fileName().toStdString() << std::endl;
-                    //item->setFlags( item->flags() | Qt::ItemIsEditable );
-                    ui->m_availablePlugins->addItem( item );
+                            << factory->GetDescription() << std::endl;
+                    QString name = QString::fromStdString( factory->GetFactoryName() );
+                    QList< QListWidgetItem* > existing = ui->m_availablePlugins->findItems(
+                            name, Qt::MatchFixedString | Qt::MatchCaseSensitive );
+                    if( existing.count() > 0 )
+                    {
+                        std::cout << "|\tPlugin already exists in list" << std::endl;
+                    }
+                    else
+                    {
+                        QListWidgetItem* item = new QListWidgetItem( factory->GetIcon(), name, ui->m_availablePlugins );
+                        // Set the plugin's full path as extra data in the item so that later
+                        // we can create new instances of this plugin.
+                        item->setData( Qt::UserRole, loader.fileName() );
+                        std::cout << "|\tAdding plugin with filename " << loader.fileName().toStdString() << std::endl;
+                        ui->m_availablePlugins->addItem( item );
+                     }
                 }
                 else
                 {
