@@ -9,7 +9,7 @@ host_type = distutils.util.get_platform()
 
 Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
 Import('tao_options xerces_options osgworks_options osgbulletplus_options LIBDIR')
-Import('bullet_options osgbullet_options osgal_options vtk_options bdfx_options')
+Import('bullet_options osgbullet_options osgal_options vtk_options bdfx_options xerces_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'share', 'examples', 'WarrantyTool', 'UserInterface','qtVersion') )
 buildSrcDir = pj('#',buildDir,'share', 'examples', 'WarrantyTool', 'UserInterface','qtVersion')
@@ -57,11 +57,13 @@ sources += sca_util.getSourcesRecursive( srcDir )
 lib_env.Append(LIBS = ['ves_xplorer',
                        'ves_xplorer_data',
                        'ves_xplorer_eventmanager',
+                       'ves_xplorer_command',
                        'ves_conductor_qtui',
                        'ves_open_xml'
                       ])
 lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'xplorer'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
+                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'command'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
                            pj('#', buildDir, 'src', 'ves', 'conductor', 'qt'),
                            pj('#', buildDir, 'src', 'ves', 'open', 'xml'),
@@ -91,6 +93,7 @@ osgworks_options.apply( lib_env )
 osgbullet_options.apply( lib_env )
 osgbulletplus_options.apply( lib_env )
 bdfx_options.apply( lib_env )
+xerces_options.apply( lib_env )
 
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
@@ -99,6 +102,7 @@ if osgal_options.isAvailable():
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_WarrantyToolPlugin_LIBRARY'])
 #lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external') ] )
+lib_env.AppendUnique( CPPPATH = [ buildSrcDir ] )
 
 #create a bundle instead of a shared library
 if GetPlatform() == 'darwin':
