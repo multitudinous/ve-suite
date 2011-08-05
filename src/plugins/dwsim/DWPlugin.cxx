@@ -257,6 +257,7 @@ void DWPlugin::CloseSimulation( void )
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
     returnState->AddDataValuePair( vendorData );
+    returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "closeSimulation" );
     returnState->AddDataValuePair( data );
@@ -388,6 +389,7 @@ wxMenu* DWPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 ////////////////////////////////////////////////////////////////////////////////
 void DWPlugin::GetInputs( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //read inputs.xml
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "readInputs" );
@@ -418,7 +420,7 @@ void DWPlugin::GetInputs( wxCommandEvent& event )
         ( objectVector.at( 0 ) );
 
     //loop over all pairs
-    DWVarDialog* params = new DWVarDialog( GetPluginParent() );
+    DWVarDialog* params = new DWVarDialog( GetPluginParent(), m_unitName );
     params->SetServiceList( serviceList );
     int numdvps = cmd->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numdvps; i++ )
@@ -439,6 +441,7 @@ void DWPlugin::GetInputs( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void DWPlugin::GetOutputs( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //read outputs.xml
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "readOutputs" );
@@ -469,7 +472,7 @@ void DWPlugin::GetOutputs( wxCommandEvent& event )
         ( objectVector.at( 0 ) );
 
     //loop over all pairs
-    DWVarDialog* params = new DWVarDialog( GetPluginParent() );
+    DWVarDialog* params = new DWVarDialog( GetPluginParent(), m_unitName );
     int numdvps = cmd->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numdvps; i++ )
     {
@@ -514,9 +517,11 @@ void DWPlugin::SetUnitName( std::string name )
 }
 void DWPlugin::SetOutputPortData( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //read outputs.xml
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "readInputFileOutputs" );
+    returnState->AddDataValuePair( vendorData );
     returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "readInputFileOutputs" );
@@ -544,7 +549,7 @@ void DWPlugin::SetOutputPortData( wxCommandEvent& event )
         ( objectVector.at( 0 ) );
 
 
-    DWPortDialog* params = new DWPortDialog( GetPluginParent(), false );
+    DWPortDialog* params = new DWPortDialog( GetPluginParent(), m_unitName, false );
     params->SetServiceList( serviceList );
     int numdvps = cmd->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numdvps; i++ )
@@ -564,6 +569,7 @@ void DWPlugin::SetOutputPortData( wxCommandEvent& event )
 }
 void DWPlugin::SetInputPortData( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //read inputs.xml
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "readInputs" );
@@ -592,7 +598,7 @@ void DWPlugin::SetInputPortData( wxCommandEvent& event )
     ves::open::xml::CommandPtr cmd =
         boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
-    DWPortDialog* params = new DWPortDialog( GetPluginParent(), true );
+    DWPortDialog* params = new DWPortDialog( GetPluginParent(), m_unitName, true );
     params->SetServiceList( serviceList );
     int numdvps = cmd->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numdvps; i++ )

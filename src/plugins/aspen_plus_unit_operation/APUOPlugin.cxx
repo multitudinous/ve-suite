@@ -163,7 +163,7 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
     wxString title( compName.c_str(), wxConvUTF8 );
     //TextResultDialog * results = new TextResultDialog(this, title);
     //QueryInputsDlg * results = new QueryInputsDlg(this);
-    APUOVarDialog* params = new APUOVarDialog( GetPluginParent() );
+    APUOVarDialog* params = new APUOVarDialog( GetPluginParent(), m_unitName );
     //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
@@ -245,7 +245,7 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
 
     wxString title( compName.c_str(), wxConvUTF8 );
     //QueryInputsDlg * results = new QueryInputsDlg(this);
-    APUOVarDialog * params = new APUOVarDialog( GetPluginParent() );
+    APUOVarDialog * params = new APUOVarDialog( GetPluginParent(), m_unitName );
     //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();

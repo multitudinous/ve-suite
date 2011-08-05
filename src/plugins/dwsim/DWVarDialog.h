@@ -36,7 +36,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLReaderWriter.h>
-#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/VEConfig.h>
 
 #include <wx/wx.h>
@@ -62,6 +62,7 @@ class DWVarDialog : public wxDialog
 public:
     ///Constructor
     DWVarDialog(wxWindow *parent,/* wxEvtHandler *tempParent,*/
+        std::string unitName,
         wxWindowID id = 1, const wxString &title = wxT("DWVarDialog"),
         const wxPoint& pos = wxDefaultPosition,
         const wxSize& size = wxDefaultSize,
@@ -108,6 +109,7 @@ private:
     int m_monitorRow;
     wxEvtHandler * m_parent;
     wxString prefix;
+    ves::open::xml::DataValuePairPtr m_vendorData;
     
     ///???
     std::string ConvertUnicode( const wxChar* data )

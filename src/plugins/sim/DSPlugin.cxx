@@ -456,7 +456,7 @@ void DSPlugin::OnTimer( wxTimerEvent& event )
 void DSPlugin::QueryForAllVariables( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this );
+    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this, m_unitName );
     for( int i = 0; i < m_opcList.size(); i++ )
     {
         //Query Unit for all opc variables available

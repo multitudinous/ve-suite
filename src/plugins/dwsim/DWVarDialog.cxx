@@ -33,6 +33,7 @@
 #include "DWVarDialog.h"
 #include "DWPlugin.h"
 #include <plugins/ConductorPluginEnums.h>
+#include <ves/open/xml/DataValuePair.h>
 #include <wx/tokenzr.h>
 
 using namespace ves::conductor;
@@ -44,11 +45,13 @@ BEGIN_EVENT_TABLE( DWVarDialog, wxDialog )
     EVT_GRID_CELL_CHANGE( DWVarDialog::OnCellChange )
 END_EVENT_TABLE()
 
-DWVarDialog::DWVarDialog(wxWindow *parent, /*wxEvtHandler *tempParent,*/ wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
+DWVarDialog::DWVarDialog(wxWindow *parent, /*wxEvtHandler *tempParent,*/std::string unitName, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
     CreateGUIControls();
     //m_parent = tempParent;
+    m_vendorData = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    m_vendorData->SetData( "vendorUnit", unitName );
 }
 
 DWVarDialog::~DWVarDialog()
@@ -127,6 +130,7 @@ void DWVarDialog::SetButtonClick(wxCommandEvent& event)
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
     params->SetCommandName( "setInputs" );
+    params->AddDataValuePair( m_vendorData );
 
     int numOfChanges = rowsChanged.size();
     for(int i = 0; i < numOfChanges; i++)
@@ -210,6 +214,7 @@ void DWVarDialog::OnMonitorVariable( wxCommandEvent& event )
 
     ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("addVariable");
+    monitor->AddDataValuePair( m_vendorData );
     
     wxString varName = WxGrid->GetRowLabelValue( m_monitorRow );
     WxGrid->SetCellValue( 0, 1, varName );

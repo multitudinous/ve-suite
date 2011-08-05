@@ -34,6 +34,7 @@
 #define OpcUOPlugin_H
 
 #include <ves/conductor/UIPluginBase.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 #include <wx/event.h>
 #include <wx/image.h>

@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/OpcUOVarDialog.h>
 #include <ves/conductor/ConductorLibEnums.h>
+#include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::conductor;
 using namespace ves::conductor::util;
@@ -45,13 +46,16 @@ BEGIN_EVENT_TABLE( OpcUOVarDialog, wxDialog )
 END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////////////////////////////
-OpcUOVarDialog::OpcUOVarDialog(wxWindow *parent, wxEvtHandler *tempParent, wxWindowID id,
+OpcUOVarDialog::OpcUOVarDialog(wxWindow *parent, wxEvtHandler *tempParent,
+                               std::string unitName, wxWindowID id,
                                const wxString &title, const wxPoint &position,
                                const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
     CreateGUIControls();
     m_parent = tempParent;
+    m_vendorData = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    m_vendorData->SetData( "vendorUnit", unitName );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -144,6 +148,7 @@ void OpcUOVarDialog::SetButtonClick( wxCommandEvent& )
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
     params->SetCommandName( "setOPCValues" );
+    params->AddDataValuePair( m_vendorData );
 
     int numOfChanges = rowsChanged.size();
     for(int i = 0; i < numOfChanges; i++)
@@ -262,6 +267,7 @@ void OpcUOVarDialog::OnMonitorVariable( wxCommandEvent& event )
 
     ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("addVariable");
+    monitor->AddDataValuePair( m_vendorData );
     
     wxString varName = WxGrid->GetRowLabelValue( monitorRow );
     std::string temp = ConvertUnicode( mCompName.c_str() ) + "." +

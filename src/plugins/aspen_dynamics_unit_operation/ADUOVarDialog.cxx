@@ -33,6 +33,7 @@
 #include "ADUOVarDialog.h"
 #include "ADUOPlugin.h"
 #include <plugins/ConductorPluginEnums.h>
+#include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::conductor;
 BEGIN_EVENT_TABLE( ADUOVarDialog, wxDialog )
@@ -44,11 +45,13 @@ BEGIN_EVENT_TABLE( ADUOVarDialog, wxDialog )
     //EVT_GRID_SELECT_CELL( ADUOVarDialog::OnSelectCell )
 END_EVENT_TABLE()
 
-ADUOVarDialog::ADUOVarDialog(wxWindow *parent, wxEvtHandler *tempParent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
+ADUOVarDialog::ADUOVarDialog(wxWindow *parent, wxEvtHandler *tempParent, std::string unitName, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
     CreateGUIControls();
     m_parent = tempParent;
+    m_vendorData = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    m_vendorData->SetData( "vendorUnit", unitName );
 }
 
 ADUOVarDialog::~ADUOVarDialog()
@@ -131,6 +134,7 @@ void ADUOVarDialog::SetButtonClick(wxCommandEvent& event)
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
     params->SetCommandName( "setParam" );
+    params->AddDataValuePair( m_vendorData );
 
     int numOfChanges = rowsChanged.size();
     for(int i = 0; i < numOfChanges; i++)
@@ -211,6 +215,7 @@ void ADUOVarDialog::OnMonitorVariable( wxCommandEvent& event )
 
     ves::open::xml::CommandPtr monitor( new ves::open::xml::Command() );
     monitor->SetCommandName("addVariable");
+    monitor->AddDataValuePair( m_vendorData );
     
     wxString varName = WxGrid->GetRowLabelValue( m_monitorRow );
     WxGrid->SetCellValue( 0, 1, varName );

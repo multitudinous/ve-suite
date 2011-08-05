@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
 #include "APUOVarDialog.h"
+#include <ves/open/xml/DataValuePair.h>
 
 #include <wx/msgdlg.h>
 #include <wx/progdlg.h>
@@ -44,11 +45,13 @@ BEGIN_EVENT_TABLE( APUOVarDialog, wxDialog )
 END_EVENT_TABLE()
 
 APUOVarDialog::APUOVarDialog(
-    wxWindow *parent, wxWindowID id, const wxString &title,
+    wxWindow *parent, std::string unitName, wxWindowID id, const wxString &title,
     const wxPoint &position, const wxSize& size, long style )
         : wxDialog( parent, id, title, position, size, style )
 {
     CreateGUIControls();
+    m_vendorData = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    m_vendorData->SetData( "vendorUnit", unitName );
 }
 APUOVarDialog::~APUOVarDialog()
 {}
@@ -332,6 +335,8 @@ void APUOVarDialog::ParamChoiceSelected( wxTreeEvent& event )
             ValueEdit->SetEditable( false );
             SetButton->Enable( false );
         }
+        
+        returnState->AddDataValuePair( m_vendorData );
 
         //create the dvp
         ves::open::xml::DataValuePairPtr
@@ -516,6 +521,7 @@ void APUOVarDialog::SetButtonClick( wxCommandEvent& event )
     std::string compName = ConvertUnicode( CompName.c_str() );
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "setParam" );
+    returnState->AddDataValuePair( m_vendorData );
 
     ves::open::xml::DataValuePairPtr
         moduleName( new ves::open::xml::DataValuePair() );

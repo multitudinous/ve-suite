@@ -374,7 +374,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
         boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
 
-    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this );
+    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this, m_unitName );
     params->SetComponentName( mPluginName );
     params->SetServiceList( serviceList );
 
@@ -397,7 +397,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
 {
-    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this );
+    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this, m_unitName );
     params->SetComponentName( mPluginName );
     //params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
     params->SetServiceList( serviceList );

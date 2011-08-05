@@ -36,7 +36,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLReaderWriter.h>
-#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/VEConfig.h>
 #include <iostream>
 #include <fstream>
@@ -64,7 +64,8 @@ class APUOVarDialog : public wxDialog
 {
 public:
     ///Constructor
-    APUOVarDialog( wxWindow *parent, wxWindowID id = 1,
+    APUOVarDialog( wxWindow *parent, 
+        std::string unitName, wxWindowID id = 1,
         const wxString &title = wxT( "ParamsDialog" ),
         const wxPoint& pos = wxDefaultPosition,
         const wxSize& size = wxDefaultSize,
@@ -156,6 +157,7 @@ private:
     std::map< std::string, wxTreeItemId > m_prevIds;
     wxTreeItemId m_prevSelection;
     wxTreeItemId mParentId;
+    ves::open::xml::DataValuePairPtr m_vendorData;
     
     enum
     {
