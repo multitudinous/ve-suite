@@ -61,6 +61,14 @@ EventFactory::EventFactory():
             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "WorkingDirectoryChanged" ] = swb;
     }
+    // Delete a CAD node
+    {
+        SignalWrapperBase* swb =
+                new SignalWrapper< ves::util::ThreeStringSignal_type >( &m_deleteCADNodeSignal );
+        evm->RegisterSignal( swb, "DeleteCADNode",
+            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "DeleteCADNode" ] = swb;
+    }
 }
 
 EventFactory::~EventFactory()

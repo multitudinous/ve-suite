@@ -73,6 +73,12 @@ CADSlotInitializer::CADSlotInitializer()
                             const std::vector<std::string>& ),
                       &SetCADPhysicsMesh,
                       m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%DeleteCADNode",
+                      void( const std::string&, const std::string&,
+                            const std::string&),
+                      &DeleteCADNode,
+                      m_connections, any_SignalType, normal_Priority );
 }
 
 } // namespace cad

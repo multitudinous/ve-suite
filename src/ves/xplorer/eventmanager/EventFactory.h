@@ -93,6 +93,8 @@ private:
     /// Signal indicating working directory has changed
     ves::util::StringSignal_type m_workingDirChangedSignal;
 
+    ves::util::ThreeStringSignal_type m_deleteCADNodeSignal;
+
     //--------------------------------------
 
     /// Logging tools

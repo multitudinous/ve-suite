@@ -51,6 +51,7 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
@@ -428,5 +429,67 @@ void TreeTab::on_m_searchBox_textEdited( const QString& pattern )
     ui->mTreeView->keyboardSearch( fullPattern );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void TreeTab::on_m_deleteButton_clicked()
+{
+    ves::xplorer::Model* model = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    if(!model)
+    {
+        return;
+    }
+    ves::xplorer::ModelCADHandler* mch = model->GetModelCADHandler();
+    if( !mch )
+    {
+        return;
+    }
+
+    QModelIndex modelIndex = ui->mTreeView->currentIndex();
+    QModelIndex parentIndex = mModel->parent( modelIndex );
+    osgQtTree::osgTreeItem* parentItem = static_cast< osgQtTree::osgTreeItem* >( parentIndex.internalPointer() );
+    osg::Node* node = parentItem->GetNode();
+    // See if this node has a VE_XML_ID
+    bool found = false;
+    if( node )
+    {
+        osg::Node::DescriptionList descList = node->getDescriptions();
+        for( size_t i = 0; i < descList.size(); ++i )
+        {
+            if( descList.at( i ) == "VE_XML_ID" )
+            {
+                found = true;
+            }
+        }
+    }
+
+    if( !found )
+    {
+        std::cout << "Trying to delete node but couldn't find parent" << std::endl << std::flush;
+        return;
+    }
+
+    ves::xplorer::scenegraph::DCS* newSelectedDCS = static_cast< ves::xplorer::scenegraph::DCS* >( node );
+
+    std::string parentID = newSelectedDCS->GetCADPart()->GetID();
+
+    std::string nodeID = mActiveSet->GetUUIDAsString();
+    std::string type;
+    if( mch->PartExists( nodeID ) )
+    {
+        std::cout << "Part exists...removing..." << std::endl << std::flush;
+        type = "Part";
+    }
+    else if( mch->AssemblyExists( nodeID ) )
+    {
+        std::cout << "Assembly exists...removing..." << std::endl << std::flush;
+        type = "Assembly";
+    }
+
+    using namespace ves::xplorer;
+    reinterpret_cast< eventmanager::SignalWrapper< ves::util::ThreeStringSignal_type >* >
+    ( eventmanager::EventFactory::instance()->GetSignal( "DeleteCADNode" ) )
+    ->mSignal->operator()( parentID, nodeID, type );
+
+    on_m_refreshTreeButton_clicked();
+}
+
 } // namespace conductor
 } // namespace ves

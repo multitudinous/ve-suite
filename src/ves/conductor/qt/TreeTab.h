@@ -136,6 +136,8 @@ protected Q_SLOTS:
 
     void on_m_searchBox_textEdited( const QString& pattern );
 
+    void on_m_deleteButton_clicked();
+
     Q_SIGNALS:
 
     /// Queued signal emitted when OnObjectPicked slot is called. This is
