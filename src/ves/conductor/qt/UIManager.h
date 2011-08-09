@@ -38,6 +38,7 @@
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/xplorer/eventmanager/ConnectionMonopoly.h>
 #include <ves/VEConfig.h>
+#include <ves/conductor/qt/TextureSubloader.h>
 
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
@@ -362,6 +363,7 @@ private:
 
     ///
     std::map< UIElement*, osg::Vec4 > mElementPositionsOrtho2D;
+    std::map< UIElement*, osg::ref_ptr< TextureSubloader > > m_subloaders;
 
     typedef boost::signals2::signal< void( bool ) > voidBoolSignalType;
     /// Emits true when mouse enters and false when mouse leaves a UIElement

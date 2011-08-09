@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
+//#define NO_SUBLOAD
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElement.h>
@@ -70,7 +70,10 @@
 
 //#define VES_QT_RENDER_DEBUG
 
-using namespace ves::conductor;
+namespace ves
+{
+namespace conductor
+{
 
 vprSingletonImp( UIManager );
 
@@ -226,6 +229,9 @@ osg::Geode* UIManager::AddElement( UIElement* element )
 
     mElements[ geode ] = element;
 
+    osg::ref_ptr<TextureSubloader> subloader = new TextureSubloader;
+    m_subloaders[ element ] = subloader;
+
     return geode;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -248,6 +254,7 @@ void UIManager::RemoveAllElements()
     }
 
     mElements.clear();
+    m_subloaders.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::Update()
@@ -595,8 +602,17 @@ void UIManager::_insertNodesToAdd()
             vec_iterator != mNodesToAdd.end();
             ++vec_iterator )
     {
+        osg::Node* node = ( *vec_iterator ).get();
         mUIGroup->addChild( ( *vec_iterator ).get() );
-        //( *vec_iterator ).release();
+#ifndef NO_SUBLOAD
+        osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+        UIElement* element = mElements[ (*vec_iterator).get()->asGeode() ];
+        osg::Image* img = new osg::Image;
+        img->allocateImage(element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE);
+        texture->setImage( img );
+        texture->setSubloadCallback( m_subloaders[ element ].get() );
+        node->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
+#endif
     }
 
     mNodesToAdd.clear();
@@ -618,12 +634,17 @@ void UIManager::_repaintChildren()
                 float( element->GetImageHeight() ) / float( element->GetImageWidth() );
             m_aspectRatioUniform->set( uiAspectRatio );
             element->Update();
-            unsigned char* image_Data = element->RenderElementToImage();
+#ifdef NO_SUBLOAD
+            unsigned char* image_Data = element->RenderElementToImage()->data();
+#else
+            osg::Image* image_Data = element->RenderElementToImage();
+#endif
 
             // Only reset the image if element tells us it has changed since 
             // last time
             if( element->IsDirty() )
             {
+#ifdef NO_SUBLOAD
                 osg::StateSet* state = ( *map_iterator ).first
                         ->getOrCreateStateSet();
                 osg::Image* image =
@@ -634,6 +655,9 @@ void UIManager::_repaintChildren()
                                  GL_BGRA, GL_UNSIGNED_BYTE,
                                  image_Data, osg::Image::NO_DELETE );
                 image->dirty();
+#else
+                m_subloaders[ element ]->Update( image_Data, 0, 0 );
+#endif
             }
         }
     }
@@ -1362,3 +1386,6 @@ void UIManager::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
     m_endPoint = endPoint;
 }
 ////////////////////////////////////////////////////////////////////////////////
+
+}
+}

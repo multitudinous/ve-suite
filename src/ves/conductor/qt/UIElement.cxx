@@ -70,7 +70,8 @@ UIElement::UIElement():
     mAnimationOn( false ),
     //mGeode( 0 ),
     m_mouseInsideUI( true ),
-    m_pixelUIRatio( 0 )
+    m_pixelUIRatio( 0 ),
+    m_osgImage( new osg::Image )
 {
     m_desktopSize = std::make_pair< int, int >( 0, 0 );
     //Request connection to UIManager.EnterLeaveUI signal
@@ -294,7 +295,7 @@ void UIElement::SendScrollEvent( int deltaX, int deltaY, int x, int y, int state
     std::cerr << "UIElement::SendScrollEvent If you see this we have problems." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char* UIElement::RenderElementToImage()
+osg::Image* UIElement::RenderElementToImage()
 {
     return 0;
 }

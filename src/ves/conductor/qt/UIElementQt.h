@@ -89,7 +89,7 @@ public:
     virtual void SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode );
     virtual void SendScrollEvent( int deltaX, int deltaY, int x, int y, int state );
 
-    virtual unsigned char* RenderElementToImage();
+    virtual osg::Image* RenderElementToImage();
     virtual bool IsDirty();
     virtual void Initialize();
 
@@ -119,6 +119,7 @@ public:
     virtual void ResizeCanvas( int width, int height );
 
 protected:
+    bool eventFilter(QObject *object, QEvent *event);
 
 private:
     void FreeOldWidgets();
@@ -152,6 +153,9 @@ private:
 
     QWidget* mTitlebar;
     Ui::titlebar* mQTitlebar;
+    int                     image_sequence;
+    QMap<QString, QImage>   update_cache;
+    QMap<QString, QRect>  capture_list;
 
 protected Q_SLOTS:
     void _render();
@@ -170,6 +174,7 @@ protected Q_SLOTS:
     void _onMinimizeButtonClicked();
     void _onTitlebarPressed();
     void _onOpacitySliderValueChanged( int opacity );
+    void RefreshWidgetFilterList();
 
     Q_SIGNALS:
     void RequestRender();

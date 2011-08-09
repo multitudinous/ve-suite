@@ -114,7 +114,8 @@ UIElementQt::UIElementQt( QWidget *parent )
     mImageMutex( 0 ),
     mDirty( true ),
     mTitlebar( 0 ),
-    mQTitlebar( 0 )
+    mQTitlebar( 0 ),
+    image_sequence( 0 )
 {
     _debug( "ctor" );
 
@@ -312,7 +313,7 @@ void UIElementQt::SendScrollEvent( int deltaX, int deltaY, int x, int y, int sta
     Q_EMIT PutScrollEvent( deltaX, deltaY, x, y, state );
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char* UIElementQt::RenderElementToImage()
+osg::Image* UIElementQt::RenderElementToImage()
 {
     //_debug( "RenderElementToImage" );
     // If there's no widget to render, return NULL
@@ -336,15 +337,19 @@ unsigned char* UIElementQt::RenderElementToImage()
             //Double buffer the texture image
             ( *mImageFlipped ) = mImage->copy();
         } // Leave critical section
+        m_osgImage->setImage( GetImageWidth(),
+                           GetImageHeight(), 1, 4,
+                           GL_BGRA, GL_UNSIGNED_BYTE,
+                           mImageFlipped->bits(), osg::Image::NO_DELETE );
 #endif
+        m_osgImage->setImage( GetImageWidth(),
+                           GetImageHeight(), 1, 4,
+                           GL_BGRA, GL_UNSIGNED_BYTE,
+                           mImage->bits(), osg::Image::NO_DELETE );
         mImageDirty = false;
     }
 
-#if defined( _DARWIN )
-    return mImageFlipped->bits();
-#else
-    return mImage->bits();
-#endif
+    return m_osgImage.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElementQt::IsDirty()
@@ -440,6 +445,57 @@ void UIElementQt::SetWidget( QWidget* widget )
     // and above.
     QEvent ev( QEvent::WindowActivate );
     QApplication::sendEvent( mGraphicsScene, &ev );
+
+    RefreshWidgetFilterList();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::RefreshWidgetFilterList()
+{
+    // for each child widget on the dialog, install an event filter
+    // for it that redirects to our eventFilter() method.
+//    QList<QWidget *> widgets = mWidget->findChildren<QWidget *>();
+//    Q_FOREACH(QWidget* mWidget, widgets)
+//        mWidget->installEventFilter(this);
+
+    //QCoreApplication::instance()->installEventFilter( this );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool UIElementQt::eventFilter(QObject *object, QEvent *event)
+{
+    std::cout << "eventFilter: " << std::flush;
+    if(event->type() == QEvent::Paint)
+    {
+        std::cout << "paint event" << std::flush;
+        QPaintEvent* paint_event = (QPaintEvent *)event;
+        if(paint_event)
+        {
+            // we can either take the larger paint_event->rect(), which
+            // encompasses the entire update region, or we can process all
+            // the individual rects that compromise the update region.  I'm
+            // not sure which is best -- all the little ones just add up to
+            // the large one.
+
+            QWidget* widget = (QWidget*)object;
+            Q_FOREACH(const QRect rect, paint_event->region().rects())
+            {
+
+                QPoint p = widget->mapTo(mWidget, rect.topLeft());
+                //QPoint p = rect.topLeft();
+                QRect r = QRect(p, rect.size());
+                QString key = QString("%1x%2x%3x%4")
+                               .arg(rect.x())
+                               .arg(rect.y())
+                               .arg(rect.width())
+                               .arg(rect.height());
+                capture_list[key] = r;
+                std::cout << object->objectName().toStdString() << ": " << key.toStdString() << "," << std::flush;
+
+            }
+        }
+    }
+    std::cout << std::endl << std::flush;
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::ResizeCanvas( int width, int height )
@@ -501,6 +557,13 @@ void UIElementQt::UpdateSize()
             {
                 delete mImageFlipped;
                 mImageFlipped = 0;
+            }
+
+            if( m_osgImage )
+            {
+                m_osgImage.release();
+                m_osgImage = new osg::Image;
+                m_osgImage->allocateImage( mWidth, mHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
             }
         } // Leave critical section
     }
@@ -566,6 +629,8 @@ void UIElementQt::FreeOldWidgets()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_render()
 {
+    capture_list.clear();
+
 #if defined( _DARWIN )
     if( !m_mouseInsideUI )
     {
@@ -601,6 +666,64 @@ void UIElementQt::_render()
     } // Leave critical section
 
     mImageDirty = true;
+
+/*
+    {
+        int image_counter = 1;
+        bool processed_updates = false;
+        const QMap<QString, QRect>& rects = capture_list;
+        Q_FOREACH(const QString key, rects.keys())
+        {
+            QRect rect = rects[key];
+            QImage fragment = mImage->copy(rect);
+
+            // We maintain an 'update_cache' that caches previously
+            // processed fragments (keyed on rectangles).  If the
+            // rectangle hasn't yet been processed, or its image
+            // content now differs from a previous value, we do our
+            // thing with it.
+
+            bool is_update = false;
+            if(update_cache.contains(key))
+            {
+                // (According to the Qt docs, this C++ operator can be a
+                // slow operation (no surprise)).  Some kind of faster
+                // comparison might be better.)
+
+                if(update_cache[key] == fragment)
+                    continue;
+
+                is_update = true;
+            }
+
+            update_cache[key] = fragment;
+
+            // The first addition to the cache is the initial draw of the
+            // dialog widgets.  We skip that (assuming the full image has
+            // already been process elsewhere), and only cache to disc those
+            // areas of the screen that have changed -- i.e., are in the
+            // cache already, but are getting new values.
+
+            if(is_update)
+            {
+                // 'image_sequence' represents an update series
+                // 'image_counter' is an image within the series
+
+                QString filename = QString("/tmp/%1_%2_%3.jpg")
+                                   .arg(image_sequence, 4, 10, QChar('0'))
+                                   .arg(image_counter, 4, 10, QChar('0'))
+                                   .arg(key);
+                //fragment.save(filename);
+
+                ++image_counter;
+                processed_updates = true;
+            }
+        }
+
+        if(processed_updates)
+            ++image_sequence;
+    }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonPressEvent( gadget::Keys button, int x, int y, int state )

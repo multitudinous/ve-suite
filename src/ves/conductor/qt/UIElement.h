@@ -43,6 +43,7 @@
 #include <osg/Geode>
 #include <osg/AnimationPath>
 #include <osg/Vec2d>
+#include <osg/Image>
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
@@ -144,7 +145,8 @@ public:
 /// @return Pointer to the image data.
 /// Required override.
 ////////////////////////////////////////////////////////////////////////////////
-    virtual unsigned char* RenderElementToImage();
+    //virtual unsigned char* RenderElementToImage();
+    virtual osg::Image* RenderElementToImage();
 ////////////////////////////////////////////////////////////////////////////////
 // Should return true if rendered image changed in the most recent call to
 // RenderElementToImage; otherwise false. This is intended as a way to allow
@@ -270,6 +272,8 @@ protected:
     osg::Vec2d m_texCoords;
     ///UI size for cave mode
     std::pair< int, int > m_uiSize;
+
+    osg::ref_ptr< osg::Image > m_osgImage;
 };
 
 } // namepsace conductor
