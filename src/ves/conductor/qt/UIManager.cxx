@@ -656,7 +656,7 @@ void UIManager::_repaintChildren()
                                  image_Data, osg::Image::NO_DELETE );
                 image->dirty();
 #else
-                m_subloaders[ element ]->Update( image_Data, 0, 0 );
+                m_subloaders[ element ]->AddUpdate( image_Data, 0, 0 );
 #endif
             }
         }

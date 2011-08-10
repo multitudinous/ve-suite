@@ -33,6 +33,7 @@
 
 #pragma once
 #include <osg/Texture2D>
+#include <vector>
 
 namespace ves
 {
@@ -55,14 +56,14 @@ class TextureSubloader : public osg::Texture2D::SubloadCallback
 
       // tell the next subload callback to copy the input image to the specified offsets
       // in the texture for this.
-      void Update(osg::Image *img, int xOff, int yOff);
+      void AddUpdate(osg::Image *img, int xOff, int yOff);
 
 
    protected:
-      int xOffset;                              // the X offset for the next subload operation.
-      int yOffset;                              // the Y offset for the next subload operation.
+      mutable std::vector< int > xOffsets;                              // the X offset for the next subload operation.
+      mutable std::vector< int > yOffsets;                              // the Y offset for the next subload operation.
       mutable bool doSubload;                   // true if should do a subload copy with next subload() callback for the texture.
-      mutable osg::ref_ptr<osg::Image> subImg;  // a pointer to an image to overlay onto the texture for this.
+      mutable std::vector< osg::Image* > subImgs;  // a pointer to an image to overlay onto the texture for this.
    };
 
 }
