@@ -78,7 +78,8 @@ else:
     qt46.applyQtBuildFlags(lib_env)
 
 if GetPlatform() == 'win32':
-    lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
+    lib_env['no_import_lib'] = 1
+    lib_env['WINDOWS_INSERT_MANIFEST'] = False
 
 #disable profiling by default
 if lib_env['VPRProfile'] == 'no':

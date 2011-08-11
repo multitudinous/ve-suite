@@ -44,7 +44,7 @@
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/replace.hpp>
-#include <boost/filesystem/path.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <Poco/Data/SQLite/SQLite.h>
