@@ -703,6 +703,7 @@ void AppFrame::OnCloseWindow( wxCloseEvent& WXUNUSED( event ) )
     
     //disconnect the service list from the CE
     serviceList->DisconnectFromCE();
+    XMLDataBufferEngine::instance()->CleanUp();
 
     //We have to mannually destroy these to make sure that things shutdown
     //properly with CORBA. There may be a possible way to get around this but
