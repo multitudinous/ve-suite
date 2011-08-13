@@ -74,8 +74,8 @@ else:
     import qt46
     qt46.applyQtBuildFlags(lib_env)
 
-if GetPlatform() == 'win32':
-    lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
+#if GetPlatform() == 'win32':
+#    lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
 
 #disable profiling by default
 if lib_env['VPRProfile'] == 'no':

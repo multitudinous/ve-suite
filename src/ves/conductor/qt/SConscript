@@ -203,11 +203,11 @@ else:
 
 #lib_env.AppendUnique( CPPDEFINES = ['QT_RENDER_DEBUG'])
 
-if GetPlatform() == 'win32':
-    boostVersion = boost_options.getVersion()
-    boostNumber = boostVersion[ 0 ] + (0.01*boostVersion[ 1 ])
-    if boostNumber < 1.46:
-        lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
+#if GetPlatform() == 'win32':
+#    boostVersion = boost_options.getVersion()
+#    boostNumber = boostVersion[ 0 ] + (0.01*boostVersion[ 1 ])
+#    if boostNumber < 1.46:
+#        lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
 
 #disable profiling by default
 if lib_env['VPRProfile'] == 'no':
