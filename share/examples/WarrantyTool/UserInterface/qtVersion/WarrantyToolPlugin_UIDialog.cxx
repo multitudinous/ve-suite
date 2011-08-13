@@ -30,11 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//#include <ves/conductor/qt/WarrantyToolPlugin/WarrantyToolPlugin_UIDialog.h>
-//#include <share/examples/WarrantyTool/UserInterface/qtVersion/ui_WarrantyToolPlugin_UIDialog.h>
-
 #include "WarrantyToolPlugin_UIDialog.h"
 #include "ui_WarrantyToolPlugin_UIDialog.h"
+
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/OneDStringArray.h>
