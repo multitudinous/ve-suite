@@ -1025,7 +1025,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     //std::cout << "Bird data " << measuredSIPCentroid << std::endl << std::flush;
     //gmtl::Matrix44d measuredSIPCentroidMat = 
     //    gmtl::makeTrans< gmtl::Matrix44d >( measuredSIPCentroid );
-    std::cout << "Bird data " << measuredSIPCentroid << std::endl << std::flush;
+    std::cout << "Bird data " << measuredSIPCentroidMat << std::endl << std::flush;
     
     ///SIP location from the user on the UI
     gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
