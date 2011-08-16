@@ -38,6 +38,7 @@
 #include <ves/xplorer/scenegraph/util/OptVisitor.h>
 #include <ves/xplorer/scenegraph/util/CountsVisitor.h>
 #include <ves/xplorer/scenegraph/util/MaterialPresent.h>
+#include <ves/xplorer/scenegraph/util/UnRefImageDataVisitor.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -576,6 +577,11 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                 new osg::Uniform( "textureZeroIsBound", false ) );
         }
     }
+    
+    {
+        util::UnRefImageDataVisitor uridv( mCadNode.get() );
+    }
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::
