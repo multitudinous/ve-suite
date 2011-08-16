@@ -117,6 +117,9 @@ private:
     void CalculateRegistrationVariables();
     ///Read bird file
     void ReadBirdRegistrationFile();
+    ///Utility function to construct look matrix
+    gmtl::Matrix44d GetLookAtMatrix( gmtl::Point4d& frontPoint, 
+        gmtl::Point4d& leftRear, gmtl::Point4d& rightRear );
 
     ///Sample thread
     vpr::Thread* m_sampleThread;

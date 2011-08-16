@@ -96,7 +96,9 @@ def registerBuck(sipx, sipy, sipz, rrbird, fbird, lrbird):
 	print "rota",rotxa*180.0/3.14159,rotya*180.0/3.14159,rotza*180.0/3.14159
 
 	fobpos = scene.FOB_trans_icon.GetLocation()
+    #The live bird data
 	ta = (xyz(rotxa,rotya,rotza)*trans(ca[0],ca[1],ca[2]))
+    # The calibrated sip data from measurements
 	td = (xyz(rotxd,rotyd,rotzd)*trans(cd[0],cd[1],cd[2]))
 	tai = ta.Inverse()
 
