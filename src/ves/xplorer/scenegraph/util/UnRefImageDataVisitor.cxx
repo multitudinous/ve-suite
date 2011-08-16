@@ -54,49 +54,41 @@ UnRefImageDataVisitor::~UnRefImageDataVisitor()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnRefImageDataVisitor::apply( osg::Geode& node )
-{
-    osg::ref_ptr< osg::StateSet > stateset = node.getStateSet();
-    
-    CheckStateSet( stateset.get() );
+{    
+    CheckStateSet( node.getStateSet() );
 
-    osg::ref_ptr< osg::StateSet > drawable_stateset;
-    for( size_t i = 0; i < node.getNumDrawables(); i++ )
+    for( size_t i = 0; i < node.getNumDrawables(); ++i )
     {
         //Stateset for the drawable
-        drawable_stateset = 
-            node.getDrawable( i )->getStateSet();
-        
-        CheckStateSet( drawable_stateset.get() );
+        CheckStateSet( node.getDrawable( i )->getStateSet() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnRefImageDataVisitor::apply( osg::Group& node )
 {
-    osg::ref_ptr< osg::StateSet > stateset = node.getStateSet();
-    
-    CheckStateSet( stateset.get() );
+    CheckStateSet( node.getStateSet() );
     
     osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnRefImageDataVisitor::CheckStateSet( osg::StateSet* stateSet )
 {
-    osg::ref_ptr< osg::StateSet > tempStateSet = stateSet;
-    if( tempStateSet.valid() )
+    if( !stateSet )
     {
         return;
     }
 
     //Texture for the stateset
-    osg::StateSet::TextureAttributeList stateSetTal = 
-        tempStateSet->getTextureAttributeList();
-    
     osg::ref_ptr< osg::Texture > texture;
-    for( size_t k = 0; k < stateSetTal.size(); ++k )
+    ///Loop over the maximum number of hardware texture units
+    for( size_t k = 0; k < 32; ++k )
     {
-        texture = static_cast< osg::Texture* >( tempStateSet->
+        texture = dynamic_cast< osg::Texture* >( stateSet->
             getTextureAttribute( k, osg::StateAttribute::TEXTURE ) );
-        texture->setUnRefImageDataAfterApply( true );
+        if( texture.valid() )
+        {
+            texture->setUnRefImageDataAfterApply( true );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
