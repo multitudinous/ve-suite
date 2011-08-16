@@ -922,6 +922,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     gmtl::Matrix44d headMat = gmtl::convertTo< double >( headposDevice->getData() );
 #ifndef DVST_TEST
     gmtl::Point4d headPoint = gmtl::makeTrans< gmtl::Point4d >( headMat );
+    std::cout << "The Front Bird " << headPoint << std::endl;
 #else
     gmtl::Point4d headPoint;
     headPoint.set( 0.00165595, 4.06479, -2.38933, 1.0 );
@@ -931,6 +932,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     gmtl::Matrix44d wandMat = gmtl::convertTo< double >( wandposDevice->getData() );
 #ifndef DVST_TEST
     gmtl::Point4d wandPoint = gmtl::makeTrans< gmtl::Point4d >( wandMat );
+    std::cout << "The Left Rear Bird " << wandPoint << std::endl;
 #else
     gmtl::Point4d wandPoint;
     wandPoint.set( -1.36624, 4.40733, 2.72343, 1.0 );
@@ -940,6 +942,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     gmtl::Matrix44d pointerMat = gmtl::convertTo< double >( pointerposDevice->getData() );
 #ifndef DVST_TEST
     gmtl::Point4d pointerPoint = gmtl::makeTrans< gmtl::Point4d >( pointerMat );
+    std::cout << "The Right Rear Bird " << pointerPoint << std::endl;
 #else
     gmtl::Point4d pointerPoint;
     pointerPoint.set( 1.30108, 4.23967, 2.6748, 1.0 );
@@ -1075,11 +1078,11 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     std::cout << "Reg matrix " << std::endl 
         << registerMat << std::endl << std::flush;
 
-    m_initialNavMatrix = registerMat * sipLoc;
+    m_initialNavMatrix = registerMat;// * sipLoc;
     std::cout << "Init nav matrix " << std::endl 
         << m_initialNavMatrix << std::endl << std::flush;
 
-    m_initialNavMatrix = m_initialNavMatrix * cadOrientationMat;
+    m_initialNavMatrix = m_initialNavMatrix * cadOrientationMat * sipLoc;
     std::cout << "Init nav matrix with CAD correction" << std::endl 
         << m_initialNavMatrix << std::endl << std::flush;
 
