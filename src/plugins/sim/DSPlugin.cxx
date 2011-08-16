@@ -139,7 +139,7 @@ void DSPlugin::OnUnitName( wxCommandEvent& event )
     wxArrayString choices;
     for( int i = 0; i < data.size(); i++ )
     {
-        choices.Add(wxString(data[i].c_str()));
+        choices.Add(wxString(data[i].c_str(), wxConvUTF8 ));
     }
 
     //create the dialog and get the selection
@@ -147,7 +147,7 @@ void DSPlugin::OnUnitName( wxCommandEvent& event )
         wxT("Select a unit"),choices);
     if( scd.ShowModal() == wxID_OK )
     {
-        SetUnitName( scd.GetStringSelection().c_str() );
+        SetUnitName( ConvertUnicode( scd.GetStringSelection().c_str() ) );
     }
 }
 /////////////////////////////////////////////////////////////////////////////
