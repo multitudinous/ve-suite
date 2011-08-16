@@ -1004,14 +1004,14 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     //x = -z
     //y = -x
     //z = y
-    gmtl::Point3d sipOffSetFrontBird;
-    sipOffSetFrontBird.set( -frontBirdZ, -frontBirdX, frontBirdY );
+    gmtl::Point4d sipOffSetFrontBird;
+    sipOffSetFrontBird.set( -frontBirdZ, -frontBirdX, frontBirdY, 1.0 );
 
-    gmtl::Point3d sipOffSetLeftRearBird;
-    sipOffSetLeftRearBird.set( -leftRearBirdZ, -leftRearBirdX, leftRearBirdY );
+    gmtl::Point4d sipOffSetLeftRearBird;
+    sipOffSetLeftRearBird.set( -leftRearBirdZ, -leftRearBirdX, leftRearBirdY, 1.0 );
     
-    gmtl::Point3d sipOffSetRightRearBird;
-    sipOffSetRightRearBird.set( -rightRearBirdZ, -rightRearBirdX, rightRearBirdY );
+    gmtl::Point4d sipOffSetRightRearBird;
+    sipOffSetRightRearBird.set( -rightRearBirdZ, -rightRearBirdX, rightRearBirdY, 1.0 );
     
     ///Get the lookat matrix based on the bird calibration points
     gmtl::Matrix44d measuredSIPCentroidMat = 
