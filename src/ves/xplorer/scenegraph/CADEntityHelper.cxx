@@ -40,6 +40,7 @@
 #include <ves/xplorer/scenegraph/util/OptVisitor.h>
 #include <ves/xplorer/scenegraph/util/CountsVisitor.h>
 #include <ves/xplorer/scenegraph/util/MaterialPresent.h>
+#include <ves/xplorer/scenegraph/util/UnRefImageDataVisitor.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -571,17 +572,10 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                 new osg::Uniform( "textureZeroIsBound", false ) );
         }
     }
-    ///Test uuid metanode io and assignment
-    /*{
-        std::string pname = filename + "_uuid.osg";
-        osg::ref_ptr< ves::xplorer::scenegraph::MetaNode > mn = new ves::xplorer::scenegraph::MetaNode();
-        boost::any tempUUID = std::string( "123456789" );
-        mn->add( "ves uuid ", tempUUID );
-        //std::ostringstream ostr;
-        //ostr << "id" << id++;
-        //osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
-        osgDB::writeObjectFile( *mn.get(), pname );
-    }*/
+    
+    {
+        util::UnRefImageDataVisitor uridv( mCadNode.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::
