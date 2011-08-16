@@ -264,7 +264,7 @@ void UIPluginBase::SetID( int id )
 void UIPluginBase::SetName( wxString pluginName )
 {
     mPluginName = pluginName;
-    m_veModel->SetPluginName( mPluginName.c_str() );
+    m_veModel->SetPluginName( ConvertUnicode( mPluginName.c_str() ) );
     if( mPopMenu )
     {    
         wxString menuName = mPluginName + wxString( " Menu", wxConvUTF8 );
