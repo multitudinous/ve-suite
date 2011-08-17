@@ -80,6 +80,8 @@ else:
 if GetPlatform() == 'win32':
     lib_env['no_import_lib'] = 1
     lib_env['WINDOWS_INSERT_MANIFEST'] = False
+    #http://lists.qt.nokia.com/pipermail/qt-interest/2009-July/009829.html
+    lib_env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG'] )
 
 #disable profiling by default
 if lib_env['VPRProfile'] == 'no':

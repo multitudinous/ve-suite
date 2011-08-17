@@ -74,9 +74,6 @@ else:
     import qt46
     qt46.applyQtBuildFlags(lib_env)
 
-#if GetPlatform() == 'win32':
-#    lib_env.AppendUnique(CXXFLAGS = ['/Zc:wchar_t-'])
-
 #disable profiling by default
 if lib_env['VPRProfile'] == 'no':
    lib_env.AppendUnique( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
@@ -94,6 +91,12 @@ bdfx_options.apply( lib_env )
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
    lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+
+if GetPlatform() == 'win32':
+    lib_env['no_import_lib'] = 1
+    lib_env['WINDOWS_INSERT_MANIFEST'] = False
+    #http://lists.qt.nokia.com/pipermail/qt-interest/2009-July/009829.html
+    lib_env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG'] )
 
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_DEFAULTPLUGIN_LIBRARY'])
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )

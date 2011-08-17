@@ -152,7 +152,7 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
     }
 
     // Recursively search all subdirectories of the passed directory
-    QStringList subdirs = pluginsPath.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    QStringList subdirs = pluginsPath.entryList( QDir::Dirs|QDir::NoDotAndDotDot );
     QStringList::iterator dir_iter = subdirs.begin();
     while( dir_iter != subdirs.end() )
     {
@@ -162,11 +162,13 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
         dir_iter++;
     }
 
-    std::cout << "|\tConductor is searching for plugins in "
+    std::cout << std::endl << "|\tConductor is searching for plugins in "
         << pluginsPath.canonicalPath().toStdString() << std::endl << std::flush;
 
     // Walk through all files in Plugins/UI directory
-    QStringList files = pluginsPath.entryList(QDir::Files);
+    QStringList extensionFilters;
+    extensionFilters << "*.dll" << "*.so" << "*.bundle";
+    QStringList files = pluginsPath.entryList( extensionFilters, QDir::Files );
     QStringList::iterator iter = files.begin();
     if( iter == files.end() )
     {
@@ -180,11 +182,11 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
         QString fileName = (*iter);
         QPluginLoader loader;
         loader.setFileName( pluginsPath.absoluteFilePath(fileName) );
-        //std::cout << "|\tChecking whether " << fileName.toStdString()
-        //        << " is a plugin...";
+        std::cout << "|\tChecking whether " << fileName.toStdString()
+                << " is a plugin...";
         if( loader.load() )
         {
-            //std::cout << "yes." << std::endl << std::flush;
+            std::cout << "yes." << std::endl << std::flush;
 
             // Get root object, which should be a UIPluginFactory
             QObject *plugin = loader.instance();
@@ -193,8 +195,9 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
                 UIPluginFactory* factory = qobject_cast< UIPluginFactory* >(plugin);
                 if( factory )
                 {
-                    std::cout << "|\tConductor successfully loaded plugin " << fileName.toStdString()
-                            << " containing plugin: " << factory->GetFactoryClassName() << "-- "
+                    std::cout << "|\tConductor successfully loaded plugin " 
+                            << fileName.toStdString()
+                            << " containing plugin: " << factory->GetFactoryClassName() << " -- "
                             << factory->GetDescription() << std::endl;
                     QString displayName = QString::fromStdString( factory->GetFactoryDisplayName() );
                     QList< QListWidgetItem* > existing = ui->m_availablePlugins->findItems(
@@ -216,8 +219,8 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
                 }
                 else
                 {
-                    //std::cout << "|\tFailed to cast plugin " << fileName.toStdString() <<
-                    //        " as a UIPluginFactory." << std::endl << std::flush;
+                    std::cout << "|\tFailed to cast plugin " << fileName.toStdString() <<
+                            " as a UIPluginFactory." << std::endl << std::flush;
                 }
             }
             else
@@ -227,10 +230,11 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
         }
         else
         {
-            //std::cout << "no. " << loader.errorString().toStdString() << std::endl << std::flush;
+            std::cout << "no. " << loader.errorString().toStdString() << std::endl << std::flush;
         }
         ++iter;
     }
+    std::cout << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 PluginSelectionTab::~PluginSelectionTab()
