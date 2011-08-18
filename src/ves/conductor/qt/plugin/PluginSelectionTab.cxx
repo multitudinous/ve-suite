@@ -468,7 +468,7 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
     bool found = false;
     while( !found && (index < ui->m_availablePlugins->count()) )
     {
-        std::cout << "Matches " << ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString().toStdString() << " ?" << std::endl << std::flush;
+        std::cout << "|\tMatches " << ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString().toStdString() << " ?" << std::endl << std::flush;
         if( ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString() == pluginName )
         {
             found = true;
@@ -486,7 +486,7 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
     }
     else
     {
-        std::cout << "|Found UI plugin lib matching name " 
+        std::cout << "|\tFound UI plugin lib matching name " 
             << pluginFactoryClassName << std::endl << std::flush;
     }
 
