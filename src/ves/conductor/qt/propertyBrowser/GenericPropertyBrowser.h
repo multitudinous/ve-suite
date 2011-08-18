@@ -50,6 +50,13 @@ public:
     explicit GenericPropertyBrowser(QWidget* parent = 0);
 
     void setPropertyBrowser( PropertyBrowser* browser );
+
+    /// Refreshes the list of properties to be displayed. This does not refresh
+    /// the *values* of the property-value pairs, but only refreshes the property
+    /// labels and the value types.
+    /// @param autosize When true autosizes the column widths to attempt to
+    ///                 display all information. When false, renders the property
+    ///                 and value columns as equal widths.
     void RefreshContents( bool autosize = true );
 
 Q_SIGNALS:
