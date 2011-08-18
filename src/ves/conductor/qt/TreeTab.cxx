@@ -281,7 +281,8 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     mBrowser->ParsePropertySet( mActiveSet );
 
     ui->cadPropertyBrowser->setPropertyBrowser( mBrowser );
-    ui->cadPropertyBrowser->RefreshContents();
+    // Don't autosize the columns when we refresh the propertybrowser
+    ui->cadPropertyBrowser->RefreshContents( false );
     ui->cadPropertyBrowser->show();
 
     // Load properties from db

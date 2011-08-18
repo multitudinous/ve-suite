@@ -69,13 +69,16 @@ void GenericPropertyBrowser::setPropertyBrowser( PropertyBrowser* browser )
     this->setFactoryForManager( browser->GetNodeSelectManager(), mNodeSelectFactory );
 }
 
-void GenericPropertyBrowser::RefreshContents()
+void GenericPropertyBrowser::RefreshContents( bool autosize )
 {
     // Clear out anything currently in the browser
     this->clear();
 
     // Tell the browser to auto-resize column widths
-    this->setResizeMode(QtTreePropertyBrowser::ResizeToContents);
+    if( autosize )
+    {
+        this->setResizeMode(QtTreePropertyBrowser::ResizeToContents);
+    }
 
     // Get all the QItems from underlying propertybrowser and add to this view
     PropertyBrowser::ItemVector* items = mBrowser->GetItems();

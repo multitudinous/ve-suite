@@ -50,7 +50,7 @@ public:
     explicit GenericPropertyBrowser(QWidget* parent = 0);
 
     void setPropertyBrowser( PropertyBrowser* browser );
-    void RefreshContents();
+    void RefreshContents( bool autosize = true );
 
 Q_SIGNALS:
 
