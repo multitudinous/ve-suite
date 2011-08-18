@@ -412,10 +412,10 @@ void TreeTab::OnNodeAdded( std::string const& filename )
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::QueuedNodeAdded( std::string const& filename )
 {
-    on_m_refreshTreeButton_clicked();
+    RefreshTree();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TreeTab::on_m_refreshTreeButton_clicked()
+void TreeTab::RefreshTree()
 {
     // Read the scenegraph and rebuild tree.
     PopulateWithRoot(
@@ -488,7 +488,21 @@ void TreeTab::on_m_deleteButton_clicked()
     ( eventmanager::EventFactory::instance()->GetSignal( "DeleteCADNode" ) )
     ->mSignal->operator()( parentID, nodeID, type );
 
-    on_m_refreshTreeButton_clicked();
+    RefreshTree();
+}
+
+void TreeTab::on_m_expandAllButton_clicked()
+{
+    if( ui->m_expandAllButton->text() == QString( "Expand All" ) )
+    {
+        ui->mTreeView->expandAll();
+        ui->m_expandAllButton->setText( "Collapse All" );
+    }
+    else
+    {
+        ui->mTreeView->collapseAll();
+        ui->m_expandAllButton->setText( "Expand All" );
+    }
 }
 
 } // namespace conductor

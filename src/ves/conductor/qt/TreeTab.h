@@ -109,6 +109,8 @@ protected:
 
     void OnNodeAdded( std::string const& filename );
 
+    void RefreshTree();
+
 protected Q_SLOTS:
     /// Called when user changes selection in tree.
     /// This function looks up the scenegraph to find a valid DCS and then
@@ -132,11 +134,13 @@ protected Q_SLOTS:
     /// in NodeAdded.
     void QueuedNodeAdded( std::string const& filename );
 
-    void on_m_refreshTreeButton_clicked();
+    //void on_m_refreshTreeButton_clicked();
 
     void on_m_searchBox_textEdited( const QString& pattern );
 
     void on_m_deleteButton_clicked();
+
+    void on_m_expandAllButton_clicked();
 
     Q_SIGNALS:
 

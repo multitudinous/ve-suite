@@ -22,7 +22,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,1">
        <item>
-        <widget class="QPushButton" name="ExpandAllButton">
+        <widget class="QPushButton" name="m_expandAllButton">
          <property name="text">
           <string>Expand All</string>
          </property>
@@ -123,9 +123,7 @@
       </layout>
      </item>
      <item>
-      <widget class="ves::conductor::GenericPropertyBrowser" name="cadPropertyBrowser" native="true">
-       <zorder></zorder>
-      </widget>
+      <widget class="ves::conductor::GenericPropertyBrowser" name="cadPropertyBrowser" native="true"/>
      </item>
     </layout>
    </item>
@@ -142,22 +140,5 @@
  <resources>
   <include location="propertyBrowser/icons.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>ExpandAllButton</sender>
-   <signal>clicked()</signal>
-   <receiver>mTreeView</receiver>
-   <slot>expandAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>86</x>
-     <y>28</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>104</x>
-     <y>118</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
