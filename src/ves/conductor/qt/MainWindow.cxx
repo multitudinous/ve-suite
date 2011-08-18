@@ -141,7 +141,10 @@ MainWindow::MainWindow(QWidget* parent) :
         
     //ui->menuBar->close();
 
+    ui->menuBar->setContextMenuPolicy( Qt::PreventContextMenu );
+
     QToolBar* toolbar = new ExtendedToolBar(this);
+    toolbar->setContextMenuPolicy( Qt::PreventContextMenu );
     toolbar->setMouseTracking( true );
     toolbar->setIconSize(QSize(32,32));
     toolbar->setMovable( false );
