@@ -1221,9 +1221,15 @@ void tecplotReader::AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, co
     std::cout << "adding cells to ordered grid" << std::endl;
 #endif // PRINT_HEADERS
 
+    if( numNodesPerElement != 8 )
+    {
+        std::cerr << "Error: AddOrderedCellsToGrid can only handle numNodesPerElement = 8" << std::endl;
+        return;
+    }
+
     for( int k = 1; k < KMax+1; k++ )         //one-based
     {
-        for( int j = 1; j <= JMax+1; j++ )     //one-based
+        for( int j = 1; j < JMax+1; j++ )     //one-based
         {
             for( int i = 1; i < IMax+1; i++ ) //one-based
             {
@@ -1240,10 +1246,10 @@ void tecplotReader::AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, co
     LgIndex_t elemNum = 0;
 
     //sometimes a value will be one (such as a collapsed 8-node element to a 4-node no-thickness element)
-    LgIndex_t IIMax = IMax, JJMax = JMax, KKMax = KMax;
-    if( IMax == 1 ) { IIMax = 2; }
-    if( JMax == 1 ) { JJMax = 2; }
-    if( KMax == 1 ) { KKMax = 2; }
+    LgIndex_t IIMax = this->IMax, JJMax = this->JMax, KKMax = this->KMax;
+    if( IIMax == 1 ) { IIMax = 2; }
+    if( JJMax == 1 ) { JJMax = 2; }
+    if( KKMax == 1 ) { KKMax = 2; }
     
     for( int k = 1; k < KKMax; k++ )         //one-based
     {
