@@ -90,6 +90,8 @@ private:
     vtkFloatArray** parameterData;
     int * timeToInitVtk;
     int * numZonesAtTimestep;
+    LgIndex_t IMax, JMax, KMax;
+    
     ///???
     void ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
     ///???
@@ -112,6 +114,8 @@ private:
     ///???
     void AddCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone,
                          const int numNodesPerElement );
+    ///???
+    void AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, const int numNodesPerElement );
     ///???
     void AddFaceCellsToGrid( const EntIndex_t currentZone, const ZoneType_e zoneType, const LgIndex_t numElementsInZone );
     ///???

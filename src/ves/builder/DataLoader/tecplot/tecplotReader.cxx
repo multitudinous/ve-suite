@@ -43,6 +43,8 @@
 #include <vtkPointData.h>
 #include <vtkCellData.h>
 #include <vtkIdList.h>
+//#include <vtkStructuredGrid.h>
+//#include <vtkThreshold.h>
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -237,14 +239,30 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
         this->ReadElementInfoInZone( currentZone, zoneType, numElementsInZone, numNodesPerElement,
                                      numFaces, numNodalPointsInZone );
 
-        if( numFaces == 0 )
+        // Add cells and cell connectivity to the grid
+        if( zoneType == ZoneType_Ordered )
         {
-            this->AddCellsToGrid( currentZone, zoneType, numElementsInZone, numNodesPerElement );
+            this->AddOrderedCellsToGrid( numElementsInZone, numNodesPerElement );
+
+/*
+            //this was start of noncompleted attempt to deal directly with structured grids
+            vtkStructuredGrid* sgrid = vtkStructuredGrid::New();
+            sgrid->SetDimensions( IMax, JMax, KMax );
+
+            // Convert from vtkStructuredGrid to vtkUnstructuredGrid.
+            vtkThreshold* thresh = vtkThreshold::New();
+            thresh->SetInput( sgrid );
+            this->ugrid = thresh->GetOutput();
+*/
         }
-        else
+        else if( numFaces > 0 )
         {
             // face-based FE-data (polygons and polyhedrons)
             this->AddFaceCellsToGrid( currentZone, zoneType, numElementsInZone );
+        }
+        else if( numFaces == 0 )
+        {
+            this->AddCellsToGrid( currentZone, zoneType, numElementsInZone, numNodesPerElement );
         }
 
         this->ReadNodalCoordinates( currentZone, numNodalPointsInZone );
@@ -935,7 +953,6 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
     // Obtain information about the current zone.
     // If the frame mode is XY the handles must be passed in as NULL.
     // Otherwise, passing NULL indicates the value is not desired.
-    LgIndex_t IMax, JMax, KMax;
     TecUtilZoneGetInfo(
         currentZone,    // Number of the zone to query
         &IMax,          // Receives the I-dimension for ordered data. Number of data points for FE-data.
@@ -968,24 +985,73 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
         if( IMax > 0 && JMax > 0 && KMax > 0 )
         {
             numNodesPerElement = 8;
+            numNodalPointsInZone = ( IMax ) * ( JMax ) * ( KMax );
+
+            //we would normally compute numElementsInZone = ( IMax - 1 ) * ( JMax - 1 ) * ( KMax - 1 );
+            //however sometimes a value will be one (such as a collapsed 8-node element to a 4-node no-thickness element)
+            numElementsInZone = 1;
+            if( IMax > 1 )
+            {
+                numElementsInZone = ( IMax - 1 ) * numElementsInZone;
+            }
+            if( JMax > 1 )
+            {
+                numElementsInZone = ( JMax - 1 ) * numElementsInZone;
+            }
+            if( KMax > 1 )
+            {
+                numElementsInZone = ( KMax - 1 ) * numElementsInZone;
+            }
+
         }
-        else if( ( IMax > 0 && JMax > 0 ) ||
-                 ( IMax > 0 && KMax > 0 ) ||
-                 ( JMax > 0 && KMax > 0 )  )
+        else if( IMax > 0 && JMax > 0 ) 
         {
             numNodesPerElement = 4;
+            numNodalPointsInZone = ( IMax ) * ( JMax );
+            numElementsInZone = ( IMax - 1 ) * ( JMax - 1 );
         }
-        else if( IMax > 0 || JMax > 0 || KMax > 0 )
+        else if( IMax > 0 && KMax > 0 )
+        {
+            numNodesPerElement = 4;
+            numNodalPointsInZone = ( IMax ) * ( KMax );
+            numElementsInZone = ( IMax - 1 ) * ( KMax - 1 );
+        }
+        else if( JMax > 0 && KMax > 0 )
+        {
+            numNodesPerElement = 4;
+            numNodalPointsInZone = ( JMax ) * ( KMax );
+            numElementsInZone = ( JMax - 1 ) * ( KMax - 1 );
+        }
+        else if( IMax > 0 )
         {
             numNodesPerElement = 2;
+            numNodalPointsInZone = ( IMax );
+            numElementsInZone = ( IMax - 1 );
+        }
+        else if( JMax > 0 )
+        {
+            numNodesPerElement = 2;
+            numNodalPointsInZone = ( JMax );
+            numElementsInZone = ( JMax - 1 );
+        }
+        else if( KMax > 0 )
+        {
+            numNodesPerElement = 2;
+            numNodalPointsInZone = ( KMax );
+            numElementsInZone = ( KMax - 1 );
         }
         else
         {
 #ifdef PRINT_HEADERS
-            std::cout << "IMax = JMax = KMax = 0. Not supposed to get here." << std::endl;
+            std::cerr << "IMax = JMax = KMax = 0. Not supposed to get here." << std::endl;
 #endif // PRINT_HEADERS
             numNodesPerElement = 0;
         }
+#ifdef PRINT_HEADERS
+        std::cout << "   numNodesPerElement = " << numNodesPerElement << std::endl;
+        std::cout << "   The number of nodal points in this zone is " << numNodalPointsInZone << std::endl;
+        std::cout << "   The number of elements in this zone is " << numElementsInZone << std::endl;
+#endif // PRINT_HEADERS
     }
     else if( zoneType > ZoneType_Ordered && zoneType < END_ZoneType_e )
     {
@@ -1059,7 +1125,6 @@ void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone,
     EntIndex_t this->connectivityShareCount = TecUtilDataConnectGetShareCount( currentZone );
     std::cout << "Connectivity share count of current zone is " << this->connectivityShareCount << std::endl;
 */
-
     // define flag to control printing of unique error message to a single time...
     int undefinedZoneType[ 8 ] = {1,1,1,1,1,1,1,1};
 
@@ -1148,6 +1213,80 @@ void tecplotReader::AddCellsToGrid( const EntIndex_t currentZone,
     {
         std::cerr << "Error: Unable to get node map" << std::endl;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void tecplotReader::AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, const int numNodesPerElement )
+{
+#ifdef PRINT_HEADERS
+    std::cout << "adding cells to ordered grid" << std::endl;
+#endif // PRINT_HEADERS
+
+    for( int k = 1; k < KMax+1; k++ )         //one-based
+    {
+        for( int j = 1; j <= JMax+1; j++ )     //one-based
+        {
+            for( int i = 1; i < IMax+1; i++ ) //one-based
+            {
+                vtkIdType NodeIndex = i + ( j - 1 ) * IMax + ( k - 1 ) * IMax * JMax;
+#ifdef PRINT_HEADERS
+                //std::cout << "NodeIndex = " << NodeIndex << std::endl;
+#endif // PRINT_HEADERS
+            }
+        }
+    }
+
+    vtkIdList* tempIdList = vtkIdList::New();
+    tempIdList->SetNumberOfIds( numNodesPerElement );   // works only with 8 right now
+    LgIndex_t elemNum = 0;
+
+    //sometimes a value will be one (such as a collapsed 8-node element to a 4-node no-thickness element)
+    LgIndex_t IIMax = IMax, JJMax = JMax, KKMax = KMax;
+    if( IMax == 1 ) { IIMax = 2; }
+    if( JMax == 1 ) { JJMax = 2; }
+    if( KMax == 1 ) { KKMax = 2; }
+    
+    for( int k = 1; k < KKMax; k++ )         //one-based
+    {
+        for( int j = 1; j < JJMax; j++ )     //one-based
+        {
+            for( int i = 1; i < IIMax; i++ ) //one-based
+            {
+                elemNum++;
+
+                // node numbers in tecplot are 1-based, 0-based in VTK
+                vtkIdType node1 = i + ( j - 1 ) * IIMax + ( k - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
+                tempIdList->SetId( 0, node1 );
+                vtkIdType node2 = (i+1) + ( j - 1 ) * IIMax + ( k - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;   // increment i
+                tempIdList->SetId( 1, node2 );
+                vtkIdType node3 = (i+1) + ( (j+1) - 1 ) * IIMax + ( k - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;   // and increment j
+                tempIdList->SetId( 2, node3 );
+                vtkIdType node4 = i + ( (j+1) - 1 ) * IIMax + ( k - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;   // and then decrement i
+                tempIdList->SetId( 3, node4 );
+
+                //same as above with k incremented...
+                vtkIdType node5 = i + ( j - 1 ) * IIMax + ( (k+1) - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
+                tempIdList->SetId( 4, node5 );
+                vtkIdType node6 = (i+1) + ( j - 1 ) * IIMax + ( (k+1) - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
+                tempIdList->SetId( 5, node6 );
+                vtkIdType node7 = (i+1) + ( (j+1) - 1 ) * IIMax + ( (k+1) - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
+                tempIdList->SetId( 6, node7 );
+                vtkIdType node8 = i + ( (j+1) - 1 ) * IIMax + ( (k+1) - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
+                tempIdList->SetId( 7, node8 );
+
+#ifdef PRINT_HEADERS
+                if( elemNum < 10 || elemNum > numElementsInZone - 10)
+                { 
+                    std::cout << "For element " << elemNum << ", vtk nodes = " 
+                        << node1 << " " << node2 << " " << node3 << " " << node4 << " "
+                        << node5 << " " << node6 << " " << node7 << " " << node8 << " " << std::endl;
+                }
+#endif // PRINT_HEADERS
+
+                this->ugrid->InsertNextCell( VTK_HEXAHEDRON, tempIdList );
+            }
+        }
+    }
+    tempIdList->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone, 
