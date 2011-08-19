@@ -397,6 +397,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this, m_unitName );
     params->SetComponentName( mPluginName );
     //params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
@@ -417,6 +418,7 @@ void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
 }
 void OpcUOPlugin::OnMonitorVariable ( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     m_monitoring = true;
 }
 ////////////////////////////////////////////////////////////////////////////////

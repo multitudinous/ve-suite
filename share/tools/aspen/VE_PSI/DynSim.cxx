@@ -736,7 +736,7 @@ std::string DynSim::CreateVESNetwork()
         flowSheetModel->SetPluginType( "SimUOPlugin" );
         flowSheetModel->SetVendorName( m_unitName );
         std::string DSS_V (DSS_VERSION);
-        flowSheetModel->SetIconFilename( DSS_V + "/Images/ClassIcons/" + sheetIter->second.cls + ".gif" );
+        flowSheetModel->SetIconFilename( DSS_V + "Images/ClassIcons/" + sheetIter->second.cls + ".gif" );
         //flowSheetModel->SetIconFilename( sheetIter->second.cls );
         flowSheetModel->SetIconRotation( 0 );
         flowSheetModel->SetIconScale( 1 );
