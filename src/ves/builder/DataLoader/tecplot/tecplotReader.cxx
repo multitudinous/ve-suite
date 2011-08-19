@@ -1245,8 +1245,11 @@ void tecplotReader::AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, co
     tempIdList->SetNumberOfIds( numNodesPerElement );   // works only with 8 right now
     LgIndex_t elemNum = 0;
 
-    //sometimes a value will be one (such as a collapsed 8-node element to a 4-node no-thickness element)
     LgIndex_t IIMax = this->IMax, JJMax = this->JMax, KKMax = this->KMax;
+
+    //sometimes a value will be one (such as a collapsed 8-node element to a 4-node no-thickness element)
+    if( IIMax == 1 || JJMax == 1 || KKMax == 1 ) { return; }    //bail out -- something not working right
+
     if( IIMax == 1 ) { IIMax = 2; }
     if( JJMax == 1 ) { JJMax = 2; }
     if( KKMax == 1 ) { KKMax = 2; }
