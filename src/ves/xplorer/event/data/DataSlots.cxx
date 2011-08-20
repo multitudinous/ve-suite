@@ -33,12 +33,15 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/data/DataSlots.h>
-#include <string>
-#include <vector>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
+#include <ves/xplorer/Debug.h>
+
 #include <ves/xplorer/data/DatasetPropertySet.h>
+
+#include <string>
+#include <vector>
 
 namespace ves
 {
@@ -51,6 +54,10 @@ namespace data
 ////////////////////////////////////////////////////////////////////////////////
 void SetContourPlaneGreyscale( std::string const& uuid, std::vector< bool > const& greyscaleflag )
 {
+    vprDEBUG( vesDBG, 2 ) 
+        << "|\tDataSlots::SetContourPlaneGreyscale : uuid " << uuid
+        << std::endl << vprDEBUG_FLUSH;
+
     if( ModelHandler::instance()->GetActiveModel() == NULL )
     {
         return;
@@ -106,12 +113,16 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
 ////////////////////////////////////////////////////////////////////////////////
 void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
 {
-    std::cout << "SetDatasetSurfaceWrap" << std::endl << std::flush;
+    vprDEBUG( vesDBG, 2 ) 
+        << "|\tDataSlots::SetDatasetSurfaceWrap : uuid " << uuid
+        << std::endl << vprDEBUG_FLUSH;
+
     ves::xplorer::Model* activeModel = ModelHandler::instance()->GetActiveModel();
     ves::xplorer::data::DatasetPropertySet set;
     set.SetUUID( uuid );
     set.LoadFromDatabase();
-    std::string datasetName = boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
+    const std::string& datasetName = 
+        boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
 
     DataSet* dataSet = activeModel->GetCfdDataSet(
         activeModel->GetIndexOfDataSet( datasetName ) );
@@ -121,15 +132,7 @@ void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
         return;
     }
 
-    if( surfaceWrap )
-    {
-        //dataSet->CreateSurfaceWrap();
-        dataSet->CreateWireframeGeode();
-    }
-    else
-    {
-        // TODO: How do we undo a surface wrap?
-    }
+    dataSet->SetWireframeState( surfaceWrap );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
