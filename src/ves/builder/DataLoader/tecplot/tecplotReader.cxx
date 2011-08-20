@@ -1233,9 +1233,9 @@ void tecplotReader::AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, co
         {
             for( int i = 1; i < IMax+1; i++ ) //one-based
             {
-                vtkIdType NodeIndex = i + ( j - 1 ) * IMax + ( k - 1 ) * IMax * JMax;
 #ifdef PRINT_HEADERS
-                //std::cout << "NodeIndex = " << NodeIndex << std::endl;
+                vtkIdType NodeIndex = i + ( j - 1 ) * IMax + ( k - 1 ) * IMax * JMax;
+                std::cout << "NodeIndex = " << NodeIndex << std::endl;
 #endif // PRINT_HEADERS
             }
         }
@@ -1245,7 +1245,9 @@ void tecplotReader::AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, co
     tempIdList->SetNumberOfIds( numNodesPerElement );   // works only with 8 right now
     LgIndex_t elemNum = 0;
 
-    LgIndex_t IIMax = this->IMax, JJMax = this->JMax, KKMax = this->KMax;
+    LgIndex_t IIMax = this->IMax;
+    LgIndex_t JJMax = this->JMax;
+    LgIndex_t KKMax = this->KMax;
 
     //sometimes a value will be one (such as a collapsed 8-node element to a 4-node no-thickness element)
     if( IIMax == 1 || JJMax == 1 || KKMax == 1 ) { return; }    //bail out -- something not working right
