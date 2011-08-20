@@ -481,6 +481,8 @@ void MainWindow::on_actionOpen_triggered()
     // Make mFileDialog manage its own lifetime and memory
     mFileDialog->setAttribute( Qt::WA_DeleteOnClose );
     mFileDialog->setFileMode( QFileDialog::ExistingFiles );
+    // Tell the dialog to open in the cwd
+    mFileDialog->setDirectory( QDir::current() );
 
     std::string AllGeometryExtensions;
     std::vector< std::string >::iterator iter = m_GeometryExtensions.begin();
