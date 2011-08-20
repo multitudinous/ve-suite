@@ -391,56 +391,6 @@ unsigned int Model::GetNumberOfGeomDataSets( void )
 {
     return mGeomDataSets.size();
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// Dynamic Loading Data Start From Here
-void Model::DynamicLoadingData( vtkUnstructuredGrid* dataset, int datasetindex, double* scale, double* trans, double* rotate )
-{
-    this->CreateCfdDataSet();
-
-
-    vprDEBUG( vesDBG, 0 ) << " ************************************* "
-    << std::endl << vprDEBUG_FLUSH;
-
-    vprDEBUG( vesDBG, 0 ) << " vtk DCS parameters:"
-    << std::endl << vprDEBUG_FLUSH;
-
-    //double scale[3], trans[3], rotate[3];   // pfDCS stuff
-    //this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
-
-    //hard code here and will change it later
-    //scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
-    //trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
-    //rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
-    // Pass in -1 to GetCfdDataSet to get the last dataset added
-    this->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
-    this->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
-    this->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
-    this->GetCfdDataSet( -1 )->LoadData( dataset, datasetindex );
-
-    // this->MakingSurface( _model->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
-    //
-    std::cout << "[DBG]...Before add data into waitinglist" << std::endl;
-    this->waitingdatalist.push_back( dataset );
-    std::cout << "[DBG]...After add data into waitinglist" << std::endl;
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void Model::DynamicLoadingGeom( std::string surfacefilename, double* scale,
-                                double* trans, double* rotate, double* stlColor, int color, int transFlag )
-{
-    std::cout << "[DBG]...the geom file is " << surfacefilename << std::endl;
-    this->CreateGeomDataSet( surfacefilename );
-    std::cout << "[DBG]...after cfdFile constructor" << std::endl;
-    //this->GetGeomDataSet( -1 )->GetDCS()->SetScaleArray( scale );
-    //this->GetGeomDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
-    //this->GetGeomDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
-}
-////////////////////////////////////////////////////////////////////////////////
-std::vector<vtkDataSet*> Model::GetWaitingDataList()
-{
-    return this->waitingdatalist;
-}
 ////////////////////////////////////////////////////////////////////////////////
 void Model::GetDataFromUnit()
 {
@@ -450,7 +400,7 @@ void Model::GetDataFromUnit()
 
     vpr::Uint32 data_length = 0;
     vpr::Uint32 compressed_data_length( 0 );
-    unsigned int bytes_read = 0;
+    //unsigned int bytes_read = 0;
     int i = 0;
 
     while( 1 )
@@ -579,7 +529,7 @@ void Model::GetDataFromUnit()
             //since the user doesn't have access to the scale a and translate edata in this thread
             // this data for this cfddataset can be set after rloading that dataset
             // in the activate custom viz function when necessary
-            this->DynamicLoadingData( ugrid, i, scale, trans, rotate );
+            //this->DynamicLoadingData( ugrid, i, scale, trans, rotate );
             std::cout << "[DBG]...AFTER LOAD DATA ****************************************" << std::endl;
             this->currentsurfacefilename = ( std::string )( this->MakeSurfaceFile( ugrid, i ) );
 
@@ -646,47 +596,6 @@ const std::string Model::MakeSurfaceFile( vtkDataSet* ugrid, int datasetindex )
     surface->Delete();
     std::cout << "\ndone\n";
     return newStlName;
-}
-//Dynamic Loading Data End Here
-/////////////////////////////////////////////////
-void Model::AddNewSound( std::string soundName,
-                         std::string filename )
-{
-    /*cfdSound newSound;
-    newSound.fileName = filename;
-    newSound.soundName = soundName;
-
-    if( newSound.initSound() )
-    {
-        _availableSounds[soundName] = newSound;
-    }*/
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void Model::ActivateSound( std::string soundName )
-{
-    /*try
-    {
-        _availableSounds[soundName].playSound();
-    }
-    catch ( ... )
-    {
-        std::cout << "Invalid sound: " << soundName << std::endl;
-        std::cout << "Model::ActivateSound" << std::endl;
-    }*/
-}
-////////////////////////////////////////////////////////////////////////////////
-void Model::DeactivateSound( std::string soundName )
-{
-    /*try
-    {
-        _availableSounds[soundName].stopSound();
-    }
-    catch ( ... )
-    {
-        std::cout << "Invalid sound: " << soundName << std::endl;
-        std::cout << "Model::ActivateSound" << std::endl;
-    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::DeleteDataSet( std::string dataSetName )

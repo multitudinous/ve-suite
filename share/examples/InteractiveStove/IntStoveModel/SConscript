@@ -7,6 +7,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import('GetPlatform RootDir ves_pkg buildDir GetPlatform vtk_options vrjuggler_options boost_options osg_options xerces_options osgal_options')
+Import('poco_options')
 
 srcs = Split("""
    VEIntStovemod.cxx
@@ -38,6 +39,7 @@ boost_options.apply( lib_env )
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
    lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
+poco_options.apply( lib_env )
 
 lib = ves_pkg.createLoadableModule( 'InteractiveStoveGP', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'InteractiveStove', 'Plugins', 'GE', host_type ) ) 

@@ -192,50 +192,37 @@ public:
     ///Get the id for this model
     const std::string& GetID();
 
-    ///Add a new sound to the model
-    ///\param soundName The name of the sound
-    ///\param filename The actual filename of the sound to load
-    void AddNewSound( std::string soundName, std::string filename );
-
-    ///Activate (play) the sound
-    ///\param soundName The name of the sound to play
-    void ActivateSound( std::string soundName );
-
-    ///Deactivate (stop) the sound
-    ///\param soundName The name of the sound to stop
-    void DeactivateSound( std::string soundName );
-
     ///Render a display for this model
     ///\param onOff Tell the model to render its textual display
     void RenderTextualDisplay( bool onOff );
 
-    //////////////////////////
-    //texture based interface
+    ///texture based interface
     void SetActiveTextureDataSet( ves::xplorer::volume::cfdTextureDataSet* tDS );
+    ///Get a texture dataset
     void CreateTextureDataSet();
+    ///Get a texture dataset from a dataset
     void AddDataSetToTextureDataSet( unsigned int index,
                                      std::string textureDescriptionFile );
+    ///Get the number of associated texture datasets
     unsigned int GetNumberOfTextureDataSets();
+    ///Get the respective texture dataset
     ves::xplorer::volume::cfdTextureDataSet* GetTextureDataSet( unsigned int index );
+    ///Get the active texture dataset
     ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet();
-    ///////////////////////////////////////////////////
+
     ///Get the VE-Open Model for this Model
     ves::open::xml::model::ModelPtr GetModelData();
 
     ///Set the VE-Open Model for this Model
     void SetModelData( ves::open::xml::model::ModelPtr tempModelData );
-    ///////////////////////////////////////////////////
 
-    //Dynamically load data from unit
+    ///Dynamically load data from unit
     void ActiveLoadingThread();
 
     void GetDataFromUnit( void );
 
     const std::string MakeSurfaceFile( vtkDataSet*, int );
-    void DynamicLoadingData( vtkUnstructuredGrid*, int, double*, double*, double* );
-    void DynamicLoadingGeom( std::string, double*, double*, double*, double*, int, int );
     void AddVTKDataSet( vtkDataSet* );
-    std::vector<vtkDataSet* >GetWaitingDataList();
 
     ///Get the dataset handler for this model
     ves::xplorer::ModelDatasetHandler* GetModelDatasetHandler();
@@ -247,7 +234,6 @@ private:
     std::string currentsurfacefilename;
     bool mirrorDataFlag;
 
-    //ves::xplorer::scenegraph::cfdTempAnimation* animation;
     osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;

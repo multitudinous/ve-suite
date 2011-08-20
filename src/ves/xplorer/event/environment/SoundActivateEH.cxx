@@ -104,7 +104,7 @@ void SoundActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veX
             std::string name;
             DataValuePairPtr soundName = command->GetDataValuePair( "Sound Name" );
             soundName->GetData( name );
-            ( onOff == 1 ) ? _activeModel->ActivateSound( name ) : _activeModel->DeactivateSound( name );
+            //( onOff == 1 ) ? _activeModel->ActivateSound( name ) : _activeModel->DeactivateSound( name );
         }
     }
     catch ( ... )

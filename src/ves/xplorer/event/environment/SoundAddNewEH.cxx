@@ -104,7 +104,7 @@ void SoundAddNewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXML
             std::string fileName;
             DataValuePairPtr soundFile = command->GetDataValuePair( "Sound Filename" );
             soundFile->GetData( fileName );
-            _activeModel->AddNewSound( guiName, fileName );
+            //_activeModel->AddNewSound( guiName, fileName );
         }
     }
     catch ( ... )
