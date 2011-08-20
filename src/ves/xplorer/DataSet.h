@@ -34,6 +34,8 @@
 #define VE_XPLORER_CFD_DATA_SET_H
 
 #include <ves/VEConfig.h>
+
+#include <ves/xplorer/Logging.h>
 #include <ves/xplorer/DataSetPtr.h>
 
 #include <ves/xplorer/util/DataObjectHandler.h>
@@ -459,6 +461,11 @@ private:
     vtkUnstructuredGridReader* dataReader[MAX_DATA];
     vtkUnstructuredGrid* data[MAX_DATA];
 #endif
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
+    
 };
 }
 }

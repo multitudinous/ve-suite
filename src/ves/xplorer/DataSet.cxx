@@ -105,7 +105,7 @@ namespace ves
 namespace xplorer
 {
 ////////////////////////////////////////////////////////////////////////////////
-DataSet::DataSet( ) 
+DataSet::DataSet() 
     :
     m_tempModel( 0 ),
     actualScalarRange( 0 ),
@@ -140,7 +140,9 @@ DataSet::DataSet( )
     m_dataObjectHandler( 0 ),
     partOfTransientSeries( 0 ),
     m_externalFileLoader( 0 ),
-    m_isPartOfCompositeDataset( false )
+    m_isPartOfCompositeDataset( false ),
+    m_logger( Poco::Logger::get("xplorer.DataSet") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     this->range = new double [ 2 ];
     this->range[ 0 ] = 0.0f;
@@ -1602,11 +1604,12 @@ double* DataSet::GetScalarRange( const std::string& scalarName )
 /////////////////////////////
 void DataSet::Print()
 {
-    std::cout << "filename = " << this->fileName << std::endl;
-    std::cout << "numScalars = " << this->numScalars << std::endl;
+    std::ostringstream out;
+    out << "filename = " << this->fileName << std::endl;
+    out << "numScalars = " << this->numScalars << std::endl;
     for( int i = 0; i < this->numScalars; i++ )
     {
-        std::cout << "\tscalarName[" << i << "] = \"" << this->scalarName[ i ]
+        out << "\tscalarName[" << i << "] = \"" << this->scalarName[ i ]
         << "\"\tactualScalarRange = "
         << this->actualScalarRange[ i ][ 0 ] << " : "
         << this->actualScalarRange[ i ][ 1 ]
@@ -1616,15 +1619,16 @@ void DataSet::Print()
         << std::endl;
     }
 
-    std::cout << "numVectors = " << this->numVectors << std::endl;
+    out << "numVectors = " << this->numVectors << std::endl;
     for( int i = 0; i < this->numVectors; i++ )
     {
-        std::cout << "\tvectorName[" << i << "] = \"" << this->vectorName[ i ]
+        out << "\tvectorName[" << i << "] = \"" << this->vectorName[ i ]
         << "\"\tvectorMagRange = "
         << this->vectorMagRange[ 0 ] << " : "
         << this->vectorMagRange[ 1 ]
         << std::endl;
     }
+    LOG_INFO( out.str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetUUID( const std::string& attribute, const std::string& uuid )

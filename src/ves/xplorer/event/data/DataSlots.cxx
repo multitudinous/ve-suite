@@ -68,7 +68,8 @@ void SetContourPlaneGreyscale( std::string const& uuid, std::vector< bool > cons
         return;
     }
 
-    ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetGreyscaleFlag( greyscaleflag[0] );
+    ModelHandler::instance()->GetActiveModel()->
+        GetActiveDataSet()->SetGreyscaleFlag( greyscaleflag[0] );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TransformDatasetNode( const std::string& uuid, const std::vector< double >& transform )
@@ -104,10 +105,6 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
         dcs->SetTranslationArray( translation );
         dcs->SetRotationArray( rotation );
         dcs->SetScaleArray( scale );
-
-//        EnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( translation );
-//        EnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( rotation );
-//        EnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( scale );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +114,8 @@ void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
         << "|\tDataSlots::SetDatasetSurfaceWrap : uuid " << uuid
         << std::endl << vprDEBUG_FLUSH;
 
-    ves::xplorer::Model* activeModel = ModelHandler::instance()->GetActiveModel();
+    ves::xplorer::Model* activeModel = 
+        ModelHandler::instance()->GetActiveModel();
     ves::xplorer::data::DatasetPropertySet set;
     set.SetUUID( uuid );
     set.LoadFromDatabase();
