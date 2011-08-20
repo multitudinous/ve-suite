@@ -51,7 +51,8 @@
 #include <osg/LineWidth>
 #include <osg/AutoTransform>
 #include <osg/io_utils>
-
+#include <osg/ComputeBoundsVisitor>
+#include <osg/BoundingBox>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/AxisAngle.h>
@@ -83,9 +84,16 @@ void FrameAll::DoFrameAll()
             *( ves::xplorer::scenegraph::SceneManager::instance() );
 
     osg::Group* activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
-    scenegraph::DCS* activeNavSwitchNode = m_sceneManager.GetActiveNavSwitchNode();
-    osg::BoundingSphere bs = activeSwitchNode->computeBound();
-
+    osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
+    activeSwitchNode->accept(cbbv);
+    osg::BoundingBox bb = cbbv.getBoundingBox();
+    osg::notify( osg::INFO ) 
+        << "|\tBounding Box Info" << std::endl 
+        << "|\tCenter " << bb.center() << std::endl
+        << "|\tRadius " << bb.radius() << std::endl
+        << "|\tMin " << bb._min << std::endl
+        << "|\tMax " << bb._max << std::endl;
+    
     //Meters to feet conversion
     double m2ft = 3.2808399;
 
@@ -158,7 +166,7 @@ void FrameAll::DoFrameAll()
             theta *= mAspectRatio;
         }
         double distance;
-        distance = ( bs.radius() / tan( theta ) );
+        distance = ( bb.radius() / tan( theta ) );
 
         //Now we can get our center frustum vector
         osg::Vec3d vecNear = centerPosition - startPoint;
@@ -173,13 +181,13 @@ void FrameAll::DoFrameAll()
     }
 
     //Set the current switch node's matrix w/ the new "frame all" transform
-    activeNavSwitchNode->setPosition( endPoint - bs.center() );
+    scenegraph::DCS* activeNavSwitchNode = m_sceneManager.GetActiveNavSwitchNode();
+    activeNavSwitchNode->setPosition( endPoint - bb.center() );
     activeNavSwitchNode->setAttitude( osg::Quat( 0.0, 0.0, 0.0, 1.0 ) );
 
     //Get the new center of the bounding sphere in camera space
-    //activeSwitchNode->computeBound();
     osg::Vec3d center =
-        bs.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
+        bb.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
     m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
