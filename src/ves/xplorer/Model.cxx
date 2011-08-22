@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/Model.h>
 
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelDatasetHandler.h>
 
@@ -65,10 +64,11 @@
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>
-//#include <vpr/vprTypes.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Misc/MatrixConvert.h>
+
 #include <gadget/Type/PositionInterface.h>
 
 
@@ -92,6 +92,7 @@
 
 ///This must be here due to boost header conflicts on windows
 #include <ves/xplorer/Debug.h>
+#include <ves/xplorer/DataSet.h>
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;

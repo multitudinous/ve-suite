@@ -35,7 +35,6 @@
 
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/Logging.h>
 #include <ves/xplorer/DataSetPtr.h>
 
 #include <ves/xplorer/util/DataObjectHandler.h>
@@ -44,6 +43,8 @@
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
 #include <ves/xplorer/scenegraph/Geode.h>
+
+#include <ves/xplorer/Logging.h>
 
 #include <osg/ref_ptr>
 

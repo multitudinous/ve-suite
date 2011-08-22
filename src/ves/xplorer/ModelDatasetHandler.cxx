@@ -39,8 +39,6 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 
-#include <ves/xplorer/DataSet.h>
-
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAttribute.h>
 #include <ves/open/xml/Command.h>
@@ -54,6 +52,7 @@
 
 ///This must be here due to boost header conflicts on windows
 #include <ves/xplorer/Debug.h>
+#include <ves/xplorer/DataSet.h>
 
 namespace ves
 {

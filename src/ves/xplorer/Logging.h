@@ -34,9 +34,13 @@
 #pragma once
 
 // New logging tools based on Poco::Logger and Poco::LogStream
+
 #include <Poco/Logger.h>
 #include <Poco/LogStream.h>
+
 #include <ves/util/PointerTypes.h>
+///We must add this here 
+//#include <windows.h>
 
 // Smart pointer-ized version of LogStream to automate memory management
 namespace ves
