@@ -68,8 +68,8 @@ VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog,
     theParent( parent ),
     theDialog( dialog ),
     return_state( 0 ),
-    cur_id_( 0 ),
-    UnitName_( name ),
+    //cur_id_( 0 ),
+    //UnitName_( name ),
     mWorkingDir( dir ),
     dyn(NULL),
     bkp(NULL),
@@ -1515,7 +1515,7 @@ void VEPSI_i::addVariable( ves::open::xml::CommandPtr cmd )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::Monitor(  )
+void VEPSI_i::Monitor()
 {
     HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
     while (true)
@@ -1541,7 +1541,7 @@ void VEPSI_i::Monitor(  )
             {
                 _mutex.acquire();
                 //dynsim->AddOPCVariable( "MY_SWITCH" );
-                std::string netPak = dynSim->GetOPCValues( );
+                std::string netPak = dynSim->GetOPCValues();
                 theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );            
                 _mutex.release();
             }

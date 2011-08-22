@@ -243,7 +243,7 @@ char * UnitWrapper::Query( const char* command )
     strm << activeId;
 
     ves::open::xml::CommandPtr params = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
-    std::string commandName = params->GetCommandName();
+    const std::string commandName = params->GetCommandName();
     std::map< std::string, VE_CE::EventHandler* >::iterator currentEventHandler;
     currentEventHandler = eventHandlerMap.find( commandName );
     if( currentEventHandler != eventHandlerMap.end() )

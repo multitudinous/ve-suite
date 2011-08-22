@@ -50,12 +50,12 @@ public:
     //Destructor 
     virtual ~VEPSI_i (void);
 
-    std::string UnitName_;
-    Types::ArrayLong ids_;
-    ::CORBA::Long cur_id_;
+    //std::string UnitName_;
+    //Types::ArrayLong ids_;
+    //::CORBA::Long cur_id_;
 
-    std::string status_;
-    std::string data_;
+    //std::string status_;
+    //std::string data_;
 
 protected:
     unsigned int return_state;
