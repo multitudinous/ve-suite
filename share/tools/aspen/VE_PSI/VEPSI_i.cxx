@@ -234,6 +234,23 @@ void VEPSI_i::StartCalc (
 {
     if( bkpFlag )
     {
+        //grab the value from one output variable
+        /*std::string value;
+        ves::open::xml::CommandPtr tempCmd =
+           boost::dynamic_pointer_cast<ves::open::xml::Command>
+           ( xmlModelMap[ strm.str() ]->GetInput( "Upstream Model Results" )->
+           GetDataValuePair( "DWSim Output" )->GetDataXMLObject() );
+        tempCmd->GetDataValuePair( 0 )->GetData( value );
+        
+        //SetParam()
+        CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName(modname.c_str());
+        CASI::Variable tempvar = cur_block.getInputVarByName(paramName.c_str());
+        CASI::Variable cur_var = bkp->aspendoc->getVarByNodePath(tempvar.getNodePath());
+        CString newValue;
+        newValue = paramValue.c_str();
+        bool success = cur_var.setValue(newValue);
+*/
+        //run simulation
         bkp->aspendoc->runSolver( false );
     }
     else if( dynFlag )
@@ -455,17 +472,21 @@ char * VEPSI_i::Query ( const char * query_str
     ::Error::EUnknown
   ))
 {
-    std::string tempResult = UnitWrapper::Query( query_str );
-    if(tempResult != "NULL" )
+    mQuerying = true;
+    AspenLog->SetSel( -1, -1 );
+    AspenLog->ReplaceSel( "Query\r\n" );
+    _mutex.acquire();
+
+    char * tempResult = UnitWrapper::Query( query_str );
+    if( strcmp(tempResult, "NULL") )
     {
-        return CORBA::string_dup( tempResult.c_str() );
+        //return CORBA::string_dup( tempResult.c_str() );
+        _mutex.release();
+        mQuerying = false;
+        return tempResult;
     }
     else
     {
-        mQuerying = true;
-        AspenLog->SetSel( -1, -1 );
-        AspenLog->ReplaceSel( "Query\r\n" );
-        _mutex.acquire();
         ves::open::xml::XMLReaderWriter networkWriter;
         networkWriter.UseStandaloneDOMDocumentManager();
         networkWriter.ReadFromString();

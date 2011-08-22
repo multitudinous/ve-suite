@@ -187,18 +187,18 @@ void UnitWrapper::SetID(::CORBA::Long id)
         xmlModelMap[ strm.str()] = ves::open::xml::model::ModelPtr( new ves::open::xml::model::Model() );
     }
 
-    std::cout << UnitName_ << " :SetID called" << std::endl;
+    //std::cout << UnitName_ << " :SetID called" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::SetCurID( ::CORBA::Long id )
 {
     activeId = id;
-    std::cout << UnitName_ << " :SetCurID called" << std::endl;
+    //std::cout << UnitName_ << " :SetCurID called" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ::Types::ArrayLong* UnitWrapper::GetID()
 {
-    std::cout << UnitName_ << " :GetID called" << std::endl;
+    //std::cout << UnitName_ << " :GetID called" << std::endl;
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,19 +212,19 @@ void UnitWrapper::SetName( const char * name )
 {
     // Add your implementation here
     UnitName_ = std::string( name );
-    std::cout << UnitName_ << " :SetName called" << std::endl;
+    //std::cout << UnitName_ << " :SetName called" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * UnitWrapper::GetName()
 {
-    std::cout << UnitName_ << " :GetName called" << std::endl;
+    //std::cout << UnitName_ << " :GetName called" << std::endl;
     return CORBA::string_dup( UnitName_.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * UnitWrapper::Query( const char* command )
 {
     //use print statement below to check command coming in
-    std::cout << "UnitWrapper::Query called = " << command << std::endl;
+    //std::cout << "UnitWrapper::Query called = " << command << std::endl;
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
@@ -257,7 +257,7 @@ char * UnitWrapper::Query( const char* command )
         network = "NULL";
     }
     //use print statement below to check network string
-    std::cout << "UnitWrapper::Query result " << network << std::endl;
+    //std::cout << "UnitWrapper::Query result " << network << std::endl;
     return CORBA::string_dup( network.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////

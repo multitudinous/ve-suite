@@ -49,7 +49,7 @@ class EventHandler;
 }
 
 ///??
-class  VE_CE_UNIT_WRAPPER_EXPORTS UnitWrapper : public virtual POA_Body::Unit
+class  VE_CE_UNIT_WRAPPER_EXPORTS UnitWrapper : public POA_Body::Unit
 {
 public:
     ///Constructor
