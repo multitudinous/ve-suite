@@ -313,7 +313,7 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     }
     
     //set the vendor name of the current plugin to the parents
-    if( GetVEModel()->GetParentModel() == NULL )
+    if( GetVEModel()->GetParentModel() )
     {
         m_unitName = m_veModel->GetParentModel()->GetVendorName();
         m_veModel->SetVendorName( m_unitName );
