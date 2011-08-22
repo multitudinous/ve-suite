@@ -199,7 +199,7 @@ bool CorbaUnitManager::RunORB()
         }
 
         //Call the Executive CORBA call to register it to the Executive
-        exec->RegisterUnit(unit_i->UnitName_.c_str(), unit.in(), 0); //0 means a normal module
+        exec->RegisterUnit( unit_i->GetName(), unit.in(), 0 ); //0 means a normal module
         m_running = true;
         return true;
     }
@@ -256,7 +256,7 @@ bool CorbaUnitManager::CleanUp( void )
 {
     try
     {
-        exec->UnRegisterUnit( unit_i->UnitName_.c_str() );
+        exec->UnRegisterUnit( unit_i->GetName() );
 
         try
         {
