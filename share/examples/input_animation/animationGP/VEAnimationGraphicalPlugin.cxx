@@ -323,69 +323,76 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
     if( m_keyboard )
     {
         //If the mouse made a pick event
-        if( !m_keyboard->GetMousePickEvent() )
+        /*if( !m_keyboard->GetMousePickEvent() )
         {
             return;
-        }
-
-        //If we had keyboard input then try and highlight the cad
-        bool pickedParts = false;
-        //if( m_mouseSelection )
-        {
-            FindPartNodeAndHighlightNode();
-        }
-
-
-        /*gadget::KeyboardMousePtr tempKeys = 
+        }*/
+        
+        gadget::KeyboardMousePtr tempKeys = 
             m_keyboard->GetKeyboardMouseVRJDevice();
-            
+
         //Get the event queue
         gadget::KeyboardMouse::EventQueue evt_queue =
             tempKeys->getEventQueue();
-        
+
         //Return if no events occurred
         if( evt_queue.empty() )
         {
             return;
         }
-        
+
         //Get the modifier key values
         //bool mKeyNone = tempKeys->modifierOnly( gadget::KEY_NONE );
         //bool mKeyShift = tempKeys->modifierOnly( gadget::KEY_SHIFT );
         //bool mKeyAlt = tempKeys->modifierOnly( gadget::KEY_ALT );
-        
+        bool pickedParts = false;
+
         //Iterate over the keyboard and mouse events
         gadget::KeyboardMouse::EventQueue::iterator i;
         for( i = evt_queue.begin(); i != evt_queue.end(); ++i )
         {
             const gadget::EventType type = ( *i )->type();
-            
+
             switch( type )
             {
-                case gadget::MouseButtonPressEvent:
-                {
-                    gadget::MouseEventPtr mouse_evt =
-                        boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+            case gadget::MouseButtonPressEvent:
+            {
+                gadget::MouseEventPtr mouse_evt =
+                    boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
 
-                    mButton = mouse_evt->getButton();
-                    
-                    if( mButton == gadget::MBUTTON1)
-                    {
-                        m_valueAnimation->setSingleChildOn( 1 );
-                    }
-                    else if( mButton == gadget::MBUTTON3)
-                    {
-                        m_valueAnimation->setSingleChildOn( 2 );
-                    }
-                    break;
-                }
-                case gadget::MouseButtonReleaseEvent:
+                mButton = mouse_evt->getButton();
+
+                if( mButton == gadget::MBUTTON1)
                 {
-                    m_valueAnimation->setSingleChildOn( 0 );
-                    break;
+                    //m_valueAnimation->setSingleChildOn( 1 );
                 }
+                else if( mButton == gadget::MBUTTON3)
+                {
+                    //m_valueAnimation->setSingleChildOn( 2 );
+                }
+                break;
             }
-        }*/
+            case gadget::MouseButtonReleaseEvent:
+            {
+                gadget::MouseEventPtr mouse_evt =
+                    boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+                
+                mButton = mouse_evt->getButton();
+                
+                if( mButton == gadget::MBUTTON1)
+                {
+                    pickedParts = true;
+                }
+                break;
+            }
+            }
+        }
+
+        //If we had keyboard input then try and highlight the cad
+        if( pickedParts )
+        {
+            FindPartNodeAndHighlightNode();
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
