@@ -44,7 +44,6 @@
 #include <vtkCellData.h>
 #include <vtkIdList.h>
 //#include <vtkStructuredGrid.h>
-//#include <vtkThreshold.h>
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -243,16 +242,10 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
         if( zoneType == ZoneType_Ordered )
         {
             this->AddOrderedCellsToGrid( numElementsInZone, numNodesPerElement );
-
 /*
             //this was start of noncompleted attempt to deal directly with structured grids
             vtkStructuredGrid* sgrid = vtkStructuredGrid::New();
             sgrid->SetDimensions( IMax, JMax, KMax );
-
-            // Convert from vtkStructuredGrid to vtkUnstructuredGrid.
-            vtkThreshold* thresh = vtkThreshold::New();
-            thresh->SetInput( sgrid );
-            this->ugrid = thresh->GetOutput();
 */
         }
         else if( numFaces > 0 )
@@ -982,68 +975,52 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
         std::cout << "   The J-dimension for ordered data is " << JMax << std::endl;
         std::cout << "   The K-dimension for ordered data is " << KMax << std::endl;
 #endif // PRINT_HEADERS
-        if( IMax > 0 && JMax > 0 && KMax > 0 )
+        if( IMax > 1 && JMax > 1 && KMax > 1 )  // 3d ordered data
         {
             numNodesPerElement = 8;
             numNodalPointsInZone = ( IMax ) * ( JMax ) * ( KMax );
-
-            //we would normally compute numElementsInZone = ( IMax - 1 ) * ( JMax - 1 ) * ( KMax - 1 );
-            //however sometimes a value will be one (such as a collapsed 8-node element to a 4-node no-thickness element)
-            numElementsInZone = 1;
-            if( IMax > 1 )
-            {
-                numElementsInZone = ( IMax - 1 ) * numElementsInZone;
-            }
-            if( JMax > 1 )
-            {
-                numElementsInZone = ( JMax - 1 ) * numElementsInZone;
-            }
-            if( KMax > 1 )
-            {
-                numElementsInZone = ( KMax - 1 ) * numElementsInZone;
-            }
-
+            numElementsInZone = ( IMax - 1 ) * ( JMax - 1 ) * ( KMax - 1 );
         }
-        else if( IMax > 0 && JMax > 0 ) 
+        else if( IMax > 1 && JMax > 1 )         // 2d ordered data
         {
             numNodesPerElement = 4;
             numNodalPointsInZone = ( IMax ) * ( JMax );
             numElementsInZone = ( IMax - 1 ) * ( JMax - 1 );
         }
-        else if( IMax > 0 && KMax > 0 )
+        else if( IMax > 1 && KMax > 1 )         // 2d ordered data
         {
             numNodesPerElement = 4;
             numNodalPointsInZone = ( IMax ) * ( KMax );
             numElementsInZone = ( IMax - 1 ) * ( KMax - 1 );
         }
-        else if( JMax > 0 && KMax > 0 )
+        else if( JMax > 1 && KMax > 1 )         // 2d ordered data
         {
             numNodesPerElement = 4;
             numNodalPointsInZone = ( JMax ) * ( KMax );
             numElementsInZone = ( JMax - 1 ) * ( KMax - 1 );
         }
-        else if( IMax > 0 )
+        else if( IMax > 1 )                     // 1d ordered data
         {
             numNodesPerElement = 2;
-            numNodalPointsInZone = ( IMax );
-            numElementsInZone = ( IMax - 1 );
+            numNodalPointsInZone = IMax;
+            numElementsInZone = IMax - 1;
         }
-        else if( JMax > 0 )
+        else if( JMax > 1 )                     // 1d ordered data
         {
             numNodesPerElement = 2;
-            numNodalPointsInZone = ( JMax );
-            numElementsInZone = ( JMax - 1 );
+            numNodalPointsInZone = JMax;
+            numElementsInZone = JMax - 1;
         }
-        else if( KMax > 0 )
+        else if( KMax > 1 )                     // 1d ordered data
         {
             numNodesPerElement = 2;
-            numNodalPointsInZone = ( KMax );
-            numElementsInZone = ( KMax - 1 );
+            numNodalPointsInZone = KMax;
+            numElementsInZone = KMax - 1;
         }
         else
         {
 #ifdef PRINT_HEADERS
-            std::cerr << "IMax = JMax = KMax = 0. Not supposed to get here." << std::endl;
+            std::cerr << "Unexpected ordered element. Not supposed to get here." << std::endl;
 #endif // PRINT_HEADERS
             numNodesPerElement = 0;
         }
@@ -1084,7 +1061,7 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
     }
     else
     {
-        std::cerr << "ZoneType not known. Not supposed to get here." << std::endl;
+        std::cerr << "Error: ZoneType not known. Not supposed to get here." << std::endl;
     }
 
     if( currentZone > 1 && this->numZones > 1 && !this->coordDataSharedAcrossZones && this->connectivityShareCount == 1 )
@@ -1220,13 +1197,7 @@ void tecplotReader::AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, co
 #ifdef PRINT_HEADERS
     std::cout << "adding cells to ordered grid" << std::endl;
 #endif // PRINT_HEADERS
-
-    if( numNodesPerElement != 8 )
-    {
-        std::cerr << "Error: AddOrderedCellsToGrid can only handle numNodesPerElement = 8" << std::endl;
-        return;
-    }
-
+/*
     for( int k = 1; k < KMax+1; k++ )         //one-based
     {
         for( int j = 1; j < JMax+1; j++ )     //one-based
@@ -1240,62 +1211,217 @@ void tecplotReader::AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, co
             }
         }
     }
-
+*/
     vtkIdList* tempIdList = vtkIdList::New();
-    tempIdList->SetNumberOfIds( numNodesPerElement );   // works only with 8 right now
+    tempIdList->SetNumberOfIds( numNodesPerElement );
     LgIndex_t elemNum = 0;
 
-    LgIndex_t IIMax = this->IMax;
-    LgIndex_t JJMax = this->JMax;
-    LgIndex_t KKMax = this->KMax;
-
-    //sometimes a value will be one (such as a collapsed 8-node element to a 4-node no-thickness element)
-    if( IIMax == 1 || JJMax == 1 || KKMax == 1 ) { return; }    //bail out -- something not working right
-
-    if( IIMax == 1 ) { IIMax = 2; }
-    if( JJMax == 1 ) { JJMax = 2; }
-    if( KKMax == 1 ) { KKMax = 2; }
-    
-    for( int k = 1; k < KKMax; k++ )         //one-based
+    if( numNodesPerElement == 8 )
     {
-        for( int j = 1; j < JJMax; j++ )     //one-based
+        for( int k = 1; k < KMax; k++ )         //one-based
         {
-            for( int i = 1; i < IIMax; i++ ) //one-based
+            for( int j = 1; j < JMax; j++ )     //one-based
+            {
+                for( int i = 1; i < IMax; i++ ) //one-based
+                {
+                    elemNum++;
+
+                    // node numbers in tecplot are 1-based, 0-based in VTK
+                    vtkIdType node1 = i + ( j - 1 ) * IMax + ( k - 1 ) * IMax * JMax - 1 + this->nodeOffset;
+                    tempIdList->SetId( 0, node1 );
+                    vtkIdType node2 = (i+1) + ( j - 1 ) * IMax + ( k - 1 ) * IMax * JMax - 1 + this->nodeOffset;   // increment i
+                    tempIdList->SetId( 1, node2 );
+                    vtkIdType node3 = (i+1) + ( (j+1) - 1 ) * IMax + ( k - 1 ) * IMax * JMax - 1 + this->nodeOffset;   // and increment j
+                    tempIdList->SetId( 2, node3 );
+                    vtkIdType node4 = i + ( (j+1) - 1 ) * IMax + ( k - 1 ) * IMax * JMax - 1 + this->nodeOffset;   // and then decrement i
+                    tempIdList->SetId( 3, node4 );
+
+                    //same as above with k incremented...
+                    vtkIdType node5 = i + ( j - 1 ) * IMax + ( (k+1) - 1 ) * IMax * JMax - 1 + this->nodeOffset;
+                    tempIdList->SetId( 4, node5 );
+                    vtkIdType node6 = (i+1) + ( j - 1 ) * IMax + ( (k+1) - 1 ) * IMax * JMax - 1 + this->nodeOffset;
+                    tempIdList->SetId( 5, node6 );
+                    vtkIdType node7 = (i+1) + ( (j+1) - 1 ) * IMax + ( (k+1) - 1 ) * IMax * JMax - 1 + this->nodeOffset;
+                    tempIdList->SetId( 6, node7 );
+                    vtkIdType node8 = i + ( (j+1) - 1 ) * IMax + ( (k+1) - 1 ) * IMax * JMax - 1 + this->nodeOffset;
+                    tempIdList->SetId( 7, node8 );
+
+    #ifdef PRINT_HEADERS
+                    if( elemNum < 10 || elemNum > numElementsInZone - 10)
+                    { 
+                        std::cout << "For element " << elemNum << ", vtk nodes = " 
+                            << node1 << " " << node2 << " " << node3 << " " << node4 << " "
+                            << node5 << " " << node6 << " " << node7 << " " << node8 << " " << std::endl;
+                    }
+    #endif // PRINT_HEADERS
+
+                    this->ugrid->InsertNextCell( VTK_HEXAHEDRON, tempIdList );
+                }
+            }
+        }
+    }
+    else if( numNodesPerElement == 4 && KMax == 1 )
+    {
+        for( int j = 1; j < JMax; j++ )     //one-based
+        {
+            for( int i = 1; i < IMax; i++ ) //one-based
             {
                 elemNum++;
 
                 // node numbers in tecplot are 1-based, 0-based in VTK
-                vtkIdType node1 = i + ( j - 1 ) * IIMax + ( k - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
+                vtkIdType node1 = i + ( j - 1 ) * IMax - 1 + this->nodeOffset;
                 tempIdList->SetId( 0, node1 );
-                vtkIdType node2 = (i+1) + ( j - 1 ) * IIMax + ( k - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;   // increment i
+                vtkIdType node2 = (i+1) + ( j - 1 ) * IMax - 1 + this->nodeOffset;   // increment i
                 tempIdList->SetId( 1, node2 );
-                vtkIdType node3 = (i+1) + ( (j+1) - 1 ) * IIMax + ( k - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;   // and increment j
+                vtkIdType node3 = (i+1) + ( (j+1) - 1 ) * IMax - 1 + this->nodeOffset;   // and increment j
                 tempIdList->SetId( 2, node3 );
-                vtkIdType node4 = i + ( (j+1) - 1 ) * IIMax + ( k - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;   // and then decrement i
+                vtkIdType node4 = i + ( (j+1) - 1 ) * IMax - 1 + this->nodeOffset;   // and then decrement i
                 tempIdList->SetId( 3, node4 );
-
-                //same as above with k incremented...
-                vtkIdType node5 = i + ( j - 1 ) * IIMax + ( (k+1) - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
-                tempIdList->SetId( 4, node5 );
-                vtkIdType node6 = (i+1) + ( j - 1 ) * IIMax + ( (k+1) - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
-                tempIdList->SetId( 5, node6 );
-                vtkIdType node7 = (i+1) + ( (j+1) - 1 ) * IIMax + ( (k+1) - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
-                tempIdList->SetId( 6, node7 );
-                vtkIdType node8 = i + ( (j+1) - 1 ) * IIMax + ( (k+1) - 1 ) * IIMax * JJMax - 1 + this->nodeOffset;
-                tempIdList->SetId( 7, node8 );
 
 #ifdef PRINT_HEADERS
                 if( elemNum < 10 || elemNum > numElementsInZone - 10)
                 { 
                     std::cout << "For element " << elemNum << ", vtk nodes = " 
-                        << node1 << " " << node2 << " " << node3 << " " << node4 << " "
-                        << node5 << " " << node6 << " " << node7 << " " << node8 << " " << std::endl;
+                        << node1 << " " << node2 << " " << node3 << " " << node4 << std::endl;
                 }
 #endif // PRINT_HEADERS
 
-                this->ugrid->InsertNextCell( VTK_HEXAHEDRON, tempIdList );
+                this->ugrid->InsertNextCell( VTK_QUAD, tempIdList );
             }
         }
+    }
+    else if( numNodesPerElement == 4 && JMax == 1 )
+    {
+        for( int k = 1; k < KMax; k++ )         //one-based
+        {
+            for( int i = 1; i < IMax; i++ )     //one-based
+            {
+                elemNum++;
+
+                // node numbers in tecplot are 1-based, 0-based in VTK
+                vtkIdType node1 = i + ( k - 1 ) * IMax - 1 + this->nodeOffset;
+                tempIdList->SetId( 0, node1 );
+                vtkIdType node2 = (i+1) + ( k - 1 ) * IMax - 1 + this->nodeOffset;   // increment i
+                tempIdList->SetId( 1, node2 );
+                vtkIdType node3 = (i+1) + ( (k+1) - 1 ) * IMax - 1 + this->nodeOffset;   // and increment k
+                tempIdList->SetId( 2, node3 );
+                vtkIdType node4 = i + ( (k+1) - 1 ) * IMax - 1 + this->nodeOffset;   // and then decrement i
+                tempIdList->SetId( 3, node4 );
+
+#ifdef PRINT_HEADERS
+                if( elemNum < 10 || elemNum > numElementsInZone - 10)
+                { 
+                    std::cout << "For element " << elemNum << ", vtk nodes = " 
+                        << node1 << " " << node2 << " " << node3 << " " << node4 << std::endl;
+                }
+#endif // PRINT_HEADERS
+
+                this->ugrid->InsertNextCell( VTK_QUAD, tempIdList );
+            }
+        }
+    }
+    else if( numNodesPerElement == 4 && IMax == 1 )
+    {
+        for( int k = 1; k < KMax; k++ )         //one-based
+        {
+            for( int j = 1; j < JMax; j++ )     //one-based
+            {
+                elemNum++;
+
+                // node numbers in tecplot are 1-based, 0-based in VTK
+                vtkIdType node1 = j + ( k - 1 ) * JMax - 1 + this->nodeOffset;
+                tempIdList->SetId( 0, node1 );
+                vtkIdType node2 = (j+1) + ( k - 1 ) * JMax - 1 + this->nodeOffset;   // increment j
+                tempIdList->SetId( 1, node2 );
+                vtkIdType node3 = (j+1) + ( (k+1) - 1 ) * JMax - 1 + this->nodeOffset;   // and increment k
+                tempIdList->SetId( 2, node3 );
+                vtkIdType node4 = j + ( (k+1) - 1 ) * JMax - 1 + this->nodeOffset;   // and then decrement j
+                tempIdList->SetId( 3, node4 );
+
+#ifdef PRINT_HEADERS
+                if( elemNum < 10 || elemNum > numElementsInZone - 10)
+                { 
+                    std::cout << "For element " << elemNum << ", vtk nodes = " 
+                        << node1 << " " << node2 << " " << node3 << " " << node4 << std::endl;
+                }
+#endif // PRINT_HEADERS
+
+                this->ugrid->InsertNextCell( VTK_QUAD, tempIdList );
+            }
+        }
+    }
+    else if( numNodesPerElement == 2 && KMax != 1 )
+    {
+        for( int k = 1; k < KMax; k++ )         //one-based
+        {
+            elemNum++;
+
+            // node numbers in tecplot are 1-based, 0-based in VTK
+            vtkIdType node1 = k - 1 + this->nodeOffset;
+            tempIdList->SetId( 0, node1 );
+            vtkIdType node2 = (k+1) - 1 + this->nodeOffset;   // and increment k
+            tempIdList->SetId( 1, node2 );
+
+#ifdef PRINT_HEADERS
+            if( elemNum < 10 || elemNum > numElementsInZone - 10)
+            {
+                std::cout << "For element " << elemNum << ", vtk nodes = "
+                    << node1 << " " << node2 << std::endl;
+            }
+#endif // PRINT_HEADERS
+
+            this->ugrid->InsertNextCell( VTK_LINE, tempIdList );
+        }
+    }
+    else if( numNodesPerElement == 2 && JMax != 1 )
+    {
+        for( int j = 1; j < JMax; j++ )         //one-based
+        {
+            elemNum++;
+
+            // node numbers in tecplot are 1-based, 0-based in VTK
+            vtkIdType node1 = j - 1 + this->nodeOffset;
+            tempIdList->SetId( 0, node1 );
+            vtkIdType node2 = (j+1) - 1 + this->nodeOffset;   // and increment j
+            tempIdList->SetId( 1, node2 );
+
+#ifdef PRINT_HEADERS
+            if( elemNum < 10 || elemNum > numElementsInZone - 10)
+            {
+                std::cout << "For element " << elemNum << ", vtk nodes = "
+                    << node1 << " " << node2 << std::endl;
+            }
+#endif // PRINT_HEADERS
+
+            this->ugrid->InsertNextCell( VTK_LINE, tempIdList );
+        }
+    }
+    else if( numNodesPerElement == 2 && IMax != 1 )
+    {
+        for( int i = 1; i < IMax; i++ )         //one-based
+        {
+            elemNum++;
+
+            // node numbers in tecplot are 1-based, 0-based in VTK
+            vtkIdType node1 = i - 1 + this->nodeOffset;
+            tempIdList->SetId( 0, node1 );
+            vtkIdType node2 = (i+1) - 1 + this->nodeOffset;   // and increment i
+            tempIdList->SetId( 1, node2 );
+
+#ifdef PRINT_HEADERS
+            if( elemNum < 10 || elemNum > numElementsInZone - 10)
+            {
+                std::cout << "For element " << elemNum << ", vtk nodes = "
+                    << node1 << " " << node2 << std::endl;
+            }
+#endif // PRINT_HEADERS
+
+            this->ugrid->InsertNextCell( VTK_LINE, tempIdList );
+        }
+    }
+    else
+    {
+        std::cerr << "Error: ZoneType not known. Not supposed to get here." << std::endl;
     }
     tempIdList->Delete();
 }
