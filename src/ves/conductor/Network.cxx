@@ -1907,12 +1907,12 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
         ///We re going to favor a plugin that sets the icon in code over 
         ///what be be by default in the ves model element
-        if( !tempPlugin->GetIconImage() )
+        //if( !tempPlugin->GetIconImage() )
         {
             tempPlugin->SetImageIcon( model->GetIconFilename(),
                         model->GetIconRotation(),
                         model->GetIconMirror(),
-                        model->GetIconScale() );  
+                        model->GetIconScale() );
         }
 
         ///If we should not draw this plugin name
