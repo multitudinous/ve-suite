@@ -64,6 +64,7 @@
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 #include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
+#include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -150,6 +151,10 @@ Selection::Selection()
                       &Selection::HighlightAndSetManipulators,
                      m_connections, any_SignalType, high_Priority );
 
+    CONNECTSIGNALS_1( "%HighlightNode", void( osg::NodePath& ),
+                     &Selection::HighlightNode,
+                     m_connections, any_SignalType, high_Priority );
+    
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
         "Selection.ObjectPickedSignal" );
@@ -328,8 +333,7 @@ void Selection::ProcessSelection()
         osg::Node* node = nodePath[ nodePath.size() - 1 ];
         vprDEBUG( vesDBG, 1 ) 
             << "|\tSelection::ProcessSelection The name of the first node hit is "
-            << node->getName() << std::endl << vprDEBUG_FLUSH;
-     
+            << node->getName() << std::endl << vprDEBUG_FLUSH;     
     }
     
     ///CAD selection code
@@ -344,6 +348,7 @@ void Selection::ProcessSelection()
     
     //Now find the new selected object
     osg::NodePath nodePath = intersections.begin()->nodePath;
+    m_objectPickedSignal( nodePath );
     osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
 
     //HighlightAndSetManipulators alters nodePath, so copy it off first.
@@ -351,7 +356,7 @@ void Selection::ProcessSelection()
     HighlightAndSetManipulators( nodePath );
 
     ///Send the data back to the ui for the expanding tree
-    m_objectPickedSignal( nodePathCopy );
+    //m_objectPickedSignal( nodePathCopy );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
@@ -466,6 +471,42 @@ void Selection::SetCADSelection( const std::string& uuid, const std::vector< boo
 {
     boost::ignore_unused_variable_warning( uuid );
     m_cadSelectionMode = flags.at( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Selection::HighlightNode( osg::NodePath& nodePath )
+{
+    if( nodePath == osg::NodePath() )
+    {
+        return;
+    }
+
+    if( !m_sceneManager.IsRTTOn() )
+    {
+        return;
+    }
+    
+    //Remove custom glows
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+        highlight2( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(), "", false, true );
+    
+    osg::Node* node = nodePath.at( nodePath.size() - 1 );
+    vprDEBUG( vesDBG, 1 ) 
+        << "|\tSelection::HighlightNode The name of the first node hit is "
+        << node->getName() << std::endl << vprDEBUG_FLUSH;
+    osg::ref_ptr< osg::StateSet > geode_stateset = node->getOrCreateStateSet();
+    //I think we need to check and see if the stateset has any parents
+    if( geode_stateset->getNumParents() > 1 )
+    {
+        //std::cout << drawable_stateset->getNumParents() << std::endl;
+        //std::cout << "StateSet is shared." << std::endl;
+        osg::ref_ptr< osg::StateSet > temp_stateset = 
+            new osg::StateSet( *(geode_stateset.get()), osg::CopyOp::DEEP_COPY_ALL );
+        node->setStateSet( temp_stateset.get() );
+    }
+    
+    //Add shader code to have code highlighted
+    osg::Vec3 enableGlow( 1.0, 0.0, 0.0 );
+    geode_stateset->addUniform( new osg::Uniform( "glowColor", enableGlow ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

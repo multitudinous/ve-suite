@@ -163,6 +163,7 @@ private:
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
 
     boost::signals2::signal< void( osg::NodePath& ) > m_highlightAndSetManipulators;
+    boost::signals2::signal< void( osg::NodePath& ) > m_highlightNode;
     ves::util::StringSignal_type m_CADNodeSelected;
 
     ///Logger reference

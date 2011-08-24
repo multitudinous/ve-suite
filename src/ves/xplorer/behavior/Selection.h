@@ -112,7 +112,9 @@ private:
     void HighlightAndSetManipulators( osg::NodePath& nodePath );
     ///CAD selection flag
     void SetCADSelection( const std::string&, const std::vector< bool >& );
-    
+    ///Highlight the last node in a node path
+    void HighlightNode( osg::NodePath& nodePath );
+
     ///Selection start end point line
     osg::Vec3d m_startPoint;
     osg::Vec3d m_endPoint;

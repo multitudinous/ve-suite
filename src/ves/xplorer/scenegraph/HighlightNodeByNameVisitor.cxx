@@ -98,11 +98,8 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
             transparentDisable( &node );
 
             //Add shader code to have code highlighted
-            //osg::Vec4 enableGlow( 1.0, 0.0, 0.0, 1.0 );
-            //m_glowColor = glowColor;
+            //osg::Vec3 enableGlow( 1.0, 0.0, 0.0 );
             geode_stateset->addUniform( new osg::Uniform( "glowColor", m_glowColor ) );
-            //geode_stateset->addUniform( new osg::Uniform( "gloColor", m_glowColor ) );
-            //osg::StateSet::UniformList uniList = geode_stateset->getUniformList();
             m_foundNodes.push_back( &node );
         }
     }

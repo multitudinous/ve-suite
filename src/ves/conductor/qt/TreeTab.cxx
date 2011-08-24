@@ -55,6 +55,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
 #include <ves/open/xml/cad/CADNode.h>
 
@@ -113,6 +114,11 @@ TreeTab::TreeTab(QWidget *parent) :
             boost::signals2::signal< void( osg::NodePath& ) > >( &m_highlightAndSetManipulators ),
         "TreeTab.HighlightAndSetManipulators" );
 
+    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
+        new ves::xplorer::eventmanager::SignalWrapper<
+        boost::signals2::signal< void( osg::NodePath& ) > >( &m_highlightNode ),
+        "TreeTab.HighlightNode" );
+    
     ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
             new ves::xplorer::eventmanager::SignalWrapper<
             ves::util::StringSignal_type >( &m_CADNodeSelected ),
@@ -254,6 +260,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
         }
     }
 
+    //If not node and not found
     if( !found )
     {
         LOG_DEBUG( "No matching DCS" );
@@ -261,6 +268,20 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
         ves::xplorer::data::PropertySetPtr nullPtr;
         mBrowser->ParsePropertySet( nullPtr );
         mActiveSet = nullPtr;
+        
+        ///Because we want to be able to select nodes for constraints and
+        ///other per part operations we need to highlight the selected node
+        ///even if it is not a top level node
+        if( node )
+        {
+            ves::xplorer::scenegraph::FindParentsVisitor 
+                parentVisitor( node, ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+            LOG_DEBUG( "Trying to select " << node->getName() );
+            osg::NodePath nodePath = parentVisitor.GetParentNodePath();
+            
+            m_highlightNode( nodePath );
+        }
+        
         return;
     }
     LOG_DEBUG( "Node is of type " << type );
@@ -411,7 +432,7 @@ void TreeTab::OnNodeAdded( std::string const& filename )
     NodeAddedQSignal( filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TreeTab::QueuedNodeAdded( std::string const& filename )
+void TreeTab::QueuedNodeAdded( std::string const& )
 {
     RefreshTree();
 }

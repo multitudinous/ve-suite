@@ -34,15 +34,10 @@
 #define HIGHLIGHT_NODE_BY_NAME_VISITOR_H
 
 /*!\file HighlightNodeByNameVisitor.h
-*/
-
-/*!\class ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
+ * \class ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+ * \namespace ves::xplorer::scenegraph
+ *
+ */
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
