@@ -165,7 +165,7 @@ using namespace ves::xplorer::network;
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-App::App( int argc, char* argv[], bool enableRTT )
+App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm )
     :
     vrj::osg::App( vrj::Kernel::instance() ),
     svUpdate( false ),
@@ -184,7 +184,8 @@ App::App( int argc, char* argv[], bool enableRTT )
     m_nearFarRatio( 0.0005 ),
     m_frameSetNearFarRatio( 0 ),
     m_processSignals( false ),
-    m_exitApp( false )
+    m_exitApp( false ),
+    m_vm( vm )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO("Starting App");
@@ -536,14 +537,9 @@ void App::initScene()
     std::cout << "| ***************************************************************** |" << std::endl;
     m_vjobsWrapper->InitCluster();
     //Need this loop here so manipulators know whether we are in desktop mode
-    for( int i = 1; i < argc; ++i )
+    if( m_vm.count("VESDesktop") )
     {
-        if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
-            ( argc >= i + 2 ) )
-        {
-            ves::xplorer::scenegraph::SceneManager::instance()->
-                SetDesktopMode( true );
-        }
+        ves::xplorer::scenegraph::SceneManager::instance()->SetDesktopMode( true );
     }
 
     //Set rtt mode for devices
@@ -564,19 +560,19 @@ void App::initScene()
 
     // navigation and cursor
     EnvironmentHandler::instance()->Initialize();
-    for( int i = 1; i < argc; ++i )
+    if( m_vm.count("VESDesktop") )
     {
-        if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
-            ( argc > i + 2 ) )
-        {
-            EnvironmentHandler::instance()->
-                SetDesktopSize( atoi( argv[ i + 1 ] ), atoi( argv[ i + 2 ] ) );
-        }
-        else if( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
-        {
-            isCluster = true;
-        }
+        std::vector< int > desktopSize =
+            m_vm["VESDesktop"].as< std::vector< int > >();
+        EnvironmentHandler::instance()->
+            SetDesktopSize( desktopSize.at( 0 ), desktopSize.at( 1 ) );
     }
+    
+    if( m_vm.count("VESCluster") )
+    {
+        isCluster = true;
+    }
+
     EnvironmentHandler::instance()->InitScene();
     cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
 

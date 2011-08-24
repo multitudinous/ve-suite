@@ -30,9 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #ifndef CFD_APPWRAPPER_H
 #define CFD_APPWRAPPER_H
+
+#include <boost/program_options.hpp>
 
 // --- VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
@@ -46,14 +47,8 @@ class App;
 class VjObsWrapper;
 
 /*!\file AppWrapper.h
- *
- */
-
-/*!\class ves::xplorer::AppWrapper
- *
- */
-
-/*!\namespace ves::xplorer
+ * \class ves::xplorer::AppWrapper
+ * \namespace ves::xplorer
  *
  */
 
@@ -61,7 +56,7 @@ class AppWrapper
 {
 public:
     ///Contructor
-    AppWrapper( int argc,  char* argv[], VjObsWrapper* input );
+    AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::program_options::variables_map vm );
 
     ///destructor
     ~AppWrapper();
@@ -91,6 +86,8 @@ private:
     ///Command line args
     char** m_argv;
 
+    ///Holds the command line options
+    boost::program_options::variables_map m_vm;
 };
 } //end xplorer
 } //end ves

@@ -62,13 +62,14 @@
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
-AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
+AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::program_options::variables_map vm )
     :
     m_cfdApp( 0 ),
     m_jugglerIsRunning( false ),
     m_vjObsWrapper( input ),
     m_argc( argc ),
-    m_argv( argv )
+    m_argv( argv ),
+    m_vm( vm )
 {
     SetupOSGFILEPATH();
     
@@ -76,27 +77,27 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input )
     int desktopHeight = 0;
     bool enableRTT = false;
     bool desktopMode = false;
-    for( int i = 1;i < argc;++i )
+    
+    if( vm.count("VESRTT") )
     {
-        if( std::string( argv[i] ) == std::string( "-VESRTT" ) )
-        {
-            enableRTT = true;
-            std::cout << "|\tEnabling RTT"<< std::endl;
-        }
-        else if( ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) ) && 
-           ( argc > i + 2 ) )
-        {
-            std::cout << "|\tEnabling Desktop Mode" << std::endl;
-            desktopWidth = atoi( argv[ i + 1 ] );
-            desktopHeight = atoi( argv[ i + 2 ] );
-            desktopMode = true;
-        }
+        enableRTT = true;
+        std::cout << "|\tEnabling RTT"<< std::endl;
+    }
+    
+    if( vm.count("VESDesktop") )
+    {
+        std::cout << "|\tEnabling Desktop Mode" << std::endl;
+        std::vector< int > desktopSize =
+            vm["VESDesktop"].as< std::vector< int > >();
+        desktopWidth = desktopSize.at( 0 );
+        desktopHeight = desktopSize.at( 1 );
+        desktopMode = true;
     }
 
     //Setup the juggler kernel now
     // block it on another thread
     // Delcare an instance of my application
-    m_cfdApp = new App( m_argc, m_argv, enableRTT );
+    m_cfdApp = new App( m_argc, m_argv, enableRTT, vm );
     m_cfdApp->SetWrapper( m_vjObsWrapper );
     
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel

@@ -59,6 +59,7 @@
 
 // --- Boost Includes --- //
 #include <boost/signals2/signal.hpp>
+#include <boost/program_options.hpp>
 
 // --- Poco Includes --- //
 #include <Poco/Logger.h>
@@ -104,7 +105,7 @@ class App : public vrj::osg::App
 {
 public:
     ///Contructor
-    App( int argc, char* argv[], bool enableRTT );
+    App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm );
 
     ///Destructor
     virtual ~App();
@@ -368,9 +369,10 @@ private:
     bool m_processSignals;
     ///Are we exiting yet
     bool m_exitApp;
-
     ///
     osg::ref_ptr< osg::Group > m_uiGroup;
+    ///Holds the command line options
+    boost::program_options::variables_map m_vm;
 };
 } //end xplorer
 } //end ves

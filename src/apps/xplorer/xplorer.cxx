@@ -364,7 +364,7 @@ int main( int argc, char* argv[] )
             return 0;
         }
 
-        AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper );
+        AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper, vm );
 
         kernel->waitForKernelStop();              // Block until kernel stops
 
