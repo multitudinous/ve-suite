@@ -374,6 +374,7 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
             }
             case gadget::MouseButtonReleaseEvent:
             {
+                //to avoid multiple events being registered
                 gadget::MouseEventPtr mouse_evt =
                     boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
                 
@@ -506,10 +507,14 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
     //Find the part numbers of the nodes we hit
     osg::Node* objectHit = 0;
     osg::Node* tempParent = 0;
-    for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
-        intersections.begin(); itr != intersections.end(); ++itr )
+    //for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+    //    intersections.begin(); itr != intersections.end(); ++itr )
     {
-        objectHit = itr->nodePath[3];
+        //objectHit = itr->nodePath[3];
+        //grab the first item that is intersected
+        //avoids sending multiple commands or activating an object in the
+        //background
+        objectHit = intersections.begin()->nodePath[3];
         //std::cout << "Top Node " << objectHit->getName() << std::endl;
         //First we see if the name has prt in the part name
         /*const std::string prtname = ".PRT";

@@ -13,8 +13,11 @@ fileBundle.addFiles( iveFile )
 # fileBundle.addFiles( [ 'Icons/fermentor.jpg' ] )
 # fileBundle.addFiles( [ 'fermentor.ves' ] )
 fermentorSubdirs = Split("""
+    SwitchGraphicalPlugin
+    ValveGraphicalPlugin
     animationGP
 """)
+#animationGP
 
 ##Run SConscript files in all of these folders.
 for d in fermentorSubdirs:
