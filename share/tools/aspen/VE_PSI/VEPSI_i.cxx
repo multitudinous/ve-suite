@@ -235,7 +235,9 @@ void VEPSI_i::StartCalc (
     if( bkpFlag )
     {
         //grab the value from one output variable
-        /*std::string value;
+        std::ostringstream strm;
+        strm << activeId;
+        std::string value;
         ves::open::xml::CommandPtr tempCmd =
            boost::dynamic_pointer_cast<ves::open::xml::Command>
            ( xmlModelMap[ strm.str() ]->GetInput( "Upstream Model Results" )->
@@ -243,13 +245,14 @@ void VEPSI_i::StartCalc (
         tempCmd->GetDataValuePair( 0 )->GetData( value );
         
         //SetParam()
-        CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName(modname.c_str());
-        CASI::Variable tempvar = cur_block.getInputVarByName(paramName.c_str());
+        CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName( "Data.Blocks.DECANTER" );//modname.c_str());
+        CASI::Variable tempvar = cur_block.getInputVarByName( ".TEMP" );//paramName.c_str());
         CASI::Variable cur_var = bkp->aspendoc->getVarByNodePath(tempvar.getNodePath());
         CString newValue;
-        newValue = paramValue.c_str();
-        bool success = cur_var.setValue(newValue);
-*/
+        //newValue = paramValue.c_str();
+        //bool success = cur_var.setValue(newValue);
+        bool success = cur_var.setValue( value.c_str() );
+
         //run simulation
         bkp->aspendoc->runSolver( false );
     }
