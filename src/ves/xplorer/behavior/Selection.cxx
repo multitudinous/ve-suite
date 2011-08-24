@@ -167,6 +167,9 @@ Selection::~Selection()
 ////////////////////////////////////////////////////////////////////////////////
 bool Selection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( buttonKey );
+    boost::ignore_unused_variable_warning( buttonState );
+
     m_currX = xPos;
     m_currY = yPos;
 
@@ -175,6 +178,9 @@ bool Selection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos,
 ////////////////////////////////////////////////////////////////////////////////
 bool Selection::ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char keyChar )
 {
+    boost::ignore_unused_variable_warning( keyPress );
+    boost::ignore_unused_variable_warning( keyChar );
+
     if( !m_cadSelectionMode )
     {
         return false;
@@ -194,6 +200,7 @@ bool Selection::ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char
 ////////////////////////////////////////////////////////////////////////////////
 bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( buttonKey );
 
     if( (xPos > m_currX + 2) || (xPos < m_currX - 2) )
     {
