@@ -602,8 +602,9 @@ void App::initScene()
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
 
     //Hand current root node UIManager so it can create UI subgraph
-    m_UIManager->Initialize( getScene() );
+    m_UIManager->Initialize( 0 );
 
+    m_uiGroup = &(m_UIManager->GetUIRootNode());
     //Start up the UI thread
     //m_qtUIThread = new vpr::Thread( boost::bind( &App::LoadUI, this ) );
 }
@@ -973,10 +974,9 @@ void App::contextPreDraw()
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
             update();
 
-            //if( mRTT )
+            //if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
             {
-                //vpr::System::msleep( 200 );  // thenth-second delay
-                //*m_skipDraw = true;
+                ( *sceneViewer )->getCamera()->addChild( m_uiGroup.get() );
             }
             *mViewportsChanged = true;
         }

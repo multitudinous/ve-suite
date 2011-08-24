@@ -369,6 +369,8 @@ private:
     ///Are we exiting yet
     bool m_exitApp;
 
+    ///
+    osg::ref_ptr< osg::Group > m_uiGroup;
 };
 } //end xplorer
 } //end ves

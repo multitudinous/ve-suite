@@ -396,7 +396,7 @@ void UIManager::Initialize( osg::Group* parentNode )
     //modelViewMatrix->addChild( mUIGroup.get() );
 
     //parentNode->addChild( mProjection.get() );
-    parentNode->addChild( mUIGroup.get() );
+    //parentNode->addChild( mUIGroup.get() );
 
     //Setup the shaders
     osg::ref_ptr< osg::Program > program = new osg::Program();
