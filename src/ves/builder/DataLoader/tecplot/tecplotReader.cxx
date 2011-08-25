@@ -422,7 +422,7 @@ void tecplotReader::ReadVariable( const EntIndex_t currentZone, int varNumber, c
     }
     else
     {
-        std::cerr << "Error: variable number " << varNumber << " does not exist or can not be read" << std::endl;
+        std::cerr << "Error: Variable number " << varNumber << " does not exist or can not be read" << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -508,9 +508,7 @@ void tecplotReader::ProcessAnyVectorData( vtkFloatArray ** vectorData )
                 }
                 else
                 {
-#ifdef PRINT_HEADERS
-                    std::cerr << "Unexpected variable name: Should not get here" << std::endl;
-#endif // PRINT_HEADERS
+                    std::cerr << "Error: Unexpected variable name: Should not get here" << std::endl;
                     vecName = midName;
                 }
 
@@ -939,7 +937,7 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
 #endif // PRINT_HEADERS
             break;
         default:
-            std::cerr << "ZoneType not recognized. Not supposed to get here." << std::endl;
+            std::cerr << "Error: ZoneType not recognized. Not supposed to get here." << std::endl;
             break;
     }
 
@@ -1019,9 +1017,7 @@ void tecplotReader::ReadElementInfoInZone( const EntIndex_t currentZone, ZoneTyp
         }
         else
         {
-#ifdef PRINT_HEADERS
-            std::cerr << "Unexpected ordered element. Not supposed to get here." << std::endl;
-#endif // PRINT_HEADERS
+            std::cerr << "Error: Unexpected ordered element." << std::endl;
             numNodesPerElement = 0;
         }
 #ifdef PRINT_HEADERS
