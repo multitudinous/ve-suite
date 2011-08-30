@@ -90,8 +90,10 @@ VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog,
     mQueryCommandNames.insert( "saveSimulation");
     mQueryCommandNames.insert( "saveAsSimulation");
     mQueryCommandNames.insert( "getModuleParamList");
+    mQueryCommandNames.insert( "getAllBlockInputs");
     mQueryCommandNames.insert( "getInputModuleParamList");
     mQueryCommandNames.insert( "getInputModuleProperties");
+    mQueryCommandNames.insert( "getAllBlockOutputs");
     mQueryCommandNames.insert( "getOutputModuleParamList");
     mQueryCommandNames.insert( "getOutputModuleProperties");
     mQueryCommandNames.insert( "getStreamModuleParamList");
@@ -234,27 +236,46 @@ void VEPSI_i::StartCalc (
 {
     if( bkpFlag )
     {
-        //grab the value from one output variable
         std::ostringstream strm;
         strm << activeId;
-        std::string value;
-        ves::open::xml::CommandPtr tempCmd =
-           boost::dynamic_pointer_cast<ves::open::xml::Command>
-           ( xmlModelMap[ strm.str() ]->GetInput( "Upstream Model Results" )->
-           GetDataValuePair( "DWSim Output" )->GetDataXMLObject() );
-        tempCmd->GetDataValuePair( 0 )->GetData( value );
-        
-        //SetParam()
-        CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName( "Data.Blocks.DECANTER" );//modname.c_str());
-        CASI::Variable tempvar = cur_block.getInputVarByName( ".TEMP" );//paramName.c_str());
-        CASI::Variable cur_var = bkp->aspendoc->getVarByNodePath(tempvar.getNodePath());
-        CString newValue;
-        //newValue = paramValue.c_str();
-        //bool success = cur_var.setValue(newValue);
-        bool success = cur_var.setValue( value.c_str() );
+        if( !mPortInput.first.empty() )
+        {
+            //grab the value from one output variable
+            std::string value;
+            ves::open::xml::CommandPtr tempCmd =
+               boost::dynamic_pointer_cast<ves::open::xml::Command>
+               ( xmlModelMap[ strm.str() ]->GetInput( "Upstream Model Results" )->
+               GetDataValuePair( "DWSim Output" )->GetDataXMLObject() );
+            tempCmd->GetDataValuePair( 0 )->GetData( value );
+            
+            //SetParam()
+            //CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName( "Data.Blocks.DECANTER" );//modname.c_str());
+            CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName( ( std::string("Data.Blocks.") + mPortInput.first ).c_str() );
+            //CASI::Variable tempvar = cur_block.getInputVarByName( ".TEMP" );//paramName.c_str());
+            CASI::Variable tempvar = cur_block.getInputVarByName( mPortInput.second.c_str() );
+            CASI::Variable cur_var = bkp->aspendoc->getVarByNodePath(tempvar.getNodePath());
+            bool success = cur_var.setValue( value.c_str() );
+        }
 
         //run simulation
         bkp->aspendoc->runSolver( false );
+        
+        if( !mPortOutput.first.empty() )
+        {
+            //write them as dvps to the command to the currentmodel
+            std::string value;
+            CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName( ( std::string("Data.Blocks.") + mPortOutput.first ).c_str() );
+            CASI::Variable tempvar = cur_block.getOutputVarByName( mPortOutput.second.c_str() );
+            CASI::Variable cur_var = bkp->aspendoc->getVarByNodePath(tempvar.getNodePath());
+            value = (char*)LPCTSTR( cur_var.getValue( ) );
+
+            ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+            command->SetCommandName( "DWSim Output" );
+            ves::open::xml::DataValuePairPtr outputDVP( new ves::open::xml::DataValuePair() );
+            outputDVP->SetData( mPortOutput.first + "." + mPortOutput.second, value );
+            command->AddDataValuePair( outputDVP );
+            xmlModelMap[ strm.str() ]->SetResult( command );    
+        }
     }
     else if( dynFlag )
     {
@@ -337,7 +358,7 @@ void VEPSI_i::StartCalc (
                         std::string id;
                         dvp->GetAttribute( prop_element, "ID", id );
                         
-                        if( id.compare(mPortInput.second.first)==0)
+                        if( id.compare(mPortInput.second)==0)
                         {                   
                             //set input
                             dvp->SetAttribute( "Value", value, prop_element );
@@ -437,7 +458,7 @@ void VEPSI_i::StartCalc (
                         std::string id;
                         dvp->GetAttribute( prop_element, "ID", id );
                         
-                        if( id.compare(mPortOutput.second.first) == 0 )
+                        if( id.compare(mPortOutput.second) == 0 )
                         {                   
                             //set input
                             //dvp->SetAttribute( "Value", value, prop_element );
@@ -626,6 +647,15 @@ char * VEPSI_i::Query ( const char * query_str
             _mutex.release();
             return returnValue;
         }
+        else if ( cmdname == "getAllBlockInputs" )
+        {
+            //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+            returnValue = handleGetAllBlockInputs( cmd );
+            //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
         else if ( cmdname == "getInputModuleParamList" )
         {
             //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
@@ -638,6 +668,15 @@ char * VEPSI_i::Query ( const char * query_str
         else if ( cmdname == "getInputModuleProperties" )
         {
             returnValue = handleGetInputModuleProperties( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "getAllBlockOutputs" )
+        {
+            //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+            returnValue = handleGetAllBlockOutputs( cmd );
+            //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
             mQuerying = false;
             _mutex.release();
             return returnValue;
@@ -1161,7 +1200,30 @@ char* VEPSI_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
 
     return CORBA::string_dup(netPak.c_str());
 }
+////////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::handleGetAllBlockInputs( ves::open::xml::CommandPtr cmd )
+{
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname;
+    unsigned int modId;
 
+    //for( size_t i=0; i < num; i++)
+    //{
+    //    ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        
+    //    if (curPair->GetDataName()=="ModuleName")
+    //        modname=curPair->GetDataString();
+    //    else if (curPair->GetDataName()=="ModuleId")
+    //        curPair->GetData(modId);
+    //}
+
+    //There shouldn't be two intances of an Aspen framework. so discard the moduleId
+    //the returned string will be a well formated XML within "vecommand" element
+    //std::string netPak = bkp->GetInputModuleParams(modname);
+    std::string netPak = bkp->GetAllBlockInputs( );
+
+    return CORBA::string_dup(netPak.c_str());
+}
 ////////////////////////////////////////////////////////////////////////////////
 char* VEPSI_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
@@ -1209,6 +1271,30 @@ char* VEPSI_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
     std::string netPak = bkp->GetInputModuleParamProperties(modname, paramName);
     return CORBA::string_dup(netPak.c_str());
 
+}
+////////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::handleGetAllBlockOutputs( ves::open::xml::CommandPtr cmd )
+{
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    std::string modname;
+    unsigned int modId;
+
+    //for( size_t i=0; i < num; i++)
+    //{
+    //    ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+        
+    //    if (curPair->GetDataName()=="ModuleName")
+    //        modname=curPair->GetDataString();
+    //    else if (curPair->GetDataName()=="ModuleId")
+    //        curPair->GetData(modId);
+    //}
+
+    //There shouldn't be two intances of an Aspen framework. so discard the moduleId
+    //the returned string will be a well formated XML within "vecommand" element
+    //std::string netPak = bkp->GetInputModuleParams(modname);
+    std::string netPak = bkp->GetAllBlockOutputs( );
+
+    return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* VEPSI_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd)
@@ -2169,8 +2255,9 @@ void VEPSI_i::setInputPort( ves::open::xml::CommandPtr cmd )
         std::vector< std::string > temp_vector;
         pair->GetData( temp_vector );
         mPortInput.first = temp_vector[0];
-        mPortInput.second.first = temp_vector[1];
-        mPortInput.second.second = temp_vector[2];
+        mPortInput.second = temp_vector[1];
+        //mPortInput.second.first = temp_vector[1];
+        //mPortInput.second.second = temp_vector[2];
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -2183,7 +2270,8 @@ void VEPSI_i::setOutputPort( ves::open::xml::CommandPtr cmd )
         std::vector< std::string > temp_vector;
         pair->GetData( temp_vector );
         mPortOutput.first = temp_vector[0];
-        mPortOutput.second.first = temp_vector[1];
-        mPortOutput.second.second = temp_vector[2];
+        mPortOutput.second = temp_vector[1];
+        //mPortOutput.second.first = temp_vector[1];
+        //mPortOutput.second.second = temp_vector[2];
     }
 }

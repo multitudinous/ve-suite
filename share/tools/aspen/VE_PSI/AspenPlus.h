@@ -135,8 +135,10 @@ public:
     void CreateNetworkInformation( std::string& networkData );
     void ParseSubSystem(ves::open::xml::model::ModelPtr model, const std::string& networkName );
     std::string CreateNetwork( void );
+    std::string GetAllBlockInputs( );
     std::string GetInputModuleParamProperties( const std::string& modname, const std::string& paramName);
-    std::string GetInputModuleParams( const std::string& modname);
+    std::string GetInputModuleParams( const std::string& modname);;
+    std::string GetAllBlockOutputs( );
     std::string GetOutputModuleParamProperties( const std::string& modname, const std::string& paramName);
     std::string GetOutputModuleParams( const std::string& modname);
     std::string GetStreamInputModuleParamProperties( const std::string& modname, const std::string& paramName);

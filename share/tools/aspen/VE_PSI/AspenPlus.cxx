@@ -1648,6 +1648,43 @@ std::string AspenPlus::GetInputModuleParams( const std::string& modname)
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
+std::string AspenPlus::GetAllBlockInputs( )
+{
+    ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
+    std::vector<std::string> paramList;
+    //input variables;
+    params->SetCommandName("InputParams");
+
+    for(int ind = 0; ind < aspendoc->getNumOfBlocks(); ind++ )
+    {
+        CASI::CASIObj cur_block =
+            //aspendoc->getBlockByName( CString( modname.c_str( ) ) );
+            aspendoc->getBlockByIndex( ind );
+        cur_block.processBlockInputs();
+
+        int numOfVars = cur_block.getNumberOfInputVars();
+        for(int i = 0; i < numOfVars; i++)
+        {
+            paramList.push_back( (char*)LPCTSTR( cur_block.getName() + "." + cur_block.getInputVarName(i)) );
+        }
+    }
+    ves::open::xml::DataValuePairPtr
+        inpParams( new ves::open::xml::DataValuePair() );
+    inpParams->SetData("params",paramList);
+    params->AddDataValuePair( inpParams );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
+    std::string >( params, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return status;
+}
+///////////////////////////////////////////////////////////////////////////////
 std::string AspenPlus::GetInputModuleParamProperties( const std::string& modname,
                                                      const std::string& paramName)
 {
@@ -1788,6 +1825,43 @@ std::string AspenPlus::GetOutputModuleParams( const std::string& modname)
     nodes.push_back( 
     std::pair< ves::open::xml::XMLObjectPtr, std::string >
     ( params, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return status;
+}
+///////////////////////////////////////////////////////////////////////////////
+std::string AspenPlus::GetAllBlockOutputs( )
+{
+    ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
+    std::vector<std::string> paramList;
+    params->SetCommandName( "OutputParams" );
+    
+    for(int ind = 0; ind < aspendoc->getNumOfBlocks(); ind++ )
+    {
+        CASI::CASIObj cur_block =
+            //aspendoc->getBlockByName( CString( modname.c_str( ) ) );
+            aspendoc->getBlockByIndex( ind );
+        cur_block.processBlockOutputs();
+
+        int numOfVars = cur_block.getNumberOfOutputVars();
+        for(int i = 0; i < numOfVars; i++)
+        {
+            paramList.push_back( (char*)LPCTSTR(cur_block.getName() + "." + cur_block.getOutputVarName(i) ) );
+        }
+
+    }
+    ves::open::xml::DataValuePairPtr
+        inpParams( new ves::open::xml::DataValuePair() );
+    inpParams->SetData("params",paramList);
+    params->AddDataValuePair( inpParams );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
+    std::string >( params, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status="returnString";

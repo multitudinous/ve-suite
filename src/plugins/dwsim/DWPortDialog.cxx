@@ -144,8 +144,8 @@ void DWPortDialog::SetButtonClick(wxCommandEvent& event)
             paramList.push_back( ConvertUnicode( tkz.GetNextToken().c_str() ) );
 
             //value
-            wxString value = WxGrid->GetCellValue( monitorRow, 1 );
-            paramList.push_back( ConvertUnicode( value.c_str() ) );
+            //wxString value = WxGrid->GetCellValue( monitorRow, 1 );
+            //paramList.push_back( ConvertUnicode( value.c_str() ) );
 
             //add list to DVP
             ves::open::xml::DataValuePairPtr
@@ -193,8 +193,8 @@ void DWPortDialog::SetButtonClick(wxCommandEvent& event)
             paramList.push_back( ConvertUnicode( tkz.GetNextToken().c_str() ) );
 
             //value
-            wxString value = WxGrid->GetCellValue( monitorRow, 1 );
-            paramList.push_back( ConvertUnicode( value.c_str() ) );
+            //wxString value = WxGrid->GetCellValue( monitorRow, 1 );
+            //paramList.push_back( ConvertUnicode( value.c_str() ) );
 
             //add list to DVP
             ves::open::xml::DataValuePairPtr
