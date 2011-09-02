@@ -75,13 +75,14 @@ SwitchGraphicalPlugin::SwitchGraphicalPlugin()
     ves::xplorer::plugin::PluginBase(),
     m_keyboard( 0 )
 {
-    m_valveHeight = 0;
-    m_valveOnOff = true;
-
     //DYNSIM
-    mObjectName = "DSPlugin"; //name of the sheet
+    //mObjectName = "DSPlugin"; //name of the sheet
+    mObjectName = "switch"; //name of the sheet
     ///Set the name of the commands we want to capture from the dynsim unit
     mEventHandlerMap[ "OPCData" ] = this;
+    mEventHandlerMap[ "SWITCH_CAD" ] = this;
+
+    m_switchDCS = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 SwitchGraphicalPlugin::~SwitchGraphicalPlugin()
@@ -96,15 +97,17 @@ void SwitchGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 
+    /*
+    //default CAD
     //SWITCH
-    m_panelGeometry = osgDB::readNodeFile( "Switch/panel.ive" );
-    m_startButtonGeometry = osgDB::readNodeFile( "Switch/go_button.ive" );
-    m_stopButtonGeometry = osgDB::readNodeFile( "Switch/stop_button.ive" );
-    
     m_startTransDCS = new ves::xplorer::scenegraph::DCS();
     m_stopTransDCS = new ves::xplorer::scenegraph::DCS();
     m_switchDCS = new ves::xplorer::scenegraph::DCS();
     
+    m_panelGeometry = osgDB::readNodeFile( "Switch/panel.ive" );
+    m_startButtonGeometry = osgDB::readNodeFile( "Switch/go_button.ive" );
+    m_stopButtonGeometry = osgDB::readNodeFile( "Switch/stop_button.ive" );
+
     m_startTransDCS->addChild( m_startButtonGeometry.get() );
     m_stopTransDCS->addChild( m_stopButtonGeometry.get() );
     
@@ -119,45 +122,34 @@ void SwitchGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     m_switchDCS->SetRotationArray( rot2 );
     m_switchDCS->SetScaleArray( scale2 );
     
-    mDCS->addChild( m_switchDCS.get() );
+    mDCS->addChild( m_switchDCS.get() );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SwitchGraphicalPlugin::PreFrameUpdate()
 {
-    //switch
-    double* tempTrans = m_startTransDCS->GetVETranslationArray();
-    double* tempTrans2 = m_stopTransDCS->GetVETranslationArray();
-    if( m_switchOnOff > 0)
+    if( m_switchDCS != 0 )
     {
-        tempTrans[0] = -0.015;
-        m_startTransDCS->SetTranslationArray( tempTrans );
-        tempTrans2[0] = 0;
-        m_stopTransDCS->SetTranslationArray( tempTrans2 );
-    }
-    else
-    {
-        tempTrans[0] = 0;
-        m_startTransDCS->SetTranslationArray( tempTrans );
-        tempTrans2[0] = -0.015;
-        m_stopTransDCS->SetTranslationArray( tempTrans2 );
-    }
+        //switch
+        double* tempTrans = m_startTransDCS->GetVETranslationArray();
+        double* tempTrans2 = m_stopTransDCS->GetVETranslationArray();
 
-    /*Process key board event
-    if( m_keyboard )
-    {
-        //If the mouse made a pick event
-        if( !m_keyboard->GetMousePickEvent() )
+        //switch on
+        if( m_switchOnOff > 0)
         {
-            return;
+            tempTrans[0] = -0.015;
+            m_startTransDCS->SetTranslationArray( tempTrans );
+            tempTrans2[0] = 0;
+            m_stopTransDCS->SetTranslationArray( tempTrans2 );
         }
-
-        //If we had keyboard input then try and highlight the cad
-        //bool pickedParts = false;
-        //if( m_mouseSelection )
+        //switch off
+        else
         {
-            FindPartNodeAndHighlightNode();
+            tempTrans[0] = 0;
+            m_startTransDCS->SetTranslationArray( tempTrans );
+            tempTrans2[0] = -0.015;
+            m_stopTransDCS->SetTranslationArray( tempTrans2 );
         }
-    }*/
+    }
 
     //Process key board event
     if( m_keyboard )
@@ -235,14 +227,59 @@ void SwitchGraphicalPlugin::SetCurrentCommand(
         return;
     }
 
-    //switch
+    //switch value
     if( command->GetDataValuePair("MY_SWITCH") )
     {
         std::string percent;
         command->GetDataValuePair("MY_SWITCH")->GetData( percent );
-        double test = boost::lexical_cast<double>( percent );
-        
-        m_switchOnOff = test;
+        m_switchOnOff = boost::lexical_cast<double>( percent );
+    }
+
+    //switch cad
+    if( command->GetCommandName( ).compare( "SWITCH_CAD" ) == 0 )
+    {
+        if( m_switchDCS != 0 )
+        {
+            mDCS->removeChild( m_switchDCS.get() );
+        }
+
+        m_startTransDCS = new ves::xplorer::scenegraph::DCS();
+        m_stopTransDCS = new ves::xplorer::scenegraph::DCS();
+        m_switchDCS = new ves::xplorer::scenegraph::DCS();
+
+        //body
+        std::string CAD;
+        command->GetDataValuePair("SWITCH_BODY")->GetData( CAD );
+        m_panelGeometry = osgDB::readNodeFile( CAD.c_str() );
+
+        //on button
+        command->GetDataValuePair("ON_BUTTON")->GetData( CAD );
+        m_startButtonGeometry = osgDB::readNodeFile( CAD.c_str() );
+
+        //offbutton
+        command->GetDataValuePair("OFF_BUTTON")->GetData( CAD );
+        m_stopButtonGeometry = osgDB::readNodeFile( CAD.c_str() );
+
+        //add to scene and placement
+        m_startTransDCS = new ves::xplorer::scenegraph::DCS();
+        m_stopTransDCS = new ves::xplorer::scenegraph::DCS();
+        m_switchDCS = new ves::xplorer::scenegraph::DCS();
+
+        m_startTransDCS->addChild( m_startButtonGeometry.get() );
+        m_stopTransDCS->addChild( m_stopButtonGeometry.get() );
+
+        m_switchDCS->addChild( m_panelGeometry.get() );
+        m_switchDCS->addChild( m_startTransDCS.get() );
+        m_switchDCS->addChild( m_stopTransDCS.get() );
+
+        double rot2[3] = { 90.0, 0.0, 0.0 };
+        double scale2[3] = { 3.28, 3.28, 3.28 };
+        double pos2[3] = { -30.315, -12.336, 6.35 };
+        m_switchDCS->SetTranslationArray( pos2 );
+        m_switchDCS->SetRotationArray( rot2 );
+        m_switchDCS->SetScaleArray( scale2 );
+
+        mDCS->addChild( m_switchDCS.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

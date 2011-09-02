@@ -76,11 +76,6 @@ private:
     ///Keyboard helper pointer
     ves::xplorer::device::KeyboardMouse* m_keyboard;
 
-    ///panel geometry
-    osg::ref_ptr< osg::Node > m_startButtonGeometry;
-    osg::ref_ptr< osg::Node > m_stopButtonGeometry;
-    osg::ref_ptr< osg::Node > m_panelGeometry;
-
     ///valve geometry
     osg::ref_ptr< osg::Node > m_handwheelGeometry;
     osg::ref_ptr< osg::Node > m_stemGeometry;
@@ -95,13 +90,9 @@ private:
     int mButton;
 
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_rotationDCS;
-	//osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_startTransDCS;
-	//osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_stopTransDCS;
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_stemTransDCS;
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_valveDCS;
-	//osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_switchDCS;
     double m_valveHeight;
-    double m_switchOnOff;
     bool m_valveOnOff;
 };
 

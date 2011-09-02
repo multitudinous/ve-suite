@@ -81,28 +81,15 @@ private:
     osg::ref_ptr< osg::Node > m_stopButtonGeometry;
     osg::ref_ptr< osg::Node > m_panelGeometry;
 
-    ///valve geometry
-    osg::ref_ptr< osg::Node > m_handwheelGeometry;
-    osg::ref_ptr< osg::Node > m_stemGeometry;
-    osg::ref_ptr< osg::Node > m_valveGeometry;
-
-    ///Pump geometry
-    osg::ref_ptr< osg::Node > m_pumpGeometry;
-    osg::ref_ptr< osg::Uniform > m_highlightColor;
-
     ///other vars
-    osg::ref_ptr< osg::Switch > m_valueAnimation;
+    //osg::ref_ptr< osg::Switch > m_valueAnimation;
     int mButton;
 
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_rotationDCS;
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_startTransDCS;
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_stopTransDCS;
-	///osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_stemTransDCS;
-	//osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_valveDCS;
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_switchDCS;
-    double m_valveHeight;
     double m_switchOnOff;
-    bool m_valveOnOff;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( SwitchGraphicalPlugin )

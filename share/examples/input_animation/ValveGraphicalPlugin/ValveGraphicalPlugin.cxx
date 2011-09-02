@@ -79,9 +79,12 @@ ValveGraphicalPlugin::ValveGraphicalPlugin()
     m_valveOnOff = true;
 
     //DYNSIM
-    mObjectName = "DWPlugin"; //name of the sheet
+    mObjectName = "valve"; //name of the sheet
     ///Set the name of the commands we want to capture from the dynsim unit
     mEventHandlerMap[ "OPCData" ] = this;
+    mEventHandlerMap[ "VALVE_CAD" ] = this;
+
+    m_valveDCS = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ValveGraphicalPlugin::~ValveGraphicalPlugin()
@@ -97,44 +100,41 @@ void ValveGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 
     //valve
+    /*m_rotationDCS = new ves::xplorer::scenegraph::DCS();
+    m_stemTransDCS = new ves::xplorer::scenegraph::DCS();
+    m_valveDCS = new ves::xplorer::scenegraph::DCS();
+
     m_handwheelGeometry = osgDB::readNodeFile( "Valve/handwheel.ive" );
     m_stemGeometry = osgDB::readNodeFile( "Valve/stem.ive" );
     m_valveGeometry = osgDB::readNodeFile( "Valve/valve.ive" );
-    
-    m_rotationDCS = new ves::xplorer::scenegraph::DCS();
-    m_stemTransDCS = new ves::xplorer::scenegraph::DCS();
-    m_valveDCS = new ves::xplorer::scenegraph::DCS();
-    
+
     m_rotationDCS->addChild( m_handwheelGeometry.get() );
     m_stemTransDCS->addChild( m_stemGeometry.get() );
     m_rotationDCS->addChild( m_stemTransDCS.get() );
-    
+
     m_valveDCS->addChild( m_valveGeometry.get() );
     m_valveDCS->addChild( m_rotationDCS.get() );
-    
+
     double rot[3] = { 0.0, 0.0, 90.0 };
     double scale[3] = { 6.56, 6.56, 6.56 };
     double pos[3] = { 20.75, -52.5, 6.7 };
     m_valveDCS->SetTranslationArray( pos );
     m_valveDCS->SetRotationArray( rot );
-    
-    m_valveDCS->SetScaleArray( scale );
-    mDCS->addChild( m_valveDCS.get() );
 
+    m_valveDCS->SetScaleArray( scale );
+    mDCS->addChild( m_valveDCS.get() );*/
+
+    //REMOVE?
+    //pump
     //Setting up the pump or something to change colors with a scalar
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > meterDCS = new ves::xplorer::scenegraph::DCS();     
     m_pumpGeometry = osgDB::readNodeFile( "FlowMeter/flowmeter.ive" );
-      
+  
     meterDCS->addChild( m_pumpGeometry.get() );
-    //double scale = { 3.28, 3.28, 3.28 };
-    scale[0] = scale[1] = scale[2] = 3.28;
-    //double pos = { 36, -28.67, 1.0 };
-    pos[0] = 36;
-    pos[1] = -28.67;
-    pos[2] = 1.0;
+    double scale[3] = { 3.28, 3.28, 3.28 };
+    double pos[3] = { 36, -28.67, 1.0 };
     meterDCS->SetTranslationArray( pos );
     meterDCS->SetScaleArray( scale );
-
     mDCS->addChild( meterDCS.get() );
 
     //Initialize shaders
@@ -142,15 +142,15 @@ void ValveGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         osgDB::findDataFile( "color_texture_part.fs" );
     osg::ref_ptr< osg::Shader > fragShader = 
         osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
-    
+
     osg::ref_ptr< osg::Program > program = new osg::Program();
     program->addShader( fragShader.get() );
-    
+
     osg::ref_ptr< osg::StateSet > stateSet = 
         m_pumpGeometry->getOrCreateStateSet();
     stateSet->setAttributeAndModes( program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    
+
     m_highlightColor = new osg::Uniform( "partColor", osg::Vec4( 1.0, 1.0, 1.0, 0.0 ) );
     stateSet->addUniform( m_highlightColor );
     stateSet->addUniform( new osg::Uniform( "tex", 0 ) );
@@ -159,45 +159,31 @@ void ValveGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 void ValveGraphicalPlugin::PreFrameUpdate()
 {
     //Valve
-    double rotRate = 5;
-    double transRate = 0.0039;
-
-    double* tempTrans = m_stemTransDCS->GetVETranslationArray();
-
-    if ( gmtl::Math::abs( tempTrans[1] -  m_valveHeight ) > ( transRate) )
+    if( m_valveDCS != 0 )
     {
-        double* tempRot = m_rotationDCS->GetRotationArray();
-        if( m_valveHeight > tempTrans[1])
-        {
-            tempRot[2] -= rotRate;
-        }
-        else
-        {
-            tempRot[2] += rotRate;
-        }
-        m_rotationDCS->SetRotationArray( tempRot );
+        double rotRate = 5;
+        double transRate = 0.0039;
 
+        double* tempTrans = m_stemTransDCS->GetVETranslationArray();
+
+        if ( gmtl::Math::abs( tempTrans[1] -  m_valveHeight ) > ( transRate) )
+        {
+            double* tempRot = m_rotationDCS->GetRotationArray();
+            if( m_valveHeight > tempTrans[1])
+            {
+                tempRot[2] -= rotRate;
+            }
+            else
+            {
+                tempRot[2] += rotRate;
+            }
+            m_rotationDCS->SetRotationArray( tempRot );
+
+        }
+
+        tempTrans[1] = m_valveHeight;
+        m_stemTransDCS->SetTranslationArray( tempTrans );
     }
-	
-    tempTrans[1] = m_valveHeight;
-    m_stemTransDCS->SetTranslationArray( tempTrans );
-      
-    //Process key board event
-    /*if( m_keyboard )
-    {
-        //If the mouse made a pick event
-        if( !m_keyboard->GetMousePickEvent() )
-        {
-            return;
-        }
-
-        //If we had keyboard input then try and highlight the cad
-        bool pickedParts = false;
-        //if( m_mouseSelection )
-        {
-            FindPartNodeAndHighlightNode();
-        }
-    }*/
 
     //Process key board event
     if( m_keyboard )
@@ -275,16 +261,58 @@ void ValveGraphicalPlugin::SetCurrentCommand(
         return;
     }
     
-    //Valve
+    //Valve value
     if( command->GetDataValuePair("MY_VALVE") )
     {
         std::string percent;
         command->GetDataValuePair("MY_VALVE")->GetData( percent );
         double test = boost::lexical_cast<double>( percent );
-        std::cout << "valve position " << test << std::endl;
+        //std::cout << "valve position " << test << std::endl;
         m_valveHeight = -0.125 * test;
 
         m_highlightColor->set( osg::Vec4( 1.0, 1.0-test, 1.0-test, 0.0) );
+    }
+
+    //valve cad
+    if( command->GetCommandName( ).compare( "VALVE_CAD" ) == 0 )
+    {
+        if( m_valveDCS != 0 )
+        {
+            mDCS->removeChild( m_valveDCS.get() );
+        }
+        m_rotationDCS = new ves::xplorer::scenegraph::DCS();
+        m_stemTransDCS = new ves::xplorer::scenegraph::DCS();
+        m_valveDCS = new ves::xplorer::scenegraph::DCS();
+        
+        //hand wheel
+        std::string CAD;
+        command->GetDataValuePair("HAND_WHEEL")->GetData( CAD );
+        m_handwheelGeometry = osgDB::readNodeFile( CAD.c_str() );
+
+        //stem
+        command->GetDataValuePair("STEM")->GetData( CAD );
+        m_stemGeometry = osgDB::readNodeFile( CAD.c_str() );
+
+        //body
+        command->GetDataValuePair("VALVE_BODY")->GetData( CAD );
+        m_valveGeometry = osgDB::readNodeFile( CAD.c_str() );
+
+        //add to scene and placement
+        m_rotationDCS->addChild( m_handwheelGeometry.get() );
+        m_stemTransDCS->addChild( m_stemGeometry.get() );
+        m_rotationDCS->addChild( m_stemTransDCS.get() );
+
+        m_valveDCS->addChild( m_valveGeometry.get() );
+        m_valveDCS->addChild( m_rotationDCS.get() );
+
+        double rot[3] = { 0.0, 0.0, 90.0 };
+        double scale[3] = { 6.56, 6.56, 6.56 };
+        double pos[3] = { 20.75, -52.5, 6.7 };
+        m_valveDCS->SetTranslationArray( pos );
+        m_valveDCS->SetRotationArray( rot );
+
+        m_valveDCS->SetScaleArray( scale );
+        mDCS->addChild( m_valveDCS.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

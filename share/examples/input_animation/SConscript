@@ -15,6 +15,7 @@ fileBundle.addFiles( iveFile )
 fermentorSubdirs = Split("""
     SwitchGraphicalPlugin
     ValveGraphicalPlugin
+    TankGraphicalPlugin
     animationGP
 """)
 #animationGP
