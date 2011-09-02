@@ -693,10 +693,37 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
         {
             // if a new module is on the id map but not on the plugins map
             // create it...
-            PluginBase* temp = 
-                static_cast< ves::xplorer::plugin::PluginBase* >( 
-                mAvailableModules->GetLoader()->CreateObject( 
-                model->GetPluginType() ) );
+            PluginBase* temp = 0;
+
+            //currently we are parsing the icon file name for one of the 3
+            //support generic dynamic plugins: switch, tank, valve
+            if( model->GetIconFilename().find("BREAKER") != std::string::npos )
+            {
+                temp = static_cast< ves::xplorer::plugin::PluginBase* >( 
+                    mAvailableModules->GetLoader()->CreateObject( 
+                    "switch" ) );
+            }
+            else if ( model->GetIconFilename().find("valve") != std::string::npos )
+            {
+                temp = static_cast< ves::xplorer::plugin::PluginBase* >( 
+                    mAvailableModules->GetLoader()->CreateObject( 
+                    "valve" ) );
+            }
+            else if ( model->GetIconFilename().find("tank") != std::string::npos )
+            {
+                temp = static_cast< ves::xplorer::plugin::PluginBase* >( 
+                    mAvailableModules->GetLoader()->CreateObject( 
+                    "tank" ) );
+            }
+
+            //this option was the original implementation which uses the
+            //plugin type
+            else
+            {
+                temp = static_cast< ves::xplorer::plugin::PluginBase* >( 
+                    mAvailableModules->GetLoader()->CreateObject( 
+                    model->GetPluginType() ) );
+            }
 
             if( temp == 0 )
             {

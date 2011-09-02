@@ -33,6 +33,9 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "OpcUOPlugin.h"
+#include "ValveDlg.h"
+#include "SwitchDlg.h"
+#include "TankDlg.h"
 #include <ves/conductor/util/OpcUOVarDialog.h>
 //#include "DynamicDataDlg.h"
 #include <plugins/ConductorPluginEnums.h>
@@ -56,6 +59,9 @@ BEGIN_EVENT_TABLE( OpcUOPlugin, UIPluginBase )
     //EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::OnShowAllVar )
     EVT_MENU( OPCUOPLUGIN_ALL_VAR, OpcUOPlugin::QueryForAllVariables )
     EVT_BUTTON( OPC_VAR_ID_MONITORBUTTON, OpcUOPlugin::OnMonitorVariable )
+    EVT_MENU( OPCUOPLUGIN_VALVE_CAD, OpcUOPlugin::OnValveCAD )
+    EVT_MENU( OPCUOPLUGIN_SWITCH_CAD, OpcUOPlugin::OnSwitchCAD )
+    //EVT_MENU( OPCUOPLUGIN_TANK_CAD, OpcUOPlugin::OnTankCAD )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( OpcUOPlugin, UIPluginBase )
@@ -182,6 +188,25 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     //mOpcMenu->Enable( OPCUOPLUGIN_STOP_TIMER, true );
     mOpcMenu->Append( OPCUOPLUGIN_ALL_VAR, _( "ALL VAR" ) );
     mOpcMenu->Enable( OPCUOPLUGIN_ALL_VAR, true );
+
+    //using the icon file name to determine if the opc plugin
+    //represents a switch, valve or tank
+    //create options for the CAD dialogs
+    if( iconFilename.find("BREAKER") != std::string::npos )
+    {
+        mOpcMenu->Append( OPCUOPLUGIN_SWITCH_CAD, _( "CAD" ) );
+        mOpcMenu->Enable( OPCUOPLUGIN_SWITCH_CAD, true );
+    }
+    else if (iconFilename.find("valve") != std::string::npos)
+    {
+        mOpcMenu->Append( OPCUOPLUGIN_VALVE_CAD, _( "CAD" ) );
+        mOpcMenu->Enable( OPCUOPLUGIN_VALVE_CAD, true );
+    }
+    else if (iconFilename.find("tank") != std::string::npos)
+    {
+        mOpcMenu->Append( OPCUOPLUGIN_TANK_CAD, _( "CAD" ) );
+        mOpcMenu->Enable( OPCUOPLUGIN_TANK_CAD, true );
+    }
     baseMenu->Insert( 0, OPCUOPLUGIN_START_TIMER,   _( "OPC" ), mOpcMenu,
                     _( "Used in conjunction with OPC" ) );
     baseMenu->Enable( OPCUOPLUGIN_SIM_MENU, true );
@@ -426,3 +451,21 @@ bool OpcUOPlugin::ShowAvailable()
 {
     return true;
 }
+////////////////////////////////////////////////////////////////////////////////
+void OpcUOPlugin::OnValveCAD( wxCommandEvent& event )
+{
+	ValveDlg* vd = new ValveDlg( 0, serviceList );
+	vd->ShowModal( );
+}
+////////////////////////////////////////////////////////////////////////////////
+void OpcUOPlugin::OnSwitchCAD( wxCommandEvent& event )
+{
+	SwitchDlg* sd = new SwitchDlg( 0, serviceList );
+	sd->ShowModal( );
+}
+////////////////////////////////////////////////////////////////////////////////
+//void OpcUOPlugin::OnTankCAD( wxCommandEvent& event )
+//{
+//	TankDlg* td = new TankDlg( 0, serviceList );
+//	td->ShowModal( );
+//}

@@ -113,6 +113,15 @@ private:
     ///???
     void OnMonitorVariable( wxCommandEvent& event );
 
+    ///???
+    void OnValveCAD( wxCommandEvent& event );
+
+    ///???
+    void OnSwitchCAD( wxCommandEvent& event );
+
+    ///???
+    //void OnTankCAD( wxCommandEvent& event );
+
     DECLARE_EVENT_TABLE()
 };
 }
