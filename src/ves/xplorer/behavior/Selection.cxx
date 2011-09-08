@@ -292,6 +292,14 @@ void Selection::ProcessSelection()
     //Unselect the previous selected DCS
     DeviceHandler::instance()->UnselectObjects();
     
+    //Remove custom glows
+    {
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlightRemove( 
+                ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(), 
+                "", false, true );
+    }
+    
     //Test for intersections
     osgUtil::LineSegmentIntersector::Intersections& intersections =
     scenegraph::TestForIntersections(
