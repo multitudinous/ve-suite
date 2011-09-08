@@ -78,7 +78,8 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
     bool enableRTT = false;
     bool desktopMode = false;
     
-    if( vm.count("VESRTT") )
+    bool RTTtemp = vm["VESRTT"].as<bool>();
+    if( RTTtemp )
     {
         enableRTT = true;
         std::cout << "|\tEnabling RTT"<< std::endl;
