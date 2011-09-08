@@ -65,6 +65,7 @@ class StateAttribute;
 class Projection;
 class NodeCallback;
 class Uniform;
+class Camera;
 }
 
 // --- STL includes --- //
@@ -235,6 +236,8 @@ public:
     ///bool to let all slots know if the wand ray is within the UI plane.
     bool TestWandIntersection();
 
+    void SetCameraForSceneDebug( osg::Camera* camera );
+
 private:
     // Set this class up as a singleton
     ///Constructor
@@ -385,6 +388,15 @@ private:
     osg::Vec3d m_intersectionPoint;
     ///Bounding box uis
     bool m_updateBBoxes;
+    /// UIElements sorted in z-order
+    std::list< UIElement* > m_zOrder;
+
+    /// Left-to-right sorted list of minimized UIElements
+    std::list< UIElement* > m_minimizedElements;
+
+    osg::Node* m_bringToFront;
+
+    osg::Camera* m_sceneDebugCamera;
 };
 
 } //end conductor

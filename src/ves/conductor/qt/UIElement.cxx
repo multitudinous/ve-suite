@@ -86,21 +86,13 @@ UIElement::~UIElement()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::PostConstructor()
 {
-    //
-    GetElementWidth();
-    GetElementHeight();
-
     m_vertices = new osg::Vec3Array();
-    /*vertices->push_back( osg::Vec3( 0.0f, 0.0f, 0.0 ) );
-    vertices->push_back( osg::Vec3( 1.0f, 0.0f, 0.0 ) );
-    vertices->push_back( osg::Vec3( 1.0f, 1.0f, 0.0 ) );
-    vertices->push_back( osg::Vec3( 0.0f, 1.0f, 0.0 ) );*/
     if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
-        m_vertices->push_back( osg::Vec3( -1.0f, -1.0f, 1.0 ) );
-        m_vertices->push_back( osg::Vec3(  1.0f, -1.0f, 1.0 ) );
-        m_vertices->push_back( osg::Vec3(  1.0f,  1.0f, 1.0 ) );
-        m_vertices->push_back( osg::Vec3( -1.0f,  1.0f, 1.0 ) );
+        m_vertices->push_back( osg::Vec3( -1.0f, -1.0f, 1.0f ) );
+        m_vertices->push_back( osg::Vec3(  1.0f, -1.0f, 1.0f ) );
+        m_vertices->push_back( osg::Vec3(  1.0f,  1.0f, 1.0f ) );
+        m_vertices->push_back( osg::Vec3( -1.0f,  1.0f, 1.0f ) );
     }
     else
     {
@@ -158,35 +150,8 @@ void UIElement::PostConstructor()
     stateset->setTextureAttributeAndModes(
         0, texture.get(), osg::StateAttribute::ON );
 
-    // Transform to make unit square appear with same dimensions as underlying
-    // element dimensions
-    //osg::ref_ptr<osg::MatrixTransform> elementTransform = new osg::MatrixTransform();
-    //elementTransform->setMatrix( osg::Matrix::scale( GetElementWidth(),
-    //                                                 GetElementHeight(),
-    //                                                 1.0f ) );
-    //elementTransform->setMatrix( osg::Matrix::identity() );
-
-    //PushElementMatrix( elementTransform->getMatrix() );
-    //elementTransform->addChild( mGeode.get() );
-    //mElementTransform = elementTransform.get();
-
-    //
-    //osg::ref_ptr<osg::MatrixTransform> uiTransform = new osg::MatrixTransform();
-    //uiTransform->setMatrix( osg::Matrix::identity() );
     PushUIMatrix( osg::Matrix::identity() );
-    //uiTransform->addChild( elementTransform.get() );
-    //uiTransform->addChild( mGeode.get() );
-    //mUITransform = uiTransform.get();
-
-    //
-    //mVisibilitySwitch = new osg::Switch();
-    //mVisibilitySwitch->addChild( uiTransform.get() );
 }
-////////////////////////////////////////////////////////////////////////////////
-/*osg::Switch* UIElement::GetVisibilitySwitch()
-{
-    return mVisibilitySwitch.get();
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* UIElement::GetGeode()
 {
@@ -305,6 +270,11 @@ bool UIElement::IsDirty()
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool UIElement::SizeDirty()
+{
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
 void UIElement::Initialize()
 {
     ;
@@ -338,17 +308,6 @@ osg::Matrixf UIElement::PopUIMatrix()
     mUIMatrixDirty = true;
     return last;
 }
-////////////////////////////////////////////////////////////////////////////////
-/*void UIElement::PushElementMatrix( osg::Matrixf const& matrix )
-{
-    mElementMatrix = matrix;
-    mElementMatrixDirty = true;
-}*/
-////////////////////////////////////////////////////////////////////////////////
-/*osg::Matrixf& UIElement::GetElementMatrix()
-{
-    return mElementMatrix;
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::MoveCanvas( float dx, float dy, float dz )
 {
@@ -435,7 +394,6 @@ void UIElement::Update()
 bool UIElement::IsVisible()
 {
     return static_cast< bool >( mGeode->getNodeMask() );
-    //mVisibilitySwitch->getValue( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SetVisible( bool visible )
@@ -443,12 +401,10 @@ void UIElement::SetVisible( bool visible )
     if( visible )
     {
         mGeode->setNodeMask( 0x1 );
-        //mVisibilitySwitch->setAllChildrenOn();
     }
     else
     {
         mGeode->setNodeMask( 0x0 );
-        //mVisibilitySwitch->setAllChildrenOff();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -576,6 +532,11 @@ osg::Vec2d& UIElement::GetTextureCoords( int x, int y )
     return m_texCoords;
 }
 ////////////////////////////////////////////////////////////////////////////////
+std::vector< std::pair< osg::Image*, std::pair< int, int > > > const& UIElement::GetDamagedAreas()
+{
+    return m_damagedAreas;
+}
+
 } // namepsace conductor
 } // namespace ves
 

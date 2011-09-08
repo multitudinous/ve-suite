@@ -1021,7 +1021,7 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 
     // Reactivate the last-known active tab
     // If there was no active tab, activate vis tab, if it exists
-    if( LastKnownActive.empty() || LastKnownActive == "" && model->GetNumberOfCfdDataSets() > 0 )
+    if( LastKnownActive.empty() || ( LastKnownActive == "" && model->GetNumberOfCfdDataSets() > 0 ) )
     {
         ActivateTab( "Visualization" );
     }

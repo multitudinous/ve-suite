@@ -165,6 +165,12 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
     virtual void Initialize();
 ////////////////////////////////////////////////////////////////////////////////
+// Should return true if image *size* has changed since last call to
+// RenderElementToImage; otherwise false.
+////////////////////////////////////////////////////////////////////////////////
+    virtual bool SizeDirty();
+
+    virtual std::vector< std::pair< osg::Image*, std::pair< int, int > > > const& GetDamagedAreas();
 
     ///
     virtual void SetMinimized( bool state );
@@ -216,6 +222,20 @@ public:
 
     ///
     virtual osg::Geode* GetGeode();
+
+    /// Tell this element it is on top. Subclasses may choose to render
+    /// differently when on top.
+    virtual void Raise(){}
+
+    /// Tell this element it is no longer on top. Subclasses may choose to render
+    /// differently when not on top.
+    virtual void Lower(){}
+
+    /// Set whether titlebar is displayed
+    virtual void ShowTitlebar( bool show ){}
+
+    /// Toggle whether titlebar is displayed
+    virtual void ToggleTitlebar(){}
 
     ///
     void SetScreenDimensions( int width, int height );
@@ -274,6 +294,7 @@ protected:
     std::pair< int, int > m_uiSize;
 
     osg::ref_ptr< osg::Image > m_osgImage;
+    std::vector< std::pair< osg::Image*, std::pair< int, int > > > m_damagedAreas;
 };
 
 } // namepsace conductor

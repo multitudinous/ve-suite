@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//#define NO_SUBLOAD
+#define NO_SUBLOAD
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElement.h>
@@ -61,6 +61,8 @@
 #include <osg/Depth>
 #include <osg/AnimationPath>
 #include <osg/io_utils>
+#include <osg/Camera>
+#include <osgDB/WriteFile>
 
 // --- STL Includes --- //
 #include <iostream>
@@ -108,7 +110,8 @@ UIManager::UIManager() :
     m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector( 
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
     m_selectedUIElement( 0 ),
-    m_updateBBoxes( false )
+    m_updateBBoxes( false ),
+    m_bringToFront( 0 )
 {
     // Register signals
     ves::xplorer::eventmanager::EventManager* evm = ves::xplorer::eventmanager::EventManager::instance();
@@ -224,6 +227,11 @@ osg::Geode* UIManager::AddElement( UIElement* element )
         mNodesToAdd.push_back( m_rttQuadTransform.get() );
     }
 
+    // Move the element so that its top-left corer is at the top-left portion of the
+    // UI area
+    double elementHeight = element->GetElementHeight();
+    element->MoveCanvas( 0, mTop - elementHeight, 0 );
+
     //mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
     m_updateBBoxes = true;
 
@@ -231,6 +239,7 @@ osg::Geode* UIManager::AddElement( UIElement* element )
 
     osg::ref_ptr<TextureSubloader> subloader = new TextureSubloader;
     m_subloaders[ element ] = subloader;
+    m_zOrder.push_front( element );
 
     return geode;
 }
@@ -255,6 +264,7 @@ void UIManager::RemoveAllElements()
 
     mElements.clear();
     m_subloaders.clear();
+    m_zOrder.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::Update()
@@ -270,6 +280,13 @@ void UIManager::Update()
     if( mNodesToAdd.size() > 0 )
     {
         _insertNodesToAdd();
+    }
+
+    if( m_bringToFront )
+    {
+        mUIGroup->removeChild( m_bringToFront );
+        mUIGroup->addChild( m_bringToFront );
+        m_bringToFront = 0;
     }
 
     // Update all of the bounding boxes for the uis
@@ -319,6 +336,11 @@ void UIManager::Update()
     }
     else if( mHide )
     {
+        //osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options;
+        //options->setOptionString( "includeImageFileInIVEFile" );
+        //osgDB::writeNodeFile( *m_sceneDebugCamera, "outfile.ive", options );
+        //osgDB::writeNodeFile( *mUIGroup, "outfile.ive", options );
+        //mHide = false;
         _hideAll();
     }
 
@@ -331,13 +353,6 @@ void UIManager::Update()
     {
         _doUnminimize();
     }
-
-//    // Check visibility of UI branch before bothering with repaints
-//    if( mUIGroup->getValue( 0 ) )
-//    {
-//        m_opacityUniform->set( mOpacity );
-//        _repaintChildren();
-//    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::HideAllElements()
@@ -373,30 +388,15 @@ void UIManager::SetRectangle( int left, int right, int bottom, int top )
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::Initialize( osg::Group* parentNode )
 {
-    //std::cout << "UIManager::Initialize" << std::endl;
     // Only allow initialization to happen once.
     if( mInitialized )
     {
         return;
     }
 
-    //mProjection = new osg::Projection();
-    //mProjection->setMatrix( osg::Matrix::ortho2D( mLeft, mRight,
-    //                                              mBottom, mTop ) );
-
-    //osg::MatrixTransform* modelViewMatrix = new osg::MatrixTransform;
-    //modelViewMatrix->setMatrix( osg::Matrix::identity() );
-    //modelViewMatrix->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
-
-    //mProjection->addChild( modelViewMatrix );
-
     mUIGroup = new osg::Switch();
     mUIGroup->setDataVariance( osg::Object::DYNAMIC );
     mUIGroup->setUpdateCallback( mUIUpdateCallback.get() );
-    //modelViewMatrix->addChild( mUIGroup.get() );
-
-    //parentNode->addChild( mProjection.get() );
-    //parentNode->addChild( mUIGroup.get() );
 
     //Setup the shaders
     osg::ref_ptr< osg::Program > program = new osg::Program();
@@ -465,13 +465,9 @@ void UIManager::Initialize( osg::Group* parentNode )
         osg::ref_ptr< osg::Depth > depth = new osg::Depth();
         depth->setFunction( osg::Depth::ALWAYS );
         depth->setWriteMask( false );
-        stateset->setRenderBinDetails( 99, "DepthSortedBin" );
+        //stateset->setRenderBinDetails( 99, "DepthSortedBin" );
         stateset->setAttributeAndModes( depth.get(), glModeValue );
-        //stateset->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF | 
-        //                                    osg::StateAttribute::PROTECTED | 
-        //                                    osg::StateAttribute::OVERRIDE );
         mUIGroup->setCullingActive( false );
-        //stateset->setMode( GL_LIGHTING, glModeValue);
     }
 
     stateset->setAttributeAndModes( program.get(), glModeValue );
@@ -506,95 +502,6 @@ void UIManager::Initialize( osg::Group* parentNode )
     mInitialized = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*bool UIManager::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event )
-{
-    // Ignore events if we're not initialized
-    if( !mInitialized )
-    {
-        return false;
-    }
-
-    // Check visibility of UI branch before bothering with events
-    if( !mUIGroup->getValue( 0 ) )
-    {
-        return false;
-    }
-
-    using ves::xplorer::eventmanager::InteractionEvent;
-
-    // If we're dealing with a mouse event, see if it's over one of our managed
-    // quads. If it isn't, we ignore the event.
-    if( ( event.EventType == InteractionEvent::pointerMotion ) ||
-            ( event.EventType == InteractionEvent::buttonPress ) ||
-            ( event.EventType == InteractionEvent::buttonRelease ) )
-    {
-        // Store off coordinates and deltas
-        int tempX = event.X;
-        int tempY = event.Y;
-        mDxPointer = tempX - mCurrentXPointer;
-        mDyPointer = tempY - mCurrentYPointer;
-        mCurrentXPointer = tempX;
-        mCurrentYPointer = tempY;
-
-        // If an element move operation is in progress, handle that and sink the event
-        if( mMoveElement )
-        {
-            if( event.EventType == InteractionEvent::pointerMotion )
-            {
-                mMoveElement->MoveCanvas( mDxPointer, mDyPointer );
-            }
-            else if( event.EventType == InteractionEvent::buttonRelease )
-            {
-                mElementPositionsOrtho2D[ mMoveElement ] = _computeMouseBoundsForElement( mMoveElement );
-                mMoveElement = 0;
-            }
-            return true;
-        }
-
-        if( !Ortho2DTestPointerCoordinates( mCurrentXPointer, mCurrentYPointer ) )
-        {
-            return false;
-        }
-    }
-
-    // Currently we have no logic in place to determine *which* element should
-    // receive this event. When there are multiple Geodes, the passed event
-    // should include a pointer to the Geode that had mouse/wand intersection
-    // (for mouse events). We should be storing the focused element somewhere
-    // in this manager class for keyboard events.
-
-    ElementMap_type::iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
-    {
-        UIElement* element = map_iterator->second;
-
-        bool visible = element->IsVisible();
-        bool minimized = element->IsMinimized();
-
-        // Only send events if element is visible and not minimzed
-        if( ( visible ) && ( !minimized ) )
-        {
-            // Translate mouse coordinates to window coordinates
-            // TODO: This may be done better by using the element's entire UIMatrix
-            // so that mouse events can be mapped to scaled (but not minimized) windows.
-            osg::Vec3 trans = element->GetUIMatrix().getTrans();
-            event.X = event.X - trans.x();
-            event.Y = event.Y - trans.y();
-
-            // Flip y mouse coordinate to origin GUI expects
-            event.Y = static_cast < double > ( mTop ) - event.Y;
-            element->SendInteractionEvent( event );
-        }
-        else if( ( visible ) && ( minimized ) &&
-                ( event.EventType == InteractionEvent::buttonPress ) )
-        {
-            mUnminimize = true;
-        }
-    }
-    return true;
-}*/
-////////////////////////////////////////////////////////////////////////////////
 void UIManager::_insertNodesToAdd()
 {
     std::vector< osg::ref_ptr< osg::Node > >::iterator vec_iterator;
@@ -620,14 +527,12 @@ void UIManager::_insertNodesToAdd()
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_repaintChildren()
 {
-    ElementMap_type::const_iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
+    std::list< UIElement* >::const_iterator z_order = m_zOrder.begin();
+    for( z_order; z_order != m_zOrder.end(); ++z_order )
     {
         // Check whether this element is currently switched as visible. If not,
         // no need to waste time rendering it.
-        // FIXME: should only render *active*, visible element?
-        UIElement* element = map_iterator->second;
+        UIElement* element = (*z_order);
         if( element->IsVisible() )
         {
             float uiAspectRatio =
@@ -645,8 +550,13 @@ void UIManager::_repaintChildren()
             if( element->IsDirty() )
             {
 #ifdef NO_SUBLOAD
-                osg::StateSet* state = ( *map_iterator ).first
+                osg::StateSet* state = element->GetGeode()
                         ->getOrCreateStateSet();
+                if( element->SizeDirty() )
+                {
+                    state->getTextureAttribute(0, osg::StateAttribute::TEXTURE )
+                        ->asTexture()->dirtyTextureObject();
+                }
                 osg::Image* image =
                         state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
                         ->asTexture()->getImage( 0 );
@@ -656,7 +566,21 @@ void UIManager::_repaintChildren()
                                  image_Data, osg::Image::NO_DELETE );
                 image->dirty();
 #else
-                m_subloaders[ element ]->AddUpdate( image_Data, 0, 0 );
+                //m_subloaders[ element ]->AddUpdate( image_Data, 0, 0 );
+
+                std::vector< std::pair< osg::Image*, std::pair<int, int> > >
+                        regions = element->GetDamagedAreas();
+                std::cout << "* ";
+                for( size_t index = 0; index < regions.size(); ++index )
+                {
+                    std::pair< osg::Image*, std::pair<int, int> > region =
+                            regions.at( index );
+                    std::cout << region.second.first << "," << region.second.second << ";";
+                    m_subloaders[ element ]->AddUpdate( region.first,
+                                                        region.second.first,
+                                                        region.second.second );
+                }
+                std::cout << std::endl << std::flush;
 #endif
             }
         }
@@ -734,14 +658,17 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
         return false;
     }
 
-    // Walk through every visible quad we own and see if the point lies on it
+    // Walk through every visible quad we own, in descending z-order,
+    // and see if the point lies on it
     UIElement* tempElement = 0;
-    ElementMap_type::const_iterator map_iterator = mElements.begin();
-    while( map_iterator != mElements.end() )
+    //ElementMap_type::const_iterator map_iterator = mElements.begin();
+    std::list<UIElement*>::const_iterator list_iterator = m_zOrder.begin();
+    //while( map_iterator != mElements.end() )
+    while( list_iterator != m_zOrder.end() )
     {
         // If the quad isn't visible, treat it as though the pointer can't be
         // over it
-        tempElement = map_iterator->second;
+        tempElement = *list_iterator;//map_iterator->second;
         if( tempElement->IsVisible() )
         {
             if( tempElement->TestQuadIntersection( x, y ) )
@@ -750,7 +677,8 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
                 return true;
             }
         }
-        ++map_iterator;
+        //++map_iterator;
+        ++list_iterator;
     }
 
     return false;
@@ -817,36 +745,27 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
     // Scale factor for minimization
     float downScale = 0.15f;
 
-    // Duration in seconds of animation
-    //float duration = 0.4f;
-
-    // Animation based on two control points: c0 (current state) and c1 (end state)
-    //osg::Matrixf currentMatrix = element->GetUIMatrix();
-
     osg::Vec4 const& uiCorners = element->GetUICorners();
-    osg::AnimationPath::ControlPoint c0( osg::Vec3( uiCorners[ 0 ], uiCorners[ 2 ], 0.0 ) );//currentMatrix.getTrans() );
-    c0.setScale( osg::Vec3( uiCorners[ 1 ] - uiCorners[ 0 ], uiCorners[ 3 ] - uiCorners[ 2 ], 0.0 ) );//currentMatrix.getScale() );
-
     osg::AnimationPath::ControlPoint c1;
 
-    // Set up the second animation control point based on whether this is a
-    // min or an unmin operation. Also set the element's UIMatrix to match
-    // the end state of the animation.
     if( minimize )
     {
+        // Let element know it is being minimized. We query this state occasionally.
+        // Some elements may choose to render their contents differently when
+        // minimized; eg. they may stop updating or they may display a condensed
+        // "view only" widget set.
         element->SetMinimized( true );
+
         c1.setPosition( osg::Vec3f( mMinimizeXOffset, yPadding, 0.0f ) );
         float xSize = downScale * (uiCorners[ 1 ] - uiCorners[ 0 ]);
         float ySize = downScale * (uiCorners[ 3 ] - uiCorners[ 2 ]);
         c1.setScale( osg::Vec3f( xSize, ySize, 1.0 ) );
         osg::Matrixf tempMatrix;
-        //c0.getMatrix( tempMatrix );
-        //std::cout << "minimize before" << tempMatrix << std::endl;
         c1.getMatrix( tempMatrix );
-        //std::cout << "minimize after" << tempMatrix << std::endl << std::flush;
         element->PushUIMatrix( tempMatrix );
 
         mMinimizeXOffset += downScale * ( element->GetElementWidth() ) + xPadding;
+        m_minimizedElements.push_back( element );
     }
     else // maximize
     {
@@ -856,21 +775,44 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
         // element in the pack gets maximized.
         mMinimizeXOffset -= downScale * ( element->GetElementWidth() ) + xPadding;
 
+        // Tell element it is no longer minimized so it can adjust its render
+        // policy and widget placement accordingly.
         element->SetMinimized( false );
+
         osg::Matrixf tempUIMat = element->PopUIMatrix();
         c1.setPosition( tempUIMat.getTrans() );
         c1.setScale( tempUIMat.getScale() );
+
+        // Run through list of minimized elements until we find the one we
+        // just un-minimized. Translate the position of all elements after that
+        // one to the left by the width of the un-minimized element.
+        bool after = false;
+        float distance = -1 * ( downScale * element->GetElementWidth() + xPadding );
+        osg::Matrixf moveLeft;
+        moveLeft.setTrans( distance, 0.0f, 0.0f );
+        osg::Matrixf current;
+        std::list< UIElement* >::iterator minElemIterator;
+        for( minElemIterator = m_minimizedElements.begin();
+             minElemIterator != m_minimizedElements.end();
+             ++minElemIterator )
+        {
+            if( after )
+            {
+                current = (*minElemIterator)->GetUIMatrix();
+                (*minElemIterator)->PopUIMatrix();
+                (*minElemIterator)->PushUIMatrix( current * moveLeft );
+            }
+
+            if( *minElemIterator == element )
+            {
+                after = true;
+            }
+        }
+
+        m_minimizedElements.remove( element );
     }
 
-    /*osg::ref_ptr< osg::AnimationPath > path = new osg::AnimationPath;
-    path->setLoopMode( osg::AnimationPath::NO_LOOPING );
-
-    path->insert( 0.0f, c0 );
-    path->insert( duration, c1 );*/
-
-    //element->SetAnimationPath( path.get() );
     m_updateBBoxes = true;
-    //mElementPositionsOrtho2D[ element ] = _computeMouseBoundsForElement( element );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_doUnminimize()
@@ -988,27 +930,47 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
     bool visible = m_selectedUIElement->IsVisible();
     bool minimized = m_selectedUIElement->IsMinimized();
 
+    // CTRL + Middle button toggles display of titlebar
+    if( (!minimized)
+        && (state & gadget::BUTTON2_MASK) && (state & gadget::CTRL_MASK) )
+    {
+        m_selectedUIElement->ToggleTitlebar();
+        return false;
+    }
+
+    // Middle button without CTRL starts a move operation
+    if( (!mMoveElement) && (state & gadget::BUTTON2_MASK)
+        && (!minimized) && (!(state & gadget::CTRL_MASK))  )
+    {
+        mMoveElement = m_selectedUIElement;
+    }
+
+    // Bring element to top of z-order if it isn't already there
+    if( *(m_zOrder.begin()) != m_selectedUIElement )
+    {
+        // Tell the element that was previously on top that it has been lowered
+        (*(m_zOrder.begin()))->Lower();
+        // Move the new one to the top and tell it to raise
+        m_zOrder.remove( m_selectedUIElement );
+        m_zOrder.push_front( m_selectedUIElement );
+        m_bringToFront = m_selectedUIElement->GetGeode();
+        m_selectedUIElement->Raise();
+    }
+
     // Only send events if element is visible and not minimzed
     if( ( visible ) && ( !minimized ) )
     {
         // Translate mouse coordinates to window coordinates
-        // TODO: This may be done better by using the element's entire UIMatrix
-        // so that mouse events can be mapped to scaled (but not minimized) windows.
-        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-        //x = x - uiCorners[ 0 ];
-        //y = y - uiCorners[ 2 ];
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
-        //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double > ( mTop ) - y;
+        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
         m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
-        //osg::Vec2d& tempCoords = m_selectedUIElement->GetTextureCoords( x, y );
-        //std::cout << y << " " << mTop << std::endl;
         m_selectedUIElement->SendButtonPressEvent( button, x, y, state );
     }
     else
     {
         mUnminimize = true;
+        mUnminimizeElement = m_selectedUIElement;
     }
 
     return false;
@@ -1047,15 +1009,9 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
     if( ( visible ) && ( !minimized ) )
     {
         // Translate mouse coordinates to window coordinates
-        // TODO: This may be done better by using the element's entire UIMatrix
-        // so that mouse events can be mapped to scaled (but not minimized) windows.
-        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-        //x = x - uiCorners[ 0 ];
-        //y = y - uiCorners[ 2 ];
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
-        //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double > ( mTop ) - y;
+        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
         m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
         m_selectedUIElement->SendButtonReleaseEvent( button, x, y, state );
     }
@@ -1088,15 +1044,10 @@ bool UIManager::MouseScrollEvent( int deltaX, int deltaY, int x, int y, int stat
     if( ( visible ) && ( !minimized ) )
     {
         // Translate mouse coordinates to window coordinates
-        // TODO: This may be done better by using the element's entire UIMatrix
-        // so that mouse events can be mapped to scaled (but not minimized) windows.
-        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-        //x = x - uiCorners[ 0 ];
-        //y = y - uiCorners[ 2 ];
         osg::Vec3d tempPoint;
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, tempPoint );
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double > ( mTop ) - y;
+        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
         m_selectedUIElement->SendScrollEvent( deltaX, deltaY, x, y, state );
     }
 
@@ -1148,19 +1099,26 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
     bool visible = m_selectedUIElement->IsVisible();
     bool minimized = m_selectedUIElement->IsMinimized();
 
+    // Begin a move operation if user is holding down middle button (wheel) and
+    // moving at same time. This code duplicates code above that deals with
+    // a move operation already in progress. We duplicate the code rather than
+    // moving the Ortho2DTestPointerCoordinates test before that code so that
+    // we can avoid a somewhat expensive pointercoord test when it isn't necessary.
+//    if( (!mMoveElement) && (state & gadget::BUTTON2_MASK)
+//        && (!minimized) && (!(state & gadget::CTRL_MASK))  )
+//    {
+//        mMoveElement = m_selectedUIElement;
+//        mMoveElement->MoveCanvas( mDxPointer, mDyPointer );
+//        return false;
+//    }
+
     // Only send events if element is visible and not minimzed
     if( visible && ( !minimized ) )
     {
         // Translate mouse coordinates to window coordinates
-        // TODO: This may be done better by using the element's entire UIMatrix
-        // so that mouse events can be mapped to scaled (but not minimized) windows.
-        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-        //x = x - uiCorners[ 0 ];
-        //y = y - uiCorners[ 2 ];
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
-        //std::cout << x << " " << trans.x() << " " << y << " " << trans.y() << std::endl;
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double > ( mTop ) - y;
+        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
         m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
         m_selectedUIElement->SendMouseMoveEvent( x, y, z, state );
     }
@@ -1195,14 +1153,9 @@ bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
     if( ( visible ) && ( !minimized ) )
     {
         // Translate mouse coordinates to window coordinates
-        // TODO: This may be done better by using the element's entire UIMatrix
-        // so that mouse events can be mapped to scaled (but not minimized) windows.
-        //osg::Vec4& uiCorners = mElementPositionsOrtho2D[ element ];
-        //x = x - uiCorners[ 0 ];
-        //y = y - uiCorners[ 2 ];
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double > ( mTop ) - y;
+        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
         m_selectedUIElement->SendDoubleClickEvent( button, x, y, state );
     }
     else
@@ -1234,22 +1187,15 @@ bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
         return false;
     }
 
-    // TODO: this iterates over all elements. We should instead just find the match
-    // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::const_iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
-    {
-        UIElement* element = map_iterator->second;
+    bool visible = m_selectedUIElement->IsVisible();
+    bool minimized = m_selectedUIElement->IsMinimized();
 
-        bool visible = element->IsVisible();
-        bool minimized = element->IsMinimized();
-        // Only send events if element is visible and not minimzed
-        if( ( visible ) && ( !minimized ) )
-        {
-            element->SendKeyPressEvent( key, modifiers, unicode );
-        }
+    // Only send events if element is visible and not minimzed
+    if( ( visible ) && ( !minimized ) )
+    {
+        m_selectedUIElement->SendKeyPressEvent( key, modifiers, unicode );
     }
+
 
     return false;
 }
@@ -1274,23 +1220,15 @@ bool UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
         return false;
     }
 
-    // TODO: this iterates over all elements. We should instead just find the match
-    // from Ortho2DTestPointerCoordinates and send to it.
-    ElementMap_type::const_iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
+    bool visible = m_selectedUIElement->IsVisible();
+    bool minimized = m_selectedUIElement->IsMinimized();
+
+    // Only send events if element is visible and not minimzed
+    if( ( visible ) && ( !minimized ) )
     {
-        UIElement* element = map_iterator->second;
-
-        bool visible = element->IsVisible();
-        bool minimized = element->IsMinimized();
-
-        // Only send events if element is visible and not minimzed
-        if( ( visible ) && ( !minimized ) )
-        {
-            element->SendKeyReleaseEvent( key, modifiers, unicode );
-        }
+        m_selectedUIElement->SendKeyReleaseEvent( key, modifiers, unicode );
     }
+
 
     return false;
 }
@@ -1386,6 +1324,11 @@ void UIManager::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
     m_endPoint = endPoint;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void UIManager::SetCameraForSceneDebug( osg::Camera* camera )
+{
+    m_sceneDebugCamera = camera;
+}
+
 
 }
 }

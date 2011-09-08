@@ -51,6 +51,7 @@
 #include <cassert>
 #include <iostream>
 #include <sstream>
+#include <ctime>
 
 // --- Qt includes --- //
 #include <QtGui/QBrush>
@@ -115,7 +116,9 @@ UIElementQt::UIElementQt( QWidget *parent )
     mDirty( true ),
     mTitlebar( 0 ),
     mQTitlebar( 0 ),
-    image_sequence( 0 )
+    m_firstRender( true ),
+    m_sizeHasChanged( true ),
+    m_sizeDirty( true )
 {
     _debug( "ctor" );
 
@@ -132,6 +135,9 @@ UIElementQt::UIElementQt( QWidget *parent )
     mQTitlebar = new Ui::titlebar();
     mTitlebar = new QWidget( 0 );
     mQTitlebar->setupUi( mTitlebar );
+    // Hide the "hide" button for now. May bring this back later on once
+    // we have a clear way to manage hiding an element vs. hiding all of UI
+    mQTitlebar->HideButton->hide();
 
     Initialize();
     PostConstructor();
@@ -328,6 +334,9 @@ osg::Image* UIElementQt::RenderElementToImage()
     // most recently painted image of this window.
     mDirty = mImageDirty;
 
+    m_sizeDirty = m_sizeHasChanged;
+    m_sizeHasChanged = false;
+
     if( mImageDirty )
     {
 #if defined( _DARWIN )
@@ -351,6 +360,117 @@ osg::Image* UIElementQt::RenderElementToImage()
 
     return m_osgImage.get();
 }
+////////////////////////////////////////////////////////////////////////////////
+std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
+        UIElementQt::GetDamagedAreas()
+{
+    RefreshWidgetFilterList();
+    m_damagedAreas.clear();
+
+    timespec ts, tt, ttt, te;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+
+    if( m_firstRender )
+    {
+        osg::Image* img = m_osgImage.get();//new osg::Image;
+        img->setImage( mImageWidth, mImageHeight, 1, 4, GL_BGRA, GL_UNSIGNED_BYTE,
+                       mImage->bits(), osg::Image::NO_DELETE );
+
+        std::pair< int, int > offset( 0, 0 );
+        std::pair< osg::Image*, std::pair<int,int> > package( img, offset );
+        m_damagedAreas.push_back( package );
+        m_firstRender = false;
+        return m_damagedAreas;
+    }
+
+    //std::cout << "+ ";
+    bool some_update = false;
+    const QMap<QString, QRect>& rects = capture_list;
+    Q_FOREACH(const QString key, rects.keys())
+    {
+        QRect rect = rects[key];
+        QImage fragment = mImage->copy(rect);
+
+        // We maintain an 'update_cache' that caches previously
+        // processed fragments (keyed on rectangles).  If the
+        // rectangle hasn't yet been processed, or its image
+        // content now differs from a previous value, we do our
+        // thing with it.
+
+        bool is_update = false;
+        if(update_cache.contains(key))
+        {
+            // (According to the Qt docs, this C++ operator can be a
+            // slow operation (no surprise)).  Some kind of faster
+            // comparison might be better.)
+            clock_gettime(CLOCK_MONOTONIC, &tt);
+
+            if(update_cache[key] != fragment)
+//            const uchar* cached = update_cache[key].bits();
+//            const uchar* frag = fragment.bits();
+//            for( int c = 0; c < 500; ++c )
+            {
+//                if( (*cached) != (*frag) )
+                //{
+                    is_update = true;
+                    some_update = true;
+                    break;
+                //}
+//                ++cached;
+//                ++frag;
+            }
+            clock_gettime(CLOCK_MONOTONIC, &ttt);
+            std::cout << "Comp: " << ttt.tv_nsec - tt.tv_nsec << std::endl << std::flush;
+        }
+
+        update_cache[key] = fragment;
+        //if(some_update)
+        //    break;
+
+        // The first addition to the cache is the initial draw of the
+        // dialog widgets.  We skip that (assuming the full image has
+        // already been process elsewhere), and only return those
+        // areas of the texture that have changed -- i.e., are in the
+        // cache already, but are getting new values.
+
+        /*if(is_update)
+        {
+            QStringList bounds = key.split( "x" );
+            bool ec;
+            int x = bounds.at(0).toInt( &ec );
+            int y = bounds.at(1).toInt( &ec );
+            int s = bounds.at(2).toInt( &ec );
+            int t = bounds.at(3).toInt( &ec );
+
+            osg::Image* img = new osg::Image;
+            img->setImage( s, t, 1, 4, GL_BGRA, GL_UNSIGNED_BYTE,
+                           update_cache[key].bits(), osg::Image::USE_NEW_DELETE  );
+
+            //std::cout << x << "x" << y << "x" << s << "x" << t << ";";
+            std::pair< int, int > offset( x, y );
+            std::pair< osg::Image*, std::pair<int,int> > package( img, offset );
+            m_damagedAreas.push_back( package );
+        }*/
+    }
+    //std::cout << std::endl << std::flush;
+    if( some_update )
+    {
+        osg::Image* img = m_osgImage.get();
+        img->setImage( mImageWidth, mImageHeight, 1, 4, GL_BGRA, GL_UNSIGNED_BYTE,
+                       mImage->bits(), osg::Image::NO_DELETE );
+
+        std::pair< int, int > offset( 0, 0 );
+        std::pair< osg::Image*, std::pair<int,int> > package( img, offset );
+        m_damagedAreas.push_back( package );
+    }
+
+
+    clock_gettime(CLOCK_MONOTONIC, &te);
+    std::cout << "UIElementQt::GetDamagedAreas " << te.tv_nsec - ts.tv_nsec << std::endl << std::flush;
+
+    return m_damagedAreas;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElementQt::IsDirty()
 {
@@ -392,6 +512,7 @@ void UIElementQt::SetWidget( QWidget* widget )
     mTitlebar->resize( mWidth, mTitlebar->height() );
     titlebar->show();
     mTitlebar->move( 0, 0 );
+
     //Now resize the respective widget to account for the title bar
     mWidget->resize( mWidth, mHeight - mTitlebar->height() );
     
@@ -419,13 +540,13 @@ void UIElementQt::SetWidget( QWidget* widget )
 
     this->setViewportUpdateMode( QGraphicsView::NoViewportUpdate );
 
-    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
+//    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
 
-    // Make the view and the scene coincident.
-    this->setSceneRect( mGraphicsScene->sceneRect() );
+//    // Make the view and the scene coincident.
+//    this->setSceneRect( mGraphicsScene->sceneRect() );
 
-    // Forcibly resize view to contain mWidget
-    this->resize( mWidth, mHeight );
+//    // Forcibly resize view to contain mWidget
+//    this->resize( mWidth, mHeight );
 
     //Now before we render but after all the widgets are configured
     //lets initialize and update all of our textures
@@ -451,36 +572,41 @@ void UIElementQt::SetWidget( QWidget* widget )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::RefreshWidgetFilterList()
 {
+    //timespec ts, te;
+    //clock_gettime(CLOCK_MONOTONIC, &ts);
     // for each child widget on the dialog, install an event filter
     // for it that redirects to our eventFilter() method.
-//    QList<QWidget *> widgets = mWidget->findChildren<QWidget *>();
-//    Q_FOREACH(QWidget* mWidget, widgets)
-//        mWidget->installEventFilter(this);
+    QList<QWidget *> widgets = mWidget->findChildren<QWidget *>();
+    Q_FOREACH(QWidget* widget, widgets)
+        widget->installEventFilter(this);
 
+    //clock_gettime(CLOCK_MONOTONIC, &te);
+    //std::cout << "UIElementQt::RefreshWidgetFilterList " << te.tv_nsec - ts.tv_nsec << std::endl << std::flush;
     //QCoreApplication::instance()->installEventFilter( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElementQt::eventFilter(QObject *object, QEvent *event)
 {
-    std::cout << "eventFilter: " << std::flush;
+    //std::cout << "eventFilter: " << std::flush;
     if(event->type() == QEvent::Paint)
     {
-        std::cout << "paint event" << std::flush;
+        //std::cout << "paint event" << std::flush;
         QPaintEvent* paint_event = (QPaintEvent *)event;
         if(paint_event)
         {
             // we can either take the larger paint_event->rect(), which
             // encompasses the entire update region, or we can process all
-            // the individual rects that compromise the update region.  I'm
+            // the individual rects that comprise the update region.  I'm
             // not sure which is best -- all the little ones just add up to
             // the large one.
 
             QWidget* widget = (QWidget*)object;
             Q_FOREACH(const QRect rect, paint_event->region().rects())
             {
+                //QRect rect = paint_event->rect();
 
-                QPoint p = widget->mapTo(mWidget, rect.topLeft());
-                //QPoint p = rect.topLeft();
+                //QPoint p = widget->mapTo( mWidget, rect.topLeft());
+                QPoint p = this->viewport()->mapToGlobal( rect.topLeft() );
                 QRect r = QRect(p, rect.size());
                 QString key = QString("%1x%2x%3x%4")
                                .arg(rect.x())
@@ -488,12 +614,12 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
                                .arg(rect.width())
                                .arg(rect.height());
                 capture_list[key] = r;
-                std::cout << object->objectName().toStdString() << ": " << key.toStdString() << "," << std::flush;
+                //std::cout << object->objectName().toStdString() << ": " << key.toStdString() << "," << std::flush;
 
             }
         }
     }
-    std::cout << std::endl << std::flush;
+    //std::cout << std::endl << std::flush;
 
     return false;
 }
@@ -523,12 +649,25 @@ void UIElementQt::UpdateSize()
     int old_Height = mHeight;
 
     mWidth = mWidget->width();
-    mHeight = mWidget->height() + mTitlebar->height();
+    mHeight = mWidget->height();
+    if( mTitlebar->isVisible() )
+    {
+        mHeight += mTitlebar->height();
+    }
+
+    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
+
+    // Make the view and the scene coincident.
+    this->setSceneRect( mGraphicsScene->sceneRect() );
+
+    // Forcibly resize view to contain mWidget
+    this->resize( mWidth, mHeight );
 
     osg::Matrixf tempUI;
     tempUI.makeScale( mWidth, mHeight, 1);
     //We assume the the ui is positioned at 0,0
-    tempUI.setTrans( 0, 0, 0 );
+    //tempUI.setTrans( 0, 0, 0 );
+    tempUI.setTrans( GetUIMatrix().getTrans() );
     PushUIMatrix( tempUI );
     
     /*osg::Matrixd const& windowMat = 
@@ -545,6 +684,7 @@ void UIElementQt::UpdateSize()
     // has changed.
     if( ( mWidth != old_Width ) || ( mHeight != old_Height ) )
     {
+        m_sizeHasChanged = true;
         { // Enter critical section
             QMutexLocker locker( mImageMutex );
             if( mImage )
@@ -666,64 +806,6 @@ void UIElementQt::_render()
     } // Leave critical section
 
     mImageDirty = true;
-
-/*
-    {
-        int image_counter = 1;
-        bool processed_updates = false;
-        const QMap<QString, QRect>& rects = capture_list;
-        Q_FOREACH(const QString key, rects.keys())
-        {
-            QRect rect = rects[key];
-            QImage fragment = mImage->copy(rect);
-
-            // We maintain an 'update_cache' that caches previously
-            // processed fragments (keyed on rectangles).  If the
-            // rectangle hasn't yet been processed, or its image
-            // content now differs from a previous value, we do our
-            // thing with it.
-
-            bool is_update = false;
-            if(update_cache.contains(key))
-            {
-                // (According to the Qt docs, this C++ operator can be a
-                // slow operation (no surprise)).  Some kind of faster
-                // comparison might be better.)
-
-                if(update_cache[key] == fragment)
-                    continue;
-
-                is_update = true;
-            }
-
-            update_cache[key] = fragment;
-
-            // The first addition to the cache is the initial draw of the
-            // dialog widgets.  We skip that (assuming the full image has
-            // already been process elsewhere), and only cache to disc those
-            // areas of the screen that have changed -- i.e., are in the
-            // cache already, but are getting new values.
-
-            if(is_update)
-            {
-                // 'image_sequence' represents an update series
-                // 'image_counter' is an image within the series
-
-                QString filename = QString("/tmp/%1_%2_%3.jpg")
-                                   .arg(image_sequence, 4, 10, QChar('0'))
-                                   .arg(image_counter, 4, 10, QChar('0'))
-                                   .arg(key);
-                //fragment.save(filename);
-
-                ++image_counter;
-                processed_updates = true;
-            }
-        }
-
-        if(processed_updates)
-            ++image_sequence;
-    }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonPressEvent( gadget::Keys button, int x, int y, int state )
@@ -1110,11 +1192,47 @@ void UIElementQt::_onOpacitySliderValueChanged( int opacity )
     ves::conductor::UIManager::instance()->SetOpacity( opacity/100.0f );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void UIElementQt::MoveCanvas( float dx, float dy, float dz )
+void UIElementQt::Raise()
 {
-    UIElement::MoveCanvas( dx, dy, dz );
-    mImageDirty = true;
-}*/
+    mQTitlebar->TitleFrame->setStyleSheet("QFrame { background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(0, 0, 0, 255), stop: 0.5 rgba(75,75,75,255), stop:0.51 rgba(100,100,100,255), stop:1 rgba(200, 200, 200, 255));}");
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::Lower()
+{
+    mQTitlebar->TitleFrame->setStyleSheet("QFrame { background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(110, 110, 110, 255), stop: 0.5 rgba(155,155,155,255), stop:0.51 rgba(160,160,160,255), stop:1 rgba(180, 180, 180, 255));}");
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::ShowTitlebar( bool show )
+{
+    if( show && mTitlebar->isHidden() )
+    {
+        mTitlebar->show();
+        mWidget->move( 0, mTitlebar->height() );
+    }
+    else if( !show && mTitlebar->isVisible() )
+    {
+        mTitlebar->hide();
+        mWidget->move( 0, 0 );
+    }
+    UpdateSize();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::ToggleTitlebar()
+{
+    if( mTitlebar->isVisible() )
+    {
+        ShowTitlebar( false );
+    }
+    else
+    {
+        ShowTitlebar( true );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+bool UIElementQt::SizeDirty()
+{
+    return m_sizeDirty;
+}
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
 } // namespace ves

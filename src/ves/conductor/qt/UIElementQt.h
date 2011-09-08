@@ -92,6 +92,7 @@ public:
     virtual osg::Image* RenderElementToImage();
     virtual bool IsDirty();
     virtual void Initialize();
+    virtual std::vector< std::pair< osg::Image*, std::pair< int, int > > > const& GetDamagedAreas();
 
     ///Override this so that we can dirty the image and ask for a draw
     //virtual void MoveCanvas( float dx, float dy, float dz );
@@ -117,6 +118,16 @@ public:
     void UpdateSize();
 
     virtual void ResizeCanvas( int width, int height );
+
+    virtual void Raise();
+
+    virtual void Lower();
+
+    virtual void ShowTitlebar( bool show );
+
+    virtual void ToggleTitlebar();
+
+    virtual bool SizeDirty();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -153,9 +164,11 @@ private:
 
     QWidget* mTitlebar;
     Ui::titlebar* mQTitlebar;
-    int                     image_sequence;
     QMap<QString, QImage>   update_cache;
     QMap<QString, QRect>  capture_list;
+    bool m_firstRender;
+    bool m_sizeHasChanged;
+    bool m_sizeDirty;
 
 protected Q_SLOTS:
     void _render();
