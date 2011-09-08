@@ -26,6 +26,32 @@
     <file>../xpm/ToolBar/ManipulatorComboButton.xpm</file>
     <file>../xpm/ToolBar/ManipulatorRotateButton.xpm</file>
     <file>../xpm/ToolBar/ManipulatorScaleButton.xpm</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Ball_And_Socket_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Ball_And_Socket.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Box_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Box.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Cardan_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Cardan.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Fixed_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Fixed.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Hinge_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Hinge.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Planar_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Planar.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Ragdoll_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Ragdoll.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Slider_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Slider.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Twist_Slider_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Twist_Slider.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Wheel_Suspension_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Connector_Types_Wheel_Suspension.png</file>
+    <file>../xpm/ToolBar/Constraints/Spring_Types_Angle_Spring_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Spring_Types_Angle_Spring.png</file>
+    <file>../xpm/ToolBar/Constraints/Spring_Types_Linear_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Spring_Types_Linear.png</file>
+    <file>../xpm/ToolBar/Constraints/Spring_Types_Linear+Angle_Spring_Select.png</file>
+    <file>../xpm/ToolBar/Constraints/Spring_Types_Linear+Angle_Spring.png</file>
     <file>../xpm/ToolBar/ManipulatorTranslateButton.xpm</file>
     <file>../xpm/ToolBar/MediumCenterPointJumpButton.xpm</file>
     <file>../xpm/ToolBar/ObjectNavigationButton.xpm</file>

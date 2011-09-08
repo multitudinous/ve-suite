@@ -535,7 +535,7 @@ QToolButton:hover
   <action name="actionConstraints">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/xpm/ToolBar/BBCenterPointJumpButton.xpm</normaloff>:/xpm/ToolBar/BBCenterPointJumpButton.xpm</iconset>
+     <normaloff>:/xpm/ToolBar/Constraints/Spring_Types_Linear+Angle_Spring.png</normaloff>:/xpm/ToolBar/Constraints/Spring_Types_Linear+Angle_Spring.png</iconset>
    </property>
    <property name="text">
     <string>Constraints</string>
