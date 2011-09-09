@@ -420,7 +420,7 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
 //                ++frag;
             }
             //clock_gettime(CLOCK_MONOTONIC, &ttt);
-            std::cout << "Comp: " << ttt.tv_nsec - tt.tv_nsec << std::endl << std::flush;
+            //std::cout << "Comp: " << ttt.tv_nsec - tt.tv_nsec << std::endl << std::flush;
         }
 
         update_cache[key] = fragment;
