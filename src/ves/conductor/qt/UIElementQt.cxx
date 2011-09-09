@@ -350,11 +350,12 @@ osg::Image* UIElementQt::RenderElementToImage()
                            GetImageHeight(), 1, 4,
                            GL_BGRA, GL_UNSIGNED_BYTE,
                            mImageFlipped->bits(), osg::Image::NO_DELETE );
-#endif
+#else
         m_osgImage->setImage( GetImageWidth(),
                            GetImageHeight(), 1, 4,
                            GL_BGRA, GL_UNSIGNED_BYTE,
                            mImage->bits(), osg::Image::NO_DELETE );
+#endif
         mImageDirty = false;
     }
 
