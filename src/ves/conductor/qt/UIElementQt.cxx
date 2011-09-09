@@ -367,8 +367,8 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
     RefreshWidgetFilterList();
     m_damagedAreas.clear();
 
-    timespec ts, tt, ttt, te;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
+    //timespec ts, tt, ttt, te;
+    //clock_gettime(CLOCK_MONOTONIC, &ts);
 
     if( m_firstRender )
     {
@@ -403,7 +403,7 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
             // (According to the Qt docs, this C++ operator can be a
             // slow operation (no surprise)).  Some kind of faster
             // comparison might be better.)
-            clock_gettime(CLOCK_MONOTONIC, &tt);
+            //clock_gettime(CLOCK_MONOTONIC, &tt);
 
             if(update_cache[key] != fragment)
 //            const uchar* cached = update_cache[key].bits();
@@ -419,7 +419,7 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
 //                ++cached;
 //                ++frag;
             }
-            clock_gettime(CLOCK_MONOTONIC, &ttt);
+            //clock_gettime(CLOCK_MONOTONIC, &ttt);
             std::cout << "Comp: " << ttt.tv_nsec - tt.tv_nsec << std::endl << std::flush;
         }
 
@@ -465,8 +465,8 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
     }
 
 
-    clock_gettime(CLOCK_MONOTONIC, &te);
-    std::cout << "UIElementQt::GetDamagedAreas " << te.tv_nsec - ts.tv_nsec << std::endl << std::flush;
+    //clock_gettime(CLOCK_MONOTONIC, &te);
+    //std::cout << "UIElementQt::GetDamagedAreas " << te.tv_nsec - ts.tv_nsec << std::endl << std::flush;
 
     return m_damagedAreas;
 }
