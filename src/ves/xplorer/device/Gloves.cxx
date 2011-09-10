@@ -196,8 +196,8 @@ void Gloves::Initialize()
     }
     else
     {
-        //mRightHand = new osgbInteraction::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbInteraction::HandNode::RIGHT, length );
-        //mRightHand->setName( "Right Hand Glove" );
+        mRightHand = new osgbInteraction::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbInteraction::HandNode::RIGHT, length );
+        mRightHand->setName( "Right Hand Glove" );
         
         if( !mRightHand.valid() )
         {
@@ -224,8 +224,8 @@ void Gloves::Initialize()
     }
     else
     {
-        //mLeftHand = new osgbInteraction::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbInteraction::HandNode::LEFT, length );
-        //mLeftHand->setName( "Left Hand Glove" );
+        mLeftHand = new osgbInteraction::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbInteraction::HandNode::LEFT, length );
+        mLeftHand->setName( "Left Hand Glove" );
         
         if( !mLeftHand.valid() )
         {
