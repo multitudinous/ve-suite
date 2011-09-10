@@ -123,10 +123,6 @@
 #include <osg/AutoTransform>
 #include <osg/io_utils>
 
-// --- osgBullet Includes --- //
-#include <osgwTools/AbsoluteModelTransform.h>
-#include <osgbBullet/RefRigidBody.h>
-
 // --- STL Includes --- //
 #include <iostream>
 #include <cmath>

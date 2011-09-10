@@ -62,12 +62,13 @@
 #include <BulletCollision/CollisionDispatch/btInternalEdgeUtility.h>
 
 // --- osgBullet Includes --- //
-#include <osgbBullet/RefRigidBody.h>
-#include <osgbBulletPlus/OSGToCollada.h>
-#include <osgbBullet/MotionState.h>
-#include <osgbBullet/Utils.h>
-#include <osgbBullet/GLDebugDrawer.h>
-#include <osgbBullet/PhysicsThread.h>
+#include <osgbCollision/CollisionShapes.h>
+#include <osgbCollision/RefBulletObject.h>
+#include <osgbCollision/Utils.h>
+#include <osgbCollision/GLDebugDrawer.h>
+
+#include <osgbDynamics/RigidBody.h>
+#include <osgbDynamics/PhysicsThread.h>
 
 // --- STL Includes --- //
 #include <sstream>
@@ -419,7 +420,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_debugDrawerGroup->setName( "osgBullet::DebugDrawer Root" );
     SceneManager::instance()->GetRootNode()->addChild(
         m_debugDrawerGroup.get() );
-    m_debugDrawer = new osgbBullet::GLDebugDrawer();
+    m_debugDrawer = new osgbCollision::GLDebugDrawer();
     m_debugDrawerGroup->addChild( m_debugDrawer->getSceneGraph() );
     m_debugDrawer->setEnabled( false );
     m_debugDrawerGroup->setNodeMask( 0 );
@@ -427,7 +428,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 
 #if MULTITHREADED_OSGBULLET
     //Setup multi threaded work
-    m_physicsThread = new osgbBullet::PhysicsThread( mDynamicsWorld, &m_tripleDataBuffer );
+    m_physicsThread = new osgbDynamics::PhysicsThread( mDynamicsWorld, &m_tripleDataBuffer );
     m_physicsThread->setProcessorAffinity( 0 );
     m_physicsThread->start();
     m_physicsThread->pause( true );
@@ -475,7 +476,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     //physics simulation clamped to 6fps
     mDynamicsWorld->stepSimulation( dt, 10 );//, btScalar( 1.0 ) / btScalar( 120.0 ) );
 #else
-    osgbBullet::TripleBufferMotionStateUpdate(
+    osgbDynamics::TripleBufferMotionStateUpdate(
         m_motionStateList, &m_tripleDataBuffer );
 #endif
 
@@ -572,8 +573,8 @@ void PhysicsSimulator::ResetScene()
         {
             if( !body->isStaticObject() )
             {
-                osgbBullet::MotionState* motionState =
-                    static_cast< osgbBullet::MotionState* >(
+                osgbDynamics::MotionState* motionState =
+                    static_cast< osgbDynamics::MotionState* >(
                         body->getMotionState() );
                 motionState->resetTransform();
                 motionState->getWorldTransform( tempTransform );
@@ -686,9 +687,9 @@ void PhysicsSimulator::CreateGroundPlane()
     cen[ 2 ] -= 1.5;
     osg::ref_ptr< osg::Node > ground = CreateGround( dim, dim, cen );
     SceneManager::instance()->GetModelRoot()->addChild( ground.get() );
-    osgbBullet::RefRigidBody* body =
-        dynamic_cast< osgbBullet::RefRigidBody* >( ground->getUserData() );
-    mDynamicsWorld->addRigidBody( body->getRigidBody() );
+    osgbCollision::RefRigidBody* body =
+        dynamic_cast< osgbCollision::RefRigidBody* >( ground->getUserData() );
+    mDynamicsWorld->addRigidBody( body->get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Transform* PhysicsSimulator::CreateOSGBox( osg::Vec3 size )
@@ -714,24 +715,29 @@ osg::Node* PhysicsSimulator::CreateGround(
     float w, float h, const osg::Vec3& center )
 {
     osg::Transform* ground = CreateOSGBox( osg::Vec3( w, h, 1.01 ) );
-    //TRIANGLE_MESH_SHAPE_PROXYTYPE
-    osgbBulletPlus::OSGToCollada converter;
-    converter.setSceneGraph( ground );
-    converter.setShapeType( BOX_SHAPE_PROXYTYPE );
-    converter.setMass( 0.f );
+
+    osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord();
+    cr->_sceneGraph = ground;
+    cr->setCenterOfMass( center );
+    cr->_shapeType = BOX_SHAPE_PROXYTYPE;
+    cr->_restitution = 0.5f;
+    cr->_friction = 1.0f;
+    cr->_mass = 0.0f;
+    cr->_reductionLevel = osgbDynamics::CreationRecord::NONE;
+    cr->_overall = true;
     
-    btRigidBody* body = converter.getRigidBody();
+    btRigidBody* body = osgbDynamics::createRigidBody( cr.get() );
     
     // OSGToCollada flattens transformation to transform all
     // verts, but that doesn't work with ShapeDrawables, so we must
     // transform the box explicitly.
-    osgbBullet::MotionState* motion =
-        dynamic_cast< osgbBullet::MotionState* >( body->getMotionState() );
+    osgbDynamics::MotionState* motion =
+        dynamic_cast< osgbDynamics::MotionState* >( body->getMotionState() );
     osg::Matrix m( osg::Matrix::translate( center ) );
     motion->setParentTransform( m );
-    body->setWorldTransform( osgbBullet::asBtTransform( m ) );
+    body->setWorldTransform( osgbCollision::asBtTransform( m ) );
     
-    ground->setUserData( new osgbBullet::RefRigidBody( body ) );
+    ground->setUserData( new osgbCollision::RefRigidBody( body ) );
     
     return ground;
 }
@@ -764,7 +770,7 @@ void PhysicsSimulator::SetDebuggingOn( bool toggle )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::RegisterMotionState(
-    osgbBullet::MotionState* motionState )
+    osgbDynamics::MotionState* motionState )
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
@@ -773,11 +779,11 @@ void PhysicsSimulator::RegisterMotionState(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UnregisterMotionState(
-    osgbBullet::MotionState* motionState )
+    osgbDynamics::MotionState* motionState )
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
-    std::vector< osgbBullet::MotionState* >::iterator iter = 
+    std::vector< osgbDynamics::MotionState* >::iterator iter = 
         std::find( m_motionStateList.begin(), m_motionStateList.end(), motionState );
     m_motionStateList.erase( iter );
     SetIdle( currentIdle );

@@ -163,13 +163,11 @@ void Gloves::Enable( const bool& enable )
         if( mRootNode->containsNode( mRightHand.get() ) )
         {
             mRootNode->removeChild( mRightHand.get() );
-            //return;
         }
 
         if( mRootNode->containsNode( mLeftHand.get() ) )
         {
             mRootNode->removeChild( mLeftHand.get() );
-            //return;
         }
     }
 }
@@ -198,8 +196,8 @@ void Gloves::Initialize()
     }
     else
     {
-        mRightHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::RIGHT, length );
-        mRightHand->setName( "Right Hand Glove" );
+        //mRightHand = new osgbInteraction::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbInteraction::HandNode::RIGHT, length );
+        //mRightHand->setName( "Right Hand Glove" );
         
         if( !mRightHand.valid() )
         {
@@ -226,8 +224,8 @@ void Gloves::Initialize()
     }
     else
     {
-        mLeftHand = new osgbBulletPlus::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbBulletPlus::HandNode::LEFT, length );
-        mLeftHand->setName( "Left Hand Glove" );
+        //mLeftHand = new osgbInteraction::HandNode( ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld(), osgbInteraction::HandNode::LEFT, length );
+        //mLeftHand->setName( "Left Hand Glove" );
         
         if( !mLeftHand.valid() )
         {
@@ -1045,17 +1043,17 @@ void Gloves::UpdateRightHandGlove()
     float pi_over_2 = 3.14 / 180.0;
     float mcp_scale = 80.f * pi_over_2;
     float pip_scale = 110.f * pi_over_2;
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_0_ROTATE_INNER, mRightThumbMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_1_ROTATE_INNER, mRightIndexMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_2_ROTATE_INNER, mRightMiddleMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_3_ROTATE_INNER, mRightRingMCP->getData() * mcp_scale );
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_4_ROTATE_INNER, mRightPinkyMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_0_ROTATE_INNER, mRightThumbMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_1_ROTATE_INNER, mRightIndexMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_2_ROTATE_INNER, mRightMiddleMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_3_ROTATE_INNER, mRightRingMCP->getData() * mcp_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_4_ROTATE_INNER, mRightPinkyMCP->getData() * mcp_scale );
 
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_0_ROTATE_OUTER, mRightThumbPIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_1_ROTATE_OUTER, mRightIndexPIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_2_ROTATE_OUTER, mRightMiddlePIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_3_ROTATE_OUTER, mRightRingPIP->getData() * pip_scale );
-    mRightHand->setArticulation( osgbBulletPlus::HandNode::FINGER_4_ROTATE_OUTER, mRightPinkyPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_0_ROTATE_OUTER, mRightThumbPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_1_ROTATE_OUTER, mRightIndexPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_2_ROTATE_OUTER, mRightMiddlePIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_3_ROTATE_OUTER, mRightRingPIP->getData() * pip_scale );
+    mRightHand->setArticulation( osgbInteraction::HandNode::FINGER_4_ROTATE_OUTER, mRightPinkyPIP->getData() * pip_scale );
 
     //float thumb_scale = 60.f * pi_over_2;
     //float abduction_scale = 30.f * pi_over_2;
@@ -1127,17 +1125,17 @@ void Gloves::UpdateLeftHandGlove()
     float pi_over_2 = 3.14 / 180.0;
     float mcp_scale = 80.f * pi_over_2;
     float pip_scale = 110.f * pi_over_2;
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_0_ROTATE_INNER, mLeftThumbMCP->getData() * mcp_scale );
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_1_ROTATE_INNER, mLeftIndexMCP->getData() * mcp_scale );
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_2_ROTATE_INNER, mLeftMiddleMCP->getData() * mcp_scale );
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_3_ROTATE_INNER, mLeftRingMCP->getData() * mcp_scale );
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_4_ROTATE_INNER, mLeftPinkyMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_0_ROTATE_INNER, mLeftThumbMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_1_ROTATE_INNER, mLeftIndexMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_2_ROTATE_INNER, mLeftMiddleMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_3_ROTATE_INNER, mLeftRingMCP->getData() * mcp_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_4_ROTATE_INNER, mLeftPinkyMCP->getData() * mcp_scale );
 
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_0_ROTATE_OUTER, mLeftThumbPIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_1_ROTATE_OUTER, mLeftIndexPIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_2_ROTATE_OUTER, mLeftMiddlePIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_3_ROTATE_OUTER, mLeftRingPIP->getData() * pip_scale );
-    mLeftHand->setArticulation( osgbBulletPlus::HandNode::FINGER_4_ROTATE_OUTER, mLeftPinkyPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_0_ROTATE_OUTER, mLeftThumbPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_1_ROTATE_OUTER, mLeftIndexPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_2_ROTATE_OUTER, mLeftMiddlePIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_3_ROTATE_OUTER, mLeftRingPIP->getData() * pip_scale );
+    mLeftHand->setArticulation( osgbInteraction::HandNode::FINGER_4_ROTATE_OUTER, mLeftPinkyPIP->getData() * pip_scale );
 
     //float thumb_scale = 60.f * pi_over_2;
     //float abduction_scale = 30.f * pi_over_2;

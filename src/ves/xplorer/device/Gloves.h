@@ -56,7 +56,7 @@
 #include <osg/Geometry>
 #include <osg/Matrix>
 
-#include <osgbBulletPlus/HandNode.h>
+#include <osgbInteraction/HandNode.h>
 
 #include <osgUtil/IntersectVisitor>
 
@@ -85,13 +85,8 @@ namespace device
 
 /*!\file Gloves.h
  * Gloves API
- */
-
-/*!\class ves::xplorer::Gloves
- *
- */
-
-/*!\namespace ves::xplorer
+ * \class ves::xplorer::Gloves
+ * \namespace ves::xplorer
  *
  */
 class VE_XPLORER_EXPORTS Gloves : public Device
@@ -224,8 +219,8 @@ private:
     ///A flag to control bullet debug info
     bool mDebugInfo;
     
-    osg::ref_ptr< osgbBulletPlus::HandNode > mLeftHand;
-    osg::ref_ptr< osgbBulletPlus::HandNode > mRightHand;
+    osg::ref_ptr< osgbInteraction::HandNode > mLeftHand;
+    osg::ref_ptr< osgbInteraction::HandNode > mRightHand;
 
     gadget::AnalogInterface      mRightThumbMCP;
     gadget::AnalogInterface      mRightThumbPIP;

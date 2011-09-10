@@ -62,13 +62,10 @@
 #include <BulletCollision/CollisionDispatch/btInternalEdgeUtility.h>
 
 // --- osgBullet Includes --- //
-#include <osgbBullet/CollisionShapes.h>
-#include <osgbBullet/MotionState.h>
-#include <osgbBulletPlus/OSGToCollada.h>
-//#include <osgbBullet/ColladaUtils.h>
-#include <osgbBullet/Utils.h>
-#include <osgbBullet/RefRigidBody.h>
-#include <osgbBullet/PhysicsState.h>
+#include <osgbDynamics/MotionState.h>
+#include <osgbCollision/CollisionShapes.h>
+#include <osgbCollision/RefBulletObject.h>
+#include <osgbDynamics/RigidBody.h>
 
 #include <osgwTools/AbsoluteModelTransform.h>
 
@@ -217,7 +214,7 @@ void PhysicsRigidBody::UserDefinedShape( btCollisionShape* collisionShape )
     mRB = new btRigidBody( 
             btRigidBody::btRigidBodyConstructionInfo(
             btScalar( mMass ),                              //mass
-            new osgbBullet::MotionState(),                   //motionState
+            new osgbDynamics::MotionState(),                   //motionState
             collisionShape,                                 //collisionShape
             localInertia ) );                               //localInertia
 
@@ -266,208 +263,182 @@ void PhysicsRigidBody::ConvexShape()
 void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const bool overall, const std::string& decimation )
 {
     CleanRigidBody();
-
+    
     //Should we be ensuring that the top level node is toggled no before
     //we try to create physics with it???
     osg::Node::NodeMask tempMask = mOSGToBullet->getNodeMask();
     mOSGToBullet->setNodeMask( 1 );
-
+    
     LocalToWorldNodePath ltw( mOSGToBullet.get(), 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+                             ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
     LocalToWorldNodePath::NodeAndPathList npl = ltw.GetLocalToWorldNodePath();
-
+    
+    //Now lets change the node back to how it was now that we are done
+    //traversing it.
+    mOSGToBullet->setNodeMask( tempMask );
+    
     if( npl.size() == 0 )
     {
         std::cerr << "|\tPhysicsRigidBody : File " << mOSGToBullet->getName() 
-            << " not on the graph yet." << std::endl
-            << "|\tTo enable physics the osg::Node must be on the graph." 
-            << std::endl;
+        << " not on the graph yet." << std::endl
+        << "|\tTo enable physics the osg::Node must be on the graph." 
+        << std::endl;
         return;
     }
-
-    osg::ref_ptr< osgbBullet::CreationRecord > record;
+    
     osg::Group* stopNode;
     osg::NodePath np;
     stopNode = static_cast< osg::Group* >( npl[ 0 ].first );
     np = npl[ 0 ].second;
-    //We set mass props here so you MUST set mass before creating the shape
-    {
-        //std::cout << typeid( *mOSGToBullet.get() ).name() << std::endl;
-        std::cout << "|\tMake a new btRigidBody for " << mOSGToBullet->getName() << std::endl;
-        osg::ref_ptr< osg::PositionAttitudeTransform > tempSubgraph = 
-            new osg::PositionAttitudeTransform( *static_cast< osg::PositionAttitudeTransform* >( mOSGToBullet.get() ), 
-            osg::CopyOp::DEEP_COPY_ALL );
-        
-        //Now lets change the node back to how it was now that we are done
-        //traversing it.
-        mOSGToBullet->setNodeMask( tempMask );
-
-        //std::string newNodeName = mOSGToBullet->getName() +"_test.osg";
-        //osgDB::writeNodeFile( *(tempSubgraph.get()), newNodeName );
-
-        osgbBulletPlus::OSGToCollada converter;
-        converter.setSceneGraph( tempSubgraph.get() );
-        converter.setShapeType( shapeType );
-        converter.setMass( mMass );
-        converter.setOverall( overall );
-        if( shapeType == CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE ||
-            shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE ||
-            shapeType == CONVEX_HULL_SHAPE_PROXYTYPE )
-        {
-            //If decimation is exact we do nothing
-            if( decimation == "High" )
-            {
-                converter.setDecimateParamaters( 0.10 );
-            }
-            else if( decimation == "Medium" )
-            {
-                converter.setDecimateParamaters( 0.45 );
-            }
-            else if( decimation == "Low" )
-            {
-                converter.setDecimateParamaters( 0.80 );
-            }
-            //converter.setSimplifyPercent( simplifyPercent );
-        }
-        //converter.setAxis( axis );
-        bool createdRB = converter.convert();
-        if( !createdRB )
-        {
-            mRB = 0;
-            std::cout << "|\tUnable to create a new btRigidBody." << std::endl;
-            return;
-        }
-        //std::string pname = mOSGToBullet->getName() + ".dae";
-        //converter.convert( pname );
-        mRB = converter.getRigidBody();
-        record = converter.getOrCreateCreationRecord();
-        std::cout << "|\tJust finished creating a new btRigidBody." << std::endl;
-    }
-
-    //Comment this code out because it crashes with very large triangle meshes
-/*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*
-    //This should probably go in CollisionShapes.cpp
-    //The btInternalEdgeUtility helps to avoid or reduce artifacts
-    //due to wrong collision normals caused by internal edges
-    if( shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE )
-    {
-        //Avoid static_cast here, as it will always succeed
-        btBvhTriangleMeshShape* bvhTriMeshShape =
-            dynamic_cast< btBvhTriangleMeshShape* >( mRB->getCollisionShape() );
-        if( bvhTriMeshShape )
-        {
-            btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
-            btGenerateInternalEdgeInfo( bvhTriMeshShape, triangleInfoMap );
-        }
-
-        //Enable custom material callback
-        mRB->setCollisionFlags(
-            mRB->getCollisionFlags() |
-            btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
-    }
- *!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*/
-
     osg::Group* parent = stopNode->getParent( 0 );
     osg::ref_ptr< osgwTools::AbsoluteModelTransform > amt =
-        dynamic_cast< osgwTools::AbsoluteModelTransform* >( parent );
+    dynamic_cast< osgwTools::AbsoluteModelTransform* >( parent );
     if( !amt.valid() )
     {
         amt = new osgwTools::AbsoluteModelTransform();
         amt->setName( "Physics AMT" );
         amt->setDataVariance( osg::Object::DYNAMIC );
         amt->addChild( mOSGToBullet.get() );
-
+        
         parent->addChild( amt.get() );
         parent->removeChild( mOSGToBullet.get() );
     }
     const std::string dcsName = mOSGToBullet->getName();
-    if( dcsName.empty() )
+    if( !dcsName.empty() )
     {
         amt->setName( "AMT_" + dcsName );
     }
-    osg::ref_ptr< osgbBullet::RefRigidBody > tempRB =
-        new osgbBullet::RefRigidBody( mRB );
-    amt->setUserData( tempRB.get() );
+    
+    //osg::BoundingSphere bs = mOSGToBullet->getBound();
+    osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
+    mOSGToBullet->accept(cbbv);
+    osg::BoundingBox bb = cbbv.getBoundingBox();
 
-    mRB->setRestitution( mRestitution );
-    mRB->setFriction( mFriction );
+    osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord();
+    cr->_sceneGraph = mOSGToBullet.get();
+    cr->setCenterOfMass( bb.center() );
+    cr->_shapeType = shapeType;
+    cr->_restitution = mRestitution;
+    cr->_friction = mFriction;
+    cr->_mass = mMass;
+    cr->_reductionLevel = osgbDynamics::CreationRecord::NONE;
+    cr->_overall = overall;
+
+    if( shapeType == CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE ||
+       shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE ||
+       shapeType == CONVEX_HULL_SHAPE_PROXYTYPE )
+    {
+        //If decimation is exact we do nothing
+        if( decimation == "High" )
+        {
+            cr->_reductionLevel = osgbDynamics::CreationRecord::AGGRESSIVE;
+        }
+        else if( decimation == "Medium" )
+        {
+            cr->_reductionLevel = osgbDynamics::CreationRecord::INTERMEDIATE;
+        }
+        else if( decimation == "Low" )
+        {
+            cr->_reductionLevel = osgbDynamics::CreationRecord::MINIMAL;
+        }
+    }
+    
+    mRB = osgbDynamics::createRigidBody( cr.get() );
+    
+    osg::ref_ptr< osgbCollision::RefRigidBody > tempRB =
+        new osgbCollision::RefRigidBody( mRB );
+    amt->setUserData( tempRB.get() );
+    
     //These are the default values for the sleeping parameters for island 
     //creation by the solver. By making these larger an object will go to 
     //sleep sooner. This can have a negative affect on the fidelity of the sim.
     //rbInfo.m_linearSleepingThreshold = btScalar(0.8);
     //rbInfo.m_angularSleepingThreshold = btScalar(1.f);
     mRB->setSleepingThresholds( 1.6, 2.0 );
-
-    osgbBullet::MotionState* motion = new osgbBullet::MotionState();
-    //osgbBullet::MotionState* motion = dynamic_cast< osgbBullet::MotionState* >( mRB->getMotionState() );
+    
+    osgbDynamics::MotionState* motion = new osgbDynamics::MotionState();
     motion->setTransform( amt.get() );
-
-    osg::BoundingSphere bs = mOSGToBullet->getBound();
-    /*osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
-    mOSGToBullet->accept(cbbv);
-    osg::BoundingBox bb = cbbv.getBoundingBox();
-    std::cout << bb.center() << std::endl;
-    std::cout << bb.radius() << std::endl;
-    std::cout << bb._min << std::endl;
-    std::cout << bb._max << std::endl;
-    std::cout << bs.center() << std::endl;
-    std::cout << bs.radius() << std::endl;*/
-    // Add visual rep of Bullet Collision shape.
-    /*osg::Node* visNode = osgbBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
-    if( visNode != NULL )
-    {
-    osgbBullet::AbsoluteModelTransform* dmt = new osgbBullet::AbsoluteModelTransform;
-    dmt->addChild( visNode );
-    motion->setDebugTransform( dmt );
-    _debugBullet.addDynamic( dmt );
-    }*/
-
+    
     osg::Matrix m;
     if( np.size() > 0 )
     { 
         m = osg::computeLocalToWorld( np );
     }
-    //std::cout << "|\tParent Transform " << m << std::endl;
-    //osg::Vec3d tempScale = m.getScale();
+    
     motion->setParentTransform( m );
-    motion->setCenterOfMass( bs.center() );
-    osgbBullet::MotionState* tempMS = dynamic_cast< osgbBullet::MotionState* >( mRB->getMotionState() );
+    motion->setCenterOfMass( bb.center() );
+    
+    osgbDynamics::MotionState* tempMS = dynamic_cast< osgbDynamics::MotionState* >( mRB->getMotionState() );
     if( tempMS )
     {
         std::cout << "|\tDeleting old motion state. " << std::endl;
         delete tempMS;
     }
-
+    
     mRB->setMotionState( motion );
-    //mRB->getCollisionShape()->setLocalScaling(
-        //btVector3( tempScale.x(), tempScale.y(), tempScale.z() ) );
-    //std::cout << tempScale << std::endl;
-    /*
-    std::cout << " center " << bs.center() << std::endl;
-    std::cout << " center " << bs.radius() << std::endl;
-    std::cout << " matrix " << m << std::endl;
-    */
-
-    /*
-    if( mMass != 0 )
-    {
-        setActivationState( DISABLE_DEACTIVATION );
-    }
-    */
-
-    {
-        std::string pname = mOSGToBullet->getName() + "_cr.osg";
-        osg::ref_ptr< osgbBullet::PhysicsData > pd = new osgbBullet::PhysicsData();
-        pd->_fileName = mOSGToBullet->getName();
-        pd->_cr = record.get();
-        pd->_body = mRB;
-        //std::ostringstream ostr;
-        //ostr << "id" << id++;
-        //osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
-        osgDB::writeObjectFile( *pd.get(), pname );
-    }
-
+    
     RegisterRigidBody( mRB );
+    
+    /*osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
+     mOSGToBullet->accept(cbbv);
+     osg::BoundingBox bb = cbbv.getBoundingBox();
+     std::cout << bb.center() << std::endl;
+     std::cout << bb.radius() << std::endl;
+     std::cout << bb._min << std::endl;
+     std::cout << bb._max << std::endl;
+     std::cout << bs.center() << std::endl;
+     std::cout << bs.radius() << std::endl;*/
+    // Add visual rep of Bullet Collision shape.
+    /*osg::Node* visNode = osgbBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
+     if( visNode != NULL )
+     {
+     osgbBullet::AbsoluteModelTransform* dmt = new osgbBullet::AbsoluteModelTransform;
+     dmt->addChild( visNode );
+     motion->setDebugTransform( dmt );
+     _debugBullet.addDynamic( dmt );
+     }*/
+    
+    /*
+     if( mMass != 0 )
+     {
+     setActivationState( DISABLE_DEACTIVATION );
+     }
+     */
+    
+    /*{
+     std::string pname = mOSGToBullet->getName() + "_cr.osg";
+     osg::ref_ptr< osgbBullet::PhysicsData > pd = new osgbBullet::PhysicsData();
+     pd->_fileName = mOSGToBullet->getName();
+     pd->_cr = record.get();
+     pd->_body = mRB;
+     //std::ostringstream ostr;
+     //ostr << "id" << id++;
+     //osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
+     osgDB::writeObjectFile( *pd.get(), pname );
+     }*/
+    
+    //Comment this code out because it crashes with very large triangle meshes
+    /*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*
+     //This should probably go in CollisionShapes.cpp
+     //The btInternalEdgeUtility helps to avoid or reduce artifacts
+     //due to wrong collision normals caused by internal edges
+     if( shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE )
+     {
+     //Avoid static_cast here, as it will always succeed
+     btBvhTriangleMeshShape* bvhTriMeshShape =
+     dynamic_cast< btBvhTriangleMeshShape* >( mRB->getCollisionShape() );
+     if( bvhTriMeshShape )
+     {
+     btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
+     btGenerateInternalEdgeInfo( bvhTriMeshShape, triangleInfoMap );
+     }
+     
+     //Enable custom material callback
+     mRB->setCollisionFlags(
+     mRB->getCollisionFlags() |
+     btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
+     }
+     *!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::CreateRigidBody(

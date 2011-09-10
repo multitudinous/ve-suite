@@ -8,7 +8,7 @@ Description: osgBullet release pre-compiled for VES
 Provides: osgBullet osgbullet
 Requires: openscenegraph openthreads bullet osgWorks
 Version: 1.0.0
-Libs: /libpath:"${libdir}" osgbBullet.lib
+Libs: /libpath:"${libdir}" osgbCollision.lib osgbDynamics.lib osgbInteraction.lib
 Cflags: /I"${includedir}"
 Arch: noarch
 

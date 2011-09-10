@@ -10,7 +10,7 @@ host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir GetPlatform osgworks_options' )
 Import( 'xerces_options vtk_options gmtl_options vrjuggler_options osg_options osgal_options' )
-Import('ApplyBulletVars bullet_options osgbulletplus_options osgbullet_options')
+Import('ApplyBulletVars bullet_options osgbullet_options')
 
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CoinFunnel', 'CoinFunnelGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
@@ -37,7 +37,6 @@ if osgal_options.isAvailable():
    lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 
 osgbullet_options.apply( lib_env )
-osgbulletplus_options.apply( lib_env )
 bullet_options.apply( lib_env )
 
 if GetPlatform() == 'win32':

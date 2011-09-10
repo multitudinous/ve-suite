@@ -34,16 +34,11 @@
 #define TEXT_TEXTURE_H
 
 /*!\file TextTexture.h
-*Text Texture API that renders text offscreen to a texture
-*/
-
-/*!\class ves::xplorer::scenegraph::TextTexture
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
+ *  Text Texture API that renders text offscreen to a texture
+ * \class ves::xplorer::scenegraph::TextTexture
+ * \namespace ves::xplorer::scenegraph
+ *
+ */
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -53,7 +48,7 @@
 #include <osg/Version>
 #include <osg/Geode>
 #include <osg/Group>
-namespace osgbBullet
+namespace osgbCollision
 {
     class Chart;
 }
@@ -111,7 +106,7 @@ public:
     void CreateChart();
 
     ///Get the data display chart
-    osgbBullet::Chart* GetChart();
+    osgbCollision::Chart* GetChart();
     
     ///Set the title for the dialog
     void SetTitle( const std::string& title );
@@ -161,7 +156,7 @@ protected:
 
     //The update callback
     //osg::ref_ptr< TextUpdateCallback > _ttUpdateCallback;
-    osgbBullet::Chart* m_chartSurface;
+    osgbCollision::Chart* m_chartSurface;
     
     ///The texture geode for the texture
     osg::ref_ptr< osg::Geode > m_textureGeode;

@@ -44,8 +44,8 @@
 #include <osg/ref_ptr>
 #include <osg/Vec3>
 
-#include <osgbBullet/TripleBuffer.h>
-#include <osgbBullet/MotionState.h>
+#include <osgbDynamics/TripleBuffer.h>
+#include <osgbDynamics/MotionState.h>
 
 namespace osg
 {
@@ -66,10 +66,14 @@ class btRigidBody;
 class btCollisionShape;
 
 // --- osgBullet Includes --- //
-namespace osgbBullet
+namespace osgbDynamics
 {
-class GLDebugDrawer;
 class PhysicsThread;
+}
+
+namespace osgbCollision
+{
+    class GLDebugDrawer;
 }
 
 // --- STL Includes --- //
@@ -84,12 +88,8 @@ namespace scenegraph
 class CADEntity;
 
 /*!\file PhysicsSimulator.h
- *
- */
-/*!\class ves::xplorer::scenegraph::PhysicsSimulator
- *
- */
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::PhysicsSimulator
+ * \namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS PhysicsSimulator
@@ -145,10 +145,10 @@ public:
     void CreateGroundPlane();
 
     ///Register a motionstate for the triple buffer to enable threaded physics
-    void RegisterMotionState( osgbBullet::MotionState* motionState );
+    void RegisterMotionState( osgbDynamics::MotionState* motionState );
 
     ///Register a motionstate for the triple buffer to enable threaded physics
-    void UnregisterMotionState( osgbBullet::MotionState* motionState );
+    void UnregisterMotionState( osgbDynamics::MotionState* motionState );
 
 private:
     ///Base constructor
@@ -207,20 +207,20 @@ private:
     btSequentialImpulseConstraintSolver* mSolver;
 
     ///THe debug drawer for the bullet physics simulator
-    osgbBullet::GLDebugDrawer* m_debugDrawer;
+    osgbCollision::GLDebugDrawer* m_debugDrawer;
 
     ///A group node to better control when debug info is displayed for
     ///the osgBullet::GLDebugDrawer
     osg::ref_ptr< osg::Group > m_debugDrawerGroup;
 
     ///Tools for running the physics simulation on a seperate thread
-    osgbBullet::TripleBuffer m_tripleDataBuffer;
+    osgbDynamics::TripleBuffer m_tripleDataBuffer;
 
     ///List of every motion state created
-    osgbBullet::MotionStateList m_motionStateList;
+    osgbDynamics::MotionStateList m_motionStateList;
 
     ///Physics thread for running solver
-    osgbBullet::PhysicsThread* m_physicsThread;
+    osgbDynamics::PhysicsThread* m_physicsThread;
 
 };
 } //end scenegraph

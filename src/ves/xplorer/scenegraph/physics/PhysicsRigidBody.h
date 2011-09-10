@@ -59,12 +59,6 @@ class btCompoundShape;
 class btCollisionShape;
 class btDynamicsWorld;
 
-// --- osgBullet Includes --- //
-namespace osgbBullet
-{
-class MotionState;
-}
-
 // --- STL Includes --- //
 #include <map>
 
@@ -79,12 +73,8 @@ class PhysicsSimulator;
 class GhostController;
 
 /*!\file PhysicsRigidBody.h
- *
- */
-/*!\class ves::xplorer::scenegraph::PhysicsRigidBody
- *
- */
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::PhysicsRigidBody
+ * \namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody

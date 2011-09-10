@@ -91,7 +91,7 @@
 
 #include <OpenThreads/Thread>
 
-#include <osgbBulletPlus/SaveRestore.h>
+//#include <osgbBulletPlus/SaveRestore.h>
 
 #include <osgwTools/Version.h>
 #if OSGWORKS_VERSION >= 10002
@@ -102,13 +102,16 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#if( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
+/*#if( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
 #include <osg/OcclusionQueryNode>
 #include <ves/xplorer/scenegraph/util/OcclusionQueryVisitor.h>
 #else
 #include <osgOQ/OcclusionQueryNode.h>
 #include <osgOQ/OcclusionQueryVisitor.h>
-#endif
+#endif*/
+#include <osgwQuery/QueryUtils.h>
+
+
 
 // --- STL Includes --- //
 #include <cctype>
@@ -311,8 +314,8 @@ void CADEntityHelper::LoadFile( const std::string& filename,
 #else
                 fullPath = fullPathFilename.native_file_string();
 #endif
-                //tempCADNode = osgDB::readNodeFile( fullPath );
-                osgbBulletPlus::RestorePhysics restorPhysics;
+                tempCADNode = osgDB::readNodeFile( fullPath );
+                /*osgbBulletPlus::RestorePhysics restorPhysics;
                 restorPhysics.restore( fullPath, NULL );
                 while( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_IN_PROGRESS )
                 {
@@ -322,7 +325,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                         break;
                     }
                 }
-                tempCADNode = restorPhysics.getSceneGraph();                
+                tempCADNode = restorPhysics.getSceneGraph();*/          
             }
                         
             ///Check for cached file when reloading file with ves file
@@ -338,8 +341,8 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                 if( !ptFileTest.empty() )
                 {
                     fullPath = ptFileTest;
-                    //tempCADNode = osgDB::readNodeFile( fullPath );
-                    osgbBulletPlus::RestorePhysics restorPhysics;
+                    tempCADNode = osgDB::readNodeFile( fullPath );
+                    /*osgbBulletPlus::RestorePhysics restorPhysics;
                     restorPhysics.restore( fullPath, NULL );
                     while( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_IN_PROGRESS )
                     {
@@ -349,7 +352,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                             break;
                         }                    
                     }
-                    tempCADNode = restorPhysics.getSceneGraph();     
+                    tempCADNode = restorPhysics.getSceneGraph();*/
                 }           
             }
         }
@@ -460,13 +463,13 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     //ves::xplorer::scenegraph::util::RescaleTextureVisitor 
     //    textureVisitor( tempCADNode.get() );
 
-#if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
+/*#if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
     osg::ref_ptr< osg::OcclusionQueryNode > root;
     root = dynamic_cast< osg::OcclusionQueryNode* >( tempCADNode.get() );
 #else
     osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
     root = dynamic_cast< osgOQ::OcclusionQueryNode* >( tempCADNode.get() );
-#endif
+#endif*/
 
     unsigned int occlusionThreshold = 1000;
     unsigned int visibilityThreshold = 100;
@@ -495,11 +498,12 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         visibilityThreshold = 500;
     }
     
-    if( !root.valid() && occlude )
+    //if( !root.valid() && occlude )
+    if( occlude )
     {
         osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
         tempGroup->addChild( tempCADNode.get() );
-
+        /*
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
         //Specify the vertex count threshold for performing 
         // occlusion query tests.
@@ -526,6 +530,16 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
         tempGroup->accept( visibilityThresholdVisitor );
 
+        mCadNode = tempGroup.get();*/
+        
+
+        // Any models using occlusion query must render in front-to-back order.
+        tempGroup->getOrCreateStateSet()->setRenderBinDetails( 0, _QUERY_FRONT_TO_BACK_BIN_NAME );
+        
+        // Realized the viewer, then root's parent should
+        // be the top-level Camera. We want to add queries starting at that node.
+        osgwQuery::AddQueries aqs;
+        tempGroup->accept( aqs );
         mCadNode = tempGroup.get();
     }
     else

@@ -67,9 +67,9 @@
 
 // --- osgBullet Includes --- //
 #include <osgwTools/AbsoluteModelTransform.h>
-#include <osgbBullet/MotionState.h>
-#include <osgbBullet/RefRigidBody.h>
-#include <osgbBullet/Utils.h>
+
+#include <osgbCollision/RefBulletObject.h>
+#include <osgbCollision/Utils.h>
 
 namespace ves
 {
@@ -230,14 +230,14 @@ bool Dragger::Connect( osg::Transform* activeAssociation )
         //This is hacky
         if( m_isRootDragger )
         {
-            osgbBullet::RefRigidBody* refRB =
-                static_cast< osgbBullet::RefRigidBody* >( amt->getUserData() );
+            osgbCollision::RefRigidBody* refRB =
+                static_cast< osgbCollision::RefRigidBody* >( amt->getUserData() );
             if( !refRB )
             {
                 return false;
             }
 
-            btRigidBody* btRB = refRB->getRigidBody();
+            btRigidBody* btRB = refRB->get();
             if( !btRB )
             {
                 return false;
@@ -287,14 +287,14 @@ void Dragger::Disconnect()
                 continue;
             }
 
-            osgbBullet::RefRigidBody* refRB =
-                static_cast< osgbBullet::RefRigidBody* >( amt->getUserData() );
+            osgbCollision::RefRigidBody* refRB =
+                static_cast< osgbCollision::RefRigidBody* >( amt->getUserData() );
             if( !refRB )
             {
                 continue;
             }
 
-            btRigidBody* btRB = refRB->getRigidBody();
+            btRigidBody* btRB = refRB->get();
             if( !btRB )
             {
                 continue;
@@ -514,14 +514,14 @@ void Dragger::UpdateAssociations()
             dynamic_cast< osgwTools::AbsoluteModelTransform* >( transform );
         if( amt )
         {
-            osgbBullet::RefRigidBody* refRB =
-                static_cast< osgbBullet::RefRigidBody* >( amt->getUserData() );
+            osgbCollision::RefRigidBody* refRB =
+                static_cast< osgbCollision::RefRigidBody* >( amt->getUserData() );
             if( !refRB )
             {
                 continue;
             }
 
-            btRigidBody* btRB = refRB->getRigidBody();
+            btRigidBody* btRB = refRB->get();
             if( !btRB )
             {
                 continue;
@@ -542,7 +542,7 @@ void Dragger::UpdateAssociations()
             if( m_transformationType & TransformationType::TRANSLATE_COMPOUND )
             {
                 btVector3 deltaTranslation =
-                    osgbBullet::asBtVector3( m_deltaTranslation );
+                    osgbCollision::asBtVector3( m_deltaTranslation );
                 ghostController.Translate( deltaTranslation, currentIdle );
             }
             else if( m_transformationType & TransformationType::ROTATE_COMPOUND )

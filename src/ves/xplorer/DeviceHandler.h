@@ -83,9 +83,7 @@ class EventHandler;
 
 /*!\file DeviceHandler.h
  * DeviceHandler API
- */
-
-/*!\class ves::xplorer::DeviceHandler
+ * \class ves::xplorer::DeviceHandler
  *
  */
 class VE_XPLORER_EXPORTS DeviceHandler

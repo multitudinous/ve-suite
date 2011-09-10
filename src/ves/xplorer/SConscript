@@ -7,7 +7,7 @@ import SConsAddons.Util as sca_util
 Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR')
 Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform osgworks_options')
 Import('poco_options minerva_options')
-Import('ApplyBulletVars bullet_options osgbulletplus_options osgbullet_options')
+Import('ApplyBulletVars bullet_options osgbullet_options')
 
 xplorerSubdirs = Split("""
     scenegraph
@@ -110,7 +110,6 @@ vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 osgworks_options.apply( lib_env )
 osgbullet_options.apply( lib_env )
-osgbulletplus_options.apply( lib_env )
 bullet_options.apply( lib_env )
 
 xerces_options.apply( lib_env )
@@ -129,18 +128,6 @@ lib_env.AppendUnique(LIBS = ['osgEphemerisVES'])
 lib_env.AppendUnique(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 
 # New Physics work
-##lib_env.Append(CPPPATH = [pj(RootDir,'external', osgbulletBaseVar,'include')])
-#lib_env.Append(LIBS = ['osgBullet'])
-#lib_env.Append(LIBPATH = [pj('#',buildDir,'external', osgbulletBaseVar)])
-
-#lib_env.Append(LIBS = ['osgBulletPlus'])
-#lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgBulletPlus')])
-
-##lib_env.Append(CPPPATH = [pj(RootDir,'external', bulletBaseVar,'src')])
-#lib_env.Append(LIBS = ['bullet'])
-#lib_env.Append(LIBPATH = [pj('#',buildDir,'external', bulletBaseVar)])
-#libBulletColladaConverter.a libCOLLADA_DOM.a libXML.a libbullet.a
-
 ApplyBulletVars(lib_env)
 
 if GetPlatform() == 'darwin':

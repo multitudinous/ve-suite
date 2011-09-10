@@ -111,6 +111,8 @@
 #include <osgUtil/UpdateVisitor>
 #include <osgUtil/Statistics>
 
+#include <osgwQuery/QueryBenchmarks.h>
+
 // --- BackdropFX Includes --- //
 #include <backdropFX/Version.h>
 #include <backdropFX/Manager.h>
@@ -364,6 +366,8 @@ void App::contextInit()
     {
         vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
         new_sv->getCamera()->setName( "SV Camera" );
+        new_sv->getCamera()->setPreDrawCallback( new osgwQuery::InitCallback() );
+
         //if( !mRTT )
         {
             //new_sv->getCamera()->addChild( getScene() );

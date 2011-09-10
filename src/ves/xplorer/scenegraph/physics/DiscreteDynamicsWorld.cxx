@@ -42,7 +42,7 @@
 #endif
 
 // --- osgBullet Includes --- //
-#include <osgbBullet/Utils.h>
+#include <osgbCollision/Utils.h>
 
 using namespace ves::xplorer::scenegraph;
 
@@ -139,7 +139,7 @@ int DiscreteDynamicsWorld::stepSimulation(
     osg::Vec3 location;
 
     //Loop over all collision points and find impacts
-    const int numManifolds( m_dispatcher1->getNumManifolds() );
+    const unsigned int numManifolds( m_dispatcher1->getNumManifolds() );
     //std::cout << "num manifolds " << numManifolds << std::endl;
     for( unsigned int i = 0; i < numManifolds; ++i )
     {
@@ -160,12 +160,12 @@ int DiscreteDynamicsWorld::stepSimulation(
             continue;
         }
 
-        const int numContacts( contactManifold->getNumContacts() );
+        const unsigned int numContacts( contactManifold->getNumContacts() );
         //std::cout << "num contacts " << numContacts << std::endl;
         for( unsigned int j = 0; j < numContacts; ++j )
         {
             const btManifoldPoint& pt( contactManifold->getContactPoint( j ) );
-            location = osgbBullet::asOsgVec3( pt.getPositionWorldOnA() );
+            location = osgbCollision::asOsgVec3( pt.getPositionWorldOnA() );
             //std::cout << " life " << pt.m_lifeTime << std::endl;
             //std::cout << " impulse " << pt.m_appliedImpulse << std::endl;
             if( pt.m_lifeTime < 3 )
@@ -195,9 +195,9 @@ int DiscreteDynamicsWorld::stepSimulation(
             }
             else
             {
-                osg::Vec3 vA( osgbBullet::asOsgVec3(
+                osg::Vec3 vA( osgbCollision::asOsgVec3(
                     obA->getInterpolationLinearVelocity() ) );
-                osg::Vec3 vB( osgbBullet::asOsgVec3(
+                osg::Vec3 vB( osgbCollision::asOsgVec3(
                     obB->getInterpolationLinearVelocity() ) );
                 if( ( vA - vB ).length2() > 0.1 )
                 {

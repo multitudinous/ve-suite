@@ -58,8 +58,8 @@
 #include <btBulletDynamicsCommon.h>
 
 // --- osgBullet Includes --- //
-#include <osgbBullet/MotionState.h>
-#include <osgbBullet/CollisionShapes.h>
+#include <osgbDynamics/MotionState.h>
+#include <osgbCollision/CollisionShapes.h>
 
 using namespace funnel;
 
@@ -73,18 +73,18 @@ CoinFunnelWorld::CoinFunnelWorld(
     osgAudio::SoundManager* soundManager
 #endif
     )
-:
-mPhysicsSimulator( physicsSimulator ),
-#ifdef VE_SOUND
-mSoundManager( soundManager ),
-#endif
-mPluginDCS( pluginDCS ),
-mFunnelEntity( 0 ),
-mMarbleEntity( 0 ),
-mRailingEntity( 0 ),
-mSlideEntity( 0 ),
-mWaterEntity( 0 ),
-mResourceManager( resourceManager )
+    :
+    mPhysicsSimulator( physicsSimulator ),
+    #ifdef VE_SOUND
+    mSoundManager( soundManager ),
+    #endif
+    mPluginDCS( pluginDCS ),
+    mFunnelEntity( 0 ),
+    mMarbleEntity( 0 ),
+    mRailingEntity( 0 ),
+    mSlideEntity( 0 ),
+    mWaterEntity( 0 ),
+    mResourceManager( resourceManager )
 {
     Initialize();
 }
@@ -132,10 +132,10 @@ void CoinFunnelWorld::Initialize()
         mFunnelEntity->SetNameAndDescriptions( "funnel_physics" );
 
         btCollisionShape* collisionShape =
-            osgbBullet::btTriMeshCollisionShapeFromOSG(
+            osgbCollision::btTriMeshCollisionShapeFromOSG(
                 mFunnelEntity->GetDCS() );
 
-        osgbBullet::MotionState* motionState = new osgbBullet::MotionState();
+        osgbDynamics::MotionState* motionState = new osgbDynamics::MotionState();
         motionState->setTransform( mFunnelEntity->GetDCS() );
         motionState->setParentTransform( osg::Matrix::identity() );
 
@@ -173,10 +173,10 @@ void CoinFunnelWorld::Initialize()
         mMarbleEntity->SetNameAndDescriptions( "marble_physics" );
 
         btCollisionShape* collisionShape =
-            osgbBullet::btSphereCollisionShapeFromOSG(
+            osgbCollision::btSphereCollisionShapeFromOSG(
                 mMarbleEntity->GetDCS() );
 
-        osgbBullet::MotionState* motionState = new osgbBullet::MotionState();
+        osgbDynamics::MotionState* motionState = new osgbDynamics::MotionState();
         motionState->setTransform( mMarbleEntity->GetDCS() );
         motionState->setParentTransform(
             osg::Matrix::translate( 4.85, 2.5, 5.75 ) );
@@ -217,10 +217,10 @@ void CoinFunnelWorld::Initialize()
         mRailingEntity->SetNameAndDescriptions( "railing_physics" );
 
         btCollisionShape* collisionShape =
-            osgbBullet::btTriMeshCollisionShapeFromOSG(
+            osgbCollision::btTriMeshCollisionShapeFromOSG(
                 mRailingEntity->GetDCS() );
 
-        osgbBullet::MotionState* motionState = new osgbBullet::MotionState();
+        osgbDynamics::MotionState* motionState = new osgbDynamics::MotionState();
         motionState->setTransform( mRailingEntity->GetDCS() );
         motionState->setParentTransform( osg::Matrix::identity() );
 
@@ -253,10 +253,10 @@ void CoinFunnelWorld::Initialize()
         mSlideEntity->SetNameAndDescriptions( "slide_physics" );
 
         btCollisionShape* collisionShape =
-            osgbBullet::btTriMeshCollisionShapeFromOSG(
+            osgbCollision::btTriMeshCollisionShapeFromOSG(
                 mSlideEntity->GetDCS() );
 
-        osgbBullet::MotionState* motionState = new osgbBullet::MotionState();
+        osgbDynamics::MotionState* motionState = new osgbDynamics::MotionState();
         motionState->setTransform( mSlideEntity->GetDCS() );
         motionState->setParentTransform( osg::Matrix::identity() );
 

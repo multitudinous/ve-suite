@@ -63,10 +63,6 @@
 
 #include <ves/conductor/qt/UIManager.h>
 
-// --- osgBullet Includes --- //
-#include <osgwTools/AbsoluteModelTransform.h>
-#include <osgbBullet/RefRigidBody.h>
-
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>

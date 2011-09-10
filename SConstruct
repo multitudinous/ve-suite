@@ -372,12 +372,12 @@ minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", Fa
 osgbullet_options = fp_option.FlagPollBasedOption("osgBullet",
                                                   "osgbullet", "1.0", True, True,
                                                   None,
-                                                  compileTest=True, headerToCheck="osgbBullet/PhysicsState.h")
+                                                  compileTest=True, headerToCheck="osgbDynamics/PhysicsState.h")
 
-osgbulletplus_options = fp_option.FlagPollBasedOption("osgBulletPlus",
-                                                  "osgbulletplus", "1.0", True, True,
-                                                  None,
-                                                  compileTest=True, headerToCheck="osgbBulletPlus/DataLoader.h")
+#osgbulletplus_options = fp_option.FlagPollBasedOption("osgBulletPlus",
+#                                                  "osgbulletplus", "1.0", True, True,
+#                                                  None,
+#                                                  compileTest=True, headerToCheck="osgbBulletPlus/DataLoader.h")
 
 bdfx_options = fp_option.FlagPollBasedOption("backdropFX",
                                                   "backdropfx", "0.1.0", True, True,
@@ -410,7 +410,7 @@ opts.AddOption( poco_options )
 opts.AddOption( minerva_options )
 opts.AddOption( osgworks_options )
 opts.AddOption( osgbullet_options )
-opts.AddOption( osgbulletplus_options )
+#opts.AddOption( osgbulletplus_options )
 opts.AddOption( bdfx_options )
 
 Export( 'opts', 'vtk_options', 'osg_options', 
@@ -427,7 +427,8 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'gadgeteer_options', 'osgal_options',
         'poco_options', 'osgworks_options',
 	    'minerva_options',
-        'osgbullet_options', 'osgbulletplus_options',
+        'osgbullet_options', 
+        #'osgbulletplus_options',
         'bdfx_options', 'lemon_options' )
 
 ##Display some help

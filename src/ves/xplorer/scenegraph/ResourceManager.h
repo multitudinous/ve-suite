@@ -38,6 +38,7 @@
 
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/concept_check.hpp>
 
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
@@ -55,15 +56,10 @@ namespace scenegraph
 
 
 /*!\file ResourceManager.h
-*/
-
-/*!\class ves::xplorer::scenegraph::ResourceManager
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
+ * \class ves::xplorer::scenegraph::ResourceManager
+ * \namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS ResourceManager
 {
 protected:
@@ -72,35 +68,36 @@ protected:
    typedef ResourceMap::iterator ResourceMapIterator;
 
 public:
-   /* Looks up resource and creates new if not available yet! */
-   template<typename T, template< typename > class Container >
-   const Container<T> get( const std::string& resourceName)
-   {
-      ResourceMapIterator iter = mResourceMap.find( resourceName );
-      if( iter != mResourceMap.end() )
-      {
-         return boost::any_cast<Container<T> >(iter->second);
-      }
-      // Was not found. So, lets make it!
-      Container<T> real_val = createResource<T, Container>( resourceName );
-      boost::any to_append = real_val;
-      mResourceMap.insert( ResourcePair( resourceName, real_val) );
-      return real_val;
-   }
+    /* Looks up resource and creates new if not available yet! */
+    template<typename T, template< typename > class Container >
+    const Container<T> get( const std::string& resourceName)
+    {
+        ResourceMapIterator iter = mResourceMap.find( resourceName );
+        if( iter != mResourceMap.end() )
+        {
+            return boost::any_cast<Container<T> >(iter->second);
+        }
+        // Was not found. So, lets make it!
+        Container<T> real_val = createResource<T, Container>( resourceName );
+        boost::any to_append = real_val;
+        mResourceMap.insert( ResourcePair( resourceName, real_val) );
+        return real_val;
+    }
 
-   /* Explicitly add a resource. */
-   void add( const std::string& resourceName, boost::any& value );
+    /* Explicitly add a resource. */
+    void add( const std::string& resourceName, boost::any& value );
 
     /* Explicitly remove a resource. */
     bool remove( const std::string& resourceName );
         
 protected:
-   template<typename T, template< typename > class Container >
-   Container<T> createResource( const std::string& resourceName)
-   {
-      //return Container<T>( new T( resourceName ) );
-      return Container<T>( new T( ) );
-   }
+    template<typename T, template< typename > class Container >
+    Container<T> createResource( const std::string& resourceName)
+    {
+        boost::ignore_unused_variable_warning( resourceName );
+        //return Container<T>( new T( resourceName ) );
+        return Container<T>( new T( ) );
+    }
 
 private:
     ///Base Constructor
