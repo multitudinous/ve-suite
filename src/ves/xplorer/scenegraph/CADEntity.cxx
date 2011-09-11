@@ -75,15 +75,17 @@ CADEntity::CADEntity(
     mOpacity( 1.0 ),
     mPhysicsSimulator( physicsSimulator ),
     mPhysicsRigidBody( NULL ),
-    mDCS( NULL ),
+    mDCS( new ves::xplorer::scenegraph::DCS() ),
     mCADEntityHelper( NULL )
 {
-    //Need to fix this and move some code to Node
-    //Leave some code here no more FILEInfo
-    mDCS = new ves::xplorer::scenegraph::DCS();
     mCADEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
     mCADEntityHelper->SetOcclusionCulling( occlude );
     mCADEntityHelper->LoadFile( geomFile.c_str(), isStream );
+
+    if( !mCADEntityHelper->GetNode() )
+    {
+        return;
+    }
     mFileName.assign( geomFile );
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );

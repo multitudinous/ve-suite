@@ -280,9 +280,9 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     if( npl.size() == 0 )
     {
         std::cerr << "|\tPhysicsRigidBody : File " << mOSGToBullet->getName() 
-        << " not on the graph yet." << std::endl
-        << "|\tTo enable physics the osg::Node must be on the graph." 
-        << std::endl;
+            << " not on the graph yet." << std::endl
+            << "|\tTo enable physics the osg::Node must be on the graph." 
+            << std::endl;
         return;
     }
     
