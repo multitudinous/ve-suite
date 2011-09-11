@@ -270,7 +270,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     mOSGToBullet->setNodeMask( 1 );
     
     LocalToWorldNodePath ltw( mOSGToBullet.get(), 
-                             ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
     LocalToWorldNodePath::NodeAndPathList npl = ltw.GetLocalToWorldNodePath();
     
     //Now lets change the node back to how it was now that we are done
@@ -313,21 +313,19 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
     mOSGToBullet->accept(cbbv);
     osg::BoundingBox bb = cbbv.getBoundingBox();
-
-    osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord();
-    cr->_sceneGraph = mOSGToBullet.get();
-    cr->setCenterOfMass( bb.center() );
-    cr->_shapeType = shapeType;
-    cr->_restitution = mRestitution;
-    cr->_friction = mFriction;
-    cr->_mass = mMass;
-    cr->_reductionLevel = osgbDynamics::CreationRecord::NONE;
-    cr->_overall = overall;
-
-    if( shapeType == CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE ||
-       shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE ||
-       shapeType == CONVEX_HULL_SHAPE_PROXYTYPE )
-    {
+    
+    {        
+        osg::ref_ptr< osgbDynamics::CreationRecord > cr = 
+            new osgbDynamics::CreationRecord();
+        cr->_sceneGraph = mOSGToBullet.get();
+        cr->setCenterOfMass( bb.center() );
+        cr->_shapeType = shapeType;
+        cr->_restitution = mRestitution;
+        cr->_friction = mFriction;
+        cr->_mass = mMass;
+        cr->_reductionLevel = osgbDynamics::CreationRecord::NONE;
+        cr->_overall = overall;
+        
         //If decimation is exact we do nothing
         if( decimation == "High" )
         {
@@ -341,13 +339,13 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         {
             cr->_reductionLevel = osgbDynamics::CreationRecord::MINIMAL;
         }
+        
+        mRB = osgbDynamics::createRigidBody( cr.get() );
+        
+        osg::ref_ptr< osgbCollision::RefRigidBody > tempRB =
+            new osgbCollision::RefRigidBody( mRB );
+        amt->setUserData( tempRB.get() );
     }
-    
-    mRB = osgbDynamics::createRigidBody( cr.get() );
-    
-    osg::ref_ptr< osgbCollision::RefRigidBody > tempRB =
-        new osgbCollision::RefRigidBody( mRB );
-    amt->setUserData( tempRB.get() );
     
     //These are the default values for the sleeping parameters for island 
     //creation by the solver. By making these larger an object will go to 
