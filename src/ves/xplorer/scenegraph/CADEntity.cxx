@@ -76,17 +76,17 @@ CADEntity::CADEntity(
     mPhysicsSimulator( physicsSimulator ),
     mPhysicsRigidBody( NULL ),
     mDCS( new ves::xplorer::scenegraph::DCS() ),
-    mCADEntityHelper( NULL )
+    mCADEntityHelper( new ves::xplorer::scenegraph::CADEntityHelper() )
 {
-    mCADEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
     mCADEntityHelper->SetOcclusionCulling( occlude );
     mCADEntityHelper->LoadFile( geomFile.c_str(), isStream );
+    mFileName.assign( geomFile );
 
     if( !mCADEntityHelper->GetNode() )
     {
         return;
     }
-    mFileName.assign( geomFile );
+
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     //Create shader modules emulating ffp
