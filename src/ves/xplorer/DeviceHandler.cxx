@@ -48,6 +48,7 @@
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
 #include <ves/xplorer/event/EventHandler.h>
+#include <ves/xplorer/event/device/DeviceSlots.h>
 #include <ves/xplorer/event/device/DeviceEH.h>
 #include <ves/xplorer/event/device/DeviceModeEH.h>
 #include <ves/xplorer/event/device/CenterPointEventHandler.h>
@@ -62,6 +63,9 @@
 #include <ves/xplorer/behavior/ManipulatorEvents.h>
 #include <ves/xplorer/behavior/Navigation.h>
 #include <ves/xplorer/behavior/Selection.h>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -114,6 +118,11 @@ DeviceHandler::DeviceHandler()
         new event::DraggerScalingEventHandler();
     
     mResetPosition.resize( 3 );
+    
+    CONNECTSIGNALS_STATIC( "%DeviceGloveDisplay", 
+                          void( /*unsigned int const&, */ bool const& ),
+                          &ves::xplorer::event::device::EnableDevice,
+                          m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()

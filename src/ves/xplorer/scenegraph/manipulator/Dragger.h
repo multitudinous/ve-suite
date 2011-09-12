@@ -79,9 +79,7 @@ class CompoundDragger;
 
 /*!\file Dragger.h
  * Dragger API
- */
-
-/*!\class ves::xplorer::scenegraph::Dragger
+ * \class ves::xplorer::scenegraph::Dragger
  * Abstract Class
  */
 class VE_SCENEGRAPH_EXPORTS Dragger : public AutoTransform

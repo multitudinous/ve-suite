@@ -261,6 +261,16 @@ void PreferencesPropertySet::CreateSkeleton()
                                                    false ));
         mLiveObjects.push_back( p );
     }
+
+    {
+        AddProperty( "DeviceGloveDisplay", false, "Display Glove Models" );
+        mPropertyMap["DeviceGloveDisplay"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
+                                                mPropertyMap["DeviceGloveDisplay"],
+                                                "PreferencesPropertySet.DeviceGloveDisplay",
+                                                false ));
+        mLiveObjects.push_back( p );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr property )

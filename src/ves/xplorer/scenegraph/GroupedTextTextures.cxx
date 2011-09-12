@@ -47,8 +47,6 @@
 // --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/Texture2D>
-#include <osg/BlendFunc>
-#include <osg/Depth>
 #include <osg/Group>
 #include <osg/Array>
 
@@ -72,9 +70,7 @@ GroupedTextTextures::GroupedTextTextures( std::string fontFile )
     m_animateTextures( true )
 {
     _font = fontFile;
-    //getOrCreateStateSet()->setAttributeAndModes( 
-    //    new osg::Depth( osg::Depth::ALWAYS ), 
-    //    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
     getOrCreateStateSet()->addUniform(
         new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
 }

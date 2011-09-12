@@ -190,12 +190,12 @@ void TextTexture::CreateTexturedQuad()
     drawable_stateset->setAttributeAndModes( bf.get(), 
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     drawable_stateset->
-    setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
+        setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
     drawable_stateset->setNestRenderBins( false );
-    drawable_stateset->
-        setAttributeAndModes( new osg::Depth( osg::Depth::ALWAYS ),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    
+    drawable_stateset->setMode(
+                      GL_DEPTH_TEST,
+                      osg::StateAttribute::OFF |
+                      osg::StateAttribute::PROTECTED );
 
     //Set the stateset for the quad
     m_textureGeode = new osg::Geode();

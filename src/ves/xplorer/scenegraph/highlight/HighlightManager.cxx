@@ -57,7 +57,6 @@
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
-#include <osg/Depth>
 #include <osg/LineWidth>
 
 #include <osgUtil/IntersectionVisitor>
@@ -81,13 +80,10 @@ HighlightManager::HighlightManager()
 
     setCullingActive( false );
 
-    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    depth->setFunction( osg::Depth::ALWAYS );
-    depth->setWriteMask( false );
-    stateSet->setAttributeAndModes(
-        depth.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-
+    stateSet->setMode(
+                      GL_DEPTH_TEST,
+                      osg::StateAttribute::OFF |
+                      osg::StateAttribute::PROTECTED );
     Enable();
 }
 ////////////////////////////////////////////////////////////////////////////////

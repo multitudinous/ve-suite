@@ -62,7 +62,6 @@
 // --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
-#include <osg/Depth>
 #include <osg/ref_ptr>
 
 #include <osgUtil/IntersectVisitor>
@@ -273,8 +272,6 @@ private:
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_beamLineSegment;
     ///Transform to manipulate the selection line
     osg::ref_ptr< osg::MatrixTransform > m_wandPAT;
-    ///Depth attribute 
-    osg::ref_ptr< osg::Depth > m_depth;
     
     ///See if a button has been pushed
     bool m_buttonPushed;

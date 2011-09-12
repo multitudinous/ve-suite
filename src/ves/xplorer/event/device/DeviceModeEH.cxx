@@ -48,12 +48,6 @@
 // --- C/C++ Libraries --- //
 #include <string>
 
-#ifdef WIN32
-#include <direct.h>
-#else
-#include <unistd.h>
-#endif
-
 using namespace ves::xplorer::event;
 
 ////////////////////////////////////////////////////////////////////////////////

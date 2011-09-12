@@ -51,6 +51,8 @@
 #include <ves/xplorer/behavior/NavigationPtr.h>
 #include <ves/xplorer/behavior/SelectionPtr.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 // --- vrJuggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -220,6 +222,8 @@ private:
     ves::xplorer::behavior::ManipulatorEventsPtr m_manipulatorSlot;
     ves::xplorer::behavior::NavigationPtr m_navSlot;
     ves::xplorer::behavior::SelectionPtr m_selectionSlot;
+    
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 } //end xplorer
 } //end ves

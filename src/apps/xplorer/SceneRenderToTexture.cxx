@@ -69,7 +69,6 @@
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Camera>
-#include <osg/Depth>
 #include <osg/FrameBufferObject>
 #include <osg/Light>
 #include <osg/LightSource>
@@ -753,11 +752,6 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     program->addShader( fragmentShader.get() );
     program->setName( "VS Quad Program" );
 
-    //Don't write to the depth buffer
-    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    depth->setWriteMask( true );
-    depth->setFunction( osg::Depth::ALWAYS );
-
     //Set stateset for quad
     osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
     //Render first
@@ -765,14 +759,18 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+
     stateset->setMode(
         GL_DEPTH_TEST,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    depth->setFunction( osg::Depth::ALWAYS );
+    depth->setWriteMask( true );
+    stateset->setAttributeAndModes( depth.get(), 
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    
     stateset->setAttributeAndModes(
         program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setAttributeAndModes(
-        depth.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->addUniform(
         &scenegraph::SceneManager::instance()->GetClearColorUniform() );
@@ -849,21 +847,15 @@ osg::Geode* SceneRenderToTexture::CreateRTTQuad( osg::Texture2D* texture )
     program->addShader( fragmentShader.get() );
     program->setName( "VS Quad Program" );
 
-    //Don't write to the depth buffer
-    //osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    //depth->setWriteMask( false );
-
     //Set stateset for quad
     osg::ref_ptr< osg::StateSet > stateset = rttQuad->getOrCreateStateSet();
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+    //Don't write to the depth buffer
     stateset->setMode(
         GL_DEPTH_TEST,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-    //stateset->setAttributeAndModes(
-        //depth.get(),
-        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->setAttributeAndModes(
         program.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );

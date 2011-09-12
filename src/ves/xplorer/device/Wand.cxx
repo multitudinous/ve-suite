@@ -273,10 +273,6 @@ Wand* Wand::AsWand()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::Initialize()
 {
-    m_depth = new osg::Depth();
-    m_depth->setFunction( osg::Depth::ALWAYS );
-    m_depth->setWriteMask( false );
-    
     for( int i = 0; i < 3; ++i )
     {
         cursorLoc[ i ] = 0;
@@ -885,14 +881,19 @@ void Wand::UpdateObjectHandler()
             {
                 
                 stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );                
-                stateset->setAttributeAndModes( m_depth.get(), 
-                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                stateset->setMode(
+                                  GL_DEPTH_TEST,
+                                  osg::StateAttribute::OFF |
+                                  osg::StateAttribute::OVERRIDE );
                 m_wandPAT->setCullingActive( false );
             }
             else
             {
                 stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
-                stateset->removeAttribute( m_depth.get() );
+                stateset->setMode(
+                                  GL_DEPTH_TEST,
+                                  osg::StateAttribute::ON |
+                                  osg::StateAttribute::OVERRIDE );
                 m_wandPAT->setCullingActive( true );
             }
         }

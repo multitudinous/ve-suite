@@ -128,6 +128,10 @@ void UIElement::PostConstructor()
     geometry->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
     geometry->setTexCoordArray( 0, texture_coordinates.get() );
+    /*osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array( 1 );
+    ( *colors )[0].set( 1.0f, 1.0f, 0.0f, 0.2f );
+    geometry->setColorArray( colors.get() );
+    geometry->setColorBinding( osg::Geometry::BIND_OVERALL );*/
 
     //
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();

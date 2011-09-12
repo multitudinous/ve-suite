@@ -62,6 +62,9 @@
 #include <osg/AnimationPath>
 #include <osg/io_utils>
 #include <osg/Camera>
+
+#include <osgUtil/CullVisitor>
+
 #include <osgDB/WriteFile>
 
 // --- STL Includes --- //
@@ -455,30 +458,54 @@ void UIManager::Initialize( osg::Group* parentNode )
     fragmentShader->setName( "VS UI Quad Fragment Shader" );
     program->addShader( fragmentShader.get() );
 
+    ///This is a major hack to get around the issue that OSG likes to cull
+    ///objects that are on the near plane when a camera is not involved
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        osg::Camera* postRenderCamera = new osg::Camera();
+        postRenderCamera->setName( "Post Render UI Desktop Camera" );
+        postRenderCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+        postRenderCamera->setRenderOrder( osg::Camera::POST_RENDER, 0 );
+        postRenderCamera->setClearMask( GL_DEPTH_BUFFER_BIT );
+        postRenderCamera->setComputeNearFarMode(
+            osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+        postRenderCamera->setCullingActive( false );
+        postRenderCamera->setThreadSafeRefUnref( true );
+        postRenderCamera->setViewMatrix( osg::Matrix::identity() );
+        postRenderCamera->setProjectionMatrix( osg::Matrix::identity() );
+        
+        postRenderCamera->addChild( mUIGroup.get() );
+    }
+
+
+    osg::ref_ptr< osg::StateSet > stateset = mUIGroup->getOrCreateStateSet();
+    {
+        stateset->setRenderBinDetails( 99, "RenderBin" );
+
+        //stateset->setNestRenderBins( false );
+        //Set depth test to always pass and don't write to the depth buffer
+        stateset->setMode(
+                          GL_LIGHTING,
+                          osg::StateAttribute::OFF |
+                          osg::StateAttribute::OVERRIDE );
+        stateset->setMode(
+                          GL_DEPTH_TEST,
+                          osg::StateAttribute::OFF |
+                          osg::StateAttribute::OVERRIDE );
+        osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+        depth->setFunction( osg::Depth::ALWAYS );
+        depth->setWriteMask( true );
+        stateset->setAttributeAndModes( depth.get(), 
+            osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+            
+        mUIGroup->setCullingActive( false );
+    }
+
     //Create stateset for adding texture
     osg::StateAttribute::GLModeValue glModeValue =
         osg::StateAttribute::ON |
         osg::StateAttribute::PROTECTED |
         osg::StateAttribute::OVERRIDE;
-    osg::ref_ptr< osg::StateSet > stateset = mUIGroup->getOrCreateStateSet();
-    {
-        //Set depth test to always pass and don't write to the depth buffer
-        osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-        depth->setFunction( osg::Depth::ALWAYS );
-        depth->setWriteMask( false );
-        stateset->setRenderBinDetails( 99, "RenderBin" );
-        //stateset->setBinNumber( 30 );
-        stateset->setAttributeAndModes( depth.get(), glModeValue );
-        //stateset->setNestRenderBins( false );
-        //stateset->setMode(
-        //                  GL_LIGHTING,
-        //                  osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-        //stateset->setMode(
-        //                  GL_DEPTH_TEST,
-        //                  osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-        mUIGroup->setCullingActive( false );
-    }
-
     stateset->setAttributeAndModes( program.get(), glModeValue );
     stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
 

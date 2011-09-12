@@ -65,12 +65,10 @@ ManipulatorManager::ManipulatorManager()
 
     setCullingActive( false );
 
-    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    depth->setFunction( osg::Depth::ALWAYS );
-    depth->setWriteMask( false );
-    stateSet->setAttributeAndModes( 
-        depth.get(), 
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateSet->setMode(
+                      GL_DEPTH_TEST,
+                      osg::StateAttribute::OFF |
+                      osg::StateAttribute::PROTECTED );
 
     //Manipulators are off on the gui by default
     //Enable();

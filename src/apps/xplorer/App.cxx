@@ -604,7 +604,15 @@ void App::initScene()
     //Hand current root node UIManager so it can create UI subgraph
     m_UIManager->Initialize( 0 );
 
-    m_uiGroup = &(m_UIManager->GetUIRootNode());
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        m_uiGroup = m_UIManager->GetUIRootNode().getParent( 0 );
+    }
+    else
+    {
+        m_uiGroup = &(m_UIManager->GetUIRootNode());
+    }
+
     //Start up the UI thread
     //m_qtUIThread = new vpr::Thread( boost::bind( &App::LoadUI, this ) );
 }
