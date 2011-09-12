@@ -72,7 +72,7 @@ public:
     NURBS( const NURBS&,
                const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
-    META_Node( ves::xplorer::scenegraph::nurbs, NURBS );
+    //META_Node( ves::xplorer::scenegraph::nurbs, NURBS );
 
     ///Set the ves::xplorer::scenegraph::nurbs::NURBSObject
     ///\param object The ves::xplorer::scenegraph::nurbs::NURBSObject

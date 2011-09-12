@@ -62,7 +62,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( rtt, UnitCameraAttachmentBypass );
+    //META_Node( rtt, UnitCameraAttachmentBypass );
 
     ///
     virtual void Initialize();

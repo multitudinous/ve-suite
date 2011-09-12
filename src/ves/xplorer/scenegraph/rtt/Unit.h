@@ -83,7 +83,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( rtt, Unit );
+    //META_Node( rtt, Unit );
 
     ///Set an input from the given unit to be linked with a given uniform name
     ///\param unit Pointer to the unit which output to use

@@ -100,7 +100,7 @@ public:
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     DCS( const DCS&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
-    META_Node( ves::xplorer::scenegraph, DCS );
+    //META_Node( ves::xplorer::scenegraph, DCS );
 
     ///Get translation array pointer
     double* GetVETranslationArray();

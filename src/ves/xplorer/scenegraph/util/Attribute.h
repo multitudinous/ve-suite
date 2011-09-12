@@ -62,7 +62,7 @@ public:
                const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///OSG defines this macro
-    META_Object( ves::xplorer::scenegraph::util, Attribute );
+    //META_Object( ves::xplorer::scenegraph::util, Attribute );
     Attribute& operator=( const osg::StateSet& rhs );
 
     ///Destructor

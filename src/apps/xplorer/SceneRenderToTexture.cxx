@@ -64,6 +64,7 @@
 #include <gmtl/Misc/MatrixConvert.h>
 
 #include <boost/concept_check.hpp>
+#include <boost/lexical_cast.hpp>
 
 // --- OSG Includes --- //
 #include <osg/Group>
@@ -789,10 +790,10 @@ osg::Geode* SceneRenderToTexture::CreateRTTQuad( osg::Texture2D* texture )
     //Get the vertex coordinates for the quad
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
-    (*quadVertices)[ 0 ].set( -1.0, -1.0, 1.0 );
-    (*quadVertices)[ 1 ].set(  1.0, -1.0, 1.0 );
-    (*quadVertices)[ 2 ].set(  1.0,  1.0, 1.0 );
-    (*quadVertices)[ 3 ].set( -1.0,  1.0, 1.0 );
+    (*quadVertices)[ 0 ].set( -1.0, -1.0, -1.0 );
+    (*quadVertices)[ 1 ].set(  1.0, -1.0, -1.0 );
+    (*quadVertices)[ 2 ].set(  1.0,  1.0, -1.0 );
+    (*quadVertices)[ 3 ].set( -1.0,  1.0, -1.0 );
 
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
@@ -1255,6 +1256,10 @@ void SceneRenderToTexture::Update(
                 osg::DisplaySettings::instance()->
                 getMaxNumberOfGraphicsContexts() );
         }
+
+        //osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options();
+        //options->setOptionString( "includeImageFileInIVEFile" );
+        //osgDB::writeNodeFile( *(*iter), "outfile.osg", options );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

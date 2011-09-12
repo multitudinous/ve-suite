@@ -81,7 +81,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::manipulator, ManipulatorManager );
+    //META_Node( ves::xplorer::scenegraph::manipulator, ManipulatorManager );
 
     ///Override the addChild function to only accept Draggers
     virtual bool addChild( Dragger* child );

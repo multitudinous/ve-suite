@@ -67,7 +67,7 @@ public:
     Switch( const Switch&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph, Switch );
+    //META_Node( ves::xplorer::scenegraph, Switch );
 
 protected:
     ///Destructor

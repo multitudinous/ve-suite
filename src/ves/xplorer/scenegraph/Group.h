@@ -47,14 +47,9 @@ namespace xplorer
 namespace scenegraph
 {
 /*!\file Group.h
- *
- */
-
-/*!\class ves::xplorer::scenegraph::Group
+ *\class ves::xplorer::scenegraph::Group
  *General group node which maintains a list of children
- */
-
-/*!\namespace ves::xplorer::scenegraph
+ *\namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS Group : public osg::Group, public SceneNode
@@ -67,7 +62,7 @@ public:
     Group( const Group&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph, Group );
+    //META_Node( ves::xplorer::scenegraph, Group );
 
 protected:
     ///Destructor

@@ -68,7 +68,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph, AutoTransform );
+    //META_Node( ves::xplorer::scenegraph, AutoTransform );
 
     ///
     enum AutoRotateMode

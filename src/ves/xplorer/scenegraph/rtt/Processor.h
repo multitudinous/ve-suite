@@ -70,7 +70,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( rtt, Processor );
+    //META_Node( rtt, Processor );
 
     ///Get camera used for this pipeline
     osg::Camera* GetCamera();

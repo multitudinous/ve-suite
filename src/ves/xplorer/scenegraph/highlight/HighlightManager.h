@@ -72,7 +72,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::highlight, HighlightManager );
+    //META_Node( ves::xplorer::scenegraph::highlight, HighlightManager );
 
     ///Override the addChild function to only accept Highlights
     virtual bool addChild( CircleHighlight* child );

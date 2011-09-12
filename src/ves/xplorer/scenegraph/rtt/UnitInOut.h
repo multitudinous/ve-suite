@@ -67,7 +67,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( rtt, UnitInOut );
+    //META_Node( rtt, UnitInOut );
 
     ///Initialze the default Processing unit
     virtual void Initialize();

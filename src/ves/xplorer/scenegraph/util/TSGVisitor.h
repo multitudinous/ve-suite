@@ -83,7 +83,7 @@ public:
     virtual ~TSGVisitor();
 
     ///
-    META_NodeVisitor( ves::xplorer::scenegraph::util, TSGVisitor );
+    //META_NodeVisitor( ves::xplorer::scenegraph::util, TSGVisitor );
 
     ///
     virtual void apply( osg::Geode& geode );

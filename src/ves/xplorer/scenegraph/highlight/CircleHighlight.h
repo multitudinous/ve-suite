@@ -81,7 +81,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::highlight, CircleHighlight );
+    //META_Node( ves::xplorer::scenegraph::highlight, CircleHighlight );
 
     ///
     DCS& GetDCS();

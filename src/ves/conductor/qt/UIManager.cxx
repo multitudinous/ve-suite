@@ -395,6 +395,7 @@ void UIManager::Initialize( osg::Group* parentNode )
     }
 
     mUIGroup = new osg::Switch();
+    mUIGroup->setName( "Qt UI Group" );
     mUIGroup->setDataVariance( osg::Object::DYNAMIC );
     mUIGroup->setUpdateCallback( mUIUpdateCallback.get() );
 
@@ -465,8 +466,16 @@ void UIManager::Initialize( osg::Group* parentNode )
         osg::ref_ptr< osg::Depth > depth = new osg::Depth();
         depth->setFunction( osg::Depth::ALWAYS );
         depth->setWriteMask( false );
-        //stateset->setRenderBinDetails( 99, "DepthSortedBin" );
+        stateset->setRenderBinDetails( 99, "RenderBin" );
+        //stateset->setBinNumber( 30 );
         stateset->setAttributeAndModes( depth.get(), glModeValue );
+        //stateset->setNestRenderBins( false );
+        //stateset->setMode(
+        //                  GL_LIGHTING,
+        //                  osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+        //stateset->setMode(
+        //                  GL_DEPTH_TEST,
+        //                  osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
         mUIGroup->setCullingActive( false );
     }
 

@@ -184,7 +184,6 @@ void SceneManager::InitScene()
     mRootNode->setThreadSafeRefUnref( true );
 
     mModelRoot = new osg::Group();
-    //mModelRoot = new ves::xplorer::scenegraph::DCS();
     mModelRoot->setName( "Model Root Node" );
 
     m_graphicalPluginManager = new Group();
@@ -351,8 +350,6 @@ void SceneManager::InitScene()
     //Setup logo nav switch
     mNavSwitch->addChild( new ves::xplorer::scenegraph::DCS() );
 
-    mNetworkDCS  = new osg::Group();
-    mNetworkDCS->setName( "Network DCS" );
     //Setup network nav switch
     mNavSwitch->addChild( new ves::xplorer::scenegraph::DCS() );
 
@@ -363,6 +360,9 @@ void SceneManager::InitScene()
     //m_sound = new ves::xplorer::scenegraph::Sound( mLogoNode.get() );
     //m_sound->LoadFile( "C:/TSVEG/Dependencies/osgal-0.6.1/data/bee.wav" );
 #endif
+
+    mNetworkDCS  = new osg::Group();
+    mNetworkDCS->setName( "Network DCS" );
 
     mLogoSwitch->addChild( mModelRoot.get() );
     mLogoSwitch->addChild( mLogoNode.get() );
@@ -505,6 +505,7 @@ void SceneManager::_createLogo()
     if( !mLogoSwitch )
     {
         mLogoSwitch = new ves::xplorer::scenegraph::Switch();
+        mLogoSwitch->setName( "Models Graph" );
     }
 
     if( mLogoNode.valid() )

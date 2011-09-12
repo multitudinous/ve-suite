@@ -73,7 +73,7 @@ public:
     Geode( const Geode& geode, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph, Geode );
+    //META_Node( ves::xplorer::scenegraph, Geode );
 
     ///Turn vtkActorToXX on and off
     ///\param onOff The VTK debug level

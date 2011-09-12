@@ -87,7 +87,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph::camera, CameraManager );
+    //META_Node( ves::xplorer::scenegraph::camera, CameraManager );
 
     ///Override the addChild function to only accept Cameras
     virtual bool addChild( std::string const& name );

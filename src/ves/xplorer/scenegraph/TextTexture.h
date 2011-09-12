@@ -85,7 +85,7 @@ public:
                  const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph, TextTexture );
+    //META_Node( ves::xplorer::scenegraph, TextTexture );
 
     ///Set the color of the text
     ///\param color Text color

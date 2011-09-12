@@ -89,10 +89,10 @@ void UIElement::PostConstructor()
     m_vertices = new osg::Vec3Array();
     if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
-        m_vertices->push_back( osg::Vec3( -1.0f, -1.0f, 1.0f ) );
-        m_vertices->push_back( osg::Vec3(  1.0f, -1.0f, 1.0f ) );
-        m_vertices->push_back( osg::Vec3(  1.0f,  1.0f, 1.0f ) );
-        m_vertices->push_back( osg::Vec3( -1.0f,  1.0f, 1.0f ) );
+        m_vertices->push_back( osg::Vec3( -1.0f, -1.0f, -1.0f ) );
+        m_vertices->push_back( osg::Vec3(  1.0f, -1.0f, -1.0f ) );
+        m_vertices->push_back( osg::Vec3(  1.0f,  1.0f, -1.0f ) );
+        m_vertices->push_back( osg::Vec3( -1.0f,  1.0f, -1.0f ) );
     }
     else
     {
@@ -135,7 +135,8 @@ void UIElement::PostConstructor()
     geode->setDataVariance( osg::Object::DYNAMIC );
     geode->addDrawable( geometry.get() );
     mGeode = geode.get();
-
+    mGeode->setName( "Qt UI" );
+    
     //Create an empty image
     osg::ref_ptr< osg::Image > image = new osg::Image();
 
@@ -362,10 +363,10 @@ void UIElement::Update()
         max = max * windowMat;
 
         //This assumes that we are spanning the whole ui the height of the screen
-        m_vertices->at( 0 ) = osg::Vec3( min.x(), min.y(), 1.0 ); //ll
-        m_vertices->at( 1 ) = osg::Vec3( max.x(), min.y(), 1.0 ); //lr
-        m_vertices->at( 2 ) = osg::Vec3( max.x(), max.y(), 1.0 ); //ur
-        m_vertices->at( 3 ) = osg::Vec3( min.x(), max.y(), 1.0 ); //ul
+        m_vertices->at( 0 ) = osg::Vec3( min.x(), min.y(), -1.0 ); //ll
+        m_vertices->at( 1 ) = osg::Vec3( max.x(), min.y(), -1.0 ); //lr
+        m_vertices->at( 2 ) = osg::Vec3( max.x(), max.y(), -1.0 ); //ur
+        m_vertices->at( 3 ) = osg::Vec3( min.x(), max.y(), -1.0 ); //ul
         
         mGeode->getDrawable( 0 )->dirtyDisplayList();
         mGeode->dirtyBound();

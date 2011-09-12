@@ -69,7 +69,7 @@ public:
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( rtt, UnitInResampleOut );
+    //META_Node( rtt, UnitInResampleOut );
 
     ///
     virtual void Initialize();

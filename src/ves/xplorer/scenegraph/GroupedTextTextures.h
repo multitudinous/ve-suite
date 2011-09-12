@@ -91,7 +91,7 @@ public:
                  const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
-    META_Node( ves::xplorer::scenegraph, GroupedTextTextures );
+    //META_Node( ves::xplorer::scenegraph, GroupedTextTextures );
 
     ///Set the font
     ///\param fontFile The file containing the font to use

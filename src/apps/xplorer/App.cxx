@@ -972,11 +972,12 @@ void App::contextPreDraw()
         {
             vpr::Guard< vpr::Mutex > val_guard( mValueLock );
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
+            ( *sceneViewer )->getCamera()->addChild( m_uiGroup.get() );
             update();
 
             //if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
             {
-                ( *sceneViewer )->getCamera()->addChild( m_uiGroup.get() );
+                ;
             }
             *mViewportsChanged = true;
         }
@@ -1192,6 +1193,9 @@ void App::update()
     // the bounding volumes from within the cull traversal which may be
     // multi-threaded.
     getScene()->getBound();
+    
+    // Since the UI is directly under the root camera we need to manually update it
+    m_uiGroup->getBound();
     
 #ifdef VE_SOUND
     m_listenerPosition.set( mNavPosition.getData() );
