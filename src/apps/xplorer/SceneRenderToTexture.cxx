@@ -343,8 +343,27 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
     if( m_enableRTT )
     {
         //
-        svCamera->addChild( CreateClearColorQuad( numViewports ) );
+        {
+            /*osg::Camera* postRenderCamera = new osg::Camera();
+            postRenderCamera->setName( "Pre Render Clear Camera" );
+            postRenderCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+            postRenderCamera->setRenderOrder( osg::Camera::PRE_RENDER );
+            //GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
+            postRenderCamera->setClearMask( 0 );
+            postRenderCamera->setClearColor( osg::Vec4( 1.0, 1.0, 0.0, 0.0 ) );
 
+            postRenderCamera->setComputeNearFarMode(
+                osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+            postRenderCamera->setCullingActive( false );
+            postRenderCamera->setThreadSafeRefUnref( true );
+            postRenderCamera->setViewMatrix( osg::Matrix::identity() );
+            postRenderCamera->setProjectionMatrix( osg::Matrix::identity() );
+            
+            postRenderCamera->addChild( CreateClearColorQuad( numViewports ) );*/
+            
+            svCamera->addChild( CreateClearColorQuad( numViewports ) );
+        }
+        
         //
         svCamera->addChild( m_rootGroup.get() );
 

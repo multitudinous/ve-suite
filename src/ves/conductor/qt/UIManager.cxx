@@ -492,11 +492,11 @@ void UIManager::Initialize( osg::Group* parentNode )
                           GL_DEPTH_TEST,
                           osg::StateAttribute::OFF |
                           osg::StateAttribute::OVERRIDE );
-        osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+        /*osg::ref_ptr< osg::Depth > depth = new osg::Depth();
         depth->setFunction( osg::Depth::ALWAYS );
         depth->setWriteMask( true );
         stateset->setAttributeAndModes( depth.get(), 
-            osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+            osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );*/
             
         mUIGroup->setCullingActive( false );
     }
