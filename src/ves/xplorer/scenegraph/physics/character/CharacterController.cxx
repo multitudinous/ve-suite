@@ -145,6 +145,21 @@ void CharacterController::Initialize()
 
     mMatrixTransform = new osg::MatrixTransform();
     mMatrixTransform->setName( "Character Transform" );
+    
+    std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
+    osg::ref_ptr< osg::Shader > fragShader = 
+    osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+    
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragShader.get() );
+    
+    osg::ref_ptr< osg::StateSet > stateset = 
+        mMatrixTransform->getOrCreateStateSet();
+    stateset->setAttributeAndModes( program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    
+    stateset->addUniform( new osg::Uniform( "tex", 0 ) );
+    
 #ifdef VES_USE_ANIMATED_CHARACTER
     //create animated character
     //idle
