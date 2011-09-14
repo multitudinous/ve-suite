@@ -15,6 +15,7 @@ srcs = Split("""
    AspenPlusLUT.cxx
    AspenDynamicsLUT.cxx
    AspenIconData.cxx
+   OPC.cxx
 """)
 
 headers = Split("""
@@ -28,6 +29,7 @@ headers = Split("""
    AspenPlusLUT.h
    AspenDynamicsLUT.h
    AspenIconData.h
+   OPC.h
 """)
 
 env = ves_pkg.getEnv().Clone()

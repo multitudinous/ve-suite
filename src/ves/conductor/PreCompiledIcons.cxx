@@ -614,7 +614,8 @@
 #include <ves/conductor/xpm/AspenPlus2DIcons/valve_valve_valve4.xpm>                                                    
 #include <ves/conductor/xpm/AspenPlus2DIcons/vscrub_vscrub_block.xpm>                                                   
 #include <ves/conductor/xpm/AspenPlus2DIcons/vscrub_vscrub_icon.xpm>                                                    
-#include <ves/conductor/xpm/AspenPlus2DIcons/sim.xpm>                                                 
+#include <ves/conductor/xpm/AspenPlus2DIcons/sim.xpm>                                                            
+#include <ves/conductor/xpm/AspenPlus2DIcons/opc.xpm>                                                         
 #include <ves/conductor/xpm/AspenPlus2DIcons/dwsim.xpm> 
 #include <ves/conductor/xpm/cad_tree_expanded.xpm>
 #include <ves/conductor/xpm/cad_tree_selected.xpm>

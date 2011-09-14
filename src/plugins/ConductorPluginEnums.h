@@ -192,6 +192,16 @@ enum
     OPCUOPLUGIN_SWITCH_CAD,
     OPCUOPLUGIN_TANK_CAD,
 
+    
+    //
+    //OPCUOPlugin.h
+    //
+    OPCPLUGIN_SET_UNIT,
+    OPCPLUGIN_MENU,
+    OPCPLUGIN_SHOW_VALUE,
+    OPCPLUGIN_ALL_VAR,
+    OPCPLUGIN_CONNECT,
+
     //
     //PSPlugin.h
     //

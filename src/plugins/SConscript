@@ -9,6 +9,7 @@ openSubdirs = Split("""
     sim
     sim_unit_operation
     opc_unit_operation
+    opc
 """)    
 
 

@@ -33,6 +33,7 @@
 #include "AspenPlus.h"
 #include "AspenDynamics.h"
 #include "DynSim.h"
+#include "OPC.h"
 #include <ves/open/xml/CommandPtr.h>
 #include "VE_PSI.h"
 #include "VE_PSIDlg.h"
@@ -50,13 +51,6 @@ public:
     //Destructor 
     virtual ~VEPSI_i (void);
 
-    //std::string UnitName_;
-    //Types::ArrayLong ids_;
-    //::CORBA::Long cur_id_;
-
-    //std::string status_;
-    //std::string data_;
-
 protected:
     unsigned int return_state;
     VE_PSIDlg * theDialog;
@@ -72,6 +66,7 @@ public:
     AspenPlus* bkp;
     AspenDynamics* dyn;
     DynSim* dynSim;
+    OPC* opc;
   
   void ShowAspen( );  
   void HideAspen( );  
@@ -139,9 +134,8 @@ private:
   bool dynFlag;
   bool dwFlag;
   bool dynSimFlag;
+  bool opcFlag;
   vpr::Thread* m_thread;
-  //std::pair< std::string, std::pair< std::string, std::string > >  mPortInput;
-  //std::pair< std::string, std::pair< std::string, std::string > > mPortOutput;
   std::pair< std::string, std::string >  mPortInput;
   std::pair< std::string, std::string > mPortOutput;
 };
