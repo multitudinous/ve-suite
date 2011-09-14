@@ -207,7 +207,7 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
         mOpcMenu->Append( OPCUOPLUGIN_TANK_CAD, _( "CAD" ) );
         mOpcMenu->Enable( OPCUOPLUGIN_TANK_CAD, true );
     }
-    baseMenu->Insert( 0, OPCUOPLUGIN_START_TIMER,   _( "OPC" ), mOpcMenu,
+    baseMenu->Insert( 0, OPCUOPLUGIN_SIM_MENU,   _( "OPC" ), mOpcMenu,
                     _( "Used in conjunction with OPC" ) );
     baseMenu->Enable( OPCUOPLUGIN_SIM_MENU, true );
     return baseMenu;
