@@ -341,29 +341,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
     InitRTTCamera( svCamera, viewportDimensions );
 
     if( m_enableRTT )
-    {
-        //
-        {
-            /*osg::Camera* postRenderCamera = new osg::Camera();
-            postRenderCamera->setName( "Pre Render Clear Camera" );
-            postRenderCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-            postRenderCamera->setRenderOrder( osg::Camera::PRE_RENDER );
-            //GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
-            postRenderCamera->setClearMask( 0 );
-            postRenderCamera->setClearColor( osg::Vec4( 1.0, 1.0, 0.0, 0.0 ) );
-
-            postRenderCamera->setComputeNearFarMode(
-                osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
-            postRenderCamera->setCullingActive( false );
-            postRenderCamera->setThreadSafeRefUnref( true );
-            postRenderCamera->setViewMatrix( osg::Matrix::identity() );
-            postRenderCamera->setProjectionMatrix( osg::Matrix::identity() );
-            
-            postRenderCamera->addChild( CreateClearColorQuad( numViewports ) );*/
-            
-            svCamera->addChild( CreateClearColorQuad( numViewports ) );
-        }
-        
+    {        
         //
         svCamera->addChild( m_rootGroup.get() );
 
@@ -420,8 +398,8 @@ void SceneRenderToTexture::InitRTTCamera(
     std::pair< int, int > const& viewportDimensions )
 {
     //Clear color quad will clear color and depth buffers for us
-    rttCamera->setClearMask( 0 );
-    rttCamera->setClearColor( osg::Vec4( 0.0, 1.0, 0.0, 0.0 ) );
+    rttCamera->setClearMask( GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT );
+    rttCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
 
     if( m_enableRTT )
     {
@@ -432,6 +410,7 @@ void SceneRenderToTexture::InitRTTCamera(
         rttCamera->setPostDrawCallback( msmrt );
 #endif
 
+        rttCamera->setRenderOrder( osg::Camera::PRE_RENDER, 1 );
         rttCamera->setRenderTargetImplementation(
             osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
         rttCamera->setComputeNearFarMode(
@@ -487,6 +466,41 @@ void SceneRenderToTexture::InitRTTCamera(
             //GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
             //osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
             //viewportDimensions );
+
+        //
+        {
+            osg::Camera* clearQuadCamera = new osg::Camera();
+            clearQuadCamera->setName( "Pre Render Clear Camera" );
+            clearQuadCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+            clearQuadCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
+            clearQuadCamera->setRenderTargetImplementation(
+                osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
+            clearQuadCamera->setClearMask( 0 );
+            clearQuadCamera->setClearColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
+            clearQuadCamera->attach(
+                              osg::Camera::COLOR_BUFFER0, colorMap.get(),
+                              0, 0, false, maxSamples, maxSamples );
+            clearQuadCamera->attach(
+                              osg::Camera::COLOR_BUFFER1, glowMap.get(),
+                              0, 0, false, maxSamples, maxSamples );
+            //Use interleaved depth/stencil renderbuffer
+            clearQuadCamera->attach(
+                osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, GL_DEPTH_STENCIL_EXT );
+            clearQuadCamera->setComputeNearFarMode(
+                osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+            clearQuadCamera->setCullingActive( false );
+            clearQuadCamera->setThreadSafeRefUnref( true );
+            clearQuadCamera->setViewMatrix( osg::Matrix::identity() );
+            clearQuadCamera->setProjectionMatrix( osg::Matrix::identity() );
+            clearQuadCamera->setViewport(
+                0, 0, viewportDimensions.first, viewportDimensions.second );
+
+            clearQuadCamera->addChild( CreateClearColorQuad( 0 ) );
+            rttCamera->addChild( clearQuadCamera );
+            
+            //svCamera->addChild( CreateClearColorQuad( numViewports ) );
+        }
+        
     }
     else
     {
@@ -715,10 +729,10 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     //Get the vertex coordinates for the quad
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
-    (*quadVertices)[ 0 ].set( -1.0, -1.0, 1.0 );
-    (*quadVertices)[ 1 ].set(  1.0, -1.0, 1.0 );
-    (*quadVertices)[ 2 ].set(  1.0,  1.0, 1.0 );
-    (*quadVertices)[ 3 ].set( -1.0,  1.0, 1.0 );
+    (*quadVertices)[ 0 ].set( -1.0, -1.0, 0.0 );
+    (*quadVertices)[ 1 ].set(  1.0, -1.0, 0.0 );
+    (*quadVertices)[ 2 ].set(  1.0,  1.0, 0.0 );
+    (*quadVertices)[ 3 ].set( -1.0,  1.0, 0.0 );
 
     //Create the quad geometry
     osg::ref_ptr< osg::Geometry > quadGeometry = new osg::Geometry();
@@ -760,6 +774,7 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     "{ \n"
         "gl_FragData[ 0 ] = clearColor; \n"
         "gl_FragData[ 1 ] = vec4( 0.0, 0.0, 0.0, 0.0 ); \n"
+        "gl_FragDepth = 1.; \n"
     "} \n";
 
     fragmentShader->setType( osg::Shader::FRAGMENT );
@@ -774,14 +789,14 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     //Set stateset for quad
     osg::ref_ptr< osg::StateSet > stateset = quadGeode->getOrCreateStateSet();
     //Render first
-    stateset->setRenderBinDetails( -1, "RenderBin" );
+    //stateset->setRenderBinDetails( -1, "RenderBin" );
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
 
     stateset->setMode(
         GL_DEPTH_TEST,
-        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     osg::ref_ptr< osg::Depth > depth = new osg::Depth();
     depth->setFunction( osg::Depth::ALWAYS );
     depth->setWriteMask( true );
@@ -1000,7 +1015,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         rttCameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
 
         // set the camera to render before after the main camera.
-        rttCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER );
+        rttCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER, 1 );
 
         // tell the camera to use OpenGL frame buffer object where supported.
         rttCameraList.back()->setRenderTargetImplementation(
@@ -1179,7 +1194,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         fullScreenQuadCameraList.back()->setClearColor( osg::Vec4( 0, 0, 0, 0) );
         fullScreenQuadCameraList.back()->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
         fullScreenQuadCameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF_INHERIT_VIEWPOINT );
-        fullScreenQuadCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER );
+        fullScreenQuadCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER, 1 );
         fullScreenQuadCameraList.back()->setRenderTargetImplementation(
             osg::Camera::FRAME_BUFFER_OBJECT );
 
@@ -1346,7 +1361,7 @@ void SceneRenderToTexture::WriteLowResImageFile(
         //Set view
         rttCameraList->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
         //Set the camera to render before after the main camera
-        rttCameraList->setRenderOrder( osg::Camera::PRE_RENDER );
+        rttCameraList->setRenderOrder( osg::Camera::PRE_RENDER, 1 );
         //Tell the camera to use OpenGL frame buffer object where supported
         rttCameraList->setRenderTargetImplementation(
             osg::Camera::FRAME_BUFFER_OBJECT );
