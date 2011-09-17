@@ -74,7 +74,7 @@ QToolButton:hover
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -161,7 +161,7 @@ QToolButton:hover
     <string>&amp;New</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionOpen">
@@ -526,7 +526,7 @@ QToolButton:hover
   <action name="actionRecent">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/images/refresh-32.png</normaloff>:/images/refresh-32.png</iconset>
+     <normaloff>:/xpm/ToolBar/RecentDocument.png</normaloff>:/xpm/ToolBar/RecentDocument.png</iconset>
    </property>
    <property name="text">
     <string>Recent...</string>

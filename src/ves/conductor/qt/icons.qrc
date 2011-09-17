@@ -1,5 +1,9 @@
 <RCC>
   <qresource>
+    <file>../xpm/ToolBar/GIS/GIS_Control_Earth.png</file>
+    <file>../xpm/ToolBar/GIS/GIS_Control_Earth2.png</file>
+    <file>../xpm/ToolBar/GIS/GIS_Control_Layers.png</file>
+    <file>../xpm/ToolBar/RecentDocument.png</file>
     <file>../xpm/CPT/NextCameraButton.xpm</file>
     <file>../xpm/CPT/NextMarkerButton.xpm</file>
     <file>../xpm/CPT/PrevCameraButton.xpm</file>
