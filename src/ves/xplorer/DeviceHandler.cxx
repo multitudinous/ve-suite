@@ -120,7 +120,7 @@ DeviceHandler::DeviceHandler()
     mResetPosition.resize( 3 );
     
     CONNECTSIGNALS_STATIC( "%DeviceGloveDisplay", 
-                          void( /*unsigned int const&, */ bool const& ),
+                          void( /*unsigned int const&, */ bool const& enable ),
                           &ves::xplorer::event::device::EnableDevice,
                           m_connections, any_SignalType, normal_Priority );
 }

@@ -175,7 +175,7 @@ void PreferencesPropertySet::CreateSkeleton()
     {
         AddProperty( "NavigationZEqual0Lock", false, "Navigation z = 0 Lock" );
         mPropertyMap["NavigationZEqual0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
+        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
                                                    mPropertyMap["NavigationZEqual0Lock"],
                                                    "PreferencesPropertySet.NavigationZEqual0Lock",
                                                    false ));
@@ -185,7 +185,7 @@ void PreferencesPropertySet::CreateSkeleton()
     {
         AddProperty( "NavigationZGreater0Lock", false, "Navigation z > 0 Lock" );
         mPropertyMap["NavigationZGreater0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
+        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
                                                    mPropertyMap["NavigationZGreater0Lock"],
                                                    "PreferencesPropertySet.NavigationZGreater0Lock",
                                                    false ));
@@ -215,7 +215,7 @@ void PreferencesPropertySet::CreateSkeleton()
     {
         AddProperty( "CADSelection", false, "CAD Selection" );
         mPropertyMap["CADSelection"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
+        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
                                                    mPropertyMap["CADSelection"],
                                                    "PreferencesPropertySet.CADSelection",
                                                    false ));
@@ -255,7 +255,7 @@ void PreferencesPropertySet::CreateSkeleton()
     {
         AddProperty( "DisplayGlobalAxis", false, "Display Global Axis" );
         mPropertyMap["DisplayGlobalAxis"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< const bool& >( mUUIDString,
+        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
                                                    mPropertyMap["DisplayGlobalAxis"],
                                                    "PreferencesPropertySet.DisplayGlobalAxis",
                                                    false ));
@@ -265,7 +265,7 @@ void PreferencesPropertySet::CreateSkeleton()
     {
         AddProperty( "DeviceGloveDisplay", false, "Display Glove Models" );
         mPropertyMap["DeviceGloveDisplay"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
+        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
                                                 mPropertyMap["DeviceGloveDisplay"],
                                                 "PreferencesPropertySet.DeviceGloveDisplay",
                                                 false ));

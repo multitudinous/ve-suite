@@ -111,7 +111,7 @@ private:
     ///Sets visual selection on object and connects manipulators if active
     void HighlightAndSetManipulators( osg::NodePath& nodePath );
     ///CAD selection flag
-    void SetCADSelection( const std::string&, const std::vector< bool >& );
+    void SetCADSelection( bool const& flag );
     ///Highlight the last node in a node path
     void HighlightNode( osg::NodePath& nodePath );
 

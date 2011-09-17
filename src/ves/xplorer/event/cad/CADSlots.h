@@ -194,7 +194,7 @@ static void SetCADPhysicsMesh( const std::string& nodeID,
     }
 }
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /**
   * Deletes a CAD node from the scenegraph and internal lists.
   * @param parentID UUID of the node's parent
@@ -246,8 +246,134 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
         std::cout << "---Invalid node specified to remove!---" << std::endl;
     }
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
+/*static void ControlOcclusionQuery( std::string const& nodeID, std::string const& oqLevel )
+{
+    if( !m_cadHandler->PartExists( nodeID ) )
+    {
+        return;
+    }
+    
+    osg::ref_ptr< osg::Node > activePart = 
+        m_cadHandler->GetPart( nodeID )->GetNode()->GetNode();
+    std::string const oqSettings = oqLevel;
+    
+    osg::ref_ptr< osg::Group > rootPartNode = 
+    s   tatic_cast< osg::Group* >( activePart.get() );
+    
+    unsigned int numOQNs = 0;
+    bool oqPresent = false;
+    
+    {
+        osgOQ::StatisticsVisitor statsVisitor;
+        rootPartNode->accept( statsVisitor );
+        numOQNs = statsVisitor.getNumOQNs();
+        vprDEBUG( vesDBG, 2 ) << "|\t\tThere are currently " << numOQNs
+        << "oq nodes." << std::endl
+        << vprDEBUG_FLUSH;
+    }
+    
+    if( numOQNs > 0 )
+    {
+        oqPresent = true;
+    }
+    unsigned int occlusionThreshold = 1000;
+    unsigned int visibilityThreshold = 100;
+    bool occlude = false;
+    
+    if( oqSettings == "Off" )
+    {
+        occlude = false;
+    }
+    else if( oqSettings == "Low" )
+    {
+        occlude = true;
+        occlusionThreshold = 10000;
+        visibilityThreshold = 100;
+    }
+    else if( oqSettings == "Medium" )
+    {
+        occlude = true;
+        occlusionThreshold = 5000;
+        visibilityThreshold = 250;
+    }
+    else if( oqSettings == "High" )
+    {
+        occlude = true;
+        occlusionThreshold = 2500;
+        visibilityThreshold = 500;
+    }
+    
+    if( !oqPresent && occlude )
+    {
+        vprDEBUG( vesDBG, 2 ) << "|\t\tCreating new oq nodes " << std::endl
+        << vprDEBUG_FLUSH;
+        
+        osgOQ::OcclusionQueryNonFlatVisitor oqv;
+        //Specify the vertex count threshold for performing 
+        // occlusion query tests.
+        //Settings others use are:
+        //Fairly lax culling
+        //occlusionThreshold = 5000
+        //visibilityThreshold = 250
+        //Fairly aggressive culling
+        //occlusionThreshold = 2500
+        //visibilityThreshold = 500
+        // If the child geometry has less than the specified number
+        //   of vertices, don't perform occlusion query testing (it's
+        //   an occluder). Otherwise, perform occlusion query testing
+        //   (it's an occludee).
+        oqv.setOccluderThreshold( occlusionThreshold );
+        rootPartNode->accept( oqv );
+        //Setup the number frames to skip
+        osgOQ::QueryFrameCountVisitor queryFrameVisitor( 2 );
+        rootPartNode->accept( queryFrameVisitor );
+        // If the occlusion query test indicates that the number of
+        //   visible pixels is greater than this value, render the
+        //   child geometry. Otherwise, don't render and continue to
+        //   test for visibility in future frames.
+        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
+        rootPartNode->accept( visibilityThresholdVisitor );
+    }
+    else if( oqPresent && !occlude )
+    {
+        vprDEBUG( vesDBG, 2 ) << "|\t\tRemoving oq nodes " << std::endl
+        << vprDEBUG_FLUSH;
+        
+        //remove oq nodes
+        osgOQ::RemoveOcclusionQueryVisitor removeOQV;
+        rootPartNode->accept( removeOQV );
+    }
+    else if( oqPresent )
+    {
+        vprDEBUG( vesDBG, 2 ) << "|\t\tUpdating oq nodes " << std::endl
+        << vprDEBUG_FLUSH;
+        //remove oq nodes
+        osgOQ::RemoveOcclusionQueryVisitor removeOQV;
+        rootPartNode->accept( removeOQV );
+        
+        //Now create the oq nodes with new settings...
+        osgOQ::OcclusionQueryNonFlatVisitor oqv;
+        oqv.setOccluderThreshold( occlusionThreshold );
+        rootPartNode->accept( oqv );
+        
+        osgOQ::QueryFrameCountVisitor queryFrameVisitor( 2 );
+        rootPartNode->accept( queryFrameVisitor );
+        
+        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
+        rootPartNode->accept( visibilityThresholdVisitor );
+    }
+    
+    {
+        osgOQ::StatisticsVisitor statsVisitor;
+        rootPartNode->accept( statsVisitor );
+        numOQNs = statsVisitor.getNumOQNs();            
+        vprDEBUG( vesDBG, 2 ) << "|\t\tThere are now " << numOQNs
+        << "oq nodes." << std::endl
+        << vprDEBUG_FLUSH;
+    }        
+}*/
+////////////////////////////////////////////////////////////////////////////////
 } // namespace cad
 } // namespace event
 } // namespace xplorer

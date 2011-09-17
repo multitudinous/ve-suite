@@ -71,7 +71,7 @@ public:
     DeviceEventHandler& operator=( const DeviceEventHandler& rhs );
 
     ///Slot for UI signal
-    void UpdateCADSelectionMode( const bool enable );
+    void UpdateCADSelectionMode( bool const& enable );
     
 protected:
 

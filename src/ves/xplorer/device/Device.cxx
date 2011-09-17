@@ -354,12 +354,12 @@ void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, do
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::UpdateZEqualZero( const bool enable )
+void Device::UpdateZEqualZero( bool const& enable )
 {
     SetZEqualsZeroFlag( enable );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::UpdateZGreaterZero( const bool enable )
+void Device::UpdateZGreaterZero( bool const& enable )
 {
     SetSubZeroFlag( enable );
 }

@@ -135,8 +135,8 @@ Selection::Selection()
         &Selection::ProcessUndoEvent, m_connections,
         keyboard_SignalType, normal_Priority );
     
-    CONNECTSIGNALS_2( "%CADSelection",
-        void( const std::string&, const std::vector< bool >& ),
+    CONNECTSIGNALS_1( "%CADSelection",
+        void( bool const& flag ),
         &Selection::SetCADSelection,
         m_connections, any_SignalType, normal_Priority );
 
@@ -482,10 +482,9 @@ void Selection::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
     m_endPoint = endPoint;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Selection::SetCADSelection( const std::string& uuid, const std::vector< bool >& flags )
+void Selection::SetCADSelection( bool const& flags )
 {
-    boost::ignore_unused_variable_warning( uuid );
-    m_cadSelectionMode = flags.at( 0 );
+    m_cadSelectionMode = flags;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::HighlightNode( osg::NodePath& nodePath )

@@ -197,10 +197,10 @@ public:
 	void SetZEqualsZeroFlag( int input);
 
     ///Used as the slot for nav control signals
-    void UpdateZEqualZero( const bool enable );
+    void UpdateZEqualZero( bool const& enable );
     
     ///Used as the slot for nav control signals
-    void UpdateZGreaterZero( const bool enable );
+    void UpdateZGreaterZero( bool const& enable );
     
 protected:
     ///Process the selection of a piece of geometry
