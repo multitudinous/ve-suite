@@ -34,11 +34,19 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/environment/EnvironmentSlots.h>
 
-//#include <ves/xplorer/scenegraph/SceneManager.h>
-
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
+
+#ifdef VE_SOUND
+// --- osgAL Includes --- //
+#include <osgAudio/SoundManager.h>
+#include <osgAudio/SoundRoot.h>
+#include <osgAudio/SoundNode.h>
+#include <osgAudio/SoundState.h>
+#endif //VE_SOUND
+
+#include <osgDB/FileUtils>
 
 namespace ves
 {
@@ -54,16 +62,40 @@ void EnablePhysicsDebugging( bool const& enable )
     ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetDebuggingOn( enable );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayFrameRate( const bool& display )
+void DisplayFrameRate( bool const& display )
 {
     ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()
             ->SetFrameRateFlag( display );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayCoordinateSystem( const bool& display )
+void DisplayCoordinateSystem( bool const& display )
 {
     ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()
             ->SetCoordSysFlag( display );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SetAmbientAudioFile( std::string const& filename )
+{
+#ifdef VE_SOUND
+    // Create a sample, load a .wav file.
+    //osgAudio::Sample *sample = new osgAudio::Sample( osgDB::findDataFile( filename ) );
+    osg::ref_ptr< osgAudio::SoundState > sound_state = 
+        new osgAudio::SoundState( filename );
+    sound_state->allocateSource( 10 );
+
+    sound_state->
+        setSample( new osgAudio::Sample( osgDB::findDataFile( filename ) ) );
+    //sound_state->setGain(0.7f);
+    //sound_state->setReferenceDistance(10);
+    // Make it an ambient (heard everywhere) sound
+    sound_state->setAmbient( true );
+    // Loop the sound forever
+    sound_state->setLooping( true );
+    // Start playing the music!
+    sound_state->setPlay( true );
+    
+    osgAudio::SoundManager::instance()->addSoundState(sound_state.get());
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

@@ -248,6 +248,10 @@ EnvironmentHandler::EnvironmentHandler()
     CONNECTSIGNALS_STATIC( "%DisplayGlobalAxis", void( bool const& enable ),
                      &ves::xplorer::event::environment::DisplayCoordinateSystem,
                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%AmbientAudioSoundFile", void( std::string const& filename ),
+                          &ves::xplorer::event::environment::SetAmbientAudioFile,
+                          m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()

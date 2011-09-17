@@ -46,14 +46,8 @@ namespace xplorer
 namespace data
 {
 /*!\file CADPropertySet.h
- *
- */
-
-/*!\class ves::xplorer::data::CADPropertySet
- *
- */
-
-/*!\namespace ves::xplorer::data
+ * \class ves::xplorer::data::CADPropertySet
+ * \namespace ves::xplorer::data
  *
  */
 class VE_DATA_EXPORTS CADPropertySet : public PropertySet

@@ -35,6 +35,8 @@
 
 #include <ves/VEConfig.h>
 
+#include <string>
+
 namespace ves
 {
 namespace xplorer
@@ -50,11 +52,11 @@ namespace environment
 ///Enable the physics debugger
 void EnablePhysicsDebugging( bool const& enable );
 ///Display the on-screen frame rate
-void DisplayFrameRate( const bool& display );
+void DisplayFrameRate( bool const& display );
 ///Display the on-screen coordinate system
-void DisplayCoordinateSystem( const bool& display );
-
-    
+void DisplayCoordinateSystem( bool const& display );
+///Set the filename for an ambient audio filename
+void SetAmbientAudioFile( std::string const& filename );    
 } //end environment
 } //end event
 } //end xplorer

@@ -271,6 +271,18 @@ void PreferencesPropertySet::CreateSkeleton()
                                                 false ));
         mLiveObjects.push_back( p );
     }
+    
+    {
+        AddProperty( "AmbientAudioSoundFile", std::string("null"), "Ambient Audio File" );
+        SetPropertyAttribute( "AmbientAudioSoundFile", "isFilePath", true );
+        mPropertyMap["AmbientAudioSoundFile"]->
+            SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        MakeLiveBasePtr p( new MakeLive< std::string const& >( mUUIDString,
+                                                       mPropertyMap["AmbientAudioSoundFile"],
+                                                       "PreferencesPropertySet.AmbientAudioSoundFile",
+                                                       false ));
+        mLiveObjects.push_back( p );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr property )

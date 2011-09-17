@@ -236,9 +236,9 @@ void CADPropertySet::Scale( PropertyPtr property )
 ////////////////////////////////////////////////////////////////////////////////
 void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
 {
-    std::string fileName = boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );
-    std::string nodeType = "Part";
-    std::string modeID = GetUUIDAsString();
+    std::string const fileName = boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );
+    std::string const nodeType = "Part";
+    std::string const modeID = GetUUIDAsString();
     
     m_animateCAD( nodeType, fileName, modeID );
     

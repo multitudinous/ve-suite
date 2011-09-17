@@ -356,11 +356,6 @@ void SceneManager::InitScene()
     //Create the switch for our logo
     _createLogo();
 
-#ifdef VE_SOUND
-    //m_sound = new ves::xplorer::scenegraph::Sound( mLogoNode.get() );
-    //m_sound->LoadFile( "C:/TSVEG/Dependencies/osgal-0.6.1/data/bee.wav" );
-#endif
-
     mNetworkDCS  = new osg::Group();
     mNetworkDCS->setName( "Network DCS" );
 
