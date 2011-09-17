@@ -500,7 +500,6 @@ void SceneRenderToTexture::InitRTTCamera(
             
             //svCamera->addChild( CreateClearColorQuad( numViewports ) );
         }
-        
     }
     else
     {
