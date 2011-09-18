@@ -69,6 +69,14 @@ EventFactory::EventFactory():
             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "DeleteCADNode" ] = swb;
     }
+    //Change the active model
+    {
+        SignalWrapperBase* swb =
+            new SignalWrapper< ves::util::StringSignal_type >( &m_changeActiveModelSignal );
+        evm->RegisterSignal( swb, "ChangeActiveModel",
+                            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "ChangeActiveModel" ] = swb;
+    }
 }
 
 EventFactory::~EventFactory()

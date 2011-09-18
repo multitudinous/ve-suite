@@ -92,8 +92,10 @@ private:
     ves::util::StringSignal_type m_vesFileLoadedSignal;
     /// Signal indicating working directory has changed
     ves::util::StringSignal_type m_workingDirChangedSignal;
-
+    ///Delete a CAD file that is loaded
     ves::util::ThreeStringSignal_type m_deleteCADNodeSignal;
+    ///Change the active model in xplorer by specifing a uuid
+    ves::util::StringSignal_type m_changeActiveModelSignal;
 
     //--------------------------------------
 

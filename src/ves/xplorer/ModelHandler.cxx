@@ -211,6 +211,11 @@ ModelHandler::ModelHandler()
     CONNECTSIGNALS_STATIC( "%SetDatasetSurfaceWrap", void( std::string const&, bool const ),
                  &ves::xplorer::event::data::SetDatasetSurfaceWrap,
                  m_connections, any_SignalType, normal_Priority );
+                 
+    CONNECTSIGNAL_1( "%ChangeActiveModel",
+                    void( std::string const& ),
+                    &ModelHandler::SetActiveModel,
+                    m_connections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler()

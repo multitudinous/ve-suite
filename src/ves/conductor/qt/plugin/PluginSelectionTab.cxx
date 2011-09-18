@@ -110,7 +110,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
     //Also attempt to discover plugins in the Plugins subfolder of the current
     //directory
     QString currentDir( QDir::currentPath() );
-    currentDir = currentDir + "/Plugins";
+    currentDir = currentDir + "/Plugins/UI";
     DiscoverPlugins( currentDir.toStdString() );
     
     qRegisterMetaType<std::string>();
@@ -144,7 +144,9 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
 {
-    QString tempDir( dir.c_str() );
+    std::string const pluginDir = dir;// + "/Plugins/UI";
+    
+    QString tempDir( pluginDir.c_str() );
     QDir pluginsPath( tempDir );
     if( !pluginsPath.exists() )
     {

@@ -78,23 +78,27 @@ void SetAmbientAudioFile( std::string const& filename )
 {
 #ifdef VE_SOUND
     // Create a sample, load a .wav file.
-    //osgAudio::Sample *sample = new osgAudio::Sample( osgDB::findDataFile( filename ) );
     osg::ref_ptr< osgAudio::SoundState > sound_state = 
-        new osgAudio::SoundState( filename );
-    sound_state->allocateSource( 10 );
-
-    sound_state->
-        setSample( new osgAudio::Sample( osgDB::findDataFile( filename ) ) );
-    //sound_state->setGain(0.7f);
-    //sound_state->setReferenceDistance(10);
-    // Make it an ambient (heard everywhere) sound
-    sound_state->setAmbient( true );
-    // Loop the sound forever
-    sound_state->setLooping( true );
-    // Start playing the music!
-    sound_state->setPlay( true );
-    
-    osgAudio::SoundManager::instance()->addSoundState(sound_state.get());
+        osgAudio::SoundManager::instance()->findSoundState( filename );
+    if( !sound_state.valid() )
+    {
+        sound_state = new osgAudio::SoundState( filename );
+        ///Priority 10
+        sound_state->allocateSource( 10 );
+        ///Add the sound sample
+        sound_state->
+            setSample( new osgAudio::Sample( osgDB::findDataFile( filename ) ) );
+        //sound_state->setGain(0.7f);
+        //sound_state->setReferenceDistance(10);
+        // Make it an ambient (heard everywhere) sound
+        sound_state->setAmbient( true );
+        // Loop the sound forever
+        sound_state->setLooping( true );
+        // Start playing the music!
+        sound_state->setPlay( true );
+        
+        osgAudio::SoundManager::instance()->addSoundState(sound_state.get());
+    }
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////

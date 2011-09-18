@@ -298,17 +298,11 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 
     if( system->GetNumberOfModels() != 0 )
     {
-        std::string modelID = system->GetModel( 0 )->GetID();
+        std::string const modelID = system->GetModel( 0 )->GetID();
 
-        ves::open::xml::DataValuePairPtr dataValuePair(
-        new ves::open::xml::DataValuePair() );
-        dataValuePair->SetData( "CHANGE_ACTIVE_MODEL", modelID );
-
-        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-        veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
-        veCommand->AddDataValuePair( dataValuePair );
-
-        ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+        reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
+            ( eventmanager::EventFactory::instance()->GetSignal( "ChangeActiveModel" ) )
+            ->mSignal->operator()( modelID );
     }
 
            //}
@@ -422,8 +416,9 @@ void NetworkLoader::OnActiveModelChanged( const std::string& modelID )
 {
     ves::xplorer::Model* model =
         ves::xplorer::ModelHandler::instance()->GetActiveModel();
-    ves::open::xml::model::SystemPtr system = model->GetModelData()->GetParentSystem();
-    const std::string& db( system->GetDBReference() );
+    ves::open::xml::model::SystemPtr system = 
+        model->GetModelData()->GetParentSystem();
+    std::string const& db( system->GetDBReference() );
     if( !db.empty() )
     {
         ves::xplorer::data::DatabaseManager::instance()->LoadFrom( db );
