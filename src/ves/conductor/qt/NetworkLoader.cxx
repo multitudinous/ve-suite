@@ -189,12 +189,12 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     //Reloading plugins
     //av_modules->ResetPluginTree();
     // RPT: The following block appears to be the key code from AvailableModules::ResetPluginTree
-    DataValuePairPtr dvp( new DataValuePair( std::string( "STRING" ) ) );
+    /*DataValuePairPtr dvp( new DataValuePair( std::string( "STRING" ) ) );
     dvp->SetData( "Reload_Plugin_Objects", "Reload" );
     ves::open::xml::CommandPtr vec( new ves::open::xml::Command() );
     vec->SetCommandName( "Plugin_Control" );
     vec->AddDataValuePair( dvp );
-    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( vec );
+    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( vec );*/
 //-!
 
 //+!

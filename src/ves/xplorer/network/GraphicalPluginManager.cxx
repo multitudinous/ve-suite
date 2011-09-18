@@ -856,6 +856,16 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::NewFileLoading( std::string const& fileName )
 {
+    //Set active model to null so that if the previous active model is deleted
+    //that we don't get errors in our code other places.
+    std::string nullString;
+    ModelHandler::instance()->SetActiveModel( nullString );    
+    
+    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
+}
+////////////////////////////////////////////////////////////////////////////////
+void GraphicalPluginManager::DiscoverPlugins( std::string const& fileName )
+{
     std::map< std::string, ves::xplorer::plugin::PluginBase* >* plugins;
     plugins = GraphicalPluginManager::instance()->GetTheCurrentPlugins();
     
@@ -871,16 +881,6 @@ void GraphicalPluginManager::NewFileLoading( std::string const& fileName )
     }
     plugins->clear();
 
-    //Set active model to null so that if the previous active model is deleted
-    //that we don't get errors in our code other places.
-    std::string nullString;
-    ModelHandler::instance()->SetActiveModel( nullString );    
-    
-    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
-}
-////////////////////////////////////////////////////////////////////////////////
-void GraphicalPluginManager::DiscoverPlugins( std::string const& fileName )
-{
     cfdVEAvailModules* modules = 
         GraphicalPluginManager::instance()->GetAvailablePlugins();
     modules->ResetPluginLoader();
