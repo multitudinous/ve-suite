@@ -32,9 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 /*!\file LoadVesFile.h
-  LoadVesFile API
-  */
-/*!\class LoadVesFile
+ * LoadVesFile API
+ * \class LoadVesFile
  * Do cleanup operations associated with loading new VES file.
  */
 
@@ -96,7 +95,6 @@ public:
     void NewFileLoaded( const std::string& fileName );
 
 private:
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 }
 }

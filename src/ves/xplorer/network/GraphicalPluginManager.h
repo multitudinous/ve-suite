@@ -46,6 +46,8 @@
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/model/SystemPtr.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -187,6 +189,12 @@ public:
     ///Clean up plugins
     void UnloadPlugins();
 
+    ///Clear things when loading a ves file
+    void NewFileLoading( std::string const& fileName );
+
+    ///Discover plugins when changing directories
+    void DiscoverPlugins( std::string const& fileName );
+
 private:
     ///Connect function so that we can connect at run time if needed
     void ConnectToCE();
@@ -242,6 +250,9 @@ private:
 
     ///The POA interface from the main vexplorer app
     PortableServer::POA* m_ChildPOA;
+
+    ///Wire up the slots
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 
 };
 } //end network

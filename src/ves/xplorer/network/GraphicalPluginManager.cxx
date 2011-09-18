@@ -62,6 +62,10 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+
+#include <ves/xplorer/data/DatabaseManager.h>
+
 #ifdef MINERVA_GIS_SUPPORT
 #include <ves/xplorer/minerva/MinervaManager.h>
 #endif
@@ -163,6 +167,19 @@ void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameCont
     _eventHandlers[std::string( "LOAD_VES_FILE" )]=
         new LoadVesFileEventHandler();
 #endif // QT_ON
+
+    ///Delete everything before loading things up
+    CONNECTSIGNALS_1( "%VesFileLoading%",
+                     void( std::string const& ),
+                     &GraphicalPluginManager::NewFileLoading,
+                     m_connections, any_SignalType, normal_Priority );
+
+    ///Reload plugins
+    CONNECTSIGNALS_1( "%WorkingDirectoryChanged%",
+        void( std::string const& ),
+        &GraphicalPluginManager::DiscoverPlugins,
+        m_connections, any_SignalType, normal_Priority );
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, ves::xplorer::plugin::PluginBase* >* 
@@ -835,5 +852,41 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
                 !parentResultsFailed, newPlugin->GetPluginDCS() );
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GraphicalPluginManager::NewFileLoading( std::string const& fileName )
+{
+    std::map< std::string, ves::xplorer::plugin::PluginBase* >* plugins;
+    plugins = GraphicalPluginManager::instance()->GetTheCurrentPlugins();
+    
+    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter = 
+        plugins->begin(); iter != plugins->end(); )
+    {
+        // if a module is on the plugins map then remove it
+        iter->second->RemoveSelfFromSG();
+        ModelHandler::instance()->RemoveModel( iter->second->GetCFDModel() );
+        // Must delete current instance of vebaseclass object
+        delete iter->second;
+        plugins->erase( iter++ );
+    }
+    plugins->clear();
+
+    //Set active model to null so that if the previous active model is deleted
+    //that we don't get errors in our code other places.
+    std::string nullString;
+    ModelHandler::instance()->SetActiveModel( nullString );    
+    
+    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
+}
+////////////////////////////////////////////////////////////////////////////////
+void GraphicalPluginManager::DiscoverPlugins( std::string const& fileName )
+{
+    cfdVEAvailModules* modules = 
+        GraphicalPluginManager::instance()->GetAvailablePlugins();
+    modules->ResetPluginLoader();
+    //Set active model to null so that if the previous active model is deleted
+    //that we don't get errors in our code other places.
+    std::string nullString;
+    ModelHandler::instance()->SetActiveModel( nullString );  
 }
 ////////////////////////////////////////////////////////////////////////////////

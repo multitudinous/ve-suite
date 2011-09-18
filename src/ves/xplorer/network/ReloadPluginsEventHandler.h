@@ -33,9 +33,8 @@
 #ifndef RELOAD_PLUGINS_EVENT_HANDLER_H
 #define RELOAD_PLUGINS_EVENT_HANDLER_H
 /*!\file ReloadPluginsEventHandler.h
-  ReloadPluginsEventHandler API
-  */
-/*!\class ReloadPluginsEventHandler
+ * ReloadPluginsEventHandler API
+ * \class ReloadPluginsEventHandler
  * Reload plugins for the network.
  */
 

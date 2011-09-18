@@ -61,10 +61,7 @@ using namespace ves::xplorer::network;
 LoadVesFileEventHandler::LoadVesFileEventHandler()
         : ves::xplorer::event::EventHandler()
 {
-    CONNECTSIGNALS_1( "%VesFileLoading%",
-                      void( const std::string& ),
-                      &LoadVesFileEventHandler::NewFileLoaded,
-                      m_connections, any_SignalType, normal_Priority );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 LoadVesFileEventHandler::LoadVesFileEventHandler( const LoadVesFileEventHandler& rhs )
