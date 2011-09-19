@@ -35,6 +35,9 @@
 #include <vtkDataSet.h>
 #include <vtkDataObject.h>
 #include <vtkUnstructuredGrid.h>
+#include <vtkStructuredGrid.h>
+#include <vtkStructuredPoints.h>
+#include <vtkRectilinearGrid.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkCellData.h>
 #include <vtkPointData.h>
@@ -132,6 +135,21 @@ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
         else if( dataSet->GetDataObjectType() == VTK_POLY_DATA )
         {
             dataSet->DeepCopy( converter->GetPolyDataOutput() );
+            converter->Delete();
+        }
+        else if( dataSet->GetDataObjectType() == VTK_RECTILINEAR_GRID )
+        {
+            dataSet->DeepCopy( converter->GetRectilinearGridOutput() );
+            converter->Delete();
+        }
+        else if( dataSet->GetDataObjectType() == VTK_STRUCTURED_POINTS )
+        {
+            dataSet->DeepCopy( converter->GetStructuredPointsOutput() );
+            converter->Delete();
+        }
+        else if( dataSet->GetDataObjectType() == VTK_STRUCTURED_GRID  )
+        {
+            dataSet->DeepCopy( converter->GetStructuredGridOutput() );
             converter->Delete();
         }
         else
