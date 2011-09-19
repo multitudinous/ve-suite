@@ -139,5 +139,12 @@ private:
     IOPCGroupPtr group;
     IOPCGroupsPtr groups;
     OPCBrowserPtr browser;
+    std::vector< std::string > tempVars;
+    std::vector< BSTR > bItemIDs;
+
+    void ParseBranch(  _bstr_t name, std::string prefix );
+    //void ParseBranch(  _bstr_t name );
+    //bool ParseBranch( );
+
 };
 #endif

@@ -65,12 +65,16 @@ OpcPlugin::OpcPlugin() :
     mDescription = wxString( "OPC Unit Operation Plugin", wxConvUTF8 );
     m_pluginType = "OpcPlugin";
     iconFilename = "opc";
-    m_unitName = "VE-PSI";
     wxImage my_img( opc );
     SetImage( my_img );
     m_monValue = "NA";
     m_monValueExists = false;
     m_monitoring = false;
+
+    m_unitName = "VE-PSI";
+    m_veModel->SetVendorName( m_unitName );
+    vendorData = DataValuePairPtr( new DataValuePair() );
+    vendorData->SetData( "vendorUnit", m_unitName );
 }
 ////////////////////////////////////////////////////////////////////////////////
 OpcPlugin::~OpcPlugin()

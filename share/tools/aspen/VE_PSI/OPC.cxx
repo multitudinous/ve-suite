@@ -83,8 +83,8 @@ bool OPC::ConnectToOPCServer()
     IOPCAutoServerPtr server( __uuidof(OPCServer) );
     m_server = server;
     m_server.AddRef();
-    //hr = m_server->Connect(_T("Softing.OPCToolboxDemo_ServerDA.1") );
-    hr = m_server->Connect(_T("OPC.Gateway.Server.DA") );
+    hr = m_server->Connect(_T("Softing.OPCToolboxDemo_ServerDA.1") );
+    //hr = m_server->Connect(_T("OPC.Gateway.Server.DA") );
     
     if( FAILED( hr ) )
     {
@@ -113,19 +113,54 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     //Get a list of the available OPC variables for a given unit op
     browser = m_server->CreateBrowser();
     browser.AddRef();
+    
+    //Get the items from the first level
     browser->ShowLeafs();
-    long browserCount = browser->GetCount();
-    std::vector< std::string > tempVars;
-    for( long i = 1; i <= browserCount; i++ )
+    long leafCount = browser->GetCount();
+    if( leafCount > 0 )
     {
-        _bstr_t itemName = browser->Item( i );
-        std::string temp = itemName;
-
-        //if( temp.find( modname ) != std::string::npos )
+        //std::vector< std::string > tempVars;
+        for( long i = 1; i <= leafCount; i++ )
         {
-            tempVars.push_back( temp );
+            _bstr_t itemName = browser->Item( i );
+            std::string temp = itemName;
+
+            //if( temp.find( modname ) != std::string::npos )
+            {
+                //for some reason the values from the "time slot" from the softing ex
+                //do not work
+                if( temp.find("time slot") == std::string::npos )
+                {
+                    tempVars.push_back( temp );
+                }
+                //bItemIDs.push_back( browser->GetItemID( itemName ) );
+            }
         }
     }
+
+    //recurse through the other branches
+    browser->ShowBranches();
+    long branchCount = browser->GetCount();
+    if( branchCount > 0 )
+    {
+        //std::vector< std::string > tempVars;
+        for( long i = 1; i <= branchCount; i++ )
+        {
+            _bstr_t itemName = browser->Item( i );
+            //browser->MoveTo( itemName );
+            //browser->MoveDown( itemName );
+            //std::string temp = itemName;
+            ParseBranch( itemName, "" );
+            browser->MoveUp();
+            browser->ShowBranches();
+        }
+    }
+
+    //this call is necessary to correctly obtain the itemIDs using the path
+    //"The server converts the name to an ItemID based on the current
+    //"position" of the browser. It will not correctly translate a name if
+    //MoveUp, MoveDown, etc. has been called since the name was obtained."
+    browser->MoveToRoot();
 
     itemIDs = new CComSafeArray<BSTR>( tempVars.size() + 1 );
     clientID = new CComSafeArray<long>( tempVars.size() + 1 );
@@ -139,7 +174,9 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     for( long i = 0; i < tempVars.size(); i++)
     {
             //add all the new variables to the itemIDs for reading values
-            itemIDs->SetAt( i + 1, browser->GetItemID( tempVars[i].c_str() ) );
+        BSTR tempId = browser->GetItemID( tempVars[i].c_str() );
+            itemIDs->SetAt( i + 1, tempId );//bItemIDs[i] );
+            //itemIDs->SetAt( i + 1, browser->GetItemID( tempVars[i].c_str() ) );//bItemIDs[i] );
             clientID->SetAt( i + 1, i + 1 );
     }
 
@@ -169,16 +206,23 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     std::vector< std::pair< std::string, std::string > > varsAndVals;
     for( int i = 1; i <= count; i++)
     {
-        values->GetAt(i).ChangeType(VT_BSTR);
-        std::pair< std::string, std::string > varAndVal;
-        std::string temp = _bstr_t( itemIDs->GetAt(i) );
+        VARTYPE myVT = values->GetAt(i).vt;
+        //the current implementation doesn't handle arrays properly
+        if( myVT <= VT_ARRAY &&
+            myVT != VT_EMPTY )
+        {
+            values->GetAt(i).ChangeType(VT_BSTR);
+            std::pair< std::string, std::string > varAndVal;
+            std::string temp = _bstr_t( itemIDs->GetAt(i) );
 
-        //remove everything but the variable ie remove the unit name
-        //everything before the "."
-        //varAndVal.first = temp.substr( temp.find(".") + 1, temp.size() - temp.find(".") + 1 );
-        varAndVal.first = temp;
-        varAndVal.second = _bstr_t( values->GetAt(i).bstrVal );
-        varsAndVals.push_back( varAndVal );
+            //remove everything but the variable ie remove the unit name
+            //everything before the "."
+            //varAndVal.first = temp.substr( temp.find(".") + 1, temp.size() - temp.find(".") + 1 );
+
+            varAndVal.first = temp;
+            varAndVal.second = _bstr_t( values->GetAt(i).bstrVal );
+            varsAndVals.push_back( varAndVal );
+        }
     }
 
     items->Remove( count, serverID->GetSafeArrayPtr(), errors->GetSafeArrayPtr());
@@ -559,4 +603,50 @@ void OPC::SetOPCValues( std::vector< std::pair < std::string, std::string > > va
 bool OPC::IsOPCVarsEmpty()
 {
     return m_opcVariables.empty();
+}
+
+void OPC::ParseBranch( _bstr_t name, std::string prefix )
+{
+    //browser->MoveTo( name );
+    browser->MoveDown( name );
+    browser->ShowLeafs();
+    long leafCount = browser->GetCount();
+    if( leafCount > 0 )
+    {
+        //std::vector< std::string > tempVars;
+        for( long i = 1; i <= leafCount; i++ )
+        {
+            _bstr_t itemName = browser->Item( i );
+            std::string temp = prefix + std::string( name ) + "." + std::string( itemName );
+
+            //if( temp.find( modname ) != std::string::npos )
+            {
+                //for some reason the values from the "time slot" from the softing ex
+                //do not work
+                if( temp.find("time slot") == std::string::npos )
+                {
+                    tempVars.push_back( temp );
+                }
+                //bItemIDs.push_back( browser->GetItemID( itemName ) );
+            }
+        }
+    }
+
+    browser->ShowBranches();
+    long branchCount = browser->GetCount();
+    if( branchCount > 0 )
+    {
+        //std::vector< std::string > tempVars;
+        for( long i = 1; i <= branchCount; i++ )
+        {
+            _bstr_t itemName = browser->Item( i );
+            //browser->MoveTo( itemName );
+            //browser->MoveDown( itemName );
+            //std::string temp = itemName;
+            ParseBranch( itemName, std::string( name ) + "." );
+            browser->MoveUp();
+            browser->ShowBranches();
+        }
+    }
+
 }
