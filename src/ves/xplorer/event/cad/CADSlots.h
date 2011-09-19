@@ -37,12 +37,22 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/util/ToggleNodeVisitor.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 #include <ves/xplorer/Debug.h>
+
+/*#if( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
+ #include <osg/OcclusionQueryNode>
+ #include <ves/xplorer/scenegraph/util/OcclusionQueryVisitor.h>
+ #else
+ #include <osgOQ/OcclusionQueryNode.h>
+ #include <osgOQ/OcclusionQueryVisitor.h>
+ #endif*/
+#include <osgwQuery/QueryUtils.h>
 
 namespace ves
 {
@@ -247,20 +257,93 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*static void ControlOcclusionQuery( std::string const& nodeID, std::string const& oqLevel )
+static void ControlOcclusionQuery( std::string const& nodeID, std::string const& oqLevel )
 {
-    if( !m_cadHandler->PartExists( nodeID ) )
+    ModelCADHandler* cadHandler = GetModelCADHandler();
+    if( !cadHandler )
+    {
+        return;
+    }
+    
+    if( !cadHandler->PartExists( nodeID ) )
     {
         return;
     }
     
     osg::ref_ptr< osg::Node > activePart = 
-        m_cadHandler->GetPart( nodeID )->GetNode()->GetNode();
-    std::string const oqSettings = oqLevel;
-    
+        //cadHandler->GetPart( nodeID )->GetNode()->GetNode();
+        cadHandler->GetPart( nodeID )->GetDCS();
+
     osg::ref_ptr< osg::Group > rootPartNode = 
-    s   tatic_cast< osg::Group* >( activePart.get() );
+        static_cast< osg::Group* >( activePart.get() );
+
+    osgwQuery::RemoveQueries rqs;
+    rootPartNode->accept( rqs );
+
+    bool occlude = false;
     
+    if( oqLevel == "Off" )
+    {
+        occlude = false;
+    }
+    else if( oqLevel == "Low" )
+    {
+        occlude = true;
+    }
+    else if( oqLevel == "Medium" )
+    {
+        occlude = true;
+    }
+    else if( oqLevel == "High" )
+    {
+        occlude = true;
+    }
+    
+    //if( !root.valid() && occlude )
+    if( occlude )
+    {
+        //osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
+        //tempGroup->addChild( tempCADNode.get() );
+        /*
+         osgOQ::OcclusionQueryNonFlatVisitor oqv;
+         //Specify the vertex count threshold for performing 
+         // occlusion query tests.
+         //Settings others use are:
+         //Fairly lax culling
+         //occlusionThreshold = 5000
+         //visibilityThreshold = 250
+         //Fairly aggressive culling
+         //occlusionThreshold = 2500
+         //visibilityThreshold = 500
+         // If the child geometry has less than the specified number
+         //   of vertices, don't perform occlusion query testing (it's
+         //   an occluder). Otherwise, perform occlusion query testing
+         //   (it's an occludee).
+         oqv.setOccluderThreshold( occlusionThreshold );
+         tempGroup->accept( oqv );
+         //Setup the number frames to skip
+         osgOQ::QueryFrameCountVisitor queryFrameVisitor( 2 );
+         tempGroup->accept( queryFrameVisitor );
+         // If the occlusion query test indicates that the number of
+         //   visible pixels is greater than this value, render the
+         //   child geometry. Otherwise, don't render and continue to
+         //   test for visibility in future frames.
+         osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
+         tempGroup->accept( visibilityThresholdVisitor );
+         
+         mCadNode = tempGroup.get();*/
+        
+        
+        // Any models using occlusion query must render in front-to-back order.
+        rootPartNode->getOrCreateStateSet()->setRenderBinDetails( 0, _QUERY_FRONT_TO_BACK_BIN_NAME );
+        
+        // Realized the viewer, then root's parent should
+        // be the top-level Camera. We want to add queries starting at that node.
+        osgwQuery::AddQueries aqs;
+        rootPartNode->accept( aqs );
+    }
+    
+    /*
     unsigned int numOQNs = 0;
     bool oqPresent = false;
     
@@ -371,8 +454,8 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
         vprDEBUG( vesDBG, 2 ) << "|\t\tThere are now " << numOQNs
         << "oq nodes." << std::endl
         << vprDEBUG_FLUSH;
-    }        
-}*/
+    }*/
+}
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace cad
 } // namespace event
