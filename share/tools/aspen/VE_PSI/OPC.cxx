@@ -293,8 +293,7 @@ void OPC::UpdateOPCList( )
 
     for( int i = 1; i <= m_opcVariables.size(); i++)
     {
-        std::string modnameOPC =
-            m_opcFlowsheetName + "_" + m_opcVariables[i-1];//+".POS";
+        std::string modnameOPC = m_opcVariables[i-1];
         _bstr_t itemName = modnameOPC.c_str();
         itemIDs->SetAt( i, browser->GetItemID( modnameOPC.c_str() ) );
         clientID->SetAt( i, i );

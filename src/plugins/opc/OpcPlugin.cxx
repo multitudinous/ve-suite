@@ -225,7 +225,8 @@ void OpcPlugin::ReadValue( )
         //std::string compName = GetVEModel()->GetPluginName();
         std::string tempData;
         //DataValuePairPtr tempDVP = opcData->GetDataValuePair( compName );
-        DataValuePairPtr tempDVP = opcData->GetDataValuePair( ConvertUnicode( mPluginName.c_str() ) );
+        //DataValuePairPtr tempDVP = opcData->GetDataValuePair( ConvertUnicode( mPluginName.c_str() ) );
+        DataValuePairPtr tempDVP = opcData->GetDataValuePair( 0 );
         //dynValue = "NA";
         if( tempDVP )
         {
