@@ -33,7 +33,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include "OpcPlugin.h"
-#include <ves/conductor/util/OpcUOVarDialog.h>
+#include "OpcVarDialog.h"
 #include <plugins/ConductorPluginEnums.h>
 #include <ves/conductor/ConductorLibEnums.h>
 #include <ves/conductor/DynamicsDataBuffer.h>
@@ -307,7 +307,7 @@ void OpcPlugin::QueryForAllVariables( wxCommandEvent& event )
         boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
 
-    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this, m_unitName );
+    OpcVarDialog* params = new OpcVarDialog( GetPluginParent(), this, m_unitName );
     params->SetComponentName( mPluginName );
     params->SetServiceList( serviceList );
 
@@ -331,7 +331,7 @@ void OpcPlugin::QueryForAllVariables( wxCommandEvent& event )
 void OpcPlugin::OnShowAllVar( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this, m_unitName );
+    OpcVarDialog* params = new OpcVarDialog( GetPluginParent(), this, m_unitName );
     params->SetComponentName( mPluginName );
     //params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
     params->SetServiceList( serviceList );
