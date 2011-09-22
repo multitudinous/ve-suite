@@ -138,11 +138,13 @@ public:
     ///
     void EnableGhostControl( bool const& enable = true );
 
+    ///Clean up the memory associated with a btRigidBody
+    void CleanRigidBody();
+
 protected:
 
 private:
-    ///Clean up the memory associated with a btRigidBody
-    void CleanRigidBody();
+
 
     ///Modify the mass, friction, restitution, and inertia for the rigidbody
     void SetMassProps( bool dynamic = true );

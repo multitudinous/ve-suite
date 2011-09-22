@@ -299,6 +299,48 @@ void CADPropertySet::EnableLiveProperties( bool live )
                                                      GetProperty("Opacity"),
                                                      "SetOpacityOnCADNode" ));
         mLiveObjects.push_back(p);
+
+
+        p = MakeLiveBasePtr(new MakeLive<const bool&>( mUUIDString,
+                                                     GetProperty("Physics"),
+                                                     "SetPhysicsOnCADNode" ));
+        mLiveObjects.push_back(p);
+
+
+        p = MakeLiveBasePtr(new MakeLive<const double&>( mUUIDString,
+                                                     GetProperty("Physics_Mass"),
+                                                     "SetMassOnCADNode" ));
+        mLiveObjects.push_back(p);
+
+
+        p = MakeLiveBasePtr(new MakeLive<const double&>( mUUIDString,
+                                                     GetProperty("Physics_Friction"),
+                                                     "SetFrictionOnCADNode" ));
+        mLiveObjects.push_back(p);
+
+
+        p = MakeLiveBasePtr(new MakeLive<const double&>( mUUIDString,
+                                                     GetProperty("Physics_Restitution"),
+                                                     "SetRestitutionOnCADNode" ));
+        mLiveObjects.push_back(p);
+
+
+        std::vector< PropertyPtr > physicsLink;
+        physicsLink.push_back( GetProperty("Physics_MotionType") );
+        physicsLink.push_back( GetProperty("Physics_LODType") );
+        physicsLink.push_back( GetProperty("Physics_MeshType") );
+        physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
+        p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
+                mUUIDString,
+                physicsLink,
+                "SetCADPhysicsMesh"));
+        mLiveObjects.push_back(p);
+
+
+        p = MakeLiveBasePtr(new MakeLive<std::string>( mUUIDString,
+                                                              GetProperty( "Culling" ),
+                                                              "SetCADCulling"));
+        mLiveObjects.push_back(p);
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

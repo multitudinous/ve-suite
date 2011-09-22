@@ -150,6 +150,87 @@ private:
 
 };
 
+/// Specialization for string type to deal with case of enums that are to be
+/// passed as strings
+template <>
+class MakeLive< std::string > : public MakeLiveBase
+{
+
+public:
+
+    MakeLive( std::string& uuid, PropertyPtr property, const std::string& signalName, bool passUUID = true ):
+        MakeLiveBase(),
+        m_UUID(uuid),
+        m_passUUID( passUUID )
+    {
+        m_SignalName = boost::lexical_cast<std::string>( this );
+        m_SignalName.append( "." );
+        m_SignalName.append( signalName );
+
+        using ves::xplorer::eventmanager::EventManager;
+        using ves::xplorer::eventmanager::SignalWrapper;
+        if( m_passUUID )
+        {
+            EventManager::instance()->RegisterSignal( new SignalWrapper<m_Signal_Type>( &m_Signal ), m_SignalName );
+        }
+        else
+        {
+            EventManager::instance()->RegisterSignal( new SignalWrapper<m_SignalNoUUID_Type>( &m_SignalNoUUID ), m_SignalName );
+        }
+        property->SignalValueChanged.connect( boost::bind( &MakeLive<std::string>::ValueChangedSlot, this, _1 )  );
+    }
+
+    void ValueChangedSlot( PropertyPtr property )
+    {
+        try
+        {
+            if( property->IsEnum() )
+            {
+                std::string value = boost::any_cast<std::string>(property->GetAttribute("enumCurrentString"));
+                 if( m_passUUID )
+                 {
+                     m_Signal( m_UUID, value );
+                 }
+                 else
+                 {
+                     m_SignalNoUUID( value );
+                 }
+            }
+            else
+            {
+                boost::any bval = property->GetValue();
+                if( !bval.empty() )
+                {
+                    std::string value = boost::any_cast<std::string>( bval );
+                    if( m_passUUID )
+                    {
+                        m_Signal( m_UUID, value );
+                    }
+                    else
+                    {
+                        m_SignalNoUUID( value );
+                    }
+                }
+            }
+        }
+        catch(...)
+        {
+            std::cout << "Failed boost::any_cast in MakeLive during attempt to call "
+                    << m_SignalName << " signal for property " /*<< name*/ << "." << std::endl << std::flush;
+        }
+    }
+
+private:
+    typedef boost::signals2::signal< void( const std::string&, std::string ) > m_Signal_Type;
+    m_Signal_Type m_Signal;
+    typedef boost::signals2::signal< void( std::string ) > m_SignalNoUUID_Type;
+    m_SignalNoUUID_Type m_SignalNoUUID;
+    std::string m_SignalName;
+    std::string& m_UUID;
+    bool m_passUUID;
+
+};
+
 /// The easy way to turn a group of related properties in a propertyset into a
 /// live feature that fires a typed signal each time any of the properties'
 /// value changes. This is especially useful when the data from multiple properties

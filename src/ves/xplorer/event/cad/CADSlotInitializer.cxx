@@ -79,6 +79,31 @@ CADSlotInitializer::CADSlotInitializer()
                             const std::string&),
                       &DeleteCADNode,
                       m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SetCADCulling",
+                      void( const std::string&, std::string const& ),
+                      &ControlOcclusionQuery,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SetPhysicsOnCADNode",
+                      void( const std::string&, const bool& ),
+                      &SetPhysicsOnCADNode,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SetMassOnCADNode",
+                      void( const std::string&, const double& ),
+                      &SetMassOnCADNode,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SetFrictionOnCADNode",
+                      void( const std::string&, const double& ),
+                      &SetFrictionOnCADNode,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SetRestitutionOnCADNode",
+                      void( const std::string&, const double& ),
+                      &SetRestitutionOnCADNode,
+                      m_connections, any_SignalType, normal_Priority );
 }
 
 } // namespace cad

@@ -42,6 +42,7 @@
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/util/ToggleNodeVisitor.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+#include <ves/xplorer/data/CADPropertySet.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -456,6 +457,109 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string const&
         << vprDEBUG_FLUSH;
     }*/
 }
+
+//////////////////////////////////////////////////////////////////////////
+/**
+  * Sets mass of node
+  * @param nodeID UUID of the node
+  * @param mass Mass
+  */
+static void SetMassOnCADNode( std::string const& nodeID,
+                        double const& mass )
+{
+    ModelCADHandler* m_cadHandler = GetModelCADHandler();
+
+    if( !m_cadHandler->PartExists( nodeID ) )
+    {
+        return;
+    }
+
+    m_cadHandler->GetPart( nodeID )->GetPhysicsRigidBody()->SetMass( mass );
+    std::cout << "Changed Physics Property (Mass): " << mass << " " << m_cadHandler->GetPart( nodeID )->GetFilename() << std::endl;
+}
+//////////////////////////////////////////////////////////////////////////
+/**
+  * Sets friction of node
+  * @param nodeID UUID of the node
+  * @param friction Friction
+  */
+static void SetFrictionOnCADNode( std::string const& nodeID,
+                        double const& friction )
+{
+    ModelCADHandler* m_cadHandler = GetModelCADHandler();
+
+    if( !m_cadHandler->PartExists( nodeID ) )
+    {
+        return;
+    }
+
+    m_cadHandler->GetPart( nodeID )->GetPhysicsRigidBody()->SetFriction( friction );
+    std::cout << "Changed Physics Property (Friction): " << friction << " " << m_cadHandler->GetPart( nodeID )->GetFilename() << std::endl;
+}
+//////////////////////////////////////////////////////////////////////////
+/**
+  * Sets restitution of node
+  * @param nodeID UUID of the node
+  * @param restitution Restitution
+  */
+static void SetRestitutionOnCADNode( std::string const& nodeID,
+                        double const& restitution )
+{
+    ModelCADHandler* m_cadHandler = GetModelCADHandler();
+
+    if( !m_cadHandler->PartExists( nodeID ) )
+    {
+        return;
+    }
+
+    m_cadHandler->GetPart( nodeID )->GetPhysicsRigidBody()->SetRestitution( restitution );
+    std::cout << "Changed Physics Property (Restitution): " << restitution << " " << m_cadHandler->GetPart( nodeID )->GetFilename() << std::endl;
+}
+
+//////////////////////////////////////////////////////////////////////////
+/**
+  * Toggles physics on CAD Node
+  * @param nodeID UUID of the node
+  * @param physics Whether physics is on or not
+  */
+static void SetPhysicsOnCADNode( std::string const& nodeID,
+                        bool const& physics )
+{
+    //std::cout << "SetPhysicsOnCADNode: " << physics << std::endl << std::flush;
+    ModelCADHandler* m_cadHandler = GetModelCADHandler();
+
+    if( !m_cadHandler->PartExists( nodeID ) )
+    {
+        return;
+    }
+
+    if( physics )
+    {
+        m_cadHandler->GetPart( nodeID )->InitPhysics();
+
+        // Once physics is initialized, we need to make sure the current physical
+        // properties and mesh settings get applied.
+        ves::xplorer::data::CADPropertySet set;
+        set.SetUUID( nodeID );
+        set.LoadFromDatabase();
+
+        SetMassOnCADNode( nodeID, boost::any_cast<double>(set.GetPropertyValue("Physics_Mass")) );
+        SetFrictionOnCADNode( nodeID, boost::any_cast<double>(set.GetPropertyValue("Physics_Friction")) );
+        SetRestitutionOnCADNode( nodeID, boost::any_cast<double>(set.GetPropertyValue("Physics_Restitution")) );
+
+        std::vector<std::string> meshDetails;
+        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyAttribute( "Physics_MotionType", "enumCurrentString" ) ) );
+        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyAttribute( "Physics_LODType", "enumCurrentString" ) ) );
+        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyAttribute( "Physics_MeshType", "enumCurrentString" ) ) );
+        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyAttribute( "Physics_MeshDecimation", "enumCurrentString" ) ) );
+        SetCADPhysicsMesh( nodeID, meshDetails );
+    }
+    else
+    {
+        m_cadHandler->GetPart( nodeID )->GetPhysicsRigidBody()->CleanRigidBody();
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace cad
 } // namespace event
