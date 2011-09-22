@@ -94,7 +94,10 @@ void FileEdit::buttonClicked()
 
 void FileEdit::onFileSelected( const QString& filePath )
 {
-    theLineEdit->setText( filePath );
+
+    QDir path = QDir::current();
+    QString relativePath = path.relativeFilePath( filePath );
+    theLineEdit->setText( relativePath );
 
     ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
 
@@ -104,7 +107,7 @@ void FileEdit::onFileSelected( const QString& filePath )
         m_fileDialog = 0;
     }
 
-    emit filePathChanged(filePath);
+    emit filePathChanged( relativePath );
 }
 
 void FileEdit::onFileCancelled()
