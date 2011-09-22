@@ -269,7 +269,7 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-static void ControlOcclusionQuery( std::string const& nodeID, std::string const& oqLevel )
+static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLevel )
 {
     ModelCADHandler* cadHandler = GetModelCADHandler();
     if( !cadHandler )
@@ -281,7 +281,7 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string const&
     {
         return;
     }
-    
+
     osg::ref_ptr< osg::Node > activePart = 
         //cadHandler->GetPart( nodeID )->GetNode()->GetNode();
         cadHandler->GetPart( nodeID )->GetDCS();

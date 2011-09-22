@@ -81,7 +81,7 @@ CADSlotInitializer::CADSlotInitializer()
                       m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SetCADCulling",
-                      void( const std::string&, std::string const& ),
+                      void( const std::string&, std::string ),
                       &ControlOcclusionQuery,
                       m_connections, any_SignalType, normal_Priority );
 

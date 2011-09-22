@@ -338,7 +338,7 @@ void CADPropertySet::EnableLiveProperties( bool live )
             mLiveObjects.push_back(p);
         }
 
-        p = MakeLiveBasePtr(new MakeLive<std::string>( mUUIDString,
+        p = MakeLiveBasePtr(new MakeLive< std::string >( mUUIDString,
                                                               GetProperty( "Culling" ),
                                                               "SetCADCulling"));
         mLiveObjects.push_back(p);
