@@ -94,6 +94,8 @@ private:
     ves::util::StringSignal_type m_workingDirChangedSignal;
     ///Delete a CAD file that is loaded
     ves::util::ThreeStringSignal_type m_deleteCADNodeSignal;
+    ///Add multi body dynamics data to a cad file
+    ves::util::ThreeStringSignal_type m_dynamicsDataCADNodeSignal;
     ///Change the active model in xplorer by specifing a uuid
     ves::util::StringSignal_type m_changeActiveModelSignal;
 

@@ -37,6 +37,9 @@
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
+
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
@@ -63,13 +66,10 @@ CADPropertySet::CADPropertySet()
 
     ///Tie up the animation controls
     {
-        std::string name("CADPropertySet");
-        name += boost::lexical_cast<std::string>( this );
-        name += ".CADAnimation";
-        
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new eventmanager::SignalWrapper< AddAnimationDataSignal_type >( &m_animateCAD ),
-            name, eventmanager::EventManager::unspecified_SignalType );
+        m_animateCAD =
+            reinterpret_cast< eventmanager::SignalWrapper< ves::util::ThreeStringSignal_type >* >
+            ( eventmanager::EventFactory::instance()->GetSignal( "CADPropertySet.CADAnimation" ) )
+            ->mSignal;
     }
     
     CreateSkeleton();
@@ -244,7 +244,7 @@ void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
     std::string const nodeType = "Part";
     std::string const modeID = GetUUIDAsString();
     
-    m_animateCAD( nodeType, fileName, modeID );
+    m_animateCAD->operator()( nodeType, fileName, modeID );
     
     // All properties here are live; save to db whenever they change.
     WriteToDatabase();

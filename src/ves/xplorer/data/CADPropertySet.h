@@ -35,6 +35,8 @@
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/PropertyPtr.h>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 #include <boost/signals2/signal.hpp>
 
 #include <ves/VEConfig.h>
@@ -74,9 +76,7 @@ private:
     void AddDynamicAnalysisData( PropertyPtr property );
     void Scale( PropertyPtr property );
 
-    typedef boost::signals2::signal< void ( std::string const& nodeType, 
-        std::string const& filename, std::string const& nodeID ) > AddAnimationDataSignal_type;
-    AddAnimationDataSignal_type m_animateCAD;
+    ves::util::ThreeStringSignal_type* m_animateCAD;
 };
 
 } // namespace data

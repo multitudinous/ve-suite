@@ -74,8 +74,16 @@ EventFactory::EventFactory():
         SignalWrapperBase* swb =
             new SignalWrapper< ves::util::StringSignal_type >( &m_changeActiveModelSignal );
         evm->RegisterSignal( swb, "ChangeActiveModel",
-                            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "ChangeActiveModel" ] = swb;
+    }
+    //Add multi body dynamics data to a CAD file
+    {
+        SignalWrapperBase* swb =
+            new SignalWrapper< ves::util::ThreeStringSignal_type >( &m_dynamicsDataCADNodeSignal );
+        evm->RegisterSignal( swb, "CADPropertySet.CADAnimation",
+            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "CADPropertySet.CADAnimation" ] = swb;
     }
 }
 
