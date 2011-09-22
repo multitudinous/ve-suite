@@ -141,6 +141,9 @@ public:
     ///Save the current physics state and scenegraph information
     void Save();
 
+    ///Determine if physics have been enabled
+    bool HavePhysics();
+
 protected:
     ///The current state of physics for CADEntity
     bool mPhysicsFlag;

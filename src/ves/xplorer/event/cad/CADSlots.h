@@ -185,21 +185,32 @@ static void SetCADPhysicsMesh( const std::string& nodeID,
 {
     ModelCADHandler* cadHandler = GetModelCADHandler();
 
-    if( cadHandler && (meshDetails.size() == 4) )
+    if( !cadHandler->PartExists( nodeID ) )
+    {
+        return;
+    }
+
+    ves::xplorer::scenegraph::CADEntity* part = cadHandler->GetPart( nodeID );
+
+    if( !part->HavePhysics() )
+    {
+        return;
+    }
+
+    if( meshDetails.size() == 4 )
     {
         const std::string mesh = meshDetails.at(0);
         const std::string lod = meshDetails.at(1);
         const std::string motion = meshDetails.at(2);
         const std::string decimation = meshDetails.at(3);
 
-        if( cadHandler->PartExists( nodeID ) )
+        //if( cadHandler->PartExists( nodeID ) )
         {
-            cadHandler->GetPart( nodeID )->
-            GetPhysicsRigidBody()->
-            CreateRigidBody( lod, motion, mesh, decimation );
+            part->GetPhysicsRigidBody()->
+                CreateRigidBody( lod, motion, mesh, decimation );
             
             vprDEBUG( vesDBG, 1 ) << "|\tChanged Physics Mesh: "
-            << cadHandler->GetPart( nodeID )->GetFilename()
+            << part->GetFilename()
             << std::endl << vprDEBUG_FLUSH;
         }
     }
@@ -474,8 +485,14 @@ static void SetMassOnCADNode( std::string const& nodeID,
         return;
     }
 
-    m_cadHandler->GetPart( nodeID )->GetPhysicsRigidBody()->SetMass( mass );
-    std::cout << "Changed Physics Property (Mass): " << mass << " " << m_cadHandler->GetPart( nodeID )->GetFilename() << std::endl;
+    ves::xplorer::scenegraph::CADEntity* part = m_cadHandler->GetPart( nodeID );
+    
+    if( part->HavePhysics() )
+    {
+        part->GetPhysicsRigidBody()->SetMass( mass );
+        std::cout << "Changed Physics Property (Mass): " << mass << " " 
+            << part->GetFilename() << std::endl;
+    }
 }
 //////////////////////////////////////////////////////////////////////////
 /**
@@ -493,8 +510,14 @@ static void SetFrictionOnCADNode( std::string const& nodeID,
         return;
     }
 
-    m_cadHandler->GetPart( nodeID )->GetPhysicsRigidBody()->SetFriction( friction );
-    std::cout << "Changed Physics Property (Friction): " << friction << " " << m_cadHandler->GetPart( nodeID )->GetFilename() << std::endl;
+    ves::xplorer::scenegraph::CADEntity* part = m_cadHandler->GetPart( nodeID );
+    
+    if( part->HavePhysics() )
+    {
+        part->GetPhysicsRigidBody()->SetFriction( friction );
+        std::cout << "Changed Physics Property (Friction): " << friction 
+            << " " << part->GetFilename() << std::endl;
+    }
 }
 //////////////////////////////////////////////////////////////////////////
 /**
@@ -512,8 +535,14 @@ static void SetRestitutionOnCADNode( std::string const& nodeID,
         return;
     }
 
-    m_cadHandler->GetPart( nodeID )->GetPhysicsRigidBody()->SetRestitution( restitution );
-    std::cout << "Changed Physics Property (Restitution): " << restitution << " " << m_cadHandler->GetPart( nodeID )->GetFilename() << std::endl;
+    ves::xplorer::scenegraph::CADEntity* part = m_cadHandler->GetPart( nodeID );
+
+    if( part->HavePhysics() )
+    {
+        part->GetPhysicsRigidBody()->SetRestitution( restitution );
+        std::cout << "Changed Physics Property (Restitution): " 
+            << restitution << " " << part->GetFilename() << std::endl;
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -533,9 +562,11 @@ static void SetPhysicsOnCADNode( std::string const& nodeID,
         return;
     }
 
+    ves::xplorer::scenegraph::CADEntity* part = m_cadHandler->GetPart( nodeID );
+
     if( physics )
     {
-        m_cadHandler->GetPart( nodeID )->InitPhysics();
+        part->InitPhysics();
 
         // Once physics is initialized, we need to make sure the current physical
         // properties and mesh settings get applied.
@@ -556,7 +587,11 @@ static void SetPhysicsOnCADNode( std::string const& nodeID,
     }
     else
     {
-        m_cadHandler->GetPart( nodeID )->GetPhysicsRigidBody()->CleanRigidBody();
+        if( part->HavePhysics() )
+        {
+            std::cout << "Cleaning physics rigid body." << std::endl;
+            part->GetPhysicsRigidBody()->CleanRigidBody();
+        }
     }
 }
 
