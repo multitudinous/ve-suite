@@ -40,12 +40,14 @@
 #include <osgQtTree/osgTreeItem.h>
 
 #include <QtGui/QScrollBar>
+#include <QtCore/QUuid>
 
 #include <ves/conductor/qt/ui_TreeTab.h>
 
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/data/CADPropertySet.h>
+#include <ves/xplorer/data/CADSubNodePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
@@ -264,10 +266,6 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     if( !found )
     {
         LOG_DEBUG( "No matching DCS" );
-        // Clear out the PropertyBrowser widget
-        ves::xplorer::data::PropertySetPtr nullPtr;
-        mBrowser->ParsePropertySet( nullPtr );
-        mActiveSet = nullPtr;
         
         ///Because we want to be able to select nodes for constraints and
         ///other per part operations we need to highlight the selected node
@@ -278,15 +276,40 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
                 parentVisitor( node, ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
             LOG_DEBUG( "Trying to select " << node->getName() );
             osg::NodePath nodePath = parentVisitor.GetParentNodePath();
+        
+            std::string uuid = CreateSubNodePropertySet( node, nodePath );
+            mActiveSet = 
+                ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CADSubNodePropertySet() );
+            mActiveSet->SetUUID( uuid );
+
+            mBrowser->ParsePropertySet( mActiveSet );
+            
+            ui->cadPropertyBrowser->setPropertyBrowser( mBrowser );
+            // Don't autosize the columns when we refresh the propertybrowser
+            ui->cadPropertyBrowser->RefreshContents( false );
+            ui->cadPropertyBrowser->show();
+            
+            // Load properties from db
+            mActiveSet->LoadFromDatabase();
+
+            mBrowser->RefreshAll();
             
             m_highlightNode( nodePath );
         }
-        
+        else
+        {
+            // Clear out the PropertyBrowser widget
+            ves::xplorer::data::PropertySetPtr nullPtr;
+            mBrowser->ParsePropertySet( nullPtr );
+            mActiveSet = nullPtr;
+        }
+
         return;
     }
     LOG_DEBUG( "Node is of type " << type );
 
-    ves::xplorer::scenegraph::DCS* newSelectedDCS = static_cast< ves::xplorer::scenegraph::DCS* >( node );
+    ves::xplorer::scenegraph::DCS* newSelectedDCS = 
+        static_cast< ves::xplorer::scenegraph::DCS* >( node );
 
     // Create a CADPropertySet and load it in the browser
     if( type == "CAD")
@@ -512,7 +535,7 @@ void TreeTab::on_m_deleteButton_clicked()
 
     RefreshTree();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_m_expandAllButton_clicked()
 {
     if( ui->m_expandAllButton->text() == QString( "Expand All" ) )
@@ -526,6 +549,44 @@ void TreeTab::on_m_expandAllButton_clicked()
         ui->m_expandAllButton->setText( "Expand All" );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
+std::string TreeTab::CreateSubNodePropertySet( osg::Node* node, osg::NodePath& path )
+{
+    ves::xplorer::data::CADSubNodePropertySet newSet;
+    std::string uuid = QUuid::createUuid().toString().toStdString();
+    newSet.SetUUID( uuid );
+    newSet.SetPropertyValue( "NameTag", node->getName() );
+/*    
+    //if( newPart->HasPhysics() )
+    {
+        newSet.SetPropertyValue( "Physics",
+                                newPart->HasPhysics() );
+        newSet.SetPropertyValue( "Physics_Mass",
+                                newPart->GetMass() );
+        newSet.SetPropertyValue( "Physics_Friction",
+                                newPart->GetFriction() );
+        newSet.SetPropertyValue( "Physics_Restitution",
+                                newPart->GetRestitution() );
+        newSet.SetPropertyValue( "Physics_MotionType",
+                                newPart->GetPhysicsMotionType() );
+        newSet.SetPropertyValue( "Physics_LODType",
+                                newPart->GetPhysicsLODType() );
+        newSet.SetPropertyValue( "Physics_MeshType",
+                                newPart->GetPhysicsMeshType() );
+        newSet.SetPropertyValue( "Physics_MeshDecimation",
+                                newPart->GetPhysicsDecimationValue() );
+    }
+*/
+    
+    // Calculate and store the NodePath
+    std::string pathString = osgwTools::nodePathToString( path );
+    newSet.SetPropertyValue( "NodePath", pathString );
+    
+    //newSet.SetPropertyValue( "Visibile", newPart->GetVisibility() );
+    
+    newSet.WriteToDatabase();
+    return uuid;
+}
+////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
 } // namespace ves

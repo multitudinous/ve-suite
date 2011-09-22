@@ -867,7 +867,7 @@ void MainWindow::LoadDataFile( std::string filename )
     if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
     {
         dataSetName->SetData( "VTK_DATASET_NAME",
-                              mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+            mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
     }
     else
     {
@@ -1332,10 +1332,12 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
         return;
     }
 
-    //std::cout << "Working Dir is: " << workingDir.toStdString() << std::endl << std::flush;
+    //std::cout << "Working Dir is: " 
+    //    << workingDir.toStdString() << std::endl << std::flush;
 
     // Change to the new working directory
-    std::cout << "Setting working directory to " << workingDir.toStdString() << std::endl << std::flush;
+    std::cout << "Setting working directory to " 
+        << workingDir.toStdString() << std::endl << std::flush;
     QDir::setCurrent( workingDir );
 
     reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
@@ -1361,7 +1363,8 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
 
     mDataBufferEngine->NewVESData( true );
     ///Initialize top level network
-    ves::open::xml::model::NetworkPtr tempNetwork( new ves::open::xml::model::Network() );
+    ves::open::xml::model::NetworkPtr tempNetwork( 
+        new ves::open::xml::model::Network() );
 
     mDataBufferEngine->GetXMLSystemDataObject(
         mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
@@ -1382,7 +1385,8 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     const std::string network = XMLDataBufferEngine::instance()->
                     SaveVESData( std::string( "returnString" ) );
 
-    ves::xplorer::network::GraphicalPluginManager::instance()->SetCurrentNetwork( network );
+    ves::xplorer::network::GraphicalPluginManager::instance()->
+        SetCurrentNetwork( network );
 
     ves::xplorer::network::GraphicalPluginManager::instance()->LoadDataFromCE();
 
@@ -1393,7 +1397,8 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
 
     // Force CAD tree to re-read the now "empty" scenegraph
     mScenegraphTreeTab->PopulateWithRoot(
-        &(ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager()) );
+        &(ves::xplorer::scenegraph::SceneManager::instance()->
+        GetGraphicalPluginManager()) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::RemoveNotifier( const std::string& filename )
@@ -1403,7 +1408,8 @@ void MainWindow::RemoveNotifier( const std::string& filename )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::QueuedRemoveNotifier(  std::string const& filename )
 {
-    std::map< std::string, QLabel* >::iterator iter = m_loadNotifiers.find( filename );
+    std::map< std::string, QLabel* >::iterator iter = 
+        m_loadNotifiers.find( filename );
     if( iter != m_loadNotifiers.end() )
     {
         RemoveTab( iter->second );
@@ -1431,7 +1437,8 @@ void MainWindow::UseAsSurfaceDataQueued( const std::string uuid, bool flag )
     }
     else
     {
-        ves::xplorer::ModelHandler::instance()->GetActiveModel()->DeleteDataSet( filename );
+        ves::xplorer::ModelHandler::instance()->
+            GetActiveModel()->DeleteDataSet( filename );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

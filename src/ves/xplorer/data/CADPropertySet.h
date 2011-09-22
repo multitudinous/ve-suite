@@ -64,6 +64,9 @@ public:
     /// live properties.
     void EnableLiveProperties( bool live );
 
+    /// Factory ctor
+    virtual PropertySetPtr CreateNew();
+
 private:
     ///Create the skeleton
     void CreateSkeleton();

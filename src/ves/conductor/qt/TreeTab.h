@@ -111,6 +111,8 @@ protected:
 
     void RefreshTree();
 
+    std::string CreateSubNodePropertySet( osg::Node* node, osg::NodePath& path );
+
 protected Q_SLOTS:
     /// Called when user changes selection in tree.
     /// This function looks up the scenegraph to find a valid DCS and then

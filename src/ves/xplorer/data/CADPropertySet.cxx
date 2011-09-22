@@ -122,9 +122,12 @@ void CADPropertySet::CreateSkeleton()
     SetPropertyAttribute( "Transform_Scale_X", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Y", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Z", "DisplayPrecision", 6 );
-    GetProperty("Transform_Scale_X")->SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
-    GetProperty("Transform_Scale_Y")->SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
-    GetProperty("Transform_Scale_Z")->SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
+    GetProperty("Transform_Scale_X")->
+        SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
+    GetProperty("Transform_Scale_Y")->
+        SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
+    GetProperty("Transform_Scale_Z")->
+        SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
 
     AddProperty( "Transform_Scale_Uniform", false, "Uniform Scaling" );
 
@@ -236,7 +239,8 @@ void CADPropertySet::Scale( PropertyPtr property )
 ////////////////////////////////////////////////////////////////////////////////
 void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
 {
-    std::string const fileName = boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );
+    std::string const fileName = 
+        boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );
     std::string const nodeType = "Part";
     std::string const modeID = GetUUIDAsString();
     
@@ -297,7 +301,11 @@ void CADPropertySet::EnableLiveProperties( bool live )
         mLiveObjects.push_back(p);
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
+PropertySetPtr CADPropertySet::CreateNew()
+{
+    return PropertySetPtr( new CADPropertySet() );
+}
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace data
 } // namespace xplorer
