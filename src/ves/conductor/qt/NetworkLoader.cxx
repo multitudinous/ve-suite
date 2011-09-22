@@ -42,6 +42,7 @@
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/data/CADPropertySet.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -422,6 +423,32 @@ void NetworkLoader::OnActiveModelChanged( const std::string& modelID )
     if( !db.empty() )
     {
         ves::xplorer::data::DatabaseManager::instance()->LoadFrom( db );
+    }
+
+    // Get id of every available CADPropertySet in the db so we can load it
+    // to turn on physics, animations, and other goodies that are stored in
+    // the db but are not in the .ves xml file.
+    ves::xplorer::data::CADPropertySet temp;
+    std::vector<std::string> ids =
+            ves::xplorer::data::DatabaseManager::instance()->
+                GetStringVector( temp.GetTableName(), "uuid" );
+
+    // Iterate through each available set and load it from db
+    std::vector<std::string>::const_iterator idIter = ids.begin();
+    while( idIter != ids.end() )
+    {
+        ves::xplorer::data::CADPropertySet cadSet;
+
+        // Turn on all live properties. This will ensure that physics meshes
+        // and all the other good stuff is turned on too. Note that dynamics
+        // data would be loaded and run even without this call since it is
+        // a permanently live property -- i.e. not one made live with
+        // MakeLive.
+        cadSet.EnableLiveProperties( true );
+
+        cadSet.SetUUID( *idIter );
+        cadSet.LoadFromDatabase( );
+        ++idIter;
     }
 
     // Notify of completion of this file load
