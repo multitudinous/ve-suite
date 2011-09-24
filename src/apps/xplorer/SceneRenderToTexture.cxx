@@ -398,8 +398,9 @@ void SceneRenderToTexture::InitRTTCamera(
     std::pair< int, int > const& viewportDimensions )
 {
     //Clear color quad will clear color and depth buffers for us
-    rttCamera->setClearMask( GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT );
-    rttCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+    //rttCamera->setClearMask( GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT );
+    rttCamera->setClearMask( GL_DEPTH_BUFFER_BIT );
+    rttCamera->setClearColor( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
 
     if( m_enableRTT )
     {
@@ -410,7 +411,7 @@ void SceneRenderToTexture::InitRTTCamera(
         rttCamera->setPostDrawCallback( msmrt );
 #endif
 
-        rttCamera->setRenderOrder( osg::Camera::PRE_RENDER, 1 );
+        rttCamera->setRenderOrder( osg::Camera::PRE_RENDER );
         rttCamera->setRenderTargetImplementation(
             osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
         rttCamera->setComputeNearFarMode(
@@ -472,7 +473,7 @@ void SceneRenderToTexture::InitRTTCamera(
             osg::Camera* clearQuadCamera = new osg::Camera();
             clearQuadCamera->setName( "Pre Render Clear Camera" );
             clearQuadCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-            clearQuadCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
+            clearQuadCamera->setRenderOrder( osg::Camera::PRE_RENDER );
             clearQuadCamera->setRenderTargetImplementation(
                 osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
             clearQuadCamera->setClearMask( 0 );
@@ -498,7 +499,7 @@ void SceneRenderToTexture::InitRTTCamera(
             clearQuadCamera->addChild( CreateClearColorQuad( 0 ) );
             rttCamera->addChild( clearQuadCamera );
             
-            //svCamera->addChild( CreateClearColorQuad( numViewports ) );
+            //rttCamera->addChild( CreateClearColorQuad( 0 ) );
         }
     }
     else
@@ -798,7 +799,7 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     osg::ref_ptr< osg::Depth > depth = new osg::Depth();
     depth->setFunction( osg::Depth::ALWAYS );
-    depth->setWriteMask( true );
+    //depth->setWriteMask( true );
     stateset->setAttributeAndModes( depth.get(), 
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     
@@ -1014,7 +1015,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         rttCameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
 
         // set the camera to render before after the main camera.
-        rttCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER, 1 );
+        rttCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER );
 
         // tell the camera to use OpenGL frame buffer object where supported.
         rttCameraList.back()->setRenderTargetImplementation(
@@ -1193,7 +1194,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         fullScreenQuadCameraList.back()->setClearColor( osg::Vec4( 0, 0, 0, 0) );
         fullScreenQuadCameraList.back()->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
         fullScreenQuadCameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF_INHERIT_VIEWPOINT );
-        fullScreenQuadCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER, 1 );
+        fullScreenQuadCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER );
         fullScreenQuadCameraList.back()->setRenderTargetImplementation(
             osg::Camera::FRAME_BUFFER_OBJECT );
 
@@ -1360,7 +1361,7 @@ void SceneRenderToTexture::WriteLowResImageFile(
         //Set view
         rttCameraList->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
         //Set the camera to render before after the main camera
-        rttCameraList->setRenderOrder( osg::Camera::PRE_RENDER, 1 );
+        rttCameraList->setRenderOrder( osg::Camera::PRE_RENDER );
         //Tell the camera to use OpenGL frame buffer object where supported
         rttCameraList->setRenderTargetImplementation(
             osg::Camera::FRAME_BUFFER_OBJECT );
