@@ -31,7 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-// This file has to be included first on Windows, or the compiler will complain about u_int in an ACE header file.
+// This file has to be included first on Windows, or the compiler 
+// will complain about u_int in an ACE header file.
 #include <ves/xplorer/network/VE_i.h>
 
 #include <ves/conductor/qt/NetworkLoader.h>
@@ -59,7 +60,7 @@
 
 #include <ves/util/commands/Minerva.h>
 
-#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
 #ifdef WIN32
@@ -156,7 +157,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         CommandPtr viewPointGUIData( new Command() );
         viewPointGUIData->SetCommandName( "Navigation_Data" );
         
-        DataValuePairPtr quatStartPosition( new DataValuePair());
+        DataValuePairPtr quatStartPosition( new DataValuePair() );
         OneDDoubleArrayPtr quatData( new OneDDoubleArray( 0 ) );
         quatData->AddElementToArray( 0 );
         quatData->AddElementToArray( 0 );
@@ -329,7 +330,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         backgroundColor.push_back( 0.0f );
         backgroundColor.push_back( 0.0f );
         backgroundColor.push_back( 1.0f );
-        
+        /*
         DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( std::string( "Background Color" ), backgroundColor );
         CommandPtr veCommand( new Command() );
@@ -337,11 +338,16 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         veCommand->AddDataValuePair( dataValuePair );
         UserPreferencesDataBuffer::instance()->
             SetCommand( std::string( "CHANGE_BACKGROUND_COLOR" ), veCommand );
+        */
+        
+        reinterpret_cast< eventmanager::SignalWrapper< ves::util::BoolAndDoubleVectorSignal_type >* >
+        ( eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
+        ->mSignal->operator()( true, backgroundColor );
     }
    
     {
         // Create the command and data value pairs
-        CommandPtr tempCommand = UserPreferencesDataBuffer::instance()->
+        /*CommandPtr tempCommand = UserPreferencesDataBuffer::instance()->
             GetCommand( "CHANGE_BACKGROUND_COLOR" );
         
         ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
@@ -373,7 +379,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         if( tempCommand->GetCommandName().compare( "NULL" ) )
         {
             ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
-        }
+        }*/
     }
     
     //Send the new commands after the new data is loaded not before

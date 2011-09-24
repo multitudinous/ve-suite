@@ -37,6 +37,9 @@
 
 //#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
 
+#include <vector>
+#include <string>
+
 namespace ves
 {
 namespace util
@@ -55,6 +58,9 @@ namespace util
     ///Signal for int
     typedef boost::signals2::signal< void ( int const& ) > IntSignal_type;
     
+    ///Signal for bools and vectors
+    typedef boost::signals2::signal< void ( const bool, const std::vector< double >&  ) > BoolAndDoubleVectorSignal_type;
+
 }
 }
 #endif

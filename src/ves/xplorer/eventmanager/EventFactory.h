@@ -98,7 +98,8 @@ private:
     ves::util::ThreeStringSignal_type m_dynamicsDataCADNodeSignal;
     ///Change the active model in xplorer by specifing a uuid
     ves::util::StringSignal_type m_changeActiveModelSignal;
-
+    ///
+    ves::util::BoolAndDoubleVectorSignal_type m_changeBackgroundColorSignal;
     //--------------------------------------
 
     /// Logging tools

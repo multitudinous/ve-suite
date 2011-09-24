@@ -35,8 +35,10 @@
 #include <ves/xplorer/event/environment/EnvironmentSlots.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
+#include <ves/xplorer/EnvironmentHandler.h>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -100,6 +102,13 @@ void SetAmbientAudioFile( std::string const& filename )
         osgAudio::SoundManager::instance()->addSoundState(sound_state.get());
     }
 #endif
+}
+////////////////////////////////////////////////////////////////////////////////
+void UpdateBackgroundColor( bool const enable, std::vector< double > const& color )
+{
+    ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
+    ves::xplorer::EnvironmentHandler::instance()->
+        GetHeadsUpDisplay()->SetTextColor( color );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

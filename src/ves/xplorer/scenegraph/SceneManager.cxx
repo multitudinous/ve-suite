@@ -112,7 +112,7 @@ SceneManager::SceneManager()
     m_sound( NULL ),
 #endif
     m_clearColorUniform(
-        new osg::Uniform( "clearColor", osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) ) ),
+        new osg::Uniform( "clearColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) ),
     mFrameStamp( NULL ),
     mCharacterController( NULL ),
     m_isRTTOn( false ),
@@ -652,7 +652,7 @@ DCS* SceneManager::GetActiveNavSwitchNode() const
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetBackgroundColor( std::vector< double > color )
 {
-    osg::Vec4 clearColor( color.at( 0 ), color.at( 1 ), color.at( 2 ), 0.0 );
+    osg::Vec4 clearColor( color.at( 0 ), color.at( 1 ), color.at( 2 ), 1.0 );
     if( m_isRTTOn )
     {
         m_clearColorUniform->set( clearColor );

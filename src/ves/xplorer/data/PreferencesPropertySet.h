@@ -36,6 +36,8 @@
 #include <ves/xplorer/data/PropertySet.h>
 #include <ves/xplorer/data/PropertyPtr.h>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 #include <ves/VEConfig.h>
 
 #include <boost/signals2/signal.hpp>
@@ -47,14 +49,8 @@ namespace xplorer
 namespace data
 {
 /*!\file PreferencesPropertySet.h
- *
- */
-
-/*!\class ves::xplorer::data::PreferencesPropertySet
- *
- */
-
-/*!\namespace ves::xplorer::data
+ * \class ves::xplorer::data::PreferencesPropertySet
+ * \namespace ves::xplorer::data
  *
  */
 class VE_DATA_EXPORTS PreferencesPropertySet : public PropertySet
@@ -107,8 +103,7 @@ private:
     UpdateCheckAndValueSignal_type m_draggerScaling;
 
     ///Update signal
-    typedef boost::signals2::signal< void ( const bool, const std::vector< double >&  ) > UpdateCheckAndVectorSignal_type;
-    UpdateCheckAndVectorSignal_type m_backgroundColor;
+    ves::util::BoolAndDoubleVectorSignal_type* m_backgroundColor;
 
     ///Update signal for check box preferences
 //    typedef boost::signals2::signal< void ( bool const& ) > CheckValueSignal_type;

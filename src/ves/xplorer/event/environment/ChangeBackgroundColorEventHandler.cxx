@@ -61,10 +61,7 @@ using namespace ves::open::xml;
 ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler()
         : ves::xplorer::event::EventHandler()
 {
-    CONNECTSIGNALS_2( "%UsePreferredBackgroundColor",
-                     void ( bool const enable, std::vector< double > const& color ),
-                     &ChangeBackgroundColorEventHandler::UpdateBackgroundColor,
-                     m_connections, any_SignalType, normal_Priority );    
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler( const ChangeBackgroundColorEventHandler& rhs )

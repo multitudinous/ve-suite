@@ -85,6 +85,14 @@ EventFactory::EventFactory():
             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "CADPropertySet.CADAnimation" ] = swb;
     }
+    ///Signal for Background Color
+    {
+        SignalWrapperBase* swb =
+        new SignalWrapper< ves::util::BoolAndDoubleVectorSignal_type >( &m_changeBackgroundColorSignal );
+        evm->RegisterSignal( swb, "PreferencesPropertySet.UsePreferredBackgroundColor",
+                            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "PreferencesPropertySet.UsePreferredBackgroundColor" ] = swb;
+    }
 }
 
 EventFactory::~EventFactory()

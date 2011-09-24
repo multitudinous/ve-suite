@@ -36,6 +36,7 @@
 #include <ves/xplorer/data/MakeLive.h>
 
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
@@ -71,13 +72,9 @@ PreferencesPropertySet::PreferencesPropertySet()
     }
     ///Signal for Background Color
     {
-        std::string name("PreferencesPropertySet");
-        name += boost::lexical_cast<std::string>( this );
-        name += ".UsePreferredBackgroundColor";
-        
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< UpdateCheckAndVectorSignal_type >( &m_backgroundColor ),
-            name, eventmanager::EventManager::unspecified_SignalType );
+        m_backgroundColor = reinterpret_cast< eventmanager::SignalWrapper< ves::util::BoolAndDoubleVectorSignal_type >* >
+        ( eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
+        ->mSignal;
     }
     
     mTableName = "XplorerPreferences";
@@ -347,7 +344,7 @@ void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr property )
     colors.push_back( g );
     colors.push_back( b );
     
-    m_backgroundColor( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
+    m_backgroundColor->operator()( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::SaveChanges( PropertyPtr property )

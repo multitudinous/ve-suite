@@ -36,6 +36,7 @@
 #include <ves/VEConfig.h>
 
 #include <string>
+#include <vector>
 
 namespace ves
 {
@@ -56,7 +57,9 @@ void DisplayFrameRate( bool const& display );
 ///Display the on-screen coordinate system
 void DisplayCoordinateSystem( bool const& display );
 ///Set the filename for an ambient audio filename
-void SetAmbientAudioFile( std::string const& filename );    
+void SetAmbientAudioFile( std::string const& filename );
+///Set the clear colors
+void UpdateBackgroundColor( bool const enable, std::vector< double > const& color );
 } //end environment
 } //end event
 } //end xplorer
