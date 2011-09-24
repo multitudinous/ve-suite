@@ -346,14 +346,22 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     }
    
     {
-        // Create the command and data value pairs
-        /*CommandPtr tempCommand = UserPreferencesDataBuffer::instance()->
+        {
+            // Create the command and data value pairs
+            CommandPtr tempCommand = UserPreferencesDataBuffer::instance()->
             GetCommand( "CHANGE_BACKGROUND_COLOR" );
-        
-        ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
+            DataValuePairPtr activeModelDVP = tempCommand->GetDataValuePair( "Background Color" );
+            std::vector< double > color;
+            activeModelDVP->GetData( color );
+            
+            //ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
+            reinterpret_cast< eventmanager::SignalWrapper< ves::util::BoolAndDoubleVectorSignal_type >* >
+            ( eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
+            ->mSignal->operator()( true, color );
+        }
         
         // Create the command and data value pairs
-        tempCommand = 
+        CommandPtr tempCommand = 
             UserPreferencesDataBuffer::instance()->
             GetCommand( "Navigation_Data" );
         
@@ -379,7 +387,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         if( tempCommand->GetCommandName().compare( "NULL" ) )
         {
             ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
-        }*/
+        }
     }
     
     //Send the new commands after the new data is loaded not before
