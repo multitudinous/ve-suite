@@ -45,38 +45,52 @@ namespace event
 {
 namespace volume
 {
-//////////////////////////////////////////////////////////////////////////
-    void SetTransientMode( std::string const& playMode, std::string const& direction );
+///Play, stop, step an animation
+void SetTransientMode( std::string const& playMode, std::string const& direction );
 
-    void SetTransientDuration( double const& duration );
+///Set the duration of the animation
+void SetTransientDuration( double const& duration );
 
-    void EnablePhoneShader( bool const& enable );
+///
+void EnablePhoneShader( bool const& enable );
 
-    void SetActiveShaderManager( std::string const& activeShaderManager );
+///
+void SetActiveShaderManager( std::string const& activeShaderManager );
 
-    void UpdateNumberOfSlicePlanes( unsigned int const& numberOfSlices );
+///
+void UpdateNumberOfSlicePlanes( unsigned int const& numberOfSlices );
 
-    void EnablePreIntegration( bool const& enable );
+///
+void EnablePreIntegration( bool const& enable );
 
-    void UpdateIsoSurfaceValue( double const& value );
+///
+void UpdateIsoSurfaceValue( double const& value );
 
-    void EnableIsoSurfaces( bool const& enable );
+///
+void EnableIsoSurfaces( bool const& enable );
 
-    void UpdateClipPlaneSettings( std::string const& planeDirection, 
-                                 std::string const& planeCoordinate, double const& roiValue, 
-                                 double const& minRoiValue, double const& maxRoiValue );
+///
+void UpdateClipPlaneSettings( std::string const& planeDirection, 
+    std::string const& planeCoordinate, double const& roiValue, 
+    double const& minRoiValue, double const& maxRoiValue );
 
-    void TurnOnBBox( bool const& enable );
+///
+void TurnOnBBox( bool const& enable );
 
-    void ActivateTBDataset( std::string const& activeDataset );
+///
+void ActivateTBDataset( std::string const& activeDataset );
 
-    void UpdateTBSolution();
+///
+void UpdateTBSolution( std::string const& dataName, std::string const& dataType, 
+    double const& minRange, double const& maxRange );
     
 ///Update the current scalar range
 void UpdateScalarRange( double const& minRange, double const& maxRange );
+
 ///Get the set active texture dataset. We assume there is only one texture
 ///dataset per model.
 ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset();
+
 } // namespace cad
 } // namespace event
 } // namespace xplorer

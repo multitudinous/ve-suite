@@ -37,6 +37,7 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/data/CADPropertySet.h>
+#include <ves/xplorer/event/data/DataSetScalarBar.h>
 
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
@@ -194,58 +195,41 @@ ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset()
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateTBSolution()
-{
-    /*CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-    DataValuePairPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
-    std::string dataName;
-    activeDataset->GetData( dataName );
-    
-    DataValuePairPtr type = command->GetDataValuePair( "Data Type" );
-    std::string dataType;
-    type->GetData( dataType );
-    
-    if( _activeTDSet )
+void UpdateTBSolution( std::string const& dataName, std::string const& dataType, double const& minRange, double const& maxRange )
+{    
+    ves::xplorer::volume::cfdTextureDataSet* activeTDSet = 
+        SetActiveTextureDataset();
+    if( !activeTDSet )
     {
-        if( dataType == "Scalar" )
+        return;
+    }
+    
+    if( dataType == "Scalar" )
+    {
+        activeTDSet->SetActiveScalar( dataName );
+        
+        ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
+        
+        //this is overkill
+        float floatRange[2];
+        floatRange[0] = minRange;
+        floatRange[1] = maxRange;
+        ves::xplorer::TextureBasedVizHandler::instance()->UpdateScalarRange( floatRange );
+
+        //need to pass the scalar range command to update it
+        DataSet* dataSet = 
+            ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+        DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+        if( scalarBar )
         {
-            _activeTDSet->SetActiveScalar( dataName );
-            
-            ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
-            
-            double scalarRange[2] = {0.f, 100.f};
-            
-            DataValuePairPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
-            minScalarRange->GetData( scalarRange[0] );
-            
-            DataValuePairPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
-            maxScalarRange->GetData( scalarRange[1] );
-            //this is overkill
-            float floatRange[2];
-            floatRange[0] = scalarRange[0];
-            floatRange[1] = scalarRange[1];
-            ves::xplorer::TextureBasedVizHandler::instance()->UpdateScalarRange( floatRange );
-            //need to pass the scalar range command to update it
-            
-            //if ( _activeModel )
-            {
-                DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-                //if ( dataSet )
-                {
-                    DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
-                    if( scalarBar )
-                    {
-                        dataSet->SetActiveScalar( dataName );
-                        scalarBar->AddScalarBarToGroup();
-                    }
-                }
-            }
+            dataSet->SetActiveScalar( dataName );
+            scalarBar->AddScalarBarToGroup();
         }
-        else if( dataType == "Vector" )
-        {
-            _activeTDSet->SetActiveVector( dataName );
-        }
-    }*/
+    }
+    else if( dataType == "Vector" )
+    {
+        activeTDSet->SetActiveVector( dataName );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace volume
