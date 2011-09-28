@@ -450,7 +450,7 @@ private:
     ///
     /// Stores a weak_ptr to the connection and a pointer to the affected SignalWrapper
     /// after a connection has been made.
-    /// This allows mConnections mConnections to be searched for a specific connection
+    /// This allows mConnections to be searched for a specific connection
     /// and thereby figure out which signal it was connected to.
     void StoreConnection( ScopedConnectionList& connections,
                           SignalWrapperBase* sigWrapper );
@@ -495,8 +495,9 @@ private:
     typedef std::map< SignalWrapperBase*, boost::weak_ptr< ConnectionMonopoly > > StrongMonopolies_type;
     StrongMonopolies_type mStrongMonopolies;
 
-    // Pointer to in-memory database session that holds details about signals
-    // to allow for efficient searches
+    ///
+    /// Pointer to in-memory database session that holds details about signals
+    /// to allow for efficient searches
     Poco::Data::Session* mSession;
 
     std::map< int, SlotWrapperBase* > mExactSlotMap;
