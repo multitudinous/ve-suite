@@ -163,10 +163,8 @@ void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameCont
         new ReloadPluginsEventHandler();
     _eventHandlers[std::string( "veNetwork Update" )] = 
         new UpdateNetworkEventHandler();
-#ifdef QT_ON
     _eventHandlers[std::string( "LOAD_VES_FILE" )]=
         new LoadVesFileEventHandler();
-#endif // QT_ON
 
     ///Delete everything before loading things up
     CONNECTSIGNALS_1( "%VesFileLoading%",
