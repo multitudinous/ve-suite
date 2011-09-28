@@ -109,7 +109,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     //http://msdn.microsoft.com/en-us/library/bf7fwze1(VS.80).aspx
     _chdir( newWorkingDir.c_str() );
 #else
-    chdir( newWorkingDir.c_str() );
+    int stopWarningMe = chdir( newWorkingDir.c_str() );
 #endif
     using namespace ves::xplorer;
     reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
@@ -274,17 +274,28 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     // <-- CORBA version with Qt
     ves::xplorer::network::GraphicalPluginManager::instance()->
             SetCurrentNetwork( nw_str );
-    std::vector< double > xplorerColor;
+
+    /*std::vector< double > xplorerColor;
     xplorerColor.push_back( 0.0 );
     xplorerColor.push_back( 0.0 );
     xplorerColor.push_back( 0.0 );
     xplorerColor.push_back( 1.0 );
-    DataValuePairPtr dataValuePair( new DataValuePair() );
+    */
+
+    /*DataValuePairPtr dataValuePair( new DataValuePair() );
     dataValuePair->SetData( std::string( "Load Data" ), xplorerColor );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "veNetwork Update" ) );
     veCommand->AddDataValuePair( dataValuePair );
     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+    */
+
+    // This signal replaces the above block. xplorerColor doesn't appear to be
+    // processed anywhere, so was left out of the signal.
+    reinterpret_cast< eventmanager::SignalWrapper< boost::signals2::signal< void( ) > >* >
+        ( eventmanager::EventFactory::instance()->GetSignal( "UpdateNetwork" ) )
+        ->mSignal->operator()( );
+
     // RPT: Make the first model in the network active
     ves::open::xml::model::SystemPtr system = XMLDataBufferEngine::instance()->GetXMLSystemDataObject( XMLDataBufferEngine::instance()->GetTopSystemId( ) );
 
@@ -293,10 +304,10 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     // database file and tells xplorer to load it up. We can't simply call
     // DatabaseManager::LoadFrom here because the system and model may not actually
     // be loaded yet.
-    CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
-                     void ( const std::string& ),
-                     &NetworkLoader::OnActiveModelChanged,
-                     m_connections, normal_Priority );
+//    CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
+//                     void ( const std::string& ),
+//                     &NetworkLoader::OnActiveModelChanged,
+//                     m_connections, normal_Priority );
 
     if( system->GetNumberOfModels() != 0 )
     {
@@ -425,8 +436,15 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         //dialog->InitalizeFromCommands ( elevationGroupCommand, rasterGroupCommand );
       }
     }
-}
 
+    OnActiveModelChanged( "null" );
+
+   }
+
+// At the moment, this shouldn't need to be a separate function since we're
+// no longer connecting to the ActiveModelChanged signal. Leaving it as-is
+// for a bit in case we discover a bug in the current arrangement and need to
+// go back to listening for ActiveModelChanged signal.
 void NetworkLoader::OnActiveModelChanged( const std::string& modelID )
 {
     ves::xplorer::Model* model =

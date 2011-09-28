@@ -44,6 +44,9 @@ namespace ves
 {
 namespace util
 {
+    ///Signal with no arguments and no returns
+    typedef boost::signals2::signal< void ( ) > VoidSignal_type;
+
     ///Signal for a String
     typedef boost::signals2::signal< void ( std::string const& ) > StringSignal_type;
     typedef boost::signals2::signal< void ( std::string const&, std::string const& ) > TwoStringSignal_type;

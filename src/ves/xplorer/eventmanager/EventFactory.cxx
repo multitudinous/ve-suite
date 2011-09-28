@@ -93,6 +93,14 @@ EventFactory::EventFactory():
                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "PreferencesPropertySet.UsePreferredBackgroundColor" ] = swb;
     }
+    // Update Network
+    {
+        SignalWrapperBase* swb =
+                new SignalWrapper< ves::util::VoidSignal_type >( &m_updateNetworkSignal );
+        evm->RegisterSignal( swb, "UpdateNetwork",
+                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "UpdateNetwork" ] = swb;
+    }
 }
 
 EventFactory::~EventFactory()

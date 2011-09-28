@@ -34,6 +34,8 @@
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/DeviceHandler.h>
 
@@ -59,7 +61,10 @@ using namespace ves::xplorer::network;
 UpdateNetworkEventHandler::UpdateNetworkEventHandler()
         : ves::xplorer::event::EventHandler()
 {
-    ;
+    CONNECTSIGNALS_0( "UpdateNetwork",
+        void( ),
+        &UpdateNetworkEventHandler::UpdateNetwork,
+        m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UpdateNetworkEventHandler::UpdateNetworkEventHandler( const UpdateNetworkEventHandler& rhs )
@@ -103,6 +108,19 @@ void UpdateNetworkEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         }
         GraphicalPluginManager::instance()->LoadDataFromCE();
     }
+
+    ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );
+}
+
+void UpdateNetworkEventHandler::UpdateNetwork()
+{
+    // CORBA no longer runs in typical desktop mode, so we have to test
+    if( GraphicalPluginManager::instance()->GetCORBAInterface() )
+    {
+        GraphicalPluginManager::instance()->GetCORBAInterface()->GetNetworkFromCE();
+    }
+    GraphicalPluginManager::instance()->LoadDataFromCE();
 
     ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
         ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );

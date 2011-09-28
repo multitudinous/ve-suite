@@ -100,6 +100,8 @@ private:
     ves::util::StringSignal_type m_changeActiveModelSignal;
     ///
     ves::util::BoolAndDoubleVectorSignal_type m_changeBackgroundColorSignal;
+    ///Update network -- main slot lives in xplorer::network::UpdateNetworkEventHandler
+    ves::util::VoidSignal_type m_updateNetworkSignal;
     //--------------------------------------
 
     /// Logging tools
