@@ -138,8 +138,9 @@ osgTreeItem* addTreeItem( TreeItem* parent,
     std::string nodename( "NULL" );
     if( node != NULL )
     {
-        nodename = node->className() + std::string( ": " );
-        nodename += name.empty() ?  node->getName() : name; // use supplied name if it exists, else nodename
+        //nodename = node->className() + std::string( ": " );
+        nodename = name.empty() ?  node->getName() : name; // use supplied name if it exists, else nodename
+        nodename += std::string(": ") + node->className();
     }
 
     QList<QVariant> viewData;
