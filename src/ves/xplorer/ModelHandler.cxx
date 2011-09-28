@@ -212,7 +212,7 @@ ModelHandler::ModelHandler()
                  &ves::xplorer::event::data::SetDatasetSurfaceWrap,
                  m_connections, any_SignalType, normal_Priority );
                  
-    CONNECTSIGNAL_1( "%ChangeActiveModel",
+    CONNECTSIGNAL_1( "ChangeActiveModel",
                     void( std::string const& ),
                     &ModelHandler::SetActiveModel,
                     m_connections, normal_Priority );
