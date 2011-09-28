@@ -76,6 +76,7 @@
 #include <ves/xplorer/eventmanager/SlotWrapper.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
+//#include <ves/xplorer/eventmanager/Event.h>
 
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/data/CADPropertySet.h>
@@ -272,7 +273,7 @@ MainWindow::MainWindow(QWidget* parent) :
                      mConnections, any_SignalType, normal_Priority );
     // Connect to VesFileLoaded signal, which is sent out when loading of a .ves
     // finishes
-    CONNECTSIGNAL_1( "%VesFileLoaded",
+    CONNECTSIGNAL_1( "VesFileLoaded",
                      void ( const std::string& ),
                      &MainWindow::RemoveNotifier,
                      mConnections, normal_Priority );
@@ -283,9 +284,9 @@ MainWindow::MainWindow(QWidget* parent) :
                      &MainWindow::RemoveNotifier,
                      mConnections, normal_Priority );
 
-    CONNECTSIGNAL_2( "%UseAsSurfaceData%", void( const std::string&, bool ),
+    CONNECTSIGNALS_2( "%UseAsSurfaceData%", void( const std::string&, bool ),
                      &MainWindow::UseAsSurfaceData,
-                     mConnections, normal_Priority );
+                     mConnections, any_SignalType, normal_Priority );
 
 
     m_GeometryExtensions.push_back("osg");
@@ -1300,6 +1301,30 @@ void MainWindow::on_actionShowPreferencesTab_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionNew_triggered( const QString& workingDir )
 {
+    /*
+    //Temporary crash button.
+    {
+        std::cout << "Registering crash signal" << std::endl << std::flush;
+        //boost::signals2::signal<void()> crashSignal;
+        ves::xplorer::eventmanager::Event<void()> crashEvent;
+        eventmanager::EventManager::instance()->RegisterSignal(
+           new eventmanager::SignalWrapper< boost::signals2::signal<void()> >( &(crashEvent.signal) ),
+           "CRASHME" );
+        std::cout << "Connecting to crash signal" << std::endl << std::flush;
+        CONNECTSIGNAL_0( "CRASHME",
+                         void ( ),
+                         &MainWindow::on_actionShowPreferencesTab_triggered,
+                         mConnections, normal_Priority );
+        crashEvent();
+    }// crashSignal goes out of scope, so the signalpointer is no longer valid.
+    // Attempt to connect to an invalid signal....
+    //std::cout << "Connecting to invalid crash signal" << std::endl << std::flush;
+//    CONNECTSIGNAL_0( "CRASHME",
+//                     void ( ),
+//                     &MainWindow::on_actionShowPreferencesTab_triggered,
+//                     mConnections, normal_Priority );
+*/
+
     onRecentFileRejected();
     // If workingDir is empty, this method was called by clicking the "New File"
     // icon. If workingDir is not empty, this method was called by successful
