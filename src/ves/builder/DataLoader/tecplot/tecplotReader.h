@@ -41,7 +41,7 @@
 class vtkDataObject;
 class vtkMultiBlockDataSet;
 class vtkUnstructuredGrid;
-class vtkFloatArray;
+class vtkDoubleArray;
 class vtkPoints;
 
 namespace ves
@@ -87,17 +87,17 @@ private:
     int nodeOffset;
     int elementOffset;
     vtkPoints* vertex;
-    vtkFloatArray** parameterData;
+    vtkDoubleArray** parameterData;
     int * timeToInitVtk;
     int * numZonesAtTimestep;
     LgIndex_t IMax, JMax, KMax;
     
     ///???
-    void ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData );
+    void ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkDoubleArray* scalarData );
     ///???
-    vtkFloatArray* ZeroArray( std::string varName, int numTuples );
+    vtkDoubleArray* ZeroArray( std::string varName, int numTuples );
     ///???
-    void ProcessAnyVectorData( vtkFloatArray** vectorData );
+    void ProcessAnyVectorData( vtkDoubleArray** vectorData );
     ///???
     void ComputeNumberOfTimesteps();
     ///???

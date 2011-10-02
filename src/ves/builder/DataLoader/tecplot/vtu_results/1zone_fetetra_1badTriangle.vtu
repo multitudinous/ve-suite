@@ -3,7 +3,7 @@
   <UnstructuredGrid>
     <Piece NumberOfPoints="14" NumberOfCells="16">
       <PointData>
-        <DataArray type="Float32" Name="Temperature" format="ascii" RangeMin="9.5" RangeMax="20">
+        <DataArray type="Float64" Name="Temperature" format="ascii" RangeMin="9.5" RangeMax="20">
           9.5 14.5 15 16 15.5 17
           17 17.5 18.5 20 17.5 18
           17.5 16.5

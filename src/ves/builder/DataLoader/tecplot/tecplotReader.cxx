@@ -39,7 +39,7 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkPoints.h>
 #include <vtkCellType.h>
-#include <vtkFloatArray.h>
+#include <vtkDoubleArray.h>
 #include <vtkPointData.h>
 #include <vtkCellData.h>
 #include <vtkIdList.h>
@@ -284,7 +284,7 @@ vtkDataObject * tecplotReader::GetOutput( const int timestep )
 
                 vtkFieldData * fd = vtkFieldData::New();
 
-                vtkFloatArray * fa = vtkFloatArray::New();
+                vtkDoubleArray * fa = vtkDoubleArray::New();
                 fa->SetName( "timestep" );
                 fa->SetNumberOfComponents( 1 );
                 fa->SetNumberOfTuples( 1 );
@@ -386,7 +386,7 @@ coordDataSharedAcrossZones == 1 means that there is 1 set of nodal coordinates, 
 if connectivityShareCount == numZones, then there is just 1 nodal connectivity array
 */
 
-void tecplotReader::ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkFloatArray* scalarData )
+void tecplotReader::ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkDoubleArray* scalarData )
 {
     // Read a single variable from the current zone...
     if( varNumber )
@@ -398,7 +398,7 @@ void tecplotReader::ReadVariable( const EntIndex_t currentZone, int varNumber, c
 
             /*if( scalarData == NULL )
             {
-                scalarData = vtkFloatArray::New();
+                scalarData = vtkDoubleArray::New();
                 scalarData->SetName( varName );
                 scalarData->SetNumberOfComponents( 1 );
             }*/
@@ -426,12 +426,12 @@ void tecplotReader::ReadVariable( const EntIndex_t currentZone, int varNumber, c
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-vtkFloatArray * tecplotReader::ZeroArray( std::string varName, int numTuples )
+vtkDoubleArray * tecplotReader::ZeroArray( std::string varName, int numTuples )
 {
 #ifdef PRINT_HEADERS
     std::cout << "setting parameter '" << varName << "' to zero" << std::endl;
 #endif // PRINT_HEADERS
-    vtkFloatArray* zero = vtkFloatArray::New();
+    vtkDoubleArray* zero = vtkDoubleArray::New();
     zero->SetName( varName.c_str() );
     zero->SetNumberOfTuples( numTuples );
     zero->SetNumberOfComponents( 1 );
@@ -442,7 +442,7 @@ vtkFloatArray * tecplotReader::ZeroArray( std::string varName, int numTuples )
     return zero;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void tecplotReader::ProcessAnyVectorData( vtkFloatArray ** vectorData )
+void tecplotReader::ProcessAnyVectorData( vtkDoubleArray ** vectorData )
 {
     // Now see if any variable names appear to be representing vector quantities...
 
@@ -548,7 +548,7 @@ void tecplotReader::ProcessAnyVectorData( vtkFloatArray ** vectorData )
                     pointCount = totalNumberOfElements;
                 }
                 
-                vtkFloatArray* vector = vtkFloatArray::New();
+                vtkDoubleArray* vector = vtkDoubleArray::New();
                 vector->SetName( vecName.c_str() );
                 vector->SetNumberOfTuples( pointCount );
                 vector->SetNumberOfComponents( 3 );
@@ -792,10 +792,10 @@ void tecplotReader::InitializeVtkData()
     this->vertex = vtkPoints::New();
 
     // set up arrays to store scalar nodal & element data over entire mesh...
-    this->parameterData = new vtkFloatArray* [ this->numParameterArrays ];
+    this->parameterData = new vtkDoubleArray* [ this->numParameterArrays ];
     for( int i = 0; i < this->numParameterArrays; ++i )
     {
-        this->parameterData[ i ] = vtkFloatArray::New();
+        this->parameterData[ i ] = vtkDoubleArray::New();
         parameterData[ i ]->SetNumberOfComponents( 1 );
         //parameterData[ i ]->DebugOn();
     }
@@ -1242,14 +1242,14 @@ void tecplotReader::AddOrderedCellsToGrid( const LgIndex_t numElementsInZone, co
                     vtkIdType node8 = i + ( (j+1) - 1 ) * IMax + ( (k+1) - 1 ) * IMax * JMax - 1 + this->nodeOffset;
                     tempIdList->SetId( 7, node8 );
 
-    #ifdef PRINT_HEADERS
+#ifdef PRINT_HEADERS
                     if( elemNum < 10 || elemNum > numElementsInZone - 10)
                     { 
                         std::cout << "For element " << elemNum << ", vtk nodes = " 
                             << node1 << " " << node2 << " " << node3 << " " << node4 << " "
                             << node5 << " " << node6 << " " << node7 << " " << node8 << " " << std::endl;
                     }
-    #endif // PRINT_HEADERS
+#endif // PRINT_HEADERS
 
                     this->ugrid->InsertNextCell( VTK_HEXAHEDRON, tempIdList );
                 }
@@ -1447,7 +1447,7 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
 
             LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum );
 #ifdef PRINT_HEADERS
-            if( elemNum < 10 )
+            if( elemNum < 10 || elemNum > numElementsInZone - 10 )
             { 
                 std::cout << "For elem " << elemNum 
                     << ", numFacesPerElement = " << numFacesPerElement << std::endl; 
@@ -1463,7 +1463,7 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
                 // how many nodes comprise the specified face? (will return 2 for polygonal zones)
                 LgIndex_t numNodesOnFace = TecUtilDataFaceMapGetNFaceNodes( FaceMap, faceNumber );
 #ifdef PRINT_HEADERS
-                if( elemNum < 10 )
+                if( elemNum < 10 || elemNum > numElementsInZone - 10 )
                 {
                     std::cout << "   For face " << faceNumber 
                         << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; 
@@ -1475,7 +1475,8 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
                     // node numbers in tecplot are 1-based, 0-based in VTK
                     vtkIdType nodeValue = TecUtilDataFaceMapGetFaceNode( FaceMap, faceNumber, node ) - 1 + this->nodeOffset;
 #ifdef PRINT_HEADERS
-                    if( elemNum < 10 ) { std::cout << "  " << nodeValue; }
+                    if( elemNum < 10 || elemNum > numElementsInZone - 10 )
+                    { std::cout << "  " << nodeValue; }
 #endif // PRINT_HEADERS
                     tempIdList->InsertUniqueId( nodeValue );
 
@@ -1486,7 +1487,8 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
                     }
                 }
 #ifdef PRINT_HEADERS
-                if( elemNum < 10 ) { std::cout << std::endl; }
+                if( elemNum < 10 || elemNum > numElementsInZone - 10 )
+                { std::cout << std::endl; }
 #endif // PRINT_HEADERS
             }
 
@@ -1515,7 +1517,7 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
         {
             LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum );
 #ifdef PRINT_HEADERS
-            if( elemNum < 10 )
+            if( elemNum < 10 || elemNum > numElementsInZone - 10 )
             {
                 std::cout << "For elem " << elemNum 
                     << ", numFacesPerElement = " << numFacesPerElement << std::endl; 
@@ -1534,7 +1536,7 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
                 // how many nodes comprise the specified face?
                 LgIndex_t numNodesOnFace = TecUtilDataFaceMapGetNFaceNodes( FaceMap, faceNumber );
 #ifdef PRINT_HEADERS
-                if( elemNum < 10 )
+                if( elemNum < 10 || elemNum > numElementsInZone - 10 )
                 { 
                     std::cout << "   For face " << faceNumber 
                     << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; 
@@ -1547,12 +1549,14 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
                     // node numbers in tecplot are 1-based, 0-based in VTK
                     vtkIdType nodeValue = TecUtilDataFaceMapGetFaceNode( FaceMap, faceNumber, node ) - 1 + this->nodeOffset;
 #ifdef PRINT_HEADERS
-                    if( elemNum < 10 ) { std::cout << "  " << nodeValue; }
+                    if( elemNum < 10 || elemNum > numElementsInZone - 10 )
+                    { std::cout << "  " << nodeValue; }
 #endif // PRINT_HEADERS
                     tempIdList->InsertNextId( nodeValue );
                 }
-#ifdef PRINT_HEADERS
-                if( elemNum < 10 ) { std::cout << std::endl; }
+#ifdef PRINT_HEADERS 
+                if( elemNum < 10 || elemNum > numElementsInZone - 10 )
+                { std::cout << std::endl; }
 #endif // PRINT_HEADERS
             }
 
@@ -1560,15 +1564,20 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
             tempIdList->Delete();
         }
 #else // VTK_VERSION
-        //std::cout << "Warning: VTK version " << VTK_VERSION 
-        //    << " can not handle polyhedron cells in zone " << currentZone << std::endl;
+
+#ifdef PRINT_HEADERS
+        std::cout << "Note: VTK version " << VTK_VERSION 
+                  << " can not directly handle polyhedron cells in zone " << currentZone 
+                  << ". Will store as VTK_CONVEX_POINT_SET." << std::endl;
+#endif // PRINT_HEADERS
+
         // Begin setting up the tempIdList. 
         vtkIdList* tempIdList = vtkIdList::New();
         for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; ++elemNum ) // element numbers are 1-based
         {
             LgIndex_t numFacesPerElement = TecUtilDataElemGetNumFaces( ElemToFaceMap, elemNum );
 #ifdef PRINT_HEADERS
-            if( elemNum < 10 )
+            if( elemNum < 10 || elemNum > numElementsInZone - 10 )
             { 
                 std::cout << "For elem " << elemNum 
                     << ", numFacesPerElement = " << numFacesPerElement << std::endl; 
@@ -1581,7 +1590,7 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
                 // how many nodes comprise the specified face?
                 LgIndex_t numNodesOnFace = TecUtilDataFaceMapGetNFaceNodes( FaceMap, faceNumber );
 #ifdef PRINT_HEADERS
-                if( elemNum < 10 )
+                if( elemNum < 10 || elemNum > numElementsInZone - 10 )
                 {
                     std::cout << "   For face " << faceNumber 
                     << ", numNodesOnFace = " << numNodesOnFace << ". node list = " ; 
@@ -1594,12 +1603,14 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
                     vtkIdType nodeValue = 
                         TecUtilDataFaceMapGetFaceNode( FaceMap, faceNumber, node ) - 1 + this->nodeOffset;
 #ifdef PRINT_HEADERS
-                    if( elemNum < 10 ) { std::cout << "  " << nodeValue; }
+                    if( elemNum < 10 || elemNum > numElementsInZone - 10 )
+                    { std::cout << "  " << nodeValue; }
 #endif // PRINT_HEADERS
                     tempIdList->InsertUniqueId( nodeValue );
                 }
 #ifdef PRINT_HEADERS
-                if( elemNum < 10 ) { std::cout << std::endl; }
+                if( elemNum < 10 || elemNum > numElementsInZone - 10 )
+                { std::cout << std::endl; }
 #endif // PRINT_HEADERS
             }
             
@@ -1620,10 +1631,10 @@ void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const in
     ///Read the nodal coordinates from the current zone...
     ///If any turn out to be non-existent (e.g., planar description),
     ///then set to zero for 3D coordinates.
-    vtkFloatArray* x = NULL;
+    vtkDoubleArray* x = NULL;
     if( this->xIndex > 0 )
     {
-        x = vtkFloatArray::New();
+        x = vtkDoubleArray::New();
         x->SetName( "X" );
         x->SetNumberOfComponents( 1 );
         this->ReadVariable( currentZone, this->xIndex, m_varName[ this->xIndex - 1 ], x );
@@ -1633,10 +1644,10 @@ void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const in
         x = this->ZeroArray( "X", numNodalPointsInZone );
     }
 
-    vtkFloatArray* y = NULL;
+    vtkDoubleArray* y = NULL;
     if( this->yIndex > 0 )
     {
-        y = vtkFloatArray::New();
+        y = vtkDoubleArray::New();
         y->SetName( "Y" );
         y->SetNumberOfComponents( 1 );
         this->ReadVariable( currentZone, this->yIndex, m_varName[ this->yIndex - 1 ], y );
@@ -1646,10 +1657,10 @@ void tecplotReader::ReadNodalCoordinates( const EntIndex_t currentZone, const in
         y = this->ZeroArray( "Y", numNodalPointsInZone );
     }
 
-    vtkFloatArray* z = NULL;
+    vtkDoubleArray* z = NULL;
     if( this->zIndex > 0 )
     {
-        z = vtkFloatArray::New();
+        z = vtkDoubleArray::New();
         z->SetName( "Z" );
         z->SetNumberOfComponents( 1 );
         this->ReadVariable( currentZone, this->zIndex, m_varName[ this->zIndex - 1 ], z );

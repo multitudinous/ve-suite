@@ -3,7 +3,7 @@
   <UnstructuredGrid>
     <Piece NumberOfPoints="6" NumberOfCells="4">
       <PointData>
-        <DataArray type="Float32" Name="P" format="ascii" RangeMin="100" RangeMax="200">
+        <DataArray type="Float64" Name="P" format="ascii" RangeMin="100" RangeMax="200">
           100 125 150 150 175 200
         </DataArray>
       </PointData>

@@ -3,26 +3,26 @@
   <UnstructuredGrid>
     <Piece NumberOfPoints="6" NumberOfCells="4">
       <PointData>
-        <DataArray type="Float32" Name="P" format="ascii" RangeMin="120" RangeMax="200">
+        <DataArray type="Float64" Name="P" format="ascii" RangeMin="120" RangeMax="200">
           120 145 180 175 195 200
         </DataArray>
-        <DataArray type="Float32" Name="X VECTOR" format="ascii" RangeMin="-1" RangeMax="-1">
+        <DataArray type="Float64" Name="X VECTOR" format="ascii" RangeMin="-1" RangeMax="-1">
           -1 -1 -1 -1 -1 -1
         </DataArray>
-        <DataArray type="Float32" Name="Y VECTOR" format="ascii" RangeMin="-1" RangeMax="-1">
+        <DataArray type="Float64" Name="Y VECTOR" format="ascii" RangeMin="-1" RangeMax="-1">
           -1 -1 -1 -1 -1 -1
         </DataArray>
-        <DataArray type="Float32" Name="VECTOR" NumberOfComponents="3" format="ascii" RangeMin="1.4142135624" RangeMax="1.4142135624">
+        <DataArray type="Float64" Name="VECTOR" NumberOfComponents="3" format="ascii" RangeMin="1.4142135624" RangeMax="1.4142135624">
           -1 -1 0 -1 -1 0
           -1 -1 0 -1 -1 0
           -1 -1 0 -1 -1 0
         </DataArray>
       </PointData>
       <CellData>
-        <DataArray type="Float32" Name="sjk1" format="ascii" RangeMin="100" RangeMax="400">
+        <DataArray type="Float64" Name="sjk1" format="ascii" RangeMin="100" RangeMax="400">
           100 200 300 400
         </DataArray>
-        <DataArray type="Float32" Name="var 2" format="ascii" RangeMin="22" RangeMax="55">
+        <DataArray type="Float64" Name="var 2" format="ascii" RangeMin="22" RangeMax="55">
           22 33 44 55
         </DataArray>
       </CellData>
