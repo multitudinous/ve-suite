@@ -97,6 +97,8 @@ private:
     ///???
     vtkDoubleArray* ZeroArray( std::string varName, int numTuples );
     ///???
+    int StringDifference( std::string string1, std::string string2 );
+    ///???
     void ProcessAnyVectorData( vtkDoubleArray** vectorData );
     ///???
     void ComputeNumberOfTimesteps();

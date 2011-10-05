@@ -6,13 +6,13 @@
         <DataArray type="Float64" Name="P" format="ascii" RangeMin="120" RangeMax="200">
           120 145 180 175 195 200
         </DataArray>
-        <DataArray type="Float64" Name="X VECTOR" format="ascii" RangeMin="-1" RangeMax="-1">
+        <DataArray type="Float64" Name="VELOCITY_1_nodal" format="ascii" RangeMin="-1" RangeMax="-1">
           -1 -1 -1 -1 -1 -1
         </DataArray>
-        <DataArray type="Float64" Name="Y VECTOR" format="ascii" RangeMin="-1" RangeMax="-1">
+        <DataArray type="Float64" Name="VELOCITY_2_nodal" format="ascii" RangeMin="-1" RangeMax="-1">
           -1 -1 -1 -1 -1 -1
         </DataArray>
-        <DataArray type="Float64" Name="VECTOR" NumberOfComponents="3" format="ascii" RangeMin="1.4142135624" RangeMax="1.4142135624">
+        <DataArray type="Float64" Name="VELOCITY__nodal" NumberOfComponents="3" format="ascii" RangeMin="1.4142135624" RangeMax="1.4142135624">
           -1 -1 0 -1 -1 0
           -1 -1 0 -1 -1 0
           -1 -1 0 -1 -1 0

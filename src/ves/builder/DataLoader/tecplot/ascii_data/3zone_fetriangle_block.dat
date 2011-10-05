@@ -1,5 +1,5 @@
 TITLE = "3zone_fetriangle.tec reformatted in block format, with extra nodal and cell data, vector components, and shared data"
-VARIABLES = "X", "Y", "P", "X VECTOR", "Y VECTOR", "sjk1", "var 2"
+VARIABLES = "X", "Y", "P", "VELOCITY_1_nodal", "VELOCITY_2_nodal", "sjk1", "var 2"
 ZONE T="P_1", DATAPACKING=BLOCK, NODES=6, ELEMENTS=4, ZONETYPE=FETRIANGLE
 VARLOCATION=([6-7]=CELLCENTERED)
 -1.0 0.0 1.0 -0.5 0.5

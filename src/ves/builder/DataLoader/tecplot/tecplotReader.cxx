@@ -412,7 +412,9 @@ void tecplotReader::ReadVariable( const EntIndex_t currentZone, int varNumber, c
             {
                 //GetByRef function is 1-based
                 double tempData = TecUtilDataValueGetByRef( FieldData, i+1 );
-                scalarData->InsertNextValue( tempData );
+                scalarData->InsertNextTuple( &tempData );
+                //scalarData->InsertNextValue( tempData );
+                //scalarData->InsertNextTuple1( tempData );
             }
         }
         else
@@ -442,147 +444,195 @@ vtkDoubleArray * tecplotReader::ZeroArray( std::string varName, int numTuples )
     return zero;
 }
 ////////////////////////////////////////////////////////////////////////////////
+int tecplotReader::StringDifference( std::string string1, std::string string2 )
+{
+    //We are looking for strings that differ by only 1 character,
+    //and we return the position where the difference occurs.
+    //For all other cases, we return -1.
+    if( string1.length() != string2.length() )
+    {
+        return -1;
+    }
+
+    //Count differences...
+    int numDiffs = 0;
+    for( unsigned int i = 0; i < string1.length(); i++ )
+    {
+        if( string1[ i ] != string2[ i ] )
+        {
+            numDiffs++;
+        }
+    }
+
+    if( numDiffs != 1 )
+    {
+        return -1;
+    }
+        
+    for( unsigned int i = 0; i < string1.length(); i++ )
+    {
+        if( string1[ i ] != string2[ i ] )
+        {
+            return i;
+        }
+    }
+
+    //should never get here...
+    return -1;
+}
+////////////////////////////////////////////////////////////////////////////////
 void tecplotReader::ProcessAnyVectorData( vtkDoubleArray ** vectorData )
 {
     // Now see if any variable names appear to be representing vector quantities...
 
-    std::string vecName;
-    std::string midName, previousMidName, nextMidName;
+    std::string varName, nextVarName, vecName;
+    int diffChar;
+    int lastDiffChar = -1;
+    int numRepeats = 0;
+    bool foundVector;
 
-    int repeatCount = 0;
-
-    // skipping first few parameters (point coordiantes), examine variable names
-    for( int i = this->dimension; i < this->numVars; i++ )
+    // Most vector are comprised of scalars that
+    // either begin/end with u,v,w or x,y,z or 1,2,3.
+    // Skip first few parameters (point coordiantes) and examine variable names
+    for( int i = this->dimension; i < this->numVars-1; i++ )
     {
-        // extract the middle part of the variable name -- neglect the first and last character
-        std::string varName( this->m_varName[ i ] );
-        midName = varName.substr( 1, varName.length()-2 );
+        foundVector = false;
+        varName.assign( this->m_varName[ i ] );
+        nextVarName.assign( this->m_varName[ i+1 ] );
 
-        if( midName.length() > 0 && midName.compare( previousMidName ) == 0 )
+        // look for consecutive variable names that differ by one character...
+        diffChar = this->StringDifference( varName, nextVarName );
+        if( diffChar >= 0 )
         {
-            repeatCount++;
+            numRepeats++;
         }
         else
         {
-            repeatCount = 1;
+            numRepeats = 0;
         }
 
-        if( repeatCount == this->dimension ) // might have found a vector, need to do a few more checks
+        if( numRepeats == this->dimension-1 ) // might have found a vector, need to do a few more checks
         {
-            bool foundVector = false;
-
-            if( i == this->numVars-1 ) // if at end of parameter list
+            if( this->dimension == 2 )
+            {
+                foundVector = true;
+            }
+            else if( this->dimension == 3 && diffChar == lastDiffChar )
             {
                 foundVector = true;
             }
             else
             {
-                //look at next parameter name, again neglecting the first and last character
-                //we do this because most vector are comprised of scalars that
-                //either begin/end with u,v,w or x,y,z or 1,2,3. By stripping
-                //these characters and comparing the middle portion of a scalar
-                //name we can actually determine if 3 scalars make up
-                //a vector.
-                std::string nextVarName( this->m_varName[ i+1 ] );
-                nextMidName = nextVarName.substr( 1, varName.length()-2 );
-                // if name is different, then assume we found a vector
-                if( midName.compare( nextMidName ) != 0 )
-                {
-                    foundVector = true;
-                }
-            }
-
-            if ( foundVector )  // reconstruct vector name
-            {
-                std::string previousVarName( this->m_varName[ i-1 ] );
-
-                //if first char was same then put it back
-                if( varName.compare( 0, 1, previousVarName, 0, 1 ) == 0 )
-                {
-                    vecName = varName.substr( 0, varName.length()-1 );
-                }
-                //if last char was same then put it back
-                else if( varName.compare( varName.length()-1, 1, previousVarName, varName.length()-1, 1 ) == 0 )
-                {
-                    vecName = varName.substr( 1, varName.length()-1 );
-                }
-                else
-                {
-                    std::cerr << "Error: Unexpected variable name: Should not get here" << std::endl;
-                    vecName = midName;
-                }
-
-                // remove leading and trailing whitespace and hyphens
-                boost::trim_left_if( vecName, boost::algorithm::is_any_of("- ") );
-                boost::trim_right_if( vecName, boost::algorithm::is_any_of("- ") );
-                //So that the vector name is reasonable
-                int vectorIndex[ 3 ] = { 0, 0, 0 };
-                if( this->dimension == 2 )
-                {
-                    vectorIndex[ 0 ] = i;
-                    vectorIndex[ 1 ] = i + 1;
-                }
-                else if( this->dimension == 3 )
-                {
-                    vectorIndex[ 0 ] = i - 1;
-                    vectorIndex[ 1 ] = i;
-                    vectorIndex[ 2 ] = i + 1;
-                }
-#ifdef PRINT_HEADERS
-                std::cout << "Found vector '" << vecName << "'"
-                          << ", vectorIndex = " << vectorIndex[ 0 ] << " "
-                          << vectorIndex[ 1 ] << " " << vectorIndex[ 2 ] << std::endl;
-#endif // PRINT_HEADERS
-
-                vtkIdType numTuples = vectorData[ vectorIndex[ 0 ]-1-this->dimension ]->GetNumberOfTuples();
-                bool isPointData = true;
-                vtkIdType pointCount = 0;
-                if( numTuples == this->totalNumberOfNodalPoints )
-                {
-                    isPointData = true;
-                    pointCount = totalNumberOfNodalPoints;
-                }
-                else if( numTuples == this->totalNumberOfElements )
-                {
-                    isPointData = false;
-                    pointCount = totalNumberOfElements;
-                }
-
-                vtkDoubleArray* vector = vtkDoubleArray::New();
-                vector->SetName( vecName.c_str() );
-                vector->SetNumberOfTuples( pointCount );
-                vector->SetNumberOfComponents( 3 );
-
-                for( int j = 0; j < pointCount; j++ )
-                {
-                    for( int k = 0; k < 3; k++ )
-                    {
-                        if( vectorIndex[ k ] == 0 )
-                        {
-                            vector->InsertComponent( j, k, 0.0 );
-                        }
-                        else
-                        {
-                            //cout << "copying data from " << vectorData[ vectorIndex[ j ]-1-this->dimension ]->GetName()
-                            //    << ", value = " << parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetValue( i ) << std::endl;
-                            vector->InsertComponent( j, k, vectorData[ vectorIndex[ k ]-1-this->dimension ]->GetValue( j ) );
-                        }
-                    }
-                }
-
-                if( isPointData )
-                {
-                    this->ugrid->GetPointData()->AddArray( vector );
-                }
-                else
-                {
-                    this->ugrid->GetCellData()->AddArray( vector );
-                }
-                vector->Delete();
+                foundVector = false;
             }
         }
 
-        previousMidName = midName;
+        // Look forward and make sure that next name doesn't look like a vector too
+        if( foundVector == true && i < this->numVars-2 )
+        {
+            std::string nextnextVarName( this->m_varName[ i+2 ] );
+
+            int nextDiffChar = this->StringDifference( nextVarName, nextnextVarName );
+            if( nextDiffChar >= 0 && nextDiffChar == diffChar )
+            {
+                foundVector = false;
+            }
+        }
+/*
+#ifdef PRINT_HEADERS
+        std::cout << "With '" << varName << "' and '" << nextVarName
+                  << "', diffChar = " << diffChar
+                  << "', lastDiffChar = " << lastDiffChar
+                  << "', numRepeats = " << numRepeats
+                  << "', foundVector = " << foundVector << std::endl;
+#endif // PRINT_HEADERS
+*/
+        if( foundVector )  // reconstruct vector name
+        {
+            if( diffChar == 0 )
+            {
+                vecName = varName.substr( 1, varName.length()-1 );
+            }
+            else if( diffChar == int(varName.length())-1 )
+            {
+                vecName = varName.substr( 0, varName.length()-1 );
+            }
+            else
+            {
+                vecName = varName.substr( 0, diffChar ) + 
+                          varName.substr( diffChar+1, varName.length()-1-diffChar );
+            }
+
+            // Remove leading and trailing whitespace, underscores, and hyphens
+            // so that the vector name is reasonable
+            boost::trim_left_if( vecName, boost::algorithm::is_any_of("_- ") );
+            boost::trim_right_if( vecName, boost::algorithm::is_any_of("_- ") );
+
+            int vectorIndex[ 3 ] = { 0, 0, 0 };
+            if( this->dimension == 2 )
+            {
+                vectorIndex[ 0 ] = i + 1;
+                vectorIndex[ 1 ] = i + 2;
+            }
+            else if( this->dimension == 3 )
+            {
+                vectorIndex[ 0 ] = i;
+                vectorIndex[ 1 ] = i + 1;
+                vectorIndex[ 2 ] = i + 2;
+            }
+#ifdef PRINT_HEADERS
+            std::cout << "Found vector '" << vecName << "'"
+                      << ", vectorIndex = " << vectorIndex[ 0 ] << " "
+                      << vectorIndex[ 1 ] << " " << vectorIndex[ 2 ] << std::endl;
+#endif // PRINT_HEADERS
+
+            vtkIdType numTuples = vectorData[ vectorIndex[ 0 ]-1-this->dimension ]->GetNumberOfTuples();
+            bool isPointData = true;
+            vtkIdType pointCount = 0;
+            if( numTuples == this->totalNumberOfNodalPoints )
+            {
+                isPointData = true;
+                pointCount = totalNumberOfNodalPoints;
+            }
+            else if( numTuples == this->totalNumberOfElements )
+            {
+                isPointData = false;
+                pointCount = totalNumberOfElements;
+            }
+
+            vtkDoubleArray* vector = vtkDoubleArray::New();
+            vector->SetName( vecName.c_str() );
+            vector->SetNumberOfTuples( pointCount );
+            vector->SetNumberOfComponents( 3 );
+
+            for( int j = 0; j < pointCount; j++ )
+            {
+                for( int k = 0; k < 3; k++ )
+                {
+                    if( vectorIndex[ k ] == 0 )
+                    {
+                        vector->InsertComponent( j, k, 0.0 );
+                    }
+                    else
+                    {
+                        //cout << "copying data from " << vectorData[ vectorIndex[ j ]-1-this->dimension ]->GetName()
+                        //    << ", value = " << parameterData[ vectorIndex[ j ]-1-this->dimension ]->GetValue( i ) << std::endl;
+                        vector->InsertComponent( j, k, vectorData[ vectorIndex[ k ]-1-this->dimension ]->GetValue( j ) );
+                    }
+                }
+            }
+
+            if( isPointData )
+            {
+                this->ugrid->GetPointData()->AddArray( vector );
+            }
+            else
+            {
+                this->ugrid->GetCellData()->AddArray( vector );
+            }
+            vector->Delete();
+        }
+        lastDiffChar = diffChar;
     }
     return;
 }
@@ -1571,7 +1621,6 @@ void tecplotReader::AddFaceCellsToGrid( const EntIndex_t currentZone,
                   << " can not directly handle polyhedron cells in zone " << currentZone
                   << ". Will store as VTK_CONVEX_POINT_SET." << std::endl;
 #endif // PRINT_HEADERS
-
         // Begin setting up the tempIdList.
         vtkIdList* tempIdList = vtkIdList::New();
         for( LgIndex_t elemNum = 1; elemNum < numElementsInZone+1; ++elemNum ) // element numbers are 1-based
