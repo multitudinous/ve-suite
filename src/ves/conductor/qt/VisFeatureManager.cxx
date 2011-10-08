@@ -44,6 +44,8 @@
 #include <ves/xplorer/data/IsosurfacePropertySet.h>
 ///Polydata
 #include <ves/xplorer/data/PolydataPropertySet.h>
+///Volume viz
+#include <ves/xplorer/data/VolumeVisPropertySet.h>
 
 namespace ves
 {
@@ -70,9 +72,7 @@ VisFeatureManager::VisFeatureManager()
     m_featureTypeToSetPtrMap["Streamlines"] = PropertySetPtr( new StreamlinePropertySet() );
     m_featureTypeToSetPtrMap["Isosurfaces"] = PropertySetPtr( new IsosurfacePropertySet() );
     m_featureTypeToSetPtrMap["Polydata"] = PropertySetPtr( new PolydataPropertySet() );
-
-    // Need to add this one in once we get a class for it!
-    //m_featureTypeToSetPtrMap["Texture-based"] = PropertySetPtr( );
+    m_featureTypeToSetPtrMap["Texture-based"] = PropertySetPtr( new VolumeVisPropertySet() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureManager::~VisFeatureManager()
