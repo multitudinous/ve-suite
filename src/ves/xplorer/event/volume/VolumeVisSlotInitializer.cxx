@@ -52,47 +52,47 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
 {
     using namespace ves::xplorer::event::volume;
 
-    /*CONNECTSIGNALS_STATIC( "%TransformCADNode",
+    /*CONNECTSIGNALS_STATIC( "%TB_UPDATE_NUMBER_SLICE_PLANES",
                       void ( const std::string&, const std::vector< double >& ),
                       &TransformCADNode,
                       m_connections, any_SignalType, normal_Priority );
 
 
-    CONNECTSIGNALS_STATIC( "%SetOpacityOnCADNode",
+    CONNECTSIGNALS_STATIC( "%TB_UPDATE_ISOSURFACE",
                       void( const std::string&, double ),
                       &SetOpacityOnCADNode,
                       m_connections, any_SignalType, normal_Priority );
 
 
-    CONNECTSIGNALS_STATIC( "%ToggleCADNode",
+    CONNECTSIGNALS_STATIC( "%TB_FULL_PREINTEGRATE_UPDATE",
                       void( const std::string&, bool ),
                       &ToggleCADNode,
                       m_connections, any_SignalType, normal_Priority );
 
 
-    CONNECTSIGNALS_STATIC( "%SetCADPhysicsMesh",
+    CONNECTSIGNALS_STATIC( "%TB_ISOSURFACE_ENABLE",
                       void( const std::string&,
                             const std::vector<std::string>& ),
                       &SetCADPhysicsMesh,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%DeleteCADNode",
+    CONNECTSIGNALS_STATIC( "%TB_SET_ACTIVE_SHADER_MANAGER",
                       void( const std::string&, const std::string&,
                             const std::string&),
                       &DeleteCADNode,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%SetCADCulling",
+    CONNECTSIGNALS_STATIC( "%TB_ACTIVE_SOLUTION",
                       void( const std::string&, std::string ),
                       &ControlOcclusionQuery,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%SetPhysicsOnCADNode",
+    CONNECTSIGNALS_STATIC( "%TB_SCALAR_RANGE",
                       void( const std::string&, const bool& ),
                       &SetPhysicsOnCADNode,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%SetMassOnCADNode",
+    CONNECTSIGNALS_STATIC( "%TB_ACTIVATE",
                       void( const std::string&, const double& ),
                       &SetMassOnCADNode,
                       m_connections, any_SignalType, normal_Priority );
