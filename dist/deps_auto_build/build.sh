@@ -302,8 +302,15 @@ function source_retrieval()
           #fi
           ;;
         tgz)
-          tar xvfz `basename ${SOURCE_URL}`;
+          TEMPBASENAME=`basename ${SOURCE_URL}`
+          PACKAGE_BASE_DIR_NAME=$( tar tf "${TEMPBASENAME}" | grep -o '^[^/]\+' | sort -u )
+          tar xvfz "${TEMPBASENAME}";
           rm -f `basename ${SOURCE_URL}`;
+          if [ -d "${BASE_DIR}" ]; then
+            echo "The BASE_DIR for $package already exists.";
+          else
+            mv "${PACKAGE_BASE_DIR_NAME}" "${BASE_DIR}";
+          fi
           ;;
         bz2)
           TEMPBASENAME=`basename ${SOURCE_URL}`
