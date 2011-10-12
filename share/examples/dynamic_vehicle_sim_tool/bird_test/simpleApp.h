@@ -158,7 +158,8 @@ public:
             jccl::ConfigManager::instance()->getActiveConfig();
         std::vector< jccl::ConfigElementPtr > elements;
         oldCfg->getByType( "alias", elements );
-        m_fileOut << "================================" << std::endl; 
+        m_fileOut << "================================" << std::endl;
+        m_fileOut << "********** alias ***************" << std::endl;
         for( size_t i = 0; i < elements.size(); ++i )
         {
             std::string aliasName = elements.at( i )->getName();
@@ -169,7 +170,23 @@ public:
             std::cout << posDevice->getData() << std::endl;
             m_fileOut << posDevice->getData() << std::endl;
         }
+        
+        m_fileOut << "********** alias ***************" << std::endl;
         std::cout << "================================" << std::endl;
+        m_fileOut << "***** position_proxy ***********" << std::endl;
+        
+        oldCfg->getByType( "position_proxy", elements );
+        for( size_t i = 0; i < elements.size(); ++i )
+        {
+            std::string aliasName = elements.at( i )->getName();
+            std::cout << aliasName << std::endl;
+            m_fileOut << aliasName << std::endl;
+            gadget::PositionInterface  posDevice;
+            posDevice.init( aliasName );
+            std::cout << posDevice->getData() << std::endl;
+            m_fileOut << posDevice->getData() << std::endl;
+        }
+        m_fileOut << "***** position_proxy ***********" << std::endl;
         std::cout << "================================" << std::endl;
         std::cout << "================================" << std::endl;
         std::cout << "================================" << std::endl;
