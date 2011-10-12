@@ -169,7 +169,7 @@ void UpdateScalarRange( double const& minRange, double const& maxRange )
     SetActiveTextureDataset();
     
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
-    
+    std::cout << minRange << " " << maxRange << std::endl;
     //this is overkill
     float floatRange[2];
     floatRange[0] = minRange;
@@ -203,9 +203,11 @@ void UpdateTBSolution( std::string const& dataName, std::string const& dataType,
     {
         return;
     }
-    
+    std::cout << dataType << std::endl;
     if( dataType == "Scalar" )
     {
+        std::cout << dataName << std::endl;
+
         activeTDSet->SetActiveScalar( dataName );
         
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();

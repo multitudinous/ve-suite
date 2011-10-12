@@ -53,6 +53,8 @@
 #include <ves/xplorer/event/volume/TBPhongShadingEnableEH.h>
 #include <ves/xplorer/event/volume/TBPreIntegrateEH.h>
 
+#include <ves/xplorer/event/volume/VolumeVisSlotInitializer.h>
+
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
@@ -102,6 +104,10 @@ TextureBasedVizHandler::TextureBasedVizHandler()
     _vvvh = 0;
     m_isMaster = false;
 
+    m_slotInitializer = 
+        ves::xplorer::event::volume::VolumeVisSlotInitializerPtr( 
+        new ves::xplorer::event::volume::VolumeVisSlotInitializer() );
+    
     _eventHandlers[std::string( "TB_SET_ACTIVE_SHADER_MANAGER" )] = new ves::xplorer::event::TextureBasedSetActiveShaderManagerEventHandler();
     _eventHandlers[std::string( "TB_ACTIVATE" )] = new ves::xplorer::event::TextureBasedActivateEventHandler();
     _eventHandlers[std::string( "TB_ACTIVE_SOLUTION" )] = new ves::xplorer::event::TextureBasedUpdateSolutionEventHandler();

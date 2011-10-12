@@ -45,14 +45,8 @@ namespace data
 {
 class Property;
 /*!\file DatasetPropertySet.h
- *
- */
-
-/*!\class ves::xplorer::data::DatasetPropertySet
- *
- */
-
-/*!\namespace ves::xplorer::data
+ * \class ves::xplorer::data::DatasetPropertySet
+ * \namespace ves::xplorer::data
  *
  */
 class VE_DATA_EXPORTS DatasetPropertySet : public PropertySet
@@ -68,6 +62,7 @@ public:
     void EnableLiveProperties( bool live );
 
 protected:
+    void LoadVTIScalars( PropertyPtr property );
 
     
 private:

@@ -116,13 +116,12 @@ namespace ves
 namespace xplorer
 {
 /*!\file DataSet.h
-DataSet API
-*/
-/*!\class ves::xplorer::DataSet
-* A class to load data set and pre-compute flow parameters
-* or properties for virtual environment interactive
-* computation.
-*/
+ * DataSet API
+ * \class ves::xplorer::DataSet
+ * A class to load data set and pre-compute flow parameters
+ * or properties for virtual environment interactive
+ * computation.
+ */
 class VE_XPLORER_EXPORTS DataSet
 {
 public:

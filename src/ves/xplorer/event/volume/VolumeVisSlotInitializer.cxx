@@ -52,31 +52,32 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
 {
     using namespace ves::xplorer::event::volume;
 
-    /*CONNECTSIGNALS_STATIC( "%TB_UPDATE_NUMBER_SLICE_PLANES",
-                      void ( const std::string&, const std::vector< double >& ),
-                      &TransformCADNode,
+    CONNECTSIGNALS_STATIC( "%TBETUpdateNumberOfSlicePlanes",
+                      void( unsigned int const& ),
+                      &UpdateNumberOfSlicePlanes,
                       m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_STATIC( "%TBETEnablePreIntegration",
+                          void( bool const& ),
+                          &EnablePreIntegration,
+                          m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%TB_UPDATE_ISOSURFACE",
-                      void( const std::string&, double ),
-                      &SetOpacityOnCADNode,
+    CONNECTSIGNALS_STATIC( "%TBETUpdateIsoSurfaceValue",
+                      void( double const& ),
+                      &UpdateIsoSurfaceValue,
                       m_connections, any_SignalType, normal_Priority );
 
-
-    CONNECTSIGNALS_STATIC( "%TB_FULL_PREINTEGRATE_UPDATE",
-                      void( const std::string&, bool ),
-                      &ToggleCADNode,
+    CONNECTSIGNALS_STATIC( "%TBETEnableIsoSurfaces",
+                      void( bool const& ),
+                      &EnableIsoSurfaces,
                       m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_STATIC( "%TBETUpdateScalarRange",
+                          void( double const&, double const& ),
+                          &UpdateScalarRange,
+                          m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%TB_ISOSURFACE_ENABLE",
-                      void( const std::string&,
-                            const std::vector<std::string>& ),
-                      &SetCADPhysicsMesh,
-                      m_connections, any_SignalType, normal_Priority );
-
-    CONNECTSIGNALS_STATIC( "%TB_SET_ACTIVE_SHADER_MANAGER",
+    /*CONNECTSIGNALS_STATIC( "%TB_SET_ACTIVE_SHADER_MANAGER",
                       void( const std::string&, const std::string&,
                             const std::string&),
                       &DeleteCADNode,
@@ -87,24 +88,9 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
                       &ControlOcclusionQuery,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%TB_SCALAR_RANGE",
-                      void( const std::string&, const bool& ),
-                      &SetPhysicsOnCADNode,
-                      m_connections, any_SignalType, normal_Priority );
-
     CONNECTSIGNALS_STATIC( "%TB_ACTIVATE",
                       void( const std::string&, const double& ),
                       &SetMassOnCADNode,
-                      m_connections, any_SignalType, normal_Priority );
-
-    CONNECTSIGNALS_STATIC( "%SetFrictionOnCADNode",
-                      void( const std::string&, const double& ),
-                      &SetFrictionOnCADNode,
-                      m_connections, any_SignalType, normal_Priority );
-
-    CONNECTSIGNALS_STATIC( "%SetRestitutionOnCADNode",
-                      void( const std::string&, const double& ),
-                      &SetRestitutionOnCADNode,
                       m_connections, any_SignalType, normal_Priority );*/
 }
 

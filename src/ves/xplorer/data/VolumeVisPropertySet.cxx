@@ -69,18 +69,18 @@ VolumeVisPropertySet::VolumeVisPropertySet()
         eventmanager::EventManager::instance()->RegisterSignal(
            new SignalWrapper< UpdateSeedPointBoundsSignal_type >( &m_updateSeedPointBounds ),
            name, eventmanager::EventManager::unspecified_SignalType );
-    }
+    }*/
     ///Signal to change the active dataset
     {
         std::string name("VolumeVisPropertySet");
         name += boost::lexical_cast<std::string>( this );
-        name += ".ActiveDataSet";
+        name += ".TBETUpdateScalarRange";
         
         eventmanager::EventManager::instance()->RegisterSignal(
-           new SignalWrapper< UpdateActiveDataSetSignal_type >( &m_activeDataSet ),
+           new SignalWrapper< ves::util::TwoDoubleSignal_type >( &m_updateTBETScalarRange ),
            name, eventmanager::EventManager::unspecified_SignalType );
     }
-*/
+
     mTableName = "VolumeVis";
 
     RegisterPropertySet( mTableName );
@@ -102,6 +102,18 @@ VolumeVisPropertySet::~VolumeVisPropertySet()
 PropertySetPtr VolumeVisPropertySet::CreateNew()
 {
     return PropertySetPtr( new VolumeVisPropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VolumeVisPropertySet::UpdateScalarRange( PropertyPtr property )
+{
+    PropertyPtr min = mPropertyMap["DataSet_ScalarRange_Min"];
+    PropertyPtr max = mPropertyMap["DataSet_ScalarRange_Max"];
+    
+    double castMin, castMax;
+    castMax = boost::any_cast<double>( max->GetValue() );
+    castMin = boost::any_cast<double>( min->GetValue() );
+std::cout << "Update " << std::endl;
+    m_updateTBETScalarRange( castMin, castMax );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VolumeVisPropertySet::CreateSkeleton()
@@ -270,6 +282,8 @@ void VolumeVisPropertySet::CreateSkeleton()
     mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
     mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
     mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    mPropertyMap["DataSet_ScalarRange_Min"]->SignalValueChanged.connect( boost::bind( &VolumeVisPropertySet::UpdateScalarRange, this, _1 ) );
+    mPropertyMap["DataSet_ScalarRange_Max"]->SignalValueChanged.connect( boost::bind( &VolumeVisPropertySet::UpdateScalarRange, this, _1 ) );
 
     /*AddProperty( "DataSet_VectorData", 0, "Vector Data" );
     enumValues.clear();

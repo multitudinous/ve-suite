@@ -101,6 +101,14 @@ EventFactory::EventFactory():
                              ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "UpdateNetwork" ] = swb;
     }
+    // Add a texture dataset
+    {
+        SignalWrapperBase* swb =
+            new SignalWrapper< ves::util::TwoStringSignal_type >( &m_addTBETScalarSignal );
+        evm->RegisterSignal( swb, "DatasetPropertySet.TBETAddScalarSignal",
+            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "DatasetPropertySet.TBETAddScalarSignal" ] = swb;
+    }
 }
 
 EventFactory::~EventFactory()

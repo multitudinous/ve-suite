@@ -33,6 +33,14 @@
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
 
+#include <ves/xplorer/eventmanager/EventFactory.h>
+
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/convenience.hpp>
+
 using namespace ves::xplorer::data;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,8 +117,6 @@ void DatasetPropertySet::CreateSkeleton()
     SetPropertyAttribute( "Transform_Scale_Y", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Z", "DisplayPrecision", 6 );
 
-
-
     //***** The following properties should all eventually make use of
     // of userVisibile = false to hide them from the user. They are intended
     // to provide persistence and access mechanisms to dataset info without
@@ -152,6 +158,13 @@ void DatasetPropertySet::CreateSkeleton()
 
     AddProperty( "PrecomputedSurfaceDir", std::string(""), "Precomputed Surface Dir" );
     SetPropertyAttribute( "PrecomputedSurfaceDir", "userVisible", false );
+    
+    AddProperty( "TBETScalarChooser", std::string("null"), "TBET Scalar Chooser" );
+    SetPropertyAttribute( "TBETScalarChooser", "isFilePath", true );
+    mPropertyMap["TBETScalarChooser"]->SignalValueChanged.connect( boost::bind( &DatasetPropertySet::LoadVTIScalars, this, _1 ) );
+    
+    AddProperty( "TBETScalarNames", stringVector, "Scalar Names" );
+    SetPropertyAttribute( "TBETScalarNames", "userVisible", false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DatasetPropertySet::EnableLiveProperties( bool live )
@@ -215,3 +228,44 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
 
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void DatasetPropertySet::LoadVTIScalars( PropertyPtr property )
+{
+    std::string const filename = 
+        boost::any_cast<std::string>( GetPropertyValue( "TBETScalarChooser" ) );
+
+    std::string extension( boost::filesystem::extension( filename ) );
+    //if the file extension is vti then we will add it as a vti scalar for this
+    //dataset
+    if( extension != ".vti" )
+    {
+        return;
+    }
+
+    
+    //Now extract the directory from the filename string handed back from the
+    //file selection dialog
+    boost::filesystem::path tmp( filename );
+    std::string const directory = tmp.remove_filename().string();
+    
+    PSVectorOfStrings enumValues = 
+        boost::any_cast< std::vector<std::string> >( 
+        GetPropertyValue( "TBETScalarNames" ) );
+
+    std::string scalarName = tmp.filename().string();
+    enumValues.push_back( scalarName );
+    SetPropertyValue( "TBETScalarNames", enumValues );
+
+    std::cout << directory << " " << filename << " " << scalarName << std::endl;
+    
+    ves::util::TwoStringSignal_type* addTexture =
+    reinterpret_cast< eventmanager::SignalWrapper< ves::util::TwoStringSignal_type >* >
+    ( eventmanager::EventFactory::instance()->GetSignal( "DatasetPropertySet.TBETAddScalarSignal" ) )
+    ->mSignal;
+
+    std::string const nodeID = GetUUIDAsString();
+    addTexture->operator()( nodeID, directory );
+
+    WriteToDatabase();
+}
+////////////////////////////////////////////////////////////////////////////////

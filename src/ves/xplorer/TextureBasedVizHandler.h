@@ -38,6 +38,7 @@
 
 
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
+#include <ves/xplorer/event/volume/VolumeVisSlotInitializerPtr.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -97,8 +98,7 @@ namespace xplorer
 {
 /*!\file TextureBasedVizHandler.h
 TextureBasedVizHandler API
-*/
-/*!\class ves::xplorer::TextureBasedVizHandler
+*\class ves::xplorer::TextureBasedVizHandler
 *
 */
 class VE_XPLORER_EXPORTS TextureBasedVizHandler
@@ -226,6 +226,7 @@ protected:
 
     std::map<std::string, ves::xplorer::event::TextureBasedEventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
 
+    ves::xplorer::event::volume::VolumeVisSlotInitializerPtr m_slotInitializer;
 private:
     // Required so that vpr::Singleton can instantiate this class.
     //friend class vpr::Singleton< TextureBasedVizHandler >;

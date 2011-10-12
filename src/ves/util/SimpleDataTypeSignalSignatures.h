@@ -57,6 +57,8 @@ namespace util
 
     ///Signal for double
     typedef boost::signals2::signal< void ( double const& ) > DoubleSignal_type;
+    typedef boost::signals2::signal< void ( double const&, double const& ) > TwoDoubleSignal_type;
+    typedef boost::signals2::signal< void ( double const&, double const&, double const& ) > ThreeDoubleSignal_type;
 
     ///Signal for int
     typedef boost::signals2::signal< void ( int const& ) > IntSignal_type;

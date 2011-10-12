@@ -41,6 +41,8 @@ namespace ves
 {
 namespace xplorer
 {
+class DataSet;
+
 namespace event
 {
 namespace data
@@ -49,6 +51,9 @@ namespace data
  *   Class for changing data signals
  * \namespace ves::xplorer::event::data
  */
+///Get the dataset that is currently being changed via the UI
+DataSet* GetSelectedDataset( std::string const& uuid );
+
 /// Turns greyscaling for contour planes on or off.
 void SetContourPlaneGreyscale( std::string const& uuid, std::vector< bool > const& greyscaleflag );
 
@@ -58,7 +63,9 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
 /// Toggles surface wrap for a data set
 void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap );
 
-    
+///Create a texture dataset for use with volume vis
+void AddTextureDataset( std::string const& uuid, std::string const& dirName );
+
 } //end data
 } //end event
 } //end xplorer

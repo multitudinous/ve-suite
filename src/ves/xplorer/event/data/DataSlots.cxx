@@ -52,6 +52,22 @@ namespace event
 namespace data
 {
 ////////////////////////////////////////////////////////////////////////////////
+DataSet* GetSelectedDataset( std::string const& uuid )
+{
+    ves::xplorer::Model* activeModel = 
+        ModelHandler::instance()->GetActiveModel();
+
+    ves::xplorer::data::DatasetPropertySet set;
+    set.SetUUID( uuid );
+    set.LoadFromDatabase();
+    const std::string& datasetName = 
+        boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
+    
+    DataSet* dataSet = activeModel->GetCfdDataSet(
+        activeModel->GetIndexOfDataSet( datasetName ) );
+    return dataSet;
+}
+////////////////////////////////////////////////////////////////////////////////
 void SetContourPlaneGreyscale( std::string const& uuid, std::vector< bool > const& greyscaleflag )
 {
     vprDEBUG( vesDBG, 2 ) 
@@ -81,14 +97,7 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
         return;
     }
 
-    ves::xplorer::data::DatasetPropertySet set;
-    set.SetUUID( uuid );
-    set.LoadFromDatabase();
-    std::string datasetName =
-            boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
-
-    DataSet* dataSet = activeModel->GetCfdDataSet(
-            activeModel->GetIndexOfDataSet( datasetName ) );
+    DataSet* dataSet = GetSelectedDataset( uuid );
 
     scenegraph::DCS* dcs = dataSet->GetDCS();
 
@@ -114,16 +123,7 @@ void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
         << "|\tDataSlots::SetDatasetSurfaceWrap : uuid " << uuid
         << std::endl << vprDEBUG_FLUSH;
 
-    ves::xplorer::Model* activeModel = 
-        ModelHandler::instance()->GetActiveModel();
-    ves::xplorer::data::DatasetPropertySet set;
-    set.SetUUID( uuid );
-    set.LoadFromDatabase();
-    const std::string& datasetName = 
-        boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
-
-    DataSet* dataSet = activeModel->GetCfdDataSet(
-        activeModel->GetIndexOfDataSet( datasetName ) );
+    DataSet* dataSet = GetSelectedDataset( uuid );
 
     if( !dataSet )
     {
@@ -131,6 +131,20 @@ void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
     }
 
     dataSet->SetWireframeState( surfaceWrap );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AddTextureDataset( std::string const& uuid, std::string const& dirName )
+{
+    ves::xplorer::Model* activeModel = 
+        ModelHandler::instance()->GetActiveModel();
+    activeModel->CreateTextureDataSet();
+    
+    activeModel->AddDataSetToTextureDataSet( 0, dirName );
+    //std::ostringstream textId;
+    //textId << "VTK_SURFACE_DIR_PATH_" << j;
+    //DataSet* dataSet = GetSelectedDataset( uuid );
+    //dataSet->SetUUID( textId.str(), 
+    //  tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

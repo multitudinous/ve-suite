@@ -96,16 +96,13 @@
 
 
 #include <ves/xplorer/event/viz/VisFeatureMakerBase.h>
-///Contours
+
 #include <ves/xplorer/event/viz/ContourFeatureMaker.h>
-///Vectors
 #include <ves/xplorer/event/viz/VectorFeatureMaker.h>
-///Streamlines
 #include <ves/xplorer/event/viz/StreamlineFeatureMaker.h>
-///Isosurfaces
 #include <ves/xplorer/event/viz/IsosurfaceFeatureMaker.h>
-///Polydata
 #include <ves/xplorer/event/viz/PolydataFeatureMaker.h>
+#include <ves/xplorer/event/viz/VolumeVisFeatureMaker.h>
 
 vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 1 );
 
@@ -276,6 +273,11 @@ void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID, std::
     {
         LOG_INFO( "UpdateFeature: Updating PolydataFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new PolydataFeatureMaker() );
+    }
+    else if( tableName == "VolumeVis" )
+    {
+        LOG_INFO( "UpdateFeature: Updating VolumeVisFeatureMaker" );
+        feature = VisFeatureMakerBasePtr( new VolumeVisFeatureMaker() );
     }
     
     feature->Update( featureUUID );

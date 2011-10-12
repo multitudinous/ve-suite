@@ -102,6 +102,8 @@ private:
     ves::util::BoolAndDoubleVectorSignal_type m_changeBackgroundColorSignal;
     ///Update network -- main slot lives in xplorer::network::UpdateNetworkEventHandler
     ves::util::VoidSignal_type m_updateNetworkSignal;
+    /// Add a texture dataset - Pass PropertySet UUID as arg1, texture directory as arg2
+    ves::util::TwoStringSignal_type m_addTBETScalarSignal;
     //--------------------------------------
 
     /// Logging tools

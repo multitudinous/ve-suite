@@ -212,6 +212,11 @@ ModelHandler::ModelHandler()
                  &ves::xplorer::event::data::SetDatasetSurfaceWrap,
                  m_connections, any_SignalType, normal_Priority );
                  
+    CONNECTSIGNALS_STATIC( "%TBETAddScalarSignal",
+                          void( std::string const&, std::string const& ),
+                          &ves::xplorer::event::data::AddTextureDataset,
+                          m_connections, any_SignalType, normal_Priority );
+        
     CONNECTSIGNAL_1( "ChangeActiveModel",
                     void( std::string const& ),
                     &ModelHandler::SetActiveModel,

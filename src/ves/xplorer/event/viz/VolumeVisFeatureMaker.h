@@ -32,32 +32,42 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-#include <ves/util/PointerTypes.h>
-
-/**
- * \file
- *
- * Include this file to get a forward declaration of the type
- * ves::xplorer:event::volume::VolumeVisSlotInitializer and its pointer types.
- * For the full declaration of ves::xplorer:event::volume::VolumeVisSlotInitializer
- * ves/xplorer/event/volume/VolumeVisSlotInitializer.h must be included, too.
- */
+#include <ves/xplorer/event/viz/VisFeatureMakerBase.h>
 
 namespace ves
 {
-namespace xplorer
+namespace conductor
 {
-namespace event
+/*!\file VolumeVisFeatureMaker.h
+ * \class ves::conductor::VolumeVisFeatureMaker
+ * \namespace ves::conductor
+ *
+ */
+class VolumeVisFeatureMaker : public VisFeatureMakerBase
 {
-namespace volume
-{
-class VolumeVisSlotInitializer;
-/// Typedef for the SmartPtr types.
-typedef ves::util::ClassPtrDef<VolumeVisSlotInitializer>::type  VolumeVisSlotInitializerPtr;
-typedef ves::util::SharedPtrDef<VolumeVisSlotInitializer>::type VolumeVisSlotInitializerSharedPtr;
-typedef ves::util::WeakPtrDef<VolumeVisSlotInitializer>::type   VolumeVisSlotInitializerWeakPtr;
-typedef ves::util::ScopedPtrDef<VolumeVisSlotInitializer>::type VolumeVisSlotInitializerScopedPtr;
-}
-}
-}
-}
+public:
+    ///Constructor
+    VolumeVisFeatureMaker();
+    ///Copy constructor
+    VolumeVisFeatureMaker( const VolumeVisFeatureMaker& orig );
+    ///Destructor
+    virtual ~VolumeVisFeatureMaker();
+    ///Update method to generate vis feature
+    virtual void Update( const::std::string& recordUUID );
+
+protected:
+    ///Called by the update function
+    void AddPlane( ves::xplorer::data::PropertySetPtr& set );
+    ///Called by AddPlane
+    void UpdateContourInformation( ves::xplorer::data::PropertySet& set );
+    ///Setup the advanced properties
+    virtual void UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set );
+
+private:
+    ///The countour setting data
+    std::vector<ves::open::xml::DataValuePairPtr> m_vectorInformation;
+
+};
+
+} // namespace conductor
+} // namespace ves

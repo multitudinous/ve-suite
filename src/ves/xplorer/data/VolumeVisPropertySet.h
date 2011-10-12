@@ -37,6 +37,8 @@
 #include <ves/xplorer/data/PropertyPtr.h>
 #include <ves/xplorer/data/VizBasePropertySet.h>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 #include <ves/VEConfig.h>
 
 #include <boost/signals2/signal.hpp>
@@ -73,7 +75,10 @@ protected:
     virtual void CreateSkeleton();
     
     void ActivateVoilumeVis();
+    
+    void UpdateScalarRange( PropertyPtr property );
 
+    ves::util::TwoDoubleSignal_type m_updateTBETScalarRange;
 /*
     ///Update signal to control turning off and on seed points
     typedef boost::signals2::signal< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;
