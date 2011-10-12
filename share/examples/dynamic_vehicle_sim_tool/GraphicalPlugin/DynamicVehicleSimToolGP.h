@@ -119,7 +119,7 @@ private:
     void ReadBirdRegistrationFile();
     ///Utility function to construct look matrix
     gmtl::Matrix44d GetLookAtMatrix( gmtl::Point4d& frontPoint, 
-        gmtl::Point4d& leftRear, gmtl::Point4d& rightRear );
+        gmtl::Point4d& leftRear, gmtl::Point4d& rightRear, bool negateCentroid = false );
 
     ///Sample thread
     vpr::Thread* m_sampleThread;

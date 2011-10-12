@@ -452,7 +452,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             dvp1->GetData( sipY );
             dvp1 = m_currentCommand->GetDataValuePair( "SIP Z" );
             dvp1->GetData( sipZ );
-            m_sip.set( -sipX, -sipY, -sipZ );
+            m_sip.set( sipX, sipY, sipZ );
         }
         else
         {
@@ -1010,12 +1010,15 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     //z = y
     gmtl::Point4d sipOffSetFrontBird;
     sipOffSetFrontBird.set( -frontBirdZ, -frontBirdX, frontBirdY, 1.0 );
+    //sipOffSetFrontBird *= -1.0f;
 
     gmtl::Point4d sipOffSetLeftRearBird;
     sipOffSetLeftRearBird.set( -leftRearBirdZ, -leftRearBirdX, leftRearBirdY, 1.0 );
-    
+    //sipOffSetLeftRearBird *= -1.0f;
+
     gmtl::Point4d sipOffSetRightRearBird;
     sipOffSetRightRearBird.set( -rightRearBirdZ, -rightRearBirdX, rightRearBirdY, 1.0 );
+    //sipOffSetRightRearBird *= -1.0f;
     
     ///Get the lookat matrix based on the bird calibration points
     gmtl::Matrix44d measuredSIPCentroidMat = 
@@ -1029,31 +1032,53 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     //    -1.0 * (sipOffSetFrontBird[ 1 ] + sipOffSetLeftRearBird[ 1 ] + sipOffSetRightRearBird[ 1 ])/3.0,
     //    -1.0 * (sipOffSetFrontBird[ 2 ] + sipOffSetLeftRearBird[ 2 ] + sipOffSetRightRearBird[ 2 ])/3.0 );
     //std::cout << "Bird data " << measuredSIPCentroid << std::endl << std::flush;
-    //gmtl::Matrix44d measuredSIPCentroidMat = 
+    //gmtl::Matrix44d measuredSIPCentroidTransMat = 
     //    gmtl::makeTrans< gmtl::Matrix44d >( measuredSIPCentroid );
+    //measuredSIPCentroidMat[ 0 ][ 3 ]  = -measuredSIPCentroidMat[ 0 ][ 3 ]  * 1.0f;
+    //measuredSIPCentroidMat[ 1 ][ 3 ]  = -measuredSIPCentroidMat[ 1 ][ 3 ]  * 1.0f;
+    //measuredSIPCentroidMat[ 2 ][ 3 ] = -measuredSIPCentroidMat[ 2 ][ 3 ] * 1.0f;
     std::cout << "Bird data " << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
+//measuredSIPCentroidMat = measuredSIPCentroidMat * cadOrientationMat;
+  //  std::cout << "Bird data " << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
     
     ///SIP location from the user on the UI
+//m_sip = m_sip * 1.0f;
     gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
-    std::cout << "Measured SIP " << m_sip << std::endl;
+    std::cout << "Measured SIP " << m_sip << std::endl << std::flush;
+measuredSIPCentroidMat = sipLoc * measuredSIPCentroidMat;// * sipLoc;
+    std::cout << "Bird data " << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
+measuredSIPCentroidMat =cadOrientationMat *  measuredSIPCentroidMat;
+    std::cout << "Bird data " << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
 
 //#ifndef DVST_TEST
     //Now we convert the sip matrix back through the transform mat to move it 
     //to the VR Juggler coord
- 
+//gmtl::Matrix44d tempTrans = transMat * measuredSIPCentroidTransMat;
+//std::cout << tempTrans << std::endl << std::flush;
+
     ///Invert this so that we can create a delta transform between the to lookat
     ///matrices we createds
-    gmtl::invert( transMat );
+    //gmtl::invert( transMat );
+    gmtl::invert( measuredSIPCentroidMat );
 
     gmtl::Matrix44d registerMat = transMat * measuredSIPCentroidMat;
+    //gmtl::invert( registerMat );
+
     std::cout << "Reg matrix " << std::endl 
         << registerMat << std::endl << std::flush;
 
-    ///Set the registration matrix
+   //registerMat[ 0 ][ 3 ]  = -registerMat[ 0 ][ 3 ]  * 1.0f;
+   //registerMat[ 1 ][ 3 ]  = -registerMat[ 1 ][ 3 ]  * 1.0f;
+   //registerMat[ 2 ][ 3 ] =  -registerMat[ 2 ][ 3 ] * 1.0f;
+
+   //std::cout << "Reg matrix " << std::endl
+   //     << registerMat << std::endl << std::flush;
+
+///Set the registration matrix
     std::cout << "CAD orientation matrix " << std::endl 
         << cadOrientationMat << std::endl << std::flush;
 
-    m_initialNavMatrix = registerMat * cadOrientationMat * sipLoc;
+    m_initialNavMatrix = registerMat;// * cadOrientationMat * sipLoc;
     std::cout << "Init nav matrix with CAD correction" << std::endl 
         << m_initialNavMatrix << std::endl << std::flush;
 
@@ -1135,30 +1160,35 @@ void DynamicVehicleSimToolGP::ProcessOnSubmitJob()
 }
 ////////////////////////////////////////////////////////////////////////////////
 gmtl::Matrix44d DynamicVehicleSimToolGP::GetLookAtMatrix( 
-    gmtl::Point4d& frontPoint, gmtl::Point4d& leftRear, gmtl::Point4d& rightRear )
+    gmtl::Point4d& frontPoint, gmtl::Point4d& leftRear, gmtl::Point4d& rightRear, bool negateCentroid )
 {
     //Create the centroid for the triangle
     //centroid = ((pt1[0]+pt2[0]+pt3[0])/3.0,
     //            (pt1[1]+pt2[1]+pt3[1])/3.0,
     //            (pt1[2]+pt2[2]+pt3[2])/3)
+    double factor = 1.0;
+    if( negateCentroid )
+    {
+        factor = -1.0f;
+    }
     gmtl::Point3d centroid;
     centroid.set( 
-                 (frontPoint[ 0 ] + leftRear[ 0 ] + rightRear[ 0 ])/3.0, 
-                 (frontPoint[ 1 ] + leftRear[ 1 ] + rightRear[ 1 ])/3.0,
-                 (frontPoint[ 2 ] + leftRear[ 2 ] + rightRear[ 2 ])/3.0 );
+                 factor * (frontPoint[ 0 ] + leftRear[ 0 ] + rightRear[ 0 ])/3.0, 
+                 factor * (frontPoint[ 1 ] + leftRear[ 1 ] + rightRear[ 1 ])/3.0,
+                 factor * (frontPoint[ 2 ] + leftRear[ 2 ] + rightRear[ 2 ])/3.0 );
     
     //Create vector from the origin of the triangle to the front bird
     gmtl::Vec3d forwardVec;
     forwardVec.set( frontPoint[ 0 ] - centroid[ 0 ], 
-                   -(frontPoint[ 2 ] - centroid[ 2 ]), 
-                   frontPoint[ 1 ] - centroid[ 1 ] );
+                   (frontPoint[ 1 ] - centroid[ 1 ]), 
+                   frontPoint[ 2 ] - centroid[ 2 ] );
     gmtl::normalize( forwardVec );
     
     //Cross the front vector with the vector from one of the rear bird corners
     gmtl::Vec3d rearVec;
     rearVec.set( rightRear[ 0 ] - centroid[ 0 ], 
-                -(rightRear[ 2 ] - centroid[ 2 ]), 
-                rightRear[ 1 ] - centroid[ 1 ] );
+                (rightRear[ 1 ] - centroid[ 1 ]), 
+                rightRear[ 2 ] - centroid[ 2 ] );
     gmtl::normalize( rearVec );
     
     //Create the up vector
@@ -1179,8 +1209,8 @@ gmtl::Matrix44d DynamicVehicleSimToolGP::GetLookAtMatrix(
     ///With this matrix setup we are making Y forward. 
     gmtl::Matrix44d transMat;
     transMat.set( rightVec[ 0 ], forwardVec[ 0 ], upVec[ 0 ],  centroid[ 0 ],
-                 rightVec[ 1 ], forwardVec[ 1 ], upVec[ 1 ], -centroid[ 2 ],
-                 rightVec[ 2 ], forwardVec[ 2 ], upVec[ 2 ],  centroid[ 1 ],
+                 rightVec[ 1 ], forwardVec[ 1 ], upVec[ 1 ],  centroid[ 1 ],
+                 rightVec[ 2 ], forwardVec[ 2 ], upVec[ 2 ],  centroid[ 2 ],
                  0.,         0.,              0.,             1. );
 
     //This link also helps detail this matrix construction
