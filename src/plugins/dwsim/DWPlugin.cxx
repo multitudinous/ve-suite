@@ -150,7 +150,7 @@ void DWPlugin::OnUnitName( wxCommandEvent& event )
         wxT("Select a unit"),choices);
     if( scd.ShowModal() == wxID_OK )
     {
-        SetUnitName( scd.GetStringSelection().c_str() );
+        SetUnitName( ConvertUnicode( scd.GetStringSelection().c_str() ) );
     }
 }
 /////////////////////////////////////////////////////////////////////////////
