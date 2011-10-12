@@ -103,7 +103,7 @@
 #include <Minerva/Core/TileEngine/Body.h>
 #endif
 
-#define BOOST_FILESYSTEM_VERSION 3
+//#define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/convenience.hpp>
@@ -772,7 +772,7 @@ void MainWindow::LoadDataFile( std::string filename )
         boost::filesystem::path tmp2( filename );
         filename = tmp2.filename().string();
     }
-
+    
     ves::open::xml::ParameterBlockPtr mParamBlock;
     ves::open::xml::model::ModelPtr m_veModel(
             ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData() );
