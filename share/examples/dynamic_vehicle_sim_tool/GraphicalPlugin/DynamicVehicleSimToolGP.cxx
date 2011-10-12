@@ -1010,16 +1010,13 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     //z = y
     gmtl::Point4d sipOffSetFrontBird;
     sipOffSetFrontBird.set( -frontBirdZ, -frontBirdX, frontBirdY, 1.0 );
-    //sipOffSetFrontBird *= -1.0f;
 
     gmtl::Point4d sipOffSetLeftRearBird;
     sipOffSetLeftRearBird.set( -leftRearBirdZ, -leftRearBirdX, leftRearBirdY, 1.0 );
-    //sipOffSetLeftRearBird *= -1.0f;
 
     gmtl::Point4d sipOffSetRightRearBird;
     sipOffSetRightRearBird.set( -rightRearBirdZ, -rightRearBirdX, rightRearBirdY, 1.0 );
-    //sipOffSetRightRearBird *= -1.0f;
-    
+
     ///Get the lookat matrix based on the bird calibration points
     gmtl::Matrix44d measuredSIPCentroidMat = 
         GetLookAtMatrix( sipOffSetFrontBird, sipOffSetLeftRearBird, sipOffSetRightRearBird );
@@ -1034,12 +1031,9 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     //std::cout << "Bird data " << measuredSIPCentroid << std::endl << std::flush;
     //gmtl::Matrix44d measuredSIPCentroidTransMat = 
     //    gmtl::makeTrans< gmtl::Matrix44d >( measuredSIPCentroid );
-    //measuredSIPCentroidMat[ 0 ][ 3 ]  = -measuredSIPCentroidMat[ 0 ][ 3 ]  * 1.0f;
-    //measuredSIPCentroidMat[ 1 ][ 3 ]  = -measuredSIPCentroidMat[ 1 ][ 3 ]  * 1.0f;
-    //measuredSIPCentroidMat[ 2 ][ 3 ] = -measuredSIPCentroidMat[ 2 ][ 3 ] * 1.0f;
+
     std::cout << "Bird data " << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
-//measuredSIPCentroidMat = measuredSIPCentroidMat * cadOrientationMat;
-  //  std::cout << "Bird data " << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
+
     
     ///SIP location from the user on the UI
 //m_sip = m_sip * 1.0f;
