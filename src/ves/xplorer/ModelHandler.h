@@ -87,11 +87,10 @@ namespace ves
 namespace xplorer
 {
 /*!\file ModelHandler.h
-ModelHandler API
-*/
-/*!\class ves::xplorer::ModelHandler
-*
-*/
+ * ModelHandler API
+ * \class ves::xplorer::ModelHandler
+ *
+ */
 class VE_XPLORER_EXPORTS ModelHandler
 {
 private:

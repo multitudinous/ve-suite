@@ -127,7 +127,7 @@ void cfdScalarShaderManager::Init()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::_setupStateSetForGLSL()
 {
-    std::cout << "Using glsl..." << std::endl;
+    //std::cout << "Using glsl..." << std::endl;
     _ss->addUniform( new osg::Uniform( "volumeData", 0 ) );
     _ss->addUniform( new osg::Uniform( "fastUpdate", _preIntegrate ) );
     _ss->addUniform( new osg::Uniform( "transferFunction", 1 ) );
@@ -249,11 +249,13 @@ void cfdScalarShaderManager::SetScalarRange( float* range )
 
     ScalarRange originalRange = _tm->dataRange( _tm->GetCurrentFrame() );
     _tf->SetFullScalarRange( originalRange.range[0], originalRange.range[1] );
-    float adjustedRange[2] = {0., 0.};
-    adjustedRange[0] = originalRange.range[0] + range[0] * ( originalRange.range[1] - originalRange.range[0] );
-    adjustedRange[1] = originalRange.range[0] + range[1] * ( originalRange.range[1] - originalRange.range[0] );
-    _tf->AdjustScalarMaximum( adjustedRange[1] );
-    _tf->AdjustScalarMinimum( adjustedRange[0] );
+    //float adjustedRange[2] = {0., 0.};
+    //adjustedRange[0] = originalRange.range[0] + range[0] * ( originalRange.range[1] - originalRange.range[0] );
+    //adjustedRange[0] = range[0];
+    //adjustedRange[1] = originalRange.range[0] + range[1] * ( originalRange.range[1] - originalRange.range[0] );
+    //adjustedRange[1] = range[1];
+    _tf->AdjustScalarMaximum( range[1] );
+    _tf->AdjustScalarMinimum( range[0] );
     _updateTransferFunction();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -147,14 +147,14 @@ void ActivateTBDataset( std::string const& activeDataset )
     activeModel->GetModelCADHandler()->MakeCADRootTransparent();
     if( !activeModel->GetDCS()->SearchChild( activeModel->GetActiveDataSet()->GetDCS() ) )
     {
-        vprDEBUG( vesDBG, 2 ) << "|\t\tadding active switch node to worldDCS"
+        vprDEBUG( vesDBG, 1 ) << "|\t\tadding active switch node to worldDCS"
         << std::endl << vprDEBUG_FLUSH;
         activeModel->GetDCS()->AddChild( activeModel->GetActiveDataSet()->GetDCS() );
     }
     ves::xplorer::scenegraph::Switch* temp = activeModel->GetActiveDataSet()->GetSwitchNode();
     if( !activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) )
     {
-        vprDEBUG( vesDBG, 2 ) << "|\t\tadding active dcs node to worldDCS for classic ss "
+        vprDEBUG( vesDBG, 1 ) << "|\t\tadding active dcs node to worldDCS for classic ss "
         << std::endl << vprDEBUG_FLUSH;
         activeModel->GetActiveDataSet()->GetDCS()->AddChild( temp );
     }
@@ -162,6 +162,8 @@ void ActivateTBDataset( std::string const& activeDataset )
     activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal( 1 );
 
     SetActiveTextureDataset();
+
+    //ves::xplorer::TextureBasedVizHandler::instance()->UpdateGraph();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UpdateScalarRange( double const& minRange, double const& maxRange )
@@ -169,7 +171,7 @@ void UpdateScalarRange( double const& minRange, double const& maxRange )
     SetActiveTextureDataset();
     
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
-    std::cout << minRange << " " << maxRange << std::endl;
+    //std::cout << minRange << " " << maxRange << std::endl;
     //this is overkill
     float floatRange[2];
     floatRange[0] = minRange;
@@ -197,16 +199,18 @@ ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset()
 ////////////////////////////////////////////////////////////////////////////////
 void UpdateTBSolution( std::string const& dataName, std::string const& dataType, double const& minRange, double const& maxRange )
 {    
+    //TB_ACTIVE_SOLUTION
+    
     ves::xplorer::volume::cfdTextureDataSet* activeTDSet = 
         SetActiveTextureDataset();
     if( !activeTDSet )
     {
         return;
     }
-    std::cout << dataType << std::endl;
+    //std::cout << dataType << std::endl;
     if( dataType == "Scalar" )
     {
-        std::cout << dataName << std::endl;
+        //std::cout << dataName << std::endl;
 
         activeTDSet->SetActiveScalar( dataName );
         
@@ -232,6 +236,10 @@ void UpdateTBSolution( std::string const& dataName, std::string const& dataType,
     {
         activeTDSet->SetActiveVector( dataName );
     }
+    
+    EnablePreIntegration( true );
+    
+    ves::xplorer::TextureBasedVizHandler::instance()->UpdateGraph();
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace volume

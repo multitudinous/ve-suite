@@ -87,6 +87,9 @@ using namespace ves::xplorer::command;
 //Constructors                                          //
 //////////////////////////////////////////////////////////
 TextureBasedVizHandler::TextureBasedVizHandler()
+    :
+    m_logger( Poco::Logger::get("xplorer.TextureBasedVizHandler") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     _animationDelay = 0.0001f;
     _appTime = 0.0;
@@ -158,17 +161,18 @@ void TextureBasedVizHandler::SetMasterNode( bool isMaster )
 /////////////////////////////////////////////////
 void TextureBasedVizHandler::_updateShaders()
 {
-    if( _activeTM )
+    if( !_activeTM )
     {
+        return;
+    }
 
-        if( _activeTM->GetDataType( 0 ) == cfdTextureManager::SCALAR )
-        {
-            _updateScalarVisHandler();
-        }
-        else if( _activeTM->GetDataType( 0 ) == cfdTextureManager::VECTOR )
-        {
-            _updateVectorVisHandler();
-        }
+    if( _activeTM->GetDataType( 0 ) == cfdTextureManager::SCALAR )
+    {
+        _updateScalarVisHandler();
+    }
+    else if( _activeTM->GetDataType( 0 ) == cfdTextureManager::VECTOR )
+    {
+        _updateVectorVisHandler();
     }
 }
 //////////////////////////////////////////////////////
@@ -489,7 +493,7 @@ void TextureBasedVizHandler::_updateVisualization()
     }*/
 }
 ///////////////////////////////////////////
-void TextureBasedVizHandler::_updateGraph()
+void TextureBasedVizHandler::UpdateGraph()
 {
     if( !ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
     {
@@ -508,6 +512,8 @@ void TextureBasedVizHandler::_updateGraph()
         return;
     }
     
+    LOG_INFO( "Adding TBET node to the graph." );
+
     osg::ref_ptr<osg::Group> tParent = _parent.get();
     osg::ref_ptr<osg::Switch> tVV = _activeVolumeVizNode->GetVolumeVisNode();
     if( !tParent->containsNode( tVV.get() ) )
@@ -587,7 +593,7 @@ void TextureBasedVizHandler::UpdateActiveTextureManager()
 void TextureBasedVizHandler::PreFrameUpdate()
 {
     //if ( ModelHandler::instance()->GetActiveModel() )
-    {
+    /*{
         if( CommandManager::instance()->GetXMLCommand() )
         {
             std::map<std::string, ves::xplorer::event::TextureBasedEventHandler*>::iterator currentEventHandler;
@@ -602,9 +608,8 @@ void TextureBasedVizHandler::PreFrameUpdate()
                 _updateGraph();
             }
         }
-    }
+    }*/
     _updateShaders();
-
 }
 //////////////////////////////////////////////////////////
 cfdPBufferManager* TextureBasedVizHandler::GetPBuffer()
@@ -718,13 +723,17 @@ void TextureBasedVizHandler::SetWorldDCS( ves::xplorer::scenegraph::DCS* dcs )
 void TextureBasedVizHandler::SetParentNode( ves::xplorer::scenegraph::Group* parent )
 {
     if( _parent != parent )
+    {
+        LOG_INFO( "TextureBasedVizHandler::SetParentNode " << parent->getName() );
         _parent = parent;
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::SetActiveTextureDataSet( cfdTextureDataSet* tds )
 {
     if( tds != _activeTDSet )
     {
+        LOG_INFO( "TextureBasedVizHandler::SetActiveTextureDataSet" );
         _activeTDSet = tds;
     }
 }
@@ -802,5 +811,6 @@ cfdVolumeVisualization* TextureBasedVizHandler::GetVolumeVizNode( int whichModel
 ///////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::ViewTextureBasedVis( bool trueFalse )
 {
+    LOG_INFO( "TextureBasedVizHandler::ViewTextureBasedVis " << trueFalse );
     _textureBaseSelected = trueFalse;
 }

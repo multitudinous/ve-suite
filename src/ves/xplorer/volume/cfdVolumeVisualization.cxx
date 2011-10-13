@@ -750,8 +750,7 @@ void cfdVolumeVisualization::_buildGraph()
 {
     if( !_tm )
     {
-        std::cout << "Warning: Texture Manager not set!!!" << std::endl;
-        std::cout << "cfdVolumeVisualization::_buildGraph..." << std::endl;
+        std::cout << "|\tcfdVolumeVisualization::_buildGraph: Texture Manager not set." << std::endl;
     }
     _volumeVizNode = new osg::Switch();
     _volumeVizNode->setName( "Volume Viz Node" );

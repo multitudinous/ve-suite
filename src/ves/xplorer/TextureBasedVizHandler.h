@@ -43,6 +43,7 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 
+#include <ves/xplorer/Logging.h>
 
 #include <vpr/Util/Singleton.h>
 
@@ -196,9 +197,10 @@ public:
     ///The active texture manager
     ves::xplorer::volume::cfdTextureManager* GetActiveTextureManager();
 
+    void UpdateGraph();
+
 protected:
     void _updateShaderState();
-    void _updateGraph();
     void _updateVisualization();
     void _updateShaders();
     void _updateScalarVisHandler();
@@ -230,10 +232,16 @@ protected:
 private:
     // Required so that vpr::Singleton can instantiate this class.
     //friend class vpr::Singleton< TextureBasedVizHandler >;
-    TextureBasedVizHandler( void );
-
-    ~TextureBasedVizHandler( void );
+    TextureBasedVizHandler();
+    ///Destructor 
+    ~TextureBasedVizHandler();
+    ///VPR singleton
     vprSingletonHeader( TextureBasedVizHandler );
+
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 }
 }

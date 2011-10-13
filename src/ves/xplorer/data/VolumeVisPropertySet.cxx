@@ -112,7 +112,7 @@ void VolumeVisPropertySet::UpdateScalarRange( PropertyPtr property )
     double castMin, castMax;
     castMax = boost::any_cast<double>( max->GetValue() );
     castMin = boost::any_cast<double>( min->GetValue() );
-std::cout << "Update " << std::endl;
+
     m_updateTBETScalarRange( castMin, castMax );
 }
 ////////////////////////////////////////////////////////////////////////////////
