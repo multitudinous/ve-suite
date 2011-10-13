@@ -78,7 +78,13 @@ protected:
     
     void UpdateScalarRange( PropertyPtr property );
 
+    void UpdateScalar( PropertyPtr property );
+
+    ///????
     ves::util::TwoDoubleSignal_type m_updateTBETScalarRange;
+    ///????
+    typedef boost::signals2::signal< void ( std::string const&, std::string const&, double const&, double const& ) > UpdateScalar_type;
+    UpdateScalar_type m_updateTBETScalar;
 /*
     ///Update signal to control turning off and on seed points
     typedef boost::signals2::signal< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;

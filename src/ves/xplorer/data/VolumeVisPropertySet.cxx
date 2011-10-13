@@ -80,7 +80,17 @@ VolumeVisPropertySet::VolumeVisPropertySet()
            new SignalWrapper< ves::util::TwoDoubleSignal_type >( &m_updateTBETScalarRange ),
            name, eventmanager::EventManager::unspecified_SignalType );
     }
-
+    ///Signal to change the active dataset
+    {
+        std::string name("VolumeVisPropertySet");
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateScalar";
+        
+        eventmanager::EventManager::instance()->RegisterSignal(
+            new SignalWrapper< UpdateScalar_type >( &m_updateTBETScalar ),
+            name, eventmanager::EventManager::unspecified_SignalType );
+    }
+    
     mTableName = "VolumeVis";
 
     RegisterPropertySet( mTableName );
@@ -114,6 +124,23 @@ void VolumeVisPropertySet::UpdateScalarRange( PropertyPtr property )
     castMin = boost::any_cast<double>( min->GetValue() );
 
     m_updateTBETScalarRange( castMin, castMax );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VolumeVisPropertySet::UpdateScalar( PropertyPtr property )
+{
+    VizBasePropertySet::UpdateScalarDataRange( property );
+    
+    std::string const currentScalar = boost::any_cast<std::string >
+        ( GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
+
+    PropertyPtr min = mPropertyMap["DataSet_ScalarRange_Min"];
+    PropertyPtr max = mPropertyMap["DataSet_ScalarRange_Max"];
+    
+    double castMin, castMax;
+    castMax = boost::any_cast<double>( max->GetValue() );
+    castMin = boost::any_cast<double>( min->GetValue() );
+    
+    m_updateTBETScalar( currentScalar, "Scalar", castMin, castMax );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VolumeVisPropertySet::CreateSkeleton()
@@ -279,7 +306,7 @@ void VolumeVisPropertySet::CreateSkeleton()
     AddProperty( "DataSet_ScalarRange_Max", 1.0, "Max" );
     mPropertyMap["DataSet_ScalarRange_Max"]->SetDisabled();
 
-    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
+    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &VolumeVisPropertySet::UpdateScalar, this, _1 ) );
     mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
     mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
     mPropertyMap["DataSet_ScalarRange_Min"]->SignalValueChanged.connect( boost::bind( &VolumeVisPropertySet::UpdateScalarRange, this, _1 ) );

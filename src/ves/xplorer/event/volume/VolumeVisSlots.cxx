@@ -225,6 +225,11 @@ void UpdateTBSolution( std::string const& dataName, std::string const& dataType,
         //need to pass the scalar range command to update it
         DataSet* dataSet = 
             ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+        if( !dataSet )
+        {
+            return;
+        }
+
         DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
         if( scalarBar )
         {
