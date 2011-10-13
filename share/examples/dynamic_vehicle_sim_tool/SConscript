@@ -17,6 +17,7 @@ WarrantyToolSubdirs = Split("""
     GraphicalPlugin
     test
     bird_test
+    matrix_test
 """)
 
 ##Run SConscript files in all of these folders.
