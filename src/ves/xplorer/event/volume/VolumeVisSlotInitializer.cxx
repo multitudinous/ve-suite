@@ -52,8 +52,8 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
 {
     using namespace ves::xplorer::event::volume;
 
-    CONNECTSIGNALS_STATIC( "%TBETUpdateNumberOfSlicePlanes",
-                      void( unsigned int const& ),
+    CONNECTSIGNALS_STATIC( "%TBETNumberOfSlicePlanes",
+                      void( std::string const&, std::vector< int > const& ),
                       &UpdateNumberOfSlicePlanes,
                       m_connections, any_SignalType, normal_Priority );
 
@@ -62,13 +62,18 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
                           &EnablePreIntegration,
                           m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%TBETUpdateIsoSurfaceValue",
-                      void( double const& ),
+    CONNECTSIGNALS_STATIC( "%TBETPhongShading",
+                          void( std::string const&, std::vector< bool > const& ),
+                          &EnablePhoneShader,
+                          m_connections, any_SignalType, normal_Priority );
+    
+    CONNECTSIGNALS_STATIC( "%TBETIsosurfaceValue",
+                      void( std::string const&, std::vector< double > const& ),
                       &UpdateIsoSurfaceValue,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%TBETEnableIsoSurfaces",
-                      void( bool const& ),
+    CONNECTSIGNALS_STATIC( "%TBETEnableIsosurface",
+                      void( std::string const&, std::vector< bool > const& ),
                       &EnableIsoSurfaces,
                       m_connections, any_SignalType, normal_Priority );
 

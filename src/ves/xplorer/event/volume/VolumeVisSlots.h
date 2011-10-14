@@ -52,22 +52,22 @@ void SetTransientMode( std::string const& playMode, std::string const& direction
 void SetTransientDuration( double const& duration );
 
 ///
-void EnablePhoneShader( bool const& enable );
+void EnablePhoneShader( std::string const& uuid, std::vector< bool > const& enable );
 
 ///
 void SetActiveShaderManager( std::string const& activeShaderManager );
 
 ///
-void UpdateNumberOfSlicePlanes( unsigned int const& numberOfSlices );
+void UpdateNumberOfSlicePlanes( std::string const& uuid, std::vector< int > const& numberOfSlices );
 
 ///
 void EnablePreIntegration( bool const& enable );
 
 ///
-void UpdateIsoSurfaceValue( double const& value );
+void UpdateIsoSurfaceValue( std::string const& uuid, std::vector< double > const& value );
 
 ///
-void EnableIsoSurfaces( bool const& enable );
+void EnableIsoSurfaces( std::string const& uuid, std::vector< bool > const& enable );
 
 ///
 void UpdateClipPlaneSettings( std::string const& planeDirection, 

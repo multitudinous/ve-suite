@@ -338,11 +338,56 @@ void VolumeVisPropertySet::CreateSkeleton()
 
     //Setup ROI bbox
     //Setup iso surface activation
+    {
+        AddProperty( "Isosurface", false, "Enable iso-surfaces" );
+        const std::string slotName = 
+            boost::lexical_cast<std::string>( this ) +".TBETEnableIsosurface";
+        std::vector< PropertyPtr > dataLink;
+        dataLink.push_back( GetProperty( "Isosurface" ) );
+        MakeLiveBasePtr p( 
+            new MakeLiveLinked< bool >( mUUIDString, dataLink, slotName ) );
+        mLiveObjects.push_back( p );
+    }
     ///Setup iso surface value
+    {
+        AddProperty( "Isosurface_IsosurfaceValue", 0.5, "Iso-surfaces value" );
+        SetPropertyAttribute( "Isosurface_IsosurfaceValue", "minimumValue", 0.0f );
+        SetPropertyAttribute( "Isosurface_IsosurfaceValue", "maximumValue", 1.0f );
+        const std::string slotName = 
+            boost::lexical_cast<std::string>( this ) +".TBETIsosurfaceValue";
+        std::vector< PropertyPtr > dataLink;
+        dataLink.push_back( GetProperty( "Isosurface_IsosurfaceValue" ) );
+        MakeLiveBasePtr p( 
+            new MakeLiveLinked< double >( mUUIDString, dataLink, slotName ) );
+        mLiveObjects.push_back( p );
+    }
     ///setup iso surface color by scalar
     //setup preintegration values
     //Setup number of slice planes
-    
+    {
+        AddProperty( "NumberOfSlicePlanes", 100, "Number of planes" );
+        SetPropertyAttribute( "NumberOfSlicePlanes", "minimumValue", 32 );
+        SetPropertyAttribute( "NumberOfSlicePlanes", "maximumValue", 1000 );
+
+        const std::string slotName = 
+            boost::lexical_cast<std::string>( this ) +".TBETNumberOfSlicePlanes";
+        std::vector< PropertyPtr > dataLink;
+        dataLink.push_back( GetProperty( "NumberOfSlicePlanes" ) );
+        MakeLiveBasePtr p( 
+            new MakeLiveLinked< int >( mUUIDString, dataLink, slotName ) );
+        mLiveObjects.push_back( p );
+    }
+    //Setup phongshader
+    {
+        AddProperty( "PhongShading", false, "Phong Shading" );
+        const std::string slotName = 
+            boost::lexical_cast<std::string>( this ) +".TBETPhongShading";
+        std::vector< PropertyPtr > dataLink;
+        dataLink.push_back( GetProperty( "PhongShading" ) );
+        MakeLiveBasePtr p( 
+            new MakeLiveLinked< bool >( mUUIDString, dataLink, slotName ) );
+        mLiveObjects.push_back( p );
+    }
     ///How to control vis animations????
 
     ///Integration controls
