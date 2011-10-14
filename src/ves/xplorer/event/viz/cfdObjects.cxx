@@ -44,6 +44,7 @@
 #include <vtkActor.h>
 #include <vtkCompositeDataGeometryFilter.h>
 #include <vtkGeometryFilter.h>
+#include <vtkDataSetSurfaceFilter.h>
 #include <vtkAlgorithmOutput.h>
 #include <vtkPointData.h>
 #include <vtkDoubleArray.h>
@@ -67,6 +68,7 @@ cfdObjects::cfdObjects( void )
     usePreCalcData( false ),
     m_gpuTools( false )
 {
+    m_surfaceFilter = vtkDataSetSurfaceFilter::New();
     for( size_t i = 0; i < 3; ++i )
     {
         origin[ i ] = 0;
@@ -95,6 +97,7 @@ cfdObjects::cfdObjects( const cfdObjects& src )
     usePreCalcData( false ),
     m_gpuTools( false )
 {
+    m_surfaceFilter = vtkDataSetSurfaceFilter::New();
     for( size_t i = 0; i < 3; ++i )
     {
         origin[ i ] = 0;
@@ -192,8 +195,10 @@ vtkAlgorithmOutput* cfdObjects::ApplyGeometryFilterNew( vtkAlgorithmOutput* inpu
     }
     else
     {
-        m_geometryFilter->SetInputConnection( input );
-        return m_geometryFilter->GetOutputPort();
+        //m_geometryFilter->SetInputConnection( input );
+        //return m_geometryFilter->GetOutputPort();
+        m_surfaceFilter->SetInputConnection( input );
+        return m_surfaceFilter->GetOutputPort();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

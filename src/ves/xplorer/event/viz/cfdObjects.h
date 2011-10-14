@@ -50,17 +50,17 @@ class vtkMaskPoints;
 class vtkCompositeDataGeometryFilter;
 class vtkGeometryFilter;
 class vtkAlgorithmOutput;
+class vtkDataSetSurfaceFilter;
 
 namespace ves
 {
 namespace xplorer
 {
 /*!\file cfdObjects.h
-cfdObjects API
-*/
-/*!\class ves::xplorer::cfdObjects
-*
-*/
+ *   cfdObjects API
+ * \class ves::xplorer::cfdObjects
+ *
+ */
 class VE_XPLORER_EXPORTS cfdObjects : public GlobalBase
 {
 public:
@@ -226,6 +226,8 @@ protected:
     ///vtkGeometryFilter
     vtkGeometryFilter* m_geometryFilter;
     
+    vtkDataSetSurfaceFilter* m_surfaceFilter;
+
     bool updateFlag;///<flag for updating.
     int vtkToPFDebug;///<debugging for performer (may not be needed).
     int objectType;///<sets object type.
