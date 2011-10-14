@@ -54,10 +54,12 @@ public:
     explicit WarrantyToolPlugin_UIDialog(QWidget *parent = 0);
     ~WarrantyToolPlugin_UIDialog();
     void ParseDataFile( const std::string& csvFilename );
+    void ParseDataBase( const std::string& csvFilename );
     void OnDataLoad( std::string const& fileName );
 
 protected:
     void changeEvent(QEvent *e);
+    void QueryUserDefinedAndHighlightParts( const std::string& queryString );
 
 protected slots:
     /// Toggles succeeding logic blocks on and off depending on value of
@@ -99,6 +101,7 @@ private:
     size_t m_tableCounter;
     ///List of tables created by the user
     std::vector< std::string > m_tableList;
+    std::string m_filename;
 };
 
 #endif // WarrantyToolPlugin_UIDIALOG_H

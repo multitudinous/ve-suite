@@ -37,6 +37,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/OneDStringArray.h>
 #include <ves/xplorer/command/CommandManager.h>
+#include <ves/conductor/qt/UITabs.h>
 
 #include "csvparser.h"
 
@@ -44,10 +45,18 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
+#include <boost/algorithm/string/find.hpp>
 
 #include <Poco/Data/SQLite/SQLite.h>
+#include <Poco/Data/SQLite/Connector.h>
+#include <Poco/Data/Session.h>
+#include <Poco/Data/Statement.h>
+#include <Poco/Data/RecordSet.h>
 
 #include <QtCore/QString>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QTreeWidgetItem>
 
 #include <string>
 #include <vector>
@@ -84,7 +93,7 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
 
 void WarrantyToolPlugin_UIDialog::on_m_dataLoadButton_clicked()
 {
-    OnDataLoad( "7460 WRTY.csv" );
+    OnDataLoad( "7460 WRTY.db" );
 }
 
 WarrantyToolPlugin_UIDialog::~WarrantyToolPlugin_UIDialog()
@@ -334,6 +343,7 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
                               relativeViewLocationsPath );
 
         std::string csvFilename =  viewPtsFilename.string();
+        m_filename = csvFilename;
         //Parse the csv file
         if( viewPtsFilename.extension().string() == (".csv") )
         {
@@ -345,11 +355,11 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
         }
         else if( viewPtsFilename.extension().string() == (".db") )
         {
-            //ParseDataBase( csvFilename );
+            ParseDataBase( csvFilename );
         }
         else if( viewPtsFilename.extension().string() == (".DB") )
         {
-            //ParseDataBase( csvFilename );
+            ParseDataBase( csvFilename );
         }
 
 
@@ -659,7 +669,8 @@ void WarrantyToolPlugin_UIDialog::SubmitQueryCommand()
     std::string mCommandName = "WARRANTY_TOOL_DB_TOOLS";
     command->SetCommandName( mCommandName );
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
-    //mServiceList->SendCommandStringToXplorer( command );
+
+    QueryUserDefinedAndHighlightParts( queryString );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -743,15 +754,16 @@ void WarrantyToolPlugin_UIDialog::UpdateQueryDisplay()
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-/*
+
 void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename )
 {
+    using namespace Poco::Data;
     // register SQLite connector
     Poco::Data::SQLite::Connector::registerConnector();
 
     Poco::Data::Session session("SQLite", csvFilename );
 
-    Statement select( session );
+    Poco::Data::Statement select( session );
 
     ///////////////////////////////////////////
     //Get the column names
@@ -760,7 +772,7 @@ void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename 
         {
             //std::string queryString = "DESCRIBE Parts";
             std::string queryString = "SELECT * FROM Parts WHERE rowid = \"1\"";
-            select << queryString.c_str(),now;
+            select << queryString, now;
         }
         catch( Poco::Data::DataException& ex )
         {
@@ -785,8 +797,7 @@ void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename 
 
         for( size_t i = 0; i < cols; ++i )
         {
-            wxString columnNames = wxString( rs.columnName( i ).c_str(), wxConvUTF8 );
-            m_columnStrings.Add( columnNames );
+            m_columnStrings.append( QString::fromStdString( rs.columnName( i ) ) );
         }
     }
     ///////////////////////////////////////////
@@ -829,8 +840,7 @@ void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename 
 
         while (more)
         {
-            wxString partNames = wxString( partRS[0].convert<std::string>().c_str(), wxConvUTF8 );
-            m_partNumberStrings.Add( partNames );
+            m_partNumberStrings.append( QString::fromStdString( partRS[0].convert<std::string>() ) );
 
             more = partRS.moveNext();
         }
@@ -853,7 +863,7 @@ void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename 
         }
         catch( ... )
         {
-            std::cout << "UI Part Number query is bad." << std::endl;
+            std::cout << "UI Table Number query is bad." << std::endl;
             return;
         }
 
@@ -879,11 +889,11 @@ void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename 
             m_tableCounter += 1;
             m_tableList.push_back( tableName );
 
-            wxString tempTableName( tableName.c_str(), wxConvUTF8 );
-            m_tableChoice1->Append( tempTableName );
-            m_tableChoice2->Append( tempTableName );
-            m_tableChoice3->Append( tempTableName );
-            m_tableChoice4->Append( tempTableName );
+            QString tempTableName( QString::fromStdString( tableName ) );
+            ui->m_tableChoice1->addItem( tempTableName );
+            ui->m_tableChoice2->addItem( tempTableName );
+            ui->m_tableChoice3->addItem( tempTableName );
+            ui->m_tableChoice4->addItem( tempTableName );
             more = tableRS.moveNext();
         }
     }
@@ -905,6 +915,7 @@ void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename 
     }
     ///////////////////////////////////////////
 }
+/*
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::OnToggleUnselected( wxCommandEvent& event )
 {
@@ -1074,3 +1085,115 @@ void WarrantyToolPlugin_UIDialog::OnSaveQuery( wxCommandEvent& event )
 }
 ////////////////////////////////////////////////////////////////////////////////
 */
+void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::string& queryString )
+{
+    std::cout << "WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts " << queryString << std::endl << std::flush;
+    //select << "SELECT Part_Number, Description, Claims FROM Parts",
+    //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
+    Poco::Data::Session session("SQLite", m_filename );
+    Poco::Data::Statement select( session );
+    try
+    {
+        select << queryString , Poco::Data::now;
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << "WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts: exception A " << std::endl << std::flush;
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
+    catch( ... )
+    {
+        return;
+    }
+
+
+    if( !queryString.compare( 0, 12, "CREATE TABLE" ) )
+    {
+        //boost::find_first( queryString, " AS " );
+        boost::iterator_range<std::string::const_iterator>::iterator stringIter = boost::find_first( queryString, " AS " ).begin();
+        //std::cout << stringIter - queryString.begin() << std::endl;
+        //Get first position for string above
+        std::size_t numEntries = ( stringIter - queryString.begin() ) + 4;
+        std::string tempString = queryString;
+        //Remove from begining to position of string above
+        tempString.erase( 0, numEntries );
+        //std::cout << tempString << std::endl;
+        //Now rerun select query and color by new color
+        //return;
+        try
+        {
+            Poco::Data::Statement select2( session );
+            select2 << tempString.c_str(), Poco::Data::now;
+            select.swap( select2 );
+        }
+        catch( Poco::Data::DataException& ex )
+        {
+            std::cout << "WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts: exception B " << std::endl << std::flush;
+            std::cout << ex.displayText() << std::endl;
+            return;
+        }
+    }
+    // create a RecordSet
+    Poco::Data::RecordSet rs(select);
+    std::size_t cols = rs.columnCount();
+    size_t numQueries = rs.rowCount();
+    std::ostringstream outString;
+    outString << "Number of parts found " << numQueries;
+    if( numQueries == 0 )
+    {
+        return;
+    }
+    // iterate over all rows and columns
+    bool more = false;
+    try
+    {
+        more = rs.moveFirst();
+    }
+    catch( ... )
+    {
+        return;
+    }
+
+    QTreeWidget* queryResults = new QTreeWidget( 0 );
+    queryResults->setColumnCount( cols );
+
+    std::string partNumber;
+    std::string partNumberHeader;
+    std::string partText;
+
+    // Get header names
+    QStringList headers;
+    if( more )
+    {
+        for (std::size_t col = 0; col < cols; ++col)
+        {
+            partNumberHeader = rs.columnName( col );
+            headers.append( QString::fromStdString( partNumberHeader ));
+        }
+    }
+    queryResults->setHeaderLabels( headers );
+
+    // Keep everything to the right of "WHERE " in the query to use as the tab
+    // title
+    QString title = QString::fromStdString( queryString );
+    int wIndex = title.indexOf( "WHERE" );
+    title = title.right( title.size() - (wIndex + 6 ) );
+
+    ves::conductor::UITabs::instance()->
+            ActivateTab( ves::conductor::UITabs::instance()->
+                         AddTab( queryResults, title.toStdString() ) );
+
+    while (more)
+    {
+        QStringList recordData;
+        for (std::size_t col = 0; col < cols; ++col)
+        {
+            recordData.append( QString::fromStdString( rs[col].convert<std::string>() ) );
+        }
+        QTreeWidgetItem* item = new QTreeWidgetItem( queryResults, recordData );
+
+        more = rs.moveNext();
+    }
+    queryResults->setSortingEnabled( true );
+}
