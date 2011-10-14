@@ -56,25 +56,34 @@ namespace event
 namespace volume
 {
 ////////////////////////////////////////////////////////////////////////////////
-void SetTransientMode( std::string const& playMode, std::string const& direction )
+void HideVizFeature( std::string const&, std::vector< bool > const& hide )
 {
-    if( playMode == "Step" )
+    ves::xplorer::TextureBasedVizHandler::instance()->ViewTextureBasedVis( !hide.at( 0 ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SetTransientMode( std::string const&, std::vector< std::string > const& playMode)
+{
+    if( playMode.at( 0 ) == "Step Forward" )
     {
-        ves::xplorer::TextureBasedVizHandler::instance()->StepTransientVisualization( direction );
+        ves::xplorer::TextureBasedVizHandler::instance()->StepTransientVisualization( "Forward" );
     }
-    else if( playMode == "Play" )
+    else if( playMode.at( 0 ) == "Step Back" )
+    {
+        ves::xplorer::TextureBasedVizHandler::instance()->StepTransientVisualization( "Backward" );
+    }
+    else if( playMode.at( 0 ) == "Play" )
     {
         ves::xplorer::TextureBasedVizHandler::instance()->PlayTransientVisualization();
     }
-    else if( playMode == "Stop" )
+    else if( playMode.at( 0 ) == "Stop" )
     {
         ves::xplorer::TextureBasedVizHandler::instance()->StopTransientVisualization();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SetTransientDuration( double const& duration )
+void SetTransientDuration( std::string const&, std::vector< double > const& duration)
 {    
-    ves::xplorer::TextureBasedVizHandler::instance()->UpdateTransientDuration( duration );        
+    ves::xplorer::TextureBasedVizHandler::instance()->UpdateTransientDuration( duration.at( 0 ) );        
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnablePhoneShader( std::string const&, std::vector< bool > const& enable )
@@ -176,8 +185,7 @@ void UpdateScalarRange( double const& minRange, double const& maxRange )
     SetActiveTextureDataset();
     
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
-    //std::cout << minRange << " " << maxRange << std::endl;
-    //this is overkill
+
     float floatRange[2];
     floatRange[0] = minRange;
     floatRange[1] = maxRange;
@@ -221,7 +229,6 @@ void UpdateTBSolution( std::string const& dataName, std::string const& dataType,
         
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
         
-        //this is overkill
         float floatRange[2];
         floatRange[0] = minRange;
         floatRange[1] = maxRange;

@@ -879,5 +879,9 @@ void TextureBasedVizHandler::ViewTextureBasedVis( bool trueFalse )
 {
     LOG_INFO( "TextureBasedVizHandler::ViewTextureBasedVis " << trueFalse );
     _textureBaseSelected = trueFalse;
+    if( _activeVolumeVizNode )
+    {
+        _activeVolumeVizNode->GetVolumeVisNode()->setNodeMask( trueFalse );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

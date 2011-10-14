@@ -49,27 +49,7 @@ using namespace ves::xplorer::data;
 VolumeVisPropertySet::VolumeVisPropertySet()
 {
     using eventmanager::SignalWrapper;
-/*
-    ///Signal for turning on seed points
-    {
-        std::string name("VolumeVisPropertySet");
-        name += boost::lexical_cast<std::string>( this );
-        name += ".ActivateSeedPoints";
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< ActivateSeedPointsSignal_type >( &m_activateSeedPoints ),
-            name, eventmanager::EventManager::unspecified_SignalType );
-    }
-    ///Signal to change the bounds of seed points
-    {
-        std::string name("VolumeVisPropertySet");
-        name += boost::lexical_cast<std::string>( this );
-        name += ".UpdateSeedPointBounds";
-        
-        eventmanager::EventManager::instance()->RegisterSignal(
-           new SignalWrapper< UpdateSeedPointBoundsSignal_type >( &m_updateSeedPointBounds ),
-           name, eventmanager::EventManager::unspecified_SignalType );
-    }*/
     ///Signal to change the active dataset
     {
         std::string name("VolumeVisPropertySet");
@@ -144,141 +124,11 @@ void VolumeVisPropertySet::UpdateScalar( PropertyPtr property )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VolumeVisPropertySet::CreateSkeleton()
-{
-/*
-    wxStaticBox* scalarNames = new wxStaticBox( this, -1, wxT( "Active Scalar" ) );
-    wxStaticBoxSizer* scalarNameSizer = new wxStaticBoxSizer( scalarNames, wxVERTICAL );
-    //_availableScalars = new wxComboBox(this,availableScalars);//,wxEmptyString, wxDefaultPosition, wxSize(150,wxDefaultCoord) );
-    //scalarNameSizer->Add(_availableScalars,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-    
-    mainSizer->Add( scalarNameSizer, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
-    
-    wxStaticText* itemStaticText6 = new wxStaticText( this, wxID_STATIC, _T( "Isosurface" ), wxDefaultPosition, wxDefaultSize, 0 );
-    mainSizer->Add( itemStaticText6, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
-    
-    _isoSurfaceSlider = new wxSlider( this, TBISOSURFACE_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_LABELS );
-    mainSizer->Add( _isoSurfaceSlider, 0, wxGROW | wxALL, 5 );
-
- ves::open::xml::DataValuePairPtr isosurfaceValue( new ves::open::xml::DataValuePair() );
- isosurfaceValue->SetData( "Iso-Surface Value", static_cast<double>(( _isoSurfaceSlider->GetValue() ) ) );
- newCommand->AddDataValuePair( isosurfaceValue );
- 
- ves::open::xml::DataValuePairPtr colorByScalar( new ves::open::xml::DataValuePair() );
- colorByScalar->SetData( "Color By Scalar", _colorByScalarName );
- newCommand->AddDataValuePair( colorByScalar );
- 
-*/    
-
-/*
- _xBounds = new DualSlider( this, -1, 1, 0, 100, 0, 100, wxDefaultPosition, wxDefaultSize,
- wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS, _( "X Bounds" ) );
- ROIMinSliderCallback* minX = new ROIMinSliderCallback( this, "X" );
- ROIMaxSliderCallback* maxX = new ROIMaxSliderCallback( this, "X" );
- ROIBothMoveCallback* bothX = new ROIBothMoveCallback( this, "X" );
- 
- _xBounds->SetMinSliderCallback( minX );
- _xBounds->SetMaxSliderCallback( maxX );
- _xBounds->SetBothSliderUpdateCallback( bothX );
- 
- _yBounds = new DualSlider( this, -1, 1, 0, 100, 0, 100, wxDefaultPosition, wxDefaultSize,
- wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS, _( "Y Bounds" ) );
- 
- ROIMinSliderCallback* minY = new ROIMinSliderCallback( this, "Y" );
- ROIMaxSliderCallback* maxY = new ROIMaxSliderCallback( this, "Y" );
- ROIBothMoveCallback* bothY = new ROIBothMoveCallback( this, "Y" );
- 
- _yBounds->SetMinSliderCallback( minY );
- _yBounds->SetMaxSliderCallback( maxY );
- _yBounds->SetBothSliderUpdateCallback( bothY );
- 
- _zBounds = new DualSlider( this, -1, 1, 0, 100, 0, 100, wxDefaultPosition, wxDefaultSize,
- wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS, _( "Z Bounds" ) );
- 
- ROIMinSliderCallback* minZ = new ROIMinSliderCallback( this, "Z" );
- ROIMaxSliderCallback* maxZ = new ROIMaxSliderCallback( this, "Z" );
- ROIBothMoveCallback* bothZ = new ROIBothMoveCallback( this, "Z" );
-
- void ROIDialog::ROIMinSliderCallback::SliderOperation()
- {
- _roidlg->SetCommandName( "TB_ROI_UPDATE" );
- 
- ves::open::xml::DataValuePairPtr coordinate( new ves::open::xml::DataValuePair() );
- coordinate->SetDataType( "STRING" );
- coordinate->SetDataName( std::string( "Coordinate" ) );
- coordinate->SetDataString( _direction );
- _roidlg->AddInstruction( coordinate );
- 
- ves::open::xml::DataValuePairPtr direction( new ves::open::xml::DataValuePair() );
- direction->SetDataType( "STRING" );
- direction->SetDataName( std::string( "Direction" ) );
- direction->SetDataString( "Positive" );
- _roidlg->AddInstruction( direction );
- 
- ves::open::xml::DataValuePairPtr value( new ves::open::xml::DataValuePair() );
- value->SetData( "ROI Value", static_cast<double>( _dualSlider->GetMinSliderValue() ) / 100.0 );
- _roidlg->AddInstruction( value );
- 
- _roidlg->SendCommands();
- _roidlg->ClearInstructions();
- }
- ///////////////////////////////////////////////////////
- void ROIDialog::ROIMaxSliderCallback::SliderOperation()
- {
- _roidlg->SetCommandName( "TB_ROI_UPDATE" );
- ves::open::xml::DataValuePairPtr coordinate( new ves::open::xml::DataValuePair() );
- coordinate->SetDataType( "STRING" );
- coordinate->SetDataName( std::string( "Coordinate" ) );
- coordinate->SetDataString( _direction );
- _roidlg->AddInstruction( coordinate );
- 
- ves::open::xml::DataValuePairPtr direction( new ves::open::xml::DataValuePair() );
- direction->SetDataType( "STRING" );
- direction->SetDataName( std::string( "Direction" ) );
- direction->SetDataString( "Negative" );
- _roidlg->AddInstruction( direction );
- 
- ves::open::xml::DataValuePairPtr value( new ves::open::xml::DataValuePair() );
- value->SetData( "ROI Value", static_cast<double>( _dualSlider->GetMaxSliderValue() ) / 100.0 );
- _roidlg->AddInstruction( value );
- 
- _roidlg->SendCommands();
- _roidlg->ClearInstructions();
- }
- //////////////////////////////////////////////////////
- void ROIDialog::ROIBothMoveCallback::SliderOperation()
- {
- _roidlg->SetCommandName( "TB_ROI_UPDATE" );
- 
- ves::open::xml::DataValuePairPtr coordinate( new ves::open::xml::DataValuePair() );
- coordinate->SetDataType( "STRING" );
- coordinate->SetDataName( std::string( "Coordinate" ) );
- coordinate->SetDataString( _direction );
- _roidlg->AddInstruction( coordinate );
- 
- ves::open::xml::DataValuePairPtr direction( new ves::open::xml::DataValuePair() );
- direction->SetDataType( "STRING" );
- direction->SetDataName( std::string( "Direction" ) );
- direction->SetDataString( "Both" );
- _roidlg->AddInstruction( direction );
- 
- 
- ves::open::xml::DataValuePairPtr minvalue( new ves::open::xml::DataValuePair() );
- minvalue->SetData( "ROI Min Value", static_cast<double>( _dualSlider->GetMinSliderValue() ) / 100.0 );
- _roidlg->AddInstruction( minvalue );
- 
- ves::open::xml::DataValuePairPtr maxvalue( new ves::open::xml::DataValuePair() );
- maxvalue->SetData( "ROI Max Value", static_cast<double>( _dualSlider->GetMaxSliderValue() ) / 100.0 );
- _roidlg->AddInstruction( maxvalue );
- 
- _roidlg->SendCommands();
- _roidlg->ClearInstructions();
- }
-*/
- 
+{ 
     {
         AddProperty( "Hide", false, "Toggle Viz Off" );
         const std::string slotName = 
-        boost::lexical_cast<std::string>( this ) +".HideVizFeature";
+            boost::lexical_cast<std::string>( this ) +".TBETHideVizFeature";
         std::vector< PropertyPtr > dataLink;
         dataLink.push_back( GetProperty( "Hide" ) );
         MakeLiveBasePtr p( 
@@ -423,7 +273,36 @@ void VolumeVisPropertySet::CreateSkeleton()
         mLiveObjects.push_back( p );
     }
     ///How to control vis animations????
+    AddProperty( "AnimationControls", boost::any(), "Animation Controls");
+    SetPropertyAttribute( "AnimationControls", "isUIGroupOnly", true );
+    SetPropertyAttribute( "AnimationControls", "setExpanded", true );
+    AddProperty( "AnimationControls_Controls", 0, "Controls" );
+    enumValues.clear();
+    enumValues.push_back( "Play" );
+    enumValues.push_back( "Stop" );
+    enumValues.push_back( "Step Forward" );
+    enumValues.push_back( "Step Back" );
+    SetPropertyAttribute( "AnimationControls_Controls", "enumValues", enumValues );
 
+    AddProperty( "AnimationControls_Duration", 0.0, "Duration" );
+    SetPropertyAttribute( "AnimationControls_Duration", "minimumValue", 0.0 );
+    SetPropertyAttribute( "AnimationControls_Duration", "maximumValue", 100.0 );
+
+    {
+        std::vector< PropertyPtr > numberOfPointsLink;
+        numberOfPointsLink.push_back( GetProperty( "AnimationControls_Duration" ) );
+        MakeLiveBasePtr p( new MakeLiveLinked< double >(
+            mUUIDString, numberOfPointsLink, "TBETAnimationDuration" ) );
+        mLiveObjects.push_back( p );         
+    }
+    ///
+    {
+        std::vector< PropertyPtr > numberOfPointsLink;
+        numberOfPointsLink.push_back( GetProperty( "AnimationControls_Controls" ) );
+        MakeLiveBasePtr p( new MakeLiveLinked< std::string >(
+            mUUIDString, numberOfPointsLink, "TBETAnimationControls" ) );
+        mLiveObjects.push_back( p );         
+    }
     ///Integration controls
     /*AddProperty( "IntegrationDirection", 2, "Integration Direction" );
     enumValues.clear();
@@ -543,230 +422,8 @@ void VolumeVisPropertySet::CreateSkeleton()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void VolumeVisPropertySet::UpdateSeedPointDisplay( PropertyPtr property )
-{
-    const std::string dataSetName = 
-        boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
-    m_activeDataSet( dataSetName );
 
-    bool showDataSet = boost::any_cast< bool >( property->GetValue() );
-
-    //Update the seed point bounds before turning the box off or on
-    if( showDataSet )
-    {
-        std::vector<double> seedPointBounds;
-        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_XMin" ) ) );
-        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_XMax" ) ) );
-        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_YMin" ) ) );
-        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_YMax" ) ) );
-        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMin" ) ) );
-        seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMax" ) ) );
-        m_updateSeedPointBounds( seedPointBounds );    
-    }
-
-    m_activateSeedPoints( dataSetName, showDataSet );
-}
-////////////////////////////////////////////////////////////////////////////////*/
+////////////////////////////////////////////////////////////////////////////////
 void VolumeVisPropertySet::ActivateVoilumeVis()
 {
-    //_tbTools->SetVectors( _availableSolutions["TEXTURE_VECTORS"] );
-    //_tbTools->SetScalars( _availableSolutions["TEXTURE_SCALARS"] );
-    
-    /*_commandName = "TB_ACTIVATE";
-    
-    ves::open::xml::DataValuePairPtr activeDatasetName( new ves::open::xml::DataValuePair() );
-    activeDatasetName->SetData( std::string( "Active Dataset Name" ) ,
-                               dynamic_cast< Vistab* >( GetParent() )->GetActiveDatasetName() );
-    _instructions.push_back( activeDatasetName );
-    
-    if( _availableScalars.GetCount() )
-    {
-        ves::open::xml::DataValuePairPtr activateCommand( new ves::open::xml::DataValuePair() );
-        activateCommand->SetDataType( "STRING" );
-        activateCommand->SetDataName( std::string( "Active Scalar" ) );
-        activateCommand->SetDataString( ConvertUnicode( _availableScalars[0].GetData() ) );
-        _instructions.push_back( activateCommand );
-        _sendCommandsToXplorer();
-    }
-    else if( _availableVectors.GetCount() )
-    {
-        ves::open::xml::DataValuePairPtr activateCommand( new ves::open::xml::DataValuePair() );
-        activateCommand->SetDataType( "STRING" );
-        activateCommand->SetDataName( std::string( "Active Vector" ) );
-        activateCommand->SetDataString( ConvertUnicode( _availableVectors[0].GetData() ) );
-        _instructions.push_back( activateCommand );
-        _sendCommandsToXplorer();
-    }    */
 }
-
-/*
- void ScalarToolsDialog::ScalarToolsSliderCallback::SliderOperation()
- {
- _scalarDlg->ClearInstructions();
- _scalarDlg->SetCommandName( "TB_SCALAR_RANGE" );
- 
- ves::open::xml::DataValuePairPtr minRangevalue( new ves::open::xml::DataValuePair() );
- minRangevalue ->SetData( "Mininum Scalar Range", static_cast<double>( _dualSlider->GetMinSliderValue() ) / 100.0 );
- _scalarDlg->AddInstruction( minRangevalue );
- 
- ves::open::xml::DataValuePairPtr maxRangevalue( new ves::open::xml::DataValuePair() );
- maxRangevalue->SetData( "Maximum Scalar Range", static_cast<double>( _dualSlider->GetMaxSliderValue() ) / 100.0 );
- _scalarDlg->AddInstruction( maxRangevalue );
- 
- _scalarDlg->SendCommands();
- _scalarDlg->ClearInstructions();
- }
- /////////////////////////////////////////////////////////////////////////////////////////
- void ScalarToolsDialog::ScalarToolsStopSliderCallback::SliderOperation()
- {
- _scalarDlg->ClearInstructions();
- _scalarDlg->SetCommandName( "TB_FULL_PREINTEGRATE_UPDATE" );
- 
- ves::open::xml::DataValuePairPtr fullUpdate( new ves::open::xml::DataValuePair() );
- unsigned int on = 1;
- fullUpdate ->SetData( "Recalculate Pre-Integration", on );
- _scalarDlg->AddInstruction( fullUpdate );
- 
- _scalarDlg->SendCommands();
- _scalarDlg->ClearInstructions();
- }
- ////////////////////////////////////////////////////////////////////////////////////
- void ScalarToolsDialog::UpdateScalarList( wxArrayString scalarNames )
- {
- _scalarSelection->Clear();
- for( size_t i = 0; i < scalarNames.GetCount(); i++ )
- {
- _scalarSelection->Append( scalarNames[i] );
- }
- if( scalarNames.GetCount() )
- {
- _scalarSelection->SetValue( _activeScalar );
- }
- }
- /////////////////////////////////////////////////////////////////////////////////////////////
- void ScalarToolsDialog::_updateActiveScalar( wxCommandEvent& command )
- {
- ClearInstructions();
- 
- _commandName = "TB_ACTIVE_SOLUTION";
- _activeScalar = _scalarSelection->GetValue();
- ves::open::xml::DataValuePairPtr name( new ves::open::xml::DataValuePair() );
- name->SetData( "Active Dataset", ConvertUnicode( _activeScalar.GetData() ) );
- _instructions.push_back( name );
- 
- ves::open::xml::DataValuePairPtr type( new ves::open::xml::DataValuePair() );
- type->SetData( "Data Type", "Scalar" );
- _instructions.push_back( type );
- 
- ves::open::xml::DataValuePairPtr minRangevalue( new ves::open::xml::DataValuePair() );
- minRangevalue->SetData( "Mininum Scalar Range", static_cast<double>( _scalarRange->GetMinSliderValue() ) / 100.0 );
- _instructions.push_back( minRangevalue );
- 
- ves::open::xml::DataValuePairPtr maxRangevalue( new ves::open::xml::DataValuePair() );
- maxRangevalue->SetData( "Maximum Scalar Range", static_cast<double>( _scalarRange->GetMaxSliderValue() ) / 100.0 );
- _instructions.push_back( maxRangevalue );
- 
- _sendCommandsToXplorer();
- ClearInstructions();
- wxScrollEvent event;
- _onPreIntegrate( event );
- }
- /////////////////////////////////////////////////////////////////////////////////
- void ScalarToolsDialog::_updateActiveScalarShaderManager( wxCommandEvent& command )
- {
- ClearInstructions();
- 
- _commandName = "TB_SET_ACTIVE_SHADER_MANAGER";
- 
- ves::open::xml::DataValuePairPtr name( new ves::open::xml::DataValuePair() );
- name->SetData( "Active Shader Manager", ConvertUnicode( _shaderManagerSelection->GetValue().GetData() ) );
- _instructions.push_back( name );
- 
- _sendCommandsToXplorer();
- ClearInstructions();
- wxScrollEvent event;
- _onPreIntegrate( event );
- }
- ////////////////////////////////////////////////////////////////
- void ScalarToolsDialog::_setColorByFace( wxCommandEvent& command )
- {
- int selectionIndex = 0;
- wxArrayString scalarNames;
- for( size_t i = 0; i < _scalarSelection->GetCount(); i++ )
- {
- if( !_scalarSelection->GetString( i ).Cmp( _colorByScalarName.c_str() ) )
- {
- selectionIndex = i;
- }
- scalarNames.Add( _scalarSelection->GetString( i ) );
- }
- wxSingleChoiceDialog scalarSelector( this, _T( "Select Scalar to color isosurface by." ), _T( "Color by Scalar" ),
- scalarNames );
- scalarSelector.SetSize( GetRect() );
- scalarSelector.SetSelection( selectionIndex );
- if( scalarSelector.ShowModal() == wxID_OK )
- {
- _colorByScalarName = scalarSelector.GetStringSelection();
- }
- }
- //////////////////////////////////////////////////////////////////////////////////
- void ScalarToolsDialog::_onPreIntegrate( wxScrollEvent& command )
- {
- ClearInstructions();
- _commandName = "TB_FULL_PREINTEGRATE_UPDATE";
- 
- unsigned int on = 1;
- ves::open::xml::DataValuePairPtr fullUpdate( new ves::open::xml::DataValuePair() );
- fullUpdate ->SetData( "Recalculate Pre-Integration", on );
- AddInstruction( fullUpdate );
- 
- _sendCommandsToXplorer();
- ClearInstructions();
- }
- ////////////////////////////////////////////////////////////////////////////////////////
- void ScalarToolsDialog::_onUpdateIsosurface( wxScrollEvent& command )
- {
- ClearInstructions();
- _commandName = "TB_UPDATE_ISOSURFACE";
- 
- ves::open::xml::DataValuePairPtr isosurfaceValue( new ves::open::xml::DataValuePair() );
- isosurfaceValue->SetData( "Iso-Surface Value", static_cast<double>(( _isoSlider->GetValue() / 100.0 ) ) );
- _instructions.push_back( isosurfaceValue );
- 
- ves::open::xml::DataValuePairPtr colorByScalar( new ves::open::xml::DataValuePair() );
- colorByScalar->SetData( "Color By Scalar", ConvertUnicode( _colorByScalarName.GetData() ) );
- _instructions.push_back( colorByScalar );
- 
- _sendCommandsToXplorer();
- ClearInstructions();
- }
- ////////////////////////////////////////////////////////////////////////////
- void ScalarToolsDialog::_onUpdateNumberOfSlicePlanes( wxScrollEvent& command )
- {
- ClearInstructions();
- _commandName = "TB_UPDATE_NUMBER_SLICE_PLANES";
- 
- ves::open::xml::DataValuePairPtr nPlanesValue( new ves::open::xml::DataValuePair() );
- nPlanesValue->SetData( "Number of Slice Planes", static_cast<unsigned int>(( _numSlicesSlider->GetValue() ) ) );
- _instructions.push_back( nPlanesValue );
- 
- _sendCommandsToXplorer();
- ClearInstructions();
- }
- ////////////////////////////////////////////////////////////////////
- void ScalarToolsDialog::_onEnableIsoSurface( wxCommandEvent& command )
- {
- _isoSlider->Enable( _isosurfaceCheck->GetValue() );
- //this isn't ready yet
- //_advancedButton->Enable(_isosurfaceCheck->GetValue());
- 
- ClearInstructions();
- _commandName = "TB_ISOSURFACE_ENABLE";
- 
- ves::open::xml::DataValuePairPtr isosurfaceValue( new ves::open::xml::DataValuePair() );
- isosurfaceValue->SetData( "Iso-Surface State", ( _isosurfaceCheck->GetValue() ) ? "On" : "Off" );
- _instructions.push_back( isosurfaceValue );
- 
- _sendCommandsToXplorer();
- ClearInstructions();
-*/

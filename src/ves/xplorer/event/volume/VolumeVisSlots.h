@@ -45,11 +45,14 @@ namespace event
 {
 namespace volume
 {
+///
+void HideVizFeature( std::string const& uuid, std::vector< bool > const& hide );
+
 ///Play, stop, step an animation
-void SetTransientMode( std::string const& playMode, std::string const& direction );
+void SetTransientMode( std::string const& uuid, std::vector< std::string > const& playMode);
 
 ///Set the duration of the animation
-void SetTransientDuration( double const& duration );
+void SetTransientDuration( std::string const& uuid, std::vector< double > const& duration );
 
 ///
 void EnablePhoneShader( std::string const& uuid, std::vector< bool > const& enable );

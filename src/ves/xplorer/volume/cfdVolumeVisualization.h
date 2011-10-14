@@ -70,9 +70,7 @@ class cfdUpdateTextureCallback;
 
 /*!\file cfdVolumeVisualization.h
  * cfdVolumeVisualization API
- */
-
-/*!\class ves::xplorer::volume::cfdVolumeVisualization
+ * \class ves::xplorer::volume::cfdVolumeVisualization
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisualization
