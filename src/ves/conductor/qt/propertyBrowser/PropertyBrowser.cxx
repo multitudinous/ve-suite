@@ -382,6 +382,15 @@ void PropertyBrowser::_refreshItem( int index )
         //int currentMax = mIntManager->maximum( item );
         //int step = static_cast < int > ( ( currentMax - currentMin ) / 100.0 );
         int step = 1;
+        if( property->AttributeExists("StepSize") )
+        {
+            int tStep = boost::any_cast<int>( property->GetAttribute( "StepSize" ) );
+            // Require positive, non-zero step size
+            if( tStep > 0 )
+            {
+                step = tStep;
+            }
+        }
         mIntManager->setSingleStep( item, step );
     }
     else if( property->IsFloat() )
