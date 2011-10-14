@@ -33,11 +33,10 @@
 #ifndef TEXTURE_REPLACE_VISITOR_H
 #define TEXTURE_REPLACE_VISITOR_H
 /*!\file SwapTexture.h
-SwapTexture API
-*/
-/*!\class SwapTexture
-*
-*/
+ *   SwapTexture API
+ *!\class SwapTexture
+ *
+ */
 #include <ves/VEConfig.h>
 
 #include <osg/ref_ptr>

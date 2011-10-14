@@ -104,9 +104,7 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
     std::string fileName;
     osg::ref_ptr< osg::Image > ddsImage;
     
-    osg::StateSet::TextureAttributeList stateSetTal =
-        tempStateSet->getTextureAttributeList();
-    for( unsigned int i = 0; i < stateSetTal.size(); ++i )
+    for( unsigned int i = 0; i < 16; ++i )
     {
         osg::StateAttribute* sa = stateSet->getTextureAttribute(
             i, osg::StateAttribute::TEXTURE );
