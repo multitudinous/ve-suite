@@ -17,4 +17,13 @@ multiblock = ves_pkg.createProgram('multiblockTest' + env["PROGSUFFIX"], env, 'b
 multiblock.addSources( srcs )
 multiblock.build()
 
+
+srcs1 = Split("""
+   polyhedral_test.cpp
+""")
+
+poly = ves_pkg.createProgram('polyhedralTest' + env["PROGSUFFIX"], env, 'bin')
+poly.addSources( srcs1 )
+poly.build()
+
 SConscript( dirs = ['vector_field'] )
