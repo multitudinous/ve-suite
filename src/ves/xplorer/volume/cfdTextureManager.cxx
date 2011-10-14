@@ -242,11 +242,11 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
         vtkImageData* flowImage = dynamic_cast< vtkImageData* >( ves::xplorer::util::readVtkThing( textureFile, 0 ) );
         if( flowImage->GetPointData()->GetNumberOfArrays() > 1 )
         {
-            std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : There are too many scalars in this texture " << std::endl;
+            std::cerr << " Warning : cfdTextureManager::addFieldTextureFromFile : There are too many scalars in this texture " << std::endl;
         }
         else if( flowImage->GetPointData()->GetNumberOfArrays() == 0 )
         {
-            std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : No scalars in this texture " << std::endl;
+            std::cerr << " Error : cfdTextureManager::addFieldTextureFromFile : No scalars in this texture " << std::endl;
         }
 
         vtkDataArray* flowData = flowImage->GetPointData()->GetArray( 0 );
