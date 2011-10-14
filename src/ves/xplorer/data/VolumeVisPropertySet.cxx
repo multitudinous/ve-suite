@@ -337,6 +337,40 @@ void VolumeVisPropertySet::CreateSkeleton()
     UpdateVectorDataOptions( nullPtr );
 
     //Setup ROI bbox
+    {
+        AddProperty( "ROIBounds", boost::any(), "Bounds");
+        SetPropertyAttribute( "ROIBounds", "isUIGroupOnly", true );
+        SetPropertyAttribute( "ROIBounds", "setExpanded", true );
+        AddProperty( "ROIBounds_XMin",   0.0, "X Minimum" );
+        SetPropertyAttribute( "ROIBounds_XMin", "minimumValue",   0.0 );
+        SetPropertyAttribute( "ROIBounds_XMin", "maximumValue", 1.0 );
+        AddProperty( "ROIBounds_XMax", 1.0, "X Maximum" );
+        SetPropertyAttribute( "ROIBounds_XMax", "minimumValue",   0.0 );
+        SetPropertyAttribute( "ROIBounds_XMax", "maximumValue", 1.0 );
+        AddProperty( "ROIBounds_YMin",   0.0, "Y Minimum" );
+        SetPropertyAttribute( "ROIBounds_YMin", "minimumValue",   0.0 );
+        SetPropertyAttribute( "ROIBounds_YMin", "maximumValue", 1.0 );
+        AddProperty( "ROIBounds_YMax", 1.0, "Y Maximum" );
+        SetPropertyAttribute( "ROIBounds_YMax", "minimumValue",   0.0 );
+        SetPropertyAttribute( "ROIBounds_YMax", "maximumValue", 1.0 );
+        AddProperty( "ROIBounds_ZMin",   0.0, "Z Minimum" );
+        SetPropertyAttribute( "ROIBounds_ZMin", "minimumValue",   0.0 );
+        SetPropertyAttribute( "ROIBounds_ZMin", "maximumValue", 1.0 );
+        AddProperty( "ROIBounds_ZMax", 1.0, "Z Maximum" );
+        SetPropertyAttribute( "ROIBounds_ZMax", "minimumValue",   0.0 );
+        SetPropertyAttribute( "ROIBounds_ZMax", "maximumValue", 1.0 );
+
+        std::vector< PropertyPtr > numberOfPointsLink;
+        numberOfPointsLink.push_back( GetProperty( "ROIBounds_XMin" ) );
+        numberOfPointsLink.push_back( GetProperty( "ROIBounds_XMax" ) );
+        numberOfPointsLink.push_back( GetProperty( "ROIBounds_YMin" ) );
+        numberOfPointsLink.push_back( GetProperty( "ROIBounds_YMax" ) );
+        numberOfPointsLink.push_back( GetProperty( "ROIBounds_ZMin" ) );
+        numberOfPointsLink.push_back( GetProperty( "ROIBounds_ZMax" ) );
+        MakeLiveBasePtr p( new MakeLiveLinked< double >(
+            mUUIDString, numberOfPointsLink, "TBETROIBoundUpdate" ) );
+        mLiveObjects.push_back( p );
+    }
     //Setup iso surface activation
     {
         AddProperty( "Isosurface", false, "Enable iso-surfaces" );

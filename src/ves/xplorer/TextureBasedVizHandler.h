@@ -126,6 +126,8 @@ public:
                           std::string planeDirection,
                           double alpha );
 
+    void UpdateClipPlane( std::vector< double > const& roi );
+
 
     ///Update the scalar range
     ///\param range The new scalar range

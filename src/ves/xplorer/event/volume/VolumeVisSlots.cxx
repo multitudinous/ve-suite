@@ -77,7 +77,7 @@ void SetTransientDuration( double const& duration )
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateTransientDuration( duration );        
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnablePhoneShader( std::string const& uuid, std::vector< bool > const& enable )
+void EnablePhoneShader( std::string const&, std::vector< bool > const& enable )
 {
     ves::xplorer::TextureBasedVizHandler::instance()->EnsurePhongShading( enable.at( 0 ) );
 }
@@ -87,7 +87,7 @@ void SetActiveShaderManager( std::string const& activeShaderManager )
     ves::xplorer::TextureBasedVizHandler::instance()->SetActiveShaderManager( activeShaderManager );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateNumberOfSlicePlanes( std::string const& uuid, std::vector< int > const& numberOfSlices )
+void UpdateNumberOfSlicePlanes( std::string const&, std::vector< int > const& numberOfSlices )
 {
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes( numberOfSlices.at( 0 ) );
     
@@ -99,12 +99,12 @@ void EnablePreIntegration( bool const& enable )
     ves::xplorer::TextureBasedVizHandler::instance()->UpdatePreIntegrationTable( enable );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateIsoSurfaceValue( std::string const& uuid, std::vector< double > const& value )
+void UpdateIsoSurfaceValue( std::string const&, std::vector< double > const& value )
 {
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateIsosurface( value.at( 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnableIsoSurfaces( std::string const& uuid, std::vector< bool > const& enable )
+void EnableIsoSurfaces( std::string const&, std::vector< bool > const& enable )
 {
     ves::xplorer::TextureBasedVizHandler::instance()->EnsureIsosurface( enable.at( 0 ) );    
 }
@@ -129,6 +129,11 @@ void UpdateClipPlaneSettings( std::string const& planeDirection,
                                                                           "Negative",
                                                                           maxRoiValue );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UpdateROIBounds( std::string const&, std::vector< double > const& roi )
+{
+    ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( roi );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TurnOnBBox( bool const& enable )
@@ -164,8 +169,6 @@ void ActivateTBDataset( std::string const& activeDataset )
     activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal( 1 );
 
     SetActiveTextureDataset();
-
-    //ves::xplorer::TextureBasedVizHandler::instance()->UpdateGraph();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UpdateScalarRange( double const& minRange, double const& maxRange )

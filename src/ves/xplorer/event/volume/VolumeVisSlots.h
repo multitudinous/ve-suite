@@ -75,6 +75,9 @@ void UpdateClipPlaneSettings( std::string const& planeDirection,
     double const& minRoiValue, double const& maxRoiValue );
 
 ///
+void UpdateROIBounds( std::string const& uuid, std::vector< double > const& roi );
+
+///
 void TurnOnBBox( bool const& enable );
 
 ///

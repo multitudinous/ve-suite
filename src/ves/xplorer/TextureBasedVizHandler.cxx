@@ -318,6 +318,72 @@ void TextureBasedVizHandler::UpdateClipPlane( std::string planeCoordinate,
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
+void TextureBasedVizHandler::UpdateClipPlane( std::vector< double > const& roi )
+{
+    double plane[4] = {0, 0, 0, 0};
+    //if( planeCoordinate == "X" )
+    {
+        plane[0] = 0.0; plane[1] = 0.0; plane[2] = 0.0; plane[3] = 0.0;
+        plane[0] = 1.0;
+        //get the xplane positions
+        //if( planeDirection == "Positive" )
+        {
+            plane[3] = _currentBBox[0] + roi.at( 0 ) * ( _currentBBox[1] - _currentBBox[0] );
+            plane[3] *= -1.0;
+            plane[3] += .001;
+            _activeVolumeVizNode->UpdateClipPlanePosition( cfdVolumeVisualization::XPLANE_MIN, plane );
+        }
+        //else if( planeDirection == "Negative" )
+        {
+            plane[3] = _currentBBox[0] + roi.at( 1 ) * ( _currentBBox[1] - _currentBBox[0] );
+            plane[0] *= -1.0;
+            plane[3] -= .001;
+            _activeVolumeVizNode->UpdateClipPlanePosition( cfdVolumeVisualization::XPLANE_MAX, plane );
+        }
+    }
+    //else if( planeCoordinate == "Y" )
+    {
+        plane[0] = 0.0; plane[1] = 0.0; plane[2] = 0.0; plane[3] = 0.0;
+        plane[1] = 1.0;
+        //get the yplane positions
+        //if( planeDirection == "Positive" )
+        {
+            plane[3] = _currentBBox[2] + roi.at( 2 ) * ( _currentBBox[3] - _currentBBox[2] );
+            plane[3] *= -1.0;
+            plane[3] += .001;
+            _activeVolumeVizNode->UpdateClipPlanePosition( cfdVolumeVisualization::YPLANE_MIN, plane );
+        }
+        //else if( planeDirection == "Negative" )
+        {
+            plane[3] = _currentBBox[2] + roi.at( 3 ) * ( _currentBBox[3] - _currentBBox[2] );
+            plane[1] *= -1.0;
+            plane[3] -= .001;
+            _activeVolumeVizNode->UpdateClipPlanePosition( cfdVolumeVisualization::YPLANE_MAX, plane );
+        }
+    }
+    //else if( planeCoordinate == "Z" )
+    {
+        //create an z plane
+        plane[0] = 0.0; plane[1] = 0.0; plane[2] = 0.0; plane[3] = 0.0;
+        plane[2] = 1.0;
+        //get the zplane positions
+        //if( planeDirection == "Positive" )
+        {
+            plane[3] = _currentBBox[4] + roi.at( 4 ) * ( _currentBBox[5] - _currentBBox[4] );
+            plane[3] *= -1.0;
+            plane[3] += .001;
+            _activeVolumeVizNode->UpdateClipPlanePosition( cfdVolumeVisualization::ZPLANE_MIN, plane );
+        }
+        //else if( planeDirection == "Negative" )
+        {
+            plane[3] = _currentBBox[4] + roi.at( 5 ) * ( _currentBBox[5] - _currentBBox[4] );
+            plane[2] *= -1.0;
+            plane[3] -= .001;
+            _activeVolumeVizNode->UpdateClipPlanePosition( cfdVolumeVisualization::ZPLANE_MAX, plane );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::UpdateNumberOfSlicePlanes( unsigned int nSlices )
 {
     if( _activeVolumeVizNode )

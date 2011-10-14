@@ -87,13 +87,12 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
                           &UpdateTBSolution,
                           m_connections, any_SignalType, normal_Priority );
                           
-    /*CONNECTSIGNALS_STATIC( "%TB_SET_ACTIVE_SHADER_MANAGER",
-                      void( const std::string&, const std::string&,
-                            const std::string&),
-                      &DeleteCADNode,
+    CONNECTSIGNALS_STATIC( "%TBETROIBoundUpdate",
+                      void( std::string const&, std::vector< double > const& ),
+                      &UpdateROIBounds,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%TB_ACTIVATE",
+    /*CONNECTSIGNALS_STATIC( "%TB_ACTIVATE",
                       void( const std::string&, const double& ),
                       &SetMassOnCADNode,
                       m_connections, any_SignalType, normal_Priority );*/
