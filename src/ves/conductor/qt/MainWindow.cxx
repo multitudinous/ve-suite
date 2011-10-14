@@ -217,6 +217,7 @@ MainWindow::MainWindow(QWidget* parent) :
            "MainWindow.JumpSignal" );
     }
 
+    // The view stack
     {
         toolbar->addAction( ui->actionViewStack );
         m_viewMenuStack = new IconStack( toolbar->
@@ -226,6 +227,7 @@ MainWindow::MainWindow(QWidget* parent) :
         m_viewMenuStack->AddAction( ui->actionShowPluginsTab );
         m_viewMenuStack->AddAction( ui->actionRecent );
         m_viewMenuStack->AddAction( ui->actionConstraints );
+        m_viewMenuStack->AddAction( ui->actionShowTestPlot );
     }
         
     // Make sure there is no statusbar on this widget.
@@ -1471,7 +1473,7 @@ void MainWindow::on_actionRecent_triggered()
 {
     if( m_recentTab != 0 )
     {
-        ActivateTab( "Recent Files" );
+        ActivateTab( AddTab( m_recentTab, "Recent Files" ) );
     }
     else
     {
@@ -1523,4 +1525,55 @@ void MainWindow::on_actionConstraints_triggered()
 {
     ActivateTab( AddTab( m_constraintsTab, "Constraints" ) );
 }
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_tabWidget_tabCloseRequested ( int index )
+{
+    RemoveTab( ui->tabWidget->tabText( index ).toStdString() );
+}
+////////////////////////////////////////////////////////////////////////////////
+
+// TESTPLOT
+#if 0
+#include <qwt-6.0.0-rc5/qwt_plot_curve.h>
+#include <qwt-6.0.0-rc5/qwt_plot_grid.h>
+#include <qwt-6.0.0-rc5/qwt_plot.h>
+#include <ves/conductor/qt/UIManager.h>
+#include <ves/conductor/qt/UIElementQt.h>
+void MainWindow::on_actionShowTestPlot_triggered()
+{
+    QwtPlot* plot = new QwtPlot(0);
+    plot->setTitle("Example Qwt Plot");
+    plot->setAxisTitle(QwtPlot::xBottom, "X Data");
+    plot->setAxisTitle(QwtPlot::yLeft, "Y Data");
+
+    QwtPlotCurve* curve = new QwtPlotCurve("Curve");
+    curve->setPen(QPen(Qt::red));
+
+    double x_data[3] = {1, 2, 7};
+    double y_data[3] = {1, 2, 3};
+
+    curve->setSamples(x_data, y_data, 3);
+
+    QwtPlotGrid* grid_y = new QwtPlotGrid();
+    grid_y->attach(plot);
+
+    curve->attach(plot);
+
+    plot->setAutoReplot(true);
+
+    // In a normal program, we'd do this to display the plot in its own window:
+    // plot->show();
+    // but we need the new window to be managed as a UIElement, so we do this:
+    ves::conductor::UIElementQt* element = new ves::conductor::UIElementQt();
+    element->SetInitialImageWidthAndHeight( 400, 300 );
+    element->SetWidget( plot );
+    ves::conductor::UIManager::instance()->AddElement( element );
+}
+#else
+void MainWindow::on_actionShowTestPlot_triggered()
+{
+
+}
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////

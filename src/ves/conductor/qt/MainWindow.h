@@ -282,7 +282,12 @@ protected Q_SLOTS:
 
     void on_actionConstraints_triggered();
 
+    /// Temporary slot to demonstrate qwtPlot integration
+    void on_actionShowTestPlot_triggered();
+
     void UseAsSurfaceDataQueued( const std::string uuid, bool flag );
+
+    void on_tabWidget_tabCloseRequested ( int index );
 
 Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
