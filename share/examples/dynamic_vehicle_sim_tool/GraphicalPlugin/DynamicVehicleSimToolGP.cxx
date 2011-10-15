@@ -1059,7 +1059,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
         << cadOrientationMat << std::endl << std::flush;
     
     measuredSIPCentroidMat = cadOrientationMat * measuredSIPCentroidMat;
-    std::cout << "Measured SIP with orientation " << std::endl 
+    std::cout << "Measured SIP and centroid with orientation " << std::endl 
         << measuredSIPCentroidMat << std::endl << std::flush;
     
 //#ifndef DVST_TEST
