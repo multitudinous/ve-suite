@@ -232,7 +232,7 @@ unsigned int cfdTextureManager::getNextFrame()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
 {
-    double tempMag[6] = {0, 0, 0, 0, 0, 0};
+    //double tempMag[6] = {0, 0, 0, 0, 0, 0};
     std::ifstream fin( textureFile.c_str() );
 
     if( fin.is_open() )
@@ -256,7 +256,7 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
         }
         dataName = flowData->GetName();
 
-        DataType curType;
+        DataType curType = NONE;
         //read the file type
         if( flowData->GetNumberOfComponents() == 1 )
         {

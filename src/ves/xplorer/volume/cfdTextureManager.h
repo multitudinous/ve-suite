@@ -61,9 +61,7 @@ namespace volume
 {
 /*!\file cfdTextureManager.h
  * cfdTextureManager API
- */
-
-/*!\class ves::xplorer::volume::cfdTextureManager
+ * \class ves::xplorer::volume::cfdTextureManager
  *
  */
 class  VE_TEXTURE_BASED_EXPORTS cfdTextureManager
@@ -80,7 +78,7 @@ public:
 
     enum DataType
     {
-        SCALAR, VECTOR
+        SCALAR, VECTOR, NONE
     };
     enum PlayMode
     {
