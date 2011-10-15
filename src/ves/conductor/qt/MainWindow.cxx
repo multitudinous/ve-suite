@@ -1533,10 +1533,10 @@ void MainWindow::on_tabWidget_tabCloseRequested ( int index )
 ////////////////////////////////////////////////////////////////////////////////
 
 // TESTPLOT
-#if 0
-#include <qwt-6.0.0-rc5/qwt_plot_curve.h>
-#include <qwt-6.0.0-rc5/qwt_plot_grid.h>
-#include <qwt-6.0.0-rc5/qwt_plot.h>
+#if 1
+#include <qwt_plot_curve.h>
+#include <qwt_plot_grid.h>
+#include <qwt_plot.h>
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElementQt.h>
 void MainWindow::on_actionShowTestPlot_triggered()

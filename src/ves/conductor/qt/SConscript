@@ -191,7 +191,8 @@ lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph'),
                            pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src'),
-                           pj('#', buildDir, 'external', 'osgQtTree' )
+                           pj('#', buildDir, 'external', 'osgQtTree' ),
+                           pj('#', buildDir, 'external', 'qwt-6.0.0-rc5', 'src' )
                          ])
 
 if GetPlatform() != 'darwin':
@@ -239,6 +240,7 @@ if minerva_options.isAvailable():
 	
 lib_env.AppendUnique( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_QTUI_LIBRARY'])
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
+lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qwt-6.0.0-rc5','src') ] )
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external') ] )
 
 if lib_env['StaticLibs'] == "yes":

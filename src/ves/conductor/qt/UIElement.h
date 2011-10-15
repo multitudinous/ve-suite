@@ -225,14 +225,14 @@ public:
 
     /// Tell this element it is on top. Subclasses may choose to render
     /// differently when on top.
-    virtual void Raise(){}
+    virtual void Raise(){;}
 
     /// Tell this element it is no longer on top. Subclasses may choose to render
     /// differently when not on top.
-    virtual void Lower(){}
+    virtual void Lower(){;}
 
     /// Set whether titlebar is displayed
-    virtual void ShowTitlebar( bool show ){}
+    virtual void ShowTitlebar( bool ){;}
 
     /// Toggle whether titlebar is displayed
     virtual void ToggleTitlebar(){}
