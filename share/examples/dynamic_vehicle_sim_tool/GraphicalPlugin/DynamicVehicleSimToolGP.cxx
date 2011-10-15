@@ -1040,7 +1040,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
     std::cout << "Measured SIP " << m_sip << std::endl << std::endl << std::flush;
     
-    measuredSIPCentroidMat = sipLoc * measuredSIPCentroidMat;
+    /*measuredSIPCentroidMat = sipLoc * measuredSIPCentroidMat;
     std::cout << "Measured SIP without orientation " 
         << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
     
@@ -1048,6 +1048,17 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
         << cadOrientationMat << std::endl << std::flush;
     
     measuredSIPCentroidMat = measuredSIPCentroidMat * cadOrientationMat;
+    std::cout << "Measured SIP with orientation " << std::endl 
+        << measuredSIPCentroidMat << std::endl << std::flush;*/
+        
+    std::cout << "CAD SIP orientation matrix " << std::endl 
+        << cadOrientationMat << std::endl << std::flush;
+    
+    cadOrientationMat = sipLoc * cadOrientationMat;
+    std::cout << "Base SIP coordinate matrix " << std::endl 
+        << cadOrientationMat << std::endl << std::flush;
+    
+    measuredSIPCentroidMat = cadOrientationMat * measuredSIPCentroidMat;
     std::cout << "Measured SIP with orientation " << std::endl 
         << measuredSIPCentroidMat << std::endl << std::flush;
     
