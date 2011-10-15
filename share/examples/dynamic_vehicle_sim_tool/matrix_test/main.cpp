@@ -141,15 +141,15 @@ int main(int argc, char* argv[])
     double mm2ft = 0.0032808;
     
     double frontBirdX = -1048.1 * mm2ft;
-     double frontBirdY = 686.8 * mm2ft;
-     double frontBirdZ = 13.3 * mm2ft;
+     double frontBirdY =  686.8 * mm2ft;
+     double frontBirdZ =   13.3 * mm2ft;
      
      double leftRearBirdX = 597.8 * mm2ft;
      double leftRearBirdY = 792.5 * mm2ft;
      double leftRearBirdZ = 421.4 * mm2ft;
      
-     double rightRearBirdX = 600.9 * mm2ft;
-     double rightRearBirdY = 792.4 * mm2ft;
+     double rightRearBirdX =  600.9 * mm2ft;
+     double rightRearBirdY =  792.4 * mm2ft;
      double rightRearBirdZ = -421.4 * mm2ft;
     /*
     double frontBirdX = m_birdData.at( 0 ) * mm2ft;
@@ -202,17 +202,51 @@ int main(int argc, char* argv[])
     gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
     std::cout << "Measured SIP " << m_sip << std::endl << std::endl << std::flush;
 
-    measuredSIPCentroidMat = sipLoc * measuredSIPCentroidMat;
-    std::cout << "Measured SIP without orientation " 
-        << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
+    std::cout << "CAD SIP orientation matrix " << std::endl 
+        << cadOrientationMat << std::endl << std::flush;
         
-    std::cout << "CAD orientation matrix " << std::endl 
+    cadOrientationMat = sipLoc * cadOrientationMat;
+    std::cout << "Base SIP coordinate matrix " << std::endl 
         << cadOrientationMat << std::endl << std::flush;
 
-    measuredSIPCentroidMat = measuredSIPCentroidMat * cadOrientationMat;
+    measuredSIPCentroidMat = cadOrientationMat * measuredSIPCentroidMat;
     std::cout << "Measured SIP with orientation " << std::endl 
         << measuredSIPCentroidMat << std::endl << std::flush;
     
+    //measuredSIPCentroidMat = sipLoc * measuredSIPCentroidMat * cadOrientationMat; //maybe
+    //| -0.019475 0.997889 -0.0619511 1.1201 |
+    //| -0.997243 -0.0149501 0.0726819 -4.07211 |
+    //| 0.0716023 0.0631958 0.995429 -1.42703 |
+    //measuredSIPCentroidMat = measuredSIPCentroidMat * sipLoc * cadOrientationMat; //probably not
+    //| -0.019475 0.997889 -0.0619511 0.877683 |
+    //| -0.997243 -0.0149501 0.0726819 -4.06648 |
+    //| 0.0716023 0.0631958 0.995429 -1.43658 |
+
+    //measuredSIPCentroidMat = sipLoc * cadOrientationMat * measuredSIPCentroidMat; //yes
+    //| -0.0195433 0.999809 0.000431068 0.558475 |
+    //| -0.999783 -0.019546 0.00725811 -3.46311 |
+    //| 0.00726515 -0.000289127 0.999974 -1.66486 |    
+    
+    //measuredSIPCentroidMat = cadOrientationMat * sipLoc * measuredSIPCentroidMat; //no - wrong coordinate frame
+    //measuredSIPCentroidMat = cadOrientationMat * measuredSIPCentroidMat * sipLoc; //no - wrong coordinate frame
+    //measuredSIPCentroidMat = measuredSIPCentroidMat * cadOrientationMat * sipLoc; //no - wrong coordinate frame
+    //measuredSIPCentroidMat = sipLoc * measuredSIPCentroidMat;
+    //std::cout << "Measured SIP with offset " 
+    //    << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
+        
+    //std::cout << "CAD orientation matrix " << std::endl 
+    //    << cadOrientationMat << std::endl << std::flush;
+
+    //measuredSIPCentroidMat = measuredSIPCentroidMat * cadOrientationMat ;
+    //std::cout << "Measured SIP with orientation " << std::endl 
+    //    << measuredSIPCentroidMat << std::endl << std::flush;
+    
+    /*gmtl::Point4d point;
+    point.set( 0.0f, 0.0f, 0.0f, 1.0f );
+    measuredSIPCentroidMat = measuredSIPCentroidMat * point ;
+    std::cout << "Measured SIP with orientation " << std::endl 
+    << measuredSIPCentroidMat << std::endl << std::flush;*/
+
     //#ifndef DVST_TEST
     //Now we convert the sip matrix back through the transform mat to move it 
     //to the VR Juggler coord
@@ -227,9 +261,9 @@ int main(int argc, char* argv[])
         << registerMat << std::endl << std::flush;
     
     ///Set the registration matrix
-    gmtl::Matrix44d m_initialNavMatrix = registerMat;// * cadOrientationMat * sipLoc;
-    std::cout << "Init nav matrix with CAD correction" << std::endl 
-    << m_initialNavMatrix << std::endl << std::flush;
+    //gmtl::Matrix44d m_initialNavMatrix = registerMat;// * cadOrientationMat * sipLoc;
+    //std::cout << "Init nav matrix with CAD correction" << std::endl 
+    //    << m_initialNavMatrix << std::endl << std::flush;
     
     
     std::cout << "Close answer" << std::endl 
