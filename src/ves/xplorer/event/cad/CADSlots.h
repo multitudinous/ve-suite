@@ -54,6 +54,7 @@
  #include <osgOQ/OcclusionQueryVisitor.h>
  #endif*/
 #include <osgwQuery/QueryUtils.h>
+#include <osgwQuery/QueryComputation.h>
 
 namespace ves
 {
