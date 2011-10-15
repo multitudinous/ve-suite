@@ -110,6 +110,10 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     _chdir( newWorkingDir.c_str() );
 #else
     int stopWarningMe = chdir( newWorkingDir.c_str() );
+    if( stopWarningMe != 0 )
+    {
+        std::cout << "Could not change working directory." << std::endl;
+    }
 #endif
     using namespace ves::xplorer;
     reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
@@ -357,6 +361,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     }
    
     {
+        if( UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" )->GetCommandName().compare( "NULL" ) )
         {
             // Create the command and data value pairs
             CommandPtr tempCommand = UserPreferencesDataBuffer::instance()->
@@ -445,7 +450,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 // no longer connecting to the ActiveModelChanged signal. Leaving it as-is
 // for a bit in case we discover a bug in the current arrangement and need to
 // go back to listening for ActiveModelChanged signal.
-void NetworkLoader::OnActiveModelChanged( const std::string& modelID )
+void NetworkLoader::OnActiveModelChanged( const std::string& )
 {
     ves::xplorer::Model* model =
         ves::xplorer::ModelHandler::instance()->GetActiveModel();

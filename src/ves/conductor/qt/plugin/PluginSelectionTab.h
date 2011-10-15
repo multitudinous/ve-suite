@@ -67,9 +67,14 @@ class PluginSelectionTab : public QWidget
 
 public:
     explicit PluginSelectionTab( MainWindow* mainWindow, QWidget *parent = 0 );
-    ~PluginSelectionTab();
+    ///Destructor
+    virtual ~PluginSelectionTab();
+    ///Clear the plugins
     void ClearActivePlugins();
+    ///Search for plugins in the specified directory
     void DiscoverPlugins( std::string const& dir );
+    ///Search for plugins from the Change working directory signal
+    void ReDiscoverPlugins( std::string const& dir );
 
 protected:
     void changeEvent(QEvent *e);

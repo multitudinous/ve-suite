@@ -138,18 +138,27 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
 
     CONNECTSIGNALS_1( "%WorkingDirectoryChanged%",
                       void( const std::string& ),
-                      &PluginSelectionTab::DiscoverPlugins,
+                      &PluginSelectionTab::ReDiscoverPlugins,
                       m_connections, any_SignalType, normal_Priority );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::ReDiscoverPlugins( std::string const& dir )
+{
+    std::string const pluginsDir = dir + "/Plugins/UI";
+    DiscoverPlugins( pluginsDir );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
 {
-    std::string const pluginDir = dir;// + "/Plugins/UI";
+    std::string const pluginDir = dir;
     
     QString tempDir( pluginDir.c_str() );
     QDir pluginsPath( tempDir );
     if( !pluginsPath.exists() )
     {
+        std::cout << std::endl << "|\tConductor does not have any plugins to "
+            << "search for in " << pluginDir 
+            << "." << std::endl << std::flush; 
         return;
     }
 
