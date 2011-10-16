@@ -56,9 +56,7 @@ namespace volume
 {
 /*!\file cfdTextureMatrixCallback.h
  * cfdTextureMatrixCallback API
- */
-
-/*!\class ves::xplorer::volume::cfdTextureMatrixCallback
+ * \class ves::xplorer::volume::cfdTextureMatrixCallback
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdTextureMatrixCallback :

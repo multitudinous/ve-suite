@@ -55,9 +55,7 @@ namespace volume
 {
 /*!\file cfdPBufferQuad.h
  * cfdPBufferQuad API
- */
-
-/*!\class ves::xplorer::volume::cfdPBufferQuad
+ * \class ves::xplorer::volume::cfdPBufferQuad
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdPBufferQuad : public osg::Drawable

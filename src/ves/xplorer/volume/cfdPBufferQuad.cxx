@@ -186,7 +186,6 @@ void cfdPBufferQuad::SetTextureDimensions(
     _w = w;
     _d = d;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPBufferQuad::SetUseAutoTexCoords( bool useAutoTCoords )
 {

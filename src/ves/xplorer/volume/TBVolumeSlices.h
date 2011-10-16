@@ -61,9 +61,7 @@ namespace volume
 {
 /*!\file TBVolumeSlices.h
  * Texture-Based Volume Rendering Slices API
- */
-
-/*!\class ves::xplorer::volume::TextureBasedVolumeSlices
+ * \class ves::xplorer::volume::TextureBasedVolumeSlices
  * Class defining slices for texture-based volume rendering.
  */
 class VE_TEXTURE_BASED_EXPORTS TextureBasedVolumeSlices : public osg::Drawable
@@ -106,11 +104,7 @@ public:
     void SetTextureDimensions( unsigned int x, unsigned int y, unsigned int z );
 
     ///OpenGL primitives
-#if ( ( OSG_VERSION_MAJOR >= 1 ) && ( OSG_VERSION_MINOR > 2 ) || ( OSG_VERSION_MAJOR >= 2 ) )
     virtual void drawImplementation( osg::RenderInfo& currentState ) const;
-#elif ( ( OSG_VERSION_MAJOR <= 1) && ( OSG_VERSION_MINOR <= 2 ) )
-    virtual void drawImplementation( osg::State& currentState ) const;
-#endif
 
     // we need to set up the bounding box of the data too, so that the scene graph knows where this
     // objects is, for both positioning the camera at start up, and most importantly for culling.
