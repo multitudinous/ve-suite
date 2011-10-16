@@ -21,6 +21,7 @@ exampleSubdirs = Split("""
     input_animation
     dynamic_vehicle_sim_tool
     TankPlugin
+    real_time_sensor
 """)
 #VascularSimViewer
 #sensor_overlay
