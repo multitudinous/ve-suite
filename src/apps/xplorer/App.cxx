@@ -192,12 +192,21 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO("Starting App");
 
-    osg::Referenced::setThreadSafeReferenceCounting( true );
-    osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
-    mFrameStamp = new osg::FrameStamp();
-    mUpdateVisitor = new osgUtil::UpdateVisitor();
-    mFrameStamp->setReferenceTime( 0.0 );
-    mFrameStamp->setFrameNumber( 0 );
+    {
+        //OSG specific settings
+        osg::Referenced::setThreadSafeReferenceCounting( true );
+        osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
+        
+        mFrameStamp = new osg::FrameStamp();
+        mUpdateVisitor = new osgUtil::UpdateVisitor();
+        mFrameStamp->setReferenceTime( 0.0 );
+        mFrameStamp->setFrameNumber( 0 );
+        
+        ///Setup caching so that textures will be cached across files
+        osgDB::ReaderWriter::Options* opt = new osgDB::ReaderWriter::Options;
+        opt->setObjectCacheHint( osgDB::ReaderWriter::Options::CACHE_ALL );
+        osgDB::Registry::instance()->setOptions( opt );
+    }
 
     _tbvHandler = 0;
 #ifdef _PBUFFER
