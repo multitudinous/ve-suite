@@ -217,12 +217,6 @@ private:
 
     ///Set the near/far slor
     void SetNearFarRatio( bool const& enable, double const& nearFar );
-    
-    ///Update sceneview
-    bool svUpdate;
-
-    ///Are we in cluster mode
-    bool isCluster;
 
     ///Not sure what this is for
     bool m_captureNextFrame;
@@ -241,9 +235,6 @@ private:
 
     ///
     vrj::opengl::ContextData< bool > mViewportsChanged;
-
-    ///
-    vrj::opengl::ContextData< bool > m_skipDraw;
 
     ///The current frame number
     unsigned int _frameNumber;
@@ -333,14 +324,8 @@ private:
     ///The manager of the window stack
     ves::xplorer::SceneGLTransformInfoPtr m_sceneGLTransformInfo;
 
-    ///Thread to run the Qt ui
-    //vpr::Thread* m_qtUIThread;
-
     /// The UI
     QApplication* m_qtApp;
-
-    /// Required for connecting to signals via EventManager
-    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
 
     /// Signal "App.LatePreFrame", emitted during LatePreFrame to allow
     /// other objects to sync operations to the draw loop
@@ -355,18 +340,13 @@ private:
     ves::xplorer::LogStreamPtr m_logStream;
     ///Try to tell when we have a valid context
     bool m_windowIsOpen;
-    ///Tell when the near far ratio is set
-    vrj::opengl::ContextData< bool > m_setNearFarRatio;
     ///The near far ratio
     double m_nearFarRatio;
     ///The framenumber for comparison of setting near far
     unsigned int m_frameSetNearFarRatio;
     /// Required to be able to connect up to signals.
+    /// Required for connecting to signals via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
-    ///Mutex to sync the draw thread with the signal loop
-    //vpr::CondVar m_syncCond;
-    ///Tell when to process signals
-    bool m_processSignals;
     ///Are we exiting yet
     bool m_exitApp;
     ///

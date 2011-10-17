@@ -170,8 +170,6 @@ using namespace ves::xplorer::scenegraph;
 App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm )
     :
     vrj::osg::App( vrj::Kernel::instance() ),
-    svUpdate( false ),
-    isCluster( false ),
     m_captureNextFrame( false ),
     m_captureMovie( false ),
     mRTT( enableRTT ),
@@ -185,7 +183,6 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_windowIsOpen( false ),
     m_nearFarRatio( 0.0005 ),
     m_frameSetNearFarRatio( 0 ),
-    m_processSignals( false ),
     m_exitApp( false ),
     m_vm( vm )
 {
@@ -213,14 +210,6 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     _pbuffer = 0;
 #endif
     _frameNumber = 0;
-
-    /*
-    std::vector< bool* >* tempData = m_setNearFarRatio.getDataVector();
-    for( size_t i = 0; i < tempData->size(); ++i )
-    {
-        *(tempData->at( i )) = false;
-    }
-    */
 
     this->argc = argc;
     this->argv = argv;
@@ -377,23 +366,12 @@ void App::contextInit()
         new_sv->getCamera()->setName( "SV Camera" );
         new_sv->getCamera()->setPreDrawCallback( new osgwQuery::InitCallback() );
 
-        //if( !mRTT )
-        {
-            //new_sv->getCamera()->addChild( getScene() );
-        }
-        //else
-        {
-            //*m_skipDraw = false;
-        }
         *mViewportsChanged = false;
         m_sceneGLTransformInfo->Initialize();
         mSceneRenderToTexture->InitializeRTT();
     }
 
     ( *sceneViewer ) = new_sv;
-
-    ///Initialize the context specific flags
-    //*m_setNearFarRatio = false;
     
 #ifdef _PBUFFER
     if( !_pbuffer )
@@ -580,11 +558,6 @@ void App::initScene()
         EnvironmentHandler::instance()->
             SetDesktopSize( desktopSize.at( 0 ), desktopSize.at( 1 ) );
     }
-    
-    if( m_vm.count("VESCluster") )
-    {
-        isCluster = true;
-    }
 
     EnvironmentHandler::instance()->InitScene();
     cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
@@ -621,9 +594,6 @@ void App::initScene()
     {
         m_uiGroup = &(m_UIManager->GetUIRootNode());
     }
-
-    //Start up the UI thread
-    //m_qtUIThread = new vpr::Thread( boost::bind( &App::LoadUI, this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::preFrame()
@@ -1019,7 +989,6 @@ void App::contextPreDraw()
     if( m_frameSetNearFarRatio == _frameNumber )
     {
         (*sceneViewer)->setNearFarRatio( m_nearFarRatio );
-        //*m_setNearFarRatio = false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1216,7 +1185,7 @@ void App::update()
     
 #ifdef VE_SOUND
     m_listenerPosition.set( mNavPosition.getData() );
-    osgAudio::SoundManager::instance()->setListenerMatrix( listenerPosition );    
+    osgAudio::SoundManager::instance()->setListenerMatrix( m_listenerPosition );    
 #endif
     vprDEBUG( vesDBG, 3 ) <<  "|\tEnd App LatePreframe Update" 
         << std::endl << vprDEBUG_FLUSH;
@@ -1234,7 +1203,7 @@ void App::LoadUI()
 
     //Request connection to UIManager.EnterLeaveUI signal
     CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &App::UIEnterLeave,
-                     mConnections, highest_Priority );
+                     m_connections, highest_Priority );
 
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware(true);
@@ -1343,13 +1312,6 @@ void App::runLoop()
 ////////////////////////////////////////////////////////////////////////////////
 void App::SetNearFarRatio( bool const& enable, double const& nearFar )
 {
-    /*std::vector< bool* >* tempData = m_setNearFarRatio.getDataVector();
-    std::cout << tempData->size() << std::endl;
-    for( size_t i = 0; i < tempData->size(); ++i )
-    {
-        *(tempData->at( i )) = true;
-        std::cout << " here 2 " << std::endl;
-    }*/
     m_frameSetNearFarRatio = _frameNumber + 1;
     
     if( enable )
