@@ -2,6 +2,15 @@
 //
 
 //#include "stdafx.h"
+#include <vtkCubeSource.h>
+#include <vtkElevationFilter.h>
+#include <vtkSmartPointer.h>
+#include <vtkCellArray.h>
+#include <vtkPolyhedron.h>
+#include <vtkIdTypeArray.h>
+#include <vtkXMLUnstructuredGridWriter.h>
+#include <vtkPointData.h>
+#include <vtkConvexPointSet.h>
 
 #include "vtkActor.h"
 #include "vtkCellDataToPointData.h"
@@ -9,7 +18,6 @@
 #include "vtkDebugLeaks.h"
 #include "vtkMultiBlockDataSet.h"
 #include "vtkGeometryFilter.h"
-//#include "vtkMultiGroupDataGeometryFilter.h"
 #include "vtkLookupTable.h"
 #include "vtkOutlineCornerFilter.h"
 #include "vtkPolyData.h"
@@ -32,8 +40,148 @@
 #include "vtkCutter.h"
 #include <vtksys/ios/sstream>
 
+#include <iostream>
+
+void testConvex()
+{
+    vtkConvexPointSet* aConvex = vtkConvexPointSet::New();
+    aConvex->GetPointIds()->InsertNextId( 0 );
+    aConvex->GetPointIds()->InsertNextId( 1 );
+    aConvex->GetPointIds()->InsertNextId( 2 );
+    aConvex->GetPointIds()->InsertNextId( 3 );
+    aConvex->GetPointIds()->InsertNextId( 4 );
+    aConvex->GetPointIds()->InsertNextId( 5 );
+    aConvex->GetPointIds()->InsertNextId( 6 );
+    aConvex->GetPointIds()->InsertNextId( 7 );  
+}
+
+
+void testGrid()
+{
+    // create the a cube
+    vtkSmartPointer<vtkCubeSource> cube = 
+    vtkSmartPointer<vtkCubeSource>::New();
+    cube->SetXLength(10); 
+    cube->SetYLength(10); 
+    cube->SetZLength(20); 
+    cube->SetCenter(0, 0, 0);  
+    cube->Update();
+
+    // add scaler
+    vtkSmartPointer<vtkElevationFilter> ele = 
+    vtkSmartPointer<vtkElevationFilter>::New();
+    ele->SetInput(cube->GetOutput());
+    ele->SetLowPoint(0,0,-10);
+    ele->SetHighPoint(0,0,10);
+    ele->Update();
+    vtkPolyData* poly = vtkPolyData::SafeDownCast(ele->GetOutput());
+
+    vtkIdList* tempIdList = vtkIdList::New();
+    tempIdList->InsertNextId( 6 );
+    // create a test polyhedron
+    vtkIdType pointIds[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+
+    vtkSmartPointer<vtkCellArray> faces = vtkSmartPointer<vtkCellArray>::New();
+    tempIdList->InsertNextId( 4 );
+    tempIdList->InsertNextId( 0 );
+    tempIdList->InsertNextId( 2 );
+    tempIdList->InsertNextId( 6 );
+    tempIdList->InsertNextId( 4 );
+    //vtkIdType face0[4] = {0, 2, 6, 4};
+    tempIdList->InsertNextId( 4 );
+    tempIdList->InsertNextId( 1 );
+    tempIdList->InsertNextId( 3 );
+    tempIdList->InsertNextId( 7 );
+    tempIdList->InsertNextId( 5 );
+    //vtkIdType face1[4] = {1, 3, 7, 5};
+    tempIdList->InsertNextId( 4 );
+    tempIdList->InsertNextId( 0 );
+    tempIdList->InsertNextId( 1 );
+    tempIdList->InsertNextId( 3 );
+    tempIdList->InsertNextId( 2 );
+    //vtkIdType face2[4] = {0, 1, 3, 2};
+    tempIdList->InsertNextId( 4 );
+    tempIdList->InsertNextId( 4 );
+    tempIdList->InsertNextId( 5 );
+    tempIdList->InsertNextId( 7 );
+    tempIdList->InsertNextId( 6 );
+    //vtkIdType face3[4] = {4, 5, 7, 6};
+    tempIdList->InsertNextId( 4 );
+    tempIdList->InsertNextId( 0 );
+    tempIdList->InsertNextId( 1 );
+    tempIdList->InsertNextId( 5 );
+    tempIdList->InsertNextId( 4 );
+    //vtkIdType face4[4] = {0, 1, 5, 4};
+    tempIdList->InsertNextId( 4 );
+    tempIdList->InsertNextId( 2 );
+    tempIdList->InsertNextId( 3 );
+    tempIdList->InsertNextId( 7 );
+    tempIdList->InsertNextId( 6 );
+    //vtkIdType face5[4] = {2, 3, 7, 6};
+    /*faces->InsertNextCell(4, face0);
+    faces->InsertNextCell(4, face1);
+    faces->InsertNextCell(4, face2);
+    faces->InsertNextCell(4, face3);
+    faces->InsertNextCell(4, face4);
+    faces->InsertNextCell(4, face5);*/
+
+    vtkConvexPointSet* aConvex = vtkConvexPointSet::New();
+    aConvex->GetPointIds()->InsertNextId( 0 );
+    aConvex->GetPointIds()->InsertNextId( 2 );
+    aConvex->GetPointIds()->InsertNextId( 6 );
+    aConvex->GetPointIds()->InsertNextId( 4 );
+    aConvex->GetPointIds()->InsertNextId( 1 );
+    aConvex->GetPointIds()->InsertNextId( 3 );
+    aConvex->GetPointIds()->InsertNextId( 7 );
+    aConvex->GetPointIds()->InsertNextId( 5 );  
+    
+    vtkSmartPointer<vtkUnstructuredGrid> ugrid0 = 
+    vtkSmartPointer<vtkUnstructuredGrid>::New();
+    ugrid0->SetPoints(poly->GetPoints());
+    ugrid0->GetPointData()->DeepCopy(poly->GetPointData());
+
+    //ugrid0->InsertNextCell(VTK_POLYHEDRON, 8, pointIds, 6, faces->GetPointer());
+    //ugrid0->InsertNextCell(VTK_POLYHEDRON, tempIdList);
+    ugrid0->InsertNextCell(aConvex->GetCellType(), aConvex->GetPointIds());
+
+    /*vtkPolyhedron *polyhedron = static_cast<vtkPolyhedron*>(ugrid0->GetCell(0));
+
+    vtkCellArray * cell = ugrid0->GetCells();
+    vtkIdTypeArray * pids = cell->GetData();
+    std::cout << "num of cells: " << cell->GetNumberOfCells() << std::endl;
+    std::cout << "num of tuples: " << pids->GetNumberOfTuples() << std::endl;
+    for (int i = 0; i < pids->GetNumberOfTuples(); i++)
+    {
+    std::cout << pids->GetValue(i) << " ";
+    }
+    std::cout << std::endl;
+    cell->Print(std::cout);
+
+    // Print out basic information
+    std::cout << "Testing polyhedron is a cube of with bounds "
+        << "[-5, 5, -5, 5, -10, 10]. It has "
+        << polyhedron->GetNumberOfEdges() << " edges and " 
+        << polyhedron->GetNumberOfFaces() << " faces." << std::endl;*/
+
+    //
+    // test writer
+    vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer =
+        vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+    writer->SetInput(ugrid0);
+    writer->SetFileName("test.vtu");
+    //writer->SetDataModeToAscii();
+    writer->Update();
+}
+
+
 int main(int argc, char* argv[])
 {
+    testGrid();
+    
+    if( argc == 1 )
+    {
+        return 1;
+    }
   vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
   vtkAlgorithm::SetDefaultExecutivePrototype(prototype);
   prototype->Delete();
