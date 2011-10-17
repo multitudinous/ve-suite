@@ -166,12 +166,22 @@ App::App( int argc, char* argv[], bool enableRTT )
     mLastFrame( 0 ),
     mLastTime( 0 )
 {
-    osg::Referenced::setThreadSafeReferenceCounting( true );
-    osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
-    mFrameStamp = new osg::FrameStamp();
-    mUpdateVisitor = new osgUtil::UpdateVisitor();
-    mFrameStamp->setReferenceTime( 0.0 );
-    mFrameStamp->setFrameNumber( 0 );
+    {
+        //OSG specific settings
+        osg::Referenced::setThreadSafeReferenceCounting( true );
+        osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
+        
+        mFrameStamp = new osg::FrameStamp();
+        mUpdateVisitor = new osgUtil::UpdateVisitor();
+        mFrameStamp->setReferenceTime( 0.0 );
+        mFrameStamp->setFrameNumber( 0 );
+        
+        ///Setup caching so that textures will be cached across files
+        osgDB::ReaderWriter::Options* opt = new osgDB::ReaderWriter::Options;
+        opt->setObjectCacheHint( osgDB::ReaderWriter::Options::CACHE_ALL );
+        osgDB::Registry::instance()->setOptions( opt );
+    }
+
     svUpdate = false;
 
     light_0 = new osg::Light();
