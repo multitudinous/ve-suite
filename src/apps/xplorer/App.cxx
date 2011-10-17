@@ -1082,7 +1082,7 @@ void App::update()
     
 #ifdef VE_SOUND
     m_listenerPosition.set( mNavPosition.getData() );
-    osgAudio::SoundManager::instance()->setListenerMatrix( listenerPosition );    
+    osgAudio::SoundManager::instance()->setListenerMatrix( m_listenerPosition );    
 #endif
     vprDEBUG( vesDBG, 3 ) <<  "|\tEnd App LatePreframe Update" 
         << std::endl << vprDEBUG_FLUSH;
