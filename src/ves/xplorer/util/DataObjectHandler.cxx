@@ -126,7 +126,7 @@ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
         ///Why do we need to do this only for unstructured grids?
         if( dataSet->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
         {
-            dataSet->DeepCopy( converter->GetUnstructuredGridOutput() );
+            dataSet->ShallowCopy( converter->GetUnstructuredGridOutput() );
             converter->Delete();
         }
         else if( dataSet->GetDataObjectType() == VTK_POLY_DATA )
