@@ -244,7 +244,6 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
         mTempSet->SetUUID( m_ids.at( index ) );
         mFeatureBrowser->ParsePropertySet( mTempSet );
         mTempSet->LoadFromDatabase();
-        mTempSet->EnableLiveProperties( true );
         mFeatureBrowser->RefreshAll();
 
         // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
@@ -253,6 +252,8 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
         m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
         m_ui->vfpb->RefreshContents();
         m_ui->vfpb->show();
+
+        mTempSet->EnableLiveProperties( true );
     }
 
 }
