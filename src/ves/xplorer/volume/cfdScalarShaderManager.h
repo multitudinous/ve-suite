@@ -49,9 +49,7 @@ class cfdTextureManager;
 
 /*!\file cfdScalarShaderManager.h
  * cfdScalarShaderManager API
- */
-
-/*!\class ves::xplorer::volume::cfdScalarShaderManager
+ * \class ves::xplorer::volume::cfdScalarShaderManager
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdScalarShaderManager :

@@ -59,9 +59,7 @@ namespace volume
 {
 /*!\file cfdOSGShaderManager.h
  * cfdOSGShaderManager API
- */
-
-/*!\class ves::xplorer::volume::cfdOSGShaderManager
+ * \class ves::xplorer::volume::cfdOSGShaderManager
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdOSGShaderManager

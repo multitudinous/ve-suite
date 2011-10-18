@@ -63,9 +63,7 @@ class cfdOSGShaderManager;
 
 /*!\file cfdVolumeVisNodeHandler.h
  * cfdVolumeVisNodeHandler API
- */
-
-/*!\class ves::xplorer::volume::cfdVolumeVisNodeHandler
+ * \class ves::xplorer::volume::cfdVolumeVisNodeHandler
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisNodeHandler

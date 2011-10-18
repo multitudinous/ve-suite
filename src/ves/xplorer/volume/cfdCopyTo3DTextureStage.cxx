@@ -38,9 +38,7 @@
 #include <osg/State>
 #include <osg/Texture3D>
 #include <osg/FrameStamp>
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 #include <osg/RenderInfo>
-#endif
 
 // --- C/C++ Includes --- //
 #include <cassert>

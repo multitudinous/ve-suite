@@ -50,7 +50,6 @@
 #include <osg/Texture3D>
 #include <osg/TexMat>
 #include <osg/TexEnv>
-#include <osg/StateSet>
 #include <osg/TexGenNode>
 
 // --- C/C++ Includes --- //

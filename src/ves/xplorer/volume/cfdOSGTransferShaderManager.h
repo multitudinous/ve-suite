@@ -68,9 +68,7 @@ class NoiseTexture2D;
 
 /*!\file cfdOSGTransferShaderManager.h
  * cfdOSGTransferShaderManager API
- */
-
-/*!\class ves::xplorer::volume::cfdOSGTransferShaderManager
+ * \class ves::xplorer::volume::cfdOSGTransferShaderManager
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdOSGTransferShaderManager :
