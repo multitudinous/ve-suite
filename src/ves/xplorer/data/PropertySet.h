@@ -195,6 +195,10 @@ public:
     /// database.
     virtual unsigned int GetRecordID() const;
 
+    ///
+    /// Toggles live properties if this set has any that are not live by default.
+    virtual void EnableLiveProperties( bool live );
+
     ///Set the UUID for this PropertySet via a string
     virtual void SetUUID( std::string const& uuid );
     ///Set the UUID for this PropertySet via a boost::uuid

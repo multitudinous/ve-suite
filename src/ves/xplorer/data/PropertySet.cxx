@@ -1364,6 +1364,12 @@ std::string const& PropertySet::GetUUIDAsString() const
     return mUUIDString;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void PropertySet::EnableLiveProperties( bool live )
+{
+    // Do nothing. Derived classes should override this method if they want
+    // delayed live properties.
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 }
 }

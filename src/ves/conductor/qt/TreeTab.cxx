@@ -332,21 +332,9 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     // Load properties from db
     mActiveSet->LoadFromDatabase();
 
-    if( type == "CAD")
-    {
-        // Update transform properties to agree with the current state of the
-        // associated DCS
-        SyncTransformFromDCS( newSelectedDCS );
-        // Turn on live updates
-        static_cast<ves::xplorer::data::CADPropertySet*>(mActiveSet.get())->
-                EnableLiveProperties( true );
-    }
-    else
-    {
-        SyncTransformFromDCS( newSelectedDCS );
-        static_cast<ves::xplorer::data::DatasetPropertySet*>(mActiveSet.get())->
-                EnableLiveProperties( true );
-    }
+    SyncTransformFromDCS( newSelectedDCS );
+    // Turn on live updates
+    mActiveSet->EnableLiveProperties( true );
 
     mBrowser->RefreshAll();
 
