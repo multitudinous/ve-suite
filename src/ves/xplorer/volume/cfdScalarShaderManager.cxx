@@ -50,6 +50,7 @@
 #include <osg/Texture2D>
 #include <osg/Texture3D>
 #include <osg/BlendFunc>
+#include <osg/BlendColor>
 #include <osg/TexEnv>
 #include <osg/TexMat>
 #include <osg/TexGen>
@@ -84,17 +85,29 @@ void cfdScalarShaderManager::Init()
     if( !_ss.valid() && _reinit && _property.valid() )
     {
         _ss = new osg::StateSet();
-        _ss->setDataVariance( osg::Object::DYNAMIC );
-        _ss->setMode( GL_BLEND, osg::StateAttribute::ON );
+        //_ss->setDataVariance( osg::Object::DYNAMIC );
+        _ss->setMode( GL_BLEND, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+
+        //osg::BlendColor* bc = 
+        //    new osg::BlendColor( osg::Vec4( 0., 0., 0., 0.5 ) );
+        //_ss->setAttributeAndModes( bc, 
+        //    osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
 
         osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
         bf->setFunction( osg::BlendFunc::SRC_ALPHA,
                          osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
 
-        _ss->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
+        _ss->setAttributeAndModes( bf.get(), 
+            osg::StateAttribute::ON  | osg::StateAttribute::OVERRIDE );
         _ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+        ///and magic occurs...to make sure that the volume vis renders properly
+        ///with other transparent objects in the scene we must put this volume
+        ///vis node in bin 9 to render before the bin 10 objects.
+        _ss->setBinNumber( 9 );
+        _ss->setNestRenderBins( false );
+
         _ss->setTextureAttributeAndModes( 0, _property.get(),
-                                          osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+            osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
         _ss->setTextureMode( 0, GL_TEXTURE_GEN_S,
                              osg::StateAttribute::ON );
         _ss->setTextureMode( 0, GL_TEXTURE_GEN_T,
