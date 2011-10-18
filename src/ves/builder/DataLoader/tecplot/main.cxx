@@ -170,6 +170,7 @@ int main( int argc, char** argv )
                 vtkXMLMultiBlockDataWriter* writer = vtkXMLMultiBlockDataWriter::New();
                 writer->SetInput( dataObject );
                 writer->SetFileName( outputFileName.c_str() );
+                writer->SetDataModeToBinary();
                 if( asciiOutputFlag )
                 {
                     writer->SetDataModeToAscii();
@@ -183,6 +184,7 @@ int main( int argc, char** argv )
                 vtkXMLUnstructuredGridWriter* writer = vtkXMLUnstructuredGridWriter::New();
                 writer->SetInput( dataObject );
                 writer->SetFileName( outputFileName.c_str() );
+                writer->SetDataModeToBinary();
                 if( asciiOutputFlag )
                 {
                     writer->SetDataModeToAscii();
