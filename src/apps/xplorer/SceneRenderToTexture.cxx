@@ -1262,7 +1262,7 @@ void SceneRenderToTexture::Update(
     {
         tempCommandName = tempCommand->GetCommandName();
     }
-
+    
     for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
         iter != m_updateList.end(); ++iter )
     {
@@ -1283,9 +1283,15 @@ void SceneRenderToTexture::Update(
                 getMaxNumberOfGraphicsContexts() );
         }
 
-        //osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options();
-        //options->setOptionString( "includeImageFileInIVEFile" );
-        //osgDB::writeNodeFile( *(*iter), "outfile.osg", options );
+        /*static int counter = 0;
+        counter += 1;
+        if( counter == 10 )
+        {
+            osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options();
+            options->setOptionString( "includeImageFileInIVEFile" );
+            osgDB::writeNodeFile( *(*iter), "outfile.osg", options );
+            counter = 0;
+        }*/
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
