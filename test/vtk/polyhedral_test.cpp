@@ -141,10 +141,10 @@ void testGrid()
     ugrid0->GetPointData()->DeepCopy(poly->GetPointData());
 
     //ugrid0->InsertNextCell(VTK_POLYHEDRON, 8, pointIds, 6, faces->GetPointer());
-    //ugrid0->InsertNextCell(VTK_POLYHEDRON, tempIdList);
-    ugrid0->InsertNextCell(aConvex->GetCellType(), aConvex->GetPointIds());
+    ugrid0->InsertNextCell(VTK_POLYHEDRON, tempIdList);
+    //ugrid0->InsertNextCell(aConvex->GetCellType(), aConvex->GetPointIds());
 
-    /*vtkPolyhedron *polyhedron = static_cast<vtkPolyhedron*>(ugrid0->GetCell(0));
+    vtkPolyhedron *polyhedron = static_cast<vtkPolyhedron*>(ugrid0->GetCell(0));
 
     vtkCellArray * cell = ugrid0->GetCells();
     vtkIdTypeArray * pids = cell->GetData();
@@ -161,7 +161,7 @@ void testGrid()
     std::cout << "Testing polyhedron is a cube of with bounds "
         << "[-5, 5, -5, 5, -10, 10]. It has "
         << polyhedron->GetNumberOfEdges() << " edges and " 
-        << polyhedron->GetNumberOfFaces() << " faces." << std::endl;*/
+        << polyhedron->GetNumberOfFaces() << " faces." << std::endl;
 
     //
     // test writer
@@ -169,7 +169,7 @@ void testGrid()
         vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
     writer->SetInput(ugrid0);
     writer->SetFileName("test.vtu");
-    //writer->SetDataModeToAscii();
+    writer->SetDataModeToAscii();
     writer->Update();
 }
 
@@ -211,33 +211,40 @@ int main(int argc, char* argv[])
   // This filter is multi-block aware and will request blocks from the
   // input. These blocks will be processed by simple processes as if they
   // are the whole dataset
-  vtkGeometryFilter* geom1 = 
-    vtkGeometryFilter::New();
-  geom1->SetInput(reader->GetOutput());
+  //vtkGeometryFilter* geom1 = 
+  //  vtkGeometryFilter::New();
+  //geom1->SetInput(reader->GetOutput());
 
   // cell 2 point and contour
   vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
   c2p->SetInput(reader->GetOutput());
+  c2p->PassCellDataOff();
+
 
   //Cut through the data set
   double center[3]= {0,0,0};
     
-  center[0] = 0.0;
-  center[1] = 0.1;
-  center[2] = 0.0;
+  //center[0] = 0.0;
+  //center[1] = 0.1;
+  //center[2] = 0.0;
   
+    center[0] = -1.48;
+    center[1] = 0.10 + 0.0001;       // addition of small fudge factor makes polyhedral_test work for me
+    center[2] = 1.27;
+    
   vtkPlane* plane = vtkPlane::New();
   plane->SetOrigin( center );
-  plane->SetNormal(1, 0, 0);
+  plane->SetNormal(0, 1, 0);
     
   vtkCutter* planeCut = vtkCutter::New();
-  planeCut->SetInput(reader->GetOutput());
+  planeCut->SetInputConnection(c2p->GetOutputPort(0));
   planeCut->SetCutFunction(plane);
+    planeCut->Update();
 
   // geometry filter
   vtkGeometryFilter* geom2 = 
     vtkGeometryFilter::New();
-  geom2->SetInputConnection(0, planeCut->GetOutputPort(0));
+  geom2->SetInputConnection(planeCut->GetOutputPort(0));
 
   vtkLookupTable* lut = vtkLookupTable::New();
   lut->SetNumberOfTableValues( 256 );
@@ -249,7 +256,8 @@ int main(int argc, char* argv[])
 
   vtkPolyDataMapper* mapper = vtkPolyDataMapper::New();
   mapper->SetInputConnection( geom2->GetOutputPort() );
-  mapper->SetScalarModeToUseCellFieldData();
+  //mapper->SetScalarModeToUseCellFieldData();
+  mapper->SetScalarModeToUsePointFieldData();
   mapper->ColorByArrayComponent( "Volume Fraction of Phase 1", 0 );
   mapper->SetScalarRange( 0.1, 0.9 );
   mapper->SetLookupTable( lut );
@@ -267,7 +275,7 @@ int main(int argc, char* argv[])
 
   // Cleanup
   reader->Delete();
-  geom1->Delete();
+  //geom1->Delete();
   geom2->Delete();
   lut->Delete();
   mapper->Delete();
