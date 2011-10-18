@@ -46,6 +46,7 @@
 #include <osg/Texture1D>
 #include <osg/Texture2D>
 #include <osg/BlendFunc>
+#include <osg/BlendColor>
 #include <osg/TexEnv>
 #include <osg/TexMat>
 #include <osg/TexGen>
@@ -185,9 +186,13 @@ void cfdOSGTransferShaderManager::Init()
     if( !_ss.valid() && _reinit && _property.valid() )
     {
         _ss = new osg::StateSet();
-        _ss->setDataVariance( osg::Object::DYNAMIC );
+        //_ss->setDataVariance( osg::Object::DYNAMIC );
         _ss->setMode( GL_BLEND, osg::StateAttribute::ON );
         _ss->setAttributeAndModes( new osg::AlphaFunc( osg::AlphaFunc::GEQUAL, .1 ) );
+        osg::BlendColor* bc = 
+            new osg::BlendColor( osg::Vec4( 0., 0., 0., 0.5 ) );
+        _ss->setAttributeAndModes( bc, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+        
         _ss->setMode( GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
         osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
         bf->setFunction( osg::BlendFunc::SRC_ALPHA,
@@ -195,6 +200,7 @@ void cfdOSGTransferShaderManager::Init()
 
         _ss->setAttributeAndModes( bf.get() );
         _ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+        _ss->setNestRenderBins( false );
 
         int nTransferFunctions = _transferFunctions.size();
         for( int i = 0; i < nTransferFunctions; i++ )
@@ -218,7 +224,7 @@ void cfdOSGTransferShaderManager::Init()
 
         }
 
-        _ss->setDataVariance( osg::Object::DYNAMIC );
+        //_ss->setDataVariance( osg::Object::DYNAMIC );
         _tUnit = nTransferFunctions;
         _setupStateSetForGLSL();
     }

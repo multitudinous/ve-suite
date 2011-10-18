@@ -210,6 +210,8 @@ void TextureBasedVolumeSlices::SetDataBoundingBox( float* boundingBox )
         osg::Vec3d( minBBox[ 0 ], minBBox[ 1 ], minBBox[ 2 ] ),
         osg::Vec3d( maxBBox[ 0 ], maxBBox[ 1 ], maxBBox[ 2 ] ) );
 
+    setInitialBound( _bbox );
+
     //Update the essentials
     double radius = _bbox.radius();
 

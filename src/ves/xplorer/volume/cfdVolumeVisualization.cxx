@@ -53,6 +53,8 @@
 #include <osg/Texture3D>
 #include <osg/TexGen>
 #include <osg/TexEnv>
+#include <osg/BlendColor>
+#include <osg/BlendFunc>
 
 #include <osg/Billboard>
 #include <osg/ClipNode>
@@ -407,7 +409,8 @@ void cfdVolumeVisualization::_createClipNode()
     if( !_clipNode.valid() )
     {
         _clipNode = new osg::ClipNode();
-        _clipNode->setDataVariance( osg::Object::DYNAMIC );
+        _decoratorAttachNode = _clipNode;
+        //_clipNode->setDataVariance( osg::Object::DYNAMIC );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -566,19 +569,25 @@ void cfdVolumeVisualization::_createStateSet()
         if( !_stateSet.valid() )
         {
             _stateSet = _noShaderGroup->getOrCreateStateSet();
-            ;
+
             _stateSet->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-            _stateSet->setMode( GL_BLEND, osg::StateAttribute::ON );
+            _stateSet->setMode( GL_BLEND, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
 
             osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
             tMat->setMatrix( osg::Matrix::identity() );
             _stateSet->setTextureAttributeAndModes( 0, tMat.get() );
 
+            osg::BlendColor* bc = 
+            new osg::BlendColor( osg::Vec4( 0., 0., 0., 0.5 ) );
+            _stateSet->setAttributeAndModes( bc, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+            
             osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
             bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
 
             _stateSet->setAttributeAndModes( bf.get() );
             _stateSet->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+            _stateSet->setNestRenderBins( false );
+
             _attachTextureToStateSet( _stateSet.get() );
         }
         else
@@ -725,6 +734,7 @@ void cfdVolumeVisualization::_createVolumeSlices()
     _slices = new ves::xplorer::volume::TextureBasedVolumeSlices( _vtkBBox, 100 );
     _slices->setUseDisplayList( false );
     _billboard = new osg::Geode();
+    _billboard->setName( "TBET VV Slices" );
     _billboard->addDrawable( _slices.get() );
     //_buildSlices();
 }
@@ -755,13 +765,13 @@ void cfdVolumeVisualization::_buildGraph()
     _volumeVizNode = new osg::Switch();
     _volumeVizNode->setName( "Volume Viz Node" );
     _volumeVizNode->setAllChildrenOff();
-    _volumeVizNode->setDataVariance( osg::Object::DYNAMIC );
+    //_volumeVizNode->setDataVariance( osg::Object::DYNAMIC );
 
     if( !_noShaderGroup.valid() )
     {
         _noShaderGroup = new osg::Group();
         _noShaderGroup->setName( "VViz Node:R" );
-        _volumeVizNode->addChild( _noShaderGroup.get() );
+        //_volumeVizNode->addChild( _noShaderGroup.get() );
 
     }
     _createTexGenNode();
@@ -792,18 +802,18 @@ void cfdVolumeVisualization::_buildGraph()
                                               _center,
                                               scale, trans ) );
         }
-        if( !_decoratorAttachNode )
+        /*if( !_decoratorAttachNode )
         {
             _decoratorAttachNode = new osg::Group();
             _decoratorAttachNode->setName( "VViz Decorator Attach" );
-            _texGenParams->addChild( _decoratorAttachNode.get() );
-        }
+            //_texGenParams->addChild( _decoratorAttachNode.get() );
+        }*/
         if( _billboard.valid() )
         {
             if( _clipNode.valid() )
             {
                 _clipNode->createClipBox( *_bbox, XPLANE_MIN );
-                _decoratorAttachNode->addChild( _clipNode.get() );
+                //_decoratorAttachNode->addChild( _clipNode.get() );
                 _clipNode->addChild( _billboard.get() );
             }
             else

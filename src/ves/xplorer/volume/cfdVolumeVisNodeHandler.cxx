@@ -183,7 +183,7 @@ void cfdVolumeVisNodeHandler::Init()
             _decoratorGroup = new osg::Group();
         }
 
-        _visualBoundingBox->addChild( _decoratorGroup.get() );
+        //_visualBoundingBox->addChild( _decoratorGroup.get() );
         _bboxSwitch->addChild( _decoratorGroup.get() );
         _bboxSwitch->setSingleChildOn( 1 );
         _decoratorGroup->addChild( _texGenParams.get() );
@@ -324,9 +324,9 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
         _visualBoundingBox->setName( "VisHandler Bounding Box" );
 
         osg::ref_ptr<osg::StateSet> ss = _visualBoundingBox->getOrCreateStateSet();
-        ss->setRenderingHint( osg::StateSet::OPAQUE_BIN );
+        //ss->setRenderingHint( osg::StateSet::OPAQUE_BIN );
         ss->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-        ss->setMode( GL_DEPTH_TEST, osg::StateAttribute::ON );
+        //ss->setMode( GL_DEPTH_TEST, osg::StateAttribute::ON );
         osg::ref_ptr<osg::Geometry> bboxCube = new osg::Geometry;
 
         osg::ref_ptr<osg::Vec3Array> coords = new osg::Vec3Array();
