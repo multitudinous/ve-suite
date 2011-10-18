@@ -129,7 +129,8 @@ bool transparentEnable( T* nodeOrDrawable, float alpha )
 
     osg::BlendColor* bc = new osg::BlendColor( osg::Vec4( 0., 0., 0., alpha ) );
     stateSet->setAttributeAndModes( bc, modeValue );
-    osg::BlendFunc* bf = new osg::BlendFunc( osg::BlendFunc::CONSTANT_ALPHA,
+    osg::BlendFunc* bf = 
+        new osg::BlendFunc( osg::BlendFunc::CONSTANT_ALPHA,
         osg::BlendFunc::ONE_MINUS_CONSTANT_ALPHA );
     stateSet->setAttributeAndModes( bf, modeValue );
     stateSet->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
