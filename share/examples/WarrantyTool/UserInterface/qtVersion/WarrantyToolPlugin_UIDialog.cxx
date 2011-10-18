@@ -66,7 +66,8 @@
 WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::WarrantyToolPlugin_UIDialog),
-    m_tableCounter(0)
+    m_tableCounter(0),
+    m_fileDialog(0)
 {
     ui->setupUi(this);
 
@@ -91,9 +92,71 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
 
 }
 
+void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
+{
+    ves::conductor::UITabs* tabs = ves::conductor::UITabs::instance();
+
+    if( m_fileDialog )
+    {
+        tabs->ActivateTab( tabs->AddTab( m_fileDialog, "Select File" ) );
+        return;
+    }
+
+    m_fileDialog = new QFileDialog( 0 );
+    m_fileDialog->setOptions( QFileDialog::DontUseNativeDialog );
+    m_fileDialog->setAttribute( Qt::WA_DeleteOnClose );
+    m_fileDialog->setFileMode( QFileDialog::ExistingFile );
+
+    QStringList filters;
+    filters << "SQLite DBs (*.db)" << "CSV files (*.csv)" << "All Files (*.*)";
+    m_fileDialog->setNameFilters( filters );
+
+    connect( m_fileDialog, SIGNAL(fileSelected(const QString &)),
+                      this, SLOT(onFileSelected(const QString&)) );
+    connect( m_fileDialog, SIGNAL(rejected()), this,
+                      SLOT( onFileCancelled() ) );
+
+    tabs->ActivateTab( tabs->AddTab( m_fileDialog, "Select File" ) );
+}
+
+void WarrantyToolPlugin_UIDialog::onFileSelected( const QString& filePath )
+{
+
+    QDir path = QDir::current();
+    QString relativePath = path.relativeFilePath( filePath );
+    ui->m_dataPath->setText( relativePath );
+
+    ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
+
+    if ( m_fileDialog != 0 )
+    {
+        m_fileDialog->close();
+        m_fileDialog = 0;
+    }
+}
+
+void WarrantyToolPlugin_UIDialog::onFileCancelled()
+{
+    ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
+
+    if ( m_fileDialog != 0 )
+    {
+        m_fileDialog->close();
+        m_fileDialog = 0;
+    }
+}
+
 void WarrantyToolPlugin_UIDialog::on_m_dataLoadButton_clicked()
 {
-    OnDataLoad( "7460 WRTY.db" );
+    QString path = ui->m_dataPath->text();
+    if( !path.isEmpty() )
+    {
+        if( QFile::exists( path ) )
+        {
+            OnDataLoad( path.toStdString() );
+        }
+    }
+    //OnDataLoad( "7460 WRTY.db" );
 }
 
 WarrantyToolPlugin_UIDialog::~WarrantyToolPlugin_UIDialog()

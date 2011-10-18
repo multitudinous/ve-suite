@@ -37,6 +37,7 @@
 #include <QtGui/QComboBox>
 #include <QtCore/QStringList>
 #include <QtGui/QListWidgetItem>
+#include <QtGui/QFileDialog>
 
 #include <string>
 #include <vector>
@@ -75,6 +76,9 @@ protected slots:
     void on_m_createTableFromQuery_toggled();
     void InputTextChanged ( const QString& text );
     void on_m_dataLoadButton_clicked();
+    void on_m_fileBrowseButton_clicked();
+    void onFileSelected( const QString& filePath );
+    void onFileCancelled();
 
 private:
     void StripCharacters( std::string& data, const std::string& character );
@@ -102,6 +106,8 @@ private:
     ///List of tables created by the user
     std::vector< std::string > m_tableList;
     std::string m_filename;
+
+    QFileDialog* m_fileDialog;
 };
 
 #endif // WarrantyToolPlugin_UIDIALOG_H
