@@ -174,17 +174,17 @@ void cfdPresetVector::Update( void )
                 vtkCutter* cutter = vtkCutter::New();
                 cutter->SetInput( GetActiveDataSet()->GetDataSet() );
                 cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-                cutter->Update();
+                //cutter->Update();
                 delete this->cuttingPlane;
                 this->cuttingPlane = NULL;
                 c2p->SetInputConnection( cutter->GetOutputPort() );
-                c2p->Update();
+                //c2p->Update();
                 cutter->Delete();
             }
             else if( xyz == 3 )
             {
                 c2p->SetInput( GetActiveDataSet()->GetDataSet() );
-                c2p->Update();
+                //c2p->Update();
             }
 
             // get every nth point from the dataSet data

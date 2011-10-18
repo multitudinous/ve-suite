@@ -178,11 +178,11 @@ cfdContourBase::~cfdContourBase()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
 {
-    mC2p->SetInputConnection( polydata );
-    mC2p->Update();
+    //mC2p->SetInputConnection( polydata );
+    //mC2p->Update();
     
-    tris->SetInputConnection( mC2p->GetOutputPort() );
-    tris->Update();
+    tris->SetInputConnection( polydata );//mC2p->GetOutputPort() );
+    //tris->Update();
     //tris->GetOutput()->ReleaseDataFlagOn();
 
     // decimate points is used for lod control of contours
@@ -193,7 +193,7 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
     //deci->GetOutput()->ReleaseDataFlagOn();
 
     this->strip->SetInputConnection( tris->GetOutputPort() );
-    strip->Update();
+    //strip->Update();
     //strip->GetOutput()->ReleaseDataFlagOn();
 
     if( this->fillType == 0 )
@@ -204,7 +204,7 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
         normals->ComputePointNormalsOn();
         //normals->ComputeCellNormalsOn();
         normals->FlipNormalsOn();
-        normals->Update();
+        //normals->Update();
     }
     else if( this->fillType == 1 ) // banded contours
     {
@@ -259,8 +259,7 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
     mapper->SelectColorArray( GetActiveDataSet()->
         GetActiveScalarName().c_str() );
     mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
-    mapper->Update();
-
+    //mapper->Update();
 }	
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::UpdateCommand()
@@ -412,15 +411,14 @@ void cfdContourBase::CreatePlane()
     }
 
     // insure that we are using correct bounds for the given data set...
-    cuttingPlane->SetBounds(
-        GetActiveDataSet()->GetBounds() );
+    cuttingPlane->SetBounds( GetActiveDataSet()->GetBounds() );
     cuttingPlane->Advance( requestedValue );
-    	
+    
     vtkCutter* tempCutter = vtkCutter::New();
     tempCutter->SetCutFunction( cuttingPlane->GetPlane() );
     tempCutter->SetInput( GetActiveDataSet()->GetDataSet() );
-    tempCutter->Update();
-    
+    //tempCutter->Update();
+
     SetMapperInput( tempCutter->GetOutputPort(0) );	
 
 	// The code below computes volume flux on the specified contour plane
