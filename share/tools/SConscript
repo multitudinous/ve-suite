@@ -6,6 +6,7 @@ toolsSubdirs = Split("""
     vea
     daycent
     dds_texture_correction
+    tbet
 """)
 
 toolsSubdirs.append( "gis/scenario_builder" )

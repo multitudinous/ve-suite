@@ -1,0 +1,23 @@
+##Builds preprocessor program
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg LIBDIR PREFIX buildDir vtk_options boost_options RootDir')
+
+srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'tbet','vti_texture_decompose') )
+
+srcs = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
+
+env = ves_pkg.getEnv().Clone()
+env.Append( LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')],
+            LIBS = ['ves_xplorer_util'])
+
+boost_options.apply( env )
+vtk_options.apply( env )
+
+prog = ves_pkg.createProgram('vti_texture_decompose' + env["PROGSUFFIX"], env, 'bin')
+prog.addSources( srcs )
+prog.addHeaders( headers )
+prog.build()
