@@ -188,6 +188,8 @@ protected Q_SLOTS:
     void _onTitlebarPressed();
     void _onOpacitySliderValueChanged( int opacity );
     void RefreshWidgetFilterList();
+    void _raise();
+    void _lower();
 
     Q_SIGNALS:
     void RequestRender();
@@ -200,6 +202,8 @@ protected Q_SLOTS:
     void PutKeyPressEvent( gadget::Keys key, int modifierMask, char unicode );
     void PutKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode );
     void PutScrollEvent( int deltaX, int deltaY, int x, int y, int state );
+    void PutRaise();
+    void PutLower();
 
 
 };

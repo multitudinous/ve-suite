@@ -209,6 +209,16 @@ void UIElementQt::Initialize()
                           this,
                           SLOT( _scrollEvent( int, int, int, int, int) ), Qt::QueuedConnection);
 
+        QObject::connect( this,
+                          SIGNAL( PutLower() ),
+                          this,
+                          SLOT( _lower() ), Qt::QueuedConnection );
+
+        QObject::connect( this,
+                          SIGNAL( PutRaise() ),
+                          this,
+                          SLOT( _raise() ), Qt::QueuedConnection );
+
         // Start up the timer that causes repaints at a set interval -- assuming
         // thread is given execution sometime during this interval.
         mTimer = new QTimer( this );
@@ -1195,10 +1205,20 @@ void UIElementQt::_onOpacitySliderValueChanged( int opacity )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::Raise()
 {
+    PutRaise();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::_raise()
+{
     mQTitlebar->TitleFrame->setStyleSheet("QFrame { background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(0, 0, 0, 255), stop: 0.5 rgba(75,75,75,255), stop:0.51 rgba(100,100,100,255), stop:1 rgba(200, 200, 200, 255));}");
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::Lower()
+{
+    PutLower();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::_lower()
 {
     mQTitlebar->TitleFrame->setStyleSheet("QFrame { background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(110, 110, 110, 255), stop: 0.5 rgba(155,155,155,255), stop:0.51 rgba(160,160,160,255), stop:1 rgba(180, 180, 180, 255));}");
 }
