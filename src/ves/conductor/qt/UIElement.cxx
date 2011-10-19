@@ -349,6 +349,12 @@ void UIElement::Update()
         return;
     }
 
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->
+       GetCurrentGLTransformInfo() )
+    {
+        return;
+    }
+
     if( mUIMatrixDirty )
     {
         osg::Matrixf& tempUIMatrix = GetUIMatrix();

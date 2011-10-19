@@ -362,11 +362,11 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
         tempWidget->setLayout( layout );
 
         UIPluginBase* pb = dynamic_cast<UIPluginBase*>(interface);
-        qtop->m_inputPortsSpinner->setValue( pb->GetNumInPorts() );
-        qtop->m_outputPortsSpinner->setValue( pb->GetNumOutPorts() );
+        //qtop->m_inputPortsSpinner->setValue( pb->GetNumInPorts() );
+        //qtop->m_outputPortsSpinner->setValue( pb->GetNumOutPorts() );
 
-        connect( qtop->m_inputPortsSpinner, SIGNAL(valueChanged(int)), pb, SLOT(SetNumInputPorts(int)));
-        connect( qtop->m_outputPortsSpinner, SIGNAL(valueChanged(int)), pb, SLOT(SetNumOutputPorts(int)));
+        //connect( qtop->m_inputPortsSpinner, SIGNAL(valueChanged(int)), pb, SLOT(SetNumInputPorts(int)));
+        //connect( qtop->m_outputPortsSpinner, SIGNAL(valueChanged(int)), pb, SLOT(SetNumOutputPorts(int)));
 
         // Add the composed widget as a tab
         m_mainWindow->ActivateTab(
