@@ -30,7 +30,7 @@ void writeFlowTexture( vtkImageData* currentFile, std::string const& fileName, s
     // setup container for scalar data
     vtkFloatArray* flowData = vtkFloatArray::New();
     flowData->DeepCopy( currentFile->GetPointData()->GetArray( scalarName.c_str() ) );
-    //flowData->SetName( scalarName.c_str() );
+    flowData->SetName( scalarName.c_str() );
     //flowData->SetNumberOfComponents( 1 );
     //flowData->SetNumberOfTuples( _dims[0]*_dims[1]*_dims[2] );
 
