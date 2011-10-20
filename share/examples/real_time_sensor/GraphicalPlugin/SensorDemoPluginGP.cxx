@@ -160,6 +160,16 @@ void SensorDemoPluginGP::InitializeNode(
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 
+    {
+        m_textTrans = new ves::xplorer::scenegraph::DCS();
+        std::vector< double > data;
+        data.push_back( -1.43 );
+        data.push_back(   6.5 );
+        data.push_back( -0.70 );
+        m_textTrans->SetTranslationArray( data );
+        
+        mDCS->addChild( m_textTrans.get() );
+    }
 
     CONNECTSIGNAL_2( "%ConnectToSensorServer",
                     void( std::string const&, std::string const& ),
@@ -167,6 +177,8 @@ void SensorDemoPluginGP::InitializeNode(
                     m_connections, normal_Priority );
 
     CreateSensorGrid();
+    
+    LoadModels();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPluginGP::PreFrameUpdate()
@@ -2255,15 +2267,15 @@ void SensorDemoPluginGP::CreateSensorGrid()
     cells->InsertNextCell( 4, face7);
     cells->InsertNextCell( 4, face8);
 
-    vtkIdType  face9[4] = { 16, 17, 13, 12};
-    vtkIdType face10[4] = { 17, 18, 14, 13};
-    vtkIdType face11[4] = { 18, 19, 15, 14};
-    vtkIdType face12[4] = { 12, 13, 21, 20};
-    vtkIdType face13[4] = { 13, 14, 22, 21};
-    vtkIdType face14[4] = { 14, 15, 23, 22};
-    vtkIdType face15[4] = { 20, 21, 25, 24};
-    vtkIdType face16[4] = { 21, 22, 26, 25};
-    vtkIdType face17[4] = { 22, 23, 27, 26};
+    vtkIdType  face9[4] = { 16, 17,  5,  4};
+    vtkIdType face10[4] = { 17, 18,  6,  5};
+    vtkIdType face11[4] = { 18, 19,  7,  6};
+    vtkIdType face12[4] = { 20, 21, 17, 16};
+    vtkIdType face13[4] = { 21, 22, 18, 17};
+    vtkIdType face14[4] = { 22, 23, 19, 18};
+    vtkIdType face15[4] = { 24, 25, 21, 20};
+    vtkIdType face16[4] = { 25, 26, 22, 21};
+    vtkIdType face17[4] = { 26, 27, 23, 22};
     
     cells->InsertNextCell( 4,  face9);
     cells->InsertNextCell( 4, face10);
@@ -2280,42 +2292,42 @@ void SensorDemoPluginGP::CreateSensorGrid()
     vtkPoints* points = vtkPoints::New();
     //vertical
     //1st row
-    points->InsertNextPoint(  0.0, 0.0,  0.0 );
-    points->InsertNextPoint( 0.25, 0.0,  0.0 );
-    points->InsertNextPoint( 0.50, 0.0,  0.0 );
-    points->InsertNextPoint( 0.75, 0.0,  0.0 );
+    points->InsertNextPoint(   0.0, -0.292, 1.25 );
+    points->InsertNextPoint( 0.167, -0.292, 1.25 );
+    points->InsertNextPoint(   0.5, -0.292, 1.25 );
+    points->InsertNextPoint( 0.667, -0.292, 1.25 );
     //2nd row
-    points->InsertNextPoint(  0.0, 0.0, 0.25 );
-    points->InsertNextPoint( 0.25, 0.0, 0.25 );
-    points->InsertNextPoint( 0.50, 0.0, 0.25 );
-    points->InsertNextPoint( 0.75, 0.0, 0.25 );
+    points->InsertNextPoint(   0.0, 0.0, 1.25 );
+    points->InsertNextPoint( 0.167, 0.0, 1.25 );
+    points->InsertNextPoint(   0.5, 0.0, 1.25 );
+    points->InsertNextPoint( 0.667, 0.0, 1.25 );
     //3rd row
-    points->InsertNextPoint(  0.0, 0.0,  0.5 );
-    points->InsertNextPoint( 0.25, 0.0,  0.5 );
-    points->InsertNextPoint( 0.50, 0.0,  0.5 );
-    points->InsertNextPoint( 0.75, 0.0,  0.5 );
+    points->InsertNextPoint(   0.0, 0.25,  1.25 );
+    points->InsertNextPoint( 0.167, 0.25,  1.25 );
+    points->InsertNextPoint(   0.5, 0.25,  1.25 );
+    points->InsertNextPoint( 0.667, 0.25,  1.25 );
     //4th row
-    points->InsertNextPoint(  0.0, 0.0, 0.75 );
-    points->InsertNextPoint( 0.25, 0.0, 0.75 );
-    points->InsertNextPoint( 0.50, 0.0, 0.75 );
-    points->InsertNextPoint( 0.75, 0.0, 0.75 );
+    points->InsertNextPoint(   0.0, 0.542, 1.25 );
+    points->InsertNextPoint( 0.167, 0.542, 1.25 );
+    points->InsertNextPoint(   0.5, 0.542, 1.25 );
+    points->InsertNextPoint( 0.667, 0.542, 1.25 );
     
     //horizontal
     //1st row
-    points->InsertNextPoint(  0.0, -0.25, 0.75 );
-    points->InsertNextPoint( 0.25, -0.25, 0.75 );
-    points->InsertNextPoint( 0.50, -0.25, 0.75 );
-    points->InsertNextPoint( 0.75, -0.25, 0.75 );
+    points->InsertNextPoint(   0.0, 0.0, 0.875 );
+    points->InsertNextPoint( 0.167, 0.0, 0.875 );
+    points->InsertNextPoint(   0.5, 0.0, 0.875 );
+    points->InsertNextPoint( 0.667, 0.0, 0.875 );
     //2nd row
-    points->InsertNextPoint(  0.0,  0.25, 0.75 );
-    points->InsertNextPoint( 0.25,  0.25, 0.75 );
-    points->InsertNextPoint( 0.50,  0.25, 0.75 );
-    points->InsertNextPoint( 0.75,  0.25, 0.75 );
+    points->InsertNextPoint(   0.0, 0.0, 0.583 );
+    points->InsertNextPoint( 0.167, 0.0, 0.583 );
+    points->InsertNextPoint(   0.5, 0.0, 0.583 );
+    points->InsertNextPoint( 0.667, 0.0, 0.583 );
     //3rd row
-    points->InsertNextPoint(  0.0,  0.50, 0.75 );
-    points->InsertNextPoint( 0.25,  0.50, 0.75 );
-    points->InsertNextPoint( 0.50,  0.50, 0.75 );
-    points->InsertNextPoint( 0.75,  0.50, 0.75 );
+    points->InsertNextPoint(   0.0, 0.0, 0.292 );
+    points->InsertNextPoint( 0.167, 0.0, 0.292 );
+    points->InsertNextPoint(   0.5, 0.0, 0.292 );
+    points->InsertNextPoint( 0.667, 0.0, 0.292 );
     
     pd->SetPoints( points );
     
@@ -2362,15 +2374,14 @@ void SensorDemoPluginGP::CreateSensorGrid()
     
     if( m_contourGeode.valid() )
     {
-        mDCS->removeChild( m_contourGeode.get() );
+        m_textTrans->removeChild( m_contourGeode.get() );
     }
     
     osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = 
         new ves::xplorer::scenegraph::Geode();
     tempGeode->TranslateToGeode( contActor );
     m_contourGeode = tempGeode.get();
-    
-    mDCS->addChild( m_contourGeode.get() );
+    m_textTrans->addChild( m_contourGeode.get() );
 
     pd->Delete();
     points->Delete();
@@ -2379,5 +2390,53 @@ void SensorDemoPluginGP::CreateSensorGrid()
     contActor->Delete();
     tempScalars->Delete();
     lut->Delete();
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPluginGP::LoadModels()
+{
+    m_sensorRack = new ves::xplorer::scenegraph::CADEntity(
+                                            "sensor_rack.ive",
+                                            mDCS.get(),
+                                            false,
+                                            "Off",
+                                            mPhysicsSimulator );
+    std::vector< double > data;
+    //data.push_back( 2.6 );
+    //data.push_back( 8.2 );
+    //data.push_back( 3.38 );
+    data.push_back( 7.5 );
+    data.push_back( 22.3 );
+    data.push_back( 11.1 );
+    m_sensorRack->GetDCS()->SetTranslationArray( data );
+    data[ 0 ] =   0.0;
+    data[ 1 ] =   0.0;
+    data[ 2 ] = 180.0;
+    m_sensorRack->GetDCS()->SetRotationArray( data );
+    data[ 0 ] = 3.28;
+    data[ 1 ] = 3.28;
+    data[ 2 ] = 3.28;
+    m_sensorRack->GetDCS()->SetScaleArray( data );
+    
+    m_stovesLab = new ves::xplorer::scenegraph::CADEntity(
+                                            "stoves_2.ive",
+                                            mDCS.get(),
+                                            false,
+                                            "Off",
+                                            mPhysicsSimulator );
+    //data[ 0 ] = 0.5;
+    //data[ 1 ] = 2.0;
+    //data[ 2 ] = 0.0;
+    data[ 0 ] = 0.5;
+    data[ 1 ] = 2.0;
+    data[ 2 ] = 0.0;    
+    m_stovesLab->GetDCS()->SetTranslationArray( data );
+    data[ 0 ] = -90.0;
+    data[ 1 ] =  90.0;
+    data[ 2 ] =   0.0;
+    m_stovesLab->GetDCS()->SetRotationArray( data );
+    data[ 0 ] = 3.28;
+    data[ 1 ] = 3.28;
+    data[ 2 ] = 3.28;
+    m_stovesLab->GetDCS()->SetScaleArray( data );
 }
 ////////////////////////////////////////////////////////////////////////////////

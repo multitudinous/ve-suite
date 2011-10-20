@@ -135,6 +135,8 @@ private:
     void GetPositionData( std::vector< double >& temp );
     ///
     void CreateSensorGrid();
+    ///
+    void LoadModels();
 
     
     std::vector< std::string > mPartNumberList;
@@ -199,6 +201,10 @@ private:
     std::vector< double > m_positionBuffer;
     ///
     osg::ref_ptr< osg::Geode > m_contourGeode;
+    ///
+    ves::xplorer::scenegraph::CADEntity* m_sensorRack;
+    ///
+    ves::xplorer::scenegraph::CADEntity* m_stovesLab;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( SensorDemoPluginGP )
