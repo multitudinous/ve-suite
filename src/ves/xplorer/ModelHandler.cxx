@@ -198,7 +198,7 @@ ModelHandler::ModelHandler()
     // Register signal(s) with EventManager
     eventmanager::EventManager::instance()->RegisterSignal(
     new eventmanager::SignalWrapper< ActiveModelChangedSignal_type >( &mActiveModelChangedSignal ),
-    "ModelHandler.ActiveModelChangedSignal");
+    "ModelHandler.ActiveModelChangedSignal" );
 
     CONNECTSIGNALS_STATIC( "%SetContourPlaneGreyscale", void( std::string const&, std::vector< bool > const&),
                  &ves::xplorer::event::data::SetContourPlaneGreyscale,
