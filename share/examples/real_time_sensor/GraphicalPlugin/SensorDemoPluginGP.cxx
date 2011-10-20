@@ -167,12 +167,12 @@ void SensorDemoPluginGP::InitializeNode(
                     m_connections, normal_Priority );
 
     CreateSensorGrid();
-    
-    mDCS->addChild( m_contourGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPluginGP::PreFrameUpdate()
 {
+    CreateSensorGrid();
+    
     if( !m_keyboard )
     {
         return;
@@ -413,9 +413,14 @@ void SensorDemoPluginGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 void SensorDemoPluginGP::SetComputerInfo( std::string const& ip, std::string const& port )
 {
     std::cout << " computer ip # " << ip << " " << port << std::endl;
-    
-    //m_sampleThread = 
-    //    new vpr::Thread( boost::bind( &SensorDemoPluginGP::SimulatorCaptureThread, this ) );
+    m_computerName = ip;
+    m_computerPort = port;
+
+    if( !m_sampleThread )
+    {
+        m_sampleThread = 
+            new vpr::Thread( boost::bind( &SensorDemoPluginGP::SimulatorCaptureThread, this ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPluginGP::StripCharacters( std::string& data, const std::string& character )
@@ -1044,6 +1049,25 @@ void SensorDemoPluginGP::RemoveSelfFromSG()
     {
         std::cout << ex.displayText() << std::endl;
     }
+    
+    m_runSampleThread = false;
+    if( m_sampleThread )
+    {
+        try
+        {
+            //std::string exitStr( "Exit" );
+            //SetSimState( exitStr );
+            //vpr::System::msleep( 300 );
+            m_sampleThread->kill();
+            m_sampleThread->join();
+            delete m_sampleThread;
+        }
+        catch( ... )
+        {
+            ;//do nothing
+        }
+    }
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPluginGP::StripDollarCharacters( std::string& data )
@@ -2021,7 +2045,8 @@ void SensorDemoPluginGP::SimulatorCaptureThread()
     //std::string simState;
     //GetSimState( simState );
     std::string computerName, computerPort;
-    
+    computerName = m_computerName;
+    computerPort = m_computerPort;
     /*while( simState != "Start" )
     {
         GetSimState( simState );
@@ -2298,9 +2323,21 @@ void SensorDemoPluginGP::CreateSensorGrid()
     tempScalars->SetNumberOfComponents( 1 );
     tempScalars->SetName( "Temperature" );
     //tempScalars->SetNumberOfTuples( 28 );
-    for( size_t i = 0; i < 28; ++i )
+    std::vector< double > tempData;
+    GetPositionData( tempData );
+    if( tempData.size() == 0 )
     {
-        tempScalars->InsertNextTuple1( 20.0 );
+        for( size_t i = 0; i < 28; ++i )
+        {
+            tempScalars->InsertNextTuple1( 0.0f );
+        }
+    }
+    else
+    {
+        for( size_t i = 0; i < tempData.size(); ++i )
+        {
+            tempScalars->InsertNextTuple1( tempData.at( i ) );
+        }
     }
     
     pd->GetPointData()->AddArray( tempScalars );
@@ -2323,9 +2360,24 @@ void SensorDemoPluginGP::CreateSensorGrid()
     vtkActor* contActor = vtkActor::New();
     contActor->SetMapper(mapper);
     
+    if( m_contourGeode.valid() )
+    {
+        mDCS->removeChild( m_contourGeode.get() );
+    }
+    
     osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = 
         new ves::xplorer::scenegraph::Geode();
     tempGeode->TranslateToGeode( contActor );
     m_contourGeode = tempGeode.get();
+    
+    mDCS->addChild( m_contourGeode.get() );
+
+    pd->Delete();
+    points->Delete();
+    cells->Delete();
+    mapper->Delete();
+    contActor->Delete();
+    tempScalars->Delete();
+    lut->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
