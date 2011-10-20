@@ -17,11 +17,13 @@ lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append( LIBS = [ 'ves_open_xml',
                          'ves_xplorer',
                          'ves_xplorer_scenegraph',
-                         'ves_xplorer_communication' ] )
+                         'ves_xplorer_communication',
+                         'ves_xplorer_eventmanager' ] )
 lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
                             pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
                             pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ),
-                            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'communication' ) ] )
+                            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'communication' ),
+                            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager' ) ] )
 lib_env.Append( CPPPATH = [ pj( RootDir,'external','osgEphemeris','include' ) ] )
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 

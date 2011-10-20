@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef WARRANTY_TOOL_GP_H
-#define WARRANTY_TOOL_GP_H
+#ifndef SENSOR_DEMO_GP_H
+#define SENSOR_DEMO_GP_H
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
@@ -47,6 +47,12 @@
 #include <vector>
 #include <utility>
 #include <string>
+
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
+
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Mutex.h>
 
 namespace ves
 {
@@ -66,12 +72,12 @@ namespace scenegraph
 }
 namespace warrantytool
 {
-class VE_USER_PLUGIN_EXPORTS WarrantyToolGP :
+class VE_USER_PLUGIN_EXPORTS SensorDemoPluginGP :
     public ves::xplorer::plugin::PluginBase
 {
 public:
-    WarrantyToolGP();
-    virtual ~WarrantyToolGP();
+    SensorDemoPluginGP();
+    virtual ~SensorDemoPluginGP();
 
     virtual void InitializeNode( osg::Group* veworldDCS );
     virtual void PreFrameUpdate();
@@ -119,6 +125,18 @@ private:
     ///Write out the current query to a file
     void SaveCurrentQuery( const std::string& filename );
 
+    ///
+    void SetComputerInfo( std::string const& ip, std::string const& port );
+    ///
+    void SimulatorCaptureThread();
+    ///Set the position data
+    void SetPositionData( std::vector< double >& temp );
+    ///Get the position data
+    void GetPositionData( std::vector< double >& temp );
+    ///
+    void CreateSensorGrid();
+
+    
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;
@@ -164,9 +182,26 @@ private:
     ///The current select statement
     Poco::Data::Statement* m_currentStatement;
     //Poco::Data::RecordSet m_currentStatement;
+    
+    /// Required to be able to connect up to signals.
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    ///Sample thread
+    vpr::Thread* m_sampleThread;
+    ///
+    std::string m_computerName;
+    ///
+    std::string m_computerPort;
+    ///Control wether the thread continues to run
+    bool m_runSampleThread;
+    ///A mutex to protect variables accesses
+    vpr::Mutex mValueLock;
+    ///Position buffer
+    std::vector< double > m_positionBuffer;
+    ///
+    osg::ref_ptr< osg::Geode > m_contourGeode;
 };
 
-CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )
+CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( SensorDemoPluginGP )
 
 } //end warrantytool
 

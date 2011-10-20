@@ -34,7 +34,7 @@
 #include <ves/xplorer/communication/CommunicationHandler.h>
 
 // --- My Includes --- //
-#include "WarrantyToolGP.h"
+#include "SensorDemoPluginGP.h"
 #include "csvparser.h"
 #include "ves/xplorer/ModelCADHandler.h"
 #include "ves/xplorer/Model.h"
@@ -59,12 +59,28 @@
 #include <ves/xplorer/scenegraph/GroupedTextTextures.h>
 #include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 #include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
+#include <ves/xplorer/scenegraph/Geode.h>
+
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/environment/TextTextureCallback.h>
 
 #include <ves/xplorer/EnvironmentHandler.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
+
+#include <vtkLookupTable.h>
+#include <vtkPlane.h>
+#include <vtkDataSet.h>
+#include <vtkCutter.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkPolyData.h>
+#include <vtkCellDataToPointData.h>
+#include <vtkActor.h>
+#include <vtkProperty.h>
+#include <vtkCellArray.h>
+#include <vtkDoubleArray.h>
+#include <vtkPointData.h>
 
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/Depth>
@@ -100,11 +116,18 @@ using namespace warrantytool;
 #include <boost/algorithm/string/find.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
+#include <boost/algorithm/string.hpp>
+#include <boost/bind.hpp>
+
+#include <vpr/vpr.h>
+#include <vpr/IO/Socket/SocketDatagram.h>
+#include <vpr/IO/Socket/InetAddr.h>
+
 using namespace Poco::Data;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-WarrantyToolGP::WarrantyToolGP()
+SensorDemoPluginGP::SensorDemoPluginGP()
     :
     PluginBase(),
     mAddingParts( false ),
@@ -113,30 +136,42 @@ WarrantyToolGP::WarrantyToolGP()
     m_cadRootNode( 0 ),
     m_hasPromiseDate( false ),
     m_mouseSelection( false ),
-    m_currentStatement( 0 )
+    m_currentStatement( 0 ),
+m_sampleThread( 0 ),
+m_computerName( "" ),
+m_computerPort( "" ),
+m_runSampleThread( false )
+
 {
     //Needs to match inherited UIPluginBase class name
-    mObjectName = "WarrantyToolUI";
+    mObjectName = "SensorDemoPlugin";
     m_dbFilename = "sample.db";
-    
-    mEventHandlerMap[ "WARRANTY_TOOL_PART_TOOLS" ] = this;
-    mEventHandlerMap[ "WARRANTY_TOOL_DB_TOOLS" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-WarrantyToolGP::~WarrantyToolGP()
+SensorDemoPluginGP::~SensorDemoPluginGP()
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::InitializeNode(
+void SensorDemoPluginGP::InitializeNode(
     osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
     
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
+
+
+    CONNECTSIGNAL_2( "%ConnectToSensorServer",
+                    void( std::string const&, std::string const& ),
+                    &SensorDemoPluginGP::SetComputerInfo,
+                    m_connections, normal_Priority );
+
+    CreateSensorGrid();
+    
+    mDCS->addChild( m_contourGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::PreFrameUpdate()
+void SensorDemoPluginGP::PreFrameUpdate()
 {
     if( !m_keyboard )
     {
@@ -173,9 +208,9 @@ void WarrantyToolGP::PreFrameUpdate()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
+void SensorDemoPluginGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 {
-    std::cout << "WarrantyToolGP::SetCurrentCommand" << std::endl << std::flush;
+    std::cout << "SensorDemoPluginGP::SetCurrentCommand" << std::endl << std::flush;
     if( !command )
     {
         return;
@@ -317,7 +352,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         else if( dvpName == "WARRANTY_FILE" )
         {
             std::string filename = dvp->GetDataString();
-            std::cout << "WarrantyToolGP::SetCurrentCommand::WARRANTY_FILE: " <<  filename << std::endl << std::flush;
+            std::cout << "SensorDemoPluginGP::SetCurrentCommand::WARRANTY_FILE: " <<  filename << std::endl << std::flush;
             boost::filesystem::path dataPath( filename );
             if( dataPath.extension() == ".db" )
             {
@@ -366,7 +401,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
         if( !m_cadRootNode )
         {
-            std::cout << "WarrantyToolGP::SetCurrentCommand::WARRANTY_TOOL_DB_TOOLS: m_cadRootNode invalid" << std::endl << std::flush;
+            std::cout << "SensorDemoPluginGP::SetCurrentCommand::WARRANTY_TOOL_DB_TOOLS: m_cadRootNode invalid" << std::endl << std::flush;
             return;
         }
         
@@ -375,7 +410,15 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::StripCharacters( std::string& data, const std::string& character )
+void SensorDemoPluginGP::SetComputerInfo( std::string const& ip, std::string const& port )
+{
+    std::cout << " computer ip # " << ip << " " << port << std::endl;
+    
+    //m_sampleThread = 
+    //    new vpr::Thread( boost::bind( &SensorDemoPluginGP::SimulatorCaptureThread, this ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPluginGP::StripCharacters( std::string& data, const std::string& character )
 {
     for ( size_t index = 0; index < data.length(); )
     {
@@ -388,9 +431,9 @@ void WarrantyToolGP::StripCharacters( std::string& data, const std::string& char
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
+void SensorDemoPluginGP::ParseDataFile( const std::string& csvFilename )
 {
-    std::cout << "WarrantyToolGP::ParseDataFile " << csvFilename << std::endl << std::flush;
+    std::cout << "SensorDemoPluginGP::ParseDataFile " << csvFilename << std::endl << std::flush;
     std::string sLine;
     std::string sCol1, sCol3, sCol4;
     //double fCol2;
@@ -555,7 +598,7 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     CreateDB();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::RenderTextualDisplay( bool onOff )
+void SensorDemoPluginGP::RenderTextualDisplay( bool onOff )
 {
     if( onOff )
     {
@@ -716,9 +759,9 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::CreateDB()
+void SensorDemoPluginGP::CreateDB()
 {
-    std::cout << "WarrantyToolGP::CreateDB" << std::endl << std::flush;
+    std::cout << "SensorDemoPluginGP::CreateDB" << std::endl << std::flush;
     mCommunicationHandler->SendConductorMessage( "Creating DB..." );
 
     // register SQLite connector
@@ -874,7 +917,7 @@ void WarrantyToolGP::CreateDB()
     mCommunicationHandler->SendConductorMessage( "Finished creating DB..." );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::CreateTextTextures()
+void SensorDemoPluginGP::CreateTextTextures()
 {
     m_textTrans = new ves::xplorer::scenegraph::DCS();
     m_textTrans->getOrCreateStateSet()->addUniform(
@@ -899,9 +942,9 @@ void WarrantyToolGP::CreateTextTextures()
     viewCameraGroup->addChild( m_textTrans.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
+void SensorDemoPluginGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 {
-    std::cout << "WarrantyToolGP::CreateDBQuery" << std::endl << std::flush;
+    std::cout << "SensorDemoPluginGP::CreateDBQuery" << std::endl << std::flush;
     mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
 
     //Clear and reset the data containers for the user defined queries
@@ -985,7 +1028,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::RemoveSelfFromSG()
+void SensorDemoPluginGP::RemoveSelfFromSG()
 {
     PluginBase::RemoveSelfFromSG();
     //m_keyboard->SetProcessSelection( true );
@@ -1003,7 +1046,7 @@ void WarrantyToolGP::RemoveSelfFromSG()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::StripDollarCharacters( std::string& data )
+void SensorDemoPluginGP::StripDollarCharacters( std::string& data )
 {
     char firstChar = data[ 0 ];
     char dollarChar( '$' );
@@ -1035,7 +1078,7 @@ void WarrantyToolGP::StripDollarCharacters( std::string& data )
     }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::ReplaceSpacesCharacters( std::string& data )
+void SensorDemoPluginGP::ReplaceSpacesCharacters( std::string& data )
 {
     boost::algorithm::trim( data );
     boost::algorithm::replace_all( data, " ", "_" );
@@ -1053,7 +1096,7 @@ void WarrantyToolGP::ReplaceSpacesCharacters( std::string& data )
 */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::ParseDataBase( const std::string& csvFilename )
+void SensorDemoPluginGP::ParseDataBase( const std::string& csvFilename )
 {
     // register SQLite connector
     Poco::Data::SQLite::Connector::registerConnector();
@@ -1067,7 +1110,7 @@ void WarrantyToolGP::ParseDataBase( const std::string& csvFilename )
     }    
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool WarrantyToolGP::FindPartNodeAndHighlightNode()
+bool SensorDemoPluginGP::FindPartNodeAndHighlightNode()
 {
     if( !m_cadRootNode )
     {
@@ -1331,7 +1374,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
     return (m_assemblyPartNumbers.size() && !failedLoad);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
+void SensorDemoPluginGP::GetPartNumberFromNodeName( std::string& nodeName )
 {
     //std::cout << "Before " << nodeName << std::endl;    
     {
@@ -1363,7 +1406,7 @@ void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
     //std::cout << "After " << nodeName << std::endl;    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::PickTextTextures()
+void SensorDemoPluginGP::PickTextTextures()
 {
     //Get the intersection visitor from keyboard mouse or the wand
     osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment;// = 
@@ -1445,7 +1488,7 @@ void WarrantyToolGP::PickTextTextures()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::ClearDatabaseUserTables()
+void SensorDemoPluginGP::ClearDatabaseUserTables()
 {
     Poco::Data::Session session("SQLite", m_dbFilename );
     
@@ -1490,7 +1533,7 @@ void WarrantyToolGP::ClearDatabaseUserTables()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::HighlightPartsInJoinedTabled( const std::string& queryString )
+void SensorDemoPluginGP::HighlightPartsInJoinedTabled( const std::string& queryString )
 {
     //Work with the first table
     std::string table = m_tableNames.first;
@@ -1519,7 +1562,7 @@ void WarrantyToolGP::HighlightPartsInJoinedTabled( const std::string& queryStrin
     mCommunicationHandler->SendConductorMessage( "Finished DB query..." );    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::QueryTableAndHighlightParts( 
+void SensorDemoPluginGP::QueryTableAndHighlightParts( 
     const std::string& tableName, osg::Vec3& glowColor )
 {
     //ves::open::xml::DataValuePairPtr stringDvp = 
@@ -1645,7 +1688,7 @@ void WarrantyToolGP::QueryTableAndHighlightParts(
     }    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& queryString )
+void SensorDemoPluginGP::QueryInnerJoinAndHighlightParts( const std::string& queryString )
 {
     //select << "SELECT Part_Number, Description, Claims FROM Parts",
     //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
@@ -1770,9 +1813,9 @@ void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& querySt
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& queryString )
+void SensorDemoPluginGP::QueryUserDefinedAndHighlightParts( const std::string& queryString )
 {
-    std::cout << "WarrantyToolGP::QueryUserDefinedAndHighlightParts " << queryString << std::endl << std::flush;
+    std::cout << "SensorDemoPluginGP::QueryUserDefinedAndHighlightParts " << queryString << std::endl << std::flush;
     //select << "SELECT Part_Number, Description, Claims FROM Parts",
     //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
     Poco::Data::Session session("SQLite", m_dbFilename );
@@ -1783,7 +1826,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     }
     catch( Poco::Data::DataException& ex )
     {
-        std::cout << "WarrantyToolGP::QueryUserDefinedAndHighlightParts: exception A " << std::endl << std::flush;
+        std::cout << "SensorDemoPluginGP::QueryUserDefinedAndHighlightParts: exception A " << std::endl << std::flush;
         std::cout << ex.displayText() << std::endl;
         return;
     }
@@ -1819,7 +1862,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
         }
         catch( Poco::Data::DataException& ex )
         {
-            std::cout << "WarrantyToolGP::QueryUserDefinedAndHighlightParts: exception B " << std::endl << std::flush;
+            std::cout << "SensorDemoPluginGP::QueryUserDefinedAndHighlightParts: exception B " << std::endl << std::flush;
             std::cout << ex.displayText() << std::endl;
             return;
         }       
@@ -1916,7 +1959,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::SaveCurrentQuery( const std::string& filename )
+void SensorDemoPluginGP::SaveCurrentQuery( const std::string& filename )
 {
     if( !m_currentStatement )
     {
@@ -1971,5 +2014,318 @@ void WarrantyToolGP::SaveCurrentQuery( const std::string& filename )
         statementExport << std::endl;
     }
     statementExport.close();
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPluginGP::SimulatorCaptureThread()
+{
+    //std::string simState;
+    //GetSimState( simState );
+    std::string computerName, computerPort;
+    
+    /*while( simState != "Start" )
+    {
+        GetSimState( simState );
+        vpr::System::msleep( 100 );  // thenth-second delay
+        if( simState == "Exit" )
+        {
+            return;
+        }
+    }*/
+    
+    int status;
+    vpr::Uint16 port(12345);     // Default listening port
+    
+    try
+    {
+        //GetComputerData( computerName, computerPort );
+        try
+        {
+            port = boost::lexical_cast<unsigned int>( computerPort );
+        }
+        catch( boost::bad_lexical_cast& ex )
+        {
+            std::cout << "cannot cast port data. defaulting to port " << port << std::endl;
+        }
+        
+        m_runSampleThread = true;
+        
+        // Create a datagram socket that will be bound to port.
+        vpr::InetAddr local;
+        local.setPort(port);
+        
+        vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
+        
+        // Bind the socket to the port.
+        sock.open();
+        sock.bind();
+        
+        //Now lets connet to the multicast group
+        // Create a socket that is sending to a remote host named in the first
+        // argument listening on the port named in the second argument.
+        vpr::InetAddr remote_addr;
+        remote_addr.setAddress( computerName, port);
+        //vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
+        //vpr::SocketOptions::Types option = vpr::SocketOptions::AddMember;
+        //vpr::SocketOptions::Data data;
+        //data.mcast_add_member = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
+        vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
+        sock.addMcastMember( data );
+        
+        const vpr::Uint32 bufferSize = 1200;
+        char* recv_buf = new char[bufferSize];
+        memset(recv_buf, '\0', bufferSize );//sizeof(recv_buf));
+        
+        typedef std::vector< std::string > split_vector_type;
+        std::vector< double > positionData;
+        std::string bufferData;
+        vpr::InetAddr addr;
+        split_vector_type splitVec;
+        
+        // Loop forever reading messages from clients.
+        while( m_runSampleThread )
+        {
+            //GetSimState( simState );
+            
+            //while( simState == "Start" )
+            {
+                try
+                {
+                    // Read a message from a client.
+                    const vpr::Uint32 bytes = sock.recvfrom(recv_buf, bufferSize,
+                                                            addr);
+                    
+                    // If we read anything, print it and send a response.
+                    vprDEBUG( vesDBG, 2 ) << "\t\tDVST read (" << bytes
+                    << " bytes) from " << addr.getAddressString()
+                    << std::endl << vprDEBUG_FLUSH;
+                    
+                    bufferData.resize( 0 );
+                    for( size_t i = 0; i < bytes; ++i )
+                    {
+                        if( recv_buf[ i ] == '\0' )
+                        {
+                            bufferData.push_back( ' ' );
+                            continue;
+                        }
+                        bufferData.push_back( recv_buf[ i ] );
+                    }
+                    
+                    boost::algorithm::trim( bufferData );
+                    /*typedef boost::tokenizer< boost::escaped_list_separator<char> > Tok;
+                     boost::escaped_list_separator<char> sep( "", "\n", "");
+                     Tok tok( bufferData, sep );
+                     std::string tempTok;
+                     double tempDouble = 0;
+                     size_t columnCount1 = 0;
+                     std::vector< std::string > columnNames;
+                     Tok::iterator firstDouble;
+                     for(Tok::iterator tok_iter = tok.begin(); tok_iter != tok.end(); ++tok_iter)
+                     {
+                     tempTok = *tok_iter;
+                     if( tempTok.empty() )
+                     {
+                     continue;
+                     }
+                     std::cout << "<" << tempTok << "> ";
+                     
+                     try
+                     {
+                     tempDouble = boost::lexical_cast<double>( tempTok );
+                     //firstDouble = tok_iter;
+                     //break;
+                     //std::cout << tempDouble << " "; 
+                     }
+                     catch( boost::bad_lexical_cast& ex )
+                     {
+                     std::cout << "cannot cast data" << std::endl;
+                     //columnNames.push_back( tempTok );
+                     //columnCount1 +=1;
+                     }
+                     }
+                     //std::cout << "Column Count " << columnCount1 << std::endl;*/
+                    vprDEBUG( vesDBG, 2 ) << "\t\tDVST buffer data " 
+                    << bufferData << std::endl << vprDEBUG_FLUSH;
+                    
+                    boost::split( splitVec, bufferData, boost::is_any_of(" "), boost::token_compress_on );
+                    double tempDouble = 0;
+                    for( size_t i = 0; i < splitVec.size(); ++i )
+                    {
+                        try
+                        {
+                            tempDouble = boost::lexical_cast<double>( splitVec.at( i ) );
+                            positionData.push_back( tempDouble );
+                        }
+                        catch( boost::bad_lexical_cast& ex )
+                        {
+                            std::cout << "cannot cast data " << ex.what() 
+                            << " data is " << splitVec.at( i ) << std::endl;
+                        }
+                    }
+                    SetPositionData( positionData );
+                    positionData.resize( 0 );
+                    splitVec.resize( 0 );
+                }
+                catch (vpr::IOException& ex)
+                {
+                    std::cerr << "Caught an I/O exception while communicating "
+                    << "with client at " << addr.getAddressString()
+                    << ":\n" << ex.what() << std::endl;
+                }
+            }
+        }
+        
+        sock.close();
+        
+        status = EXIT_SUCCESS;
+    }
+    catch (vpr::SocketException& ex)
+    {
+        std::cerr << "Caught a socket exception:\n" << ex.what() << std::endl;
+        status = EXIT_FAILURE;
+    }
+    catch (vpr::IOException& ex)
+    {
+        std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
+        status = EXIT_FAILURE;
+    }
+    
+    std::cout << "Thread exiting." << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPluginGP::SetPositionData( std::vector< double >& temp )
+{
+    vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+    m_positionBuffer = temp;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPluginGP::GetPositionData( std::vector< double >& temp )
+{
+    vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+    temp = m_positionBuffer;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPluginGP::CreateSensorGrid()
+{
+    vtkPolyData* pd = vtkPolyData::New();
+    
+    // temp grids
+    vtkIdType face0[4] = { 0,  1,  5,  4};
+    vtkIdType face1[4] = { 1,  2,  6,  5};
+    vtkIdType face2[4] = { 2,  3,  7,  6};
+    vtkIdType face3[4] = { 4,  5,  9,  8};
+    vtkIdType face4[4] = { 5,  6, 10,  9};
+    vtkIdType face5[4] = { 6,  7, 11, 10};
+    vtkIdType face6[4] = { 8,  9, 13, 12};
+    vtkIdType face7[4] = { 9, 10, 14, 13};
+    vtkIdType face8[4] = {10, 11, 15, 14};
+
+    vtkCellArray* cells = vtkCellArray::New();
+    cells->InsertNextCell( 4, face0);
+    cells->InsertNextCell( 4, face1);
+    cells->InsertNextCell( 4, face2);
+    cells->InsertNextCell( 4, face3);
+    cells->InsertNextCell( 4, face4);
+    cells->InsertNextCell( 4, face5);
+    cells->InsertNextCell( 4, face6);
+    cells->InsertNextCell( 4, face7);
+    cells->InsertNextCell( 4, face8);
+
+    vtkIdType  face9[4] = { 16, 17, 13, 12};
+    vtkIdType face10[4] = { 17, 18, 14, 13};
+    vtkIdType face11[4] = { 18, 19, 15, 14};
+    vtkIdType face12[4] = { 12, 13, 21, 20};
+    vtkIdType face13[4] = { 13, 14, 22, 21};
+    vtkIdType face14[4] = { 14, 15, 23, 22};
+    vtkIdType face15[4] = { 20, 21, 25, 24};
+    vtkIdType face16[4] = { 21, 22, 26, 25};
+    vtkIdType face17[4] = { 22, 23, 27, 26};
+    
+    cells->InsertNextCell( 4,  face9);
+    cells->InsertNextCell( 4, face10);
+    cells->InsertNextCell( 4, face11);
+    cells->InsertNextCell( 4, face12);
+    cells->InsertNextCell( 4, face13);
+    cells->InsertNextCell( 4, face14);
+    cells->InsertNextCell( 4, face15);
+    cells->InsertNextCell( 4, face16);
+    cells->InsertNextCell( 4, face17);
+    
+    pd->SetPolys( cells );
+
+    vtkPoints* points = vtkPoints::New();
+    //vertical
+    //1st row
+    points->InsertNextPoint(  0.0, 0.0,  0.0 );
+    points->InsertNextPoint( 0.25, 0.0,  0.0 );
+    points->InsertNextPoint( 0.50, 0.0,  0.0 );
+    points->InsertNextPoint( 0.75, 0.0,  0.0 );
+    //2nd row
+    points->InsertNextPoint(  0.0, 0.0, 0.25 );
+    points->InsertNextPoint( 0.25, 0.0, 0.25 );
+    points->InsertNextPoint( 0.50, 0.0, 0.25 );
+    points->InsertNextPoint( 0.75, 0.0, 0.25 );
+    //3rd row
+    points->InsertNextPoint(  0.0, 0.0,  0.5 );
+    points->InsertNextPoint( 0.25, 0.0,  0.5 );
+    points->InsertNextPoint( 0.50, 0.0,  0.5 );
+    points->InsertNextPoint( 0.75, 0.0,  0.5 );
+    //4th row
+    points->InsertNextPoint(  0.0, 0.0, 0.75 );
+    points->InsertNextPoint( 0.25, 0.0, 0.75 );
+    points->InsertNextPoint( 0.50, 0.0, 0.75 );
+    points->InsertNextPoint( 0.75, 0.0, 0.75 );
+    
+    //horizontal
+    //1st row
+    points->InsertNextPoint(  0.0, -0.25, 0.75 );
+    points->InsertNextPoint( 0.25, -0.25, 0.75 );
+    points->InsertNextPoint( 0.50, -0.25, 0.75 );
+    points->InsertNextPoint( 0.75, -0.25, 0.75 );
+    //2nd row
+    points->InsertNextPoint(  0.0,  0.25, 0.75 );
+    points->InsertNextPoint( 0.25,  0.25, 0.75 );
+    points->InsertNextPoint( 0.50,  0.25, 0.75 );
+    points->InsertNextPoint( 0.75,  0.25, 0.75 );
+    //3rd row
+    points->InsertNextPoint(  0.0,  0.50, 0.75 );
+    points->InsertNextPoint( 0.25,  0.50, 0.75 );
+    points->InsertNextPoint( 0.50,  0.50, 0.75 );
+    points->InsertNextPoint( 0.75,  0.50, 0.75 );
+    
+    pd->SetPoints( points );
+    
+    vtkDoubleArray* tempScalars = vtkDoubleArray::New();
+    tempScalars->SetNumberOfComponents( 1 );
+    tempScalars->SetName( "Temperature" );
+    //tempScalars->SetNumberOfTuples( 28 );
+    for( size_t i = 0; i < 28; ++i )
+    {
+        tempScalars->InsertNextTuple1( 20.0 );
+    }
+    
+    pd->GetPointData()->AddArray( tempScalars );
+    
+    vtkLookupTable* lut = vtkLookupTable::New();
+    lut->SetNumberOfTableValues( 256 );
+    lut->SetHueRange( 0.6667, 0 );
+    lut->SetSaturationRange( 1, 1 );
+    lut->SetValueRange( 1, 1 );
+    //lut->SetVectorComponent( 0 );
+    //lut->SetVectorMode( 1 );
+    
+    vtkPolyDataMapper* mapper = vtkPolyDataMapper::New();
+    mapper->SetInput( pd );
+    mapper->SetScalarModeToUsePointFieldData();
+    mapper->ColorByArrayComponent( "Temperature", 0 );
+    mapper->SetScalarRange( 10.0, 30.00 );
+    mapper->SetLookupTable( lut );
+    
+    vtkActor* contActor = vtkActor::New();
+    contActor->SetMapper(mapper);
+    
+    osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = 
+        new ves::xplorer::scenegraph::Geode();
+    tempGeode->TranslateToGeode( contActor );
+    m_contourGeode = tempGeode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

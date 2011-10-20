@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>501</width>
-    <height>823</height>
+    <width>581</width>
+    <height>884</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,486 +24,112 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>510</width>
-        <height>800</height>
+        <width>553</width>
+        <height>814</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QGroupBox" name="groupBox_6">
-         <property name="title">
-          <string>Data Load</string>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QPushButton" name="m_dataLoadButton">
-            <property name="text">
-             <string>Load</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit"/>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="text">
-             <string>Browse...</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_7">
-         <property name="title">
-          <string>Query Composition</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QComboBox" name="m_variableChoice00"/>
-            </item>
-            <item>
-             <widget class="QComboBox" name="m_variableLogicOperator00">
-              <item>
-               <property name="text">
-                <string>Less Than</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Greater Than</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Equal</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Not Equal</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Like</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Not Like</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Begins With</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Does Not Begin With</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="m_textInput00"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QComboBox" name="m_logicOperator00">
-            <item>
-             <property name="text">
-              <string>None</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>And</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Or</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="m_logicGroup01">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout">
-             <property name="margin">
-              <number>0</number>
-             </property>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_3">
-               <item>
-                <widget class="QComboBox" name="m_variableChoice01"/>
-               </item>
-               <item>
-                <widget class="QComboBox" name="m_variableLogicOperator01">
-                 <item>
-                  <property name="text">
-                   <string>Less Than</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Greater Than</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Equal</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Not Equal</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Like</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Not Like</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Begins With</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Does Not Begin With</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="m_textInput01"/>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QComboBox" name="m_logicOperator01">
-               <item>
-                <property name="text">
-                 <string>None</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>And</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Or</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item>
-              <widget class="QFrame" name="m_logicGroup02">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_4">
-                <property name="margin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_4">
-                  <item>
-                   <widget class="QComboBox" name="m_variableChoice02"/>
-                  </item>
-                  <item>
-                   <widget class="QComboBox" name="m_variableLogicOperator02">
-                    <item>
-                     <property name="text">
-                      <string>Less Than</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Greater Than</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Equal</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Not Equal</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Like</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Not Like</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Begins With</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Does Not Begin With</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLineEdit" name="m_textInput02"/>
-                  </item>
-                 </layout>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="m_logicOperator02">
-                  <item>
-                   <property name="text">
-                    <string>None</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>And</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Or</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QFrame" name="m_logicGroup03">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_5">
-                   <property name="margin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_5">
-                     <item>
-                      <widget class="QComboBox" name="m_variableChoice03"/>
-                     </item>
-                     <item>
-                      <widget class="QComboBox" name="m_variableLogicOperator03">
-                       <item>
-                        <property name="text">
-                         <string>Less Than</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>Greater Than</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>Equal</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>Not Equal</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>Like</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>Not Like</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>Begins With</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>Does Not Begin With</string>
-                        </property>
-                       </item>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="m_textInput03"/>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_5">
-         <property name="title">
-          <string>Query Command</string>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_12">
-          <item>
-           <widget class="QCheckBox" name="m_createTableFromQuery">
-            <property name="text">
-             <string>Create Table</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="m_queryTextCommandCtrl"/>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
-          <string>Table Controls</string>
+          <string>Client Connections</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <widget class="QComboBox" name="m_tableChoice1"/>
+             <layout class="QHBoxLayout" name="sensorInputLayout">
+              <property name="spacing">
+               <number>10</number>
+              </property>
+              <property name="sizeConstraint">
+               <enum>QLayout::SetDefaultConstraint</enum>
+              </property>
+              <item>
+               <widget class="QPushButton" name="m_sensorClientConnect">
+                <property name="text">
+                 <string>Data Connect</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="m_sensorClientIP"/>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="m_sensorPort">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
-             <widget class="QComboBox" name="m_tableChoice2"/>
-            </item>
-            <item>
-             <widget class="QComboBox" name="m_tableChoice3"/>
-            </item>
-            <item>
-             <widget class="QComboBox" name="m_tableChoice4"/>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QPushButton" name="m_heaterClientConnect">
+                <property name="text">
+                 <string>Heater Connect</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="m_heaterClientIP"/>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="m_heaterPort">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_2">
-         <property name="title">
-          <string>Part Selection</string>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QComboBox" name="m_manualPartSelectionChoice"/>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit_7"/>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="title">
-          <string>Text Display Selection</string>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_9">
-          <item>
-           <widget class="QListWidget" name="m_displayTextChkList">
-            <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
-            </property>
-            <property name="showDropIndicator" stdset="0">
-             <bool>false</bool>
+           <widget class="QPushButton" name="m_testTableView">
+            <property name="text">
+             <string>PushButton</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>200</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_4">
+        <widget class="QGroupBox" name="m_sensorData">
          <property name="title">
-          <string>Controls</string>
+          <string>GroupBox</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_10">
-          <item>
-           <widget class="QCheckBox" name="checkBox_2">
-            <property name="text">
-             <string>Toggle Unselected</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBox_3">
-            <property name="text">
-             <string>Mouse Selection</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="text">
-             <string>Clear</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_4">
-            <property name="text">
-             <string>Save</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </widget>
        </item>
       </layout>

@@ -38,6 +38,8 @@
 #include <QtCore/QStringList>
 #include <QtGui/QListWidgetItem>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 #include <string>
 #include <vector>
 #include <map>
@@ -64,18 +66,31 @@ protected:
 protected slots:
     /// Toggles succeeding logic blocks on and off depending on value of
     /// selection. (Not autoconnected)
-    void m_logicOperatorS_currentIndexChanged ( QString const& text );
+    //void m_logicOperatorS_currentIndexChanged ( QString const& text );
     /// Submits user-entered query. (Autoconnected)
-    void on_m_queryTextCommandCtrl_returnPressed(  );
+    //void on_m_queryTextCommandCtrl_returnPressed(  );
     void on_m_applyButton_clicked( );
     /// Called whenever a checkbox is toggled in the "Text Display Selection"
     /// widget. (Autoconnected)
-    void on_m_displayTextChkList_itemClicked( QListWidgetItem* item );
+    //void on_m_displayTextChkList_itemClicked( QListWidgetItem* item );
     /// Called when Create Table checkbox is toggled. (Autoconnected)
-    void on_m_createTableFromQuery_toggled();
+    //void on_m_createTableFromQuery_toggled();
     void InputTextChanged ( const QString& text );
-    void on_m_dataLoadButton_clicked();
+    
+    void on_m_sensorClientConnect_clicked();
+    void on_m_heaterClientConnect_clicked();
+    void on_m_testTableView_clicked();
 
+    /*
+    m_sensorClientIP
+    m_sensorClientConnect
+    m_heaterClientIP
+    m_heaterClientConnect
+    m_heaterPort
+    m_sensorPort
+    m_sensorData
+    m_testTableView
+    */
 private:
     void StripCharacters( std::string& data, const std::string& character );
     const std::string GetTextFromChoice( QComboBox* variable,
@@ -102,6 +117,11 @@ private:
     ///List of tables created by the user
     std::vector< std::string > m_tableList;
     std::string m_filename;
+    
+    ///The connect signal for sensors
+    ves::util::TwoStringSignal_type m_connectSensorSignal;
+    ///The connect signal for sensors
+    ves::util::TwoStringSignal_type m_connectHeaterSignal;
 };
 
 #endif // SensorDemoPlugin_UIDialog_H

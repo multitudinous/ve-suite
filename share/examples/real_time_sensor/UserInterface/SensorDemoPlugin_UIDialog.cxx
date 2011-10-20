@@ -37,6 +37,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/OneDStringArray.h>
 #include <ves/xplorer/command/CommandManager.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 #include <ves/conductor/qt/UITabs.h>
 
 //#include "csvparser.h"
@@ -72,7 +74,7 @@ SensorDemoPlugin_UIDialog::SensorDemoPlugin_UIDialog(QWidget *parent) :
 
     // Connect all the logic operators to a single slot which toggle sub-blocks
     // of the Query Composition group on and off.
-    connect( ui->m_logicOperator00, SIGNAL(currentIndexChanged(QString)),
+    /*connect( ui->m_logicOperator00, SIGNAL(currentIndexChanged(QString)),
              this, SLOT(m_logicOperatorS_currentIndexChanged(QString)) );
     connect( ui->m_logicOperator01, SIGNAL(currentIndexChanged(QString)),
              this, SLOT(m_logicOperatorS_currentIndexChanged(QString)) );
@@ -86,20 +88,111 @@ SensorDemoPlugin_UIDialog::SensorDemoPlugin_UIDialog(QWidget *parent) :
     connect( ui->m_textInput02, SIGNAL(textChanged(QString)),
              this, SLOT(InputTextChanged(QString)));
     connect( ui->m_textInput03, SIGNAL(textChanged(QString)),
-             this, SLOT(InputTextChanged(QString)));
+             this, SLOT(InputTextChanged(QString)));*/
 
-
+    ves::xplorer::eventmanager::EventManager* evm =
+        ves::xplorer::eventmanager::EventManager::instance();
+    using ves::xplorer::eventmanager::SignalWrapper;
+    
+    {
+        std::string signalName = "SensorDemoPlugin_UIDialog" +
+            boost::lexical_cast<std::string>( this ) + ".ConnectToSensorServer";
+        evm->RegisterSignal(
+            new SignalWrapper< ves::util::TwoStringSignal_type >( &m_connectSensorSignal ),
+            signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+    }
 }
-
-void SensorDemoPlugin_UIDialog::on_m_dataLoadButton_clicked()
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPlugin_UIDialog::on_m_sensorClientConnect_clicked()
 {
-    OnDataLoad( "7460 WRTY.db" );
+    std::cout << "get ip address and send it to xplorer" << std::endl;
+    std::cout << ui->m_heaterClientIP->text().toStdString() << " " 
+        << ui->m_sensorClientIP->text().toStdString() << " " 
+        << ui->m_sensorPort->text().toStdString() << " "
+        << ui->m_heaterPort->text().toStdString() << std::endl;
+    m_connectSensorSignal( ui->m_sensorClientIP->text().toStdString(), ui->m_sensorPort->text().toStdString() );
 }
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPlugin_UIDialog::on_m_heaterClientConnect_clicked()
+{
+    std::cout << "get ip address and send it to xplorer" << std::endl;
+    std::cout << ui->m_heaterClientIP->text().toStdString() << " " 
+        << ui->m_sensorClientIP->text().toStdString() << " " 
+        << ui->m_sensorPort->text().toStdString() << " "
+        << ui->m_heaterPort->text().toStdString() << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPlugin_UIDialog::on_m_testTableView_clicked()
+{
+std::cout << "here 1 " << std::endl;
+    QTreeWidget* queryResults = new QTreeWidget( 0 );
+    //QTreeWidget* queryResults = new QTreeWidget( ui->m_sensorData );
+    
+    queryResults->setColumnCount( 2 );
+    
+    std::string partNumber;
+    std::string partNumberHeader;
+    std::string partText;
+    
+    // Get header names
+    QStringList headers;
+    headers.append( QString::fromStdString( "Sensor Number" ) );
+    headers.append( QString::fromStdString( "Sensor Type" ) );
 
+    /*if( more )
+    {
+        for (std::size_t col = 0; col < cols; ++col)
+        {
+            partNumberHeader = rs.columnName( col );
+            headers.append( QString::fromStdString( partNumberHeader ));
+        }
+    }*/
+    
+    queryResults->setHeaderLabels( headers );
+    
+    // Keep everything to the right of "WHERE " in the query to use as the tab
+    // title
+    QString title = QString::fromStdString( "Sensor Information" );
+    
+    ves::conductor::UITabs::instance()->
+    ActivateTab( ves::conductor::UITabs::instance()->
+                AddTab( queryResults, title.toStdString() ) );
+    
+    /*while (more)
+    {
+        QStringList recordData;
+        for (std::size_t col = 0; col < cols; ++col)
+        {
+            recordData.append( QString::fromStdString( rs[col].convert<std::string>() ) );
+        }
+        QTreeWidgetItem* item = new QTreeWidgetItem( queryResults, recordData );
+        
+        more = rs.moveNext();
+    }*/
+    
+    ///
+    {
+        QStringList recordData;
+        recordData.append( QString::fromStdString( "1" ) );
+        recordData.append( QString::fromStdString( "Thermocouple" ) );
+        QTreeWidgetItem* item = new QTreeWidgetItem( queryResults, recordData );
+    }
+    ///
+    {
+        QStringList recordData;
+        recordData.append( QString::fromStdString( "2" ) );
+        recordData.append( QString::fromStdString( "Super Thermocouple" ) );
+        QTreeWidgetItem* item = new QTreeWidgetItem( queryResults, recordData );
+    }
+    
+    queryResults->setSortingEnabled( true );
+}
+////////////////////////////////////////////////////////////////////////////////
 SensorDemoPlugin_UIDialog::~SensorDemoPlugin_UIDialog()
 {
     delete ui;
 }
+////////////////////////////////////////////////////////////////////////////////
 
 void SensorDemoPlugin_UIDialog::changeEvent(QEvent *e)
 {
@@ -112,7 +205,7 @@ void SensorDemoPlugin_UIDialog::changeEvent(QEvent *e)
         break;
     }
 }
-
+/*
 void SensorDemoPlugin_UIDialog::m_logicOperatorS_currentIndexChanged ( QString const& text )
 {
     QObject* caller = sender();
@@ -152,6 +245,7 @@ void SensorDemoPlugin_UIDialog::m_logicOperatorS_currentIndexChanged ( QString c
 
     //UpdateQueryDisplay();
 }
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //void SensorDemoPlugin_UIDialog::SendCommandsToXplorer()
@@ -332,7 +426,7 @@ void SensorDemoPlugin_UIDialog::ParseDataFile( const std::string& csvFilename )
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPlugin_UIDialog::OnDataLoad( std::string const& fileName )
 {
-    if( !fileName.empty() )
+    /*if( !fileName.empty() )
     {
         boost::filesystem::path viewPtsFilename( fileName );
         std::string relativeViewLocationsPath(  "./" +
@@ -391,7 +485,7 @@ void SensorDemoPlugin_UIDialog::OnDataLoad( std::string const& fileName )
         }
 
         ui->m_manualPartSelectionChoice->addItems( m_partNumberStrings );
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPlugin_UIDialog::InputTextChanged( const QString& text )
@@ -402,11 +496,11 @@ void SensorDemoPlugin_UIDialog::InputTextChanged( const QString& text )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SensorDemoPlugin_UIDialog::on_m_queryTextCommandCtrl_returnPressed(  )
+/*void SensorDemoPlugin_UIDialog::on_m_queryTextCommandCtrl_returnPressed(  )
 {
     //When the user types in their on text entry submit the query
     SubmitQueryCommand();
-}
+}*/
 /*
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPlugin_UIDialog::OnPartSelection( wxCommandEvent& WXUNUSED( event ) )
@@ -484,11 +578,11 @@ void SensorDemoPlugin_UIDialog::OnPartNumberEntry( wxCommandEvent& WXUNUSED( eve
 }
 ////////////////////////////////////////////////////////////////////////////////
 */
-void SensorDemoPlugin_UIDialog::on_m_displayTextChkList_itemClicked
+/*void SensorDemoPlugin_UIDialog::on_m_displayTextChkList_itemClicked
         ( QListWidgetItem* item )
 {
     UpdateQueryDisplay();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -498,7 +592,7 @@ void SensorDemoPlugin_UIDialog::on_m_applyButton_clicked( )
     SubmitQueryCommand();
 
     //Once we submit a query we can reset the table creation check box
-    ui->m_createTableFromQuery->setChecked( false );
+    //ui->m_createTableFromQuery->setChecked( false );
 }
 
 
@@ -527,7 +621,7 @@ void SensorDemoPlugin_UIDialog::OnQueryOK( wxCommandEvent& WXUNUSED( event ) )
 const std::string SensorDemoPlugin_UIDialog::GetTextFromChoice( QComboBox* variable,
                                                      QComboBox* logicOperator, QLineEdit* textInput )
 {
-    //"SELECT * FROM Parts WHERE Claims > 10"
+    /*//"SELECT * FROM Parts WHERE Claims > 10"
     //std::string variableString = ConvertUnicode( variable->GetStringSelection().c_str() );
     std::string variableString = variable->currentText().toStdString();
 
@@ -591,9 +685,9 @@ const std::string SensorDemoPlugin_UIDialog::GetTextFromChoice( QComboBox* varia
         {
             inputString = "'" + inputString + "'";
         }
-    }
+    }*/
 
-    std::string queryCommand = "\"" + variableString + "\" " + logicString + " " + inputString;
+    std::string queryCommand;// = "\"" + variableString + "\" " + logicString + " " + inputString;
 
     return queryCommand;
 }
@@ -620,7 +714,7 @@ const std::string SensorDemoPlugin_UIDialog::GetTextFromLogicOperator( QComboBox
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPlugin_UIDialog::SubmitQueryCommand()
 {
-    QString queryText = ui->m_queryTextCommandCtrl->text();
+    /*QString queryText = ui->m_queryTextCommandCtrl->text();
     if( queryText.isEmpty() )
     {
         return;
@@ -670,13 +764,13 @@ void SensorDemoPlugin_UIDialog::SubmitQueryCommand()
     command->SetCommandName( mCommandName );
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
 
-    QueryUserDefinedAndHighlightParts( queryString );
+    QueryUserDefinedAndHighlightParts( queryString );*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPlugin_UIDialog::UpdateQueryDisplay()
 {
-    std::string queryCommand;
+    /*std::string queryCommand;
 
     if( ui->m_createTableFromQuery->isChecked() )
     {
@@ -750,14 +844,14 @@ void SensorDemoPlugin_UIDialog::UpdateQueryDisplay()
     }
 
     //The update the text display box
-    ui->m_queryTextCommandCtrl->setText( QString::fromStdString( queryCommand ) );
+    ui->m_queryTextCommandCtrl->setText( QString::fromStdString( queryCommand ) );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 
 
 void SensorDemoPlugin_UIDialog::ParseDataBase( const std::string& csvFilename )
 {
-    using namespace Poco::Data;
+    /*using namespace Poco::Data;
     // register SQLite connector
     Poco::Data::SQLite::Connector::registerConnector();
 
@@ -913,7 +1007,7 @@ void SensorDemoPlugin_UIDialog::ParseDataBase( const std::string& csvFilename )
     {
         std::cout << ex.displayText() << std::endl;
     }
-    ///////////////////////////////////////////
+    ///////////////////////////////////////////*/
 }
 /*
 ////////////////////////////////////////////////////////////////////////////////
@@ -975,13 +1069,13 @@ void SensorDemoPlugin_UIDialog::OnClearData( wxCommandEvent& WXUNUSED( event ) )
 }
 ////////////////////////////////////////////////////////////////////////////////
 */
-void SensorDemoPlugin_UIDialog::on_m_createTableFromQuery_toggled()
+/*void SensorDemoPlugin_UIDialog::on_m_createTableFromQuery_toggled()
 {
     //CREATE TABLE new_tbl SELECT * FROM orig_tbl;
     //http://dev.mysql.com/doc/refman/5.0/en/create-table-select.html
     //http://www.mydigitallife.info/2006/08/23/create-new-table-by-selecting-data-from-other-tables-with-create-table-as/
     UpdateQueryDisplay();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 /*
 void SensorDemoPlugin_UIDialog::OnTableSelection( wxCommandEvent& WXUNUSED( event ) )
@@ -1087,7 +1181,7 @@ void SensorDemoPlugin_UIDialog::OnSaveQuery( wxCommandEvent& event )
 */
 void SensorDemoPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::string& queryString )
 {
-    std::cout << "SensorDemoPlugin_UIDialog::QueryUserDefinedAndHighlightParts " << queryString << std::endl << std::flush;
+    /*std::cout << "SensorDemoPlugin_UIDialog::QueryUserDefinedAndHighlightParts " << queryString << std::endl << std::flush;
     //select << "SELECT Part_Number, Description, Claims FROM Parts",
     //select << "SELECT Part_Number, Description, Claims FROM Parts WHERE Claims > 10 AND Claims_Cost > 1000",
     Poco::Data::Session session("SQLite", m_filename );
@@ -1195,5 +1289,5 @@ void SensorDemoPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::st
 
         more = rs.moveNext();
     }
-    queryResults->setSortingEnabled( true );
+    queryResults->setSortingEnabled( true );*/
 }
