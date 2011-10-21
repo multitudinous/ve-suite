@@ -122,7 +122,9 @@ using namespace warrantytool;
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/IO/Socket/InetAddr.h>
-
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/Util/Interval.h>
 using namespace Poco::Data;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2068,7 +2070,7 @@ void SensorDemoPluginGP::SimulatorCaptureThread()
             return;
         }
     }*/
-    
+#if 0
     int status;
     vpr::Uint16 port(12345);     // Default listening port
     
@@ -2225,7 +2227,124 @@ void SensorDemoPluginGP::SimulatorCaptureThread()
         std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
         status = EXIT_FAILURE;
     }
+#else
+    vpr::Uint16 port(12345);     // Default listening port
     
+    try
+    {
+        port = boost::lexical_cast<unsigned int>( computerPort );
+    }
+    catch( boost::bad_lexical_cast& ex )
+    {
+        std::cout << "cannot cast port data. defaulting to port " << port << std::endl;
+    }
+    
+    try
+    {
+        m_runSampleThread = true;
+        
+        vpr::InetAddr remote_addr;
+        remote_addr.setAddress(computerName, port);
+    
+        try
+        {
+            // The socket is a stack variable, so it will be deallocated if an
+            // exception gets thrown. The vpr::SocketStream destructor closes
+            // the socket if it is still open.
+            vpr::SocketStream sock(vpr::InetAddr::AnyAddr, remote_addr);
+            
+            sock.open();
+            
+            // Connect to the server.
+            sock.connect();
+            
+            const vpr::Uint32 bufferSize = 1200;
+            char* recv_buf = new char[bufferSize];
+            memset(recv_buf, '\0', bufferSize );//sizeof(recv_buf));
+            
+            typedef std::vector< std::string > split_vector_type;
+            std::vector< double > positionData;
+            std::string bufferData;
+            vpr::InetAddr addr;
+            split_vector_type splitVec;
+            
+            while( m_runSampleThread )
+            {
+                // Read from the server.
+                try
+                {
+                    const vpr::Uint32 bytes =
+                        sock.read(recv_buf, 1200, vpr::Interval(10, vpr::Interval::Sec));
+                    
+                    // If we read anything, print it and send a response.
+                    vprDEBUG( vesDBG, 2 ) << "\t\tDVST read (" << bytes
+                        << " bytes) from " << remote_addr.getAddressString()
+                        << std::endl << vprDEBUG_FLUSH;
+                    
+                    bufferData.resize( 0 );
+                    for( size_t i = 0; i < bytes; ++i )
+                    {
+                        if( recv_buf[ i ] == '\0' )
+                        {
+                            bufferData.push_back( ' ' );
+                            continue;
+                        }
+                        bufferData.push_back( recv_buf[ i ] );
+                    }
+                    
+                    boost::algorithm::trim( bufferData );
+                    
+                    vprDEBUG( vesDBG, 2 ) << "\t\tDVST buffer data " 
+                        << bufferData << std::endl << vprDEBUG_FLUSH;
+                    
+                    boost::split( splitVec, bufferData, boost::is_any_of(" "), boost::token_compress_on );
+                    double tempDouble = 0;
+                    for( size_t i = 0; i < splitVec.size(); ++i )
+                    {
+                        try
+                        {
+                            tempDouble = boost::lexical_cast<double>( splitVec.at( i ) );
+                            positionData.push_back( tempDouble );
+                        }
+                        catch( boost::bad_lexical_cast& ex )
+                        {
+                            std::cout << "cannot cast data " << ex.what() 
+                                << " data is " << splitVec.at( i ) << std::endl;
+                        }
+                    }
+                    SetPositionData( positionData );
+                    positionData.resize( 0 );
+                    splitVec.resize( 0 );
+                }
+                catch (vpr::TimeoutException&)
+                {
+                    std::cerr << "No resposne from server within timeout period!\n";
+                }
+            }
+            
+            sock.close();
+        }
+        catch (vpr::SocketException& ex)
+        {
+            std::cerr << "Caught a socket exception:\n" << ex.what()
+            << std::endl;
+        }
+        catch (vpr::IOException& ex)
+        {
+            std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
+        }
+    }
+    catch (vpr::UnknownHostException& ex)
+    {
+        std::cerr << "Failed to set server address:\n" << ex.what()
+        << std::endl;
+        return;
+    }
+    catch (vpr::Exception& ex)
+    {
+        std::cerr << "Caught an exception:\n" << ex.what() << std::endl;
+    }
+#endif    
     std::cout << "Thread exiting." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2366,7 +2485,7 @@ void SensorDemoPluginGP::CreateSensorGrid()
     mapper->SetInput( pd );
     mapper->SetScalarModeToUsePointFieldData();
     mapper->ColorByArrayComponent( "Temperature", 0 );
-    mapper->SetScalarRange( 10.0, 30.00 );
+    mapper->SetScalarRange( 40.0f, 65.0f );
     mapper->SetLookupTable( lut );
     
     vtkActor* contActor = vtkActor::New();
