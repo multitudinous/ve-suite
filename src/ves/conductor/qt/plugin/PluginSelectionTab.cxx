@@ -83,35 +83,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
 {
     ui->setupUi(this);
 
-    QString qPluginDir = 
-        QProcessEnvironment::systemEnvironment().value ( "CONDUCTOR_PLUGINS_DIR" );
-    std::string pluginsDir;
-    if( qPluginDir.toStdString().empty() )
-    {
-        std::cout << "|\tCONDUCTOR_PLUGINS_DIR is not defined." 
-            << std::endl << std::flush;
-        qPluginDir = 
-            QProcessEnvironment::systemEnvironment().value ( "XPLORER_PLUGINS_DIR" );
-        pluginsDir = qPluginDir.toStdString() + "/../../conductor/plugins";
-        std::cout << "|\tUsing " << pluginsDir << " instead." 
-            << std::endl << std::flush;
-    }
-    else
-    {
-        std::cout << "|\tCONDUCTOR_PLUGINS_DIR = " 
-            << qPluginDir.toStdString() << std::endl << std::flush;
-        pluginsDir = qPluginDir.toStdString();
-    }
-
-    //QDir pluginsPath = qApp->applicationDirPath();
-    //pluginsPath.cd("conductor/plugins");
-    DiscoverPlugins( pluginsDir.c_str() );
-
-    //Also attempt to discover plugins in the Plugins subfolder of the current
-    //directory
-    QString currentDir( QDir::currentPath() );
-    currentDir = currentDir + "/Plugins/UI";
-    DiscoverPlugins( currentDir.toStdString() );
+    ReDiscoverPlugins("");
     
     qRegisterMetaType<std::string>();
     qRegisterMetaType<ves::xplorer::plugin::PluginBase>();
@@ -144,8 +116,42 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::ReDiscoverPlugins( std::string const& dir )
 {
-    std::string const pluginsDir = dir + "/Plugins/UI";
+    // We ignore the path passed as argument "dir" since it is just the new
+    // working dir, and is already the current dir by the time this slot is
+    // called.
+    boost::ignore_unused_variable_warning( dir );
+
+    // Wipe out plugin list.
+    ClearActivePlugins();
+    ui->m_availablePlugins->clear();
+
+
+    QString qPluginDir =
+        QProcessEnvironment::systemEnvironment().value ( "CONDUCTOR_PLUGINS_DIR" );
+    std::string pluginsDir;
+    if( qPluginDir.toStdString().empty() )
+    {
+        std::cout << "|\tCONDUCTOR_PLUGINS_DIR is not defined."
+            << std::endl << std::flush;
+        qPluginDir =
+            QProcessEnvironment::systemEnvironment().value ( "XPLORER_PLUGINS_DIR" );
+        pluginsDir = qPluginDir.toStdString() + "/../../conductor/plugins";
+        std::cout << "|\tUsing " << pluginsDir << " instead."
+            << std::endl << std::flush;
+    }
+    else
+    {
+        std::cout << "|\tCONDUCTOR_PLUGINS_DIR = "
+            << qPluginDir.toStdString() << std::endl << std::flush;
+        pluginsDir = qPluginDir.toStdString();
+    }
     DiscoverPlugins( pluginsDir );
+
+    //Also attempt to discover plugins in the Plugins subfolder of the current
+    //directory
+    QString currentDir( QDir::currentPath() );
+    currentDir = currentDir + "/Plugins/UI";
+    DiscoverPlugins( currentDir.toStdString() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
@@ -338,9 +344,16 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
             m_itemWidgetMap.find( item );
     if( witer != m_itemWidgetMap.end() )
     {
-        // Just activate the tab.
-        m_mainWindow->ActivateTab( witer->second );
-        return;
+        std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
+                m_itemInterfaceMap.find( item );
+        if( iter != m_itemInterfaceMap.end() )
+        {
+            // Just activate the tab.
+            m_mainWindow->ActivateTab( m_mainWindow->AddTab( witer->second,
+                                               iter->second->GetName() ) );
+            return;
+        }
+
     }
 
     std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
