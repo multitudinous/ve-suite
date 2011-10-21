@@ -111,13 +111,13 @@ void SwitchDlg::SetButtonClick(wxCommandEvent& event)
     ves::open::xml::DataValuePairSharedPtr switchBody(
           new ves::open::xml::DataValuePair() );
     switchBody->SetData( "SWITCH_BODY",
-        SwitchBodyBrowseBox->GetValue().c_str() );
+        ConvertUnicode( SwitchBodyBrowseBox->GetValue().c_str() ) );
     ves::open::xml::DataValuePairSharedPtr onButton(
           new ves::open::xml::DataValuePair() );
-    onButton->SetData( "ON_BUTTON", OnButtonBrowseBox->GetValue().c_str() );
+    onButton->SetData( "ON_BUTTON", ConvertUnicode( OnButtonBrowseBox->GetValue().c_str() ) );
     ves::open::xml::DataValuePairSharedPtr offButton(
           new ves::open::xml::DataValuePair() );
-    offButton->SetData( "OFF_BUTTON", OffButtonBrowseBox->GetValue().c_str() );
+    offButton->SetData( "OFF_BUTTON", ConvertUnicode( OffButtonBrowseBox->GetValue().c_str() ) );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     std::string mCommandName = "SWITCH_CAD";
@@ -144,7 +144,7 @@ void SwitchDlg::CancelClick(wxCommandEvent& event)
  */
 void SwitchDlg::SwitchBodyBrowseButtonClick(wxCommandEvent& event)
 {
-	wxFileDialog fd( this, "Choose the Switch Body" );
+	wxFileDialog fd( this, _("Choose the Switch Body" ) );
 	if( fd.ShowModal() == wxID_OK )
 	{
         SwitchBodyBrowseBox->SetValue( fd.GetPath() );
@@ -156,7 +156,7 @@ void SwitchDlg::SwitchBodyBrowseButtonClick(wxCommandEvent& event)
  */
 void SwitchDlg::OnButtonBrowseButtonClick(wxCommandEvent& event)
 {
-	wxFileDialog fd( this, "Choose the On Button" );
+	wxFileDialog fd( this, _("Choose the On Button" ) );
 	if( fd.ShowModal() == wxID_OK )
 	{
         OnButtonBrowseBox->SetValue( fd.GetPath() );
@@ -168,7 +168,7 @@ void SwitchDlg::OnButtonBrowseButtonClick(wxCommandEvent& event)
  */
 void SwitchDlg::OffButtonBrowseButtonClick(wxCommandEvent& event)
 {
-	wxFileDialog fd( this, "Choose the Off Button" );
+	wxFileDialog fd( this, _( "Choose the Off Button" ) );
 	if( fd.ShowModal() == wxID_OK )
 	{
         OffButtonBrowseBox->SetValue( fd.GetPath() );

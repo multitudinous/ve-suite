@@ -112,13 +112,13 @@ void ValveDlg::SetButtonClick(wxCommandEvent& event)
     ves::open::xml::DataValuePairSharedPtr valveBody(
           new ves::open::xml::DataValuePair() );
     valveBody->SetData( "VALVE_BODY",
-        ValveBodyBrowseBox->GetValue().c_str() );
+        ConvertUnicode( ValveBodyBrowseBox->GetValue().c_str() ) );
     ves::open::xml::DataValuePairSharedPtr handWheel(
           new ves::open::xml::DataValuePair() );
-    handWheel->SetData( "HAND_WHEEL", HandWheelBrowseBox->GetValue().c_str() );
+    handWheel->SetData( "HAND_WHEEL", ConvertUnicode( HandWheelBrowseBox->GetValue().c_str() ) );
     ves::open::xml::DataValuePairSharedPtr stem(
           new ves::open::xml::DataValuePair() );
-    stem->SetData( "STEM", StemBrowseBox->GetValue().c_str() );
+    stem->SetData( "STEM", ConvertUnicode( StemBrowseBox->GetValue().c_str() ) );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     std::string mCommandName = "VALVE_CAD";
@@ -141,7 +141,7 @@ void ValveDlg::CancelClick(wxCommandEvent& event)
 ///////////////////////////////////////////////////////////////////////////////
 void ValveDlg::ValveBodyBrowseButtonClick(wxCommandEvent& event)
 {
-	wxFileDialog fd( this, "Choose the Valve Body" );
+	wxFileDialog fd( this, _("Choose the Valve Body") );
 	if( fd.ShowModal() == wxID_OK )
 	{
         ValveBodyBrowseBox->SetValue( fd.GetPath() );
@@ -151,7 +151,7 @@ void ValveDlg::ValveBodyBrowseButtonClick(wxCommandEvent& event)
 ///////////////////////////////////////////////////////////////////////////////
 void ValveDlg::StemBrowseButtonClick(wxCommandEvent& event)
 {
-	wxFileDialog fd( this, "Choose the Stem" );
+	wxFileDialog fd( this, _("Choose the Stem") );
 	if( fd.ShowModal() == wxID_OK )
 	{
         StemBrowseBox->SetValue( fd.GetPath() );
@@ -161,7 +161,7 @@ void ValveDlg::StemBrowseButtonClick(wxCommandEvent& event)
 ///////////////////////////////////////////////////////////////////////////////
 void ValveDlg::HandWheelBrowseButtonClick(wxCommandEvent& event)
 {
-	wxFileDialog fd( this, "Choose the Hand Wheel" );
+	wxFileDialog fd( this, _("Choose the Hand Wheel") );
 	if( fd.ShowModal() == wxID_OK )
 	{
         HandWheelBrowseBox->SetValue( fd.GetPath() );

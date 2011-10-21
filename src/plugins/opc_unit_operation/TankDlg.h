@@ -34,7 +34,13 @@ class TankDlg : public wxDialog
 		wxButton *TankBrowseButton;
 		wxStaticText *TankLabel;
         ves::conductor::util::CORBAServiceList* mServiceList;
-		
+    std::string ConvertUnicode( const wxChar* data )
+        {
+                std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+
+
 	private:
 		enum
 		{

@@ -142,7 +142,7 @@ void DWPlugin::OnUnitName( wxCommandEvent& event )
     wxArrayString choices;
     for( int i = 0; i < data.size(); i++ )
     {
-        choices.Add(wxString(data[i].c_str()));
+        choices.Add(wxString(data[i].c_str(), wxConvUTF8 ));
     }
 
     //create the dialog and get the selection

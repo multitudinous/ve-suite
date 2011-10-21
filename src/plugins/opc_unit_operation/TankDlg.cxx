@@ -63,7 +63,7 @@ void TankDlg::SetButtonClick(wxCommandEvent& event)
     ves::open::xml::DataValuePairSharedPtr tank(
           new ves::open::xml::DataValuePair() );
     tank->SetData( "TANK",
-        TankBrowseBox->GetValue().c_str() );
+        ConvertUnicode( TankBrowseBox->GetValue().c_str() ) );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     std::string mCommandName = "TANK_CAD";
@@ -82,7 +82,7 @@ void TankDlg::CancelClick(wxCommandEvent& event)
 
 void TankDlg::TankBrowseButtonClick(wxCommandEvent& event)
 {
-	wxFileDialog fd( this, "Choose the Tank Body" );
+	wxFileDialog fd( this, _("Choose the Tank Body") );
 	if( fd.ShowModal() == wxID_OK )
 	{
         TankBrowseBox->SetValue( fd.GetPath() );
