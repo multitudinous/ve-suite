@@ -77,6 +77,7 @@ TankGraphicalPlugin::TankGraphicalPlugin()
 {
     //DYNSIM
     mObjectName = "DSPlugin";
+    //mObjectName = "tank";
     mEventHandlerMap[ "OPCData" ] = this;
     //mEventHandlerMap[ "TANK_CAD" ] = this;
     mEventHandlerMap[ "VALVE_CAD" ] = this;
@@ -96,7 +97,7 @@ void TankGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
         
     //do we want to provide default CAD?
     //If so initialize
-    /*m_tankGeometry = osgDB::readNodeFile( "Tank/tank.ive" );
+    m_tankGeometry = osgDB::readNodeFile( "Tank/tank.ive" );
     td = new TankData( m_tankGeometry.get() );
     td->setColorMethod( TankData::COLOR_EXPLICIT );
     td->setExplicitColor( osg::Vec4( .2, 1., .8, .4 ) );
@@ -104,7 +105,9 @@ void TankGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     m_tankDCS = new ves::xplorer::scenegraph::DCS();
     m_tankDCS->addChild( m_tankGeometry.get() );
     td->setPercentOfCapacity( 1.0 );
-    mDCS->addChild( m_tankDCS.get() );*/
+    double scale[3] = { 3.28, 3.28, 3.28 };
+    m_tankDCS->SetScaleArray( scale );
+    mDCS->addChild( m_tankDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TankGraphicalPlugin::PreFrameUpdate()

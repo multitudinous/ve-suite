@@ -324,6 +324,7 @@ wxMenu* DSPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mDynSimMenu->Enable( DSPLUGIN_CREATE_OPC_LIST, false );
     mDynSimMenu->Append( DSPLUGIN_CONNECT, _( "Connect to OPC") );
     mDynSimMenu->Enable( DSPLUGIN_CONNECT, false );
+    //mDynSimMenu->Enable( DSPLUGIN_CONNECT, true );
     mDynSimMenu->Append( DSPLUGIN_ADDVAR, _( "ADD VAR") );
     mDynSimMenu->Enable( DSPLUGIN_ADDVAR, false );
     mDynSimMenu->Append( DSPLUGIN_ALLVAR, _( "ALL VAR") );

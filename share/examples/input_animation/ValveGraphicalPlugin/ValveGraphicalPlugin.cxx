@@ -79,9 +79,11 @@ ValveGraphicalPlugin::ValveGraphicalPlugin()
     m_valveOnOff = true;
 
     //DYNSIM
+    //mObjectName = "DSPlugin"; //name of the sheet
     mObjectName = "valve"; //name of the sheet
     ///Set the name of the commands we want to capture from the dynsim unit
     mEventHandlerMap[ "OPCData" ] = this;
+    //mEventHandlerMap[ "ADData" ] = this;
     mEventHandlerMap[ "VALVE_CAD" ] = this;
 
     m_valveDCS = 0;
@@ -98,31 +100,33 @@ void ValveGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
+    {
+        //valve
+        m_rotationDCS = new ves::xplorer::scenegraph::DCS();
+        m_stemTransDCS = new ves::xplorer::scenegraph::DCS();
+        m_valveDCS = new ves::xplorer::scenegraph::DCS();
 
-    //valve
-    /*m_rotationDCS = new ves::xplorer::scenegraph::DCS();
-    m_stemTransDCS = new ves::xplorer::scenegraph::DCS();
-    m_valveDCS = new ves::xplorer::scenegraph::DCS();
+        m_handwheelGeometry = osgDB::readNodeFile( "Valve/handwheel.ive" );
+        m_stemGeometry = osgDB::readNodeFile( "Valve/stem.ive" );
+        m_valveGeometry = osgDB::readNodeFile( "Valve/valve.ive" );
 
-    m_handwheelGeometry = osgDB::readNodeFile( "Valve/handwheel.ive" );
-    m_stemGeometry = osgDB::readNodeFile( "Valve/stem.ive" );
-    m_valveGeometry = osgDB::readNodeFile( "Valve/valve.ive" );
+        m_rotationDCS->addChild( m_handwheelGeometry.get() );
+        m_stemTransDCS->addChild( m_stemGeometry.get() );
+        m_rotationDCS->addChild( m_stemTransDCS.get() );
 
-    m_rotationDCS->addChild( m_handwheelGeometry.get() );
-    m_stemTransDCS->addChild( m_stemGeometry.get() );
-    m_rotationDCS->addChild( m_stemTransDCS.get() );
+        m_valveDCS->addChild( m_valveGeometry.get() );
+        m_valveDCS->addChild( m_rotationDCS.get() );
 
-    m_valveDCS->addChild( m_valveGeometry.get() );
-    m_valveDCS->addChild( m_rotationDCS.get() );
+        //double scale[3] = { 2.13, 2.13, 2.13 };
+        double scale[3] = { 6.9864, 6.9864, 6.9864 };
+        m_valveDCS->SetScaleArray( scale );
+        double pos[3] = { -15.4084, -23.7, 6.268864 };
+        m_valveDCS->SetTranslationArray( pos );
+        double rot[3] = { 0.0, 0.0, 90.0 };
+        m_valveDCS->SetRotationArray( rot );
 
-    double rot[3] = { 0.0, 0.0, 90.0 };
-    double scale[3] = { 6.56, 6.56, 6.56 };
-    double pos[3] = { 20.75, -52.5, 6.7 };
-    m_valveDCS->SetTranslationArray( pos );
-    m_valveDCS->SetRotationArray( rot );
-
-    m_valveDCS->SetScaleArray( scale );
-    mDCS->addChild( m_valveDCS.get() );*/
+        mDCS->addChild( m_valveDCS.get() );
+    }
 
     //REMOVE?
     //pump
@@ -131,10 +135,11 @@ void ValveGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     m_pumpGeometry = osgDB::readNodeFile( "FlowMeter/flowmeter.ive" );
   
     meterDCS->addChild( m_pumpGeometry.get() );
+    //double scale[3] = { 1, 1, 1 };
     double scale[3] = { 3.28, 3.28, 3.28 };
-    double pos[3] = { 36, -28.67, 1.0 };
-    meterDCS->SetTranslationArray( pos );
     meterDCS->SetScaleArray( scale );
+    double pos[3] = { 0, 0, 0.0 };
+    meterDCS->SetTranslationArray( pos );
     mDCS->addChild( meterDCS.get() );
 
     //Initialize shaders

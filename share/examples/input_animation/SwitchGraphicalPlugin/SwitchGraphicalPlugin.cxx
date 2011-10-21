@@ -97,32 +97,35 @@ void SwitchGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 
-    /*
     //default CAD
     //SWITCH
     m_startTransDCS = new ves::xplorer::scenegraph::DCS();
     m_stopTransDCS = new ves::xplorer::scenegraph::DCS();
     m_switchDCS = new ves::xplorer::scenegraph::DCS();
     
-    m_panelGeometry = osgDB::readNodeFile( "Switch/panel.ive" );
+    //m_panelGeometry = osgDB::readNodeFile( "Switch/panel.ive" );
     m_startButtonGeometry = osgDB::readNodeFile( "Switch/go_button.ive" );
     m_stopButtonGeometry = osgDB::readNodeFile( "Switch/stop_button.ive" );
 
     m_startTransDCS->addChild( m_startButtonGeometry.get() );
     m_stopTransDCS->addChild( m_stopButtonGeometry.get() );
     
-    m_switchDCS->addChild( m_panelGeometry.get() );
+    //m_switchDCS->addChild( m_panelGeometry.get() );
     m_switchDCS->addChild( m_startTransDCS.get() );
     m_switchDCS->addChild( m_stopTransDCS.get() );
     
-    double rot2[3] = { 90.0, 0.0, 0.0 };
     double scale2[3] = { 3.28, 3.28, 3.28 };
-    double pos2[3] = { -30.315, -12.336, 6.35 };
-    m_switchDCS->SetTranslationArray( pos2 );
-    m_switchDCS->SetRotationArray( rot2 );
+    //double scale2[3] = { 1.0, 1.0, 1.0 };
     m_switchDCS->SetScaleArray( scale2 );
     
-    mDCS->addChild( m_switchDCS.get() );*/
+    double pos2[3] = { -66.313964, 16.33586, 5.349864 };
+    //double pos2[3] = { -30.315, -12.336, 6.35 };
+    m_switchDCS->SetTranslationArray( pos2 );
+
+    double rot2[3] = { 90.0, 0.0, 0.0 };
+    m_switchDCS->SetRotationArray( rot2 );
+    
+    mDCS->addChild( m_switchDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SwitchGraphicalPlugin::PreFrameUpdate()
@@ -250,7 +253,7 @@ void SwitchGraphicalPlugin::SetCurrentCommand(
         //body
         std::string CAD;
         command->GetDataValuePair("SWITCH_BODY")->GetData( CAD );
-        m_panelGeometry = osgDB::readNodeFile( CAD.c_str() );
+        //m_panelGeometry = osgDB::readNodeFile( CAD.c_str() );
 
         //on button
         command->GetDataValuePair("ON_BUTTON")->GetData( CAD );
@@ -268,7 +271,7 @@ void SwitchGraphicalPlugin::SetCurrentCommand(
         m_startTransDCS->addChild( m_startButtonGeometry.get() );
         m_stopTransDCS->addChild( m_stopButtonGeometry.get() );
 
-        m_switchDCS->addChild( m_panelGeometry.get() );
+        //m_switchDCS->addChild( m_panelGeometry.get() );
         m_switchDCS->addChild( m_startTransDCS.get() );
         m_switchDCS->addChild( m_stopTransDCS.get() );
 

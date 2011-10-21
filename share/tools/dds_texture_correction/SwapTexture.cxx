@@ -40,6 +40,7 @@
 #include <osg/Texture2D>
 
 #include <osgDB/ReadFile>
+#include <osgDB/WriteFile>
 #include <osgDB/ReaderWriter>
 
 // --- C/C++ Libraries --- //
@@ -131,7 +132,7 @@ void SwapTexture::CheckStateSet( osg::StateSet* stateSet )
                         tex2D->setImage( ddsImage.get() );
                         //Write it back out if we do not want to include the image 
                         //file in the ive file
-                        //osgDB::writeImageFile( *(ddsImage.get), newFileName.string() );
+                        osgDB::writeImageFile( *(ddsImage.get()),  newFileName.string());
                     }
                 }
             }

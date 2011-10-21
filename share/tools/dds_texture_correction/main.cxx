@@ -110,8 +110,9 @@ int main( int argc, char* argv[] )
         }
         //write ive file back out
         // But without including the image files in the ive:
-        //osg::ref_ptr< osgDB::ReaderWriter::Options > noImgOpt = new osgDB::ReaderWriter::Options();
-        //noImgOpt->setOptionString( "noTexturesInIVEFile" );
+        osg::ref_ptr< osgDB::ReaderWriter::Options > noImgOpt = new osgDB::ReaderWriter::Options();
+        noImgOpt->setOptionString( "noTexturesInIVEFile" );
+        osgDB::Registry::instance()->setOptions( noImgOpt );
         //std::string olfFileName = iveFiles.at( i );
         //boost::filesystem::path oldFileName( iveFiles.at( i ), boost::filesystem::no_check );
         if( !singleFile )

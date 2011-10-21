@@ -224,9 +224,9 @@ KinematicCharacterController::KinematicCharacterController()
     //This is the speed of the character in ft/s
     //Slow walk speed is 5 km/h ~ 1.0 ft/s
     //Usain Bolt's top 10m split 10m/0.82s ~ 40 ft/s
-    m_forwardBackwardSpeedModifier( 4.0 ),
-    m_leftRightSpeedModifier( 4.0 ),
-    m_upDownSpeedModifier( 4.0 ),
+    m_forwardBackwardSpeedModifier( 6.0 ),
+    m_leftRightSpeedModifier( 6.0 ),
+    m_upDownSpeedModifier( 6.0 ),
     m_flySpeedModifier( 3.0 ),
     m_vo( 0.0 ),
     m_jumpHeight( 0.0 ),
