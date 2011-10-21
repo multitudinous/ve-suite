@@ -161,7 +161,7 @@ void PluginLoader::ScanAndLoad( void )
 
     //Look for custom plugin path
     std::string modelPath;
-    vpr::System::getenv( std::string( "CFDHOSTTYPE" ), modelPath );
+    //vpr::System::getenv( std::string( "CFDHOSTTYPE" ), modelPath );
     std::string path( "Plugins/GE/" );
     std::string libDir = path + modelPath;
     bool customPlugins = false;
@@ -174,7 +174,27 @@ void PluginLoader::ScanAndLoad( void )
 #endif
         if( boost::filesystem::is_directory( dir_path ) )
         {
-            customPlugins = true;
+            for( boost::filesystem::recursive_directory_iterator itr( dir_path ); 
+                itr !=  boost::filesystem::recursive_directory_iterator(); ++itr )
+            {
+                if( boost::filesystem::is_directory( itr->status() ) )
+                {
+                    vpr::LibraryFinder finder( itr->path().string(), DSO_SUFFIX );
+                    
+                    vpr::LibraryFinder::LibraryList tempLibs;
+                    tempLibs = finder.getLibraries();
+                    vprDEBUG( vesDBG, 1 )  << "|\tNumber of user custom libs : "
+                        << tempLibs.size() << " " << itr->path()
+                        << " " << DSO_SUFFIX << std::endl
+                        << vprDEBUG_FLUSH;
+                    if( tempLibs.size() > 0 )
+                    {
+                        libDir = itr->path().string();
+                        customPlugins = true;
+                        break;
+                    }
+                }
+            }
         }
     }
     catch( const std::exception& ex )
