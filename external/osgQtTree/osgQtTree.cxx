@@ -99,10 +99,14 @@ findItemIndex( TreeModel* tree, const osg::NodePath& nodepath )
         while( row < tree->rowCount(modelIndex) )
         {
             childIndex = modelIndex.child( row, 0 );
-            osgTreeItem* child = static_cast<osgTreeItem*>(childIndex.internalPointer());
-            if( child->GetNode() == node )
+            void* tempPointer = childIndex.internalPointer();
+            if( tempPointer )
             {
-                break;
+                osgTreeItem* child = static_cast<osgTreeItem*>(tempPointer);
+                if( child->GetNode() == node )
+                {
+                    break;
+                }
             }
             ++row;
         }
