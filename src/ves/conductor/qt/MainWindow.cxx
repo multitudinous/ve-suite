@@ -474,7 +474,9 @@ void MainWindow::on_actionOpen_triggered()
     // Don't allow multiple file dialogs to be opened.
     if( mFileDialog )
     {
-        return;
+        mFileDialog->close();
+        mFileDialog = 0;
+        //return;
     }
     
     mFileDialog = new QFileDialog( 0 );
@@ -597,10 +599,7 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
     // Now deal with loading the selected files
     for( int index = 0; index < fileNames.size(); index++ )
     {
-//        if(!m_loading)
-//        {
-//            m_loading = new QLabel;
-//        }
+        /*
         QLabel* m_loading = new QLabel();
         //m_loadNotifiers.push_back( m_loading );
         QString text("Loading ");
@@ -609,20 +608,23 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         m_loading->setWordWrap( true );
         m_loading->setMaximumSize( this->width() - 20, m_loading->maximumHeight() );
         ActivateTab( AddTab( m_loading, "Loading..." ) );
+        */
 
         QString fileName = fileNames.at(index);
         QDir dir = QDir::current();
         fileName = dir.relativeFilePath( fileName );
         boost::filesystem::path file( fileName.toStdString() );
 
-        m_loadNotifiers[ file.filename().string() ] = m_loading;
+        /*m_loadNotifiers[ file.filename().string() ] = m_loading;
 
         // Insert spaces on either side of slashes to allow better wordwrapping
         // in the notifier
+
         fileName.replace(QString("/"), QString(" / "));
         fileName.replace(QString("\\"), QString(" \\ "));
         text = text + fileName + " ...";
         m_loading->setText( text );
+        */
 
         std::string extension( boost::filesystem::extension( file ) );
 
@@ -901,7 +903,8 @@ void MainWindow::on_actionSave_triggered()
     // Don't allow multiple file dialogs to be opened.
     if( mFileDialog )
     {
-        return;
+        mFileDialog->close();
+        mFileDialog = 0;
     }
 
     mFileDialog = new QFileDialog( 0 );
