@@ -67,6 +67,9 @@ public:
     /// Factory ctor
     virtual PropertySetPtr CreateNew();
 
+    ///Setup the live properties
+    virtual void EnableLiveProperties( bool live );
+    
 protected:
     ///Slot connected to the value change of  display seed points
     ///\param property The bool value for the seed point display flag

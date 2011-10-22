@@ -122,7 +122,6 @@ ModelHandler::ModelHandler()
     activeCommand( ves::open::xml::CommandPtr() ),
     _activeModel( 0 ),
     _activeTDSet( 0 ),
-    tbased( false ),
     arrow( 0 ),
     m_rescaleCADEntityTextures( false ),
     m_CADSlotInitializer( new ves::xplorer::event::cad::CADSlotInitializer )
@@ -480,10 +479,6 @@ void ModelHandler::InitScene()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////
-// PreFrameUpdate - Be sure to set the commandArray before calling this
-// function.
-/////////////////////////////////
 void ModelHandler::PreFrameUpdate()
 {
     activeCommand = 
@@ -502,11 +497,6 @@ void ModelHandler::PreFrameUpdate()
             currentEventHandler->second->Execute( activeCommand );
         }
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-bool ModelHandler::GetVisOption()
-{
-    return tbased;
 }
 ////////////////////////////////////////////////////////////////////////////////
 vtkPolyData* ModelHandler::GetArrow()

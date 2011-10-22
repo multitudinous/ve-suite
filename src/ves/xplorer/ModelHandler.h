@@ -158,8 +158,6 @@ private:
     Model* _activeModel;
     ///Active texture based dataset
     ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;
-    ///Is this texture based
-    bool tbased;
     ///The pd arrow for datasets
     vtkPolyData* arrow;
     ///The list of models being maintained

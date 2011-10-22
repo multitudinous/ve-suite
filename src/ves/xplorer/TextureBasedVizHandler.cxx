@@ -570,7 +570,6 @@ void TextureBasedVizHandler::UpdateGraph()
                     ModelHandler::instance()->GetActiveModel()->
                     GetActiveDataSet()->GetSwitchNode()->GetChild( 1 ) ) );
     SetActiveTextureDataSet( ModelHandler::instance()->GetActiveTextureDataSet() );
-    ViewTextureBasedVis( ModelHandler::instance()->GetVisOption() );
 
     //place vv node on the graph
     if( !_activeVolumeVizNode )

@@ -70,7 +70,7 @@ void VolumeVisFeatureMaker::Update( const::std::string& recordUUID )
     //Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VolumeVisFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )
+void VolumeVisFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& )
 {
     ;
 }
@@ -99,7 +99,7 @@ void VolumeVisFeatureMaker::AddPlane( xplorer::data::PropertySetPtr& set )
     UpdateScalarRange( minimumValue, maximumValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VolumeVisFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
+void VolumeVisFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& )
 {
     ;
 }
