@@ -64,7 +64,7 @@ public:
 
     /// Toggles whether this set's live properties are actually enabled as
     /// live properties.
-    void EnableLiveProperties( bool live );
+    virtual void EnableLiveProperties( bool live );
 
     /// Factory ctor
     virtual PropertySetPtr CreateNew();

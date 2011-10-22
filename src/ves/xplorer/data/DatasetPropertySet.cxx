@@ -44,8 +44,7 @@
 using namespace ves::xplorer::data;
 
 ////////////////////////////////////////////////////////////////////////////////
-DatasetPropertySet::DatasetPropertySet():
-        m_isLive( false )
+DatasetPropertySet::DatasetPropertySet()
 {
     mTableName = "Dataset";
 

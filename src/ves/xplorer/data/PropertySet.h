@@ -280,23 +280,25 @@ protected:
     PSVectorOfStrings mPropertyList; /// Maintains a list of available properties
     // sorted by order of addition
 
+    ///The table used by the respective property set
     std::string mTableName;
     Poco::UInt32 mID;
 
+    ///The uuid for the respective property set
     boost::uuids::uuid mUUID;
+    ///The uuid as a std::string
     std::string mUUIDString;
-
+    ///The list of live objects for this property set
     std::vector< MakeLiveBasePtr > mLiveObjects;
-
+    ///Determine whether the live properties should be live
+    bool m_isLive;
 private:
     // Empty string to use when need to return an empty string by reference
     std::string emptyString;
     // Empty PSVectorOfStrings to use when need to return an empty PSVOS by reference
     PSVectorOfStrings emptyPSVectorOfStrings;
     PSVectorOfStrings mAccumulatedChangesReturnable;
-    //std::string _toString( int value );
-    //std::string _toString( size_t value );
-    //std::string _toString( long unsigned int value );
+
 };
 
 } // namespace data

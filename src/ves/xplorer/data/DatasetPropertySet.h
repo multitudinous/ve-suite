@@ -59,7 +59,7 @@ public:
     ///Destructor
     virtual ~DatasetPropertySet();
 
-    void EnableLiveProperties( bool live );
+    virtual void EnableLiveProperties( bool live );
 
 protected:
     void LoadVTIScalars( PropertyPtr property );
@@ -68,7 +68,6 @@ protected:
 private:
     ///Create skeleton
     void CreateSkeleton();
-    bool m_isLive;
 };
 
 } // namespace data

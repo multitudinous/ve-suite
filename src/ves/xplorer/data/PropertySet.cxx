@@ -59,15 +59,14 @@ namespace data
 {
 
 PropertySet::PropertySet():
-    mUUID( boost::uuids::random_generator()() )
+    mID( 0 ),
+    mUUID( boost::uuids::random_generator()() ),
+    m_isLive( false )
 {
     mPropertyMap.clear();
     mAccumulatedChanges.clear();
-    mID = 0;
 
-    std::stringstream ss;
-    ss << mUUID;
-    mUUIDString = ss.str();
+    mUUIDString = boost::lexical_cast< std::string >( mUUID );
 
     // Set NameTag to the first 4-characters of the uuid
     AddProperty("NameTag", mUUIDString.substr( 0, 4 ), "Name Tag");
@@ -1368,6 +1367,7 @@ void PropertySet::EnableLiveProperties( bool live )
 {
     // Do nothing. Derived classes should override this method if they want
     // delayed live properties.
+    m_isLive = live;
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
