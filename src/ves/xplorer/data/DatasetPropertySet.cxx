@@ -44,7 +44,8 @@
 using namespace ves::xplorer::data;
 
 ////////////////////////////////////////////////////////////////////////////////
-DatasetPropertySet::DatasetPropertySet()
+DatasetPropertySet::DatasetPropertySet():
+        m_isLive( false )
 {
     mTableName = "Dataset";
 
@@ -163,12 +164,14 @@ void DatasetPropertySet::CreateSkeleton()
     SetPropertyAttribute( "TBETScalarChooser", "isFilePath", true );
     mPropertyMap["TBETScalarChooser"]->SignalValueChanged.connect( boost::bind( &DatasetPropertySet::LoadVTIScalars, this, _1 ) );
     
-    AddProperty( "TBETScalarNames", stringVector, "Scalar Names" );
+    AddProperty( "TBETScalarNames", stringVector, "TBET Scalar Names" );
     SetPropertyAttribute( "TBETScalarNames", "userVisible", false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DatasetPropertySet::EnableLiveProperties( bool live )
 {
+    m_isLive = live;
+
     if( !live )
     {
         // Clearing list will allow live objs to go out of scope and autodelete
@@ -231,6 +234,11 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
 ////////////////////////////////////////////////////////////////////////////////
 void DatasetPropertySet::LoadVTIScalars( PropertyPtr property )
 {
+    if( !m_isLive )
+    {
+        return;
+    }
+
     std::string const filename = 
         boost::any_cast<std::string>( GetPropertyValue( "TBETScalarChooser" ) );
 
@@ -256,7 +264,7 @@ void DatasetPropertySet::LoadVTIScalars( PropertyPtr property )
     enumValues.push_back( scalarName );
     SetPropertyValue( "TBETScalarNames", enumValues );
 
-    std::cout << directory << " " << filename << " " << scalarName << std::endl;
+    std::cout << "DatasetPropertySet::LoadVTIScalars: "  << directory << " " << filename << " " << scalarName << std::endl;
     
     ves::util::TwoStringSignal_type* addTexture =
     reinterpret_cast< eventmanager::SignalWrapper< ves::util::TwoStringSignal_type >* >

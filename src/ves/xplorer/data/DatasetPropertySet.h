@@ -68,6 +68,7 @@ protected:
 private:
     ///Create skeleton
     void CreateSkeleton();
+    bool m_isLive;
 };
 
 } // namespace data
