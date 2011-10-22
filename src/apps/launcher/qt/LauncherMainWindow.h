@@ -1,7 +1,7 @@
 #ifndef LAUNCHERMAINWINDOW_H
 #define LAUNCHERMAINWINDOW_H
 
-#include <QMainWindow>
+#include <QtGui/QMainWindow>
 #include <QtGui/QTextEdit>
 #include <QtCore/QProcess>
 
