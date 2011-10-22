@@ -103,7 +103,7 @@ protected:
     bool _preIntegrate;///<Flag determining how to update Pre-Integration table
     ///Update the transfer function.
     ///\param fastUpdate If preintegration is used, do a fast update to remain interactive.
-    virtual void _updateTransferFunction( bool fastUpdate = true );
+    virtual void _updateTransferFunction( bool fastUpdate = false );
     float _scalarRange[2];///<Scalar range
     float _percentScalarRange;///<Percentage of scalar range
     float _stepSize[3];///<Step size

@@ -215,10 +215,28 @@ void VolumeVisPropertySet::CreateSkeleton()
     //Setup iso surface activation
     {
         AddProperty( "Isosurface", false, "Enable iso-surfaces" );
+        AddProperty( "Isosurface_ColorByScalar", 0, "Color By Scalar" );
+        enumValues.clear();
+        enumValues.push_back( "Select Scalar Data" );
+        SetPropertyAttribute( "Isosurface_ColorByScalar", "enumValues", enumValues );
+        
+        AddProperty( "Isosurface_ColorByScalar_ScalarRange", boost::any(), "Scalar Range" );
+        SetPropertyAttribute( "Isosurface_ColorByScalar_ScalarRange", "isUIGroupOnly", true );
+        SetPropertyAttribute( "Isosurface_ColorByScalar_ScalarRange", "setExpanded", true );
+        
+        AddProperty( "Isosurface_ColorByScalar_ScalarRange_Min", 0.0, "Min" );
+        //mPropertyMap["Isosurface_ColorByScalar_ScalarRange_Min"]->SetDisabled();
+        
+        AddProperty( "Isosurface_ColorByScalar_ScalarRange_Max", 1.0, "Max" );
+        //mPropertyMap["Isosurface_ColorByScalar_ScalarRange_Max"]->SetDisabled();
+        
+        mPropertyMap["Isosurface_ColorByScalar"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
+        mPropertyMap["Isosurface_ColorByScalar_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+        mPropertyMap["Isosurface_ColorByScalar_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
     }
     ///Setup iso surface value
     {
-        AddProperty( "Isosurface_IsosurfaceValue", 0.5, "Iso-surfaces value" );
+        AddProperty( "Isosurface_IsosurfaceValue", 0.0, "Iso-surfaces value" );
         SetPropertyAttribute( "Isosurface_IsosurfaceValue", "minimumValue", 0.0f );
         SetPropertyAttribute( "Isosurface_IsosurfaceValue", "maximumValue", 1.0f );
     }
