@@ -337,8 +337,10 @@ private:
     Poco::Util::Timer m_wandMoveTimer;
     ///Trigger wand move
     bool m_triggerWandMove;
-    ///
+    ///We are shuting down
     bool m_shutdown;
+    ///Store the previous wand matrix to see if it is moving at all
+    gmtl::Matrix44d m_previousWandMat;
 };
 } //end device
 } //end xplorer

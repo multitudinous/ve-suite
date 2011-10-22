@@ -1906,6 +1906,13 @@ void Wand::OnWandMoveTimer( Poco::Util::TimerTask& task )
         return;
     }
 
-    m_triggerWandMove = true;
+    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
+    ///If our wand is not moving let the keyboard potentially interface with 
+    ///the ui. We may need a better way to handle this.
+    if( m_previousWandMat != vrjWandMat )
+    {
+        m_triggerWandMove = true;
+        m_previousWandMat = vrjWandMat;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

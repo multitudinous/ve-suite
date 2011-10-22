@@ -356,12 +356,12 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             m_startEndPointSignal( m_startPoint, m_endPoint );
         }
         
-        /*vprDEBUG( vesDBG, 2 )
-            << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseMoveEvent"
-            << mouseEvt->getButton() << " " << mouseEvt->getX() << ", " << mouseEvt->getY()
-            << ", 0, " << mouseEvt->getState()
-            << std::endl << vprDEBUG_FLUSH;
-        // x, y, z, state (modifier mask OR'd with button mask)*/
+        //vprDEBUG( vesDBG, 2 )
+        //    << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseMoveEvent"
+        //    << mouseEvt->getButton() << " " << mouseEvt->getX() << ", " << mouseEvt->getY()
+        //    << ", 0, " << mouseEvt->getState()
+        //    << std::endl << vprDEBUG_FLUSH;
+        // x, y, z, state (modifier mask OR'd with button mask)
         m_mouseMove( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
 
         break;
