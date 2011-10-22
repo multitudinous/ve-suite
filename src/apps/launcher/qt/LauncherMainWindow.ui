@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LauncherMainWindow</class>
+ <widget class="QMainWindow" name="LauncherMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>558</width>
+    <height>334</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Launch VE-Suite</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>Working Directory</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLineEdit" name="m_workingDir"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_workingDirButton">
+           <property name="text">
+            <string>Choose...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string>Configuration</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLineEdit" name="m_configuration"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_configurationButton">
+           <property name="text">
+            <string>Choose...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QCheckBox" name="m_desktopMode">
+        <property name="text">
+         <string>Desktop Mode</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="m_width">
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="m_height">
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="m_RTT">
+      <property name="text">
+       <string>RTT</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Logging level:</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_logLevel</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="m_logLevel">
+        <item>
+         <property name="text">
+          <string>fatal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>critical</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>error</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>warning</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>notice</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>information</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>debug</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>trace</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="m_showStdout">
+      <property name="text">
+       <string>Show standard output</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="launch">
+      <property name="text">
+       <string>Launch VE-Suite</string>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>558</width>
+     <height>19</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>launch</tabstop>
+  <tabstop>m_workingDir</tabstop>
+  <tabstop>m_workingDirButton</tabstop>
+  <tabstop>m_configuration</tabstop>
+  <tabstop>m_configurationButton</tabstop>
+  <tabstop>m_desktopMode</tabstop>
+  <tabstop>m_width</tabstop>
+  <tabstop>m_height</tabstop>
+  <tabstop>m_RTT</tabstop>
+  <tabstop>m_logLevel</tabstop>
+  <tabstop>m_showStdout</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>m_desktopMode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_width</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>124</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>123</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_desktopMode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_height</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>30</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>313</x>
+     <y>130</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

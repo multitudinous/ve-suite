@@ -1,0 +1,45 @@
+##Builds Qt launcher
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('buildDir GetPlatform RootDir ves_pkg')
+
+lib_env2 = ves_pkg.getEnv().Clone()
+
+# files to be uic'ed
+source = [pj('#',buildDir,'src','apps','launcher','qt','LauncherMainWindow.ui')]
+cppHeaders = lib_env2.qt_uic(source)
+
+# files to be moc'ed
+source = [pj('#',buildDir,'src','apps','launcher','qt','LauncherMainWindow.h')]
+cppSources = lib_env2.qt_moc(source)
+
+openDir = os.path.abspath( pj(RootDir,buildDir,'src','apps','launcher','qt') )
+cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)
+
+cppHeaders1 = map(lambda s: pj(openDir, '%s' ) %(s), cppHeaders)
+
+headers2 = cppHeaders1
+headers2 += sca_util.getHeadersRecursive( pj(RootDir,'src','apps','launcher','qt') )
+sources2 = sca_util.getSourcesRecursive( pj(RootDir,'src','apps','launcher','qt') )
+sources2+=cppSources1
+
+if GetPlatform() != 'darwin':
+    Import('qt_options')
+    qt_options.apply(lib_env2)
+else:
+    import qt46
+    qt46.applyQtBuildFlags( lib_env2 )
+    lib_env2.Append( LINKFLAGS = ['-framework','AppKit'])
+
+if GetPlatform() == 'linux':
+    lib_env2.AppendUnique( CXXFLAGS=['-fPIC'])
+
+lib_env2.AppendUnique( CPPPATH = [pj(openDir)] )
+
+qtprog = ves_pkg.createProgram('velauncherqt' + lib_env2["PROGSUFFIX"], lib_env2, 'bin')
+qtprog.addSources(sources2)
+#qtprog.addHeaders(headers2, pj('test'))
+qtprog.build()
+
