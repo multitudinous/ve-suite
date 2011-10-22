@@ -1205,7 +1205,7 @@ bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
 {
-    if( ! _okayToSendEvent() )
+    if( !_okayToSendEvent() )
     {
         return false;
     }
@@ -1223,6 +1223,12 @@ bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
         return false;
     }
 
+    ///If we do not have a selected element
+    if( !m_selectedUIElement )
+    {
+        return false;
+    }
+    
     bool visible = m_selectedUIElement->IsVisible();
     bool minimized = m_selectedUIElement->IsMinimized();
 
@@ -1256,6 +1262,12 @@ bool UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
         return false;
     }
 
+    ///If we do not have a selected element
+    if( !m_selectedUIElement )
+    {
+        return false;
+    }
+    
     bool visible = m_selectedUIElement->IsVisible();
     bool minimized = m_selectedUIElement->IsMinimized();
 
