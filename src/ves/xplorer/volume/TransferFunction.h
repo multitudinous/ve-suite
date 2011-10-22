@@ -45,9 +45,7 @@ namespace volume
 {
 /*!\file TransferFunction.h
  * Transfer function API
- */
-
-/*!\class ves::xplorer::volume::TransferFunction
+ * \class ves::xplorer::volume::TransferFunction
  * Abstract class defining a transfer function.
  */
 class VE_TEXTURE_BASED_EXPORTS TransferFunction

@@ -47,9 +47,7 @@ namespace volume
 {
 /*!\file RedYellowGreenCyanBlueTransferFunction.h
  * Red-to-Blue transfer function API
- */
-
-/*!\class ves::xplorer::volume::RYGCBLinearTF
+ * \class ves::xplorer::volume::RYGCBLinearTF
  * Class defining defining Red-to-Blue transfer function.
  */
 class VE_TEXTURE_BASED_EXPORTS RYGCBLinearTF : public TransferFunction

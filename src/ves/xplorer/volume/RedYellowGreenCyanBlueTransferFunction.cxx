@@ -192,7 +192,6 @@ void RYGCBLinearTF::_update()
                             _classification[i*4 +2] = 0.;
                             _classification[i*4 +3] = alpha * 255.f;//*.5f;
                         }
-
                     }
                     else
                     {
