@@ -123,14 +123,17 @@ osg::Group* CharacterAnimation::Register( std::string const& fileName )
 
     //for( size_t i = 0; i < fileName.size(); ++i )
     {
-        osg::Group* node = dynamic_cast<osg::Group*>( osgDB::readNodeFile( fileName ) );
+        osgDB::ReaderWriter::Options* opt = new osgDB::ReaderWriter::Options;
+        opt->setObjectCacheHint( osgDB::ReaderWriter::Options::CACHE_IMAGES );
+
+        osg::Group* node = dynamic_cast< osg::Group *>( osgDB::readNodeFile( fileName, opt ) );
         //dynamic_cast<osgAnimation::AnimationManager*>(osgDB::readNodeFile(psr[1]));
-        root->addChild( node );
         if( !node )
         {
             std::cout << "No data loaded" << std::endl;
             return 0;
         }
+        root->addChild( node );
     }
 
     // Set our Singleton's model.
