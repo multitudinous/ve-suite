@@ -601,16 +601,25 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
         
         m_runSampleThread = true;
         // Create a datagram socket that will be bound to port.
-        //std::vector< vpr::InetAddr > tempAddrVec;
-        //tempAddrVec = vpr::InetAddr::getAllLocalAddrs( false );
-        
+        std::vector< vpr::InetAddr > tempAddrVec;
+        tempAddrVec = vpr::InetAddr::getAllLocalAddrs( false, false );
+        std::string computerLocalName;
+
+        for( size_t i = 0; i < tempAddrVec.size(); ++i )
+        {
+            computerLocalName = tempAddrVec.at( i ).getHostname();
+            if( !boost::algorithm::ifind_first( computerName, "-10gbe" ) )
+            {
+                break;
+            }
+        }
         vpr::InetAddr local;
         local.setPort(port);
-        //local.setPort(port);
+        local.setAddress( computerLocalName, port );
         
         // Create a datagram socket that will be bound to port.
-        vpr::InetAddr local;
-        local.setPort(port);
+        //vpr::InetAddr local;
+        //local.setPort(port);
         
         vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
         
@@ -627,7 +636,7 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
         //vpr::SocketOptions::Types option = vpr::SocketOptions::AddMember;
         //vpr::SocketOptions::Data data;
         //data.mcast_add_member = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
-        vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
+        vpr::McastReq data = vpr::McastReq( remote_addr, local );//vpr::InetAddr::AnyAddr);
         sock.addMcastMember( data );
         
         const vpr::Uint32 bufferSize = 1200;
