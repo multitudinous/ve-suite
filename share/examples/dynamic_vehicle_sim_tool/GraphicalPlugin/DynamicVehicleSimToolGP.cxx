@@ -600,7 +600,14 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
         }
         
         m_runSampleThread = true;
-
+        // Create a datagram socket that will be bound to port.
+        //std::vector< vpr::InetAddr > tempAddrVec;
+        //tempAddrVec = vpr::InetAddr::getAllLocalAddrs( false );
+        
+        vpr::InetAddr local;
+        local.setPort(port);
+        //local.setPort(port);
+        
         // Create a datagram socket that will be bound to port.
         vpr::InetAddr local;
         local.setPort(port);
