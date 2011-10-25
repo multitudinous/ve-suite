@@ -103,7 +103,7 @@ protected Q_SLOTS:
     void on_m_removePluginButton_clicked();
 
     /// Handles doubleclicks and pressing "enter" on instantiated plugins list
-    void on_m_instantiatedPlugins_itemActivated( QListWidgetItem* item );
+    void on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item );
 
     /// Handles doubleclicks and pressing "enter" on available plugins list
     void on_m_availablePlugins_itemActivated( QListWidgetItem* item );

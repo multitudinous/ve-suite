@@ -258,6 +258,7 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
 ////////////////////////////////////////////////////////////////////////////////
 PluginSelectionTab::~PluginSelectionTab()
 {
+    ClearActivePlugins();
     delete ui;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -338,7 +339,7 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::on_m_instantiatedPlugins_itemActivated( QListWidgetItem* item )
+void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item )
 {
     // Check whether we've already composed a widget and tab for this item to
     // prevent showing multiple tabs
@@ -599,18 +600,24 @@ void PluginSelectionTab::qFileLoadedSlot( const std::string& fileName )
 ////////////////////////////////////////////////////////////////////////////////
 bool PluginSelectionTab::eventFilter(QObject *obj, QEvent *event)
 {
-    // If delete key was pressed inside instantiatedPlugins list, we
-    // remove that plugin.
     if ( event->type() == QEvent::KeyPress )
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+
+        // If delete key was pressed inside instantiatedPlugins list, we
+        // remove that plugin.
         if( keyEvent->key() == Qt::Key_Delete )
         {
             on_m_removePluginButton_clicked();
             return true;
         }
+        // If enter/return key was pressed, bring up ui for that plugin
+        else if( keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return )
+        {
+            on_m_instantiatedPlugins_itemDoubleClicked( ui->m_instantiatedPlugins->currentItem() );
+            return true;
+        }
     }
-
 
     return QObject::eventFilter( obj, event );
 }
