@@ -78,6 +78,8 @@ public:
 
 protected:
     void changeEvent(QEvent *e);
+    /// EventFilter that we use to intercept keypresses on list widgets
+    bool eventFilter(QObject *obj, QEvent *event);
 
 private:
     Ui::PluginSelectionTab *ui;

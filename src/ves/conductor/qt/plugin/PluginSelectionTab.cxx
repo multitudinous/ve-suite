@@ -67,6 +67,7 @@
 #include <QtCore/QStringList>
 #include <QtGui/QIcon>
 #include <QtGui/QLabel>
+#include <QtGui/QKeyEvent>
 
 Q_DECLARE_METATYPE(std::string)
 Q_DECLARE_METATYPE(ves::xplorer::plugin::PluginBase)
@@ -82,6 +83,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent 
     m_mainWindow( mainWindow )
 {
     ui->setupUi(this);
+    ui->m_instantiatedPlugins->installEventFilter( this );
 
     ReDiscoverPlugins("");
     
@@ -593,6 +595,24 @@ void PluginSelectionTab::qFileLoadedSlot( const std::string& fileName )
 {
     boost::ignore_unused_variable_warning( fileName );
     ClearActivePlugins();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool PluginSelectionTab::eventFilter(QObject *obj, QEvent *event)
+{
+    // If delete key was pressed inside instantiatedPlugins list, we
+    // remove that plugin.
+    if ( event->type() == QEvent::KeyPress )
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if( keyEvent->key() == Qt::Key_Delete )
+        {
+            on_m_removePluginButton_clicked();
+            return true;
+        }
+    }
+
+
+    return QObject::eventFilter( obj, event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
