@@ -336,6 +336,11 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::on_m_instantiatedPlugins_itemActivated( QListWidgetItem* item )
+{
+    on_m_instantiatedPlugins_itemDoubleClicked( item );
+}
+////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item )
 {
     // Check whether we've already composed a widget and tab for this item to
@@ -389,6 +394,11 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
         // time
         m_itemWidgetMap[item] = tempWidget;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::on_m_availablePlugins_itemActivated( QListWidgetItem* item )
+{
+    on_m_availablePlugins_itemDoubleClicked( item );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_availablePlugins_itemDoubleClicked( QListWidgetItem* item )

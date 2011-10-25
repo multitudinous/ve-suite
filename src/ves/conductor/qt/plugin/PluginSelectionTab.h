@@ -95,15 +95,26 @@ private:
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 
 protected Q_SLOTS:
-    // Auto-connected slot
+    /// Handles clicks on Add Plugin button
     void on_m_addPluginButton_clicked();
+    /// Handles clicks on Remove Plugin button
     void on_m_removePluginButton_clicked();
+
+    /// Handles double clicks on instantiated plugins list
     void on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item );
+    /// Handles pressing "enter" on instantiated plugins list
+    void on_m_instantiatedPlugins_itemActivated( QListWidgetItem* item );
+
+    /// Handles double clicks on available plugins list
     void on_m_availablePlugins_itemDoubleClicked( QListWidgetItem* item );
-    ///Called when data of item changes
+    /// Handles pressing "enter" on available plugins list
+    void on_m_availablePlugins_itemActivated( QListWidgetItem* item );
+
+    /// Called when data of item changes
     void on_m_instantiatedPlugins_itemChanged ( QListWidgetItem * item );
-    ///Called when current item selection is changed via keyboard or mouse
+    /// Called when current item selection is changed via keyboard or mouse
     void on_m_instantiatedPlugins_currentItemChanged ( QListWidgetItem * current, QListWidgetItem * previous );
+
     void qCreateUIPlugin( const std::string& pluginFactoryName,
                           ves::xplorer::plugin::PluginBase* xplorerPlugin );
     void qFileLoadedSlot( const std::string& fileName );
