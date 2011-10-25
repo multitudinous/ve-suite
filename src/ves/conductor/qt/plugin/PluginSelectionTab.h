@@ -100,14 +100,10 @@ protected Q_SLOTS:
     /// Handles clicks on Remove Plugin button
     void on_m_removePluginButton_clicked();
 
-    /// Handles double clicks on instantiated plugins list
-    void on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item );
-    /// Handles pressing "enter" on instantiated plugins list
+    /// Handles doubleclicks and pressing "enter" on instantiated plugins list
     void on_m_instantiatedPlugins_itemActivated( QListWidgetItem* item );
 
-    /// Handles double clicks on available plugins list
-    void on_m_availablePlugins_itemDoubleClicked( QListWidgetItem* item );
-    /// Handles pressing "enter" on available plugins list
+    /// Handles doubleclicks and pressing "enter" on available plugins list
     void on_m_availablePlugins_itemActivated( QListWidgetItem* item );
 
     /// Called when data of item changes

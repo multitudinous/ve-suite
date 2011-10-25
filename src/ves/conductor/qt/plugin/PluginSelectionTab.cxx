@@ -338,11 +338,6 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_instantiatedPlugins_itemActivated( QListWidgetItem* item )
 {
-    on_m_instantiatedPlugins_itemDoubleClicked( item );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item )
-{
     // Check whether we've already composed a widget and tab for this item to
     // prevent showing multiple tabs
     std::map< QListWidgetItem*, QWidget* >::iterator witer =
@@ -397,11 +392,6 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_availablePlugins_itemActivated( QListWidgetItem* item )
-{
-    on_m_availablePlugins_itemDoubleClicked( item );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::on_m_availablePlugins_itemDoubleClicked( QListWidgetItem* item )
 {
     InstantiatePlugin( item );
 }
