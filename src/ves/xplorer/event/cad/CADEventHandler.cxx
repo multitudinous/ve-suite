@@ -474,11 +474,11 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
         newSet.SetPropertyValue( "Transform_Translation_Z",
                                  nodeTranslation->GetElement( 2 ) );
         newSet.SetPropertyValue( "Transform_Rotation_X",
-                                 nodeRotation->GetElement( 0 ) );
-        newSet.SetPropertyValue( "Transform_Rotation_Y",
                                  nodeRotation->GetElement( 1 ) );
-        newSet.SetPropertyValue( "Transform_Rotation_Z",
+        newSet.SetPropertyValue( "Transform_Rotation_Y",
                                  nodeRotation->GetElement( 2 ) );
+        newSet.SetPropertyValue( "Transform_Rotation_Z",
+                                 nodeRotation->GetElement( 0 ) );
         newSet.SetPropertyValue( "Transform_Scale_X",
                                  nodeScale->GetElement( 0 ) );
         newSet.SetPropertyValue( "Transform_Scale_Y",

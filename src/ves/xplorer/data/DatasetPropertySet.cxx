@@ -216,9 +216,9 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
         transformLink.push_back( GetProperty( "Transform_Translation_X" ) );
         transformLink.push_back( GetProperty( "Transform_Translation_Y" ) );
         transformLink.push_back( GetProperty( "Transform_Translation_Z" ) );
+        transformLink.push_back( GetProperty( "Transform_Rotation_Z" ) );
         transformLink.push_back( GetProperty( "Transform_Rotation_X" ) );
         transformLink.push_back( GetProperty( "Transform_Rotation_Y" ) );
-        transformLink.push_back( GetProperty( "Transform_Rotation_Z" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_X" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Y" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Z" ) );

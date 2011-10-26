@@ -379,9 +379,9 @@ void TreeTab::SyncTransformFromDCS( ves::xplorer::scenegraph::DCS* dcs )
         mActiveSet->SetPropertyValue( "Transform_Translation_Z", trans[2] );
 
         double* rot = dcs->GetRotationArray();
-        mActiveSet->SetPropertyValue( "Transform_Rotation_X", rot[0] );
-        mActiveSet->SetPropertyValue( "Transform_Rotation_Y", rot[1] );
-        mActiveSet->SetPropertyValue( "Transform_Rotation_Z", rot[2] );
+        mActiveSet->SetPropertyValue( "Transform_Rotation_X", rot[1] );
+        mActiveSet->SetPropertyValue( "Transform_Rotation_Y", rot[2] );
+        mActiveSet->SetPropertyValue( "Transform_Rotation_Z", rot[0] );
 
         double* scale = dcs->GetScaleArray();
         mActiveSet->SetPropertyValue( "Transform_Scale_X", scale[0] );
