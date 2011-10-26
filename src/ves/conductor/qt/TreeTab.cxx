@@ -378,6 +378,7 @@ void TreeTab::SyncTransformFromDCS( ves::xplorer::scenegraph::DCS* dcs )
         mActiveSet->SetPropertyValue( "Transform_Translation_Y", trans[1] );
         mActiveSet->SetPropertyValue( "Transform_Translation_Z", trans[2] );
 
+        // Rotation angles are in order z, x, y
         double* rot = dcs->GetRotationArray();
         mActiveSet->SetPropertyValue( "Transform_Rotation_X", rot[1] );
         mActiveSet->SetPropertyValue( "Transform_Rotation_Y", rot[2] );

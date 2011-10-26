@@ -89,7 +89,7 @@ static ves::xplorer::ModelCADHandler* GetModelCADHandler()
   * @param nodeID The UUID of the CAD node to transform
   * @param transform Reference to the transform to apply. The transform should
   *                  contain x, y, z translation at the first three indices,
-  *                  x, y, z rotation at the next three indices, and
+  *                  z, x, y rotation at the next three indices, and
   *                  x, y, z scale at the last three indices.
   **/
 static void TransformCADNode( const std::string& nodeID,
