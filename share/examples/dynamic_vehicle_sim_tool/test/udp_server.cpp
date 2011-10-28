@@ -61,31 +61,58 @@ int main (int argc, char* argv[])
 
    try
    {
-        // Create a datagram socket that will be bound to port.
+        /*std::vector< vpr::InetAddr > tempAddrVec;
+        tempAddrVec = vpr::InetAddr::getAllLocalAddrs( false, false );
+        std::string computerLocalName;
+        size_t correctAddress = 0;
+        for( size_t i = 0; i < tempAddrVec.size(); ++i )
+        {
+            computerLocalName = tempAddrVec.at( i ).getHostname();
+            if( !boost::algorithm::ifind_first( computerLocalName, "-10gbe" ) )
+            {
+                correctAddress = i;
+std::cout << computerLocalName << std::endl;
+                break;
+            }
+        }*/
         vpr::InetAddr local;
         local.setPort(port);
+        //local.setAddress( computerLocalName, port );
+        // local.setAddress( computerLocalName, 1000 );
 
-        vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
+        // Create a datagram socket that will be bound to port.
+        //vpr::InetAddr local;
+        //local.setPort(port);
+        vpr::InetAddr remote_addr;
+        remote_addr.setAddress("225.0.0.37", port);
+        //remote_addr.setFamily(vpr::SocketTypes::INET);
+ 
+        vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
 
+        vpr::SocketDatagram sock( local, vpr::InetAddr::AnyAddr );
+std::cout << " here 1 " << std::endl;
         // Bind the socket to the port.
         sock.open();
+std::cout << " here 1 " << std::endl;
+        //sock.setMcastInterface(local);
         sock.bind();
+std::cout << " here 1 " << std::endl;
 
         //Now lets connet to the multicast group
         // Create a socket that is sending to a remote host named in the first
         // argument listening on the port named in the second argument.
-        vpr::InetAddr remote_addr;
-        remote_addr.setAddress("225.0.0.37", port);
-        //vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
+       //vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
         //vpr::SocketOptions::Types option = vpr::SocketOptions::AddMember;
         //vpr::SocketOptions::Data data;
         //data.mcast_add_member = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
-        vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
+std::cout << " here 1 " << std::endl;
         sock.addMcastMember( data );
+std::cout << " here 1 " << std::endl;
         typedef std::vector< std::string > split_vector_type;
 
         char recv_buf[2048];
         memset(recv_buf, '\0', sizeof(recv_buf));
+std::cout << " here 1 " << std::endl;
 
         std::ofstream outputFile( "test_data_out.txt" );
         // Loop forever reading messages from clients.
@@ -101,8 +128,10 @@ int main (int argc, char* argv[])
             vpr::Uint32 bytes = 10;
             //while( bytes > 0 )
             {
+std::cout << " here 2 " << std::endl;
               bytes = sock.recvfrom(recv_buf, sizeof(recv_buf),
-                                addr);
+                                addr, vpr::Interval(5, vpr::Interval::Sec));
+std::cout << " here 2 " << std::endl;
             }
 
             std::string tempbuff;

@@ -601,25 +601,26 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
         
         m_runSampleThread = true;
         // Create a datagram socket that will be bound to port.
-        std::vector< vpr::InetAddr > tempAddrVec;
+        /*std::vector< vpr::InetAddr > tempAddrVec;
         tempAddrVec = vpr::InetAddr::getAllLocalAddrs( false, false );
         std::string computerLocalName;
 
         for( size_t i = 0; i < tempAddrVec.size(); ++i )
         {
             computerLocalName = tempAddrVec.at( i ).getHostname();
-            if( !boost::algorithm::ifind_first( computerName, "-10gbe" ) )
+std::cout << computerLocalName << std::endl;
+            if( !boost::algorithm::ifind_first( computerLocalName, "-10gbe" ) )
             {
                 break;
             }
         }
         vpr::InetAddr local;
         local.setPort(port);
-        local.setAddress( computerLocalName, port );
+        local.setAddress( computerLocalName, port );*/
         
         // Create a datagram socket that will be bound to port.
-        //vpr::InetAddr local;
-        //local.setPort(port);
+        vpr::InetAddr local;
+        local.setPort(port);
         
         vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
         
@@ -636,7 +637,7 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
         //vpr::SocketOptions::Types option = vpr::SocketOptions::AddMember;
         //vpr::SocketOptions::Data data;
         //data.mcast_add_member = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
-        vpr::McastReq data = vpr::McastReq( remote_addr, local );//vpr::InetAddr::AnyAddr);
+        vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
         sock.addMcastMember( data );
         
         const vpr::Uint32 bufferSize = 1200;
@@ -817,19 +818,19 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
                              0.,        0.,        0.,           1. );
     
         //This is a hack to record the body position
-        /*if( i == 0 )
+        if( i == 0 )
         {
             hackTransMat = transMat;
-        }*/
+        }
 
         //We can grab the ith matrix because the indices of the position stack
         //correspond to the position of the data coming back from the simulator
-        /*if( i > 1 )
+        if( i > 1 )
         {
             //This is a hack to make the wheels spin relative to the machine
             transMat = m_initialPositionStack.at( i ) * hackTransMat * transMat;            
         }
-        else*/
+        else
         {
             transMat = m_initialPositionStack.at( i ) * transMat;            
         }
@@ -972,13 +973,13 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
 #endif
     gmtl::Point4d rightRearBird( pointerPoint[ 0 ], -pointerPoint[ 2 ], pointerPoint[ 1 ], pointerPoint[ 3 ] );
     std::cout << "The delta in the rear bird data (ft) " 
-        << gmtl::length( leftRearBird - rightRearBird ) << std::endl
+        //<< gmtl::length( leftRearBird - rightRearBird ) << std::endl
         << leftRearBird - rightRearBird << std::endl << std::flush;
     std::cout << "The delta in the left rear bird to front bird data (ft) " 
-        << gmtl::length( frontBird - leftRearBird ) << std::endl
+        //<< gmtl::length( frontBird - leftRearBird ) << std::endl
         << frontBird - leftRearBird << std::endl << std::flush;
     std::cout << "The delta in the right rear bird to front bird data (ft) " 
-        << gmtl::length( frontBird - rightRearBird ) << std::endl
+        //<< gmtl::length( frontBird - rightRearBird ) << std::endl
         << frontBird - rightRearBird << std::endl << std::flush;
 
     ///Get the lookat matrix based on the bird points
@@ -1048,15 +1049,15 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     sipOffSetRightRearBird.set( -rightRearBirdZ, -rightRearBirdX, rightRearBirdY, 1.0 );
 
     std::cout << "The delta in the rear measured data (ft) " 
-        << gmtl::length( sipOffSetLeftRearBird - sipOffSetRightRearBird ) 
+        //<< gmtl::length( sipOffSetLeftRearBird - sipOffSetRightRearBird ) 
         << sipOffSetLeftRearBird - sipOffSetRightRearBird
         << std::endl << std::flush;
     std::cout << "The delta in the left rear measured to front measured data (ft) " 
-        << gmtl::length( sipOffSetFrontBird - sipOffSetLeftRearBird ) 
+        //<< gmtl::length( sipOffSetFrontBird - sipOffSetLeftRearBird ) 
         << sipOffSetFrontBird - sipOffSetLeftRearBird
         << std::endl << std::flush;
     std::cout << "The delta in the right rear measured to front measured data (ft) " 
-        << gmtl::length( sipOffSetFrontBird - sipOffSetRightRearBird ) 
+        //<< gmtl::length( sipOffSetFrontBird - sipOffSetRightRearBird ) 
         << sipOffSetFrontBird - sipOffSetRightRearBird
         << std::endl << std::flush;
     
