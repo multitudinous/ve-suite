@@ -938,7 +938,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     gmtl::Matrix44d headMat = gmtl::convertTo< double >( headposDevice->getData() );
 #ifndef DVST_TEST
     gmtl::Point4d headPoint = gmtl::makeTrans< gmtl::Point4d >( headMat );
-    std::cout << "The Front Bird (ft) " << headPoint << std::endl;
+    std::cout << "The Front Bird (ft) " << headPoint << std::endl << std::flush;
 #else
     //0.643805 4.71268 -3.03138
     gmtl::Point4d headPoint;
@@ -950,7 +950,7 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     gmtl::Matrix44d wandMat = gmtl::convertTo< double >( wandposDevice->getData() );
 #ifndef DVST_TEST
     gmtl::Point4d wandPoint = gmtl::makeTrans< gmtl::Point4d >( wandMat );
-    std::cout << "The Left Rear Bird (ft) " << wandPoint << std::endl;
+    std::cout << "The Left Rear Bird (ft) " << wandPoint << std::endl << std::flush;
 #else
     //-0.803867 5.09858 2.33167
     gmtl::Point4d wandPoint;
@@ -959,21 +959,33 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     gmtl::Point4d leftRearBird( wandPoint[ 0 ], -wandPoint[ 2 ], wandPoint[ 1 ], wandPoint[ 3 ] );
 
     //VJPointer - right rear
-    gmtl::Matrix44d pointerMat = gmtl::convertTo< double >( pointerposDevice->getData() );
+    gmtl::Matrix44d pointerMat = 
+        gmtl::convertTo< double >( pointerposDevice->getData() );
 #ifndef DVST_TEST
-    gmtl::Point4d pointerPoint = gmtl::makeTrans< gmtl::Point4d >( pointerMat );
-    std::cout << "The Right Rear Bird (ft) " << pointerPoint << std::endl;
+    gmtl::Point4d pointerPoint = 
+        gmtl::makeTrans< gmtl::Point4d >( pointerMat );
+    std::cout << "The Right Rear Bird (ft) " << pointerPoint << std::endl << std::flush;
 #else
     //1.96846 5.09418 2.34925    
     gmtl::Point4d pointerPoint;
     pointerPoint.set( 1.96846, 5.09418, 2.34925, 1.0 );
 #endif
     gmtl::Point4d rightRearBird( pointerPoint[ 0 ], -pointerPoint[ 2 ], pointerPoint[ 1 ], pointerPoint[ 3 ] );
-    std::cout << "The delta in the rear bird data (ft) " << leftRearBird - rightRearBird << std::endl;
+    std::cout << "The delta in the rear bird data (ft) " 
+        << gmtl::length( leftRearBird - rightRearBird ) << std::endl
+        << leftRearBird - rightRearBird << std::endl << std::flush;
+    std::cout << "The delta in the left rear bird to front bird data (ft) " 
+        << gmtl::length( frontBird - leftRearBird ) << std::endl
+        << frontBird - leftRearBird << std::endl << std::flush;
+    std::cout << "The delta in the right rear bird to front bird data (ft) " 
+        << gmtl::length( frontBird - rightRearBird ) << std::endl
+        << frontBird - rightRearBird << std::endl << std::flush;
 
     ///Get the lookat matrix based on the bird points
-    gmtl::Matrix44d transMat = GetLookAtMatrix( frontBird, leftRearBird, rightRearBird );
-    std::cout << "Bird coord " << std::endl << transMat << std::endl << std::flush;
+    gmtl::Matrix44d transMat = 
+        GetLookAtMatrix( frontBird, leftRearBird, rightRearBird );
+    std::cout << "Sensor bird data " << std::endl 
+        << transMat << std::endl << std::flush;
 
     ///Now lets setup the CAD specific matrix to let the dvst know what the
     ///orientation of the CAD is.
@@ -1035,37 +1047,28 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     gmtl::Point4d sipOffSetRightRearBird;
     sipOffSetRightRearBird.set( -rightRearBirdZ, -rightRearBirdX, rightRearBirdY, 1.0 );
 
+    std::cout << "The delta in the rear measured data (ft) " 
+        << gmtl::length( sipOffSetLeftRearBird - sipOffSetRightRearBird ) 
+        << sipOffSetLeftRearBird - sipOffSetRightRearBird
+        << std::endl << std::flush;
+    std::cout << "The delta in the left rear measured to front measured data (ft) " 
+        << gmtl::length( sipOffSetFrontBird - sipOffSetLeftRearBird ) 
+        << sipOffSetFrontBird - sipOffSetLeftRearBird
+        << std::endl << std::flush;
+    std::cout << "The delta in the right rear measured to front measured data (ft) " 
+        << gmtl::length( sipOffSetFrontBird - sipOffSetRightRearBird ) 
+        << sipOffSetFrontBird - sipOffSetRightRearBird
+        << std::endl << std::flush;
+    
     ///Get the lookat matrix based on the bird calibration points
     gmtl::Matrix44d measuredSIPCentroidMat = 
         GetLookAtMatrix( sipOffSetFrontBird, sipOffSetLeftRearBird, sipOffSetRightRearBird );
-
-    ///This code is used if the user would like to transform a measured point in space
-    ///rather than create a delta transform as we do belows
-    //gmtl::Point3d measuredSIPCentroid;
-    //measuredSIPCentroid.set( 
-    //    -1.0 * (sipOffSetFrontBird[ 0 ] + sipOffSetLeftRearBird[ 0 ] + sipOffSetRightRearBird[ 0 ])/3.0, 
-    //    -1.0 * (sipOffSetFrontBird[ 1 ] + sipOffSetLeftRearBird[ 1 ] + sipOffSetRightRearBird[ 1 ])/3.0,
-    //    -1.0 * (sipOffSetFrontBird[ 2 ] + sipOffSetLeftRearBird[ 2 ] + sipOffSetRightRearBird[ 2 ])/3.0 );
-    //std::cout << "Bird data " << measuredSIPCentroid << std::endl << std::flush;
-    //gmtl::Matrix44d measuredSIPCentroidTransMat = 
-    //    gmtl::makeTrans< gmtl::Matrix44d >( measuredSIPCentroid );
-
-    std::cout << "Measured bird data " << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
+    std::cout << "Measured bird data " << std::endl 
+        << measuredSIPCentroidMat << std::endl << std::flush;
 
     ///SIP location from the user on the UI
     gmtl::Matrix44d sipLoc = gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
-    std::cout << "Measured SIP " << m_sip << std::endl << std::endl << std::flush;
-    
-    /*measuredSIPCentroidMat = sipLoc * measuredSIPCentroidMat;
-    std::cout << "Measured SIP without orientation " 
-        << std::endl << measuredSIPCentroidMat << std::endl << std::flush;
-    
-    std::cout << "CAD orientation matrix " << std::endl 
-        << cadOrientationMat << std::endl << std::flush;
-    
-    measuredSIPCentroidMat = measuredSIPCentroidMat * cadOrientationMat;
-    std::cout << "Measured SIP with orientation " << std::endl 
-        << measuredSIPCentroidMat << std::endl << std::flush;*/
+    std::cout << "Measured SIP " << m_sip << std::endl << std::flush;
         
     std::cout << "CAD SIP orientation matrix " << std::endl 
         << cadOrientationMat << std::endl << std::flush;
@@ -1074,14 +1077,12 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
     std::cout << "Base SIP coordinate matrix " << std::endl 
         << cadOrientationMat << std::endl << std::flush;
     
+    //Now we convert the sip matrix back through the transform mat to move it 
+    //to the VR Juggler coord
     measuredSIPCentroidMat = cadOrientationMat * measuredSIPCentroidMat;
     std::cout << "Measured SIP and centroid with orientation " << std::endl 
         << measuredSIPCentroidMat << std::endl << std::flush;
     
-//#ifndef DVST_TEST
-    //Now we convert the sip matrix back through the transform mat to move it 
-    //to the VR Juggler coord
-
     ///Invert this so that we can create a transform between the two lookat
     ///matrices we created. This will take the user from the measured matrix
     ///to global coordinates and then in the real-time bird coordinate frame.
@@ -1091,20 +1092,6 @@ void DynamicVehicleSimToolGP::CalculateRegistrationVariables()
 
     std::cout << "Reg matrix " << std::endl 
         << registerMat << std::endl << std::flush;
-
-    //m_initialNavMatrix = registerMat;// * cadOrientationMat * sipLoc;
-    //std::cout << "Init nav matrix with CAD correction" << std::endl 
-    //    << m_initialNavMatrix << std::endl << std::flush;
-
-/*#else
-    gmtl::AxisAngled viewCorrection( gmtl::Math::deg2Rad( 90.0 ), 0, 0, 1 );
-    gmtl::Matrix44d myMat = gmtl::makeRot< gmtl::Matrix44d >( viewCorrection );
-    gmtl::Matrix44d registerMat = transMat * measuredSIPCentroidMat;
-    //gmtl::invert( registerMat );
-
-    m_initialNavMatrix = registerMat * myMat;
-    //std::cout << m_initialNavMatrix << std::endl;
-#endif*/
 
     ///Now apply the nave matrix to update the view
     mSceneManager->GetNavDCS()->SetMat( registerMat );
