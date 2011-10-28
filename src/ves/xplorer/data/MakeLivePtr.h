@@ -30,17 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VES_XPLORER_DATA_PROPERTYSET_PTR_H
-#define VES_XPLORER_DATA_PROPERTYSET_PTR_H
+#ifndef VES_XPLORER_DATA_MAKELIVEBASE_PTR_H
+#define VES_XPLORER_DATA_MAKELIVEBASE_PTR_H
 
 #include <ves/util/PointerTypes.h>
 
 /**
- * \file ves::xplorer::data::PropertySetPtr
+ * \file ves::xplorer::data::MakeLiveBasePtr
  *
  * Include this file to get a forward declaration of the pointer.
  * To get the full declaration of this pointer include the non-Ptr header file.
- * \class ves::xplorer::data::PropertySetPtr
+ * \class ves::xplorer::data::MakeLiveBasePtr
  * \namespace ves::xplorer::data
  *
  */
@@ -51,12 +51,12 @@ namespace xplorer
 {
 namespace data
 {
-class PropertySet;
+class MakeLiveBase;
 /// Typedef for a SmartPtr
-typedef ves::util::ClassPtrDef<PropertySet>::type  PropertySetPtr;
-typedef ves::util::SharedPtrDef<PropertySet>::type PropertySetSharedPtr;
-typedef ves::util::WeakPtrDef<PropertySet>::type   PropertySetWeakPtr;
-typedef ves::util::ScopedPtrDef<PropertySet>::type PropertySetScopedPtr;
+typedef ves::util::ClassPtrDef<MakeLiveBase>::type  MakeLiveBasePtr;
+typedef ves::util::SharedPtrDef<MakeLiveBase>::type MakeLiveBaseSharedPtr;
+typedef ves::util::WeakPtrDef<MakeLiveBase>::type   MakeLiveBaseWeakPtr;
+typedef ves::util::ScopedPtrDef<MakeLiveBase>::type MakeLiveBaseScopedPtr;
 }
 }
 }

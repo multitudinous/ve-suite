@@ -222,7 +222,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         const gadget::KeyEventPtr keyEvt =
             boost::static_pointer_cast< gadget::KeyEvent >( event );
 
-        if(keyEvt->getKey() == gadget::KEY_UNKNOWN)
+        if( keyEvt->getKey() == gadget::KEY_UNKNOWN )
         {
             vprDEBUG( vesDBG, 2 )
                 << "|\tGadgeteer does not recognize this key: " <<
@@ -230,7 +230,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         }
 
         // Emit the keypress signal associated with this particular key
-        KeyPressSignalMapType::iterator itr = mKeyPressSignalMap.find( keyEvt->getKey() );
+        KeyPressSignalMapType::iterator itr = 
+            mKeyPressSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyPressSignalMap.end() )
         {
             (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask(),

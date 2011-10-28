@@ -193,23 +193,27 @@ static void SetCADPhysicsMesh( const std::string& nodeID,
 
     ves::xplorer::scenegraph::CADEntity* part = cadHandler->GetPart( nodeID );
 
+for( size_t i = 0; i < meshDetails.size(); ++i )
+{
+    std::cout << meshDetails.at( i ) << std::endl;
+}
     if( !part->HavePhysics() )
     {
         return;
     }
 
     if( meshDetails.size() == 4 )
-    {
-        const std::string mesh = meshDetails.at(0);
+    {        
+        const std::string motion = meshDetails.at(0);
         const std::string lod = meshDetails.at(1);
-        const std::string motion = meshDetails.at(2);
+        const std::string mesh = meshDetails.at(2);
         const std::string decimation = meshDetails.at(3);
 
         //if( cadHandler->PartExists( nodeID ) )
         {
             part->GetPhysicsRigidBody()->
                 CreateRigidBody( lod, motion, mesh, decimation );
-            
+            std::cout << lod << " " << motion << " " << mesh << " " << decimation << std::endl;
             vprDEBUG( vesDBG, 1 ) << "|\tChanged Physics Mesh: "
             << part->GetFilename()
             << std::endl << vprDEBUG_FLUSH;

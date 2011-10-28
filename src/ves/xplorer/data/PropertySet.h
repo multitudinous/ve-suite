@@ -31,9 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
-#include <ves/xplorer/data/PropertySetPtr.h>
-#include <ves/xplorer/data/PropertyPtr.h>
-
 #include <map>
 #include <string>
 #include <vector>
@@ -45,7 +42,10 @@
 
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/data/MakeLive.h>
+#include <ves/xplorer/data/MakeLivePtr.h>
+
+#include <ves/xplorer/data/PropertySetPtr.h>
+#include <ves/xplorer/data/PropertyPtr.h>
 
 // Forward declarations
 namespace Poco
@@ -64,17 +64,12 @@ namespace xplorer
 namespace data
 {
 /*!\file PropertySet.h
- *
- */
-
-/*!\class ves::xplorer::data::PropertySet
+ * \class ves::xplorer::data::PropertySet
  * PropertySet is a base class for collections of properties
  * containing methods to read and write values and attributes of
  * properties, as well as to get information about changes to other properties
  * that may occur when a property value or attribute is changed.
- */
-
-/*!\namespace ves::xplorer::data
+ * \namespace ves::xplorer::data
  *
  */
 

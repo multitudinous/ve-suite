@@ -33,9 +33,11 @@
 #include <ves/xplorer/data/VectorPlanePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/Property.h>
+#include <ves/xplorer/data/MakeLive.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <iostream>
 #include <ves/xplorer/data/DatabaseManager.h>

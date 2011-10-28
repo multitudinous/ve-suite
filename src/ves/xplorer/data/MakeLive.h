@@ -33,6 +33,8 @@
 #pragma once
 
 #include <ves/xplorer/data/Property.h>
+#include <ves/xplorer/data/PropertySet.h>
+
 #include <ves/xplorer/eventmanager/EventManager.h>
 
 #include <string>
@@ -285,6 +287,11 @@ public:
     void ValueChangedSlot( PropertyPtr property )
     {
         boost::ignore_unused_variable_warning( property );
+
+        //ves::xplorer::data::PropertySet set;
+        //set.SetUUID( m_UUID );
+        //set.WriteToDatabase();
+
         try
         {
             std::vector< T > result;
@@ -297,7 +304,6 @@ public:
                 ++iter;
             }
             m_Signal( m_UUID, result );
-
         }
         catch(...)
         {
@@ -350,6 +356,11 @@ public:
     void ValueChangedSlot( PropertyPtr property )
     {
         boost::ignore_unused_variable_warning( property );
+
+        //ves::xplorer::data::PropertySet set;
+        //set.SetUUID( m_UUID );
+        //set.WriteToDatabase();
+
         try
         {
             std::vector< std::string > result;
@@ -385,8 +396,6 @@ private:
 
     std::vector< PropertyPtr > m_Properties;
 };
-
-typedef ves::util::ClassPtrDef<MakeLiveBase>::type  MakeLiveBasePtr;
 
 } // namespace data
 } // namespace xplorer
