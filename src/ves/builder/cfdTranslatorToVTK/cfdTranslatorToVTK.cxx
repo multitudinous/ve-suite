@@ -45,15 +45,15 @@ using namespace ves::builder::cfdTranslatorToVTK;
 //Constructor                         //
 ////////////////////////////////////////
 cfdTranslatorToVTK::cfdTranslatorToVTK()
-    :mVTKReader( 0 ),
+    :
     _nFoundFiles( 0 ),
     _preTCbk( 0 ),
     _postTCbk( 0 ),
     _translateCbk( 0 ),
-    isTransient( false ),
     _outputDataset( 0 ),
-    m_extractGeometry( false ),
-    m_writeOption("")
+    mVTKReader( 0 ),
+    isTransient( false ),
+    m_extractGeometry( false )
 {
 
     _baseFileName = "flowdata";
@@ -277,7 +277,7 @@ bool cfdTranslatorToVTK::_writeToVTK( unsigned int fileNum )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////
-vtkDataObject* cfdTranslatorToVTK::GetVTKFile( unsigned int fileNum )
+vtkDataObject* cfdTranslatorToVTK::GetVTKFile( unsigned int )
 {
     if( _outputDataset )
     {
