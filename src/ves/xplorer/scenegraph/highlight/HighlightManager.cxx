@@ -147,7 +147,7 @@ bool HighlightManager::insertChild( unsigned int index, CircleHighlight* child )
     return osg::Group::insertChild( index, child );
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool HighlightManager::IsEnabled() const
+bool HighlightManager::IsEnabled() const
 {
     return m_enabled;
 }

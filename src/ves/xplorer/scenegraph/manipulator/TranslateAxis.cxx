@@ -221,7 +221,7 @@ void TranslateAxis::ComputeDeltaTransform()
 }
 ////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
-const bool TranslateAxis::ComputeProjectedPoint(
+bool TranslateAxis::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
     osg::Vec3d& projectedPoint )
 {

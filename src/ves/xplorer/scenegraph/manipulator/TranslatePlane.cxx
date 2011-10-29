@@ -93,7 +93,7 @@ void TranslatePlane::ComputeDeltaTransform()
 }
 ////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
-const bool TranslatePlane::ComputeProjectedPoint(
+bool TranslatePlane::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
     osg::Vec3d& projectedPoint )
 {

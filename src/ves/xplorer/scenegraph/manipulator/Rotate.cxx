@@ -149,7 +149,7 @@ void Rotate::ComputeDeltaTransform()
     m_deltaRotation.makeRotate( angle, axis );
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool Rotate::ComputeProjectedPoint(
+bool Rotate::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
     osg::Vec3d& projectedPoint )
 {

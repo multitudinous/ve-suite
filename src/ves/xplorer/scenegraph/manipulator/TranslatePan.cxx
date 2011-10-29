@@ -110,7 +110,7 @@ void TranslatePan::ComputeDeltaTransform()
 }
 ////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
-const bool TranslatePan::ComputeProjectedPoint(
+bool TranslatePan::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
     osg::Vec3d& projectedPoint )
 {

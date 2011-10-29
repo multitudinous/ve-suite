@@ -122,7 +122,7 @@ public:
     virtual bool insertChild( unsigned int index, CameraObject* child );
 
     ///
-    const bool IsEnabled() const;
+    bool IsEnabled() const;
 
     ///Returns if the camera placement tool is enabled for CAVE
     bool const& IsCPTEnabled() const;

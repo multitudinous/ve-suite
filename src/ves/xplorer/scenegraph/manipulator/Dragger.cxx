@@ -361,7 +361,7 @@ Dragger* Dragger::Focus( osg::NodePath::iterator& npItr )
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const TransformationType::Enum Dragger::GetTransformationType() const
+TransformationType::Enum Dragger::GetTransformationType() const
 {
     return m_transformationType;
 }

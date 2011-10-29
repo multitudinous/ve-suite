@@ -99,7 +99,7 @@ protected:
     virtual void ComputeDeltaTransform();
 
     ///
-    virtual const bool ComputeProjectedPoint(
+    virtual bool ComputeProjectedPoint(
         const osgUtil::LineSegmentIntersector& deviceInput,
         osg::Vec3d& projectedPoint );
 

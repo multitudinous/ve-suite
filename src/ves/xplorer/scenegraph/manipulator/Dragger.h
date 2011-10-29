@@ -175,7 +175,7 @@ public:
 
     ///
     ///\return
-    const TransformationType::Enum GetTransformationType() const;
+    TransformationType::Enum GetTransformationType() const;
 
     ///
     ///\param premultiply
@@ -263,7 +263,7 @@ protected:
     ///\param deviceInput
     ///\param projectedPoint
     ///\return
-    virtual const bool ComputeProjectedPoint(
+    virtual bool ComputeProjectedPoint(
         const osgUtil::LineSegmentIntersector& deviceInput,
         osg::Vec3d& projectedPoint )
     {

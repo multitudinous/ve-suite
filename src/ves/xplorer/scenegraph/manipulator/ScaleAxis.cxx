@@ -151,7 +151,7 @@ void ScaleAxis::ComputeDeltaTransform()
 }
 ////////////////////////////////////////////////////////////////////////////////
 //See http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
-const bool ScaleAxis::ComputeProjectedPoint(
+bool ScaleAxis::ComputeProjectedPoint(
     const osgUtil::LineSegmentIntersector& deviceInput,
     osg::Vec3d& projectedPoint )
 {

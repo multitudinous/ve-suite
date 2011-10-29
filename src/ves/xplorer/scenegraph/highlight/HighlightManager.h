@@ -91,7 +91,7 @@ public:
     virtual bool insertChild( unsigned int index, CircleHighlight* child );
 
     ///
-    const bool IsEnabled() const;
+    bool IsEnabled() const;
 
     ///
     bool const& IsToggled() const;

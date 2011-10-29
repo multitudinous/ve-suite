@@ -268,7 +268,7 @@ bool CameraManager::insertChild( unsigned int index, CameraObject* child )
     return osg::Group::insertChild( index, child );
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool CameraManager::IsEnabled() const
+bool CameraManager::IsEnabled() const
 {
     return m_enabled;
 }
