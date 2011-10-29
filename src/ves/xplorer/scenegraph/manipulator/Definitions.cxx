@@ -129,7 +129,7 @@ void ves::xplorer::scenegraph::manipulator::SetComputeBBCallback(
     drawable.setComputeBoundingBoxCallback( rabbc.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool ves::xplorer::scenegraph::manipulator::GetLinePlaneIntersection(
+bool ves::xplorer::scenegraph::manipulator::GetLinePlaneIntersection(
     const osg::Vec3d& lineStart,
     const osg::Vec3d& lineEnd,
     const osg::Plane& plane,
@@ -164,7 +164,7 @@ const bool ves::xplorer::scenegraph::manipulator::GetLinePlaneIntersection(
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool ves::xplorer::scenegraph::manipulator::IsFiniteNumber(
+bool ves::xplorer::scenegraph::manipulator::IsFiniteNumber(
     const double& number )
 {
     return ( number <= DBL_MAX && number >= -DBL_MAX );
@@ -181,7 +181,7 @@ osg::Vec3d ves::xplorer::scenegraph::manipulator::ProjectPointOntoPlane(
     return u;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const double ves::xplorer::scenegraph::manipulator::SignedAngle(
+double ves::xplorer::scenegraph::manipulator::SignedAngle(
     const osg::Vec3d& source,
     const osg::Vec3d& destination,
     const osg::Vec3d& reference )
