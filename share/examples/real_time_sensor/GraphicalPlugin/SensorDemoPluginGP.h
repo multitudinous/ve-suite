@@ -39,9 +39,8 @@
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 
-#include <Poco/Tuple.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/Data/RecordSet.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Mutex.h>
 
 #include <map>
 #include <vector>
@@ -51,8 +50,9 @@
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
 
-#include <vpr/Thread/Thread.h>
-#include <vpr/Sync/Mutex.h>
+#include <Poco/Tuple.h>
+#include <Poco/Data/Statement.h>
+#include <Poco/Data/RecordSet.h>
 
 namespace ves
 {

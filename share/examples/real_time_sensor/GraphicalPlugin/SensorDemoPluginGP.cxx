@@ -30,14 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #include <ves/xplorer/communication/CommunicationHandler.h>
 
 // --- My Includes --- //
-#include "SensorDemoPluginGP.h"
 #include "csvparser.h"
-#include "ves/xplorer/ModelCADHandler.h"
-#include "ves/xplorer/Model.h"
+
+#include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/Model.h>
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -90,22 +89,8 @@
 #include <fstream>
 #include <algorithm>
 
-using namespace ves::xplorer::scenegraph;
-using namespace warrantytool;
-
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <Poco/SharedPtr.h>
-#include <Poco/Tuple.h>
-#include <Poco/DateTimeFormatter.h>
-#include <Poco/DateTimeParser.h>
-
-#include <Poco/Data/SessionFactory.h>
-#include <Poco/Data/Session.h>
-#include <Poco/Data/RecordSet.h>
-#include <Poco/Data/SQLite/Connector.h>
-#include <vector>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/concept_check.hpp>
@@ -125,8 +110,22 @@ using namespace warrantytool;
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/Util/Interval.h>
-using namespace Poco::Data;
 
+#include "SensorDemoPluginGP.h"
+
+#include <Poco/SharedPtr.h>
+#include <Poco/Tuple.h>
+#include <Poco/DateTimeFormatter.h>
+#include <Poco/DateTimeParser.h>
+
+#include <Poco/Data/SessionFactory.h>
+#include <Poco/Data/Session.h>
+#include <Poco/Data/RecordSet.h>
+#include <Poco/Data/SQLite/Connector.h>
+
+using namespace Poco::Data;
+using namespace ves::xplorer::scenegraph;
+using namespace warrantytool;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 SensorDemoPluginGP::SensorDemoPluginGP()
