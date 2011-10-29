@@ -51,7 +51,7 @@ fileIO::fileIO( )
 fileIO::~fileIO( )
 {}
 ////////////////////////////////////////////////////////////////////////////////
-int fileIO::isFileReadable( const std::string filename )
+int fileIO::isFileReadable( std::string const& filename )
 {
     std::ifstream fileIn( filename.c_str(), std::ios::in );
     if( !fileIn.good() )
@@ -62,7 +62,7 @@ int fileIO::isFileReadable( const std::string filename )
     return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int fileIO::isFileWritable( std::string filename )
+int fileIO::isFileWritable( std::string const& )
 {
     // This will not compile due to a bug in vapor.  Uncomment this when the
     // bug is resolved.
@@ -76,10 +76,9 @@ int fileIO::isFileWritable( std::string filename )
     */
     return 1;
 }
-
-int fileIO::DirectoryExists( std::string dirName )
+////////////////////////////////////////////////////////////////////////////////
+int fileIO::DirectoryExists( std::string const& dirName )
 {
-    dirName.empty();
     fs::path pathName( dirName );
     //fs::path pathName( dirName.c_str, fs::native );
     if( ! fs::exists( pathName ) )
@@ -95,8 +94,8 @@ int fileIO::DirectoryExists( std::string dirName )
     }
     return 1;
 }
-
-int fileIO::isDirWritable( const std::string dirname )
+////////////////////////////////////////////////////////////////////////////////
+int fileIO::isDirWritable( std::string const& dirname )
 {
     // create string of dirname and testing.txt file
     std::string fullDirName = dirname + std::string( "/" ) + std::string( "testing.txt" );
@@ -115,7 +114,7 @@ int fileIO::isDirWritable( const std::string dirname )
     }
     return static_cast<int>( result );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 const std::string fileIO::getWritableDir()
 {
     std::string dir_name;
@@ -134,7 +133,7 @@ const std::string fileIO::getWritableDir()
     while( 1 );
     return dir_name;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 std::string fileIO::getFilenameFromDefault( std::string fileContents, std::string defaultName )
 {
     int answer = 1;

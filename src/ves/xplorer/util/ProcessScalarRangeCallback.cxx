@@ -79,11 +79,11 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
             //each dataset in the multiblock may have it's own scalar range but
             //it's not clear if that is the case...
             array->GetRange( tempRange );
-            if( abs( tempRange[ 0 ] ) < 1e-100 )
+            if( fabs( tempRange[ 0 ] ) < 1e-100 )
             {
                 tempRange[ 0 ] = 0.0f;
             }
-            if( abs( tempRange[ 1 ] ) < 1e-100 )
+            if( fabs( tempRange[ 1 ] ) < 1e-100 )
             {
                 tempRange[ 0 ] = 0.0f;
             }
