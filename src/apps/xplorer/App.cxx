@@ -369,6 +369,8 @@ void App::contextInit()
         *mViewportsChanged = false;
         m_sceneGLTransformInfo->Initialize();
         mSceneRenderToTexture->InitializeRTT();
+        
+        ves::conductor::UIManager::instance()->AddUIToNode( new_sv->getCamera() );
     }
 
     ( *sceneViewer ) = new_sv;

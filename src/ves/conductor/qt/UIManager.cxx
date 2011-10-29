@@ -114,7 +114,9 @@ UIManager::UIManager() :
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
     m_selectedUIElement( 0 ),
     m_updateBBoxes( false ),
-    m_bringToFront( 0 )
+    m_bringToFront( 0 ),
+    m_isDesktopMode( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() ),
+    m_isWandIntersection( false )
 {
     // Register signals
     ves::xplorer::eventmanager::EventManager* evm = ves::xplorer::eventmanager::EventManager::instance();
@@ -563,8 +565,8 @@ void UIManager::_insertNodesToAdd()
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_repaintChildren()
 {
-    std::list< UIElement* >::const_iterator z_order = m_zOrder.begin();
-    for( z_order; z_order != m_zOrder.end(); ++z_order )
+    for( std::list< UIElement* >::const_iterator z_order = m_zOrder.begin(); 
+        z_order != m_zOrder.end(); ++z_order )
     {
         // Check whether this element is currently switched as visible. If not,
         // no need to waste time rendering it.
@@ -677,14 +679,13 @@ void UIManager::SetProjectionMatrix( osg::Matrixd& matrix )
 bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
 {
     m_selectedUIElement = 0;
-
     ///Handle the test for non desktop mode
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
         if( TestWandIntersection() )
         {
             ElementMap_type::const_iterator iter = 
-                mElements.find( m_selectedUINode->asGeode() );
+            mElements.find( m_selectedUINode->asGeode() );
             if( iter != mElements.end() )
             {
                 m_selectedUIElement = iter->second;
@@ -692,8 +693,9 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
             return true;
         }
         return false;
+        //return m_isWandIntersection;
     }
-
+    
     // Walk through every visible quad we own, in descending z-order,
     // and see if the point lies on it
     UIElement* tempElement = 0;
@@ -717,6 +719,31 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
         ++list_iterator;
     }
 
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool UIManager::Test3DPointerCoordinates( int& x, int& y )
+{
+    m_selectedUIElement = 0;
+    ///Handle the test for non desktop mode
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        if( TestWandIntersection() )
+        {
+            ElementMap_type::const_iterator iter = 
+            mElements.find( m_selectedUINode->asGeode() );
+            if( iter != mElements.end() )
+            {
+                m_selectedUIElement = iter->second;
+                m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
+            }
+            m_isWandIntersection = true;
+            return true;
+        }
+        m_isWandIntersection = false;
+        return false;
+    }
+    m_isWandIntersection = false;
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1097,6 +1124,8 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
         return false;
     }
 
+    //Test3DPointerCoordinates( x, y );
+    
     // Store off coordinates and deltas
     mDxPointer = x - mCurrentXPointer;
     mDyPointer = y - mCurrentYPointer;
@@ -1376,7 +1405,11 @@ void UIManager::SetCameraForSceneDebug( osg::Camera* camera )
 {
     m_sceneDebugCamera = camera;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::AddUIToNode( osg::Group* node )
+{
+    node->addChild( mUIGroup.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 }

@@ -199,6 +199,8 @@ public:
     // Returns true if the point (x,y) is over a quad associated with a UIElement,
     // false otherwise.
     bool Ortho2DTestPointerCoordinates( int x, int y );
+    ///Test the coordinates in 3d space and create x and y pixel coordinates
+    bool Test3DPointerCoordinates( int& x, int& y );
 
     /// Set the overall UI opacity
     void SetOpacity( float opacity );
@@ -238,6 +240,9 @@ public:
 
     void SetCameraForSceneDebug( osg::Camera* camera );
 
+    ///Add the ui to a render camera
+    void AddUIToNode( osg::Group* node );
+    
 private:
     // Set this class up as a singleton
     ///Constructor
@@ -397,6 +402,10 @@ private:
     osg::Node* m_bringToFront;
 
     osg::Camera* m_sceneDebugCamera;
+    ///Is desktop mode
+    bool m_isDesktopMode;
+    ///Is the wand in the UI
+    bool m_isWandIntersection;
 };
 
 } //end conductor
