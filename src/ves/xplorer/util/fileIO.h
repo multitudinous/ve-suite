@@ -34,11 +34,10 @@
 #ifndef FILEIO_H
 #define FILEIO_H
 /*!\file fileIO.h
-fileIO API
-*/
-/*!\class ves::xplorer::util::fileIO
-*
-*/
+ * fileIO API
+ * \class ves::xplorer::util::fileIO
+ *
+ */
 #include <iosfwd>
 #include <string>
 #include <vector>
@@ -61,18 +60,18 @@ public:
 
     ///Checks file to ensure it is readable.
     ///\param filename Name of the file to be checked.
-    static int isFileReadable( const std::string filename );
+    static int isFileReadable( std::string const& filename );
     ///Makes sure that the file isn't write-protected (currently disabled).
     ///\param filename Name of the file to be checked.
-    static int isFileWritable( std::string filename );
+    static int isFileWritable( std::string const& filename );
     ///Checks to ensure directory exists.
     ///\param dirName Name of the directory being verified.
-    static int DirectoryExists( std::string dirName );
+    static int DirectoryExists( std::string const& dirName );
     ///Checks to ensure directory ins't write-protected.
     ///\param dirname Name of the directory being verified.
-    static int isDirWritable( const std::string dirname );
+    static int isDirWritable( std::string const& dirname );
     ///Gets user input for directory to write to.
-    static const std::string getWritableDir( void );
+    static const std::string getWritableDir();
     ///Asks user to use default filename or specify a new one.
     static std::string getFilenameFromDefault( std::string, std::string );///<The file contents and default file name.
     ///Returns a file with the default file name for input.  If not readable, it asks for a valid file name.
