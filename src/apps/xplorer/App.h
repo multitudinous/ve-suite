@@ -350,7 +350,7 @@ private:
     ///Are we exiting yet
     bool m_exitApp;
     ///
-    osg::ref_ptr< osg::Group > m_uiGroup;
+    //osg::ref_ptr< osg::Group > m_uiGroup;
     ///Holds the command line options
     boost::program_options::variables_map m_vm;
 };

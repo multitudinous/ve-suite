@@ -221,6 +221,9 @@ private:
 
     ///Light model for the scene
     osg::ref_ptr< osg::LightModel > m_lightModel0;
+    
+    ///Add the ui group to the cameras
+    bool m_isUIAdded;
 
 };
 } //end xplorer

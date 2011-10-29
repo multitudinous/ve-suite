@@ -585,15 +585,6 @@ void App::initScene()
 
     //Hand current root node UIManager so it can create UI subgraph
     m_UIManager->Initialize( 0 );
-
-    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
-    {
-        m_uiGroup = m_UIManager->GetUIRootNode().getParent( 0 );
-    }
-    else
-    {
-        m_uiGroup = &(m_UIManager->GetUIRootNode());
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::preFrame()
@@ -959,8 +950,8 @@ void App::contextPreDraw()
         {
             vpr::Guard< vpr::Mutex > val_guard( mValueLock );
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
-            ( *sceneViewer )->getCamera()->addChild( m_uiGroup.get() );
-            update();
+            //( *sceneViewer )->getCamera()->addChild( m_uiGroup.get() );
+            //update();
 
             //if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
             {
@@ -1181,7 +1172,7 @@ void App::update()
     getScene()->getBound();
     
     // Since the UI is directly under the root camera we need to manually update it
-    m_uiGroup->getBound();
+    //m_uiGroup->getBound();
     
 #ifdef VE_SOUND
     m_listenerPosition.set( mNavPosition.getData() );

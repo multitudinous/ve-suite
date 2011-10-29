@@ -106,6 +106,8 @@
 #define VES_USE_MULTISAMPLING
 #endif*/
 
+#include <ves/conductor/qt/UIManager.h>
+
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +120,8 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
     m_1dyVP( NULL ),
     m_1dyFP( NULL ),
     m_finalShader( NULL ),
-    m_light0( new osg::Light() )
+    m_light0( new osg::Light() ),
+    m_isUIAdded( false )
 {
     /// When m_enableRTT is true we will use our old RTT and post processing 
     /// pipeline. When it is false we will use bdfx.
@@ -1266,6 +1269,22 @@ void SceneRenderToTexture::Update(
     for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
         iter != m_updateList.end(); ++iter )
     {
+        if( !m_isUIAdded )
+        {
+            if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+            {
+                (*iter)->addChild( 
+                    ves::conductor::UIManager::instance()->
+                    GetUIRootNode().getParent( 0 ) );
+            }
+            else
+            {
+                (*iter)->addChild( 
+                    &ves::conductor::UIManager::instance()->GetUIRootNode() );
+            }
+            m_isUIAdded = true;
+        }
+
         (*iter)->accept( *updateVisitor );
 
         //This code came from osgViewer::Viewer::setSceneData
