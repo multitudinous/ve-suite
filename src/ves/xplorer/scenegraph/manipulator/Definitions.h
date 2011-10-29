@@ -161,14 +161,14 @@ void VE_SCENEGRAPH_EXPORTS SetComputeBBCallback( osg::Drawable& drawable );
 ///\param plane
 ///\param intersection
 ///\return const bool
-const bool VE_SCENEGRAPH_EXPORTS GetLinePlaneIntersection(
+bool VE_SCENEGRAPH_EXPORTS GetLinePlaneIntersection(
     const osg::Vec3d& lineStart,
     const osg::Vec3d& lineEnd,
     const osg::Plane& plane,
     osg::Vec3d& intersection );
 
 ///
-const bool VE_SCENEGRAPH_EXPORTS IsFiniteNumber( const double& number );
+bool VE_SCENEGRAPH_EXPORTS IsFiniteNumber( const double& number );
 
 ///
 ///\param point The point to project onto the plane
@@ -183,7 +183,7 @@ osg::Vec3d VE_SCENEGRAPH_EXPORTS ProjectPointOntoPlane(
 ///\param source
 ///\param destination
 ///\param reference
-const double VE_SCENEGRAPH_EXPORTS SignedAngle(
+double VE_SCENEGRAPH_EXPORTS SignedAngle(
     const osg::Vec3d& source,
     const osg::Vec3d& destination,
     const osg::Vec3d& reference );
