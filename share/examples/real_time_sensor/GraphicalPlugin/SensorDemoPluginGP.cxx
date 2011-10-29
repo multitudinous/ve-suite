@@ -2484,7 +2484,7 @@ void SensorDemoPluginGP::CreateSensorGrid()
     mapper->SetInput( pd );
     mapper->SetScalarModeToUsePointFieldData();
     mapper->ColorByArrayComponent( "Temperature", 0 );
-    mapper->SetScalarRange( 40.0f, 65.0f );
+    mapper->SetScalarRange( 28.0f, 60.0f );
     mapper->SetLookupTable( lut );
     
     vtkActor* contActor = vtkActor::New();
@@ -2536,11 +2536,18 @@ void SensorDemoPluginGP::LoadModels()
     m_sensorRack->GetDCS()->SetScaleArray( data );
     
     m_stovesLab = new ves::xplorer::scenegraph::CADEntity(
+                                                          "StoveLab_v1.ive",
+                                                          mDCS.get(),
+                                                          false,
+                                                          "Off",
+                                                          mPhysicsSimulator );
+
+    /*m_stovesLab = new ves::xplorer::scenegraph::CADEntity(
                                             "stoves_2.ive",
                                             mDCS.get(),
                                             false,
                                             "Off",
-                                            mPhysicsSimulator );
+                                            mPhysicsSimulator );*/
     //data[ 0 ] = 0.5;
     //data[ 1 ] = 2.0;
     //data[ 2 ] = 0.0;
