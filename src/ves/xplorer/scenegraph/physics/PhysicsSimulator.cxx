@@ -775,7 +775,7 @@ void PhysicsSimulator::RegisterMotionState(
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
-#if OSGBCOLLISION_VERSION > 10900
+#if OSGBCOLLISION_VERSION > 10901
     m_motionStateList.insert( motionState );
 #else
     m_motionStateList.push_back( motionState );
@@ -788,7 +788,7 @@ void PhysicsSimulator::UnregisterMotionState(
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
-#if OSGBCOLLISION_VERSION > 10900
+#if OSGBCOLLISION_VERSION > 10901
     std::set< osgbDynamics::MotionState* >::iterator iter = 
         std::find( m_motionStateList.begin(), m_motionStateList.end(), motionState );
 #else
