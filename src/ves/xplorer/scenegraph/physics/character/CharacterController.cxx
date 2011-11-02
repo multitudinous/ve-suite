@@ -590,7 +590,7 @@ void CharacterController::Zoom( bool inOut )
     mCameraDistanceLERP = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool CharacterController::IsEnabled() const
+bool CharacterController::IsEnabled() const
 {
     return m_enabled;
 }

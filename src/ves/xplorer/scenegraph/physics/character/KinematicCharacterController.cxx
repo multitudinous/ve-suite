@@ -798,7 +798,7 @@ void KinematicCharacterController::setMaxJumpHeight( btScalar maxJumpHeight )
     m_maxJumpHeight = maxJumpHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool KinematicCharacterController::IsFlying() const
+bool KinematicCharacterController::IsFlying() const
 {
     return m_fly;
 }

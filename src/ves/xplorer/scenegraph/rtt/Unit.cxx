@@ -273,7 +273,7 @@ void Unit::SetInputTextureIndexForViewportReference( int index )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const int Unit::GetInputTextureIndexForViewportReference() const
+int Unit::GetInputTextureIndexForViewportReference() const
 {
     return mInputTextureIndexForViewportReference;
 }

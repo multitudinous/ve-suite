@@ -132,7 +132,7 @@ public:
     void Initialize();
 
     ///Returns if the character controller is active
-    const bool IsEnabled() const;
+    bool IsEnabled() const;
 
     ///
     void FirstPersonMode( bool onOff );

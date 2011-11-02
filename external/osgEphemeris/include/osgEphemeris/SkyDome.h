@@ -194,17 +194,17 @@ class OSGEPHEMERIS_EXPORT SkyDome:  public Sphere
 
         void _updateDistributionCoefficients();
         void _updateZenithxyY();
-        inline const float _xDistributionFunction(const float theta, const float cos_theta,
+        inline float _xDistributionFunction(const float theta, const float cos_theta,
                                            const float gamma, const float cos_gamma_sq);
-        inline const float _yDistributionFunction(const float theta, const float cos_theta,
+        inline float _yDistributionFunction(const float theta, const float cos_theta,
                                            const float gamma, const float cos_gamma_sq);
-        inline const float _YDistributionFunction(const float theta, const float cos_theta,
+        inline float _YDistributionFunction(const float theta, const float cos_theta,
                                            const float gamma, const float cos_gamma_sq);
-        inline const float   _RedFunction(const float theta, const float theta_0_1,
+        inline float _RedFunction(const float theta, const float theta_0_1,
                                           const float gamma, const float gamma_1_0);
-        inline const float _GreenFunction(const float theta, const float theta_0_1,
+        inline float _GreenFunction(const float theta, const float theta_0_1,
                                           const float gamma, const float gamma_1_0);
-        inline const float  _BlueFunction(const float theta, const float theta_0_1,
+        inline float _BlueFunction(const float theta, const float theta_0_1,
                                           const float gamma, const float gamma_1_0);
         void _computeSkyTexture();
 };

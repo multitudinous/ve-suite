@@ -109,7 +109,7 @@ public:
     static btVector3* getUpAxisDirections();
 
     ///
-    const bool IsFlying() const;
+    bool IsFlying() const;
 
     ///
     void jump();

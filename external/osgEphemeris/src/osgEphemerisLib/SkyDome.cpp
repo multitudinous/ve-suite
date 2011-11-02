@@ -520,7 +520,7 @@ void SkyDome::_updateZenithxyY()
     _Yz = (((4.0453f * _T) - 4.971f) * tanf(chi)) - (0.2155f * _T) + 2.4192f;
 }
 
-inline const float SkyDome::_xDistributionFunction(const float theta, const float cos_theta,
+inline float SkyDome::_xDistributionFunction(const float theta, const float cos_theta,
                                             const float gamma, const float cos_gamma_sq)
 {
     return _xz
@@ -530,7 +530,7 @@ inline const float SkyDome::_xDistributionFunction(const float theta, const floa
         * (1.0f + (_Cx * expf(_Dx * _theta_sun)) + (_Ex * _cos_theta_sun_squared)) );
 }
 
-inline const float SkyDome::_yDistributionFunction(const float theta, const float cos_theta,
+inline float SkyDome::_yDistributionFunction(const float theta, const float cos_theta,
                                             const float gamma, const float cos_gamma_sq)
 {
     return _yz
@@ -540,7 +540,7 @@ inline const float SkyDome::_yDistributionFunction(const float theta, const floa
         * (1.0f + (_Cy * expf(_Dy * _theta_sun)) + (_Ey * _cos_theta_sun_squared)) );
 }
 
-inline const float SkyDome::_YDistributionFunction(const float theta, const float cos_theta,
+inline float SkyDome::_YDistributionFunction(const float theta, const float cos_theta,
                                             const float gamma, const float cos_gamma_sq)
 {
     return _Yz
@@ -550,7 +550,7 @@ inline const float SkyDome::_YDistributionFunction(const float theta, const floa
         * (1.0f + (_CY * expf(_DY * _theta_sun)) + (_EY * _cos_theta_sun_squared)) );
 }
 
-inline const float SkyDome::_RedFunction(const float theta, const float theta_0_1,
+inline float SkyDome::_RedFunction(const float theta, const float theta_0_1,
                                          const float gamma, const float gamma_1_0)
 {
     return ( (_Ar * powf(theta_0_1, _Br))  // horizon light
@@ -559,7 +559,7 @@ inline const float SkyDome::_RedFunction(const float theta, const float theta_0_
         * _light_due_to_alt;
 }
 
-inline const float SkyDome::_GreenFunction(const float theta, const float theta_0_1,
+inline float SkyDome::_GreenFunction(const float theta, const float theta_0_1,
                                            const float gamma, const float gamma_1_0)
 {
     return ( (_Ag * powf(theta_0_1, _Bg) * (1.0f - _horiz_atten_g * _sunset_atten))
@@ -568,7 +568,7 @@ inline const float SkyDome::_GreenFunction(const float theta, const float theta_
         * _light_due_to_alt;
 }
 
-inline const float SkyDome::_BlueFunction(const float theta, const float theta_0_1,
+inline float SkyDome::_BlueFunction(const float theta, const float theta_0_1,
                                           const float gamma, const float gamma_1_0)
 {
     return ( (_Ab * powf(theta_0_1, _Bb) * (1.0f - _horiz_atten_b * _sunset_atten))

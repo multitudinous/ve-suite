@@ -227,17 +227,17 @@ PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
     return mPhysicsRigidBody;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& CADEntity::GetFilename() const
+std::string const& CADEntity::GetFilename() const
 {
     return mFileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const float CADEntity::GetOpacityValue() const
+float CADEntity::GetOpacityValue() const
 {
     return mOpacity;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool CADEntity::GetTransparentFlag() const
+bool CADEntity::GetTransparentFlag() const
 {
     return mTransparencyFlag;
 }

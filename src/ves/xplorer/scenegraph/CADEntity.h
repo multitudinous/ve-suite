@@ -119,15 +119,15 @@ public:
 
     ///Returns the filename of CADEntity
     ///\return 
-    const std::string& GetFilename() const;
+    std::string const& GetFilename() const;
 
     ///Get the opacity value for this file
     ///\return 
-    const float GetOpacityValue() const;
+    float GetOpacityValue() const;
 
     ///Returns the transparency state of the node
     ///\return 
-    const bool GetTransparentFlag() const;
+    bool GetTransparentFlag() const;
 
     ///Set the transparency state of the node to go 
     ///transparent when data is selected

@@ -138,7 +138,7 @@ public:
 
     ///Get the input texture with dimenstions used for setting up the viewport
     ///\return
-    const int GetInputTextureIndexForViewportReference() const;
+    int GetInputTextureIndexForViewportReference() const;
 
     ///Get geode to which the unit's drawables are attached
     ///\return
