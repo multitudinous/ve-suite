@@ -47,8 +47,10 @@
 #include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+//#include <gadget/Type/KeyboardMouse/KeyEvent.h>
+#include <gadget/Event/KeyboardMouse/KeyEvent.h>
+//#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
 #include <gadget/Type/KeyboardMouseInterface.h>
 
 // --- OSG Includes --- //
