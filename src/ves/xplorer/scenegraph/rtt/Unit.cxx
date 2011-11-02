@@ -287,8 +287,8 @@ void Unit::SetInputTexturesFromParents()
 {
     //Scan the input to uniform map
     rtt::Unit* unit( NULL );
-    Unit::InputToUniformMap::iterator itumItr = mInputToUniformMap.begin();
-    for( itumItr; itumItr != mInputToUniformMap.end(); ++itumItr )
+    for( Unit::InputToUniformMap::iterator itumItr = mInputToUniformMap.begin(); 
+        itumItr != mInputToUniformMap.end(); ++itumItr )
     {
         //unit = itumItr->first.get();
         unit = itumItr->second.get();
@@ -296,8 +296,8 @@ void Unit::SetInputTexturesFromParents()
         {
             //Add each found texture as input
             const Unit::TextureMap& textureMap = unit->GetOutputTextureMap();
-            Unit::TextureMap::const_iterator tmItr = textureMap.begin();
-            for( tmItr; tmItr != textureMap.end(); ++tmItr )
+            for( Unit::TextureMap::const_iterator tmItr = textureMap.begin(); 
+                tmItr != textureMap.end(); ++tmItr )
             {
                 //osg::Texture* texture = tmItr->second.get();
                 osg::Texture* texture = tmItr->get();
@@ -332,8 +332,8 @@ void Unit::UpdateUniforms()
     osg::StateSet* stateset = mGeode->getOrCreateStateSet();
 
     //Setup input texture uniforms
-    InputToUniformMap::iterator itr = mInputToUniformMap.begin();
-    for( itr; itr != mInputToUniformMap.end(); ++itr )
+    for( InputToUniformMap::iterator itr = mInputToUniformMap.begin(); 
+        itr != mInputToUniformMap.end(); ++itr )
     {
         //Only valid inputs
         //if( itr->first.valid() )
@@ -357,8 +357,8 @@ void Unit::UpdateUniforms()
 void Unit::NoticeChangeViewport()
 {
     //Change size of the result texture according to the viewport
-    TextureMap::iterator itr = mOutputTextures.begin();
-    for( itr; itr != mOutputTextures.end(); ++itr )
+    for( TextureMap::iterator itr = mOutputTextures.begin(); 
+        itr != mOutputTextures.end(); ++itr )
     {
         //if( itr->second.valid() )
         if( itr->valid() )
@@ -385,8 +385,8 @@ void Unit::AssignInputTexture()
     osg::StateSet* stateset = getOrCreateStateSet();
 
     //For all entries
-    TextureMap::iterator itr = mInputTextures.begin();
-    for( itr; itr != mInputTextures.end(); ++itr )
+    for( TextureMap::iterator itr = mInputTextures.begin(); 
+        itr != mInputTextures.end(); ++itr )
     {
         //Set texture if it is valid
         //if( itr->second.valid() )
