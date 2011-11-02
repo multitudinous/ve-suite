@@ -66,6 +66,7 @@
 #include <osgbCollision/RefBulletObject.h>
 #include <osgbCollision/Utils.h>
 #include <osgbCollision/GLDebugDrawer.h>
+#include <osgbCollision/Version.h>
 
 #include <osgbDynamics/RigidBody.h>
 #include <osgbDynamics/PhysicsThread.h>
@@ -774,7 +775,11 @@ void PhysicsSimulator::RegisterMotionState(
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
+#if OSGBCOLLISION_VERSION > 10900
+    m_motionStateList.insert( motionState );
+#else
     m_motionStateList.push_back( motionState );
+#endif
     SetIdle( currentIdle );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -783,8 +788,13 @@ void PhysicsSimulator::UnregisterMotionState(
 {
     bool currentIdle = GetIdle();
     SetIdle( true );
+#if OSGBCOLLISION_VERSION > 10900
+    std::set< osgbDynamics::MotionState* >::iterator iter = 
+        std::find( m_motionStateList.begin(), m_motionStateList.end(), motionState );
+#else
     std::vector< osgbDynamics::MotionState* >::iterator iter = 
         std::find( m_motionStateList.begin(), m_motionStateList.end(), motionState );
+#endif
     m_motionStateList.erase( iter );
     SetIdle( currentIdle );
 }
