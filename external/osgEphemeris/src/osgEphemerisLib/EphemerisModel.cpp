@@ -35,6 +35,8 @@ using namespace osgEphemeris;
 
 EphemerisModel::EphemerisModel(const EphemerisModel& copy, 
                               const osg::CopyOp& copyop )
+    :
+    osg::Group( copy, copyop )
 {
 }
 
