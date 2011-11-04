@@ -3,16 +3,28 @@
 
 #include <vesenv.iss>
 
-#define MyAppName "osgPTExporter"
-#define MyAppVerName "osgPTExporter"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
-#define VEVERSION "1.1.0"
-#define SVNVERSION "14394"
-#define OSGHOME "C:\dev\ves_deps\msvs_9.0\OSG_2.8.3_msvc-9.0-sp1-x86"
-#define OSGPTEXPORTERHOME "C:\dev\skewmatrix-vesuite\skewmatrix\osgPT\trunk\OSGExport"
+#define VEVERSION "1.2.0"
+#define SVNVERSION "15044"
+#ifdef x64
+#define OSGHOME "C:\dev\deps\auto_deps\osg_2.8.5\install-64-bit"
+#define MyAppName "osgPTExporter"
+#define MyAppVerName "osgPTExporter"
+#define OSGPTEXPORTERHOME "C:\dev\skewmatrix-redmine-svn\skewmatrix\osgPT\trunk\OSGExport\x64"
+#else
+#define OSGHOME "C:\dev\deps\auto_deps\osg_2.8.5\install-32-bit"
+#define MyAppName "osgPTExporter"
+#define MyAppVerName "osgPTExporter"
+#define OSGPTEXPORTERHOME "C:\dev\skewmatrix-redmine-svn\skewmatrix\osgPT\trunk\OSGExport\Win32"
+#endif
+
 ; This needs to be vcplugin for x86 and vcplugin64 for x86_64
+#ifdef x64
+#define VCPLUGINDIR "vcplugin64"
+#else
 #define VCPLUGINDIR "vcplugin"
+#endif
 
 [Setup]
 AppName={#MyAppName}
@@ -26,7 +38,7 @@ DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
 OutputBaseFilename={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
-Compression=lzma
+Compression=lzma/Max
 SolidCompression=true
 ChangesEnvironment=false
 ShowLanguageDialog=yes
@@ -40,12 +52,11 @@ WindowVisible=true
 WizardImageBackColor=clWhite
 ChangesAssociations=true
 WindowStartMaximized=false
-BackColor=$0080ff
-BackColor2=$ff0000
+BackColor=$000080FF
+BackColor2=clBlue
 SetupIconFile={#VEDEVHOME}\dist\installerImages\ves_icon.ico
 CreateAppDir=true
 AppID={{33FA9BA1-2C6D-440D-AA00-8EC3CE3A5C70}
-DisableDirPage=true
 UsePreviousAppDir=false
 DirExistsWarning=no
 AppendDefaultDirName=false
@@ -54,8 +65,10 @@ VersionInfoVersion={#VEVERSION}
 VersionInfoCompany=SMDS
 VersionInfoProductVersion={#VEVERSION}
 AppVersion={#VEVERSION}
-UninstallDisplayIcon={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 UninstallDisplayName={#MyAppName}_{#VEVERSION}_{#MSVCVERSION}
+VersionInfoDescription=PolyTrans exporter for OSG
+VersionInfoCopyright=2008-2011
+VersionInfoProductName=osgPTExporter
 
 [Types]
 Name: full; Description: Full installation
@@ -68,25 +81,25 @@ Name: osgPTExporter; Description: Installs the OpenSceneGraph PolyTrans exporter
 ;Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create Desktop Icon
 
 [Files]
-Source: {#OSGHOME}\lib\osg65-osg.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg65-osgUtil.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg65-osgSim.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg65-osgDB.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg65-osgFX.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg65-osgText.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\osg65-osgTerrain.dll; DestDir: {app}; Components: 
-Source: {#OSGHOME}\lib\ot11-OpenThreads.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\osg74-osg.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\osg74-osgUtil.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\osg74-osgSim.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\osg74-osgDB.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\osg74-osgFX.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\osg74-osgText.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\osg74-osgTerrain.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\ot11-OpenThreads.dll; DestDir: {app}; Components: 
 ;Source: {#OSGHOME}\lib\zlib1.dll; DestDir: {app}; Components:
-Source: {#OSGHOME}\lib\osgPlugins-2.8.3\osgdb_ive.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.8.3\osgdb_jpeg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgPlugins-2.8.5\osgdb_ive.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgPlugins-2.8.5\osgdb_jpeg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
 ;Source: {#OSGHOME}\lib\osgPlugins-2.8.3\osgdb_gif.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.8.3\osgdb_png.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.8.3\osgdb_osg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.8.3\osgdb_rgb.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGHOME}\lib\osgPlugins-2.8.3\osgdb_tiff.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgPlugins-2.8.5\osgdb_png.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgPlugins-2.8.5\osgdb_osg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgPlugins-2.8.5\osgdb_rgb.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgPlugins-2.8.5\osgdb_tiff.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#OSGPTEXPORTERHOME}\exp_isu_osg.dll; DestDir: {app}\{#VCPLUGINDIR}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGPTEXPORTERHOME}\EXP_ISU_OSG.RTI; DestDir: {app}\{#VCPLUGINDIR}; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#OSGPTEXPORTERHOME}\EXP_ISU_OSG.HLP; DestDir: {app}\{#VCPLUGINDIR}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGPTEXPORTERHOME}\..\EXP_ISU_OSG.RTI; DestDir: {app}\{#VCPLUGINDIR}; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGPTEXPORTERHOME}\..\EXP_ISU_OSG.HLP; DestDir: {app}\{#VCPLUGINDIR}; Components: ; Flags: overwritereadonly ignoreversion
 
 [Icons]
 ;Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\VE_icon.ico
@@ -113,18 +126,22 @@ InstallDir : string;
 begin
   Result := 'MyDefaultInstallDir';
   //Check for polytrans first
-  //On x86 platforms this statement should be:
+#ifdef x64
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE_64, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans64','cwd', InstallDir) then begin
+#else
   if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans','cwd', InstallDir) then begin
-  //On x86_64 platforms this statement should be:
-  //if RegQueryStringValue(HKEY_LOCAL_MACHINE_64, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans64','cwd', InstallDir) then begin
+#endif
     // Successfully read the value.
     Result := InstallDir;
   end else begin
     // Check for nurgaf now
+#ifdef x64
+    //On x86_64 platforms this statement should be:
+    if RegQueryStringValue(HKEY_LOCAL_MACHINE_64, 'SOFTWARE\Okino Computer Graphics, Inc.\NuGraf64','cwd', InstallDir) then begin
+#else
     //On x86 platforms this statement should be:
     if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\NuGraf','cwd', InstallDir) then begin
-    //On x86_64 platforms this statement should be:
-    //if RegQueryStringValue(HKEY_LOCAL_MACHINE_64, 'SOFTWARE\Okino Computer Graphics, Inc.\NuGraf64','cwd', InstallDir) then begin
+#endif
       // Successfully read the value.
       Result := InstallDir;
     end else begin
