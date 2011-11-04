@@ -45,6 +45,7 @@
 #include <ves/xplorer/data/CADPropertySet.h>
 
 #include <ves/xplorer/Debug.h>
+#include <ves/xplorer/Logging.h>
 
 /*#if( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
  #include <osg/OcclusionQueryNode>
@@ -95,6 +96,11 @@ static ves::xplorer::ModelCADHandler* GetModelCADHandler()
 static void TransformCADNode( const std::string& nodeID,
                    const std::vector<double>& transform )
 {
+    STATIC_LOG_INFO("xplorer.CADSlots","TransformCADNode nodeID: " << nodeID << ", transform: ("
+                     << transform[0] << "," << transform[1] << "," << transform[2] << "), ("
+                     << transform[3] << "," << transform[4] << "," << transform[5] << "), ("
+                     << transform[6] << "," << transform[7] << "," << transform[8] << ")"
+                      );
     ModelCADHandler* cadHandler = GetModelCADHandler();
 
     if( cadHandler )

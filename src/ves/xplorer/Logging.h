@@ -56,13 +56,32 @@ typedef ves::util::ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
 //#define CREATE_LOG_STREAM m_LogStream = LogStreamPtr( new Poco::LogStream::LogStream( m_Logger ) )
 
 #define _LOG_CALL( prio, msg ) do {if( m_logger.prio() ){ (*m_logStream).prio() << msg << std::endl; } } while( 0 )
+#define _STATIC_LOG_CALL( prio, name, msg ) do { Poco::Logger& logger = Poco::Logger::get( name ); if( logger.prio() ){Poco::LogStream logstream( logger ); logstream.information() << msg << std::endl; } } while( 0 )
 
+/// Use these logging macros in classes that have a dedicated m_logger and m_logStream.
+/// This method has faster execution that the static method below since the log
+/// is only requested once and a reference to it is stored in the class's m_logger
+/// member.
 #define LOG_FATAL( msg ) _LOG_CALL( fatal, msg )
 #define LOG_CRITICAL( msg ) _LOG_CALL( critical, msg )
 #define LOG_ERROR( msg ) _LOG_CALL( error, msg )
 #define LOG_WARNING( msg ) _LOG_CALL( warning, msg )
 #define LOG_NOTICE( msg ) _LOG_CALL( notice, msg )
 #define LOG_INFO( msg ) _LOG_CALL( information, msg )
+
+/// Use these logging macros for one-off log messages and inside static methods
+/// or other places not associated with a class. The name argument is the name
+/// of the log to use. The name is in the form parent.child.subchild.subsubchild
+/// where everything after parent is optional. However, if requesting parent.child.subchild,
+/// a log named parent.child must have been previously requested, otherwise the
+/// log call fails silently. Likewise, if requesting parent.child, the parent log
+/// must have been previously requested.
+#define STATIC_LOG_FATAL( name, msg ) _STATIC_LOG_CALL( fatal, name, msg )
+#define STATIC_LOG_CRITICAL( name, msg ) _STATIC_LOG_CALL( critical, name, msg )
+#define STATIC_LOG_ERROR( name, msg ) _STATIC_LOG_CALL( error, name, msg )
+#define STATIC_LOG_WARNING( name, msg ) _STATIC_LOG_CALL( warning, name, msg )
+#define STATIC_LOG_NOTICE( name, msg ) _STATIC_LOG_CALL( notice, name, msg )
+#define STATIC_LOG_INFO( name, msg ) _STATIC_LOG_CALL( information, name, msg )
 
 
 // DEBUG and TRACE log messages will only be compiled in when VES_DEBUG
@@ -74,8 +93,12 @@ typedef ves::util::ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
 #if defined(VES_DEBUG)
     #define LOG_DEBUG( msg ) _LOG_CALL( debug, msg )
     #define LOG_TRACE( msg ) _LOG_CALL( trace, msg )
+    #define STATIC_LOG_DEBUG( name, msg ) _STATIC_LOG_CALL( debug, name, msg )
+    #define STATIC_LOG_TRACE( name, msg ) _STATIC_LOG_CALL( trace, name, msg )
 #else
     #define LOG_DEBUG( msg )
     #define LOG_TRACE( msg )
+    #define STATIC_LOG_DEBUG( name, msg )
+    #define STATIC_LOG_TRACE( name, msg )
 #endif
 
