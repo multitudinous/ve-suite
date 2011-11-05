@@ -1,0 +1,38 @@
+##Builds utility
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+Import('ves_pkg LIBDIR PREFIX buildDir boost_header_options boost_options GetPlatform RootDir')
+
+openDir = os.path.abspath( pj( RootDir, 'share', 'tools', 'images' ) )
+
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
+
+env = ves_pkg.getEnv().Clone()
+
+#env.Append(LIBS = ['ves_open_xml'])
+#env.Append(LIBPATH = [ pj('#', buildDir,'src','ves', 'open', 'xml')])
+#    CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="/usr/include" )
+#    CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib/libz.dylib" )
+#    CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="${PNG_INSTALL_DIR}/include" )
+#    CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.a" )
+
+env.Append(CPPPATH = [ "/stuff/data/VE_Suite_Deps/auto_deps/libpng-1.5.2/install-64-bit/include" ]) 
+env.Append(LIBPATH = [ "/stuff/data/VE_Suite_Deps/auto_deps/libpng-1.5.2/install-64-bit/lib" ]) 
+env.Append(LINKFLAGS = [ "/stuff/data/VE_Suite_Deps/auto_deps/libpng-1.5.2/install-64-bit/lib/libpng.a" ])
+#env.Append(LINKFLAGS = ["--static"])
+env.Append(LIBS = ['z'])
+#env.Append(LIBS = ['png'])
+#pj('#', buildDir,'src','ves', 'open', 'xml')])
+
+boost_header_options.apply( env )
+boost_options.apply( env )
+
+ce_prog = ves_pkg.createProgram('ves_image_processor' + env["PROGSUFFIX"], env, 'bin')
+ce_prog.addSources( sources )
+ce_prog.addHeaders( headers )
+ce_prog.build()
+
