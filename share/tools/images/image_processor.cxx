@@ -20,11 +20,11 @@
 #include <boost/lexical_cast.hpp>
 
 boost::gil::rgb8_image_t image;
-boost::gil::rgb8_pixel_t pixel;
 boost::gil::rgb8_image_t blobImage;
 boost::gil::rgb8_image_t visitedImage;
 boost::gil::rgb8_image_t smallImage;
 
+boost::gil::rgb8_pixel_t pixel;
 boost::gil::rgb8_pixel_t whitePixel( 255, 255, 255 );;
 boost::gil::rgb8_pixel_t blackPixel( 0, 0, 0 );
 double r,g,b;
@@ -98,6 +98,12 @@ void extractblob( int x, int y, int currentpositionx, int currentpositiony )
         
 int main( int argc, char* argv[] )
 {
+    if( argc == 1 )
+    {
+        std::cout << "Pass in a png file." << std::endl;
+        return 1;
+    }
+
     boost::filesystem::path scalarPath( argv[ 1 ] );
     //Get base directory name from vtiFilename
     std::string const directory = scalarPath.remove_filename().string();
@@ -111,6 +117,7 @@ int main( int argc, char* argv[] )
     blobImage.recreate( image.dimensions(), whitePixel, 1 );
 
     size_t counter = 0;
+    std::string fileName;
     for (int y=0; y<image._view.height(); ++y)
     {
         for (int x=0; x<image._view.width(); ++x)
@@ -134,7 +141,7 @@ int main( int argc, char* argv[] )
                         boost::gil::subimage_view( boost::gil::view( blobImage ), min.x, min.y, dim1, dim2), 
                         boost::gil::subimage_view( boost::gil::view( smallImage ), 5, 5, dim1, dim2) );
                     
-                    std::string fileName = directory + "/blob_" + boost::lexical_cast< std::string >( counter ) + ".png";
+                    fileName = directory + "/blob_" + boost::lexical_cast< std::string >( counter ) + ".png";
                     boost::gil::png_write_view( fileName, boost::gil::view( smallImage ) );
                     
                     boost::gil::fill_pixels( boost::gil::view( blobImage ), whitePixel );
