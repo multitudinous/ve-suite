@@ -20,7 +20,6 @@
 #include <boost/lexical_cast.hpp>
 
 boost::gil::rgb8_image_t image;
-boost::gil::rgb8_image_t whiteImage;
 boost::gil::rgb8_pixel_t pixel;
 boost::gil::rgb8_image_t blobImage;
 boost::gil::rgb8_image_t visitedImage;
@@ -62,9 +61,9 @@ void extractblob( int x, int y, int currentpositionx, int currentpositiony )
 
     if( (r>220) && (g>220) && (b>220) )
     {
-        //<< boost::gil::get_color(pixel, boost::gil::alpha_t()) << std::endl;
         return;
     }
+
     blobSize += 1;
     
     if( x < min.x )
@@ -89,7 +88,6 @@ void extractblob( int x, int y, int currentpositionx, int currentpositiony )
 
     //std::cout << r << " " << g << " " << b << " "<< std::endl; 
     //std::cout << currentpositionx << " " << currentpositiony << std::endl;
-    //copy(buffer[x][y], blobbuffer[currentpositionx][currentpositiony])
     blobImage._view( currentpositionx, currentpositiony ) = pixel;
 
     extractblob( x-1,   y, currentpositionx-1,   currentpositiony);
@@ -111,7 +109,6 @@ int main( int argc, char* argv[] )
 
     visitedImage.recreate( image.dimensions(), blackPixel, 1 );
     blobImage.recreate( image.dimensions(), whitePixel, 1 );
-    whiteImage.recreate( image.dimensions(), whitePixel, 1 );
 
     size_t counter = 0;
     for (int y=0; y<image._view.height(); ++y)
@@ -129,8 +126,6 @@ int main( int argc, char* argv[] )
                 extractblob( x, y, x, y );
                 if( blobSize > 200 )
                 {
-                    //std::cout << min.x << " " << min.y << std::endl << max.x << " " << max.y << std::endl << std::endl;
-                    //std::cout << max.x - min.x << " " << max.y - min.y << std::endl << std::endl;
                     int dim1 = max.x - min.x;
                     int dim2 = max.y - min.y;
                     smallImage.recreate( dim1+10, dim2+10, whitePixel, 1 );
@@ -142,7 +137,6 @@ int main( int argc, char* argv[] )
                     std::string fileName = directory + "/blob_" + boost::lexical_cast< std::string >( counter ) + ".png";
                     boost::gil::png_write_view( fileName, boost::gil::view( smallImage ) );
                     
-                    //blobImage = whiteImage;
                     boost::gil::fill_pixels( boost::gil::view( blobImage ), whitePixel );
 
                     counter += 1;
