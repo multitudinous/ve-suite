@@ -118,9 +118,9 @@ int main( int argc, char* argv[] )
 
     size_t counter = 0;
     std::string fileName;
-    for (int y=0; y<image._view.height(); ++y)
+    for( int y=0; y<image._view.height(); ++y)
     {
-        for (int x=0; x<image._view.width(); ++x)
+        for( int x=0; x<image._view.width(); ++x)
         {
             if( visitedImage._view(x,y) == blackPixel )
             {
@@ -140,6 +140,8 @@ int main( int argc, char* argv[] )
                     boost::gil::copy_pixels( 
                         boost::gil::subimage_view( boost::gil::view( blobImage ), min.x, min.y, dim1, dim2), 
                         boost::gil::subimage_view( boost::gil::view( smallImage ), 5, 5, dim1, dim2) );
+                    
+                    //boost::gil::rotated90cw_view
                     
                     fileName = directory + "/blob_" + boost::lexical_cast< std::string >( counter ) + ".png";
                     boost::gil::png_write_view( fileName, boost::gil::view( smallImage ) );
