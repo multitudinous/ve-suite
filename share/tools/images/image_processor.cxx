@@ -118,10 +118,6 @@ int main( int argc, char* argv[] )
     {
         for (int x=0; x<image._view.width(); ++x)
         {
-            //pixel = visitedImage._view(x,y);
-            //r = double(boost::gil::get_color(pixel, boost::gil::red_t()));
-            //g = double(boost::gil::get_color(pixel, boost::gil::green_t()));
-            //b = double(boost::gil::get_color(pixel, boost::gil::blue_t()));
             if( visitedImage._view(x,y) == blackPixel )
             {
                 blobSize = 0;
@@ -146,23 +142,16 @@ int main( int argc, char* argv[] )
                     std::string fileName = directory + "/blob_" + boost::lexical_cast< std::string >( counter ) + ".png";
                     boost::gil::png_write_view( fileName, boost::gil::view( smallImage ) );
                     
-                    //boost::gil::fill_pixels
-                    blobImage = whiteImage;
-                    
+                    //blobImage = whiteImage;
+                    boost::gil::fill_pixels( boost::gil::view( blobImage ), whitePixel );
+
                     counter += 1;
                 }
             }
         }
     }
     std::cout << counter << " blobs found." << std::endl;
-    //find where a pixel is white or not and dump out that block of data
-    //boost::gil::rgba8_pixel_t pixel;
-    //boost::gil::get_color(pixel,boost::gil::red_t());
-    
-    //boost::gil::get_color(Input, boost::gil::red_t()) + value,
-    //boost::gil::get_color(Input, boost::gil::green_t()) + value,
-    //boost::gil::get_color(Input, boost::gil::blue_t()) + value,
-    //boost::gil::get_color(Input, boost::gil::alpha_t()));
+
     return 0;
 }
 
