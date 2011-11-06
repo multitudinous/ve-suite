@@ -883,6 +883,16 @@ void App::latePreFrame()
     _frameNumber += 1;
     mProfileCounter += 1;
 
+    /*if( !m_windowIsOpen )
+    {
+        //Get the view matrix and the frustum from the draw manager
+        vrj::opengl::DrawManager* glDrawManager =
+        static_cast< vrj::opengl::DrawManager* >( getDrawManager() );
+        const vrj::opengl::UserData* userData = glDrawManager->currentUserData();
+        const vrj::opengl::WindowPtr window = userData->getGlWindow();
+        m_windowIsOpen = window->isOpen();
+    }*/
+    
     vprDEBUG( vesDBG, 3 ) << "|End App::latePreFrame"
                           << std::endl << vprDEBUG_FLUSH;
 }
@@ -952,13 +962,8 @@ void App::contextPreDraw()
         {
             vpr::Guard< vpr::Mutex > val_guard( mValueLock );
             mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
-            //( *sceneViewer )->getCamera()->addChild( m_uiGroup.get() );
             //update();
 
-            //if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
-            {
-                ;
-            }
             *mViewportsChanged = true;
         }
     }
@@ -1275,6 +1280,12 @@ void App::UIEnterLeave( bool entered )
 ////////////////////////////////////////////////////////////////////////////////
 void App::preRun()
 {
+#if defined( _DARWIN )
+    while( !jccl::ConfigManager::instance()->isPendingStale() )
+    {
+        vpr::System::msleep( 200 );
+    }
+#endif
     LoadUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
