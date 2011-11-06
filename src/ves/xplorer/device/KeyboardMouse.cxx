@@ -133,7 +133,7 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
     :
-    Device( KEYBOARD_MOUSE ),
+    Device( GAME_CONTROLLER ),
     m_exit( false )
 {
     // Connect to Juggler's new event handling interface

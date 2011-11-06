@@ -101,7 +101,7 @@ public:
     KeyboardMouse();
 
     ///Destructor
-    ~KeyboardMouse();
+    virtual ~KeyboardMouse();
 
     ///
     ///\return

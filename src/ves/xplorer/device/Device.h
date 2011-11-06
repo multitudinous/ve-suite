@@ -98,12 +98,11 @@ class KeyboardMouse;
 class Tablet;
 class Wand;
 class Pointer;
+class GameController;
 
 /*!\file Device.h
  * Device API
- */
-
-/*!\class VE_XPlorer::Device
+ * \class VE_XPlorer::Device
  *
  */
 class VE_XPLORER_EXPORTS Device : public GlobalBase
@@ -117,7 +116,8 @@ public:
         KEYBOARD_MOUSE = 2,
         TABLET = 3,
         WAND = 4,
-        POINTER = 5
+        POINTER = 5,
+        GAME_CONTROLLER = 6
     };
 
     ///Constructor
@@ -148,6 +148,10 @@ public:
     ///
     ///\return
     virtual Pointer* AsPointer();
+    
+    ///
+    ///\return
+    virtual GameController* AsGameController();
     
     ///
     ///\return

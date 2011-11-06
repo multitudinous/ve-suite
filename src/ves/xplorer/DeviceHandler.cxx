@@ -41,6 +41,7 @@
 #include <ves/xplorer/device/Tablet.h>
 #include <ves/xplorer/device/Gloves.h>
 #include <ves/xplorer/device/Pointer.h>
+#include <ves/xplorer/device/GameController.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -174,6 +175,11 @@ void DeviceHandler::Initialize()
     device = new device::Pointer();
     //device->Enable();
     m_deviceMap[ device::Device::POINTER ] = device;
+    
+    //Initialize tablet device
+    device = new device::GameController();
+    //device->Enable();
+    m_deviceMap[ device::Device::GAME_CONTROLLER ] = device;
     
     device = NULL;
     
