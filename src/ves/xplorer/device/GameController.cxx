@@ -196,8 +196,8 @@ void GameController::OnAxis0Event( const float event )
 
     m_gadgetInputAdapter->clear();
     m_gadgetInputAdapter->ExtractAxis( MOVE_X_AXIS_IDX, event );
-    m_mxGamePadStyle->matrixTransform( 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetFrameStamp()->getSimulationTime() );
+    //m_mxGamePadStyle->matrixTransform( 
+    //    ves::xplorer::scenegraph::SceneManager::instance()->GetFrameStamp()->getSimulationTime() );
     osg::Matrixd navMatrix = m_mxGamePadStyle->getMxCore()->getMatrix();
     //std::cout << " Analog device input " << event << std::endl << std::flush;
 }
