@@ -76,16 +76,6 @@
 #include <ves/xplorer/device/MxInputAdapterGadgeteerGamePad.h>
 #include <osgwMx/MxMovementStyleGamePad.h>
 
-#define ROTATE_X_AXIS_IDX 2      // the range value (axis) index to be used for X axis rotation.
-#define ROTATE_Y_AXIS_IDX 5      // the range value index to be used for Y axis rotation.
-#define MOVE_X_AXIS_IDX 0        // the range value index to be used for X axis movement.
-#define MOVE_Y_AXIS_IDX 1        // the range value index to be used for Y axis movement.
-#define UPDOWN_BTN_IDX 1         // when pressed, this button makes the MOVE_Y_AXIS_IDX stick move up-down.
-#define SLOW_RATE_BTN_IDX 6      // the index of the button that, when pressed, slows the change rate by a factor of 4.
-#define FAST_RATE_BTN_IDX 7      // the index of the button that, when pressed, speeds up the change rate by a factor of 4.
-#define RESET_MATRIX_BTN_IDX 5   // the index of the button that, when pressed, will reset the view matrix to its original state.
-#define JUMP_TO_ORIGIN_BTN_IDX 4 // This butten sets the view position to the origin.
-
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 

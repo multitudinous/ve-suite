@@ -34,7 +34,10 @@ namespace osgwMx
 ////////////////////////////////////////////////////////////////////////////////
 MxInputAdapterGadgeteerGamePad::MxInputAdapterGadgeteerGamePad() 
 {
-    ;
+    rangeValueAttenuate[ ROTATE_X_AXIS_IDX ] = 0.05f;
+    rangeValueAttenuate[ ROTATE_Y_AXIS_IDX ] = 0.05f;
+    rangeValueAttenuate[ MOVE_X_AXIS_IDX ] = 0.05f;
+    rangeValueAttenuate[ MOVE_Y_AXIS_IDX ] = 0.05f;
 }
 ////////////////////////////////////////////////////////////////////////////////
 MxInputAdapterGadgeteerGamePad::~MxInputAdapterGadgeteerGamePad()
