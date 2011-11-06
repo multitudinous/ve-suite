@@ -89,7 +89,7 @@ void MxInputAdapterGadgeteerGamePad::ExtractPOV( float value )
 void MxInputAdapterGadgeteerGamePad::ExtractAxis( unsigned int axis, float value )
 {
     rangeValues[ axis ] = GetNormalizedAxisValue( value );
-    if( abs( rangeValues[ axis ] ) < rangeValueAttenuate[ axis ])
+    if( std::abs( rangeValues[ axis ] ) < rangeValueAttenuate[ axis ])
     {
         rangeValues[ axis ] = 0;
     }
