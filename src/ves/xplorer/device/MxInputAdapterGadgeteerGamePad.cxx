@@ -23,6 +23,8 @@
 #include <ostream>
 #include <iostream>
 
+#include <gmtl/Math.h>
+
 
 namespace osgwMx
 {
@@ -89,7 +91,7 @@ void MxInputAdapterGadgeteerGamePad::ExtractPOV( float value )
 void MxInputAdapterGadgeteerGamePad::ExtractAxis( unsigned int axis, float value )
 {
     rangeValues[ axis ] = GetNormalizedAxisValue( value );
-    if( std::abs( rangeValues[ axis ] ) < rangeValueAttenuate[ axis ])
+    if( gmtl::Math::abs( rangeValues[ axis ] ) < rangeValueAttenuate[ axis ])
     {
         rangeValues[ axis ] = 0;
     }
