@@ -63,6 +63,7 @@ TextTextureCallback::~TextTextureCallback()
 ////////////////////////////////////////////////////////////////////////////////
 TextTextureCallback::TextTextureCallback( const TextTextureCallback& ctc, const osg::CopyOp& copyop )
     :
+    osg::Object( ctc, copyop ),
     osg::NodeCallback( ctc, copyop )
 {
     ;
