@@ -682,7 +682,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
     if GetPlatform() != 'win32':
         baseEnv.AppendUnique( LINKFLAGS = ['-g'] )
-        baseEnv.AppendUnique( CXXFLAGS = ['-g','-funroll-loops'] )
+        baseEnv.AppendUnique( CXXFLAGS = ['-g','-funroll-loops','-fno-strict-aliasing'] )
         #baseEnv.AppendUnique( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
 
     baseEnv.Append(BUILDERS = builders)
