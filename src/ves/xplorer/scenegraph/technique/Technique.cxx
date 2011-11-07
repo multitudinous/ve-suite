@@ -87,7 +87,7 @@ void Technique::Traverse(
     osgUtil::CullVisitor* cv = dynamic_cast< osgUtil::CullVisitor* >( &nv );
 
     //Traverse all passes
-    for( int i = 0; i < GetNumPasses(); ++i )
+    for( size_t i = 0; i < GetNumPasses(); ++i )
     {
         //Push the i-th pass' StateSet if necessary
         if( cv )
