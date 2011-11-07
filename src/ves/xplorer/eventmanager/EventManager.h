@@ -76,12 +76,12 @@
             connections, ves::xplorer::eventmanager::EventManager::type, ves::xplorer::eventmanager::EventManager::priority ); \
         }while(0)
 
-#define CONNECT____0( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this ) CONNECTSIGNALPOST
-#define CONNECT____1( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1 ) CONNECTSIGNALPOST
-#define CONNECT____2( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1, _2 ) CONNECTSIGNALPOST
-#define CONNECT____3( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1, _2, _3 ) CONNECTSIGNALPOST
-#define CONNECT____4( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1, _2, _3, _4 ) CONNECTSIGNALPOST
-#define CONNECT____5( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, this, _1, _2, _3, _4, _5 ) CONNECTSIGNALPOST
+#define CONNECT____0( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ) ) CONNECTSIGNALPOST
+#define CONNECT____1( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1 ) CONNECTSIGNALPOST
+#define CONNECT____2( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1, _2 ) CONNECTSIGNALPOST
+#define CONNECT____3( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1, _2, _3 ) CONNECTSIGNALPOST
+#define CONNECT____4( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1, _2, _3, _4 ) CONNECTSIGNALPOST
+#define CONNECT____5( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1, _2, _3, _4, _5 ) CONNECTSIGNALPOST
 
 
 #define CONNECTSIGNAL_0( name, signature, slot, connections, priority ) \
@@ -132,27 +132,27 @@
 
 #define CONNECT____0_COMBINER( signature, combiner, slot ) \
                 CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, this ) CONNECTSIGNALPOST
+                boost::bind( slot, boost::ref( *this ) ) CONNECTSIGNALPOST
 
 #define CONNECT____1_COMBINER( signature, combiner, slot ) \
                 CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, this, _1 ) CONNECTSIGNALPOST
+                boost::bind( slot, boost::ref( *this ), _1 ) CONNECTSIGNALPOST
 
 #define CONNECT____2_COMBINER( signature, combiner, slot ) \
                 CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, this, _1, _2 ) CONNECTSIGNALPOST
+                boost::bind( slot, boost::ref( *this ), _1, _2 ) CONNECTSIGNALPOST
 
 #define CONNECT____3_COMBINER( signature, combiner, slot ) \
                 CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, this, _1, _2, _3 ) CONNECTSIGNALPOST
+                boost::bind( slot, boost::ref( *this ), _1, _2, _3 ) CONNECTSIGNALPOST
 
 #define CONNECT____4_COMBINER( signature, combiner, slot ) \
                 CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, this, _1, _2, _3, _4 ) CONNECTSIGNALPOST
+                boost::bind( slot, boost::ref( *this ), _1, _2, _3, _4 ) CONNECTSIGNALPOST
 
 #define CONNECT____5_COMBINER( signature, combiner, slot ) \
                 CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, this, _1, _2, _3, _4, _5 ) CONNECTSIGNALPOST
+                boost::bind( slot, boost::ref( *this ), _1, _2, _3, _4, _5 ) CONNECTSIGNALPOST
 
 #define CONNECTSIGNALS_0_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
             CONNECT____0_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
