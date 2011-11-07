@@ -501,7 +501,7 @@ void DCS::UpdatePhysicsTransform()
 */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody )
+void DCS::SetPhysicsRigidBody( PhysicsRigidBody* )
 {
     /*mPhysicsRigidBody = physicsRigidBody;
     m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
