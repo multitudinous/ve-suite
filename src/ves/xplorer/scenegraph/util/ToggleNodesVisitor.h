@@ -33,11 +33,10 @@
 #ifndef VES_XPLORER_TOGGLE_NODES_VISITOR_H
 #define VES_XPLORER_TOGGLE_NODES_VISITOR_H
 /*!\file ToggleNodesVisitor.h
-ToggleNodesVisitor API
-*/
-/*!\class ToggleNodesVisitor
-*
-*/
+ * ToggleNodesVisitor API
+ * \class ToggleNodesVisitor
+ *
+ */
 #include <ves/VEConfig.h>
 
 #include <osg/NodeVisitor>

@@ -33,11 +33,10 @@
 #ifndef VES_XPLORER_TOGGLE_PLUGIN_VISITOR_H
 #define VES_XPLORER_TOGGLE_PLUGIN_VISITOR_H
 /*!\file TogglePluginVisitor.h
-TogglePluginVisitor API
-*/
-/*!\class TogglePluginVisitor
-*
-*/
+ * TogglePluginVisitor API
+ * \class TogglePluginVisitor
+ *
+ */
 #include <ves/VEConfig.h>
 
 #include <osg/ref_ptr>

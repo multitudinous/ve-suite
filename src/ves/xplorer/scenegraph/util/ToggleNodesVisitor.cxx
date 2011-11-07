@@ -48,8 +48,8 @@ ToggleNodesVisitor::ToggleNodesVisitor( osg::Node* osg_node, bool toggle,
     std::vector< std::string > nodeID )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-    m_nodeIDs( nodeID ),
-    mToggle( toggle )
+    mToggle( toggle ),
+    m_nodeIDs( nodeID )
 {
     //This enables the visitor to traverse "off" nodes
     setNodeMaskOverride( 1 );

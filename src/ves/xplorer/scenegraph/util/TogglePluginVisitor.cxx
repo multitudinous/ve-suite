@@ -46,8 +46,8 @@ TogglePluginVisitor::TogglePluginVisitor( osg::Node* osg_node, bool toggle,
     const std::string& nodeID )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-    mNodeID( nodeID ),
-    mToggle( toggle )
+    mToggle( toggle ),
+    mNodeID( nodeID )
 {
     //This enables the visitor to traverse "off" nodes
     mToggle = false;
