@@ -365,6 +365,7 @@ void Selection::ProcessSelection()
     osg::NodePath nodePath = intersections.begin()->nodePath;
     m_objectPickedSignal( nodePath );
     osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
+    boost::ignore_unused_variable_warning( vesObject );
 
     //HighlightAndSetManipulators alters nodePath, so copy it off first.
     osg::NodePath nodePathCopy( nodePath );
