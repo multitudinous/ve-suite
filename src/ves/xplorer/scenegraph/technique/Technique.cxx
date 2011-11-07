@@ -52,7 +52,7 @@ Technique::~Technique()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const size_t Technique::GetNumPasses() const
+size_t Technique::GetNumPasses() const
 {
     return m_passes.size();
 }

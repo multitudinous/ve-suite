@@ -58,9 +58,7 @@ namespace technique
 
 /*!\file Technique.h
  * Technique API
- */
-
-/*!\class ves::xplorer::scenegraph::technique::Technique
+ * \class ves::xplorer::scenegraph::technique::Technique
  *
  */
 class VE_SCENEGRAPH_EXPORTS Technique
@@ -76,7 +74,7 @@ public:
     void DirtyPasses();
 
     ///
-    const size_t GetNumPasses() const;
+    size_t GetNumPasses() const;
 
     ///
     osg::StateSet* GetPassStateSet( int i );
