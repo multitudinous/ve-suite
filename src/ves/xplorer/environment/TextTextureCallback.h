@@ -71,7 +71,7 @@ public:
     ///Constructor
     TextTextureCallback( ves::xplorer::scenegraph::TextTexture* textTexture);
 
-    META_Object(ves::xplorer::environment, TextTextureCallback);
+    //META_Object(ves::xplorer::environment, TextTextureCallback);
     
     ///Copy Constructor
     TextTextureCallback( const TextTextureCallback& ctc, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );

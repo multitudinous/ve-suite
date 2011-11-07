@@ -308,7 +308,9 @@ PluginBase* PluginLoader::CreateNewPlugin( unsigned int input )
 
     void* object = ( *creator )();
     if( NULL != object )
+    {
         vprDEBUG( vesDBG, 1 )  <<  "|\tCreated object instance " << std::endl << vprDEBUG_FLUSH;
+    }
 
     // Is there a way to test that this cast was successful?
     test_obj = static_cast<PluginBase*>( object );
