@@ -629,7 +629,7 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
                     newComboVertList->InsertNextId( tempVertList->GetId( j ) );
                 }
                 //std::cout << std::endl;
-                for( size_t j = 1; j < oldVertList->GetNumberOfIds(); ++j )
+                for( vtkIdType j = 1; j < oldVertList->GetNumberOfIds(); ++j )
                 {
                     //std::cout << " " << oldVertList->GetId( j );
                     newComboVertList->InsertNextId( oldVertList->GetId( j ) );
@@ -665,7 +665,7 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
         if( IsStreamlineBackwards( cellId, polydata ) )
         {
             vtkIdType numVerts = origVertList->GetNumberOfIds();
-            for( size_t i = 0; i < numVerts; ++i )
+            for( vtkIdType i = 0; i < numVerts; ++i )
             {
                 tempVertList->SetId( i, origVertList->GetId( numVerts - 1 - i ) );
             }
@@ -689,7 +689,7 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
             vprDEBUG( vesDBG, 1 )
             << "|\t\tNumber of Forward points = " << numVerts
             << std::endl << vprDEBUG_FLUSH;
-            for( size_t j = 0; j < numVerts; ++j )
+            for( vtkIdType j = 0; j < numVerts; ++j )
             {
                 x = points->GetPoint( tempVertList->GetId( j ) );
                 vprDEBUG( vesDBG, 3 )
