@@ -341,7 +341,7 @@ void SteadyStateVizHandler::InitScene()
     //This set of thread stuff needs to be in ssvizhandler and transvizhandler
     std::cout << "| Initializing............................................. Threads |" << std::endl;
     runIntraParallelThread = true;
-    m_vizThread = new vpr::Thread( boost::bind( &SteadyStateVizHandler::CreateActorThread, this ) );
+    m_vizThread = new vpr::Thread( boost::bind( &SteadyStateVizHandler::CreateActorThread, boost::ref( this ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::PreFrameUpdate()

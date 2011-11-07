@@ -109,9 +109,7 @@ class DCS;
 
 /*!\file SteadyStateVizHandler.h
  * SteadyStateVizHandler API
- */
-
-/*!\class ves::xplorer::SteadyStateVizHandler
+ * \class ves::xplorer::SteadyStateVizHandler
  *
  */
 class VE_XPLORER_EXPORTS SteadyStateVizHandler
