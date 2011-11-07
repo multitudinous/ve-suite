@@ -60,6 +60,7 @@ public:
         const ForceCullCallback& forceCullCallback,
         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY )
         :
+        osg::Object( forceCullCallback, copyop ),
         osg::Drawable::CullCallback( forceCullCallback, copyop )
     {
         ;
