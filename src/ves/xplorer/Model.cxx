@@ -206,7 +206,7 @@ void Model::CreateCfdDataSet( void )
     mVTKDataSets.back()->SetModel( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* dataNode )
+void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* )
 {
     if( !mirrorNode )
     {
