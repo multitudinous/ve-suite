@@ -852,7 +852,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GraphicalPluginManager::NewFileLoading( std::string const& fileName )
+void GraphicalPluginManager::NewFileLoading( std::string const& )
 {
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.
@@ -862,7 +862,7 @@ void GraphicalPluginManager::NewFileLoading( std::string const& fileName )
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GraphicalPluginManager::DiscoverPlugins( std::string const& fileName )
+void GraphicalPluginManager::DiscoverPlugins( std::string const& )
 {
     std::map< std::string, ves::xplorer::plugin::PluginBase* >* plugins;
     plugins = GraphicalPluginManager::instance()->GetTheCurrentPlugins();

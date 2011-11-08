@@ -116,7 +116,7 @@ void NormalizeVisitor::apply( osg::PositionAttitudeTransform& node )
 }
 ////////////////////////////////////////////////////////////////////////
 void NormalizeVisitor::SetupNormalizeForStateSet( osg::StateSet* stateset, 
-    osg::Node* node )
+    osg::Node* )
 {
     ///Do this so that the normals will not be affected by the 
     ///scaling applied by the user - See osg post on April 19, 2007

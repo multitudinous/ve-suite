@@ -57,7 +57,7 @@ using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 LoadVesFileEventHandler::LoadVesFileEventHandler()
         : ves::xplorer::event::EventHandler()
 {
@@ -88,18 +88,19 @@ LoadVesFileEventHandler& LoadVesFileEventHandler::operator=( const LoadVesFileEv
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void LoadVesFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
+void LoadVesFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }
-//////////////////////////////////////////////////////////////////////////
-void LoadVesFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
+////////////////////////////////////////////////////////////////////////////////
+void LoadVesFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& )
 {
     NewFileLoaded( "null" );
 }
-
-void LoadVesFileEventHandler::NewFileLoaded( const std::string& fileName )
+////////////////////////////////////////////////////////////////////////////////
+void LoadVesFileEventHandler::NewFileLoaded( const std::string& )
 {
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 }
+////////////////////////////////////////////////////////////////////////////////
 

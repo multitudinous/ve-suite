@@ -146,7 +146,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     // get number of indices in the vtk prim array. Each vtkCell has the length
     // (not counted), followed by the indices.
     int primArraySize = primArray->GetNumberOfConnectivityEntries();
-    int numIndices = primArraySize - numPrimitives;
+    //int numIndices = primArraySize - numPrimitives;
 
     // allocate as many verts as there are indices in vtk prim array
     osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
@@ -175,7 +175,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars( opacity );
     if( actor->GetMapper()->GetScalarVisibility() && colorArray != NULL )
     {
-        int scalarMode = actor->GetMapper()->GetScalarMode();
+        //int scalarMode = actor->GetMapper()->GetScalarMode();
         /*if( scalarMode == VTK_SCALAR_MODE_USE_CELL_DATA ||
                 !polyData->GetPointData()->GetScalars() ) // there is no point data
             colorPerCell = 1;
