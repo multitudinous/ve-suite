@@ -87,7 +87,7 @@ void PerlinNoiseTexture::_initNoiseImage( int s, int t, int r )
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void PerlinNoiseTexture::_initNoiseTexture( int s, int t, int r )
+void PerlinNoiseTexture::_initNoiseTexture( int, int, int )
 {
     ///\Note Need to add checks for texture type!!!
     m_noiseTexture = new osg::Texture3D;

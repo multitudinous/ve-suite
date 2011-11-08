@@ -332,7 +332,7 @@ void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
         std::string tWrap;
         std::string rWrap;
 
-        osg::Texture::WrapMode swrapMode = osg::Texture::CLAMP;
+        //osg::Texture::WrapMode swrapMode = osg::Texture::CLAMP;
 
         if( textureImage->GetWrapMode( "Wrap S", sWrap ) )
             _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_S, sWrap );
