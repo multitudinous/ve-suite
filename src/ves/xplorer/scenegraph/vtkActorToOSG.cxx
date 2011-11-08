@@ -145,7 +145,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
 
     // get number of indices in the vtk prim array. Each vtkCell has the length
     // (not counted), followed by the indices.
-    int primArraySize = primArray->GetNumberOfConnectivityEntries();
+    //int primArraySize = primArray->GetNumberOfConnectivityEntries();
     //int numIndices = primArraySize - numPrimitives;
 
     // allocate as many verts as there are indices in vtk prim array
