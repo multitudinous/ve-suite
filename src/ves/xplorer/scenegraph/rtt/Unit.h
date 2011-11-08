@@ -107,7 +107,7 @@ public:
     ///Return an input texture of a certain mrt index
     ///\param inputIndex Index of the input texture
     ///\return
-    osg::Texture* GetInputTexture( int inputIndex ) const;
+    osg::Texture* GetInputTexture( size_t inputIndex ) const;
 
     ///Return complete index to texture mapping
     ///\return
@@ -116,7 +116,7 @@ public:
     ///Return an output texture of a certain mrt index
     ///\param mrt
     ///\return
-    osg::Texture* GetOutputTexture( int mrt = 0 ) const;
+    osg::Texture* GetOutputTexture( size_t mrt = 0 ) const;
 
     ///Return mOutputTextures
     ///\return

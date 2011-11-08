@@ -126,7 +126,7 @@ protected:
     ///Create an output texture of a certain mrt index
     ///NOTE: This may or maynot use the mrt index that the user provides
     ///as the index for the output texture.
-    virtual osg::Texture* CreateOutputTexture( int mrt = 0 );
+    virtual osg::Texture* CreateOutputTexture( size_t mrt = 0 );
 
 private:
     ///Framebuffer object where results are written

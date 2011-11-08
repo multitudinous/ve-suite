@@ -191,7 +191,7 @@ const Unit::TextureMap& Unit::GetInputTextureMap() const
     return mInputTextures;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture* Unit::GetOutputTexture( int mrt ) const
+osg::Texture* Unit::GetOutputTexture( size_t mrt ) const
 {
     if( mrt < mOutputTextures.size() )
     {

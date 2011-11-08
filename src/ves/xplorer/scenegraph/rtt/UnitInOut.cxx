@@ -187,7 +187,7 @@ GLenum UnitInOut::GetOutputInternalFormat() const
     }
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture* UnitInOut::CreateOutputTexture( int mrt )
+osg::Texture* UnitInOut::CreateOutputTexture( size_t mrt )
 {
     //If already exists, then return back
     osg::Texture* newTexture( 0 );

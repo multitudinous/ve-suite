@@ -111,8 +111,8 @@ void UnitInResampleOut::SetInputTexturesFromParents()
              //Add each found texture as input
              const Unit::TextureMap& textureMap =
                 unit->GetOutputTextureMap();
-             Unit::TextureMap::const_iterator itr = textureMap.begin();
-             for( itr; itr != textureMap.end(); ++itr )
+             for( Unit::TextureMap::const_iterator itr = textureMap.begin(); 
+                 itr != textureMap.end(); ++itr )
              {
                  osg::Texture* texture = itr->get();
                  if( texture )
