@@ -84,12 +84,12 @@ ReloadPluginsEventHandler& ReloadPluginsEventHandler::operator=( const ReloadPlu
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ReloadPluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
+void ReloadPluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 {
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void ReloadPluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
+void ReloadPluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& )
 {
     std::map< std::string, ves::xplorer::plugin::PluginBase* >* plugins;
     plugins = GraphicalPluginManager::instance()->GetTheCurrentPlugins();

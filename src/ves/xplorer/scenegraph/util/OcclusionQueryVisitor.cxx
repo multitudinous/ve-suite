@@ -120,7 +120,6 @@ OcclusionQueryNonFlatVisitor::OcclusionQueryNonFlatVisitor()
     _nameIdx( 0 ),
     _occluderThreshold( 5000 )
 {
-    int clampMe;
     //if ( OptionLoader::instance()->getOption( "OccluderThreshold", clampMe ) )
     //    _occluderThreshold = (clampMe < 0 ) ? 0 : static_cast<unsigned int>( clampMe );
     osg::ref_ptr<osg::OcclusionQueryNode> oqn = new osg::OcclusionQueryNode;
@@ -224,7 +223,6 @@ OcclusionQueryFlatVisitor::OcclusionQueryFlatVisitor()
     _nameIdx( 0 ),
     _occluderThreshold( 5000 )
 {
-    int clampMe;
     //if ( OptionLoader::instance()->getOption( "OccluderThreshold", clampMe ) )
     //    _occluderThreshold = (clampMe < 0 ) ? 0 : static_cast<unsigned int>( clampMe );
     osg::ref_ptr<osg::OcclusionQueryNode> oqn = new osg::OcclusionQueryNode;
@@ -336,11 +334,11 @@ OcclusionQueryFlatVisitor::getNextOQNName()
 
 //
 PerDrawableQueryVisitor::PerDrawableQueryVisitor()
-  : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
+    : 
+    osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
     _occluderThreshold( 5000 ),
     _count( 0 )
 {
-    int clampMe;
     //if ( OptionLoader::instance()->getOption( "OccluderThreshold", clampMe ) )
     //    _occluderThreshold = (clampMe < 0 ) ? 0 : static_cast<unsigned int>( clampMe );
 }
