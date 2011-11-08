@@ -139,7 +139,7 @@ std::vector< std::vector< std::vector< long > > > ThreeDIntArray::GetArray( void
     return tripleArray;
 }
 ////////////////////////////////////
-void ThreeDIntArray::_updateVEElement( const std::string& input )
+void ThreeDIntArray::_updateVEElement( const std::string& )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code

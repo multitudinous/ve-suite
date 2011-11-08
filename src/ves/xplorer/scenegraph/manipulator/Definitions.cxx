@@ -67,14 +67,10 @@ public:
     }
 
     ///
-    META_Object(
-        ves::xplorer::scenegraph::manipulator::Dragger, ForceCullCallback );
-
-    ///
     virtual bool cull(
-        osg::NodeVisitor* nv,
-        osg::Drawable* drawable,
-        osg::RenderInfo* renderInfo ) const
+        osg::NodeVisitor*,
+        osg::Drawable*,
+        osg::RenderInfo* ) const
     {
         return true;
     }
@@ -103,8 +99,6 @@ struct RotateAxisBBCallback : public osg::Drawable::ComputeBoundingBoxCallback
     {
         ;
     }
-
-    META_Object( ves::xplorer::scenegraph::manipulator, RotateAxisBBCallback );
 
     virtual osg::BoundingBox computeBound( const osg::Drawable& drawable ) const
     {

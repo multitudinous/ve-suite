@@ -205,8 +205,8 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::WriteMultipleXMLDocuments(
-    std::vector< std::pair< XMLObjectPtr, std::string > > nodes,
-    std::string& xmlData )
+    std::vector< std::pair< XMLObjectPtr, std::string > > ,
+    std::string&  )
 {
     /*
     if(!mDomDocumentManager )

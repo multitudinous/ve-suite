@@ -125,7 +125,7 @@ void cfdAnimatedStreamlineCone::Update( void )
     m_streamlines.clear();
     
     vtkIdType cellId;        //vtkIdType
-    vtkIdType npts;          //vtkIdType
+    size_t npts;          //vtkIdType
     vtkPoints * points;
     vtkPoints **pointsArray;
 
@@ -149,8 +149,8 @@ void cfdAnimatedStreamlineCone::Update( void )
     }
 
     // Find the maximum number of points in one streamline
-    int maxNpts = 0;
-    int minNpts = 1000000;
+    size_t maxNpts = 0;
+    size_t minNpts = 1000000;
 
     vtkPoints* points2 = 0;
     double x2[ 3 ];
@@ -231,7 +231,7 @@ void cfdAnimatedStreamlineCone::Update( void )
     {
         cellId = m_streamlines.at( i ).first;
         // For forward integrated points
-        int forwardPoints = 0;
+        size_t forwardPoints = 0;
         if( cellId != -1 )
         {
             points = polyData->GetCell( cellId )->GetPoints();
@@ -289,9 +289,9 @@ void cfdAnimatedStreamlineCone::Update( void )
         << maxNpts << std::endl << vprDEBUG_FLUSH;
     vprDEBUG( vesDBG, 1 ) << "|\t\tminNpts = " 
         << minNpts << std::endl << vprDEBUG_FLUSH;
-    int w = maxNpts;
-    double decimalRatio = ( double )w / 150.0;
-    int ratio = ( int )ceil( decimalRatio );
+    size_t w = maxNpts;
+    double decimalRatio = double( w )/ 150.0;
+    int ratio = int( ceil( decimalRatio ) );
 
     vtkPolyData* polydata = vtkPolyData::New();
     for( size_t i = 0; i < w; i += ratio )

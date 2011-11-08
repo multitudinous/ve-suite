@@ -83,7 +83,7 @@ const std::pair< unsigned int, unsigned int >& Point::GetPoint( void )
     return mPoint;
 }
 ////////////////////////////////////
-void Point::_updateVEElement( const std::string& input )
+void Point::_updateVEElement( const std::string& )
 {
     //Add code here to update the specific sub elements
     // name comes from verg.xsd

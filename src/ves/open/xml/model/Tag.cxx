@@ -85,7 +85,7 @@ void Tag::SetText( const std::string& text )
     mTagText = text;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tag::_updateVEElement( const std::string& input )
+void Tag::_updateVEElement( const std::string& )
 {
     // write all the elements according to verg_model.xsd
     SetAttribute( "id", mUuid );

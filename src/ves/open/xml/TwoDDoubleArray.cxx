@@ -138,7 +138,7 @@ std::vector< std::vector< double > > TwoDDoubleArray::GetArray( void )
     return tempData;
 }
 ////////////////////////////////////
-void TwoDDoubleArray::_updateVEElement( const std::string& input )
+void TwoDDoubleArray::_updateVEElement( const std::string& )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code

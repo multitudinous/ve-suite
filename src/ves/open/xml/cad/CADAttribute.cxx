@@ -214,7 +214,7 @@ CADAttribute& CADAttribute::operator=( const CADAttribute& rhs )
     return *this;
 }
 //////////////////////////////////////////////////////
-void CADAttribute::_updateVEElement( const std::string& input )
+void CADAttribute::_updateVEElement( const std::string& )
 {
     SetSubElement( "type", _attributeType );
     SetSubElement( "blending", _blending );

@@ -160,7 +160,7 @@ const std::vector<float>& Uniform::GetValues()
     return mValues;
 }
 //////////////////////////////////////////////////
-void Uniform::_updateVEElement( const std::string& input )
+void Uniform::_updateVEElement( const std::string& )
 {
     _updateUniformName();
     _updateUniformType();

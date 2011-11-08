@@ -119,7 +119,7 @@ void Transform::SetRotation( float* rotation )
     }
 }
 /////////////////////////////////////////////////////
-void Transform::_updateVEElement( const std::string& input )
+void Transform::_updateVEElement( const std::string& )
 {
     // name comes from verg.xsd
     mTranslationArray->SetOwnerDocument( mRootDocument );

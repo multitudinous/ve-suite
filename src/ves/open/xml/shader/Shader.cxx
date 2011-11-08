@@ -209,7 +209,7 @@ const UniformPtr Shader::GetUniform( unsigned int index )
     return mUniformList.at( index );
 }
 ////////////////////////////////////////////////
-void Shader::_updateVEElement( const std::string& input )
+void Shader::_updateVEElement( const std::string& )
 {
     _updateShaderType();
     _updateTextureImages();

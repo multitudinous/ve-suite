@@ -248,7 +248,7 @@ void CADMaterial::_updateColorProperties()
     opacityElement->appendChild( opacity );
 }
 /////////////////////////////////////////////////////
-void CADMaterial::_updateVEElement( const std::string& input )
+void CADMaterial::_updateVEElement( const std::string& )
 {
     _updateColorProperties();
     _updateShininess();

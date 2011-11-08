@@ -157,7 +157,7 @@ const std::string& Program::GetProgramName()
     return mName;
 }
 /////////////////////////////////////////////////
-void Program::_updateVEElement( const std::string& input )
+void Program::_updateVEElement( const std::string& )
 {
     _updateProgramName();
     if( mVertexShader )

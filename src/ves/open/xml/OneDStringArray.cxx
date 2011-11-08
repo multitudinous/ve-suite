@@ -104,12 +104,12 @@ std::string OneDStringArray::GetElement( unsigned int index )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::string > OneDStringArray::GetArray( void )
+std::vector< std::string > OneDStringArray::GetArray()
 {
     return mArray;
 }
 ////////////////////////////////////
-void OneDStringArray::_updateVEElement( const std::string& input )
+void OneDStringArray::_updateVEElement( const std::string& )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code

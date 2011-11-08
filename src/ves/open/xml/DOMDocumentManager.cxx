@@ -127,7 +127,7 @@ void DOMDocumentManager::_readInputFile( const std::string& xmlFile )
     mParser->parse( xmlFile.c_str() );
 }
 //////////////////////////////////////////////////////
-std::string DOMDocumentManager::WriteDocumentToString( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* document )
+std::string DOMDocumentManager::WriteDocumentToString( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* )
 {
     std::string outputData;
     // do all the xerces studd to make a DOMWriter

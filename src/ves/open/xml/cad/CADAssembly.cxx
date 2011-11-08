@@ -225,7 +225,6 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
         for( size_t i = 0; i < nChilderenReally; i++ )
         {
             DOMElement* cadNode = dynamic_cast<DOMElement*>( childrenNodes->item( i ) );
-            unsigned int g = 0;
             ///Find the children with the immediate parent of this node
             while( cadNode->getParentNode() != childListElement )
             {
