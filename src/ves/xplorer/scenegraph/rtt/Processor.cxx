@@ -79,12 +79,12 @@ void Processor::SetCamera( osg::Camera* camera )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-Unit* Processor::FindUnit( const std::string& unitName )
+Unit* Processor::FindUnit( const std::string& )
 {
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Processor::RemoveUnit( Unit* unit )
+bool Processor::RemoveUnit( Unit* )
 {
     return true;
 }
