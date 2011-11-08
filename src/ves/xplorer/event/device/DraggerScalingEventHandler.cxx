@@ -123,7 +123,7 @@ void DraggerScalingEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* 
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DraggerScalingEventHandler::UpdateDraggerScaling( bool const& enable, double const& draggerScaling )
+void DraggerScalingEventHandler::UpdateDraggerScaling( bool const&, double const& draggerScaling )
 {
     scenegraph::SceneManager::instance()->
         GetManipulatorManager().SetDraggerScale( draggerScaling );

@@ -72,7 +72,7 @@ DeviceModeEventHandler::~DeviceModeEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceModeEventHandler::SetGlobalBaseObject(
-    ves::xplorer::GlobalBase* modelHandler )
+    ves::xplorer::GlobalBase* )
 {
     ;
 }

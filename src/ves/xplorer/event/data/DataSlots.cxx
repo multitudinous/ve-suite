@@ -133,7 +133,7 @@ void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
     dataSet->SetWireframeState( surfaceWrap );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AddTextureDataset( std::string const& uuid, std::string const& dirName )
+void AddTextureDataset( std::string const&, std::string const& dirName )
 {
     ves::xplorer::Model* activeModel = 
         ModelHandler::instance()->GetActiveModel();

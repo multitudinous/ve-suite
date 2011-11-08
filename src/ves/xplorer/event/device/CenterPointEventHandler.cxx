@@ -80,7 +80,7 @@ CenterPointEventHandler::~CenterPointEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CenterPointEventHandler::SetGlobalBaseObject(
-    ves::xplorer::GlobalBase* modelHandler )
+    ves::xplorer::GlobalBase* )
 {
     ;
 }
