@@ -179,6 +179,9 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     mLastFrame( 0 ),
     mLastTime( 0 ),
     mLastQtLoopTime( 0.0 ),
+    m_numContexts( 0 ),
+    m_numInitialized( 0 ),
+    m_render( false ),
     m_logger( Poco::Logger::get( "xplorer.App" ) ),
     m_windowIsOpen( false ),
     m_nearFarRatio( 0.0005 ),
@@ -210,7 +213,8 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     _pbuffer = 0;
 #endif
     _frameNumber = 0;
-
+    m_loadingUILock.acquire();
+    
     this->argc = argc;
     this->argv = argv;
 
@@ -304,6 +308,11 @@ App::~App()
     {
         m_signalLock.release();
     }
+
+    if( m_loadingUILock.test() )
+    {
+        m_loadingUILock.release();
+    }
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -316,6 +325,11 @@ void App::exit()
     if( m_signalLock.test() )
     {
         m_signalLock.release();
+    }
+
+    if( m_loadingUILock.test() )
+    {
+        m_loadingUILock.release();
     }
 #endif
     //Profiling guard used by vrjuggler
@@ -371,6 +385,7 @@ void App::contextInit()
         mSceneRenderToTexture->InitializeRTT();
         
         ves::conductor::UIManager::instance()->AddUIToNode( new_sv->getCamera() );
+        m_numContexts += 1;
     }
 
     ( *sceneViewer ) = new_sv;
@@ -489,6 +504,7 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
 //       color should be defined and glClear(GL_COLOR_BUFFER_BIT) should be
 //       called in this method.
 //
+////////////////////////////////////////////////////////////////////////////////
 void App::bufferPreDraw()
 {
 #if 0
@@ -869,6 +885,13 @@ void App::latePreFrame()
             m_signalLock.acquire();
         }
     }
+    else
+    {
+        m_loadingUILock.release();
+        vprDEBUG( vesDBG, 3 ) << "|\tApp::latePreFrame Try loading the UI."
+            << std::endl << vprDEBUG_FLUSH;
+        m_loadingUILock.acquire();
+    }
 #endif 
     
     ///////////////////////
@@ -960,9 +983,15 @@ void App::contextPreDraw()
     {
         if( jccl::ConfigManager::instance()->isPendingStale() && m_windowIsOpen )
         {
-            vpr::Guard< vpr::Mutex > val_guard( mValueLock );
-            mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
-            //update();
+            {
+                vpr::Guard< vpr::Mutex > val_guard( mValueLock );
+                mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
+                m_numInitialized += 1;
+                if( m_numInitialized == m_numContexts )
+                {
+                    m_render = true;
+                }
+            }
 
             *mViewportsChanged = true;
         }
@@ -999,6 +1028,11 @@ void App::draw()
         return;
     }
 
+    if( !m_render )
+    {
+        return;
+    }
+    
     //std::cout << "----------Draw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::draw", 20 );
     glClear( GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
@@ -1285,8 +1319,12 @@ void App::preRun()
     {
         vpr::System::msleep( 200 );
     }
+    m_loadingUILock.acquire();
 #endif
     LoadUI();
+#if defined( _DARWIN )
+    m_loadingUILock.release();
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::runLoop()

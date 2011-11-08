@@ -281,7 +281,16 @@ private:
 #if defined( _DARWIN )
     ///A mutex to protect variables accesses
     vpr::Mutex m_signalLock;
+    ///A mutex to sync loading the UI
+    vpr::Mutex m_loadingUILock;
 #endif
+    ///Number of contexts
+    size_t m_numContexts;
+    ///Number of contexts
+    size_t m_numInitialized;
+    ///Tell when things should render
+    bool m_render;
+    
     ///File name for screen capture filename
     std::string m_filename;
 
