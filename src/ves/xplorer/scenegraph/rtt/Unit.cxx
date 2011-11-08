@@ -166,7 +166,7 @@ const Unit::InputToUniformMap& Unit::GetInputToUniformMap() const
     return mInputToUniformMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture* Unit::GetInputTexture( int inputIndex ) const
+osg::Texture* Unit::GetInputTexture( size_t inputIndex ) const
 {
     if( inputIndex < mInputTextures.size() )
     {
