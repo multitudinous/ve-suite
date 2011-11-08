@@ -100,7 +100,7 @@ ChangeBackgroundColorEventHandler& ChangeBackgroundColorEventHandler::operator=(
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ChangeBackgroundColorEventHandler::UpdateBackgroundColor( bool const enable, std::vector< double > const& color )
+void ChangeBackgroundColorEventHandler::UpdateBackgroundColor( bool const, std::vector< double > const& color )
 {
     ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
     ves::xplorer::EnvironmentHandler::instance()->

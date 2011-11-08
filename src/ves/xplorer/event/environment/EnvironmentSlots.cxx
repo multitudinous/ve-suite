@@ -104,7 +104,7 @@ void SetAmbientAudioFile( std::string const& filename )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateBackgroundColor( bool const enable, std::vector< double > const& color )
+void UpdateBackgroundColor( bool const, std::vector< double > const& color )
 {
     ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
     ves::xplorer::EnvironmentHandler::instance()->
