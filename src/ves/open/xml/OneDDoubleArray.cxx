@@ -39,7 +39,7 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-OneDDoubleArray::OneDDoubleArray( unsigned int nElements )
+OneDDoubleArray::OneDDoubleArray( unsigned int )
         : XMLObject()
 {
     // These should match the schema for min and max occurances
@@ -104,7 +104,7 @@ std::vector< double > OneDDoubleArray::GetArray( void )
     return mArray;
 }
 ////////////////////////////////////
-void OneDDoubleArray::_updateVEElement( const std::string& input )
+void OneDDoubleArray::_updateVEElement( const std::string& )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code

@@ -122,7 +122,7 @@ std::vector< double > FloatArray::GetArray( void )
     return mArray;
 }
 ////////////////////////////////////
-void FloatArray::_updateVEElement( const std::string& input )
+void FloatArray::_updateVEElement( const std::string& )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code

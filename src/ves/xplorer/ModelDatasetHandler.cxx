@@ -58,7 +58,7 @@ namespace ves
 {
 namespace xplorer
 {
-ModelDatasetHandler::ModelDatasetHandler( ves::xplorer::scenegraph::DCS* rootNode )
+ModelDatasetHandler::ModelDatasetHandler( ves::xplorer::scenegraph::DCS* )
     :
     GlobalBase()
 {
@@ -96,14 +96,12 @@ void ModelDatasetHandler::CreateDataset( std::string assemblyID )
     m_datasetList[ assemblyID ] = new ves::xplorer::DataSet();
 }
 /////////////////////////////////////////////////////
-void ModelDatasetHandler::RemoveDataset( std::string nodeID )
+void ModelDatasetHandler::RemoveDataset( std::string )
 {
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelDatasetHandler::SetActiveDataset( std::string nodeID,
-                                                std::string nodeType,
-                                                std::string attributeName )
+void ModelDatasetHandler::SetActiveDataset( std::string, std::string, std::string )
 {
 }
 ////////////////////////////////////////////////////////////////////////

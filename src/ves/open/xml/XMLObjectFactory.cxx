@@ -103,10 +103,10 @@ XMLObjectFactory* XMLObjectFactory::Instance()
 }
 /////////////////////////////////////////////////////////////////////////////////////
 XMLObjectPtr XMLObjectFactory::CreateXMLObject( const std::string& objectType,
-                                              std::string objectNameSpace )
+                                              std::string )
 {
     std::map<std::string, CreationEventHandler* >::iterator xmlCreator;
-    //xmlCreator = mObjectCreators.find(objectNameSpace);
+
     for( xmlCreator = mObjectCreators.begin(); xmlCreator != mObjectCreators.end(); ++xmlCreator )
     {
         XMLObjectPtr temp = xmlCreator->second->CreateNewXMLObject( objectType );
