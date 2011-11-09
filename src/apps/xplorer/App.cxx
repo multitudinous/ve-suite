@@ -213,7 +213,9 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     _pbuffer = 0;
 #endif
     _frameNumber = 0;
+#if defined( _DARWIN )
     m_loadingUILock.acquire();
+#endif
     
     this->argc = argc;
     this->argv = argv;
