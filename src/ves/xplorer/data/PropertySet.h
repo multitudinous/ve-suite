@@ -194,6 +194,15 @@ public:
 
     ///
     /// Toggles live properties if this set has any that are not live by default.
+    /// Add MakeLive directives for any such properties inside an overridden
+    /// version of this method. To enable autosaving of live properties, call
+    /// PropertySet::EnableLiveProperties( live ) from inside the overridden
+    /// version. Caution: Since PropertySet is an Object Relational Mapper,
+    /// the *entire* propertyset, not just the changed property, is saved out
+    /// every time an autosave occurs. This may be undesirable behavior for
+    /// some propertysets. To ensure that autosaving does not occur, override
+    /// this method in your derived class and do not call
+    /// PropertySet::EnableLiveProperties() from within it.
     virtual void EnableLiveProperties( bool live );
 
     ///Set the UUID for this PropertySet via a string
@@ -272,6 +281,9 @@ protected:
     /// Helper function to determine whether a given TableName exists in the db.
     bool _tableExists( Poco::Data::Session* session, const std::string& TableName );
 
+    /// Callback method set up when argument to EnableLiveProperties is true.
+    /// Checks whether a live property has changed and saves out the PropertySet
+    /// if so.
     void SaveLiveProperties( Poco::Timer& timer );
 
     PropertyMap mPropertyMap; /// Map holding the collection of properties.
