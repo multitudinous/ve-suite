@@ -46,10 +46,12 @@
 
 #include <ves/xplorer/data/PropertySetPtr.h>
 #include <ves/xplorer/data/PropertyPtr.h>
+#include <ves/xplorer/Logging.h>
 
 // Forward declarations
 namespace Poco
 {
+class Timer;
 namespace Data
 {
 class Session;
@@ -270,6 +272,8 @@ protected:
     /// Helper function to determine whether a given TableName exists in the db.
     bool _tableExists( Poco::Data::Session* session, const std::string& TableName );
 
+    void SaveLiveProperties( Poco::Timer& timer );
+
     PropertyMap mPropertyMap; /// Map holding the collection of properties.
     PSVectorOfStrings mAccumulatedChanges;
     PSVectorOfStrings mPropertyList; /// Maintains a list of available properties
@@ -293,6 +297,13 @@ private:
     // Empty PSVectorOfStrings to use when need to return an empty PSVOS by reference
     PSVectorOfStrings emptyPSVectorOfStrings;
     PSVectorOfStrings mAccumulatedChangesReturnable;
+
+    Poco::Timer* m_timer;
+    bool m_writeDirty; ///< Data has changed since last write to db.
+    bool m_liveWriteDirty; ///< Data in a live property has changed since last write to db
+
+    Poco::Logger& m_logger;
+    ves::xplorer::LogStreamPtr m_logStream;
 
 };
 

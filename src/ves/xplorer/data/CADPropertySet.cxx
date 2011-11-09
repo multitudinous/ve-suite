@@ -252,6 +252,8 @@ void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
 ////////////////////////////////////////////////////////////////////////////////
 void CADPropertySet::EnableLiveProperties( bool live )
 {
+    PropertySet::EnableLiveProperties( true );
+
     if( !live )
     {
         // Clearing list will allow live objs to go out of scope and autodelete

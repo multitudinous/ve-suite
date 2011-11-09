@@ -74,6 +74,8 @@ public:
     void UpdateVectorDataOptions( PropertyPtr property );
     ///Update method for enabling surface tools
     void UpdateDirectionSelection( PropertyPtr property );
+    /// Override from PropertySet
+    virtual void EnableLiveProperties( bool live );
     
 protected:
     ///Registration of this property set for a child case

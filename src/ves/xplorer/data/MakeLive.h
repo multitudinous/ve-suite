@@ -64,6 +64,12 @@ class MakeLiveBase
 {
 public:
     virtual ~MakeLiveBase(){;}
+    std::vector<std::string> GetNames()
+    {
+        return m_propertyNames;
+    }
+protected:
+    std::vector<std::string> m_propertyNames;
 };
 
 
@@ -99,6 +105,10 @@ public:
         m_UUID(uuid),
         m_passUUID( passUUID )
     {
+        std::string name = boost::any_cast<std::string>
+                           ( property->GetAttribute("nameInSet") );
+        m_propertyNames.push_back( name );
+
         m_SignalName = boost::lexical_cast<std::string>( this );
         m_SignalName.append( "." );
         m_SignalName.append( signalName );
@@ -165,6 +175,10 @@ public:
         m_UUID(uuid),
         m_passUUID( passUUID )
     {
+        std::string name = boost::any_cast<std::string>
+                           ( property->GetAttribute("nameInSet") );
+        m_propertyNames.push_back( name );
+
         m_SignalName = boost::lexical_cast<std::string>( this );
         m_SignalName.append( "." );
         m_SignalName.append( signalName );
@@ -280,6 +294,9 @@ public:
         while( iter != m_Properties.end() )
         {
             (*iter)->SignalValueChanged.connect( boost::bind( &MakeLiveLinked<T>::ValueChangedSlot, this, _1 )  );
+            std::string name = boost::any_cast<std::string>
+                               ( (*iter)->GetAttribute("nameInSet") );
+            m_propertyNames.push_back( name );
             ++iter;
         }
     }
@@ -349,6 +366,9 @@ public:
         while( iter != m_Properties.end() )
         {
             (*iter)->SignalValueChanged.connect( boost::bind( &MakeLiveLinked<std::string>::ValueChangedSlot, this, _1 )  );
+            std::string name = boost::any_cast<std::string>
+                               ( (*iter)->GetAttribute("nameInSet") );
+            m_propertyNames.push_back( name );
             ++iter;
         }
     }

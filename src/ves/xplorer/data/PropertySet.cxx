@@ -34,6 +34,7 @@
 #include <ves/xplorer/data/Property.h>
 #include <ves/xplorer/data/BindableAnyWrapper.h>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/data/MakeLive.h>
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
@@ -48,6 +49,7 @@
 #include <Poco/Data/SessionPool.h>
 #include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/DataException.h>
+#include <Poco/Timer.h>
 
 #include "BindableAnyWrapper.h"
 
@@ -61,8 +63,16 @@ namespace data
 PropertySet::PropertySet():
     mID( 0 ),
     mUUID( boost::uuids::random_generator()() ),
-    m_isLive( false )
+    m_isLive( false ),
+    m_timer( 0 ),
+    m_writeDirty( false ),
+    m_liveWriteDirty( false ),
+    m_logger( Poco::Logger::get("xplorer.PropertySet") )
 {
+    m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
+
+    LOG_TRACE( "ctor" );
+
     mPropertyMap.clear();
     mAccumulatedChanges.clear();
 
@@ -72,7 +82,9 @@ PropertySet::PropertySet():
     AddProperty("NameTag", mUUIDString.substr( 0, 4 ), "Name Tag");
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySet::PropertySet( const PropertySet& orig )
+PropertySet::PropertySet( const PropertySet& orig ):
+    m_logger( orig.m_logger ),
+    m_logStream( orig.m_logStream )
 {
     boost::ignore_unused_variable_warning( orig );
 }
@@ -80,6 +92,12 @@ PropertySet::PropertySet( const PropertySet& orig )
 PropertySet::~PropertySet()
 {
     mPropertyMap.clear();
+    if(m_timer)
+    {
+        m_timer->restart( 0 );
+        delete m_timer;
+        m_timer = 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 PropertySetPtr PropertySet::CreateNew()
@@ -572,6 +590,13 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* const session,
         }
         iterator++;
     }
+
+    // If we have just loaded a dataset, the change accumulator will be full
+    // of changes and it will appear as though the set is dirty and needs to
+    // be written back to the database. To prevent an unnecessary write, we
+    // set this false:
+    m_writeDirty = false;
+    m_liveWriteDirty = false;
 
     return true;
 }
@@ -1146,6 +1171,9 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
         }
     }
 
+    m_writeDirty = false;
+    m_liveWriteDirty = false;
+
     return returnVal;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1288,6 +1316,9 @@ void PropertySet::_connectChanges( PropertyPtr property )
 ////////////////////////////////////////////////////////////////////////////////
 void PropertySet::ChangeAccumulator( PropertyPtr property )
 {
+    // Data has changed, so set dirty flag
+    m_writeDirty = true;
+
     // Ask the property for its name
     const std::string nameInSet = 
         boost::any_cast< std::string > ( property->GetAttribute( "nameInSet" ) );
@@ -1310,6 +1341,34 @@ void PropertySet::ChangeAccumulator( PropertyPtr property )
     if( ( !found ) && ( mAccumulatedChanges.size() < 1000 ) )
     {
         mAccumulatedChanges.push_back( nameInSet );
+
+        // If liveWriteDirty flag isn't already set, check whether this is a
+        // live property. If so, set the  m_liveWriteDirty flag
+        if( !m_liveWriteDirty )
+        {
+            std::vector< MakeLiveBasePtr >::const_iterator mlb =
+                    mLiveObjects.begin();
+            while( mlb != mLiveObjects.end() )
+            {
+                std::vector<std::string> liveNames = (*mlb)->GetNames();
+                std::vector<std::string>::const_iterator name =
+                        liveNames.begin();
+                while( name != liveNames.end() )
+                {
+                    if( *name == nameInSet )
+                    {
+                        m_liveWriteDirty = true;
+                        break;
+                    }
+                    ++name;
+                }
+                if( m_liveWriteDirty )
+                {
+                    break;
+                }
+                ++mlb;
+            }
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1368,6 +1427,35 @@ void PropertySet::EnableLiveProperties( bool live )
     // Do nothing. Derived classes should override this method if they want
     // delayed live properties.
     m_isLive = live;
+    if( live )
+    {
+        if( !m_timer )
+        {
+            // Create timer that fires every two seconds
+            m_timer = new Poco::Timer( 2000, 2000 );
+        }
+        Poco::TimerCallback<PropertySet> callback(*this, &PropertySet::SaveLiveProperties);
+        m_timer->start( callback );
+    }
+    else if( m_timer )
+    {
+        m_timer->restart( 0 );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PropertySet::SaveLiveProperties( Poco::Timer& timer )
+{
+    boost::ignore_unused_variable_warning( timer );
+    if( m_liveWriteDirty )
+    {
+        LOG_INFO( "Changes detected in live property in propertyset " << mUUIDString <<
+                ": auto-saving." );
+        WriteToDatabase();
+    }
+    else
+    {
+        LOG_INFO( "No live data changes detected in propertyset " << mUUIDString );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

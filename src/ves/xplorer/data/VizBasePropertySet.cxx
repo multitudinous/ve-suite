@@ -398,3 +398,11 @@ void VizBasePropertySet::UpdateDirectionSelection( PropertyPtr property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::EnableLiveProperties( bool live )
+{
+    // Do nothing
+    // Doing nothing here prevents live autosave from
+    // turning on for all derived classes that do not override this method again
+    // and explicitly call PropertySet::EnableLiveProperties.
+}
+////////////////////////////////////////////////////////////////////////////////
