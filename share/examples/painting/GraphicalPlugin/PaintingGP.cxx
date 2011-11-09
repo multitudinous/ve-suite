@@ -86,6 +86,14 @@
 #include <fstream>
 #include <algorithm>
 
+#include "MainScene.h"
+#include "Utilities.h"
+#include "RTTScene.h"
+#include "ShaderSupport.h"
+// pick this up from RTTScene for now
+extern osg::ref_ptr<osg::Texture2D> RTTtex;
+
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -158,7 +166,7 @@ void PaintingGP::InitializeNode(
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 
-    {
+    /*{
         m_textTrans = new ves::xplorer::scenegraph::DCS();
         std::vector< double > data;
         data.push_back( -1.43 );
@@ -176,18 +184,117 @@ void PaintingGP::InitializeNode(
 
     CreateSensorGrid();
     
-    LoadModels();
+    LoadModels();*/
+    
+    InitializePaintingGraph();
+}
+////////////////////////////////////////////////////////////////////////////////
+int PaintingGP::InitializePaintingGraph()
+{
+    // the paint gun object.
+    /*osg::ref_ptr<PaintGun> paintGun = new PaintGun;
+    if( !paintGun.valid() )
+    {
+		osg::notify(osg::WARN) << "Insufficient memory for PaintGun object." << endl;
+        return 20;
+    }
+    // create and install a keyboard handler for the gun.
+    osg::ref_ptr<GunInputAdapterKeyboard> giaKey = new GunInputAdapterKeyboard(paintGun.get());
+    if (giaKey.valid())
+        viewer.addEventHandler(giaKey.get());
+    // create and install a mouse handler for the gun.
+    osg::ref_ptr<GunInputAdapterMouse> giaMouse = new GunInputAdapterMouse(paintGun.get());
+    if (giaMouse.valid())
+        viewer.addEventHandler(giaMouse.get());
+    // create and install the input handler for application global things.
+    osg::ref_ptr<InputHandler> inHdl = new InputHandler();
+    if (inHdl.valid())
+        viewer.addEventHandler(inHdl.get());
+    */
+    
+    osg::ref_ptr<osg::Node> bgQuad = BuildBackground();
+    if (bgQuad.valid() == false)
+    {
+		osg::notify(osg::WARN) << "BuildBackground() failed. Check missing image file(s)." << endl;
+        return 25;
+    }
+    
+    // remove the normal mouse cursor from the screen when this app is active / has the input focus.
+    // also, record window dimensions for use in sizing mouse pointer reticle
+    //int x = 0, y = 0; 
+    int width = 800, height = 800; 
+    /*for (osgViewer::Viewer::Windows::iterator itr = windows.begin(); itr != windows.end(); itr++)
+    {
+        (*itr)->setCursor(osgViewer::GraphicsWindow::NoCursor);
+        (*itr)->getWindowRectangle(x, y, width, height);
+    }*/
+    
+    // load a custom mouse pointer. Note that in the real application, the mouse position is controlled
+    // by a gun pointed at the screen. The gun simulates a real paint gun.
+    osg::ref_ptr<osg::Node> mouse = LoadMousePointer("images/Reticle.png", 0.03f * ((float)height / (float)width), 0.03f);
+    if (mouse.valid() == false)
+    {
+		osg::notify(osg::WARN) << "LoadMousePointer() failed. Check missing image file(s)." << endl;
+        return 30;
+    }
+
+    /*osg::ref_ptr<osg::Node> hud = BuildHud(gLesson, *paintGun);
+    if (hud.valid() == false)
+    {
+		osg::notify(osg::WARN) << "BuildHud() failed." << endl;
+        return 40;
+    }*/
+    osg::ref_ptr<osg::Group> root = new osg::Group;
+    if (root.valid() == false)
+        return 45;
+    
+    
+    osg::ref_ptr<osg::Node> preRenderGraph;
+    preRenderGraph = createPreRenderGraph(width, height);
+    if (preRenderGraph.valid() == false)
+    {
+		osg::notify(osg::WARN) << "Unable to create accumulation prerender graph." << endl;
+        return 50;
+    }
+    // add preRenderGraph to main scene root
+    root->addChild(preRenderGraph.get());
+    
+    //osg::ref_ptr<osg::Texture2D> RTTtex;
+    
+    // assign RTT texture as layer #1 for both the quad and the model
+    bgQuad->getOrCreateStateSet()->setTextureAttributeAndModes(TEXUNIT_ACCUM, RTTtex.get());
+
+	// assign shaders to the bgQuad
+	setupShaders(bgQuad.get(), NULL);
+
+    root->addChild(bgQuad.get());
+    //root->addChild(hud.get());
+    root->addChild(mouse.get());
+    
+    mDCS->addChild( root.get() );
+    // test prerender subgraph
+    // enter the render & display frame loop.
+    /*while (!viewer.done())
+    {
+		viewer.frame();
+        // update the HUD if the gun or lesson paramaters changed.
+        if (paintGun->IsChanged() || gLesson.IsChanged())
+            UpdateHud(gLesson, *paintGun);
+        // clear the gun changed status every frame after everything that uses it has finished.
+        paintGun->ClearChanged();
+    } */    
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PaintingGP::PreFrameUpdate()
-{
-    CreateSensorGrid();
-    
+{    
     if( !m_keyboard )
     {
         return;
     }
-        
+    
+    return;
+    
     if( m_groupedTextTextures.valid() )
     {
         if( !m_groupedTextTextures->AnimationComplete() )

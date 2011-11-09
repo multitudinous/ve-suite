@@ -87,6 +87,9 @@ public:
 protected:
 
 private:
+    ///Initialize the vpaint demo graph
+    int InitializePaintingGraph();
+
     ///Create the db for the tool to grab dat from
     void CreateDB();
     ///Create the list of textures
