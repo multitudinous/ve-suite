@@ -50,7 +50,7 @@ std::string PaintingPluginFactory::GetFactoryClassName()
 
 std::string PaintingPluginFactory::GetFactoryDisplayName()
 {
-    return std::string( "Sensor Demo" );
+    return std::string( "Painting Plugin" );
 }
 
 double PaintingPluginFactory::GetVersion()
@@ -61,7 +61,7 @@ double PaintingPluginFactory::GetVersion()
 
 std::string PaintingPluginFactory::GetDescription()
 {
-    return std::string( "A generic tool to process sensor data." );
+    return std::string( "A generic tool to spary paint with a simple paint model." );
 }
 
 
