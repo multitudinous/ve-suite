@@ -301,6 +301,10 @@ void CADEntityHelper::LoadFile( const std::string& filename,
 #endif
             ///get osg node
         }
+        else if( osgDB::getLowerCaseFileExtension( filename ) == "png" )
+        {
+            tempCADNode = LoadTextureFile( filename );
+        }
         else
         {
             boost::filesystem::path fullPathFilename =
@@ -689,5 +693,53 @@ osg::Node* CADEntityHelper::parseOCCNURBSFile( const std::string& directory )
     }
 
     return 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Node* CADEntityHelper::LoadTextureFile( std::string const& filename )
+{
+    osg::Image* image = osgDB::readImageFile( filename );
+    
+    //double aspectRatio = double(image->s())/double(image->t());
+    double s = image->s();
+    double t = image->t();
+    if( t > s )
+    {
+        s = s/t;
+        t = 1;
+    }
+    else 
+    {
+        t = t/s;
+        s = 1;
+    }
+
+    //corner, width, height
+    osg::Geometry* geom = osg::createTexturedQuadGeometry( osg::Vec3(0,0,0), osg::Vec3( s,0,0), osg::Vec3(0,0,t) );
+
+    osg::Texture2D* _texture = new osg::Texture2D();
+    //_texture->setInternalFormat( GL_RGBA );
+    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
+    //_texture->setSourceFormat( GL_RGBA8 );
+    //_texture->setInternalFormat( GL_RGBA16F_ARB );
+    //_texture->setSourceType( GL_UNSIGNED_INT );
+    //_texture->setSourceType( GL_FLOAT );
+    _texture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    _texture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    _texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    _texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    _texture->setImage( image );
+    
+    
+    osg::Geode* m_textureGeode = new osg::Geode();
+    m_textureGeode->setName( "Texture Geode" );
+    m_textureGeode->setCullingActive( false );
+    m_textureGeode->addDrawable( geom );
+    
+    osg::ref_ptr< osg::StateSet > stateset =
+        m_textureGeode->getOrCreateStateSet();
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
+    stateset->setTextureAttributeAndModes( 0, _texture, osg::StateAttribute::ON );
+    
+    return m_textureGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////

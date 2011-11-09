@@ -181,6 +181,9 @@ private:
     bool mIsSTLFile;
     ///Control how the occlusion culling settings are handled
     std::string m_occlusionSettings;
+    
+    ///Load an image file
+    osg::Node* LoadTextureFile( std::string const& filename );
 };
 }
 }

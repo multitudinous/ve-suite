@@ -301,6 +301,7 @@ MainWindow::MainWindow(QWidget* parent) :
     m_GeometryExtensions.push_back("flt");
     m_GeometryExtensions.push_back("dxf");
     m_GeometryExtensions.push_back("3ds");
+    m_GeometryExtensions.push_back("png");
 
     m_DataExtensions.push_back("vtk");
     m_DataExtensions.push_back("vtu");

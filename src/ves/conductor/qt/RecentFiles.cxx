@@ -161,6 +161,6 @@ void RecentFiles::on_m_recentFilesList_itemEntered( QListWidgetItem* item )
         m_lastChanged = item;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 }
 }
