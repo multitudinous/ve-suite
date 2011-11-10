@@ -2069,7 +2069,7 @@ void SensorDemoPluginGP::SimulatorCaptureThread()
             return;
         }
     }*/
-#if 0
+#if 1
     int status;
     vpr::Uint16 port(12345);     // Default listening port
     
