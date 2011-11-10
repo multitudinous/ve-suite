@@ -17,7 +17,7 @@
 * Boston, MA 02111-1307, USA.
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-
+/*
 #include <ves/xplorer/device/MxInputAdapterGadgeteerGamePad.h>
 
 #include <ostream>
@@ -49,43 +49,13 @@ MxInputAdapterGadgeteerGamePad::~MxInputAdapterGadgeteerGamePad()
 ////////////////////////////////////////////////////////////////////////////////
 void MxInputAdapterGadgeteerGamePad::ExtractButtons( float value )
 {
-    /*int cnt, maxBtns = BUTTON_COUNT;
-    if (BUTTON_COUNT > 128)       // don't read more than is available in DIJOYSTATE2.
-        maxBtns = 128;
-    for (cnt = 0; cnt < maxBtns; cnt++)
-    {
-        if (devState.rgbButtons[cnt])
-            buttons[cnt] = true;
-    }*/
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MxInputAdapterGadgeteerGamePad::ExtractPOV( float value )
 
 {
-    /*DWORD pov = devState.rgdwPOV[0] & 0xffff;          // get POV value
-    if (pov != 0xffff)                                 // if current POV not centered
-    {
-        if ((pov >= 30000) || (pov <= 6000))            // forward
-        {
-            dpad.up = true;
-            if ((pov >= 4500) && (pov <= 6000))
-                dpad.right = true;
-            else if ((pov >= 30000) && (pov <= 31500))
-                dpad.left = true;
-        }
-        else if ((pov > 6000) && (pov < 12000))         // right
-            dpad.right = true;
-        else if ((pov >= 12000) && (pov <= 24000))      // backward
-        {
-            dpad.down = true;
-            if (pov <= 13500)
-                dpad.right = true;
-            else if (pov >= 22500)
-                dpad.left = true;
-        }
-        else if ((pov > 24000) && (pov < 30000))        // left
-            dpad.left = true;
-    }*/
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MxInputAdapterGadgeteerGamePad::ExtractAxis( unsigned int axis, float value )
@@ -105,3 +75,4 @@ double MxInputAdapterGadgeteerGamePad::GetNormalizedAxisValue( float av )
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // osgwMx
+*/

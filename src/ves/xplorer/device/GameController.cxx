@@ -74,7 +74,7 @@
 
 #include <osgwMx/MxEventHandler.h>
 #include <ves/xplorer/device/MxInputAdapterGadgeteerGamePad.h>
-#include <osgwMx/MxMovementStyleGamePad.h>
+//#include <osgwMx/MxMovementStyleGamePad.h>
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
@@ -111,10 +111,10 @@ using namespace ves::xplorer::scenegraph;
 GameController::GameController()
     :
     Device( KEYBOARD_MOUSE ),
-    m_exit( false ),
+    m_exit( false )
     // create a game pad input handler and data interpreter to control the view.
-    m_gadgetInputAdapter( new osgwMx::MxInputAdapterGadgeteerGamePad() ),
-    m_mxGamePadStyle( new osgwMx::MxMovementStyleGamePad( m_gadgetInputAdapter.get() ) )
+    //m_gadgetInputAdapter( new osgwMx::MxInputAdapterGadgeteerGamePad() ),
+    //m_mxGamePadStyle( new osgwMx::MxMovementStyleGamePad( m_gadgetInputAdapter.get() ) )
 {
     // Connect to Juggler's new event handling interface
     m_analogAxis0EventInterface.init("VJAxis0");
@@ -194,11 +194,11 @@ void GameController::OnAxis0Event( const float event )
         return;
     }
 
-    m_gadgetInputAdapter->clear();
-    m_gadgetInputAdapter->ExtractAxis( MOVE_X_AXIS_IDX, event );
+    //m_gadgetInputAdapter->clear();
+    //m_gadgetInputAdapter->ExtractAxis( MOVE_X_AXIS_IDX, event );
     //m_mxGamePadStyle->matrixTransform( 
     //    ves::xplorer::scenegraph::SceneManager::instance()->GetFrameStamp()->getSimulationTime() );
-    osg::Matrixd navMatrix = m_mxGamePadStyle->getMxCore()->getMatrix();
+    //osg::Matrixd navMatrix = m_mxGamePadStyle->getMxCore()->getMatrix();
     //std::cout << " Analog device input " << event << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -20,7 +20,7 @@
 
 #ifndef VES_XPLORER_DEVICE_GADGETEER_INPUTADAPTER
 #define VES_XPLORER_DEVICE_GADGETEER_INPUTADAPTER 1
-
+/*
 #include <osgwMx/MxInputAdapter.h>
 
 #define ROTATE_X_AXIS_IDX 2      // the range value (axis) index to be used for X axis rotation.
@@ -53,7 +53,7 @@ private:
 
 // osgwMx
 }
-
+*/
 
 // VES_XPLORER_DEVICE_GADGETEER_INPUTADAPTER
 #endif

@@ -172,8 +172,8 @@ private:
         eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
     ScrollSignal_type m_scroll;
     
-    osg::ref_ptr< osgwMx::MxInputAdapterGadgeteerGamePad > m_gadgetInputAdapter;
-    osg::ref_ptr< osgwMx::MxMovementStyleGamePad > m_mxGamePadStyle;
+    //osg::ref_ptr< osgwMx::MxInputAdapterGadgeteerGamePad > m_gadgetInputAdapter;
+    //osg::ref_ptr< osgwMx::MxMovementStyleGamePad > m_mxGamePadStyle;
 };
 
 } //end device
