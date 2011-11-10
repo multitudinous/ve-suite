@@ -19,15 +19,19 @@
 
 #include <boost/lexical_cast.hpp>
 
-boost::gil::rgb8_image_t image;
-boost::gil::rgb8_image_t blobImage;
-boost::gil::rgb8_image_t visitedImage;
-boost::gil::rgb8_image_t smallImage;
+boost::gil::rgba8_image_t image;
+boost::gil::rgba8_image_t blobImage;
+boost::gil::rgba8_image_t visitedImage;
+boost::gil::rgba8_image_t smallImage;
 
-boost::gil::rgb8_pixel_t pixel;
-boost::gil::rgb8_pixel_t whitePixel( 255, 255, 255 );;
-boost::gil::rgb8_pixel_t blackPixel( 0, 0, 0 );
-double r,g,b;
+boost::gil::rgba8_pixel_t pixel;
+boost::gil::rgba8_pixel_t pixel2;
+boost::gil::rgba8_pixel_t whitePixel( 255, 255, 255,255 );;
+boost::gil::rgba8_pixel_t alphaPixel( 0, 0, 0,0 );;
+
+boost::gil::rgba8_pixel_t blackPixel( 0, 0, 0,0 );
+//boost::gil::rgba8_pixel_t blackPixel( 0, 0, 0 );
+double r,g,b,a;
 size_t blobSize = 0;
 boost::gil::point2< int > min;
 boost::gil::point2< int > max;
@@ -55,12 +59,14 @@ void extractblob( int x, int y, int currentpositionx, int currentpositiony )
     r = double(boost::gil::get_color(pixel, boost::gil::red_t()));
     g = double(boost::gil::get_color(pixel, boost::gil::green_t()));
     b = double(boost::gil::get_color(pixel, boost::gil::blue_t()));
+	a = double(boost::gil::get_color(pixel, boost::gil::alpha_t()));
 
     //mark visited
     visitedImage._view(x,y) = whitePixel;
 
-    if( (r>220) && (g>220) && (b>220) )
-    {
+    //if( (r>220) && (g>220) && (b>220) )
+	if(a < 10)
+	{
         return;
     }
 
@@ -111,10 +117,10 @@ int main( int argc, char* argv[] )
     //Read in the png image
     boost::gil::png_read_image( argv[ 1 ], image);
     //loop over all of the pixels
-    //boost::gil::rgba8c_view_t view( image._view );
+	boost::gil::rgba8c_view_t view( image._view );
 
     visitedImage.recreate( image.dimensions(), blackPixel, 1 );
-    blobImage.recreate( image.dimensions(), whitePixel, 1 );
+    blobImage.recreate( image.dimensions(), alphaPixel, 1 );
 
     size_t counter = 0;
     std::string fileName;
@@ -122,7 +128,13 @@ int main( int argc, char* argv[] )
     {
         for( int x=0; x<image._view.width(); ++x)
         {
-            if( visitedImage._view(x,y) == blackPixel )
+			double aa;
+			//pixel2 = view(x,y);
+			pixel = view(x,y);
+			aa = double(boost::gil::get_color(pixel, boost::gil::alpha_t()));
+			//std::cout << "pixel:" << aa << std::endl;
+            //if( visitedImage._view(x,y) == blackPixel )
+			if(aa > 10)
             {
                 blobSize = 0;
                 min.x = 100000000;
@@ -131,22 +143,23 @@ int main( int argc, char* argv[] )
                 max.y = 0;
 
                 extractblob( x, y, x, y );
+				//std::cout << "blobsize:" << blobSize << std::endl;
                 if( blobSize > 200 )
                 {
                     int dim1 = max.x - min.x;
                     int dim2 = max.y - min.y;
-                    smallImage.recreate( dim1+10, dim2+10, whitePixel, 1 );
+                    smallImage.recreate( dim1, dim2, whitePixel, 1 );
                     
                     boost::gil::copy_pixels( 
                         boost::gil::subimage_view( boost::gil::view( blobImage ), min.x, min.y, dim1, dim2), 
-                        boost::gil::subimage_view( boost::gil::view( smallImage ), 5, 5, dim1, dim2) );
+                        boost::gil::subimage_view( boost::gil::view( smallImage ), 0, 0, dim1, dim2) );
                     
                     //boost::gil::rotated90cw_view
                     
                     fileName = directory + "/blob_" + boost::lexical_cast< std::string >( counter ) + ".png";
                     boost::gil::png_write_view( fileName, boost::gil::view( smallImage ) );
                     
-                    boost::gil::fill_pixels( boost::gil::view( blobImage ), whitePixel );
+                    boost::gil::fill_pixels( boost::gil::view( blobImage ), alphaPixel );
 
                     counter += 1;
                 }
