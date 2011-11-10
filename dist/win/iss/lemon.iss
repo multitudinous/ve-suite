@@ -53,6 +53,7 @@ Name: eng; MessagesFile: compiler:Default.isl
 Source: {#LEMONINSTALLHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#LEMONINSTALLHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: {#LEMONINSTALLHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#LEMONINSTALLHOME}\lib\*.pdb; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ;glpk
 Source: {#GLPKSRCHOME}\w32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs

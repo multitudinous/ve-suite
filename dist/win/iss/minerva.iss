@@ -1,6 +1,6 @@
 ; Minerva installer script
 #include <vesenv.iss>
-#define MyAppVer "1.2.0-395"
+#define MyAppVer "1.2.0-07272011"
 #define MyAppName "Minerva Pre-Compile"
 #define MyAppVerName "Minerva"
 #define MyAppPublisher "VERG"

@@ -21,11 +21,11 @@
 ; installed under for the Start Menu
 #define VESGROUPNAME "VE-Suite"
 ; Location where all of the ves dependencies are installed
-#define DEPENDSINSTALLHOME "C:\dev\ves_deps\msvs_9.0"
+#define DEPENDSINSTALLHOME "C:\dev\deps\msvc90"
 ; Location where you want innosetup to build the installers
 #define INSTALLERINSTALLLOCATION "C:\dev\ve-suite-trunk\dist\win\iss"
 ; Install prefix of ves
-#define VEINSTALLHOME "C:\dev\ve-suite-trunk\install-debug-9.0"
+#define VEINSTALLHOME "C:\dev\ve-suite-trunk\install-win32-qt"
 ; Source root location for ves
 #define VEDEVHOME "C:\dev\ve-suite-trunk"
 ; Location if the Microsoft redistributable executable
@@ -37,7 +37,7 @@
 
 ; Directory names for all VES dependencies
 #define ACETAOHOME "ACETAO_5.7.0_Pre-Compile_vcmsvc-9.0-sp1-x86"
-#define VTKHOME "VTK_5.4.2_msvc-9.0-sp1-x86"
+#define VTKHOME "VTK_5.8.0_msvc-9.0-sp1-x86"
 #define OSGHOME "OSG_2.8.5_msvc-9.0-sp1-x86"
 #define WXHOME "WXWidgets_2.8.10_msvc-9.0-sp1-x86"
 #define XERCESHOME "Xerces_3.0.1_msvc-9.0-sp1-x86"
@@ -73,7 +73,7 @@
 #define ACETAODIRNAME "ACE_wrappers_32-bit"
 #define XERCESCDIRNAME "xerces-c-3.1.1-x86-windows-vc-9.0"
 #endif
-#define POCODIRNAME "poco-1.4.1p1-all"
+#define POCODIRNAME "poco"
 #define VRJUGGLERDIRNAME "vrjuggler-trunk"
 
 
@@ -122,7 +122,7 @@
 ; xerces deps
 #define XERCESSRCINSTALL "C:\Projects\ves-windows\xerces-c-3.0.1-x86-windows-vc-9.0"
 ; Tecplot SDK installation
-#define TECPLOTSDKHOME "C:\Program Files (x86)\Tecplot\TecSDK 1.1"
+#define TECPLOTSDKHOME "C:\dev\deps\tecplot_sdk"
 ; Bullet deps
 #define BULLETSRCHOME "C:\dev\deps\bullet-2.77\install-win32"
 ; osgBullet deps

@@ -7,10 +7,14 @@
 #define MyAppVerName "tecplot2VTK"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
-#define VEVERSION "0.6.0"
-#define SVNVERSION "14502"
+#define VEVERSION "0.6.1"
+#define SVNVERSION "16576"
 #define VesIcon "ves_icon.ico"
-#define LIBDIR "x64"
+#ifdef x64
+#define TECLIBDIR "x64"
+#else
+#define TECLIBDIR "win32"
+#endif
 
 [Setup]
 AppName={#MyAppName}
@@ -73,29 +77,36 @@ Name: {commondesktop}\{#MyAppName}; Filename: {app}\bin\tecplot2VTK.exe; Working
 Name: {group}\{#MyAppName} About & Help; Filename: {app}\bin\tecplot2VTK.exe; WorkingDir: {app}\bin; IconFilename: {app}\bin\installerImages\{#VesIcon}; Parameters: --help; Flags: dontcloseonexit; Components: ; Tasks: 
 
 [Run]
+#ifdef x64
 Filename: {tmp}\vcredist_x64.exe; Description: Install Microsoft Runtime Redistributable; StatusMsg: Installing Microsoft Runtime Redistributable...; Flags: postinstall unchecked; Tasks: 
-
+#else
+Filename: {tmp}\vcredist_x86.exe; Description: Install Microsoft Runtime Redistributable; StatusMsg: Installing Microsoft Runtime Redistributable...; Flags: postinstall unchecked; Tasks: 
+#endif
 [Files]
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkzlib.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtktiff.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtksys.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkpng.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkNetCDF.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkmetaio.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkjpeg.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkIO.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkFiltering.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkexpat.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkDICOMParser.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkCommon.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkzlib.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtktiff.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtksys.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkpng.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkNetCDF.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkNetCDF_cxx.dll; DestDir: {app}\bin; Components:
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkmetaio.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkjpeg.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkIO.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkFiltering.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkexpat.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkDICOMParser.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkCommon.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 
-Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\tptoolbox.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\tpsdkintegrationmanager.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\tpsdkbase.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\tecio.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\pthreadVC.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\libtec.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#TECPLOTSDKHOME}\bin\{#LIBDIR}\gltt.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#VESAUTODEPSDIR}\{#VRJUGGLERDIRNAME}\{#VESINSTALLDIR}-deps\lib\boost_system-vc90-mt-1_46_1.dll; DestDir: {app}\bin; Components: 
+Source: {#VESAUTODEPSDIR}\{#VRJUGGLERDIRNAME}\{#VESINSTALLDIR}-deps\lib\boost_filesystem-vc90-mt-1_46_1.dll; DestDir: {app}\bin; Components: 
+
+Source: {#TECPLOTSDKHOME}\bin\{#TECLIBDIR}\tptoolbox.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#TECLIBDIR}\tpsdkintegrationmanager.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#TECLIBDIR}\tpsdkbase.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#TECLIBDIR}\tecio.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#TECLIBDIR}\pthreadVC.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#TECLIBDIR}\libtec.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#TECPLOTSDKHOME}\bin\{#TECLIBDIR}\gltt.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#TECPLOTSDKHOME}\tecplot.fnt; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#TECPLOTSDKHOME}\tecplot.cfg; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#TECPLOTSDKHOME}\pub\*; DestDir: {app}\pub; Components: ; Flags: overwritereadonly ignoreversion recursesubdirs
@@ -103,4 +114,8 @@ Source: {#TECPLOTSDKHOME}\pub\*; DestDir: {app}\pub; Components: ; Flags: overwr
 Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 Source: {#VEINSTALLHOME}\bin\tecplot2VTK.exe; DestDir: {app}\bin; Flags: replacesameversion
 
-Source: E:\dev\ves_deps\msvc_redist_vc8\vcredist_x64.exe; DestDir: {tmp}
+#ifdef x64
+Source: C:\dev\deps\vcredist_x64.exe; DestDir: {tmp}
+#else
+Source: C:\dev\deps\vcredist_x86.exe; DestDir: {tmp}
+#endif
