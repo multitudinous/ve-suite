@@ -716,30 +716,24 @@ osg::Node* CADEntityHelper::LoadTextureFile( std::string const& filename )
     //corner, width, height
     osg::Geometry* geom = osg::createTexturedQuadGeometry( osg::Vec3(0,0,0), osg::Vec3( s,0,0), osg::Vec3(0,0,t) );
 
-    osg::Texture2D* _texture = new osg::Texture2D();
-    //_texture->setInternalFormat( GL_RGBA );
-    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    //_texture->setSourceFormat( GL_RGBA8 );
-    //_texture->setInternalFormat( GL_RGBA16F_ARB );
-    //_texture->setSourceType( GL_UNSIGNED_INT );
-    //_texture->setSourceType( GL_FLOAT );
-    _texture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    _texture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    _texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    _texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-    _texture->setImage( image );
+    osg::Texture2D* texture = new osg::Texture2D();
+    texture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    texture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    texture->setImage( image );
     
     
-    osg::Geode* m_textureGeode = new osg::Geode();
-    m_textureGeode->setName( "Texture Geode" );
-    m_textureGeode->setCullingActive( false );
-    m_textureGeode->addDrawable( geom );
+    osg::Geode* geode = new osg::Geode();
+    geode->setName( "Texture Geode" );
+    geode->setCullingActive( false );
+    geode->addDrawable( geom );
     
     osg::ref_ptr< osg::StateSet > stateset =
-        m_textureGeode->getOrCreateStateSet();
+        geode->getOrCreateStateSet();
     stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
-    stateset->setTextureAttributeAndModes( 0, _texture, osg::StateAttribute::ON );
+    stateset->setTextureAttributeAndModes( 0, texture, osg::StateAttribute::ON );
     
-    return m_textureGeode;
+    return geode;
 }
 ////////////////////////////////////////////////////////////////////////////////
