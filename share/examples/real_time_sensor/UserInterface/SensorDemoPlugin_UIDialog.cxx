@@ -41,7 +41,10 @@
 
 #include <ves/conductor/qt/UITabs.h>
 
-//#include "csvparser.h"
+#include <vpr/vpr.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/Util/Interval.h>
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/replace.hpp>
@@ -106,25 +109,23 @@ SensorDemoPlugin_UIDialog::SensorDemoPlugin_UIDialog(QWidget *parent) :
 void SensorDemoPlugin_UIDialog::on_m_sensorClientConnect_clicked()
 {
     std::cout << "get ip address and send it to xplorer" << std::endl;
-    std::cout << ui->m_heaterClientIP->text().toStdString() << " " 
-        << ui->m_sensorClientIP->text().toStdString() << " " 
-        << ui->m_sensorPort->text().toStdString() << " "
-        << ui->m_heaterPort->text().toStdString() << std::endl;
-    m_connectSensorSignal( ui->m_sensorClientIP->text().toStdString(), ui->m_sensorPort->text().toStdString() );
+    std::cout << ui->m_sensorClientIP->text().toStdString() << " " 
+        << ui->m_sensorPort->text().toStdString() << std::endl;
+    m_connectSensorSignal( ui->m_sensorClientIP->text().toStdString(), 
+                          ui->m_sensorPort->text().toStdString() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPlugin_UIDialog::on_m_heaterClientConnect_clicked()
 {
-    std::cout << "get ip address and send it to xplorer" << std::endl;
+    std::cout << "get ip address to send to the heater" << std::endl;
     std::cout << ui->m_heaterClientIP->text().toStdString() << " " 
-        << ui->m_sensorClientIP->text().toStdString() << " " 
-        << ui->m_sensorPort->text().toStdString() << " "
         << ui->m_heaterPort->text().toStdString() << std::endl;
+    LaunchServerThread( ui->m_heaterClientIP->text().toStdString(), 
+                       ui->m_heaterPort->text().toStdString() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPlugin_UIDialog::on_m_testTableView_clicked()
 {
-std::cout << "here 1 " << std::endl;
     QTreeWidget* queryResults = new QTreeWidget( 0 );
     //QTreeWidget* queryResults = new QTreeWidget( ui->m_sensorData );
     
@@ -1291,3 +1292,61 @@ void SensorDemoPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::st
     }
     queryResults->setSortingEnabled( true );*/
 }
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPlugin_UIDialog::LaunchServerThread( std::string const& ipAddress, std::string const& portNumber )
+{
+    int app_status;
+    
+    vpr::InetAddr local;
+    vpr::Uint16 port = boost::lexical_cast< unsigned short >( portNumber );
+    local.setAddress( ipAddress, port );
+
+    // Create an acceptor socket that listens on port.
+    vpr::SocketStream sock( local, vpr::InetAddr::AnyAddr );
+    
+    try
+    {
+        // Open in server mode.
+        sock.openServer();
+        sock.setReuseAddr(true);
+        
+        char buffer[] = "Hello there!";
+        //      std::string buffer = "Hello there!";
+        
+        // Loop forever handling all clients serially.
+        while ( true )
+        {
+            // Wait for an incoming connection.
+            try
+            {
+                vpr::SocketStream client_sock;
+                sock.accept(client_sock, vpr::Interval(60, vpr::Interval::Sec));
+                
+                // Using the new socket, send the buffer to the client and close
+                // the socket.
+                client_sock.write(buffer, sizeof(buffer));
+                client_sock.close();
+            }
+            catch( vpr::TimeoutException& )
+            {
+                std::cerr << "No connections within timeout period!\n";
+                //break;
+            }
+            catch( vpr::SocketException& ex )
+            {
+                std::cerr << "Caught a socket exception:\n" << ex.what()
+                    << std::endl;
+            }
+        }
+        
+        app_status = EXIT_SUCCESS;
+    }
+    catch( vpr::IOException& ex )
+    {
+        std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
+        app_status = EXIT_FAILURE;
+    }
+    
+    return;    
+}
+////////////////////////////////////////////////////////////////////////////////

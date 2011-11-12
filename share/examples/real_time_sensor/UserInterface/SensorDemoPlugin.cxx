@@ -65,13 +65,13 @@ std::string SensorDemoPlugin::GetName()
 }
 
 
-QWidget* SensorDemoPlugin::GetUIWidget( QWidget* parent )
+QWidget* SensorDemoPlugin::GetUIWidget( QWidget* )
 {
     return m_UIWidget;
 }
 
 
-QWidget* SensorDemoPlugin::GetResultWidget( QWidget* parent )
+QWidget* SensorDemoPlugin::GetResultWidget( QWidget* )
 {
     return m_ResultWidget;
 }
@@ -83,12 +83,12 @@ QWidget* SensorDemoPlugin::GetFinancialDataWidget()
 }
 
 
-QWidget* SensorDemoPlugin::ViewInputVariables( QWidget* parent )
+QWidget* SensorDemoPlugin::ViewInputVariables( QWidget* )
 {
     return m_InputVariablesWidget;
 }
 
-QWidget* SensorDemoPlugin::ViewResultsVariables( QWidget* parent )
+QWidget* SensorDemoPlugin::ViewResultsVariables( QWidget* )
 {
     return m_ResultsVariablesWidget;
 }
@@ -100,8 +100,8 @@ void SensorDemoPlugin::DeleteWidgets()
     delete m_FinancialDataWidget;
     delete m_InputVariablesWidget;
     delete m_ResultsVariablesWidget;
-    m_UIWidget = m_ResultWidget = m_FinancialDataWidget =
-                 m_InputVariablesWidget = m_ResultsVariablesWidget = 0;
+    m_UIWidget = m_ResultWidget = m_FinancialDataWidget = 
+        m_InputVariablesWidget = m_ResultsVariablesWidget = 0;
 }
 
 }

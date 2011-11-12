@@ -81,6 +81,8 @@ protected slots:
     void on_m_heaterClientConnect_clicked();
     void on_m_testTableView_clicked();
 
+    void LaunchServerThread( std::string const& ipAddress, std::string const& portNumber );
+
     /*
     m_sensorClientIP
     m_sensorClientConnect
