@@ -101,6 +101,9 @@ void SetAmbientAudioFile( std::string const& filename )
         
         osgAudio::SoundManager::instance()->addSoundState(sound_state.get());
     }
+#else
+    std::cout << "VE-Suite is not compiled with audio support " 
+        << filename << "." << std::endl;
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
