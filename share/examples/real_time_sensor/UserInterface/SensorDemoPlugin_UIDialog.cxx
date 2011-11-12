@@ -588,7 +588,7 @@ void SensorDemoPlugin_UIDialog::OnPartNumberEntry( wxCommandEvent& WXUNUSED( eve
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void SensorDemoPlugin_UIDialog::on_m_applyButton_clicked( )
+void SensorDemoPlugin_UIDialog::on_m_applyButton_clicked()
 {
     //Submit the command currently in the query text box
     SubmitQueryCommand();
@@ -1311,9 +1311,6 @@ void SensorDemoPlugin_UIDialog::LaunchServerThread( std::string const& ipAddress
         sock.openServer();
         sock.setReuseAddr(true);
         
-        char buffer[] = "Hello there!";
-        //      std::string buffer = "Hello there!";
-        
         // Loop forever handling all clients serially.
         //while ( true )
         {
@@ -1327,9 +1324,11 @@ void SensorDemoPlugin_UIDialog::LaunchServerThread( std::string const& ipAddress
                 {
                     // Using the new socket, send the buffer to the client and close
                     // the socket.
-                    if( false )
+                    if( m_sendData )
                     {
-                        client_sock.write(buffer, sizeof(buffer));
+                        vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
+                        client_sock.write( m_dataBuffer, m_dataBuffer.length() );
+                        m_sendData = false;
                     }
                     else
                     {
@@ -1359,5 +1358,19 @@ void SensorDemoPlugin_UIDialog::LaunchServerThread( std::string const& ipAddress
     }
     
     return;    
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPlugin_UIDialog::on_m_heaterSpinBox_valueChanged( double d )
+{
+    vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
+    ///double heaterSetting = m_heaterSpinBox->getValue();
+    m_dataBuffer = boost::lexical_cast< std::string >( d );
+    m_sendData = true;
+    ui->m_heaterSlider->setSliderPosition( int( d * 100 ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SensorDemoPlugin_UIDialog::on_m_heaterSlider_sliderReleased()
+{
+    ui->m_heaterSpinBox->setValue( ui->m_heaterSlider->value() * 0.01f );
 }
 ////////////////////////////////////////////////////////////////////////////////
