@@ -67,7 +67,7 @@ std::string SensorDemoPluginFactory::GetDescription()
 
 std::string SensorDemoPluginFactory::GetHelpURL()
 {
-    return std::string( "" );
+    return std::string();
 }
 
 

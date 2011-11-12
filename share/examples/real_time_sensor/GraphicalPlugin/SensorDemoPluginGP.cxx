@@ -32,9 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/communication/CommunicationHandler.h>
 
-// --- My Includes --- //
-#include "csvparser.h"
-
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
 
@@ -373,7 +370,7 @@ void SensorDemoPluginGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             }
             else if( dataPath.extension() == ".csv" )
             {
-                ParseDataFile( dataPath.string() );
+                ;
             }
             /*for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
             {
@@ -447,173 +444,6 @@ void SensorDemoPluginGP::StripCharacters( std::string& data, const std::string& 
             //data.erase( index, 1 );
         }
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void SensorDemoPluginGP::ParseDataFile( const std::string& csvFilename )
-{
-    std::cout << "SensorDemoPluginGP::ParseDataFile " << csvFilename << std::endl << std::flush;
-    std::string sLine;
-    std::string sCol1, sCol3, sCol4;
-    //double fCol2;
-    //int iCol5, iCol6;
-    
-    CSVParser parser;
-    
-    std::ifstream infile( csvFilename.c_str() );
-    //Get file name string from directory passed in
-#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-    boost::filesystem::path csvFile( csvFilename.c_str() );
-#else
-    boost::filesystem::path csvFile( csvFilename.c_str(), 
-        boost::filesystem::no_check );
-#endif
-    //Set m_dbFilename with the filename of the csv file
-    csvFile.replace_extension( ".db" );
-#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-    m_dbFilename = csvFile.filename().string();
-#else
-    m_dbFilename = csvFile.filename();
-#endif
-    //std::streampos beforeNetwork;
-    //beforeNetwork = inFile.tellg();
-    
-    infile.seekg( 0, std::ios::end);
-    std::streampos length = infile.tellg();
-    infile.seekg (0, std::ios::beg);
-    
-    //Now we have passed the network data so record it
-    //std::streampos afterNetwork;
-    //afterNetwork = inFile.tellg();
-    //go back to the beginning of the network
-    //inFile.seekg( beforeNetwork );
-    // allocate memory:
-    char* buffer = new char [ length ];
-    // read data as a block:
-    infile.read( buffer, (length) );
-    //std::ofstream tester4 ("tester4.txt");
-    //tester4<<buffer<<std::endl;
-    //tester4.close();
-    infile.close();
-    std::string networkData( buffer );
-    delete [] buffer;
-    StripCharacters( networkData, "\r" );
-    
-    //std::cout << networkData << std::endl;
-    //build network information
-    //CreateNetworkInformation( networkData );
-    std::istringstream iss;
-    iss.str( networkData );
-    
-    std::getline(iss, sLine); // Get a line
-    parser << sLine; // Feed the line to the parser
-    size_t columnCount = 0;
-    std::map< int, std::vector< std::string > > csvDataMap;
-    
-    m_partNumberColumn = 0;
-    m_promiseDateColumn = 0;
-    m_hasPromiseDate = false;
-    while( parser.getPos() < sLine.size() )
-    {
-        parser >> sCol1; // Feed the line to the parser
-        //std::cout << sCol1 << std::endl;
-        std::vector< std::string > data;
-        if( sCol1.empty() )
-        {
-            std::ostringstream headerTemp;
-            headerTemp << "N/A " << columnCount;
-            sCol1 = headerTemp.str();
-        }
-        ReplaceSpacesCharacters( sCol1 );
-        data.push_back( sCol1 );
-        //std::vector< std::string > data;
-        csvDataMap[ columnCount ] = data;
-        if( "Part_Number" == sCol1 )
-        {
-            m_partNumberColumn = columnCount;
-        }
-        
-        //if( boost::algorithm::ifind_first( sCol1, "promise_date" ) )
-        if( boost::algorithm::iequals( sCol1, "promise_date" ) )
-        {
-            m_hasPromiseDate = true;
-            m_promiseDateColumn = columnCount;
-        }
-        columnCount += 1;
-    }
-
-    std::cout << "Part Number Column = " << m_partNumberColumn 
-        << " Promise Date Column = " << m_promiseDateColumn << std::endl;
-
-    while( iss.good() )
-    {
-        std::getline(iss, sLine); // Get a line
-
-        if( !iss.good() )
-        {
-            break;
-        }
-        
-        if (sLine == "")
-            continue;
-        
-        boost::algorithm::replace_all( sLine, "'", "" );
-        boost::algorithm::replace_all( sLine, "%", "" );
-
-        parser << sLine; // Feed the line to the parser
-        for( size_t i = 0; i < columnCount; ++i )
-        {
-            parser >> sCol1;
-            StripDollarCharacters( sCol1 );
-            boost::algorithm::trim( sCol1 );
-            if( m_hasPromiseDate && (i == m_promiseDateColumn) )
-            {
-                //convert date to uniform string
-                try
-                {
-                    int timeDifValue = 0;
-                    std::string fmt = "%e-%b-%y";
-                    Poco::DateTime tempDateTime = Poco::DateTimeParser::parse( fmt, sCol1, timeDifValue );
-                    std::string newDateTime = Poco::DateTimeFormatter::format( tempDateTime, "%Y.%m.%d" );
-                    sCol1 = newDateTime;
-                }
-                catch( Poco::SyntaxException& ex )
-                {
-                    std::cout << ex.displayText() << std::endl
-                        << "The actual string is " << sCol1 << std::endl;
-                }
-            }
-            csvDataMap[ i ].push_back( sCol1 );
-        }
-    }
-    //iss.close();
-    m_csvDataMap = csvDataMap;
-    mLoadedPartNumbers = csvDataMap[ m_partNumberColumn ];
-    for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
-    {
-        std::vector< std::pair< std::string, std::string > > partData;
-        for( size_t j = 0; j < columnCount; ++j )
-        {
-            partData.push_back( std::pair< std::string, std::string >( csvDataMap[ j ].at( 0 ), csvDataMap[ j ].at( i ) ) );
-        }
-
-        if( !mLoadedPartNumbers.at( i ).empty() )
-        {
-            m_dataMap[ mLoadedPartNumbers.at( i ) ] = partData;
-        }
-    }
-    
-    
-    if( !mAddingParts )
-    {
-        transparentEnable( mDCS.get(), 0.3f );
-
-        mAddingParts = true;
-    }
-    
-    //Open DB
-    //Add data
-    //close connection
-    CreateDB();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPluginGP::RenderTextualDisplay( bool onOff )
@@ -1873,10 +1703,6 @@ void SensorDemoPluginGP::QueryUserDefinedAndHighlightParts( const std::string& q
         return;
     }
     
-    
-//    m_groupedTextTextures =
-//        new ves::xplorer::scenegraph::GroupedTextTextures();
-    
     if( !queryString.compare( 0, 12, "CREATE TABLE" ) )
     {
         //boost::find_first( queryString, " AS " );
@@ -1928,49 +1754,22 @@ void SensorDemoPluginGP::QueryUserDefinedAndHighlightParts( const std::string& q
     }
     
     bool failedLoad = false;
-    float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
     std::string partNumber;
     std::string partNumberHeader;
-//    ves::xplorer::scenegraph::TextTexture* tempText = 0;
     std::string partText;
     osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
-    while (more)
+    while( more )
     {
-//        tempText = 0;
-        try
-        {
-//            tempText =
-//                new ves::xplorer::scenegraph::TextTexture();
-        }
-        catch(...)
-        {
-//            m_groupedTextTextures = 0;
-            failedLoad = true;
-            break;
-        }
-//        tempText->SetTextColor( textColor );
-        
-//        std::ostringstream tempTextData;
-
-        for (std::size_t col = 0; col < cols; ++col)
+        for( std::size_t col = 0; col < cols; ++col )
         {
             partNumberHeader = rs.columnName(col);
             boost::algorithm::to_lower( partNumberHeader );
             if( partNumberHeader == "part_number" )
             {
                 partNumber = rs[col].convert<std::string>();
-//                tempText->SetTitle( partNumber );
                 m_assemblyPartNumbers.push_back( partNumber );
             }
-            else
-            {
-//                tempTextData << rs.columnName(col) << ": "
-//                    << rs[col].convert<std::string>() << "\n";
-            }
         }
-//        partText = tempTextData.str();
-//        tempText->UpdateText( partText );
-        //m_groupedTextTextures->AddTextTexture( partNumber, tempText );
 
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
         highlight( m_cadRootNode, partNumber, true, true, 
@@ -1978,6 +1777,7 @@ void SensorDemoPluginGP::QueryUserDefinedAndHighlightParts( const std::string& q
 
         more = rs.moveNext();
     }
+
     if( m_currentStatement )
     {
         delete m_currentStatement;
@@ -1986,10 +1786,6 @@ void SensorDemoPluginGP::QueryUserDefinedAndHighlightParts( const std::string& q
     
     if( !failedLoad )
     {
-        //m_groupedTextTextures->UpdateListPositions();
-        
-        //m_textTrans->addChild( m_groupedTextTextures.get() );
-        
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor
         highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
         //osg::Vec3( 0.34118, 1.0, 0.57255 ) );

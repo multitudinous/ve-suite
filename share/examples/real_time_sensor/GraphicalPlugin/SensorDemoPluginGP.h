@@ -93,8 +93,6 @@ private:
     void CreateTextTextures();
     ///Strip characters from datafile
     void StripCharacters( std::string& data, const std::string& character );
-    ///PArse the csv file
-    void ParseDataFile( const std::string& csvFilename );
     ///Parse the db file selected by the user
     void ParseDataBase( const std::string& csvFilename );
     ///Render the displays
