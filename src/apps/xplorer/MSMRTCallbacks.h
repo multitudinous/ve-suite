@@ -112,8 +112,8 @@ public:
             }
         }
 
-        const GLint width = _cam->getViewport()->width();
-        const GLint height = _cam->getViewport()->height();
+        const GLint width = GLint( _cam->getViewport()->width() );
+        const GLint height = GLint( _cam->getViewport()->height() );
 
 #if 0
         //Make sure something is actually bound
