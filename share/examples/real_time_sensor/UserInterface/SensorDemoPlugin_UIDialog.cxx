@@ -42,6 +42,7 @@
 #include <ves/conductor/qt/UITabs.h>
 
 #include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/Util/Interval.h>
@@ -1314,17 +1315,27 @@ void SensorDemoPlugin_UIDialog::LaunchServerThread( std::string const& ipAddress
         //      std::string buffer = "Hello there!";
         
         // Loop forever handling all clients serially.
-        while ( true )
+        //while ( true )
         {
             // Wait for an incoming connection.
             try
             {
                 vpr::SocketStream client_sock;
-                sock.accept(client_sock, vpr::Interval(60, vpr::Interval::Sec));
+                sock.accept( client_sock, vpr::Interval(60, vpr::Interval::Sec));
                 
-                // Using the new socket, send the buffer to the client and close
-                // the socket.
-                client_sock.write(buffer, sizeof(buffer));
+                while( true )
+                {
+                    // Using the new socket, send the buffer to the client and close
+                    // the socket.
+                    if( false )
+                    {
+                        client_sock.write(buffer, sizeof(buffer));
+                    }
+                    else
+                    {
+                        vpr::System::msleep( 300 );
+                    }
+                }
                 client_sock.close();
             }
             catch( vpr::TimeoutException& )
