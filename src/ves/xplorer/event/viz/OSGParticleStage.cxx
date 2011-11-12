@@ -86,7 +86,7 @@ void OSGParticleStage::createSLPoint( osg::Geometry& geom, int nInstances )
     geom.setUseVertexBufferObjects( true );
 
     //osgwTools::makeGeodesicSphere( 1.0, 0.0, &geom );
-    osgwTools::makeAltAzSphere( float( 0.5 ), float( 4.0 ), float( 6.0 ), &geom );
+    osgwTools::makeAltAzSphere( float( 0.5 ), 4, 6, &geom );
     unsigned int numPrim = geom.getNumPrimitiveSets();
     for( unsigned int i = 0; i < numPrim; ++i )
     {

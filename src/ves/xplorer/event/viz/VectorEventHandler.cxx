@@ -123,7 +123,7 @@ void VectorEventHandler::UpdateGeodeUniform(
     ves::open::xml::DataValuePairPtr, 
     const std::string& uniformName, double valueFactor )
 {
-    unsigned int numdraw = 0.0;
+    unsigned int numdraw = 0;
     osg::ref_ptr< osg::Uniform > activeUniform;
     osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;
     

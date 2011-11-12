@@ -429,7 +429,7 @@ void cfdStreamers::Update()
         try
         {
             OSGStreamlineStage* tempStage = new OSGStreamlineStage();
-            tempStage->SetParticleDiameter( particleDiameter );
+            tempStage->SetParticleDiameter( int( particleDiameter ) );
             //This is a multiplier to create extra points using 
             //linear interplation to smooth out the animation
             int mult=10;  

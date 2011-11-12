@@ -132,7 +132,7 @@ void cfdIsosurface::Update()
     << std::endl << vprDEBUG_FLUSH;
 
     // convert the requested value percentage (0-100) to a scalar value
-    this->value = convertPercentage( this->requestedValue );
+    this->value = convertPercentage( int( requestedValue ) );
 
     vprDEBUG( vesDBG, 1 ) << "|\tthis->value: " << this->value
     << std::endl << vprDEBUG_FLUSH;
