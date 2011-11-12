@@ -74,9 +74,9 @@ namespace scenegraph
 
 ////////////////////////////////////////////////////////////////////////////////
 osgToBullet::osgToBullet( osg::Node* node )
-        :
-        m_triangleMesh( new btTriangleMesh() ),
-        NodeVisitor( TRAVERSE_ALL_CHILDREN )
+    :
+    NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+    m_triangleMesh( new btTriangleMesh() )
 {
     node->accept( *this );
 }
