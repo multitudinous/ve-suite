@@ -363,7 +363,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
-        m_scroll( mouseEvt->getScrollDeltaX(), mouseEvt->getScrollDeltaY(),
+        m_scroll( int( mouseEvt->getScrollDeltaX() ), int( mouseEvt->getScrollDeltaY() ),
                   mouseEvt->getX(), mouseEvt->getY(), mouseEvt->getState() );
         break;
     }
