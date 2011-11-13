@@ -48,14 +48,10 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Quat.h>
 
-#include <boost/shared_ptr.hpp>
-
 #include <gadget/gadgetParam.h>
 
 #include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/PositionInterface.h>
-
-//#include <gadget/Type/KeyboardMouse/EventPtr.h>
 
 #include <gadget/Event/KeyboardMouseEventInterface.h>
 #include <gadget/Event/MouseMultiClickEventInterface.h>

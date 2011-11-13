@@ -35,9 +35,6 @@
 #include <ves/xplorer/device/KeyboardMouse.h>
 
 #include <ves/xplorer/Debug.h>
-#include <ves/xplorer/Model.h>
-#include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/plugin/PluginBase.h>
@@ -71,11 +68,6 @@
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
-
-#include <ves/open/xml/model/Model.h>
-// #include <ves/open/xml/DataValuePair.h>
-// #include <ves/open/xml/Command.h>
-// #include <ves/xplorer/command/CommandManager.h>
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
@@ -125,7 +117,6 @@
 
 // --- STL Includes --- //
 #include <iostream>
-#include <cmath>
 
 using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
