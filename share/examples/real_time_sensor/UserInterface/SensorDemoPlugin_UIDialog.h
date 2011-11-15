@@ -33,14 +33,14 @@
 #ifndef SensorDemoPlugin_UIDialog_H
 #define SensorDemoPlugin_UIDialog_H
 
+#include <vpr/Sync/Mutex.h>
+
 #include <QtGui/QWidget>
 #include <QtGui/QComboBox>
 #include <QtCore/QStringList>
 #include <QtGui/QListWidgetItem>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
-
-#include <vpr/Sync/Mutex.h>
 
 #include <string>
 #include <vector>

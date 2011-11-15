@@ -32,6 +32,10 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "ui_SensorDemoPlugin_UIDialog.h"
 
+#include <QtCore/QString>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QTreeWidgetItem>
+
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/OneDStringArray.h>
@@ -53,6 +57,11 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/find.hpp>
 
+#include <string>
+#include <vector>
+#include <map>
+#include <fstream>
+
 #include "SensorDemoPlugin_UIDialog.h"
 
 #include <Poco/Data/SQLite/SQLite.h>
@@ -60,15 +69,6 @@
 #include <Poco/Data/Session.h>
 #include <Poco/Data/Statement.h>
 #include <Poco/Data/RecordSet.h>
-
-#include <QtCore/QString>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QTreeWidgetItem>
-
-#include <string>
-#include <vector>
-#include <map>
-#include <fstream>
 
 SensorDemoPlugin_UIDialog::SensorDemoPlugin_UIDialog(QWidget *parent) :
     QWidget(parent),
