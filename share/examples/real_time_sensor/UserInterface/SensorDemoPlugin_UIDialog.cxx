@@ -42,8 +42,6 @@
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 
-#include <ves/conductor/qt/UITabs.h>
-
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/IO/Socket/SocketStream.h>
@@ -63,6 +61,8 @@
 #include <fstream>
 
 #include "SensorDemoPlugin_UIDialog.h"
+
+#include <ves/conductor/qt/UITabs.h>
 
 #include <Poco/Data/SQLite/SQLite.h>
 #include <Poco/Data/SQLite/Connector.h>
