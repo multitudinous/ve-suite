@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include "SensorDemoPlugin_UIDialog.h"
 #include "ui_SensorDemoPlugin_UIDialog.h"
 
 #include <ves/open/xml/DataValuePair.h>
@@ -53,6 +52,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/find.hpp>
+
+#include "SensorDemoPlugin_UIDialog.h"
 
 #include <Poco/Data/SQLite/SQLite.h>
 #include <Poco/Data/SQLite/Connector.h>
