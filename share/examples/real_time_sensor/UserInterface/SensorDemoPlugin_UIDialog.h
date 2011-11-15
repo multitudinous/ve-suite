@@ -57,27 +57,11 @@ class SensorDemoPlugin_UIDialog : public QWidget
 public:
     explicit SensorDemoPlugin_UIDialog(QWidget *parent = 0);
     ~SensorDemoPlugin_UIDialog();
-    void ParseDataFile( const std::string& csvFilename );
-    void ParseDataBase( const std::string& csvFilename );
-    void OnDataLoad( std::string const& fileName );
 
 protected:
     void changeEvent(QEvent *e);
-    void QueryUserDefinedAndHighlightParts( const std::string& queryString );
 
 protected slots:
-    /// Toggles succeeding logic blocks on and off depending on value of
-    /// selection. (Not autoconnected)
-    //void m_logicOperatorS_currentIndexChanged ( QString const& text );
-    /// Submits user-entered query. (Autoconnected)
-    //void on_m_queryTextCommandCtrl_returnPressed();
-    void on_m_applyButton_clicked();
-    /// Called whenever a checkbox is toggled in the "Text Display Selection"
-    /// widget. (Autoconnected)
-    //void on_m_displayTextChkList_itemClicked( QListWidgetItem* item );
-    /// Called when Create Table checkbox is toggled. (Autoconnected)
-    //void on_m_createTableFromQuery_toggled();
-    void InputTextChanged ( const QString& text );
     
     void on_m_sensorClientConnect_clicked();
     void on_m_heaterClientConnect_clicked();
@@ -89,12 +73,6 @@ protected slots:
 
 private:
     void StripCharacters( std::string& data, const std::string& character );
-    const std::string GetTextFromChoice( QComboBox* variable,
-                                         QComboBox* logicOperator,
-                                         QLineEdit* textInput );
-    const std::string GetTextFromLogicOperator( QComboBox* logicOperator );
-    void SubmitQueryCommand();
-    void UpdateQueryDisplay();
 
     Ui::SensorDemoPlugin_UIDialog *ui;
 
