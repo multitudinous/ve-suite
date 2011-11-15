@@ -60,9 +60,9 @@
 #include <map>
 #include <fstream>
 
-#include "SensorDemoPlugin_UIDialog.h"
-
 #include <ves/conductor/qt/UITabs.h>
+
+#include "SensorDemoPlugin_UIDialog.h"
 
 #include <Poco/Data/SQLite/SQLite.h>
 #include <Poco/Data/SQLite/Connector.h>
