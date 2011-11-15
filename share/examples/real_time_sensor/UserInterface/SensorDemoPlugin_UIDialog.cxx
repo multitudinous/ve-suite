@@ -42,18 +42,18 @@
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 
-#include <vpr/vpr.h>
-#include <vpr/System.h>
-#include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/IO/TimeoutException.h>
-#include <vpr/Util/Interval.h>
-
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/find.hpp>
+
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/Util/Interval.h>
 
 #include <string>
 #include <vector>
