@@ -227,6 +227,8 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
 {
     rigidBody->setUserPointer( this );
     rigidBody->getCollisionShape()->setMargin( btScalar( 0.001 ) );
+    
+    SetMassProps();
     ///Look at CCD demo in Demos/CcdPhysicsDemo/CcdPhysicsDemo.cpp
     ///http://www.bulletphysics.com/mediawiki-1.5.8/index.php?title=Anti_tunneling_by_Motion_Clamping
     // Only do CCD if  motion in one timestep (1.f/60.f) exceeds CUBE_HALF_EXTENTS
@@ -310,7 +312,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         amt->setName( "AMT_" + dcsName );
     }
     
-    //osg::BoundingSphere bs = mOSGToBullet->getBound();
+    //osg::BoundingSphere bs = mOSGToBullet->getBound();    
     osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
     mOSGToBullet->accept(cbbv);
     osg::BoundingBox bb = cbbv.getBoundingBox();
