@@ -221,7 +221,7 @@ void SceneGLTransformInfo::CalculateCenterViewMatrix( vrj::ProjectionPtr const p
         viewport->getUser()->getHeadPosProxy()->getData( positionScale );
     
     const gmtl::Point3f center_pos( cur_head_pos * gmtl::Point3f( 0, 0, 0 ) );
-    projection->calcViewMatrix( center_pos, positionScale );
+    projection->calcViewMatrix( gmtl::MAT_IDENTITY44F, center_pos, positionScale );
     const gmtl::Matrix44d& viewMatrix = 
         gmtl::convertTo< double >( projection->getViewMatrix() ) * GetZUpMatrix();
     scenegraph::GLTransformInfoPtr glTI = GetGLTransformInfo( viewport );
