@@ -256,7 +256,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
     parentAssembly = m_cadHandler->GetAssembly( parentID );
 
     vprDEBUG( vesDBG, 1 ) << "|---Adding node to parent--- id = " << parentID
-    << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
     if( !parentAssembly )
     {
         std::cout << "|---No parent found--- id = " << parentID << std::endl;
@@ -275,13 +275,14 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             <<") child nodes---"<<std::endl<< vprDEBUG_FLUSH;
 
         m_cadHandler->CreateAssembly( newAssembly->GetID() );
-        m_cadHandler->GetAssembly( newAssembly->GetID() )->
-            SetName( newAssembly->GetNodeName() );
+        ves::xplorer::scenegraph::DCS* tempAssem = 
+            m_cadHandler->GetAssembly( newAssembly->GetID() );
+        tempAssem->SetName( newAssembly->GetNodeName() );
 
-        parentAssembly->AddChild( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
+        parentAssembly->AddChild( tempAssem );
 
         unsigned int nChildren = newAssembly->GetNumberOfChildren();
-        for( unsigned int i = 0; i < nChildren; i++ )
+        for( unsigned int i = 0; i < nChildren; ++i )
         {
             vprDEBUG( vesDBG, 2 )<<"|\tAdding child: "
                 <<newAssembly->GetChild(i)->GetNodeName()
@@ -303,8 +304,12 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         vprDEBUG( vesDBG, 2 )<<"|\t---Set Assembly Attributes---"
             <<std::endl<< vprDEBUG_FLUSH;
         
-        m_cadHandler->GetAssembly( newAssembly->GetID() )->
-                ToggleDisplay( newAssembly->GetVisibility() );
+        ///Setup the scale for any sub children
+        {
+            ves::xplorer::scenegraph::util::NormalizeVisitor normVis( tempAssem, false );
+        }
+        
+        tempAssem->ToggleDisplay( newAssembly->GetVisibility() );
 
         vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---" 
             << std::endl << vprDEBUG_FLUSH;
