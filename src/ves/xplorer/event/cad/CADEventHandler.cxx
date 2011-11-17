@@ -313,8 +313,6 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
         
         m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity() );
-        
-        WritePartToDB( newAssembly );
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
