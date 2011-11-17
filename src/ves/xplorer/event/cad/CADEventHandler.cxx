@@ -45,6 +45,7 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
+#include <ves/xplorer/scenegraph/util/NormalizeVisitor.h>
 
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAssembly.h>
@@ -268,13 +269,14 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             <<"---"<<std::endl<< vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 2 )<<"|\t--- ("<<newAssembly->GetNumberOfChildren()
             <<") child nodes---"<<std::endl<< vprDEBUG_FLUSH;
-
+        
         m_cadHandler->CreateAssembly( newAssembly->GetID() );
-        m_cadHandler->GetAssembly( newAssembly->GetID() )->
-            SetName( newAssembly->GetNodeName() );
-
-        parentAssembly->AddChild( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
-
+        ves::xplorer::scenegraph::DCS* tempAssem = 
+            m_cadHandler->GetAssembly( newAssembly->GetID() );
+        tempAssem->SetName( newAssembly->GetNodeName() );
+        
+        parentAssembly->AddChild( tempAssem );
+        
         unsigned int nChildren = newAssembly->GetNumberOfChildren();
         for( unsigned int i = 0; i < nChildren; i++ )
         {
@@ -298,15 +300,21 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         vprDEBUG( vesDBG, 2 )<<"|\t---Set Assembly Attributes---"
             <<std::endl<< vprDEBUG_FLUSH;
         
-        m_cadHandler->GetAssembly( newAssembly->GetID() )->
-                ToggleDisplay( newAssembly->GetVisibility() );
-
+        ///Setup the scale for any sub children
+        {
+            ves::xplorer::scenegraph::util::NormalizeVisitor normVis( tempAssem, true );
+        }
+        
+        tempAssem->ToggleDisplay( newAssembly->GetVisibility() );
+        
         vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---" 
             << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
             << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
-
+        
         m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity() );
+        
+        WritePartToDB( newAssembly );
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
