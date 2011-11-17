@@ -278,7 +278,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         parentAssembly->AddChild( tempAssem );
         
         unsigned int nChildren = newAssembly->GetNumberOfChildren();
-        for( unsigned int i = 0; i < nChildren; i++ )
+        for( unsigned int i = 0; i < nChildren; ++i )
         {
             vprDEBUG( vesDBG, 2 )<<"|\tAdding child: "
                 <<newAssembly->GetChild(i)->GetNodeName()
@@ -302,7 +302,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         
         ///Setup the scale for any sub children
         {
-            ves::xplorer::scenegraph::util::NormalizeVisitor normVis( tempAssem, true );
+            ves::xplorer::scenegraph::util::NormalizeVisitor normVis( tempAssem, false );
         }
         
         tempAssem->ToggleDisplay( newAssembly->GetVisibility() );
