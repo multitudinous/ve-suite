@@ -46,6 +46,7 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
+#include <ves/xplorer/scenegraph/util/NormalizeVisitor.h>
 
 #include <ves/xplorer/data/CADPropertySet.h>
 
