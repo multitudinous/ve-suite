@@ -199,6 +199,10 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     {
         m_dbPresent( true );
     }
+    else
+    {
+        m_dbPresent( false );
+    }
     
     ///This code will be moved in the future. It is Aspen specific code.
     CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
