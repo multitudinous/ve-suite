@@ -40,6 +40,8 @@
 #include <ves/conductor/qt/XMLDataBufferEngine.h>
 #include <ves/conductor/qt/UserPreferencesDataBuffer.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
@@ -73,16 +75,19 @@ namespace ves
 {
 namespace conductor
 {
-        
-
-NetworkLoader::NetworkLoader(  )
+////////////////////////////////////////////////////////////////////////////////
+NetworkLoader::NetworkLoader()
 {
+    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
+        new ves::xplorer::eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_dbPresent ),
+        "NetworkLoader.dbPresent" );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 NetworkLoader::~NetworkLoader()
 {
+    ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void NetworkLoader::LoadVesFile( const std::string& fileName )
 {
     ///First lets get the current working directory and see where we need to
@@ -185,10 +190,16 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 
     // RPT: Following line replaces key functionality of canvas->PopulateNetworks
     XMLDataBufferEngine::instance()->LoadVESData( m_filename );
+    ves::open::xml::model::SystemPtr system = 
+        XMLDataBufferEngine::instance()->
+        GetXMLSystemDataObject( XMLDataBufferEngine::instance()->GetTopSystemId( ) );
 
-    //create hierarchy page
-    //hierarchyTree->PopulateTree();
-
+    std::string const& db( system->GetDBReference() );
+    if( !db.empty() )
+    {
+        m_dbPresent( true );
+    }
+    
     ///This code will be moved in the future. It is Aspen specific code.
     CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
     GetCommand( "Aspen_Plus_Preferences" );
@@ -237,6 +248,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     const std::string nw_str = XMLDataBufferEngine::instance()->
                     SaveVESData( std::string( "returnString" ) );
 
+    ///Load the ves data on the xplorer side
     ves::xplorer::network::GraphicalPluginManager::instance()->
             SetCurrentNetwork( nw_str );
 
@@ -247,8 +259,6 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         ->mSignal->operator()( );
 
     // RPT: Make the first model in the network active
-    ves::open::xml::model::SystemPtr system = XMLDataBufferEngine::instance()->GetXMLSystemDataObject( XMLDataBufferEngine::instance()->GetTopSystemId( ) );
-
     // Connect to the ActiveModelChangedSignal. Just below we will send in a command
     // that will eventually trigger this signal. The slot called looks for a related
     // database file and tells xplorer to load it up. We can't simply call

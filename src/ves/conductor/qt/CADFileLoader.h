@@ -30,24 +30,25 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #pragma once
 
 #include <string>
+
+#include <ves/open/xml/cad/CADPartPtr.h>
 
 namespace ves
 {
 namespace conductor
 {
-
 class CADFileLoader 
 {
-    public:
-        CADFileLoader(  );
-        ~CADFileLoader();
-        
-        void LoadCADFile( const std::string& fileName, const std::string& parentID = "" );
-        
+public:
+    CADFileLoader();
+    ~CADFileLoader();
+
+    void LoadCADFile( const std::string& fileName, const std::string& parentID = "" );
+
+    void WritePartToDB( std::string const& vegFileNamePath, ves::open::xml::cad::CADPartPtr& newPart );
 };
 
 } // namespace conductor

@@ -146,6 +146,10 @@ public:
     void PlayCADAnimations();
     ///Reset the animation paths for any registered CAD files
     void ResetCADAnimations();
+    ///Get the db flag
+    bool GetDBPresent();
+    ///Get the db flag
+    void SetDBPresent( bool const& dbPresent );
     
 private:
     ///Create the arrow polydata
@@ -183,9 +187,10 @@ private:
     ActiveModelChangedSignal_type mActiveModelChangedSignal;
     ///Slot for initializing CAD
     ves::xplorer::event::cad::CADSlotInitializerPtr m_CADSlotInitializer;
-
     /// Required to be able to connect up to signals.
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    ///Whether we have a db or not
+    bool m_dbPresent;
 };
 }
 }

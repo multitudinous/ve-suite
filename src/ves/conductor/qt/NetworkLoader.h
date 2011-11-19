@@ -33,18 +33,20 @@
 
 #pragma once
 
-#include<string>
-#include<ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <string>
+
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 namespace ves
 {
 namespace conductor
 {
 /**
-* NetworkLoader unifies the logic to load a network. This logic was previously 
-* spread across AppFrame, Canvas, Network, AvailableModules, and UIPluginBase.
-* This class is intended to be completely separate of the UI, and should compile,
-* link, and be functional even in the absence of a UI library (Qt, Wx, etc.)
+ * NetworkLoader unifies the logic to load a network. This logic was previously 
+ * spread across AppFrame, Canvas, Network, AvailableModules, and UIPluginBase.
+ * This class is intended to be completely separate of the UI, and should compile,
+ * link, and be functional even in the absence of a UI library (Qt, Wx, etc.)
 **/
 class NetworkLoader 
 {
@@ -53,26 +55,29 @@ public:
     // to create an instance on the stack. It must be created on the heap.
     // Notice the destructor is private too. This oject autodeletes when it is
     // done processing.
-    static NetworkLoader* createNetworkLoader( )
-                          { return new NetworkLoader; }
+    static NetworkLoader* createNetworkLoader(){ return new NetworkLoader; }
 
     /**
-    * Load the .ves file specified by @c fileName
-    * This function will activate the first model loaded by default.
+     * Load the .ves file specified by @c fileName
+     * This function will activate the first model loaded by default.
     **/
     void LoadVesFile( const std::string& fileName );
 
 private:
-        NetworkLoader();
-        ~NetworkLoader();
+    ///Constuctor
+    NetworkLoader();
+    ///Destructor
+    ~NetworkLoader();
 
-        /// Holds the filename we're loading so we can later emit a signal
-        /// indicating loading is done.
-        std::string m_filename;
-
-        void OnActiveModelChanged( const std::string& modelID );
-        ves::xplorer::eventmanager::ScopedConnectionList m_connections;
-        
+    ///Set the active model
+    void OnActiveModelChanged( const std::string& modelID );
+    /// Holds the filename we're loading so we can later emit a signal
+    /// indicating loading is done.
+    std::string m_filename;
+    ///Signals tools
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    ///The signal to tell whether we have a db or not
+    ves::util::BoolSignal_type m_dbPresent;
 };
 
 } // namespace conductor

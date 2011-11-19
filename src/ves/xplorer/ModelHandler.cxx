@@ -220,6 +220,11 @@ ModelHandler::ModelHandler()
                     void( std::string const& ),
                     &ModelHandler::SetActiveModel,
                     m_connections, normal_Priority );
+
+    CONNECTSIGNAL_1( "%dbPresent",
+                    void( bool const& ),
+                    &ModelHandler::SetDBPresent,
+                    m_connections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler()
@@ -608,5 +613,15 @@ void ModelHandler::ResetCADAnimations()
             tempPath->update( *(static_cast< osg::Node* >( iter->second->GetDCS() )) );
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::SetDBPresent( bool const& dbPresent )
+{
+    m_dbPresent = dbPresent;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool ModelHandler::GetDBPresent()
+{
+    return m_dbPresent;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -40,12 +40,13 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
 
+#include <ves/xplorer/data/CADPropertySet.h>
+
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAssembly.h>
 #include <ves/open/xml/cad/CADPart.h>
-#include <ves/open/xml/cad/CADPartPtr.h>
 #include <ves/open/xml/model/Model.h>
 
 #include <boost/filesystem/path.hpp>
@@ -114,17 +115,12 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
         return;
     }
 
-//    if( model->GetModelCADHandler()->AssemblyExists( parentID ) )
-    {
-//        CADNodePtr cad = model->GetModelData()->GetGeometry();
-        ves::xplorer::scenegraph::DCS* cad =
-                model->GetModelCADHandler()->GetAssembly( parentID );
-        CADAssemblyPtr assembly = boost::dynamic_pointer_cast<CADAssembly>( cad->GetCADPart() );
-//        CADAssemblyPtr assembly = boost::dynamic_pointer_cast<CADAssembly>( cad );
-        assembly->AddChild( newCADPart );
-        //std::cout << "Assembly ID = " << assembly->GetID() << std::endl << std::flush;
-        newCADPart->SetParent( assembly->GetID() );
-    }
+    ves::xplorer::scenegraph::DCS* cad =
+        model->GetModelCADHandler()->GetAssembly( parentID );
+    CADAssemblyPtr assembly = 
+        boost::dynamic_pointer_cast<CADAssembly>( cad->GetCADPart() );
+    assembly->AddChild( newCADPart );
+    newCADPart->SetParent( assembly->GetID() );
     
     // Send node off to xplorer
     ves::open::xml::DataValuePairPtr cadNode( new ves::open::xml::DataValuePair() );
@@ -134,8 +130,58 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
     cadCommand->SetCommandName( std::string( "CAD_ADD_NODE" ) );
     cadCommand->AddDataValuePair( cadNode );
     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( cadCommand );
+    
+    WritePartToDB( vegFileNamePath, newCADPart );
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath, 
+    ves::open::xml::cad::CADPartPtr& newPart )
+{
+    ves::xplorer::data::CADPropertySet newSet;
+    newSet.SetUUID( newPart->GetID() );
+    boost::filesystem::path cadFileName( vegFileNamePath );
+    newSet.SetPropertyValue( "NameTag", boost::filesystem::basename( cadFileName )  );
+    newSet.SetPropertyValue( "Opacity", 1.0 );
+    newSet.SetPropertyValue( "TransparencyFlag", true );
+    newSet.SetPropertyValue( "Transform_Translation_X", 0 );
+    newSet.SetPropertyValue( "Transform_Translation_Y", 0 );
+    newSet.SetPropertyValue( "Transform_Translation_Z", 0 );
+    newSet.SetPropertyValue( "Transform_Rotation_X", 0 );
+    newSet.SetPropertyValue( "Transform_Rotation_Y", 0 );
+    newSet.SetPropertyValue( "Transform_Rotation_Z", 0 );
+    newSet.SetPropertyValue( "Transform_Scale_X", 1 );
+    newSet.SetPropertyValue( "Transform_Scale_Y", 1 );
+    newSet.SetPropertyValue( "Transform_Scale_Z", 1 );
+    newSet.SetPropertyValue( "Physics", false );
+    newSet.SetPropertyValue( "Physics_Mass", 1 );
+    //newSet.SetPropertyValue( "Physics_Friction", 1 );
+    //newSet.SetPropertyValue( "Physics_Restitution", 1 );
+    //newSet.SetPropertyValue( "Physics_MotionType", "" );
+    //newSet.SetPropertyValue( "Physics_LODType", "" );
+    //newSet.SetPropertyValue( "Physics_MeshType", "" );
+    //newSet.SetPropertyValue( "Physics_MeshDecimation", "" );
+    //newSet.SetPropertyValue( "Culling", "" );
+    std::string pathString;
+    newSet.SetPropertyValue( "NodePath", pathString );
+    newSet.SetPropertyValue( "Filename", vegFileNamePath );    
+    newSet.SetPropertyValue( "Visibile", true );
+    
+    // What needs to be tested to turn GPS on/off?
+    //    if( ??minerva_gps_condition?? )
+    //    {
+    //        newSet.SetPropertyValue( "GPS", true );
+    //    }
+    //    else
+    //    {
+    //        newSet.SetPropertyValue( "GPS", false );
+    //    }
+    
+    //newSet.SetPropertyValue( "GPS_Longitude",  );
+    //newSet.SetPropertyValue( "GPS_Latitude", );
+        
+    newSet.WriteToDatabase();
+}
+////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
 } // namespace ves
 #endif
