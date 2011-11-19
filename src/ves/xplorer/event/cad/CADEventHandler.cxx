@@ -433,7 +433,6 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
 
             ves::xplorer::minerva::MinervaManager::instance()->AddModel ( id, modelWrapper.get() );
 #endif
-
             WritePartToDB( newPart );
             
             //Is the node off or on?
@@ -459,6 +458,40 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
 {
     ves::xplorer::data::CADPropertySet newSet;
     newSet.SetUUID( newPart->GetID() );
+    if( ves::xplorer::ModelHandler::instance()->GetDBPresent() )
+    {
+        newSet.LoadFromDatabase();
+    }
+
+    // Calculate and store the NodePath - for all methods whether import or 
+    // file load or ves load
+    {
+        std::string pathString;
+        if( newPart->GetNodeType() == "Assembly" )
+        {
+            ves::xplorer::scenegraph::DCS* transform = 
+                m_cadHandler->GetAssembly( newPart->GetID() );
+            
+            pathString = GetNodePathString(
+                scenegraph::SceneManager::instance()->GetRootNode(), transform);
+        }
+        else if( newPart->GetNodeType() == "Part" )
+        {
+            osg::Node* node = 
+                m_cadHandler->GetPart( newPart->GetID() )->GetNode()->GetNode();
+            
+            pathString = GetNodePathString(
+                scenegraph::SceneManager::instance()->GetRootNode(), node );
+        }
+        newSet.SetPropertyValue( "NodePath", pathString );
+    }
+    
+    ///Only write to the DB if are importing an old file
+    if( ves::xplorer::ModelHandler::instance()->GetDBPresent() )
+    {
+        return;
+    }
+    
     newSet.SetPropertyValue( "NameTag", newPart->GetNodeName() );
     newSet.SetPropertyValue( "Opacity", static_cast<double>( newPart->GetOpacity() ) );
     newSet.SetPropertyValue( "TransparencyFlag", newPart->GetTransparentFlag() );
@@ -526,28 +559,6 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
 //    }
     newSet.SetPropertyValue( "GPS_Longitude", newPart->GetLongitude() );
     newSet.SetPropertyValue( "GPS_Latitude", newPart->GetLatitude() );
-
-    // Calculate and store the NodePath
-    std::string pathString;
-    if( newPart->GetNodeType() == "Assembly" )
-    {
-        ves::xplorer::scenegraph::DCS* transform = 
-            m_cadHandler->GetAssembly( newPart->GetID() );
-
-        pathString = GetNodePathString(
-                          scenegraph::SceneManager::instance()->GetRootNode(),
-                          transform);
-    }
-    else if( newPart->GetNodeType() == "Part" )
-    {
-        osg::Node* node = m_cadHandler->
-                          GetPart( newPart->GetID() )->GetNode()->GetNode();
-
-        pathString = GetNodePathString(
-                      scenegraph::SceneManager::instance()->GetRootNode(),
-                      node );
-    }
-    newSet.SetPropertyValue( "NodePath", pathString );
 
     if( newPart->GetNodeType() == "Part" )
     {
