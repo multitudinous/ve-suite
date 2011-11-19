@@ -56,11 +56,9 @@ namespace xml
 namespace model
 {
 /*!\file System.h
-  *System System API
-  */
-
-/*!\class ves::open::xml::model::System
- *Class that manages the system network for conductor.
+ * System System API
+ * \class ves::open::xml::model::System
+ * Class that manages the system network for conductor.
  */
 class VE_MODEL_EXPORTS System : public ves::open::xml::XMLObject,
                                public boost::enable_shared_from_this<System>
