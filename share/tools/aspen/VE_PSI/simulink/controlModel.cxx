@@ -35,11 +35,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <time.h>
 
 #include "engine.h"
 #include "matrix.h"
+#include "mex.h"
 
-//#define BUFSIZE 256
+void wait( int seconds )
+{
+    clock_t endwait = clock () + seconds * CLOCKS_PER_SEC ;
+    while (clock() < endwait) {}
+}
 
 int main( int argc, char** argv )
 {
@@ -74,35 +80,34 @@ int main( int argc, char** argv )
     engEvalString(ep, matlabCommand.c_str() );
 */
 
-    // start the simulation
-    std::cout << "Starting simulation" << std::endl;
     // Use SimulationCommand to start, stop, pause, continue, update 
+    std::cout << "Starting simulation" << std::endl;
     matlabCommand = "set_param('" + modelName + "','SimulationCommand', 'start')";
     engEvalString(ep, matlabCommand.c_str() );
-/*
-    char buffer[BUFSIZE+1];
-    buffer[BUFSIZE] = '\0';
-    engOutputBuffer(ep, buffer, BUFSIZE);
-*/
+
     matlabCommand = "status = get_param('" + modelName + "','SimulationStatus')";
     engEvalString(ep, matlabCommand.c_str() );
+
+    mxArray *mxTimeArray;
     mxArray *resultArray = engGetVariable(ep,"status");   //returns 'running' or 'stopped'
-    if( resultArray )
+    char * resultString = mxArrayToString( resultArray );
+    std::cout << "status = " << resultString << std::endl;
+    double simTime;
+    do 
     {
-        char * resultString = mxArrayToString( resultArray );
+        wait( 1 );
+        matlabCommand = "time = get_param('" + modelName + "','SimulationTime')";
+        engEvalString(ep, matlabCommand.c_str() );
+        mxTimeArray = engGetVariable(ep,"time");
+        simTime = mxGetScalar( mxTimeArray );
+        std::cout << "simulation time = " << simTime << std::endl;
+/*
+        resultArray = engGetVariable(ep,"status");   //returns 'running' or 'stopped'
+        resultString = mxArrayToString( resultArray );
         std::cout << "status = " << resultString << std::endl;
-
-        if( strcmp(resultString, "running") == 0 )
-        {
-            matlabCommand = "time = get_param('" + modelName + "','SimulationTime')";
-            engEvalString(ep, matlabCommand.c_str() );
-            mxArray *timeArray = engGetVariable(ep,"time");   //returns 'running' or 'stopped'
-            //std::cout << "time = " << timeArray[ 0 ] << std::endl;
-        }
-    }
-
-    // Echo the output from the command.  
-    //std::cout << buffer << std::endl;
+*/
+//    } while ( strcmp(resultString, "running") == 0 );
+    } while ( simTime != 0 );
 
 /*
 %callback for the stop simulation button
@@ -117,7 +122,8 @@ myfun(simdata) %just an example, insert here your own function
     
     // We're done! Free memory, close MATLAB engine and exit.
     std::cout << "Freeing memory, closing MATLAB engine, and exiting" << std::endl;
-    mxDestroyArray(resultArray);
+    mxDestroyArray( resultArray );
+    mxDestroyArray( mxTimeArray );
     engClose(ep);
     
     return( EXIT_SUCCESS );
