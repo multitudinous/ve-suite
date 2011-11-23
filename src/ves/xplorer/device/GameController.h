@@ -61,8 +61,7 @@ class InputArea;
 
 namespace osgwMx
 {
-class MxInputAdapterGadgeteerGamePad;
-class MxMovementStyleGamePad;
+class MxGamePad;
 }
 
 // --- OSG Includes --- //
@@ -173,7 +172,7 @@ private:
     ScrollSignal_type m_scroll;
     
     //osg::ref_ptr< osgwMx::MxInputAdapterGadgeteerGamePad > m_gadgetInputAdapter;
-    //osg::ref_ptr< osgwMx::MxMovementStyleGamePad > m_mxGamePadStyle;
+    osg::ref_ptr< osgwMx::MxGamePad > m_mxGamePadStyle;
 };
 
 } //end device

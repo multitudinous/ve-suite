@@ -68,13 +68,10 @@
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
 
 #include <ves/open/xml/model/Model.h>
-// #include <ves/open/xml/DataValuePair.h>
-// #include <ves/open/xml/Command.h>
-// #include <ves/xplorer/command/CommandManager.h>
 
 #include <osgwMx/MxEventHandler.h>
 #include <ves/xplorer/device/MxInputAdapterGadgeteerGamePad.h>
-//#include <osgwMx/MxMovementStyleGamePad.h>
+#include <osgwMx/MxGamePad.h>
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
@@ -111,11 +108,18 @@ using namespace ves::xplorer::scenegraph;
 GameController::GameController()
     :
     Device( KEYBOARD_MOUSE ),
-    m_exit( false )
+    m_exit( false ),
     // create a game pad input handler and data interpreter to control the view.
     //m_gadgetInputAdapter( new osgwMx::MxInputAdapterGadgeteerGamePad() ),
-    //m_mxGamePadStyle( new osgwMx::MxMovementStyleGamePad( m_gadgetInputAdapter.get() ) )
+    m_mxGamePadStyle( new osgwMx::MxGamePad() )
 {
+    m_mxGamePadStyle->setStickRate( 1.0 );
+    // Set some MxCore defaults:
+    osgwMx::MxCore* mxCore = m_mxGamePadStyle->getMxCore();
+    mxCore->setInitialValues( 
+        osg::Vec3d( 0., 0., 1. ), osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., -30., 0. ) );
+    mxCore->reset();
+    
     // Connect to Juggler's new event handling interface
     m_analogAxis0EventInterface.init("VJAxis0");
     m_analogAxis0EventInterface.addCallback(boost::bind(&GameController::OnAxis0Event, this, _1));
@@ -194,12 +198,30 @@ void GameController::OnAxis0Event( const float event )
         return;
     }
 
-    //m_gadgetInputAdapter->clear();
-    //m_gadgetInputAdapter->ExtractAxis( MOVE_X_AXIS_IDX, event );
-    //m_mxGamePadStyle->matrixTransform( 
-    //    ves::xplorer::scenegraph::SceneManager::instance()->GetFrameStamp()->getSimulationTime() );
-    //osg::Matrixd navMatrix = m_mxGamePadStyle->getMxCore()->getMatrix();
-    //std::cout << " Analog device input " << event << std::endl << std::flush;
+    m_mxGamePadStyle->setButtons( 0 );
+    float elapsedSeconds = ves::xplorer::scenegraph::SceneManager::instance()->GetFrameStamp()->getSimulationTime() - 0.0;
+
+    // Left stick: Move.
+    // Normalize values to range -1.0 to 1.0.
+    // These are units to move in world coordinates per event or per frame.
+    float x = ( ( event - 0 ) / 127.5 ) - 1.f;
+    //float y = normalizeAxisValue( devState.lY );
+    m_mxGamePadStyle->setLeftStick( x, 0, elapsedSeconds );
+    
+    // Right stick: Rotate.
+    // Base class angle values are in degrees. By calling
+    // normalizeAxisValue, we pass in -1 to 1 degrees.
+    // Compensate for rotation as well:
+    //  x value around up vector, positive values counterclockwise
+    //  y value around right/cross vector, positive values counterclockwise
+    //    NOTE .lZ is positive when pulled back. This is the opposite of
+    //    the left gamepad stick.
+    //x = -normalizeAxisValue( devState.lRz );
+    //y = normalizeAxisValue( devState.lZ );
+    m_mxGamePadStyle->setRightStick( 0, 0, elapsedSeconds );
+    
+    osg::Matrixd navMatrix = m_mxGamePadStyle->getMxCore()->getMatrix();
+    std::cout << " Analog device input " << navMatrix << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis1Event( const float event )
