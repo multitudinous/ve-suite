@@ -199,7 +199,8 @@ void GameController::OnAxis0Event( const float event )
     }
 
     m_mxGamePadStyle->setButtons( 0 );
-    float elapsedSeconds = ves::xplorer::scenegraph::SceneManager::instance()->GetFrameStamp()->getSimulationTime() - 0.0;
+    float elapsedSeconds = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime();
 
     // Left stick: Move.
     // Normalize values to range -1.0 to 1.0.

@@ -118,7 +118,9 @@ SceneManager::SceneManager()
     m_isRTTOn( false ),
     m_isDesktopMode( false ),
     m_screenAlignedNormals( true ),
-    m_isMasterNode( true )
+    m_isMasterNode( true ),
+    m_previousTime( 0 ),
+    m_deltaTime( 0 )
 {
     ;
 }
@@ -606,6 +608,9 @@ void SceneManager::LatePreFrameUpdate()
             mNavSwitch->getChild( 1 ) )->SetMat( m_invertedNavMatrix );
     }
     
+    m_deltaTime = mFrameStamp->getSimulationTime() - m_previousTime;
+    m_previousTime = mFrameStamp->getSimulationTime();
+
     m_cameraManager->LatePreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -755,5 +760,10 @@ void SceneManager::SetCurrentGLTransformInfo( GLTransformInfoPtr const transform
 gmtl::Point3d& SceneManager::GetCenterPoint()
 {
     return m_centerPoint;
+}
+////////////////////////////////////////////////////////////////////////////////
+double SceneManager::GetDeltaFrameTime()
+{
+    return m_deltaTime;
 }
 ////////////////////////////////////////////////////////////////////////////////

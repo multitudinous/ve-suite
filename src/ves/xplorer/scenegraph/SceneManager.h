@@ -276,6 +276,9 @@ public:
     void  ConfigureFMODSystem( FMOD::System* system );
 #endif
 
+    ///Get the delta frame stamp
+    double GetDeltaFrameTime();
+    
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -398,6 +401,12 @@ private:
     
     ///The center point used for rotation purposes with the kmb and wand
     gmtl::Point3d m_centerPoint;
+    
+    ///Previous time stamp
+    double m_previousTime;
+    
+    ///Delta framestamp
+    double m_deltaTime;
 };
 } //end scenegraph
 } //end xplorer
