@@ -173,6 +173,11 @@ private:
     
     //osg::ref_ptr< osgwMx::MxInputAdapterGadgeteerGamePad > m_gadgetInputAdapter;
     osg::ref_ptr< osgwMx::MxGamePad > m_mxGamePadStyle;
+    
+    float m_leftStickX;
+    float m_leftStickY;
+    float m_rightStickX;
+    float m_rightStickY;
 };
 
 } //end device

@@ -111,25 +111,35 @@ GameController::GameController()
     m_exit( false ),
     // create a game pad input handler and data interpreter to control the view.
     //m_gadgetInputAdapter( new osgwMx::MxInputAdapterGadgeteerGamePad() ),
-    m_mxGamePadStyle( new osgwMx::MxGamePad() )
+    m_mxGamePadStyle( new osgwMx::MxGamePad() ),
+    m_leftStickX( 0 ),
+    m_leftStickY( 0 ),
+    m_rightStickX( 0 ),
+    m_rightStickY( 0 )
 {
-    m_mxGamePadStyle->setStickRate( 1.0 );
+    m_mxGamePadStyle->setStickRate( 10.0 );
+    m_mxGamePadStyle->setStickDeadZone( 0.05f );
+    
     // Set some MxCore defaults:
     osgwMx::MxCore* mxCore = m_mxGamePadStyle->getMxCore();
     mxCore->setInitialValues( 
-        osg::Vec3d( 0., 0., 1. ), osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., -30., 0. ) );
+        osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., 0., -1.0 ), osg::Vec3d( 0., 0., 0. ) );
     mxCore->reset();
     
     // Connect to Juggler's new event handling interface
+    //Left stick - X
     m_analogAxis0EventInterface.init("VJAxis0");
     m_analogAxis0EventInterface.addCallback(boost::bind(&GameController::OnAxis0Event, this, _1));
 
+    //Left stick - Y
     m_analogAxis1EventInterface.init("VJAxis1");
     m_analogAxis1EventInterface.addCallback(boost::bind(&GameController::OnAxis1Event, this, _1));
 
+    //Right stick - X
     m_analogAxis2EventInterface.init("VJAxis2");
     m_analogAxis2EventInterface.addCallback(boost::bind(&GameController::OnAxis2Event, this, _1));
 
+    //Right stick - X
     m_analogAxis3EventInterface.init("VJAxis3");
     m_analogAxis3EventInterface.addCallback(boost::bind(&GameController::OnAxis3Event, this, _1));
 
@@ -198,16 +208,90 @@ void GameController::OnAxis0Event( const float event )
         return;
     }
 
-    m_mxGamePadStyle->setButtons( 0 );
-    float elapsedSeconds = 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime();
+    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::BottomButton );
 
     // Left stick: Move.
     // Normalize values to range -1.0 to 1.0.
     // These are units to move in world coordinates per event or per frame.
-    float x = ( ( event - 0 ) / 127.5 ) - 1.f;
+    m_leftStickX = ( ( event + 32767.0 ) / 32767.0 ) - 1.f;
+    m_leftStickX *= -1.0;
     //float y = normalizeAxisValue( devState.lY );
-    m_mxGamePadStyle->setLeftStick( x, 0, elapsedSeconds );
+    m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+        
+    osg::Matrixd navMatrix = m_mxGamePadStyle->getMxCore()->getMatrix();
+    //std::cout << " Analog device input 0 " << m_leftStickX << " " << navMatrix << std::endl << std::flush;
+    gmtl::Matrix44d newTransform;
+    
+    newTransform.set( navMatrix.ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnAxis1Event( const float event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::BottomButton );
+    
+    // Left stick: Move.
+    // Normalize values to range -1.0 to 1.0.
+    // These are units to move in world coordinates per event or per frame.
+    m_leftStickY = ( ( event + 32767.0 ) / 32767.0 ) - 1.f;
+    m_leftStickY *= -1.0;
+    //float y = normalizeAxisValue( devState.lY );
+    m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+
+    osg::Matrixd navMatrix = m_mxGamePadStyle->getMxCore()->getMatrix();
+    //std::cout << " Analog device input 1 " << m_leftStickY << " " << navMatrix << std::endl << std::flush;
+    gmtl::Matrix44d newTransform;
+
+    newTransform.set( navMatrix.ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnAxis2Event( const float event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    m_mxGamePadStyle->setButtons( 0 );
+
+    // Right stick: Rotate.
+    // Base class angle values are in degrees. By calling
+    // normalizeAxisValue, we pass in -1 to 1 degrees.
+    // Compensate for rotation as well:
+    //  x value around up vector, positive values counterclockwise
+    //  y value around right/cross vector, positive values counterclockwise
+    //    NOTE .lZ is positive when pulled back. This is the opposite of
+    //    the left gamepad stick.
+    //x = -normalizeAxisValue( devState.lRz );
+    //y = normalizeAxisValue( devState.lZ );
+    m_rightStickX = ( ( event + 32767.0) / 32767.0 ) - 1.f;
+
+    m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+    
+    osg::Matrixd navMatrix = m_mxGamePadStyle->getMxCore()->getMatrix();
+    //std::cout << " Analog device input 2 " << m_rightStickX << " " << navMatrix << std::endl << std::flush;
+    gmtl::Matrix44d newTransform;
+    
+    newTransform.set( navMatrix.ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnAxis3Event( const float event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    m_mxGamePadStyle->setButtons( 0 );
     
     // Right stick: Rotate.
     // Base class angle values are in degrees. By calling
@@ -219,40 +303,17 @@ void GameController::OnAxis0Event( const float event )
     //    the left gamepad stick.
     //x = -normalizeAxisValue( devState.lRz );
     //y = normalizeAxisValue( devState.lZ );
-    m_mxGamePadStyle->setRightStick( 0, 0, elapsedSeconds );
+    m_rightStickY = ( ( event + 32767.0 ) / 32767.0 ) - 1.f;
     
+    m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+
     osg::Matrixd navMatrix = m_mxGamePadStyle->getMxCore()->getMatrix();
-    std::cout << " Analog device input " << navMatrix << std::endl << std::flush;
-}
-////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis1Event( const float event )
-{
-    if( m_exit )
-    {
-        return;
-    }
+    //std::cout << " Analog device input 3 " << m_rightStickY << " " << navMatrix << std::endl << std::flush;
+    gmtl::Matrix44d newTransform;
     
-    //std::cout << " Analog device input " << event << std::endl << std::flush;
-}
-////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis2Event( const float event )
-{
-    if( m_exit )
-    {
-        return;
-    }
-    
-    //std::cout << " Analog device input " << event << std::endl << std::flush;
-}
-////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis3Event( const float event )
-{
-    if( m_exit )
-    {
-        return;
-    }
-    
-    //std::cout << " Analog device input " << event << std::endl << std::flush;
+    newTransform.set( navMatrix.ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis4Event( const float event )
