@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#define NO_SUBLOAD
+//#define NO_SUBLOAD
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElement.h>
@@ -608,17 +608,17 @@ void UIManager::_repaintChildren()
 
                 std::vector< std::pair< osg::Image*, std::pair<int, int> > >
                         regions = element->GetDamagedAreas();
-                std::cout << "* ";
+                //std::cout << "* ";
                 for( size_t index = 0; index < regions.size(); ++index )
                 {
                     std::pair< osg::Image*, std::pair<int, int> > region =
                             regions.at( index );
-                    std::cout << region.second.first << "," << region.second.second << ";";
+                    //std::cout << region.second.first << "," << region.second.second << ";";
                     m_subloaders[ element ]->AddUpdate( region.first,
                                                         region.second.first,
                                                         region.second.second );
                 }
-                std::cout << std::endl << std::flush;
+                //std::cout << std::endl << std::flush;
 #endif
             }
         }

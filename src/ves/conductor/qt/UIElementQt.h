@@ -48,6 +48,8 @@
 #include <QtCore/QTimer>
 #include <QtCore/QMutex>
 #include <QtCore/qobjectdefs.h>
+#include <QtGui/QLabel>
+#include <QtCore/QTime>
 
 namespace Ui {
     class titlebar;
@@ -169,6 +171,13 @@ private:
     bool m_firstRender;
     bool m_sizeHasChanged;
     bool m_sizeDirty;
+
+#ifdef FULL_IMAGE_DEBUG
+    QLabel* m_imgCurrentLabel;
+    QLabel* m_imgPreviousLabel;
+#endif
+
+    QTime m_paintTime;
 
 protected Q_SLOTS:
     void _render();

@@ -161,6 +161,7 @@ MainWindow::MainWindow(QWidget* parent) :
         mFileOpsStack->AddAction( ui->actionNew );
         mFileOpsStack->AddAction( ui->actionOpen);
         mFileOpsStack->AddAction( ui->actionSave );
+        mFileOpsStack->setObjectName( "mFileOpsStack" );
     }
 
     ///The physics menu stack
@@ -174,6 +175,7 @@ MainWindow::MainWindow(QWidget* parent) :
         m_physicsMenuStack->AddAction( ui->actionPausePhysics);
         m_physicsMenuStack->AddAction( ui->actionResetPhysics );
         m_physicsMenuStack->AddAction( ui->actionStepPhysics );
+        m_physicsMenuStack->setObjectName( "m_physicsMenuStack" );
     }
 
     ///The manipulator menu stack
@@ -188,6 +190,7 @@ MainWindow::MainWindow(QWidget* parent) :
         m_manipulatorMenuStack->AddAction( ui->actionTranslateManipulator );
         m_manipulatorMenuStack->AddAction( ui->actionRotateManipulator );
         m_manipulatorMenuStack->AddAction( ui->actionComboManipulator );
+        m_manipulatorMenuStack->setObjectName( "m_manipulatorMenuStack" );
         //ui->actionManipulatorStack
         
         ui->actionScaleManipulator->setEnabled( false );
@@ -211,6 +214,7 @@ MainWindow::MainWindow(QWidget* parent) :
         m_navMenuStack->AddAction( ui->actionObjectNavigation );
         m_navMenuStack->AddAction( ui->actionCharacterNavigation );
         m_navMenuStack->AddAction( ui->actionCharacterFlyMode );
+        m_navMenuStack->setObjectName( "m_navMenustack" );
         
         eventmanager::EventManager::instance()->RegisterSignal(
            new eventmanager::SignalWrapper< NavJumpSignal_type >( &m_jumpSignal ),
@@ -228,6 +232,7 @@ MainWindow::MainWindow(QWidget* parent) :
         m_viewMenuStack->AddAction( ui->actionRecent );
         m_viewMenuStack->AddAction( ui->actionConstraints );
         m_viewMenuStack->AddAction( ui->actionShowTestPlot );
+        m_viewMenuStack->setObjectName( "m_viewMenuStack" );
     }
         
     // Make sure there is no statusbar on this widget.

@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 //#define VES_QT_RENDER_DEBUG
+//#define FULL_IMAGE_DEBUG
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
@@ -135,12 +136,28 @@ UIElementQt::UIElementQt( QWidget *parent )
     mQTitlebar = new Ui::titlebar();
     mTitlebar = new QWidget( 0 );
     mQTitlebar->setupUi( mTitlebar );
+    QList<QWidget *> widgets = mTitlebar->findChildren<QWidget *>();
+    Q_FOREACH(QWidget* widget, widgets)
+        widget->installEventFilter(this);
     // Hide the "hide" button for now. May bring this back later on once
     // we have a clear way to manage hiding an element vs. hiding all of UI
     mQTitlebar->HideButton->hide();
 
     Initialize();
     PostConstructor();
+
+#ifdef FULL_IMAGE_DEBUG
+    QWidget* imgDialog = new QWidget(0);
+    QBoxLayout* bl = new QBoxLayout(QBoxLayout::LeftToRight);
+    imgDialog->setLayout(bl);
+    m_imgCurrentLabel = new QLabel(0);
+    m_imgPreviousLabel = new QLabel(0);
+    bl->addWidget( m_imgCurrentLabel );
+    bl->addWidget( m_imgPreviousLabel );
+    imgDialog->resize( 450, 250 );
+    imgDialog->show();
+#endif
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIElementQt::~UIElementQt()
@@ -381,9 +398,14 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
     //timespec ts, tt, ttt, te;
     //clock_gettime(CLOCK_MONOTONIC, &ts);
 
+    if(!mImage)
+    {
+        return m_damagedAreas;
+    }
+
     if( m_firstRender )
     {
-        osg::Image* img = m_osgImage.get();//new osg::Image;
+        osg::Image* img = m_osgImage.get();
         img->setImage( mImageWidth, mImageHeight, 1, 4, GL_BGRA, GL_UNSIGNED_BYTE,
                        mImage->bits(), osg::Image::NO_DELETE );
 
@@ -391,11 +413,20 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
         std::pair< osg::Image*, std::pair<int,int> > package( img, offset );
         m_damagedAreas.push_back( package );
         m_firstRender = false;
+
+#ifdef FULL_IMAGE_DEBUG
+        m_imgCurrentLabel->setPixmap( QPixmap::fromImage( *mImage ).scaledToWidth(200) );
+#endif
+
         return m_damagedAreas;
     }
 
-    //std::cout << "+ ";
+#ifdef FULL_IMAGE_DEBUG
+    QPixmap markupImage( QPixmap::fromImage( *mImage ) );
+#endif
+
     bool some_update = false;
+    int index = 0;
     const QMap<QString, QRect>& rects = capture_list;
     Q_FOREACH(const QString key, rects.keys())
     {
@@ -417,26 +448,21 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
             //clock_gettime(CLOCK_MONOTONIC, &tt);
 
             if(update_cache[key] != fragment)
-//            const uchar* cached = update_cache[key].bits();
-//            const uchar* frag = fragment.bits();
-//            for( int c = 0; c < 500; ++c )
             {
-//                if( (*cached) != (*frag) )
-                //{
-                    is_update = true;
-                    some_update = true;
-                    break;
-                //}
-//                ++cached;
-//                ++frag;
+                is_update = true;
+                some_update = true;
             }
             //clock_gettime(CLOCK_MONOTONIC, &ttt);
             //std::cout << "Comp: " << ttt.tv_nsec - tt.tv_nsec << std::endl << std::flush;
         }
+        else
+        {
+            // If the region is not in the update cache, then it *must* be an update
+            is_update = true;
+            some_update = true;
+        }
 
         update_cache[key] = fragment;
-        //if(some_update)
-        //    break;
 
         // The first addition to the cache is the initial draw of the
         // dialog widgets.  We skip that (assuming the full image has
@@ -444,7 +470,7 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
         // areas of the texture that have changed -- i.e., are in the
         // cache already, but are getting new values.
 
-        /*if(is_update)
+        if(is_update)
         {
             QStringList bounds = key.split( "x" );
             bool ec;
@@ -457,27 +483,45 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
             img->setImage( s, t, 1, 4, GL_BGRA, GL_UNSIGNED_BYTE,
                            update_cache[key].bits(), osg::Image::USE_NEW_DELETE  );
 
-            //std::cout << x << "x" << y << "x" << s << "x" << t << ";";
             std::pair< int, int > offset( x, y );
             std::pair< osg::Image*, std::pair<int,int> > package( img, offset );
             m_damagedAreas.push_back( package );
-        }*/
-    }
-    //std::cout << std::endl << std::flush;
-    if( some_update )
-    {
-        osg::Image* img = m_osgImage.get();
-        img->setImage( mImageWidth, mImageHeight, 1, 4, GL_BGRA, GL_UNSIGNED_BYTE,
-                       mImage->bits(), osg::Image::NO_DELETE );
 
-        std::pair< int, int > offset( 0, 0 );
-        std::pair< osg::Image*, std::pair<int,int> > package( img, offset );
-        m_damagedAreas.push_back( package );
-    }
+            ++index;
 
+#ifdef FULL_IMAGE_DEBUG
+            QPainter painter(&markupImage);
+            //QPen pen(Qt::yellow);
+            //pen.setWidth(5);
+            painter.setPen(Qt::yellow);
+            painter.drawRect(rect);
+#endif
+        }
+        else
+        {
+#ifdef FULL_IMAGE_DEBUG
+            QPainter painter(&markupImage);
+            //QPen pen(Qt::red);
+            //pen.setWidth(4);
+            painter.setPen(Qt::red);
+            painter.drawRect(rect);
+#endif
+        }
+    }
 
     //clock_gettime(CLOCK_MONOTONIC, &te);
     //std::cout << "UIElementQt::GetDamagedAreas " << te.tv_nsec - ts.tv_nsec << std::endl << std::flush;
+
+#ifdef FULL_IMAGE_DEBUG
+    if(some_update)
+    {
+        // Copy last "frame's" image into the previous bucket
+        m_imgPreviousLabel->setPixmap( *(m_imgCurrentLabel->pixmap()) );
+        m_imgCurrentLabel->setPixmap( markupImage.scaledToWidth(200) );
+    }
+#endif
+
+    capture_list.clear();
 
     return m_damagedAreas;
 }
@@ -614,23 +658,34 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
             QWidget* widget = (QWidget*)object;
             Q_FOREACH(const QRect rect, paint_event->region().rects())
             {
-                //QRect rect = paint_event->rect();
 
-                //QPoint p = widget->mapTo( mWidget, rect.topLeft());
-                QPoint p = this->viewport()->mapToGlobal( rect.topLeft() );
+                QPoint p = widget->mapToGlobal( rect.topLeft() );
+                p = this->viewport()->mapFromGlobal( p );
                 QRect r = QRect(p, rect.size());
                 QString key = QString("%1x%2x%3x%4")
-                               .arg(rect.x())
-                               .arg(rect.y())
-                               .arg(rect.width())
-                               .arg(rect.height());
+                               .arg(r.x())
+                               .arg(r.y())
+                               .arg(r.width())
+                               .arg(r.height());
                 capture_list[key] = r;
-                //std::cout << object->objectName().toStdString() << ": " << key.toStdString() << "," << std::flush;
-
             }
         }
     }
-    //std::cout << std::endl << std::flush;
+    else if( (event->type() == QEvent::Hide) || (event->type() == QEvent::Show) )
+    {
+        QWidget* widget = (QWidget*)object;
+        QRect r = widget->rect();
+
+        QPoint p = widget->mapToGlobal( r.topLeft() );
+        p = this->viewport()->mapFromGlobal( p );
+        r = QRect(p, r.size());
+        QString key = QString("%1x%2x%3x%4")
+                       .arg(r.x())
+                       .arg(r.y())
+                       .arg(r.width())
+                       .arg(r.height());
+        capture_list[key] = r;
+    }
 
     return false;
 }
@@ -780,7 +835,7 @@ void UIElementQt::FreeOldWidgets()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_render()
 {
-    capture_list.clear();
+    //capture_list.clear();
 
 #if defined( _DARWIN )
     if( !m_mouseInsideUI )
@@ -794,11 +849,6 @@ void UIElementQt::_render()
     {
         return;
     }
-
-    /*std::cout << "UIElementQt::_render: Widget(" << mWidget->width() << ", " << mWidget->height()
-                << ") Titlebar(" << mTitlebar->width() << ", " << mTitlebar->height()
-                << ") Overall(" << mWidth << ", " << mHeight << ") Image("
-            << mImageWidth << ", " << mImageHeight << ")" << std::endl << std::flush;*/
 
     { // Enter critical section
         QMutexLocker locker( mImageMutex );
