@@ -6,14 +6,16 @@
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define VEVERSION "1.2.0"
-#define SVNVERSION "15044"
+#define SVNVERSION "15045"
 #ifdef x64
 #define OSGHOME "C:\dev\deps\auto_deps\osg_2.8.5\install-64-bit"
+#define ZLIBHOME "C:\dev\deps\auto_deps\zlib-1.2.5\install-64-bit"
 #define MyAppName "osgPTExporter"
 #define MyAppVerName "osgPTExporter"
 #define OSGPTEXPORTERHOME "C:\dev\skewmatrix-redmine-svn\skewmatrix\osgPT\trunk\OSGExport\x64"
 #else
 #define OSGHOME "C:\dev\deps\auto_deps\osg_2.8.5\install-32-bit"
+#define ZLIBHOME "C:\dev\deps\auto_deps\zlib-1.2.5\install-32-bit"
 #define MyAppName "osgPTExporter"
 #define MyAppVerName "osgPTExporter"
 #define OSGPTEXPORTERHOME "C:\dev\skewmatrix-redmine-svn\skewmatrix\osgPT\trunk\OSGExport\Win32"
@@ -89,7 +91,7 @@ Source: {#OSGHOME}\bin\osg74-osgFX.dll; DestDir: {app}; Components:
 Source: {#OSGHOME}\bin\osg74-osgText.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\bin\osg74-osgTerrain.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\bin\ot11-OpenThreads.dll; DestDir: {app}; Components: 
-;Source: {#OSGHOME}\lib\zlib1.dll; DestDir: {app}; Components:
+Source: {#ZLIBHOME}\bin\zlib1.dll; DestDir: {app}; Components:
 Source: {#OSGHOME}\bin\osgPlugins-2.8.5\osgdb_ive.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#OSGHOME}\bin\osgPlugins-2.8.5\osgdb_jpeg.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
 ;Source: {#OSGHOME}\lib\osgPlugins-2.8.3\osgdb_gif.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion

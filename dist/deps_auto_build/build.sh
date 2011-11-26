@@ -548,7 +548,7 @@ function e()
       case $PLATFORM in
         Windows)
           cp "${VES_SRC_DIR}/dist/win/fpc_deps_files/release/${FPC_FILE}.in" "${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}";
-          echo "Installing ${VES_SRC_DIR}/dist/win/fpc_deps_files/${FPC_FILE}.in to ${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}"
+          echo "Installing ${VES_SRC_DIR}/dist/win/fpc_deps_files/release/${FPC_FILE}.in to ${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}"
           ;;
         Darwin | Linux)
           cp "${VES_SRC_DIR}/dist/linux/fpc_deps_files/${FPC_FILE}.in" "${INSTALL_DIR}/lib/flagpoll/${FPC_FILE}";
