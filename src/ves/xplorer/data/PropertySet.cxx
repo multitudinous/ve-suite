@@ -1454,7 +1454,7 @@ void PropertySet::SaveLiveProperties( Poco::Timer& timer )
     }
     else
     {
-        LOG_INFO( "No live data changes detected in propertyset " << mUUIDString );
+        LOG_TRACE( "No live data changes detected in propertyset " << mUUIDString );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
