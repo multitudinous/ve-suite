@@ -205,6 +205,7 @@ protected Q_SLOTS:
     /// Called when the file save icon of the file operations stack is clicked.
     /// Autoconnected slot.
     void on_actionSave_triggered();
+    void on_actionSaveAs_triggered();
     
     /// Called when a user selects quit.
     void on_actionQuit_triggered();
@@ -360,6 +361,10 @@ private:
 
     std::vector< std::string > m_GeometryExtensions;
     std::vector< std::string > m_DataExtensions;
+
+    /// Stores absolute path of currently open file so it can be saved out
+    /// when the save action is triggered.
+    QString m_saveFileName;
 };
     
 }

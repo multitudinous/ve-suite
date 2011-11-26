@@ -654,6 +654,9 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
             loader->LoadVesFile( file.string() );
             // Destructor for loader is private; object autodeletes when done
             // processing.
+
+            // Keep the absolute filepath since CWD may change out from under us
+            m_saveFileName = fileNames.at(index);
         }
         // Remove the dot from the head of extension so we can compare to our
         // vectors of other file extensions
@@ -906,6 +909,19 @@ void MainWindow::onFileCancelled()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionSave_triggered()
 {
+    if( m_saveFileName.isEmpty() )
+    {
+        on_actionSaveAs_triggered();
+    }
+    else
+    {
+        onFileSaveSelected( m_saveFileName );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionSaveAs_triggered()
+{
     // Don't allow multiple file dialogs to be opened.
     if( mFileDialog )
     {
@@ -933,9 +949,11 @@ void MainWindow::on_actionSave_triggered()
 
     ActivateTab( AddTab( mFileDialog, "Save Session" ) );
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileSaveSelected( const QString& fileName )
 {
+    m_saveFileName = fileName;
     //std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
 
     // Close out the fileDialog tab and kill the file dialog
@@ -1368,6 +1386,7 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
         return;
     }
 
+    m_saveFileName.clear();
     //std::cout << "Working Dir is: " 
     //    << workingDir.toStdString() << std::endl << std::flush;
 
