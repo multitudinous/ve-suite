@@ -1,0 +1,17 @@
+PACKAGE_NAME=FLAGPOLL
+BASE_DIR="${DEV_BASE_DIR}/flagpoll-0.9.4"
+
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_URL=http://flagpoll.googlecode.com/files/flagpoll-0.9.4.zip
+SOURCE_FORMAT=zip
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}"
+
+case $PLATFORM in
+  Windows|Darwin|Linux)
+    unset PROJ_STR
+    unset BUILD_TARGET
+    ;;
+esac
