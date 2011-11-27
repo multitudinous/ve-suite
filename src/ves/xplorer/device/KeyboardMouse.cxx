@@ -130,11 +130,21 @@ KeyboardMouse::KeyboardMouse()
     // Connect to Juggler's new event handling interface
     m_mouseDoubleClickEventInterface.setClickTime(300);
     m_mouseDoubleClickEventInterface.init("VJKeyboard");
-    m_mouseDoubleClickEventInterface.addCallback(boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1));
 
     m_keyboardMouseEventInterface.init("VJKeyboard");
     m_keyboardMouseEventInterface.addCallback(boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1));
 
+#if 0
+    m_mouseDoubleClickEventInterface.addCallback(boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1));
+
+#else
+    //m_mouseDoubleClickEventInterface.addCallback<gadget::event::single_click_tag>(
+    //                                                         boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1)
+    //                                                         );
+    m_mouseDoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(
+                                                             boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1)
+                                                             );
+#endif
     eventmanager::EventManager* evm = eventmanager::EventManager::instance();
     using eventmanager::SignalWrapper;
 
@@ -193,9 +203,9 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     {
         return;
     }
-
-    const gadget::EventType eventType = event->type();
     
+    const gadget::EventType eventType = event->type();
+
     //Get the current display from the input area
     gadget::InputArea& inputArea = event->getSource();
     vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
@@ -270,6 +280,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     case gadget::MouseButtonPressEvent:
     {
+        //std::cout << "press event " << std::endl;
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
         
@@ -302,6 +313,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     case gadget::MouseButtonReleaseEvent:
     {
+        //std::cout << "press release " << std::endl;
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
@@ -377,6 +389,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
 {
+    //std::cout << "double click " << std::endl;
     const gadget::MouseEventPtr mouseEvt =
         boost::static_pointer_cast< gadget::MouseEvent >( event );
 

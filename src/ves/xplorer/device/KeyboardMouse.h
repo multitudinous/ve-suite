@@ -55,6 +55,7 @@
 
 #include <gadget/Event/KeyboardMouseEventInterface.h>
 #include <gadget/Event/MouseMultiClickEventInterface.h>
+#include <gadget/Event/MouseClickEventInterface.h>
 #include <gadget/Event/EventPtr.h>
 
 namespace gadget
@@ -177,9 +178,15 @@ private:
     ///is called in VR Juggler. This has the potential to cause big thread
     ///sync issues. Again, for now we will use the draw loop to help us sync
     ///data access.
+#if 0
     gadget::MouseMultiClickEventInterface< 2,
         gadget::event::all_events_tag,
         gadget::event::synchronized_tag > m_mouseDoubleClickEventInterface;
+#else
+    gadget::MouseClickEventInterface< 2,
+        gadget::event::all_events_tag,
+        gadget::event::synchronized_tag > m_mouseDoubleClickEventInterface;
+#endif
 
     void onMouseDoubleClick( gadget::EventPtr event );
 
