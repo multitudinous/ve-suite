@@ -282,7 +282,7 @@ void UIManager::Update()
     }
 
     // Insert any new elements added since last update into the scenegraph
-    if( mNodesToAdd.size() > 0 )
+    if( mNodesToAdd.size() > 0 && mElements.size() > 0 )
     {
         _insertNodesToAdd();
     }
@@ -391,7 +391,7 @@ void UIManager::SetRectangle( int left, int right, int bottom, int top )
     mTop = top;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::Initialize( osg::Group* parentNode )
+void UIManager::Initialize( osg::Group* )
 {
     // Only allow initialization to happen once.
     if( mInitialized )
@@ -548,15 +548,34 @@ void UIManager::_insertNodesToAdd()
             ++vec_iterator )
     {
         osg::Node* node = ( *vec_iterator ).get();
-        mUIGroup->addChild( ( *vec_iterator ).get() );
+        mUIGroup->addChild( node );
 #ifndef NO_SUBLOAD
-        osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
-        UIElement* element = mElements[ (*vec_iterator).get()->asGeode() ];
-        osg::Image* img = new osg::Image;
-        img->allocateImage(element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE);
-        texture->setImage( img );
-        texture->setSubloadCallback( m_subloaders[ element ].get() );
-        node->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
+        osg::Geode* tempGeode = 0;
+        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+        {
+            tempGeode = node->asGeode();
+        }
+        else
+        {
+            tempGeode = node->asGroup()->getChild( 0 )->asGeode();
+        }
+
+        ElementMap_type::const_iterator iter = mElements.find( tempGeode );
+
+        if( iter != mElements.end() )
+        {
+            osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+            UIElement* element = iter->second;
+            osg::Image* img = new osg::Image;
+            img->allocateImage(element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE);
+            texture->setImage( img );
+            texture->setSubloadCallback( m_subloaders[ element ].get() );
+            tempGeode->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
+        }
+        else
+        {
+            std::cout << "UIManager::_insertNodesToAdd : no elements yet " << mElements.size() << std::endl;
+        }
 #endif
     }
 
