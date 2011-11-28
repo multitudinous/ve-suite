@@ -355,9 +355,6 @@ void App::exit()
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* App::getScene()
 {
-    //osgDB::writeNodeFile(
-        //*this->_sceneManager->GetRootNode()->GetRawNode(), "C:/test.osg" );
-
     return ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 }
 ////////////////////////////////////////////////////////////////////////////////
