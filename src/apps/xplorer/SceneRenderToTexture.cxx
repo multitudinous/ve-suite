@@ -1302,7 +1302,8 @@ void SceneRenderToTexture::Update(
                 getMaxNumberOfGraphicsContexts() );
         }
 
-        /*static int counter = 0;
+#if 0
+        static int counter = 0;
         counter += 1;
         if( counter == 10 )
         {
@@ -1310,7 +1311,8 @@ void SceneRenderToTexture::Update(
             options->setOptionString( "includeImageFileInIVEFile" );
             osgDB::writeNodeFile( *(*iter), "outfile.osg", options );
             counter = 0;
-        }*/
+        }
+#endif
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
