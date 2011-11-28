@@ -141,7 +141,10 @@ Gloves::Gloves()
     }
     beamLineSegment = new osg::LineSegment();
     
-    mRootNode = ves::xplorer::DeviceHandler::instance()->GetDeviceGroup();
+    mRootNode = new osg::Group();
+    mRootNode->setName( "Glove Group" );
+    
+    ves::xplorer::DeviceHandler::instance()->GetDeviceGroup()->addChild( mRootNode.get() );
 
     {
         std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );

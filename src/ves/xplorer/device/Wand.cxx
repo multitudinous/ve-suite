@@ -1416,6 +1416,8 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
             }
         }
     }
+    
+    PostProcessNav();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton2Event( gadget::DigitalState::State event )
@@ -1475,7 +1477,9 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
         {
             m_characterController.StepForward( false );
         }
-    }    
+    }
+    
+    PostProcessNav();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton3Event( gadget::DigitalState::State event )
@@ -1516,6 +1520,8 @@ void Wand::OnWandButton3Event( gadget::DigitalState::State event )
         m_buttonPushed = true;
         FreeRotateAboutWand( false );
     }
+    
+    PostProcessNav();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton4Event( gadget::DigitalState::State event )
@@ -1576,6 +1582,8 @@ void Wand::OnWandButton4Event( gadget::DigitalState::State event )
             }
         }
     }
+    
+    PostProcessNav();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton5Event( gadget::DigitalState::State event )
@@ -1816,8 +1824,13 @@ void Wand::PreProcessNav()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::PostProcessNav()
 {
+    if( !m_buttonPushed )
+    {
+        return;
+    }
+
     ///If we actually pushed a button then move things
-    if( m_buttonPushed && !m_characterController.IsEnabled() )
+    if( !m_characterController.IsEnabled() )
     {
         //Set the DCS postion based off of previous
         //manipulation of the worldTrans array
@@ -1835,7 +1848,7 @@ void Wand::PostProcessNav()
         m_activeDCS->SetTranslationArray( m_worldTrans );
         m_activeDCS->SetQuat( m_worldQuat );
     }
-    else if( m_characterController.IsEnabled() && m_buttonPushed )
+    else if( m_characterController.IsEnabled() )
     {
         //Set the DCS postion based off of previous
         //manipulation of the worldTrans array
