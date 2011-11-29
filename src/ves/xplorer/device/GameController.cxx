@@ -119,11 +119,11 @@ GameController::GameController()
 {
     m_mxGamePadStyle->setStickRate( 10.0 );
     m_mxGamePadStyle->setStickDeadZone( 0.05f );
-    m_mxGamePadStyle->setWorldCoordMove( true );
+
     // Set some MxCore defaults:
     osgwMx::MxCore* mxCore = m_mxGamePadStyle->getMxCore();
     mxCore->setInitialValues( 
-        osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., 0., -1.0 ), osg::Vec3d( 0., 0., 0. ) );
+        osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., 0., -1. ), osg::Vec3d( 0., 0., 0. ) );
     mxCore->reset();
     
     // Connect to Juggler's new event handling interface
@@ -210,7 +210,7 @@ void GameController::OnAxis0Event( const float event )
         return;
     }
 
-    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::BottomButton );
+    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button2 );//osgwMx::MxGamePad::Button8 );
 
     m_mxGamePadStyle->getMxCore()->setByMatrix( 
         osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
@@ -227,9 +227,10 @@ void GameController::OnAxis0Event( const float event )
     {
         return;
     }
-        
+    
     gmtl::Matrix44d newTransform;
     newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
+    
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
@@ -241,7 +242,7 @@ void GameController::OnAxis1Event( const float event )
         return;
     }
     
-    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::BottomButton );
+    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button2 );//osgwMx::MxGamePad::Button8 );
     
     m_mxGamePadStyle->getMxCore()->setByMatrix( 
         osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
@@ -262,6 +263,7 @@ void GameController::OnAxis1Event( const float event )
         
     gmtl::Matrix44d newTransform;
     newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
+
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 
@@ -273,7 +275,7 @@ void GameController::OnAxis2Event( const float event )
     {
         return;
     }
-    m_mxGamePadStyle->setButtons( 0 );
+    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button11 );
 
     m_mxGamePadStyle->getMxCore()->setByMatrix( 
         osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
@@ -310,7 +312,7 @@ void GameController::OnAxis3Event( const float event )
     {
         return;
     }
-    m_mxGamePadStyle->setButtons( 0 );
+    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button11 );
     
     m_mxGamePadStyle->getMxCore()->setByMatrix( 
         osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
