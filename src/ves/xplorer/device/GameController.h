@@ -51,6 +51,7 @@
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Event/AnalogEventInterface.h>
+#include <gadget/Event/DigitalEventInterface.h>
 
 #include <gadget/Event/EventPtr.h>
 
@@ -114,8 +115,24 @@ private:
     AnalogAxisInterface m_analogAxis1EventInterface;
     AnalogAxisInterface m_analogAxis2EventInterface;
     AnalogAxisInterface m_analogAxis3EventInterface;
-    AnalogAxisInterface m_analogAxis4EventInterface;
-    AnalogAxisInterface m_analogAxis5EventInterface;
+
+    typedef gadget::DigitalEventInterface<gadget::event::all_events_tag,
+        gadget::event::synchronized_tag> GamePadClickInterface;
+    GamePadClickInterface m_button0EventInterface;
+    GamePadClickInterface m_button1EventInterface;
+    GamePadClickInterface m_button2EventInterface;
+    GamePadClickInterface m_button3EventInterface;
+    GamePadClickInterface m_button4EventInterface;
+    GamePadClickInterface m_button5EventInterface;
+    GamePadClickInterface m_button6EventInterface;
+    GamePadClickInterface m_button7EventInterface;
+    GamePadClickInterface m_button8EventInterface;
+    GamePadClickInterface m_button9EventInterface;
+    GamePadClickInterface m_button10EventInterface;
+    GamePadClickInterface m_button11EventInterface;
+    GamePadClickInterface m_button12EventInterface;
+    GamePadClickInterface m_button13EventInterface;
+    GamePadClickInterface m_button14EventInterface;
 
     /// All GameController events get delivered here
     void OnAxis0Event( const float event );
@@ -126,9 +143,9 @@ private:
     /// All GameController events get delivered here
     void OnAxis3Event( const float event );
     /// All GameController events get delivered here
-    void OnAxis4Event( const float event );
+    void OnAxis4Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
-    void OnAxis5Event( const float event );
+    void OnAxis5Event( gadget::DigitalState::State event );
 
     ///Setup the start and end point for a mouse pick 
     void SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
@@ -178,6 +195,8 @@ private:
     float m_leftStickY;
     float m_rightStickX;
     float m_rightStickY;
+    
+    unsigned int m_buttons;
 };
 
 } //end device

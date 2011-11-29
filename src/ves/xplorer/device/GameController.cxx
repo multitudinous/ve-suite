@@ -122,6 +122,10 @@ GameController::GameController()
 
     // Set some MxCore defaults:
     osgwMx::MxCore* mxCore = m_mxGamePadStyle->getMxCore();
+    ///This is not really the up or view vector for ves but since we are working
+    ///in Z up space we need an identity matrix for mxcore. This can be 
+    ///accomplished by telling mxcore that we are in Y up space so that it thinks
+    ///we are already in native OpenGL coordinate space.
     mxCore->setInitialValues( 
         osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., 0., -1. ), osg::Vec3d( 0., 0., 0. ) );
     mxCore->reset();
@@ -129,7 +133,6 @@ GameController::GameController()
     // Connect to Juggler's new event handling interface
     //Left stick - X
     m_analogAxis0EventInterface.init("VJAxis0");
-    //m_analogAxis0EventInterface.addCallback(boost::bind(&GameController::OnAxis0Event, this, _1));
     m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind(&GameController::OnAxis0Event, this, _1) );
     //m_analogAxis0EventInterface.addCallback<raw_analog_event_tag>(boost::bind(&GameController::OnAxis0Event, this, _1));
     
@@ -141,16 +144,29 @@ GameController::GameController()
     m_analogAxis2EventInterface.init("VJAxis2");
     m_analogAxis2EventInterface.addCallback<gadget::event::normalized_analog_event_tag>(boost::bind(&GameController::OnAxis2Event, this, _1));
 
-    //Right stick - X
+    //Right stick - Y
     m_analogAxis3EventInterface.init("VJAxis3");
     m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>(boost::bind(&GameController::OnAxis3Event, this, _1));
-
-    m_analogAxis4EventInterface.init("VJAxis4");
-    m_analogAxis4EventInterface.addCallback<gadget::event::normalized_analog_event_tag>(boost::bind(&GameController::OnAxis4Event, this, _1));
-
-    m_analogAxis5EventInterface.init("VJAxis5");
-    m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>(boost::bind(&GameController::OnAxis5Event, this, _1));
     
+    //All the buttons
+    //m_button0EventInterface.init( "Joystick0_d0" );
+    //m_button0EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+
+    m_button1EventInterface.init( "Joystick0_d1" );
+    m_button1EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+
+    //m_button2EventInterface.init( "Joystick0_d2" );
+    //m_button2EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+
+    m_button3EventInterface.init( "Joystick0_d3" );
+    m_button3EventInterface.addCallback(boost::bind(&GameController::OnAxis4Event, this, _1));
+
+    //m_button4EventInterface.init( "Joystick0_d4" );
+    //m_button4EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+
+    //m_button5EventInterface.init( "Joystick0_d5" );
+    //m_button5EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+
     /*eventmanager::EventManager* evm = eventmanager::EventManager::instance();
     using eventmanager::SignalWrapper;
 
@@ -343,26 +359,86 @@ void GameController::OnAxis3Event( const float event )
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis4Event( const float event )
+void GameController::OnAxis4Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
         return;
     }
     
-    std::cout << " Analog device input OnAxis4Event " 
-        << event << std::endl << std::flush;
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    m_mxGamePadStyle->getMxCore()->setByMatrix( 
+        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {   
+        float distance = 10. * ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime();
+        m_mxGamePadStyle->getMxCore()->move( osg::Vec3d( 0., 0., -distance ) );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+         break;
+    }
+    default:
+        break;
+    }
+    
+    gmtl::Matrix44d newTransform;    
+    newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis5Event( const float event )
+void GameController::OnAxis5Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
         return;
     }
     
-    std::cout << " Analog device input OnAxis5Event " 
-        << event << std::endl << std::flush;
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    m_mxGamePadStyle->getMxCore()->setByMatrix( 
+        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {        
+        float distance = 10. * ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime();
+        m_mxGamePadStyle->getMxCore()->move( osg::Vec3d( 0., 0., distance ) );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+    
+    gmtl::Matrix44d newTransform;    
+    newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
