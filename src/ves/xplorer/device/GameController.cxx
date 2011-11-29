@@ -149,23 +149,23 @@ GameController::GameController()
     m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>(boost::bind(&GameController::OnAxis3Event, this, _1));
     
     //All the buttons
-    //m_button0EventInterface.init( "Joystick0_d0" );
-    //m_button0EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+    m_button0EventInterface.init( "Joystick0_d0" );
+    m_button0EventInterface.addCallback(boost::bind(&GameController::OnButton0Event, this, _1));
 
     m_button1EventInterface.init( "Joystick0_d1" );
     m_button1EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
 
-    //m_button2EventInterface.init( "Joystick0_d2" );
-    //m_button2EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+    m_button2EventInterface.init( "Joystick0_d2" );
+    m_button2EventInterface.addCallback(boost::bind(&GameController::OnButton2Event, this, _1));
 
     m_button3EventInterface.init( "Joystick0_d3" );
     m_button3EventInterface.addCallback(boost::bind(&GameController::OnAxis4Event, this, _1));
 
-    //m_button4EventInterface.init( "Joystick0_d4" );
-    //m_button4EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+    m_button4EventInterface.init( "Joystick0_d4" );
+    m_button4EventInterface.addCallback(boost::bind(&GameController::OnButton4Event, this, _1));
 
-    //m_button5EventInterface.init( "Joystick0_d5" );
-    //m_button5EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+    m_button5EventInterface.init( "Joystick0_d5" );
+    m_button5EventInterface.addCallback(boost::bind(&GameController::OnButton5Event, this, _1));
 
     /*eventmanager::EventManager* evm = eventmanager::EventManager::instance();
     using eventmanager::SignalWrapper;
@@ -226,7 +226,7 @@ void GameController::OnAxis0Event( const float event )
         return;
     }
 
-    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button2 );//osgwMx::MxGamePad::Button8 );
+    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button2 );//| osgwMx::MxGamePad::Button8 );
 
     m_mxGamePadStyle->getMxCore()->setByMatrix( 
         osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
@@ -258,7 +258,7 @@ void GameController::OnAxis1Event( const float event )
         return;
     }
     
-    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button2 );//osgwMx::MxGamePad::Button8 );
+    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button2 );//| osgwMx::MxGamePad::Button8 );
     
     m_mxGamePadStyle->getMxCore()->setByMatrix( 
         osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
@@ -380,6 +380,7 @@ void GameController::OnAxis4Event( gadget::DigitalState::State event )
     {   
         float distance = 10. * ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime();
         m_mxGamePadStyle->getMxCore()->move( osg::Vec3d( 0., 0., -distance ) );
+        //m_mxGamePadStyle->getMxCore()->moveWorldCoords( movement );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -421,6 +422,7 @@ void GameController::OnAxis5Event( gadget::DigitalState::State event )
     {        
         float distance = 10. * ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime();
         m_mxGamePadStyle->getMxCore()->move( osg::Vec3d( 0., 0., distance ) );
+        //m_mxGamePadStyle->getMxCore()->moveWorldCoords( movement );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -437,6 +439,181 @@ void GameController::OnAxis5Event( gadget::DigitalState::State event )
     
     gmtl::Matrix44d newTransform;    
     newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton0Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    osgwMx::MxCore* core = m_mxGamePadStyle->getMxCore();
+    core->setByMatrix( 
+                      osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {   
+        osg::Vec3d scale = core->getMoveScale();
+        scale -= osg::Vec3d( 1., 1., 1. );
+        if( scale[ 0 ] < 0. )
+        {
+            scale = osg::Vec3d( 1., 1., 1. );
+        }
+        core->setMoveScale( scale );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        //_mxCore->setMoveScale( osg::Vec3d( 5., 5., 5. ) );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+    
+    gmtl::Matrix44d newTransform;    
+    newTransform.set( core->getMatrix().ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton2Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    osgwMx::MxCore* core = m_mxGamePadStyle->getMxCore();
+    core->setByMatrix( 
+        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {   
+        osg::Vec3d scale = core->getMoveScale();
+        scale += osg::Vec3d( 1., 1., 1. );
+        core->setMoveScale( scale );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        //_mxCore->setMoveScale( osg::Vec3d( 15., 15., 15. ) );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+    
+    gmtl::Matrix44d newTransform;    
+    newTransform.set( core->getMatrix().ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton4Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    osgwMx::MxCore* core = m_mxGamePadStyle->getMxCore();
+    core->setByMatrix( 
+                      osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {   
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        //_mxCore->setPosition( osg::Vec3( 0., 0., 0. ) );
+        core->level();
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+    
+    gmtl::Matrix44d newTransform;    
+    newTransform.set( core->getMatrix().ptr() );
+    //Set the activeDCS w/ new transform
+    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton5Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    osgwMx::MxCore* core = m_mxGamePadStyle->getMxCore();
+    core->setByMatrix( 
+                      osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {        
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        core->reset();
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+    
+    gmtl::Matrix44d newTransform;    
+    newTransform.set( core->getMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
