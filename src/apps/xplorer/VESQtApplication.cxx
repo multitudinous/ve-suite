@@ -51,6 +51,7 @@ VESQtApplication::VESQtApplication(int & argc, char ** argv, ves::xplorer::App* 
 bool VESQtApplication::notify(QObject* obj, QEvent* event)
 {
     //Look for the various event types in qcoreevent.h
+    //in here: src/corelib/kernel/qcoreevent.h
     if( event->type() == QEvent::Paint )
     {
         bool temp = QApplication::notify( obj, event );
@@ -63,10 +64,25 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
         return temp;
     }
     
-    /*if( event->type() == QEvent::None )
+    if( event->type() == QEvent::Enter )
     {
         return ProcessEvent( obj, event );
-    }*/
+    }
+
+    if( event->type() == QEvent::Leave )
+    {
+        return ProcessEvent( obj, event );
+    }
+    
+    if( event->type() == QEvent::Hide )
+    {
+        return ProcessEvent( obj, event );
+    }
+    
+    if( event->type() == QEvent::Show )
+    {
+        return ProcessEvent( obj, event );
+    }
     
     if( event->type() == QEvent::KeyPress )
     {
@@ -117,11 +133,6 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
     {
         return ProcessEvent( obj, event );
     }*/
-    
-    if( event->type() == QEvent::Leave )
-    {
-        return ProcessEvent( obj, event );
-    }
 
     //std::cout << event->type() << std::endl << std::flush;
     
