@@ -64,6 +64,17 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
         return temp;
     }
     
+    if( event->type() == QEvent::Hide )
+    {
+        return QApplication::notify( obj, event );
+    }
+    
+    if( event->type() == QEvent::Show )
+    {
+        return QApplication::notify( obj, event );
+    }
+    
+    
     if( event->type() == QEvent::Enter )
     {
         return ProcessEvent( obj, event );
@@ -73,17 +84,7 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
     {
         return ProcessEvent( obj, event );
     }
-    
-    if( event->type() == QEvent::Hide )
-    {
-        return ProcessEvent( obj, event );
-    }
-    
-    if( event->type() == QEvent::Show )
-    {
-        return ProcessEvent( obj, event );
-    }
-    
+        
     if( event->type() == QEvent::KeyPress )
     {
         return ProcessEvent( obj, event );
@@ -100,6 +101,11 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
     }
     
     if( event->type() == QEvent::MouseButtonRelease )
+    {
+        return ProcessEvent( obj, event );
+    }
+    
+    if( event->type() == QEvent::MouseButtonDblClick )
     {
         return ProcessEvent( obj, event );
     }
@@ -123,11 +129,6 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
     {
         return ProcessEvent( obj, event );
     }*/
-    
-    if( event->type() == QEvent::MouseButtonDblClick )
-    {
-        return ProcessEvent( obj, event );
-    }
     
     /*if( event->type() == QEvent::DeferredDelete )
     {
