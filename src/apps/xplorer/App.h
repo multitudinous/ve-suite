@@ -273,7 +273,7 @@ private:
     ///Time to start
     double time_since_start;
 
-    ///
+    ///Control the qt event loop event processing
     double mLastQtLoopTime;
 
     ///A mutex to protect variables accesses

@@ -177,8 +177,11 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_MouseInsideUI( true ),
     mProfileCounter( 0 ),
     mLastFrame( 0 ),
-    mLastTime( 0 ),
-    mLastQtLoopTime( 0.0 ),
+    mLastTime( 0. ),
+    mLastFrameTime( 0. ),
+    mFrameDT( 0. ),
+    time_since_start( 0. ),
+    mLastQtLoopTime( 0. ),
     m_numContexts( 0 ),
     m_numInitialized( 0 ),
     m_render( false ),
@@ -696,12 +699,12 @@ void App::latePreFrame()
         //don't move above function call
         mFrameStamp->setFrameNumber( _frameNumber );
         mFrameStamp->setReferenceTime( current_time );
-        
+
         double tempSimTime = mFrameStamp->getSimulationTime();
 
         mFrameDT = current_time - mLastFrameTime;
         mLastFrameTime = current_time;
-        
+
         mFrameStamp->setSimulationTime( tempSimTime + mFrameDT );
 
         //This is a frame rate calculation
