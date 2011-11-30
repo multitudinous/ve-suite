@@ -175,6 +175,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     mRTT( enableRTT ),
     m_uiInitialized( false ),
     m_MouseInsideUI( true ),
+    _frameNumber( 0 ),
     mProfileCounter( 0 ),
     mLastFrame( 0 ),
     mLastTime( 0. ),
