@@ -257,7 +257,7 @@ void GameController::OnAxis1Event( const float event )
     {
         return;
     }
-    
+
     m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button2 );//| osgwMx::MxGamePad::Button8 );
     
     m_mxGamePadStyle->getMxCore()->setByMatrix( 
@@ -457,12 +457,16 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
     
     osgwMx::MxCore* core = m_mxGamePadStyle->getMxCore();
     core->setByMatrix( 
-                      osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
     case gadget::DigitalState::ON:
     {   
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
         osg::Vec3d scale = core->getMoveScale();
         scale -= osg::Vec3d( 1., 1., 1. );
         if( scale[ 0 ] < 0. )
@@ -470,10 +474,6 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
             scale = osg::Vec3d( 1., 1., 1. );
         }
         core->setMoveScale( scale );
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
         //_mxCore->setMoveScale( osg::Vec3d( 5., 5., 5. ) );
         break;
     }
@@ -511,13 +511,13 @@ void GameController::OnButton2Event( gadget::DigitalState::State event )
     {
     case gadget::DigitalState::ON:
     {   
-        osg::Vec3d scale = core->getMoveScale();
-        scale += osg::Vec3d( 1., 1., 1. );
-        core->setMoveScale( scale );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
+        osg::Vec3d scale = core->getMoveScale();
+        scale += osg::Vec3d( 1., 1., 1. );
+        core->setMoveScale( scale );
         //_mxCore->setMoveScale( osg::Vec3d( 15., 15., 15. ) );
         break;
     }
