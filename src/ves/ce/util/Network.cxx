@@ -170,7 +170,7 @@ int Network::moduleIdx( int id )
     ///to the vector id.
     for( size_t i = 0; i < _module_ptrs.size(); ++i )
     {
-        if( id == _module_ptrs[ i ]->get_id() )
+        if( id == int( _module_ptrs[ i ]->get_id() ) )
             return i;
     }
     return -1;
