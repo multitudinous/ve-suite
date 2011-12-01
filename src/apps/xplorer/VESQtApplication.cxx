@@ -74,7 +74,8 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
         return QApplication::notify( obj, event );
     }
     
-    
+    //////////
+
     if( event->type() == QEvent::Enter )
     {
         return ProcessEvent( obj, event );
