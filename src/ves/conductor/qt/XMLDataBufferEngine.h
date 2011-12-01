@@ -33,11 +33,10 @@
 #ifndef XML_DATA_BUFFER_ENGINE_H
 #define XML_DATA_BUFFER_ENGINE_H
 /*!\file XMLDataBufferEngine.h
-XMLDataBufferEngine API
-*/
-/*!\class ves::conductor::XMLDataBufferEngine
-*
-*/
+ * XMLDataBufferEngine API
+ * \class ves::conductor::XMLDataBufferEngine
+ *
+ */
 
 //do this to remove compile warnings from linux platforms
 #undef _REENTRANT

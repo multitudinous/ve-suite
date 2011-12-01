@@ -864,27 +864,46 @@ void GraphicalPluginManager::NewFileLoading( std::string const& )
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::DiscoverPlugins( std::string const& )
 {
-    std::map< std::string, ves::xplorer::plugin::PluginBase* >* plugins;
-    plugins = GraphicalPluginManager::instance()->GetTheCurrentPlugins();
-    
     for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter = 
-        plugins->begin(); iter != plugins->end(); )
+        mPluginsMap.begin(); iter != mPluginsMap.end(); )
     {
         // if a module is on the plugins map then remove it
         iter->second->RemoveSelfFromSG();
         ModelHandler::instance()->RemoveModel( iter->second->GetCFDModel() );
         // Must delete current instance of vebaseclass object
         delete iter->second;
-        plugins->erase( iter++ );
+        mPluginsMap.erase( iter++ );
     }
-    plugins->clear();
+    mPluginsMap.clear();
 
-    cfdVEAvailModules* modules = 
-        GraphicalPluginManager::instance()->GetAvailablePlugins();
-    modules->ResetPluginLoader();
+    mAvailableModules->ResetPluginLoader();
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.
     std::string nullString;
     ModelHandler::instance()->SetActiveModel( nullString );  
+}
+////////////////////////////////////////////////////////////////////////////////
+void GraphicalPluginManager::RemovePlugin( std::string const& pluginId )
+{
+    std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter 
+        = mPluginsMap.find( pluginId );
+    if( iter != mPluginsMap.end() )
+    {
+        ///First lets cleanup the event map for the plugin
+        std::map< std::string, std::map< std::string, PluginBase* > >::iterator 
+            cmdIter = pluginEHMap.find( pluginId );
+        if( cmdIter != pluginEHMap.end() )
+        {
+            pluginEHMap.erase( cmdIter );
+        }
+        
+        ///Now lets remove it from the graph and remove the model from the env
+        iter->second->RemoveSelfFromSG();
+        ModelHandler::instance()->RemoveModel( iter->second->GetCFDModel() );
+
+        ///Now lets clean up its memory and from the plugin map
+        delete iter->second;
+        mPluginsMap.erase( iter );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

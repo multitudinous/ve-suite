@@ -231,18 +231,32 @@ ModelSharedPtr System::GetParentModel( )
 ////////////////////////////////////////////////////////////////////////////////
 bool System::RemoveModel( ModelPtr model )
 {
-    std::vector< ModelPtr >::iterator foundModel;
-    foundModel = std::find( mModels.begin(), mModels.end(), model );
+    std::vector< ModelPtr >::iterator foundModel 
+        = std::find( mModels.begin(), mModels.end(), model );
     
     if( foundModel != mModels.end() )
     {
         mModels.erase( foundModel );
         return true;
     }
-    else
+
+    ///If we fail to remove the model via a memory address search we can
+    ///try to find it via uuid.
+    return RemoveModel( model->GetID() );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool System::RemoveModel( std::string const& modelId )
+{
+    for( std::vector< ModelPtr >::iterator foundModel = mModels.begin(); 
+        foundModel != mModels.end(); ++foundModel )
     {
-        return false;
+        if( (*foundModel)->GetID() == modelId )
+        {
+            mModels.erase( foundModel );
+            return true;
+        }
     }
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void System::SetDBReference( const std::string& dbReference )

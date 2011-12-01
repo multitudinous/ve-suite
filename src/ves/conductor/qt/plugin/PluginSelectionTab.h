@@ -90,7 +90,11 @@ private:
     void InstantiatePlugin( QListWidgetItem* item );
     void CreateUIPlugin( const std::string& pluginFactoryName,
                          ves::xplorer::plugin::PluginBase* xplorerPlugin );
+    ///On file load populate the plugin tree
     void FileLoadedSlot( const std::string& fileName );
+
+    ///Remove a plugin from xplorer via plugin id
+    void RemovePlugin( UIPluginInterface* plugin );
 
     std::map< QListWidgetItem*, QWidget* > m_itemWidgetMap;
 

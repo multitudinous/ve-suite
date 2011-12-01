@@ -309,6 +309,8 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
         ///Initialize top level network
         ves::open::xml::model::NetworkPtr tempNetwork( new ves::open::xml::model::Network() );
 
+        ///I am not sure why we need a new network for all new plugins that are
+        ///added. This does not seem to be correct.
         mDataBufferEngine->GetXMLSystemDataObject(
             mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
 
@@ -377,7 +379,7 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
         QWidget* tempWidget = new QWidget(0);
         tempWidget->setLayout( layout );
 
-        UIPluginBase* pb = dynamic_cast<UIPluginBase*>(interface);
+        //UIPluginBase* pb = dynamic_cast<UIPluginBase*>(interface);
         //qtop->m_inputPortsSpinner->setValue( pb->GetNumInPorts() );
         //qtop->m_outputPortsSpinner->setValue( pb->GetNumOutPorts() );
 
@@ -418,29 +420,30 @@ void PluginSelectionTab::on_m_removePluginButton_clicked()
 {
     QListWidgetItem* item = ui->m_instantiatedPlugins->currentItem();
 
-    if( item )
+    if( !item )
     {
-        std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
-                m_itemInterfaceMap.find( item );
-        if( iter != m_itemInterfaceMap.end() )
-        {
-            // Deleting the widgets will automatically remove the tabs
-            iter->second->DeleteWidgets();
-            delete iter->second;
-            m_itemInterfaceMap.erase( iter );
-        }
-
-        std::map< QListWidgetItem*, QWidget* >::iterator witer =
-                m_itemWidgetMap.find( item );
-        if( witer != m_itemWidgetMap.end() )
-        {
-            delete witer->second;
-            m_itemWidgetMap.erase( witer );
-        }
-
-        // Remove entry in instantiated plugins ListView
-        delete ui->m_instantiatedPlugins->takeItem( ui->m_instantiatedPlugins->row( item ) );
+        return;
     }
+
+    std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
+            m_itemInterfaceMap.find( item );
+    if( iter != m_itemInterfaceMap.end() )
+    {
+        RemovePlugin( iter->second );
+        m_itemInterfaceMap.erase( iter );
+    }
+
+    std::map< QListWidgetItem*, QWidget* >::iterator witer =
+            m_itemWidgetMap.find( item );
+    if( witer != m_itemWidgetMap.end() )
+    {
+        ui->m_instantiatedPlugins->removeItemWidget( witer->first );
+        delete witer->second;
+        m_itemWidgetMap.erase( witer );
+    }
+
+    // Remove entry in instantiated plugins ListView
+    delete ui->m_instantiatedPlugins->takeItem( ui->m_instantiatedPlugins->row( item ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::CreateUIPlugin( const std::string& pluginFactoryClassName,
@@ -473,7 +476,7 @@ void PluginSelectionTab::ClearActivePlugins()
             m_itemInterfaceMap.begin();
     while( iter != m_itemInterfaceMap.end() )
     {
-        delete iter->second;
+        RemovePlugin( iter->second );
         ++iter;
     }
     m_itemInterfaceMap.clear();
@@ -495,7 +498,9 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
     bool found = false;
     while( !found && (index < ui->m_availablePlugins->count()) )
     {
-        std::cout << "|\tMatches " << ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString().toStdString() << " ?" << std::endl << std::flush;
+        std::cout << "|\tMatches " 
+            << ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString().toStdString() 
+            << " ?" << std::endl << std::flush;
         if( ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString() == pluginName )
         {
             found = true;
@@ -620,6 +625,30 @@ bool PluginSelectionTab::eventFilter(QObject *obj, QEvent *event)
     }
 
     return QObject::eventFilter( obj, event );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginSelectionTab::RemovePlugin( UIPluginInterface* plugin )
+{
+    UIPluginBase* pb = dynamic_cast<UIPluginBase*>( plugin );
+    ves::open::xml::model::ModelPtr modelPtr = pb->GetVEModel();
+    
+    ///Remove the data from the ui xml representation
+    XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
+    bool success = mDataBufferEngine->RemoveModelFromSystem( modelPtr );
+    boost::ignore_unused_variable_warning( success );
+
+    ///Remove the graphics side of things
+    ves::xplorer::network::GraphicalPluginManager::instance()->
+    RemovePlugin( modelPtr->GetID() );
+    
+    //Set active model to null so that if the previous active model is deleted
+    //that we don't get errors in our code other places.
+    std::string const nullString;
+    ves::xplorer::ModelHandler::instance()->SetActiveModel( nullString );    
+    
+    // Deleting the widgets will automatically remove the tabs
+    plugin->DeleteWidgets();
+    delete plugin;
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

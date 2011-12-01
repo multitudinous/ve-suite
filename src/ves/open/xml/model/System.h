@@ -108,6 +108,8 @@ public:
     ModelPtr GetParentModel();
     ///Remove the model from the system
     bool RemoveModel( ModelPtr parent );
+    ///Remove the model from the system
+    bool RemoveModel( std::string const& modelId );
     
     ///Set the DB reference string
     ///\param dbReference The reference to the DB
