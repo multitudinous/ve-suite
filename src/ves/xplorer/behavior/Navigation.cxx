@@ -137,7 +137,8 @@ Navigation::Navigation()
                      eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
                      m_connections, any_SignalType, lowest_Priority );
     
-    CONNECTSIGNALS_1( "MainWindow.JumpSignal", void( const std::string ), &Navigation::SetCenterPointJumpMode,
+    CONNECTSIGNALS_1( "MainWindow.JumpSignal", void( const std::string ), 
+                     &Navigation::SetCenterPointJumpMode,
                      m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_0( "ResetNavToGlobalOrigin", void(), 
@@ -161,10 +162,9 @@ bool Navigation::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos
     m_currX = xPos;
     m_currY = yPos;
 
-//#if !defined( VPR_OS_Windows )
     m_prevX = m_currX;
     m_prevY = m_currY;
-//#endif
+
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
