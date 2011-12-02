@@ -78,6 +78,8 @@ private:
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
     ///The signal to tell whether we have a db or not
     ves::util::BoolSignal_type m_dbPresent;
+    ///The signal for reseting the view
+    ves::util::VoidSignal_type m_navReset;
 };
 
 } // namespace conductor

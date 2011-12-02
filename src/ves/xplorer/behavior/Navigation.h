@@ -137,6 +137,8 @@ private:
     void UpdateSelectionLine();
     ///Now try and pick the object
     void ProcessSelection();
+    ///Reset nav slot
+    void ResetToGlobalOrigin();
 
     /// Required connections list for connecting to events via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;

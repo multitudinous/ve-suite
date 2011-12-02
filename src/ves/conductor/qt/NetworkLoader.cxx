@@ -81,6 +81,10 @@ NetworkLoader::NetworkLoader()
     ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
         new ves::xplorer::eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_dbPresent ),
         "NetworkLoader.dbPresent" );
+
+    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
+        new ves::xplorer::eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_navReset ),
+        "ResetNavToGlobalOrigin" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 NetworkLoader::~NetworkLoader()
@@ -104,6 +108,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     {
         return;
     }
+    ///Since the file is good change the working directory
     std::string newWorkingDir = dir_path.parent_path().string();
     std::cout << "|\tThe new working directory is " 
         << newWorkingDir << std::endl;
@@ -124,6 +129,10 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
     ( eventmanager::EventFactory::instance()->GetSignal( "WorkingDirectoryChanged" ) )
     ->mSignal->operator()( newWorkingDir );
+    
+    ///Now lets reset the view back to 0,0,0
+    m_navReset();
+    
     //A new working directory also means that 
     //the STORED scenes are no longer valid
     //ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();

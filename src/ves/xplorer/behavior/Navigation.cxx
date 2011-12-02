@@ -93,6 +93,9 @@
 
 #include <BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h>
 
+//Boost
+#include <boost/concept_check.hpp>
+
 namespace ves
 {
 namespace xplorer
@@ -137,6 +140,9 @@ Navigation::Navigation()
     CONNECTSIGNALS_1( "MainWindow.JumpSignal", void( const std::string ), &Navigation::SetCenterPointJumpMode,
                      m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_0( "ResetNavToGlobalOrigin", void(), 
+                     &Navigation::ResetToGlobalOrigin,
+                     m_connections, any_SignalType, normal_Priority );
     //eventmanager::EventManager::instance()->RegisterSignal(
     //    new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
     //    "KeyboardMouse.ObjectPickedSignal" );
@@ -149,6 +155,9 @@ Navigation::~Navigation()
 ////////////////////////////////////////////////////////////////////////////////
 bool Navigation::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( buttonState );
+    boost::ignore_unused_variable_warning( buttonKey );
+
     m_currX = xPos;
     m_currY = yPos;
 
@@ -161,6 +170,8 @@ bool Navigation::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos
 ////////////////////////////////////////////////////////////////////////////////
 bool Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( zPos );
+
     if( buttonState == 0 || buttonState&gadget::KEY_SHIFT )
     {
         return false;
@@ -442,6 +453,16 @@ void Navigation::SetCenterPointJumpMode( const std::string& jumpMode )
         mCenterPointJump = DeviceHandler::instance()->GetActiveDCS()->getBound().radius();
         mCenterPointThreshold = mCenterPointJump * 0.01;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Navigation::ResetToGlobalOrigin()
+{
+    double trans[ 3 ] = { 0., 0., 0. };
+
+    osg::Quat resetQuat;
+    
+    DeviceHandler::instance()->GetActiveDCS()->SetTranslationArray( trans );
+    DeviceHandler::instance()->GetActiveDCS()->SetQuat( resetQuat );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
