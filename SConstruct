@@ -665,6 +665,9 @@ if not SConsAddons.Util.hasHelpFlag():
         baseEnv.AppendUnique( LINKFLAGS = ['/OPT:REF','/OPT:ICF'] )
         #http://msdn.microsoft.com/en-us/library/k1ack8f1%28v=VS.90%29.aspx
         baseEnv.AppendUnique( CXXFLAGS = ['/Oi'] )
+        #This is useful information for boost and windows and compiler issues
+        #https://svn.boost.org/trac/boost/wiki/Guidelines/WarningsGuidelines
+        baseEnv.AppendUnique( CXXFLAGS = ['/wd4503','/wd4251'] )
 
 
     baseEnv = base_bldr.applyToEnvironment( baseEnv.Clone() )

@@ -36,11 +36,11 @@
 #define VE_PHYSICS 1
 
 #define VES_MAJOR_VERSION    2
-#define VES_MINOR_VERSION    3 
+#define VES_MINOR_VERSION    5 
 #define VES_PATCH_VERSION    0
 
 #if defined(_MSC_VER)
-//#pragma warning( disable : 4244 )
+#pragma warning( disable : 4503 )
 #pragma warning( disable : 4251 )
 //#pragma warning( disable : 4267 )
 //#pragma warning( disable : 4275 )
