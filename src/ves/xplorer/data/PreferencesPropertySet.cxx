@@ -282,7 +282,7 @@ void PreferencesPropertySet::CreateSkeleton()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr property )
+void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr& property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
     
@@ -295,10 +295,11 @@ void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr property )
         GetProperty( "NearFarRatio_Ratio" )->SetDisabled();
     }
     
-    UpdateNearFarRatio( GetProperty( "NearFarRatio_Ratio" ) );
+    PropertyPtr ptr = GetProperty( "NearFarRatio_Ratio" );
+    UpdateNearFarRatio( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::EnableBackgroundColor( PropertyPtr property )
+void PreferencesPropertySet::EnableBackgroundColor( PropertyPtr& property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
     
@@ -318,7 +319,7 @@ void PreferencesPropertySet::EnableBackgroundColor( PropertyPtr property )
     UpdateBackgroundColor( property );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::EnableDraggerScaling( PropertyPtr property )
+void PreferencesPropertySet::EnableDraggerScaling( PropertyPtr& property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
 
@@ -331,10 +332,11 @@ void PreferencesPropertySet::EnableDraggerScaling( PropertyPtr property )
         GetProperty( "DraggerScaling_Scale" )->SetDisabled();
     }
     
-    UpdateDraggerScaling( GetProperty( "DraggerScaling_Scale" ) );
+    PropertyPtr ptr = GetProperty( "DraggerScaling_Scale" );
+    UpdateDraggerScaling( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr property )
+void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr& )
 {
     double r = boost::any_cast<double>( GetPropertyValue( "UsePreferredBackgroundColor_Red" ) );
     double g = boost::any_cast<double>( GetPropertyValue( "UsePreferredBackgroundColor_Green" ) );
@@ -347,17 +349,17 @@ void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr property )
     m_backgroundColor->operator()( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::SaveChanges( PropertyPtr property )
+void PreferencesPropertySet::SaveChanges( PropertyPtr& )
 {
     WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateDraggerScaling( PropertyPtr property )
+void PreferencesPropertySet::UpdateDraggerScaling( PropertyPtr& property )
 {
     m_draggerScaling( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ), boost::any_cast<double>( property->GetValue() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateNearFarRatio( PropertyPtr property )
+void PreferencesPropertySet::UpdateNearFarRatio( PropertyPtr& property )
 {
     m_nearFarRatio( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ), boost::any_cast<double>( property->GetValue() ) );
 }

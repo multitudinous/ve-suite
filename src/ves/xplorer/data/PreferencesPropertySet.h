@@ -65,14 +65,14 @@ public:
 
 private:
     ///Enable method
-    void EnableNearFarRatio( PropertyPtr property );
+    void EnableNearFarRatio( PropertyPtr& property );
     ///Enable method
-    void EnableBackgroundColor( PropertyPtr property );
+    void EnableBackgroundColor( PropertyPtr& property );
     ///Enable method
-    void EnableDraggerScaling( PropertyPtr property );
+    void EnableDraggerScaling( PropertyPtr& property );
 
     ///Relay method for passing signals on to xplorer
-    void UpdateBackgroundColor( PropertyPtr property );
+    void UpdateBackgroundColor( PropertyPtr& property );
     ///Relay method for passing signals on to xplorer
     //void UpdateNavEqualZero( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
@@ -86,12 +86,12 @@ private:
     ///Relay method for passing signals on to xplorer
     //void UpdateScreenAlignedNormals( PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateDraggerScaling( PropertyPtr property );
+    void UpdateDraggerScaling( PropertyPtr& property );
     ///Relay method for passing signals on to xplorer
-    void UpdateNearFarRatio( PropertyPtr property );
+    void UpdateNearFarRatio( PropertyPtr& property );
     ///Relay method for passing signals on to xplorer
     //void UpdateLODScaling( PropertyPtr property );
-    void SaveChanges( PropertyPtr property );
+    void SaveChanges( PropertyPtr& property );
     
 private:
     ///Create the skeleton

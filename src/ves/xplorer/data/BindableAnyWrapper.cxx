@@ -31,25 +31,23 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/BindableAnyWrapper.h>
-#include <Poco/Data/Binding.h>
 
-//#include <Poco/Data/Common.h>
+#include <Poco/Data/Binding.h>
 #include <Poco/Data/Statement.h>
-//#include <Poco/Data/SQLite/Connector.h>
 
 #include <iostream>
 
 using namespace ves::xplorer::data;
 
-BindableAnyWrapper::BindableAnyWrapper( )
+BindableAnyWrapper::BindableAnyWrapper()
 {
 }
 
-BindableAnyWrapper::BindableAnyWrapper( const BindableAnyWrapper& orig )
+BindableAnyWrapper::BindableAnyWrapper( const BindableAnyWrapper& )
 {
 }
 
-BindableAnyWrapper::~BindableAnyWrapper( )
+BindableAnyWrapper::~BindableAnyWrapper()
 {
 }
 
