@@ -58,13 +58,16 @@ public:
     DatasetPropertySet( const DatasetPropertySet& orig );
     ///Destructor
     virtual ~DatasetPropertySet();
-
+    ///Override to handle live events
     virtual void EnableLiveProperties( bool live );
 
 protected:
-    void LoadVTIScalars( PropertyPtr property );
+    ///Handle loading transient texture data
+    void LoadVTIScalars( PropertyPtr& property );
 
-    
+    ///Handle uniform scaling events
+    void Scale( PropertyPtr& property );
+
 private:
     ///Create skeleton
     void CreateSkeleton();

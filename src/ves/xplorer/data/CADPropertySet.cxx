@@ -129,7 +129,7 @@ void CADPropertySet::CreateSkeleton()
     GetProperty("Transform_Scale_Z")->
         SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
 
-    AddProperty( "Transform_Scale_Uniform", false, "Uniform Scaling" );
+    AddProperty( "Transform_Scale_Uniform", true, "Uniform Scaling" );
 
     AddProperty( "Physics", false, "Physics Enabled" );
 
@@ -212,7 +212,7 @@ void CADPropertySet::CreateSkeleton()
     SetPropertyAttribute( "Filename", "userVisible", false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADPropertySet::Scale( PropertyPtr property )
+void CADPropertySet::Scale( PropertyPtr& property )
 {
     bool uniform = boost::any_cast<bool>( GetPropertyValue( "Transform_Scale_Uniform" ) );
     if( uniform )
@@ -237,7 +237,7 @@ void CADPropertySet::Scale( PropertyPtr property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADPropertySet::AddDynamicAnalysisData( PropertyPtr property )
+void CADPropertySet::AddDynamicAnalysisData( PropertyPtr& )
 {
     std::string const fileName = 
         boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );
