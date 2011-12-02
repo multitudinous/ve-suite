@@ -199,26 +199,22 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
 
         p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
                                                      GetProperty( "SurfaceWrap" ),
-                                                     "SetDatasetSurfaceWrap",
-                                                     true ));
+                                                     "SetDatasetSurfaceWrap" ) );
         mLiveObjects.push_back( p );
 
         p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
                                                      GetProperty( "BoundingBox" ),
-                                                     "ShowDatasetBBox",
-                                                     true ));
+                                                     "ShowDatasetBBox" ) );
         mLiveObjects.push_back( p );
 
         p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
                                                        GetProperty( "ScalarBar" ),
-                                                       "ShowDatasetScalarBar",
-                                                       true ));
+                                                       "ShowDatasetScalarBar" ) );
         mLiveObjects.push_back( p );
 
         p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
                                                        GetProperty( "Axes" ),
-                                                       "ShowDatasetAxes",
-                                                       true ));
+                                                       "ShowDatasetAxes" ) );
         mLiveObjects.push_back( p );
 
         // Link up all the transform properties so that a single signal named
