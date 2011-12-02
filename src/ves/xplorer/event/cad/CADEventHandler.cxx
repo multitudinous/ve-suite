@@ -528,7 +528,7 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
 
     //if( newPart->HasPhysics() )
     {
-        newSet.SetPropertyValue( "Physics",
+        newSet.SetPropertyValue( "Physics_Enable",
                                  newPart->HasPhysics() );
         newSet.SetPropertyValue( "Physics_Mass",
                                 newPart->GetMass() );

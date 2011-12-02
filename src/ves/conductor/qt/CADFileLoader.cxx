@@ -1,4 +1,3 @@
-#if 1
 /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2011 by Iowa State University
@@ -150,7 +149,7 @@ void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath,
     newSet.SetPropertyValue( "Transform_Scale_X", 1. );
     newSet.SetPropertyValue( "Transform_Scale_Y", 1. );
     newSet.SetPropertyValue( "Transform_Scale_Z", 1. );
-    newSet.SetPropertyValue( "Physics", false );
+    newSet.SetPropertyValue( "Physics_Enable", false );
     newSet.SetPropertyValue( "Physics_Mass", 1. );
     //newSet.SetPropertyValue( "Physics_Friction", 1 );
     //newSet.SetPropertyValue( "Physics_Restitution", 1 );
@@ -181,4 +180,3 @@ void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath,
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
 } // namespace ves
-#endif

@@ -63,7 +63,7 @@ CADSlotInitializer::CADSlotInitializer()
 
 
     CONNECTSIGNALS_STATIC( "%ToggleCADNode",
-                      void( const std::string&, bool ),
+                      void( const std::string&, bool const& ),
                       &ToggleCADNode,
                       m_connections, any_SignalType, normal_Priority );
 

@@ -131,8 +131,10 @@ void CADPropertySet::CreateSkeleton()
 
     AddProperty( "Transform_Scale_Uniform", true, "Uniform Scaling" );
 
-    AddProperty( "Physics", false, "Physics Enabled" );
-
+    AddProperty( "Physics", boost::any(), "Physics" );
+    SetPropertyAttribute( "Physics", "isUIGroupOnly", true );
+    SetPropertyAttribute( "Physics", "setExpanded", false );
+    
     AddProperty( "Physics_Mass", 1.00, "Mass" );
     AddProperty( "Physics_Friction", 0.00, "Coeff. of Friction" );
     AddProperty( "Physics_Restitution", 0.00, "Coeff. of Restitution" );
@@ -168,6 +170,8 @@ void CADPropertySet::CreateSkeleton()
     enumValues.push_back( "Medium" );
     enumValues.push_back( "High" );
     SetPropertyAttribute( "Physics_MeshDecimation", "enumValues", enumValues );
+
+    AddProperty( "Physics_Enable", false, "Enable Physics" );
 
 //    std::vector< PropertyPtr > physicsLink;
 //    physicsLink.push_back( GetProperty("Physics_MotionType") );
@@ -274,7 +278,7 @@ void CADPropertySet::EnableLiveProperties( bool live )
                                                 "UseAsSurfaceData") );
         mLiveObjects.push_back(p);
 
-        p = MakeLiveBasePtr(new MakeLive<bool>( mUUIDString,
+        p = MakeLiveBasePtr(new MakeLive<bool const&>( mUUIDString,
                                                      GetProperty("Visible"),
                                                      "ToggleCADNode" ));
         mLiveObjects.push_back(p);
@@ -302,10 +306,9 @@ void CADPropertySet::EnableLiveProperties( bool live )
                                                      "SetOpacityOnCADNode" ));
         mLiveObjects.push_back(p);
 
-        //if( boost::any_cast<const bool&>( GetProperty("Physics")->GetValue() ) )
         {
             p = MakeLiveBasePtr(new MakeLive<const bool&>( mUUIDString,
-                                                          GetProperty("Physics"),
+                                                          GetProperty("Physics_Enable"),
                                                           "SetPhysicsOnCADNode" ));
             mLiveObjects.push_back(p);
             

@@ -207,7 +207,7 @@ ModelHandler::ModelHandler()
                  &ves::xplorer::event::data::TransformDatasetNode,
                  m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%SetDatasetSurfaceWrap", void( std::string const&, bool const ),
+    CONNECTSIGNALS_STATIC( "%SetDatasetSurfaceWrap", void( std::string const&, bool const& ),
                  &ves::xplorer::event::data::SetDatasetSurfaceWrap,
                  m_connections, any_SignalType, normal_Priority );
                  
@@ -217,7 +217,7 @@ ModelHandler::ModelHandler()
                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%ToggleDataNode",
-                          void( std::string const&, bool const ),
+                          void( std::string const&, bool const& ),
                           &ves::xplorer::event::data::ToggleCADNode,
                           m_connections, any_SignalType, normal_Priority );
     

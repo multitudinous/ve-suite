@@ -160,7 +160,7 @@ static void SetOpacityOnCADNode( const std::string& nodeID,
   * @param visible Whether the CAD should be visible
   */
 static void ToggleCADNode( const std::string& nodeID,
-                    bool visible )
+                    bool const& visible )
 {
     ModelCADHandler* cadHandler = GetModelCADHandler();
 
