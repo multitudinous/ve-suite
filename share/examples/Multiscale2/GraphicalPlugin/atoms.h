@@ -10,6 +10,7 @@
 //#include <optixu/optixpp.h>
 
 #include <vector>
+#include <string>
 //#include "hr_time.h"
 //#define uint unsigned int
 
