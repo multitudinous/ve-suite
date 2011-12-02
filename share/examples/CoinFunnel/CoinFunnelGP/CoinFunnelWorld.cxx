@@ -75,6 +75,7 @@ CoinFunnelWorld::CoinFunnelWorld(
     )
     :
     mPhysicsSimulator( physicsSimulator ),
+    mResourceManager( resourceManager ),
     #ifdef VE_SOUND
     mSoundManager( soundManager ),
     #endif
@@ -83,8 +84,7 @@ CoinFunnelWorld::CoinFunnelWorld(
     mMarbleEntity( 0 ),
     mRailingEntity( 0 ),
     mSlideEntity( 0 ),
-    mWaterEntity( 0 ),
-    mResourceManager( resourceManager )
+    mWaterEntity( 0 )
 {
     Initialize();
 }
