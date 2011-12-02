@@ -60,7 +60,7 @@ namespace ves
 namespace conductor
 {
 
-CADFileLoader::CADFileLoader(  )
+CADFileLoader::CADFileLoader()
 {
 }
 
@@ -70,7 +70,6 @@ CADFileLoader::~CADFileLoader()
 
 void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string& parentID )
 {
-    //std::cout << "LoadCADFile " << fileName << " with parent " << parentID << std::endl << std::flush;
     namespace bfs = boost::filesystem;
     using namespace ves::open::xml;
     using namespace ves::open::xml::cad;
@@ -130,7 +129,6 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
     cadCommand->SetCommandName( std::string( "CAD_ADD_NODE" ) );
     cadCommand->AddDataValuePair( cadNode );
     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( cadCommand );
-    
     WritePartToDB( vegFileNamePath, newCADPart );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,17 +141,17 @@ void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath,
     newSet.SetPropertyValue( "NameTag", boost::filesystem::basename( cadFileName )  );
     newSet.SetPropertyValue( "Opacity", 1.0 );
     newSet.SetPropertyValue( "TransparencyFlag", true );
-    newSet.SetPropertyValue( "Transform_Translation_X", 0 );
-    newSet.SetPropertyValue( "Transform_Translation_Y", 0 );
-    newSet.SetPropertyValue( "Transform_Translation_Z", 0 );
-    newSet.SetPropertyValue( "Transform_Rotation_X", 0 );
-    newSet.SetPropertyValue( "Transform_Rotation_Y", 0 );
-    newSet.SetPropertyValue( "Transform_Rotation_Z", 0 );
-    newSet.SetPropertyValue( "Transform_Scale_X", 1 );
-    newSet.SetPropertyValue( "Transform_Scale_Y", 1 );
-    newSet.SetPropertyValue( "Transform_Scale_Z", 1 );
+    newSet.SetPropertyValue( "Transform_Translation_X", 0. );
+    newSet.SetPropertyValue( "Transform_Translation_Y", 0. );
+    newSet.SetPropertyValue( "Transform_Translation_Z", 0. );
+    newSet.SetPropertyValue( "Transform_Rotation_X", 0. );
+    newSet.SetPropertyValue( "Transform_Rotation_Y", 0. );
+    newSet.SetPropertyValue( "Transform_Rotation_Z", 0. );
+    newSet.SetPropertyValue( "Transform_Scale_X", 1. );
+    newSet.SetPropertyValue( "Transform_Scale_Y", 1. );
+    newSet.SetPropertyValue( "Transform_Scale_Z", 1. );
     newSet.SetPropertyValue( "Physics", false );
-    newSet.SetPropertyValue( "Physics_Mass", 1 );
+    newSet.SetPropertyValue( "Physics_Mass", 1. );
     //newSet.SetPropertyValue( "Physics_Friction", 1 );
     //newSet.SetPropertyValue( "Physics_Restitution", 1 );
     //newSet.SetPropertyValue( "Physics_MotionType", "" );
@@ -165,7 +163,6 @@ void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath,
     newSet.SetPropertyValue( "NodePath", pathString );
     newSet.SetPropertyValue( "Filename", vegFileNamePath );    
     newSet.SetPropertyValue( "Visibile", true );
-    
     // What needs to be tested to turn GPS on/off?
     //    if( ??minerva_gps_condition?? )
     //    {
