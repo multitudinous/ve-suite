@@ -16,7 +16,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+//#include <unistd.h>
 //#include <ANN/ANN.h> 
 
 #define ATOM_TIMER 0
