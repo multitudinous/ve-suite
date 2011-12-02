@@ -215,7 +215,12 @@ ModelHandler::ModelHandler()
                           void( std::string const&, std::string const& ),
                           &ves::xplorer::event::data::AddTextureDataset,
                           m_connections, any_SignalType, normal_Priority );
-        
+
+    CONNECTSIGNALS_STATIC( "%ToggleDataNode",
+                          void( std::string const&, bool const ),
+                          &ves::xplorer::event::data::ToggleCADNode,
+                          m_connections, any_SignalType, normal_Priority );
+    
     CONNECTSIGNAL_1( "ChangeActiveModel",
                     void( std::string const& ),
                     &ModelHandler::SetActiveModel,

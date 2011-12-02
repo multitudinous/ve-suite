@@ -71,6 +71,8 @@ DatasetPropertySet::~DatasetPropertySet()
 ////////////////////////////////////////////////////////////////////////////////
 void DatasetPropertySet::CreateSkeleton()
 {
+    AddProperty( "Visible", true, "Visible" );
+
     AddProperty( "SurfaceWrap", false, "Surface Wrap" );
 
     AddProperty( "BoundingBox", false, "Bounding Box" );
@@ -236,7 +238,11 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
                 transformLink,
                 "TransformDataNode"));
         mLiveObjects.push_back(p);
-
+        
+        p = MakeLiveBasePtr(new MakeLive<bool>( mUUIDString,
+                                               GetProperty("Visible"),
+                                               "ToggleDataNode" ));
+        mLiveObjects.push_back(p);        
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -66,6 +66,11 @@ void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap );
 ///Create a texture dataset for use with volume vis
 void AddTextureDataset( std::string const& uuid, std::string const& dirName );
 
+///Turns a CAD node on or off in the scenegraph.
+///\param nodeID The UUID of the node to alter
+///\param visible Whether the CAD should be visible
+void ToggleCADNode( const std::string& nodeID, bool visible );
+   
 } //end data
 } //end event
 } //end xplorer

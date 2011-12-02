@@ -94,7 +94,7 @@ PropertySetPtr VolumeVisPropertySet::CreateNew()
     return PropertySetPtr( new VolumeVisPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VolumeVisPropertySet::UpdateScalarRange( PropertyPtr property )
+void VolumeVisPropertySet::UpdateScalarRange( PropertyPtr )
 {
     if( !m_isLive )
     {
