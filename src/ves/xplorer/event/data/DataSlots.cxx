@@ -147,7 +147,7 @@ void AddTextureDataset( std::string const&, std::string const& dirName )
     //  tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ToggleCADNode( const std::string& nodeID, bool visible )
+void ToggleCADNode( const std::string& nodeID, bool const& visible )
 {
     DataSet* dataSet = GetSelectedDataset( nodeID );
     

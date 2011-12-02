@@ -65,7 +65,7 @@ BBoxEventHandler::BBoxEventHandler()
         _activeModel( 0 )
 {
     CONNECTSIGNALS_2( "%ShowDatasetBBox",
-                     void ( const std::string&, const bool ),
+                     void ( const std::string&, const bool& ),
                      &BBoxEventHandler::ShowBBox,
                      m_connections, any_SignalType, normal_Priority );
 }

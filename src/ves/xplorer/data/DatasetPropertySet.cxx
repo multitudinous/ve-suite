@@ -197,22 +197,22 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
     {
         MakeLiveBasePtr p;
 
-        p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
+        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
                                                      GetProperty( "SurfaceWrap" ),
                                                      "SetDatasetSurfaceWrap" ) );
         mLiveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
+        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
                                                      GetProperty( "BoundingBox" ),
                                                      "ShowDatasetBBox" ) );
         mLiveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
+        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
                                                        GetProperty( "ScalarBar" ),
                                                        "ShowDatasetScalarBar" ) );
         mLiveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<const bool>( mUUIDString,
+        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
                                                        GetProperty( "Axes" ),
                                                        "ShowDatasetAxes" ) );
         mLiveObjects.push_back( p );
@@ -235,7 +235,7 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
                 "TransformDataNode"));
         mLiveObjects.push_back(p);
         
-        p = MakeLiveBasePtr(new MakeLive<bool>( mUUIDString,
+        p = MakeLiveBasePtr(new MakeLive<bool const&>( mUUIDString,
                                                GetProperty("Visible"),
                                                "ToggleDataNode" ));
         mLiveObjects.push_back(p);        

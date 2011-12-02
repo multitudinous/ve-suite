@@ -65,7 +65,7 @@ ScalarBarEventHandler::ScalarBarEventHandler()
         _activeModel( 0 )
 {
     CONNECTSIGNALS_2( "%ShowDatasetScalarBar",
-                     void ( const std::string&, const bool ),
+                     void ( const std::string&, const bool& ),
                      &ScalarBarEventHandler::ShowScalarBar,
                      m_connections, any_SignalType, normal_Priority );
 }
@@ -139,7 +139,7 @@ void ScalarBarEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObje
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ScalarBarEventHandler::ShowScalarBar( const std::string& uuid, const bool show )
+void ScalarBarEventHandler::ShowScalarBar( const std::string& uuid, const bool& show )
 {
     SetGlobalBaseObject();
     ves::xplorer::data::DatasetPropertySet set;

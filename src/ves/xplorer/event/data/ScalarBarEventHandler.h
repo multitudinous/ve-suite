@@ -51,9 +51,8 @@ namespace xplorer
 namespace event
 {
 /*!\file ScalarBarEventHandler.h
-  ScalarBarEventHandler API
-  */
-/*!\class ScalarBarEventHandler
+ * ScalarBarEventHandler API
+ * \class ScalarBarEventHandler
  *
  */
 class VE_XPLORER_EXPORTS ScalarBarEventHandler: public EventHandler
@@ -81,7 +80,7 @@ public:
     ///\param xmlObject The current xmlObject event.
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
-    void ShowScalarBar( const std::string& uuid, const bool show );
+    void ShowScalarBar( const std::string& uuid, const bool& show );
 
 private:
     ves::xplorer::Model* _activeModel;
