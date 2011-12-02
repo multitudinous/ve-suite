@@ -461,16 +461,28 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* const session,
         return false;
     }
 
-    // Parse out the record column by column and put the data into the
-    // appropriate places
-    for( size_t index = 0; index < recordset.columnCount(); index++ )
+    // Step through the property list and look for matching column names. If
+    // there's a match, load the data into the correct property. It's important
+    // that this operation be done in the order of properties in mPropertyList
+    // since that implicitly sets the load/execution order of properties.
+    for( size_t s = 0; s < mPropertyList.size(); ++s )
     {
-        // Get the name of the column
-        std::string name = recordset.columnName( index );
+        std::string name = mPropertyList.at( s );
+        size_t index = 0;
+        bool found = false;
+        while( !found && index < recordset.columnCount() )
+        {
+            if( recordset.columnName( index ) == name )
+            {
+                found = true;
+                break;
+            }
+            ++index;
+        }
 
         // If column name corresponds to a property name in this set, extract
         // the value from the column and set the property value
-        if( PropertyExists( name ) )
+        if( found )
         {
             boost::any bValue;
             Poco::DynamicAny value = recordset[index];
