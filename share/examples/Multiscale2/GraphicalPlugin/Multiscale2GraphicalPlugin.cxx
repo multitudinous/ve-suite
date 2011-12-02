@@ -73,6 +73,7 @@
 #include <osg/AnimationPath>
 #include <osg/ShapeDrawable>
 #include <osg/Sequence>
+#include <osg/Multisample>
 
 #include <osg/DisplaySettings>
 
@@ -91,6 +92,7 @@
 #include <osg/Point>
 #include <osg/ClampColor>
 #include <osg/Switch>
+#include <osg/VertexProgram>
 
 #include <boost/lexical_cast.hpp>
 
