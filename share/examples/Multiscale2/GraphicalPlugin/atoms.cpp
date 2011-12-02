@@ -11,7 +11,7 @@
 #include <fstream>
 #include <cstdio>
 #include <string>
-#include <stdint.h>
+//#include <stdint.h>
 #include <math.h>
 
 #include <sys/types.h>
