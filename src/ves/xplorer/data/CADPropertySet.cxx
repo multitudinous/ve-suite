@@ -116,6 +116,8 @@ void CADPropertySet::CreateSkeleton()
     AddProperty( "Transform_Scale", boost::any(), "Scale" );
     SetPropertyAttribute( "Transform_Scale", "isUIGroupOnly", true );
 
+    AddProperty( "Transform_Scale_Uniform", true, "Uniform Scaling" );
+
     AddProperty( "Transform_Scale_X", 1.0, "x" );
     AddProperty( "Transform_Scale_Y", 1.0, "y" );
     AddProperty( "Transform_Scale_Z", 1.0, "z" );
@@ -129,7 +131,7 @@ void CADPropertySet::CreateSkeleton()
     GetProperty("Transform_Scale_Z")->
         SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
 
-    AddProperty( "Transform_Scale_Uniform", true, "Uniform Scaling" );
+
 
     AddProperty( "Physics", boost::any(), "Physics" );
     SetPropertyAttribute( "Physics", "isUIGroupOnly", true );
