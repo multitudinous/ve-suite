@@ -209,6 +209,9 @@ CharacterNavigation::~CharacterNavigation()
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modifierState, char keyChar )
 { 
+    boost::ignore_unused_variable_warning( modifierState );
+    boost::ignore_unused_variable_warning( keyChar );
+
     switch( buttonKey )
     {
     case gadget::KEY_A:
@@ -289,6 +292,9 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int modifierState, char keyChar )
 {
+    boost::ignore_unused_variable_warning( modifierState );
+    boost::ignore_unused_variable_warning( keyChar );
+
     switch( buttonKey )
     {
     case gadget::KEY_A:
@@ -427,6 +433,10 @@ bool CharacterNavigation::ProcessMousePress( gadget::Keys buttonKey, int xPos, i
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( xPos );
+    boost::ignore_unused_variable_warning( yPos );
+    boost::ignore_unused_variable_warning( buttonState );
+
     switch( buttonKey )
     {
     //Left mouse button
@@ -458,6 +468,8 @@ bool CharacterNavigation::ProcessMouseRelease( gadget::Keys buttonKey, int xPos,
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessMouseMove( int xPos, int yPos, int zPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( zPos );
+    
     if( buttonState == 0 )
     {
         return false;
@@ -512,6 +524,10 @@ bool CharacterNavigation::ProcessMouseMove( int xPos, int yPos, int zPos, int bu
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessMouseScroll( int deltaX, int deltaY, int x, int y, int buttonState )
 {
+    boost::ignore_unused_variable_warning( deltaY );
+    boost::ignore_unused_variable_warning( x );
+    boost::ignore_unused_variable_warning( y );
+    boost::ignore_unused_variable_warning( buttonState );
     //Scroll wheel up
     //case gadget::MBUTTON4:
     if( deltaX > 0 )

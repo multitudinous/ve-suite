@@ -188,6 +188,10 @@ bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( buttonKey );
+    boost::ignore_unused_variable_warning( xPos );
+    boost::ignore_unused_variable_warning( yPos );
+    boost::ignore_unused_variable_warning( buttonState );
     /*if( (xPos > m_currX + 2) || (xPos < m_currX - 2) )
     {
         return false;
@@ -220,6 +224,10 @@ bool ManipulatorEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, i
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorEvents::ProcessMouseMove( int xPos, int yPos, int zPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( xPos );
+    boost::ignore_unused_variable_warning( yPos );
+    boost::ignore_unused_variable_warning( zPos );
+
     if( buttonState == 0 )
     {        
         if( m_manipulatorManager.IsEnabled() )

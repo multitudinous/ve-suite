@@ -54,7 +54,7 @@ class Subload2DCallback : public osg::Texture2D::SubloadCallback
 {
 public:
     //Fill texture with default pixel values
-    void load( const osg::Texture2D &texture, osg::State &state ) const
+    void load( const osg::Texture2D& texture, osg::State& ) const
     {
         //Create temporary image which is initialized with 0 values
         osg::ref_ptr< osg::Image > image = new osg::Image();
@@ -77,7 +77,7 @@ public:
     }
 
     //No subload because while we want to subload the texture should be already valid
-    void subload( const osg::Texture2D &texture, osg::State &state ) const
+    void subload( const osg::Texture2D&, osg::State& ) const
     {
         ;
     }

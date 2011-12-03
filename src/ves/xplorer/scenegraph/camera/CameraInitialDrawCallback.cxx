@@ -52,7 +52,7 @@ CameraInitialDrawCallback::CameraInitialDrawCallback()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraInitialDrawCallback::operator()( osg::RenderInfo& ri ) const
+void CameraInitialDrawCallback::operator()( osg::RenderInfo& ) const
 {
 
 }

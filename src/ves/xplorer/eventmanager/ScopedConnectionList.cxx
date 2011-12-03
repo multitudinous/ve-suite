@@ -49,7 +49,7 @@ ScopedConnectionList::ScopedConnectionList()
 {
 }
 
-ScopedConnectionList::ScopedConnectionList( const ScopedConnectionList& orig )
+ScopedConnectionList::ScopedConnectionList( const ScopedConnectionList& )
     :
     this_(this, null_deleter())
 {

@@ -102,7 +102,6 @@ bool TranslatePlane::ComputeProjectedPoint(
     const osg::Vec3d& lineEnd = deviceInput.getEnd();
 
     //Exit if the intersection is invalid
-    double intersectDistance;
     if( !GetLinePlaneIntersection(
             lineStart, lineEnd, GetPlane(), projectedPoint ) )
     {

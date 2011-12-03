@@ -75,7 +75,7 @@ void UnitOut::Initialize()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitOut::CreateVESQuad(
-    osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords )
+    osg::Vec3Array*, osg::Vec2Array* )
 {
     /*
     osg::Geometry* quadGeom = new osg::Geometry();

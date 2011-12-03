@@ -74,7 +74,7 @@ HeadCameraObjectCallback::~HeadCameraObjectCallback()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HeadCameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
+void HeadCameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* )
 {
     osg::ref_ptr< CameraObject > cameraObject =
         static_cast< CameraObject* >( node );

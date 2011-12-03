@@ -66,13 +66,13 @@ std::string DefaultPlugin::GetName()
 }
 
 
-QWidget* DefaultPlugin::GetUIWidget( QWidget* parent )
+QWidget* DefaultPlugin::GetUIWidget( QWidget* )
 {
     return m_UIWidget;
 }
 
 
-QWidget* DefaultPlugin::GetResultWidget( QWidget* parent )
+QWidget* DefaultPlugin::GetResultWidget( QWidget* )
 {
     return m_ResultWidget;
 }
@@ -84,12 +84,12 @@ QWidget* DefaultPlugin::GetFinancialDataWidget()
 }
 
 
-QWidget* DefaultPlugin::ViewInputVariables( QWidget* parent )
+QWidget* DefaultPlugin::ViewInputVariables( QWidget* )
 {
     return m_InputVariablesWidget;
 }
 
-QWidget* DefaultPlugin::ViewResultsVariables( QWidget* parent )
+QWidget* DefaultPlugin::ViewResultsVariables( QWidget* )
 {
     return m_ResultsVariablesWidget;
 }

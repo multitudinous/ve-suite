@@ -280,7 +280,7 @@ btVector3 GhostController::ComputeReflectionDirection(
     return direction - ( btScalar( 2.0 ) * direction.dot( normal ) ) * normal;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GhostController::debugDraw( btIDebugDraw* debugDrawer )
+void GhostController::debugDraw( btIDebugDraw* )
 {
     ;
 }
@@ -475,7 +475,7 @@ void GhostController::Translate(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GhostController::updateAction(
-    btCollisionWorld* collisionWorld, btScalar deltaTime )
+    btCollisionWorld*, btScalar deltaTime )
 {
     //Test if we have delta translation or rotation
     bool translated( !m_deltaTranslation.isZero() );

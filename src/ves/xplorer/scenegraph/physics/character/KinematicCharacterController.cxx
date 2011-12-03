@@ -281,9 +281,8 @@ KinematicCharacterController::KinematicCharacterController()
     m_lineGeode->setName( "Kinematic Character Line Geode" );
     m_lineGeode->setStateSet( stateset.get() );
 
-    osg::Group* modelRoot =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
-    //modelRoot->addChild( m_lineGeode.get() );
+    //ves::xplorer::scenegraph::SceneManager::instance()->
+    //    GetModelRoot()->addChild( m_lineGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KinematicCharacterController::~KinematicCharacterController()
@@ -839,7 +838,7 @@ btScalar KinematicCharacterController::getGravity() const
     return m_gravity;
 }
 ////////////////////////////////////////////////////////////////////////////////
-btScalar KinematicCharacterController::GetJumpHeight( btScalar elapsedTime )
+btScalar KinematicCharacterController::GetJumpHeight( btScalar )
 {
     /*
     //if( !m_jump )
@@ -892,7 +891,7 @@ btVector3* KinematicCharacterController::getUpAxisDirections()
     return sUpAxisDirection;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KinematicCharacterController::debugDraw( btIDebugDraw* debugDrawer )
+void KinematicCharacterController::debugDraw( btIDebugDraw* )
 {
     ;
 }

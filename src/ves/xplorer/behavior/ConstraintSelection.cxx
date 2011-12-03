@@ -128,7 +128,11 @@ ConstraintSelection::~ConstraintSelection()
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ConstraintSelection::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
-{    
+{
+    boost::ignore_unused_variable_warning( buttonKey );
+    boost::ignore_unused_variable_warning( xPos );
+    boost::ignore_unused_variable_warning( yPos );
+
     if( buttonState&gadget::KEY_SHIFT )
     {
         CreatePointConstraint();
@@ -140,6 +144,10 @@ bool ConstraintSelection::RegisterButtonPress( gadget::Keys buttonKey, int xPos,
 ////////////////////////////////////////////////////////////////////////////////
 bool ConstraintSelection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( buttonKey );
+    boost::ignore_unused_variable_warning( xPos );
+    boost::ignore_unused_variable_warning( yPos );
+    boost::ignore_unused_variable_warning( buttonState );
     //Do not require mod key depending on what the user did
     ClearPointConstraint();
     return false;
@@ -147,6 +155,10 @@ bool ConstraintSelection::ProcessSelection( gadget::Keys buttonKey, int xPos, in
 ////////////////////////////////////////////////////////////////////////////////
 bool ConstraintSelection::ProcessNavigation( int xPos, int yPos, int zPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( xPos );
+    boost::ignore_unused_variable_warning( yPos );
+    boost::ignore_unused_variable_warning( zPos );
+
     if( buttonState == 0 )
     {
         return false;
