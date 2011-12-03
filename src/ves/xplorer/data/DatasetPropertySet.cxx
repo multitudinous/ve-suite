@@ -113,6 +113,8 @@ void DatasetPropertySet::CreateSkeleton()
     AddProperty( "Transform_Scale", boost::any(), "Scale" );
     SetPropertyAttribute( "Transform_Scale", "isUIGroupOnly", true );
 
+    AddProperty( "Transform_Scale_Uniform", true, "Uniform Scaling" );
+
     AddProperty( "Transform_Scale_X", 1.0, "x" );
     AddProperty( "Transform_Scale_Y", 1.0, "y" );
     AddProperty( "Transform_Scale_Z", 1.0, "z" );
@@ -125,8 +127,6 @@ void DatasetPropertySet::CreateSkeleton()
         SignalValueChanged.connect( boost::bind( &DatasetPropertySet::Scale, this, _1 ) );
     GetProperty("Transform_Scale_Z")->
         SignalValueChanged.connect( boost::bind( &DatasetPropertySet::Scale, this, _1 ) );
-    
-    AddProperty( "Transform_Scale_Uniform", true, "Uniform Scaling" );
     
     //***** The following properties should all eventually make use of
     // of userVisibile = false to hide them from the user. They are intended
