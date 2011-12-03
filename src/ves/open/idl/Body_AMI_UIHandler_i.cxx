@@ -49,7 +49,7 @@ void Body_AMI_UIHandler_i::UpdateNetwork( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateNetwork_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder * 
 )
 {
     // Add your implementation here
@@ -63,7 +63,7 @@ void Body_AMI_UIHandler_i::UpdateModuleUI( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleUI_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder * 
 )
 {
     // Add your implementation here
@@ -77,7 +77,7 @@ void Body_AMI_UIHandler_i::UpdateModuleResult( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleResult_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder * 
 )
 {
     // Add your implementation here
@@ -91,7 +91,7 @@ void Body_AMI_UIHandler_i::UpdateLinkContent()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateLinkContent_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder *
 )
 {
     // Add your implementation here
@@ -105,7 +105,7 @@ void Body_AMI_UIHandler_i::Raise()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::Raise_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder *
 )
 {
     // Add your implementation here
@@ -119,7 +119,7 @@ void Body_AMI_UIHandler_i::SetXplorerData()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetXplorerData_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder * 
 )
 {
     // Add your implementation here
@@ -136,7 +136,7 @@ void Body_AMI_UIHandler_i::SetCommand()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetCommand_excep( 
-    ::Messaging::ExceptionHolder * excep_holder)
+    ::Messaging::ExceptionHolder * )
 {
     throw CORBA::NO_IMPLEMENT();
 }

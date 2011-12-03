@@ -360,7 +360,7 @@ void CameraEntity::CustomKeyboardMouseSelection(
 
         //Calculate the distance hit point is from the camera lens
         osg::Vec3d hitToCameraVector = intersectPoint - cameraLensPoint;
-        double hitDistanceFromCamera = hitToCameraVector.length();
+        //double hitDistanceFromCamera = hitToCameraVector.length();
 
         //Get the center vector of the frustum in world coordinates
         osg::Vec3d centerVector( 0, 1, 0 );
@@ -376,10 +376,11 @@ void CameraEntity::CustomKeyboardMouseSelection(
         double yCenterLength = centerFrustumProjection.length();
         yRatio = yCenterLength / (*mFrustumVertices)[ 3 ].y();
 
+        /*
         double x = yRatio * (*mFrustumVertices)[ 3 ].x();
         double z = yRatio * (*mFrustumVertices)[ 3 ].z();
 
-        /*
+
         (*mHitQuadVertices)[ 0 ].set( -x, yCenterLength, -z );
         (*mHitQuadVertices)[ 1 ].set(  x, yCenterLength, -z );
         (*mHitQuadVertices)[ 2 ].set(  x, yCenterLength,  z );

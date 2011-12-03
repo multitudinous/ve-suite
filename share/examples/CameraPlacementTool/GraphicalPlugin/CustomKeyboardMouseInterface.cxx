@@ -35,7 +35,7 @@
 #include "CustomKeyboardMouseInterface.h"
 
 // --- vrJuggler Includes --- //
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
 
 using namespace cpt;
 

@@ -66,13 +66,13 @@ char* Body_VEXplorer_i::GetStatusMessage( )
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetParams( const char* param )
+void Body_VEXplorer_i::SetParams( const char* )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetID( ::CORBA::Long id )
+void Body_VEXplorer_i::SetID( ::CORBA::Long )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
@@ -84,7 +84,7 @@ void Body_VEXplorer_i::SetID( ::CORBA::Long id )
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetName( const char* name )
+void Body_VEXplorer_i::SetName( const char* )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
@@ -96,13 +96,13 @@ char* Body_VEXplorer_i::GetName()
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetNetwork( const char* network )
+void Body_VEXplorer_i::SetNetwork( const char* )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetCommand( const char* command )
+void Body_VEXplorer_i::SetCommand( const char* )
 {
     /*//When starting xplorer it is possible to connect and send a command before
     // xplorer is ready to receive it
@@ -141,7 +141,7 @@ void Body_VEXplorer_i::RegisterUI( const char* UIName, ::Body::UI_ptr ui )
     uiCom[std::string( UIName )] = Body::UI::_duplicate( ui );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::UnRegisterUI( const char* UIName )
+void Body_VEXplorer_i::UnRegisterUI( const char* )
 {
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();

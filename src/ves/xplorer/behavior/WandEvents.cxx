@@ -144,6 +144,11 @@ WandEvents::~WandEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void WandEvents::Button0OnEvent( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( buttonKey );
+    boost::ignore_unused_variable_warning( xPos );
+    boost::ignore_unused_variable_warning( yPos );
+    boost::ignore_unused_variable_warning( buttonState );
+
     //UpdateSelectionLine( true );
     
     ///Push the FOCUS event if we are using manipulators and a dragger is not
@@ -183,13 +188,20 @@ void WandEvents::Button0OnEvent( gadget::Keys buttonKey, int xPos, int yPos, int
 ////////////////////////////////////////////////////////////////////////////////
 void WandEvents::Button0PressEvent( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( buttonKey );
+    boost::ignore_unused_variable_warning( buttonState );
+
     m_currX = xPos;
     m_currY = yPos;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WandEvents::Button0ReleaseEvent( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
-    //std::cout << " Button0ReleaseEvent 2 " << std::endl;
+    boost::ignore_unused_variable_warning( buttonKey );
+    boost::ignore_unused_variable_warning( xPos );
+    boost::ignore_unused_variable_warning( yPos );
+    boost::ignore_unused_variable_warning( buttonState );
+
     //UpdateSelectionLine( false );
     
     if( m_manipulatorManager.IsEnabled() && 
@@ -214,7 +226,7 @@ void WandEvents::Button0ReleaseEvent( gadget::Keys buttonKey, int xPos, int yPos
                                                    m_lineSegmentIntersector.get() );
         if( m_manipulatorManager.LeafDraggerIsActive() )
         {
-            vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully pushed a dragger." 
+            vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully pushed a dragger." << success
             << std::endl << vprDEBUG_FLUSH;
             return;
         }

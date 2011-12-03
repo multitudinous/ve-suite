@@ -186,7 +186,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
             command->GetDataValuePair(
                 "drumAnimationOnOff" )->GetData( selection );
 
-            bool onOff = ( selection != 0 );
+            //bool onOff = ( selection != 0 );
             //mCameraEntity->DrumAnimation( onOff );
         }
         break;

@@ -271,7 +271,7 @@ Gloves::~Gloves()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Gloves::ProcessEvents( ves::open::xml::CommandPtr command )
+void Gloves::ProcessEvents( ves::open::xml::CommandPtr )
 {
     if( !m_enabled )
     {
@@ -280,164 +280,10 @@ void Gloves::ProcessEvents( ves::open::xml::CommandPtr command )
     UpdateRightHandGlove();
     UpdateLeftHandGlove();
 
-    
-    //This is the old nav code for the wand. I think we can use this for the
-    //glove to use hand gestures that are in VR Juggler.
-    /*
-    ves::xplorer::scenegraph::DCS* const activeDCS =
-        ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
-
-    //Remove the pointer if present
-    if( beamGeode.valid() )
-    {
-        mRootNode->asGroup()->removeChild( beamGeode.get() );
-    }
-
-    //If the wand does not exist
-    if( wand->isStupefied() )
-    {
-        return;
-    }
-
-    m_buttonPushed = false;
-
-    //Update the wand direction every frame
-    UpdateWandLocalDirection();
-
-    buttonData[ 0 ] = digital[ 0 ]->getData();
-    buttonData[ 1 ] = digital[ 1 ]->getData();
-    buttonData[ 2 ] = digital[ 2 ]->getData();
-    buttonData[ 3 ] = digital[ 3 ]->getData();
-    buttonData[ 4 ] = digital[ 4 ]->getData();
-
-    m_rotIncrement.set( 0, 0, 0, 1 );
-    osg::Quat world_quat = activeDCS->getAttitude();
-
-    double* tempWorldTrans = activeDCS->GetVETranslationArray();
-    m_worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
-    m_worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
-    m_worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
-
-    //This is NOT how we should do things
-    //Command should allowed to be null but because we always
-    //have to have a command due to our command structure
-    //this hack must be in here
-    //This should be changed once our complete command structure is in place
-    std::string commandType;
-    std::string newCommand;
-    if( command )
-    {
-        commandType = command->GetCommandName();
-    }
-    else
-    {
-        commandType = "wait";
-        newCommand = "wait";
-    }
-
-    if( !commandType.compare( "Navigation_Data" ) )
-    {
-        DataValuePairPtr commandData = command->GetDataValuePair( 0 );
-        cfdIso_value = commandData->GetDataValue();
-        newCommand = commandData->GetDataName();
-    }
-
-    if( !newCommand.compare( "ROTATE_ABOUT_HEAD" ) )
-    {
-        SetHeadRotationFlag( cfdIso_value );
-    }
-    else if( !newCommand.compare( "Z_ZERO_PLANE" ) )
-    {
-        SetSubZeroFlag( cfdIso_value );
-    }
-    else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )
-    {
-        //This equation returns a range of ~ 0.01' -> 220'
-        //the equation is 1/100 * e ^ ( x / 10 ) where 1 < x < 100
-        translationStepSize = 0.01f * exp( cfdIso_value * 0.10f );
-    }
-    else if( !newCommand.compare( "CHANGE_ROTATION_STEP_SIZE" ) )
-    {
-        //This equation returns a range of ~ 0.00029' -> 1.586'
-        //NOTE: These are in degrees
-        //This equation is 1 / 750 * ( x / 2 ) ^ 2.2 where 1 < x < 50
-        rotationStepSize = 0.001333f * powf(( cfdIso_value * 0.5f ), 2.2f );
-    }
-
-    //Free rotation
-    if (( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) ||
-            ( buttonData[ 1 ] == gadget::Digital::ON ) )
-    {
-        m_buttonPushed = true;
-        FreeRotateAboutWand();
-    }
-    //Navigate about z up axis
-    else if (( buttonData[ 3 ] == gadget::Digital::TOGGLE_ON ) ||
-        ( buttonData[ 3 ] == gadget::Digital::ON ) )
-    {
-        m_buttonPushed = true;
-        FreeRotateAboutWand( false );
-    }
-    //Navigation based on current wand direction
-    else if( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
-              buttonData[ 2 ] == gadget::Digital::ON )
-    {
-        double* tempWandDir = GetDirection();
-        vprDEBUG( vesDBG, 2 ) << "|\tWand direction :"
-            << tempWandDir[ 0 ] << " : "
-            << tempWandDir[ 1 ] << " : " << tempWandDir[ 2 ]
-            << std::endl << vprDEBUG_FLUSH;
-
-        m_buttonPushed = true;
-        for( int i = 0; i < 3; ++i )
-        {
-            //Update the translation movement for the objects
-            //How much object should move
-            m_worldTrans[ i ] += tempWandDir[ i ] * translationStepSize;
-        }
-    }
-    //Reset back to 0, 0, 0
-    else if( buttonData[ 4 ] == gadget::Digital::TOGGLE_ON ||
-              buttonData[ 4 ] == gadget::Digital::ON )
-    {
-        m_buttonPushed = true;
-        world_quat = *mResetAxis;
-        for( unsigned int i = 0; i < 3; ++i )
-        {
-            m_worldTrans[ i ] = -mResetPosition->at( i );
-            //world_quat[ i ] = 0.0f;
-            mCenterPoint->mData[ i ] = 0.0f;
-        }
-    }
-
-    ///If we actually pushed a button then move things
-    if( m_buttonPushed )
-    {
-        //Set the DCS postion based off of previous
-        //manipulation of the worldTrans array
-        for( unsigned int i = 0; i < 3; ++i )
-        {
-            m_worldTrans[ i ] = -m_worldTrans[ i ];
-        }
-
-        //Do not allow translation below z = 0 plane
-        if( subzeroFlag )
-        {
-            if( m_worldTrans[ 2 ] > 0 )
-            {
-                m_worldTrans[ 2 ] = 0;
-            }
-        }
-
-        activeDCS->SetTranslationArray( m_worldTrans );
-        world_quat *= m_rotIncrement;
-        activeDCS->SetQuat( world_quat );
-    }
-*/
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Gloves::ProcessEvents" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Gloves::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
+void Gloves::SetStartEndPoint( osg::Vec3d*, osg::Vec3d* )
 {
     ;
 }
