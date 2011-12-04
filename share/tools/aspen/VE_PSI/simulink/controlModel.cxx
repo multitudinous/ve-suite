@@ -31,11 +31,12 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
 #include <iostream>
-#include <time.h>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <ctime>
 
 #include "engine.h"
 #include "matrix.h"
@@ -44,7 +45,37 @@
 void wait( int seconds )
 {
     clock_t endwait = clock () + seconds * CLOCKS_PER_SEC ;
-    while (clock() < endwait) {}
+    while( clock() < endwait ) {}
+}
+
+double GetResultFromMatlabCommand( Engine *ep, std::string matlabCommand )
+{
+    engEvalString(ep, matlabCommand.c_str() );
+    mxArray *tempMxArray = engGetVariable(ep,"ans");
+    double returnValue = mxGetScalar( tempMxArray );
+    mxDestroyArray( tempMxArray );
+    return( returnValue );
+}
+
+double GetSimulinkParameter( Engine *ep, std::string modelName, std::string paramString )
+{
+    std::string matlabCommand = "get_param('" + modelName + "','" + paramString + "');";
+    return( GetResultFromMatlabCommand( ep, matlabCommand ) );
+}
+
+std::string GetStringFromMatlabCommand( Engine *ep, std::string matlabCommand )
+{
+    engEvalString(ep, matlabCommand.c_str() );
+    mxArray *tempMxArray = engGetVariable(ep,"ans");
+    char * resultString = mxArrayToString( tempMxArray );
+    mxDestroyArray( tempMxArray );
+    return( std::string(resultString) );
+}
+
+std::string GetSimulinkString( Engine *ep, std::string modelName, std::string paramString )
+{
+    std::string matlabCommand = "get_param('" + modelName + "','" + paramString + "');";
+    return( GetStringFromMatlabCommand( ep, matlabCommand ) );
 }
 
 int main( int argc, char** argv )
@@ -52,11 +83,13 @@ int main( int argc, char** argv )
     if( argc != 2 )
     {
         std::cout << "Error: Need one argument specifying a simulink model!" << std::endl;
-        //std::cout << "For more information enter: " << argv[ 0 ] << " --help" << std::endl;
+        std::cout << "    For example: " << argv[ 0 ] << " ves_test" << std::endl;
+        std::cout << "    (note that mdl extension is not used)" << std::endl;
         return( EXIT_FAILURE );
     }
 
     std::cout << "Starting MATLAB engine" << std::endl;
+
     // Call engOpen with a NULL string. This starts a MATLAB process on the current host
     Engine *ep;
     if (!(ep = engOpen("")))
@@ -68,6 +101,7 @@ int main( int argc, char** argv )
     std::string modelName( argv[ 1 ] );
     std::cout << "Opening simulink model '" << modelName << "'" << std::endl;
 
+    //matlabCommand(s) are strings that you could directly enter in the MATLAB Command Window
     std::string matlabCommand;
 
     // open the simulink window with your model
@@ -82,32 +116,81 @@ int main( int argc, char** argv )
 
     // Use SimulationCommand to start, stop, pause, continue, update 
     std::cout << "Starting simulation" << std::endl;
-    matlabCommand = "set_param('" + modelName + "','SimulationCommand', 'start')";
+    matlabCommand = "set_param('" + modelName + "','SimulationCommand', 'start');";
     engEvalString(ep, matlabCommand.c_str() );
 
-    matlabCommand = "status = get_param('" + modelName + "','SimulationStatus')";
-    engEvalString(ep, matlabCommand.c_str() );
+    //i status is either 'running' or 'stopped'
+    std::string status = GetSimulinkString( ep, modelName, "SimulationStatus" );
+    std::cout << "status = " << status << std::endl;
 
-    mxArray *mxTimeArray;
-    mxArray *resultArray = engGetVariable(ep,"status");   //returns 'running' or 'stopped'
-    char * resultString = mxArrayToString( resultArray );
-    std::cout << "status = " << resultString << std::endl;
     double simTime;
     do 
     {
         wait( 1 );
-        matlabCommand = "time = get_param('" + modelName + "','SimulationTime')";
-        engEvalString(ep, matlabCommand.c_str() );
-        mxTimeArray = engGetVariable(ep,"time");
-        simTime = mxGetScalar( mxTimeArray );
-        std::cout << "simulation time = " << simTime << std::endl;
+
+        simTime = GetSimulinkParameter( ep, modelName, "SimulationTime" );
+        status = GetSimulinkString( ep, modelName, "SimulationStatus" );
+        std::cout << "simulation time = " << simTime << ", status = " << status << std::endl;
+    }
+    while( status == "running" );
+    //while( simTime != 0 );
+
+    // Get a list of the blocks in the system
+    matlabCommand = "blks = find_system('" + modelName + "', 'Type', 'block');";
+    engEvalString(ep, matlabCommand.c_str() );
+
+    int numBlocks = GetResultFromMatlabCommand( ep, "length(blks);" );
+    std::cout << "numBlocks = " << numBlocks << std::endl;
+    for( int i=1; i<= numBlocks; i++ )
+    {
+        std::stringstream out;
+        out << i;
+        //data is stored in cells rather than directly as strings
+        //thus can't access as blks(i). Instead use blks{i,1}.
+        std::cout << GetStringFromMatlabCommand( ep, "blks{" + out.str() + ",1};" ) << std::endl;
+    }
+
 /*
-        resultArray = engGetVariable(ep,"status");   //returns 'running' or 'stopped'
-        resultString = mxArrayToString( resultArray );
-        std::cout << "status = " << resultString << std::endl;
+    //listblks = get_param(blks, 'BlockType') 
+    mxArray * blocks[ numrows ];
+    blocks[0] = engGetVariable(ep,"blks");
+    std::cout << "blocks[0] = " << blocks[0] << std::endl;
+
+    if ( ! mxIsChar( blocks[0] ) || mxGetNumberOfDimensions( blocks[0] ) > 2)
+    {
+        std::cout << "expecting char matrix" << std::endl;
+    }
+
+    mxChar *pi;
+    //mxChar *po;
+    pi = mxGetChars( blocks[0] );
+    std::cout << "pi[0] = " << pi[0] << std::endl;
+
+    mwSize m, n;
+    m = mxGetM( blocks[0] );
+    n = mxGetN( blocks[0] );
+    //mxArray * blocks2[];
+    //blocks2[0] = mxCreateNumericMatrix (m, n, mxCHAR_CLASS, mxREAL);
+    
+    //char * blocksString = mxArrayToString( blocks );
+    //std::cout << "blocksString = " << blocksString << std::endl;
+
+    char *str[100];
+    int nrhs = 3;
+    for (int i=0; i<nrhs; i++)
+    {
+        // Check input to be sure it is of type char.
+        if( !mxIsChar( blocks[i] ) )
+        {
+            std::cout << "expecting char matrix" << std::endl;
+        }
+        // Copy the string data from prhs and place it into str.
+        str[i] = mxArrayToString( blocks[i] );
+        std::cout << "blocksString = " << str[i] << std::endl;
+    }
+
 */
-//    } while ( strcmp(resultString, "running") == 0 );
-    } while ( simTime != 0 );
+
 
 /*
 %callback for the stop simulation button
@@ -117,13 +200,11 @@ simdata = evalin('base', 'simout'); %get the simulation data exported by the blo
 myfun(simdata) %just an example, insert here your own function 
 */
     // use fgetc() to pause
-    std::cout << "Hit return to continue" << std::endl;
+    std::cout << "\nHit return to continue" << std::endl;
     fgetc(stdin);
     
     // We're done! Free memory, close MATLAB engine and exit.
     std::cout << "Freeing memory, closing MATLAB engine, and exiting" << std::endl;
-    mxDestroyArray( resultArray );
-    mxDestroyArray( mxTimeArray );
     engClose(ep);
     
     return( EXIT_SUCCESS );
