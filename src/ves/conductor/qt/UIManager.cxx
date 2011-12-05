@@ -220,7 +220,7 @@ osg::Geode* UIManager::AddElement( UIElement* element )
     //Store the switch node so that it can be added to mUIGroup during the
     //next update traversal.
     osg::Geode* geode = element->GetGeode();
-    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( m_isDesktopMode )
     {
         mNodesToAdd.push_back( geode );
     }
@@ -408,7 +408,7 @@ void UIManager::Initialize( osg::Group* )
     osg::ref_ptr< osg::Program > program = new osg::Program();
     program->setName( "VS UI Quad Program" );
 
-    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( m_isDesktopMode )
     {
         osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
         std::string vertexSource =
@@ -462,7 +462,7 @@ void UIManager::Initialize( osg::Group* )
 
     ///This is a major hack to get around the issue that OSG likes to cull
     ///objects that are on the near plane when a camera is not involved
-    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( m_isDesktopMode )
     {
         osg::Camera* postRenderCamera = new osg::Camera();
         postRenderCamera->setName( "Post Render UI Desktop Camera" );
@@ -551,7 +551,7 @@ void UIManager::_insertNodesToAdd()
         mUIGroup->addChild( node );
 #ifndef NO_SUBLOAD
         osg::Geode* tempGeode = 0;
-        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+        if( m_isDesktopMode )
         {
             tempGeode = node->asGeode();
         }
@@ -596,6 +596,7 @@ void UIManager::_repaintChildren()
                 float( element->GetImageHeight() ) / float( element->GetImageWidth() );
             m_aspectRatioUniform->set( uiAspectRatio );
             element->Update();
+            ///This code must be left here to correctly update the UI.
 #ifdef NO_SUBLOAD
             unsigned char* image_Data = element->RenderElementToImage()->data();
 #else
@@ -699,7 +700,7 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
 {
     m_selectedUIElement = 0;
     ///Handle the test for non desktop mode
-    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( !m_isDesktopMode )
     {
         if( TestWandIntersection() )
         {
@@ -745,7 +746,7 @@ bool UIManager::Test3DPointerCoordinates( int& x, int& y )
 {
     m_selectedUIElement = 0;
     ///Handle the test for non desktop mode
-    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( !m_isDesktopMode )
     {
         if( TestWandIntersection() )
         {

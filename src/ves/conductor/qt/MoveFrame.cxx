@@ -43,7 +43,7 @@ void MoveFrame::mousePressEvent ( QMouseEvent* event )
     QFrame::mousePressEvent( event );
 }
 
-void MoveFrame::mouseDoubleClickEvent ( QMouseEvent* event )
+void MoveFrame::mouseDoubleClickEvent ( QMouseEvent* )
 {
     Q_EMIT doubleClicked();
 }

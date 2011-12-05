@@ -48,7 +48,7 @@ NonScrollGraphicsView::NonScrollGraphicsView(QGraphicsScene* scene,
 {
 }
 
-void NonScrollGraphicsView::scrollContentsBy ( int dx, int dy )
+void NonScrollGraphicsView::scrollContentsBy( int, int )
 {
     // do nothing
 }
