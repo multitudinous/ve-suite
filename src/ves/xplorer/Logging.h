@@ -96,8 +96,13 @@ typedef ves::util::ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
     #define STATIC_LOG_DEBUG( name, msg ) _STATIC_LOG_CALL( debug, name, msg )
     #define STATIC_LOG_TRACE( name, msg ) _STATIC_LOG_CALL( trace, name, msg )
 #else
-    #define LOG_DEBUG( msg )
-    #define LOG_TRACE( msg )
+    //#if defined(_MSC_VER)
+        #define LOG_DEBUG( msg )
+        #define LOG_TRACE( msg )
+    //#else
+    //    #define LOG_DEBUG( msg ) msg __attribute__ ((unused))
+    //    #define LOG_TRACE( msg ) msg __attribute__ ((unused))
+    //#endif
     #define STATIC_LOG_DEBUG( name, msg )
     #define STATIC_LOG_TRACE( name, msg )
 #endif
