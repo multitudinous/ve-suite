@@ -70,11 +70,11 @@ SceneGLTransformInfo::SceneGLTransformInfo(
     gmtl::Matrix44d const& zUpMatrix )
     :
     m_ortho2DMatrix( ortho2DMatrix ),
-    m_ortho2DMatrixOSG( m_ortho2DMatrix.mData ),
+    m_ortho2DMatrixOSG( m_ortho2DMatrix.getData() ),
     m_identityMatrix( identityMatrix ),
-    m_identityMatrixOSG( m_identityMatrix.mData ),
+    m_identityMatrixOSG( m_identityMatrix.getData() ),
     m_zUpMatrix( zUpMatrix ),
-    m_zUpMatrixOSG( m_zUpMatrix.mData )
+    m_zUpMatrixOSG( m_zUpMatrix.getData() )
 {
     ;
 }
