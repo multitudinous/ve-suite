@@ -33,7 +33,6 @@
 
 #ifndef OPC_H
 #define OPC_H
-
 #include <string>
 #include <map>
 #include <vector>
@@ -43,9 +42,22 @@
 #include <atlsafe.h>
 #include <atlbase.h>
 #include <atlcom.h>
+#include <objbase.h>
 #include <comdef.h>
-#import <gbda_aut.tlb>
-using namespace GBDAAutomation;
+#include <fstream>
+
+//#include "C:\Program Files (x86)\Common Files\OPC Foundation\Include\opcda.h"
+//#import "gbda_aut.tlb"
+//using namespace GBDAAutomation;
+
+//#import "opcda.idl"
+#import "opcproxy.dll"
+using namespace OPCDA;
+typedef DWORD OPCHANDLE;
+typedef tagOPCITEMDEF OPCITEMDEF;
+typedef tagOPCITEMRESULT OPCITEMRESULT;
+typedef tagOPCITEMSTATE OPCITEMSTATE;
+typedef tagOPCBROWSEELEMENT OPCBROWSEELEMENT;
 
 class OPC
 {
@@ -56,13 +68,13 @@ public:
     std::vector< std::pair< std::string, std::string > > ReadVars();
     //std::map< std::string, std::pair< std::string, VARTYPE > > ReadVars();
     //std::string GetOPCValue( const std::string& );
-    std::string GetOPCValues();
-    void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
+//    std::string GetOPCValues();
+//    void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
     //void ConnectWithList( std::vector< std::string > list );
     bool ConnectToOPCServer();
-    std::string GetAllOPCVariables( const std::string& );
-    void AddOPCVariable( const std::string& );
-    bool IsOPCVarsEmpty();
+//    std::string GetAllOPCVariables( const std::string& );
+//    void AddOPCVariable( const std::string& );
+//    bool IsOPCVarsEmpty();
 
 private:
     void UpdateOPCList( );
@@ -134,15 +146,29 @@ private:
     CComSafeArray<long> * serverID;
     CComSafeArray<BSTR> * itemIDs;
     CComSafeArray<long> * clientID;
-    IOPCAutoServerPtr m_server;
-    OPCItemsPtr items;
-    IOPCGroupPtr group;
-    IOPCGroupsPtr groups;
-    OPCBrowserPtr browser;
+    //IOPCAutoServerPtr m_server;
+    IOPCServer* m_Server;
+    IOPCBrowse* browse;  
+    //OPCItemsPtr items;
+    IOPCItemMgt* items;
+    //IOPCGroupPtr group;
+    //IOPCGroupsPtr groups;
+    //OPCBrowserPtr browser;
+    IOPCBrowse* browser;
     std::vector< std::string > tempVars;
     std::vector< BSTR > bItemIDs;
+    std::ofstream logFile;
 
     void ParseBranch(  _bstr_t name, std::string prefix );
+
+    IOPCServer* InstantiateServer(wchar_t ServerName[]);
+    void AddTheGroup(IOPCServer* pIOPCServer, IOPCItemMgt* &pIOPCItemMgt, OPCHANDLE& hServerGroup);
+    void AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem);
+    void ReadItem(IUnknown* pGroupIUnknown, OPCHANDLE hServerItem, VARIANT& varValue);
+    void RemoveItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE hServerItem);
+    void RemoveGroup (IOPCServer* pIOPCServer, OPCHANDLE hServerGroup);
+    void Parse ( std::string name );
+    
     //void ParseBranch(  _bstr_t name );
     //bool ParseBranch( );
 
