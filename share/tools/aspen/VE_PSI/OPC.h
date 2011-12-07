@@ -72,7 +72,7 @@ public:
 //    void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
     //void ConnectWithList( std::vector< std::string > list );
     bool ConnectToOPCServer();
-//    std::string GetAllOPCVariables( const std::string& );
+    std::string GetAllOPCVariables( const std::string& );
 //    void AddOPCVariable( const std::string& );
 //    bool IsOPCVarsEmpty();
 
@@ -141,6 +141,7 @@ private:
     std::vector< std::string > m_opcBlocks;
     std::vector< std::string > m_opcVariables;
     std::string m_unitName;
+    std::vector< std::pair< std::string, std::string > > varsAndVals;
 
     
     CComSafeArray<long> * serverID;

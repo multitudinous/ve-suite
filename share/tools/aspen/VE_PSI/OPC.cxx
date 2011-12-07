@@ -57,8 +57,8 @@
 
 //#define DSS_VERSION "C:/SIMSCI/DSS44/GUI/"
 
-//#define OPC_SERVER_NAME L"Softing.OPCToolboxDemo_ServerDA.1"
-#define OPC_SERVER_NAME L"Woodward.ServLinkOpcDa.1"
+#define OPC_SERVER_NAME L"Softing.OPCToolboxDemo_ServerDA.1"
+//#define OPC_SERVER_NAME L"Woodward.ServLinkOpcDa.1"
 #define ITEM_ID L"maths.sin"
 #define VT VT_R4
 #define XVAL fltVal
@@ -84,32 +84,26 @@ OPC::OPC( std::string unitName )
 
 ///////////////////////////////////////////////////////////////////////////////
 bool OPC::ConnectToOPCServer()
-{
-    //Connect to the OPC Server
-    HRESULT hr;
-
-    //IOPCAutoServerPtr server( __uuidof(OPCServer) );
-    //CComPtr<IOPCServer> server( );//__uuidof(IOPCServer) );
-
-    //OPCSERVERSTATUS *serverStatus;
-    //m_server->GetStatus(&serverStatus);
-    //std::string test( serverStatus->szVendorInfo );
-
-	//IOPCServer* pIOPCServer = NULL;   //pointer to IOPServer interface
+{   
 	IOPCItemMgt* pIOPCItemMgt = NULL; //pointer to IOPCItemMgt interface
-
 	OPCHANDLE hServerGroup; // server handle to the group
 	OPCHANDLE hServerItem;  // server handle to the item
     
 	// Let's instantiante the IOPCServer interface and get a pointer of it:
 	m_Server = InstantiateServer(OPC_SERVER_NAME);
-    //pIOPCServer = InstantiateServer(OPC_SERVER_NAME);
-	
-    //IOPCBrowse* browse = NULL;
-    m_Server->QueryInterface(&browse);
+    //m_Server->QueryInterface(&browse);
+    //Parse( "" );
 
-    Parse( "" );
-/*        std::ofstream output("log.txt");
+	//IOPCServer* pIOPCServer = NULL;   //pointer to IOPServer interface
+    //IOPCAutoServerPtr server( __uuidof(OPCServer) );
+    //CComPtr<IOPCServer> server( );//__uuidof(IOPCServer) );
+    //OPCSERVERSTATUS *serverStatus;
+    //m_server->GetStatus(&serverStatus);
+    //std::string test( serverStatus->szVendorInfo );
+    //pIOPCServer = InstantiateServer(OPC_SERVER_NAME);
+    //IOPCBrowse* browse = NULL;
+    
+    /*        std::ofstream output("log.txt");
         output<<"browse"<<std::endl;
     //HRESULT hr = browse->Browse( CA2W(name.c_str()),  
     hr = browse->Browse( CA2W(""),  
@@ -210,11 +204,14 @@ bool OPC::ConnectToOPCServer()
     return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
-/*std::string OPC::GetAllOPCVariables( const std::string& modname )
+std::string OPC::GetAllOPCVariables( const std::string& modname )
 {
     logFile.open("log.txt");
+    
+    m_Server->QueryInterface(&browse);
+    Parse( "" );
 
-    //Get a list of the available OPC variables for a given unit op
+/*    //Get a list of the available OPC variables for a given unit op
     browser = m_server->CreateBrowser();
     browser->AccessRights = OPCWritable | OPCReadable;
     browser.AddRef();
@@ -345,6 +342,7 @@ bool OPC::ConnectToOPCServer()
     }
 
     items->Remove( count, serverID->GetSafeArrayPtr(), errors->GetSafeArrayPtr());
+    */
     //append the flowsheet name
     ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
     varsAndValues->SetCommandName("AllOPCData");
@@ -956,7 +954,7 @@ void OPC::RemoveGroup (IOPCServer* pIOPCServer, OPCHANDLE hServerGroup)
 	_ASSERT(!hr);
 }
 
-void OPC::Parse (std::string name)
+void OPC::Parse( std::string name )
 {
         LPWSTR pszContinuationPoint = NULL; 
     OPCBROWSEELEMENT *pBrowseElements = NULL;  
@@ -982,26 +980,39 @@ void OPC::Parse (std::string name)
 	if( SUCCEEDED(hr) ) { 
     std::ofstream output ( (name+".log").c_str() );
         output<<count<<std::endl;
-		for( DWORD i=0; i < count; ++i )
+
+        for( DWORD i=0; i < count; ++i )
         { 
             output << "Name: " << CW2A(pBrowseElements[i].szName) << std::endl;
-            //std::string temp(pBrowseElements[i].szName);
-            std::wstring wtemp(pBrowseElements[i].szName);
-            std::string temp( wtemp.begin(), wtemp.end());
-            //Parse( pBrowseElements[i].szName );
+            //std::wstring wtemp(pBrowseElements[i].szName);
+            std::string temp( CW2A(pBrowseElements[i].szItemID) );
             
-            //if it has children
+            //if element is an item add it to the available variables
+            if( pBrowseElements[i].dwFlagValue & OPC_BROWSE_ISITEM )
+            {
+                //guard against an item that is a hint
+                if( pBrowseElements[i].szItemID )
+                {
+                    std::pair< std::string, std::string > varAndVal;
+                    varAndVal.first = temp;
+                    varAndVal.second = "0";
+                    varsAndVals.push_back( varAndVal );
+                }
+            } 
+            
+            //if it has children parse it
             if( pBrowseElements[i].dwFlagValue & OPC_BROWSE_HASCHILDREN )
             {
-            if( !name.empty() )
-            {
-                Parse( name + "." + temp );
+                //if( !name.empty() )
+                {
+                    Parse( temp );
+                }
+                //else
+                //{
+                //    Parse(temp);
+                //}
             }
-            else
-            {
-                Parse(temp);
-            }
-            }
+
 		} 
         output.close();
     }
