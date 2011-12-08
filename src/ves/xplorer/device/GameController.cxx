@@ -69,7 +69,6 @@
 
 #include <ves/open/xml/model/Model.h>
 
-#include <osgwMx/MxEventHandler.h>
 #include <ves/xplorer/device/MxInputAdapterGadgeteerGamePad.h>
 #include <osgwMx/MxGamePad.h>
 
@@ -115,20 +114,32 @@ GameController::GameController()
     m_leftStickX( 0 ),
     m_leftStickY( 0 ),
     m_rightStickX( 0 ),
-    m_rightStickY( 0 )
+    m_rightStickY( 0 ),
+    m_buttonMap( new osgwMx::FunctionalMap() ),
+    m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() )
 {
+    // Create a default functional map.
+    m_buttonMap->configure( osgwMx::MxGamePad::Button0, osgwMx::FunctionalMap::JumpToWorldOrigin );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button1, osgwMx::FunctionalMap::LevelView );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button2, osgwMx::FunctionalMap::MoveModifyUpDown );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button3, osgwMx::FunctionalMap::JumpToHomePosition );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button6, osgwMx::FunctionalMap::MoveModifyScaleSpeedDown );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button7, osgwMx::FunctionalMap::MoveModifyScaleSpeedUp );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button8, osgwMx::FunctionalMap::MoveModeWorld );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button9, osgwMx::FunctionalMap::MoveModeConstrained );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button10, osgwMx::FunctionalMap::RotateModeOrbit );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button11, osgwMx::FunctionalMap::RotateModifyRoll );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button12, osgwMx::FunctionalMap::MoveUpAtRate );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button13, osgwMx::FunctionalMap::MoveDownAtRate );
+    ///Initialize the gamepad class
+    m_mxGamePadStyle->setFunctionalMap( m_buttonMap.get() );
     m_mxGamePadStyle->setStickRate( 10.0 );
     m_mxGamePadStyle->setStickDeadZone( 0.05f );
-
-    // Set some MxCore defaults:
-    osgwMx::MxCore* mxCore = m_mxGamePadStyle->getMxCore();
-    ///This is not really the up or view vector for ves but since we are working
-    ///in Z up space we need an identity matrix for mxcore. This can be 
-    ///accomplished by telling mxcore that we are in Y up space so that it thinks
-    ///we are already in native OpenGL coordinate space.
-    mxCore->setInitialValues( 
-        osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., 0., -1. ), osg::Vec3d( 0., 0., 0. ) );
-    mxCore->reset();
+    m_mxGamePadStyle->setMxCore( &m_viewMatrix );
+    //MoveModeLiteral - moves in opengl / eye space
+    //MoveModeWorld - moves in rotate object space
+    //MoveModeLocal - moves in global coordinates
+    m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
     
     // Connect to Juggler's new event handling interface
     //Left stick - X
@@ -226,15 +237,15 @@ void GameController::OnAxis0Event( const float event )
         return;
     }
 
-    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button2 );//| osgwMx::MxGamePad::Button8 );
+    m_mxGamePadStyle->setButtons( 0 );//osgwMx::MxGamePad::Button2 );//| osgwMx::MxGamePad::Button8 );
 
-    m_mxGamePadStyle->getMxCore()->setByMatrix( 
-        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     // Left stick: Move.
     // Normalize values to range -1.0 to 1.0.
     // These are units to move in world coordinates per event or per frame.
     m_leftStickX = ( ( event - 0.0f ) / 0.5f ) - 1.f;
-    m_leftStickX *= -1.0;
+    //m_leftStickX *= -1.0;
     //float y = normalizeAxisValue( devState.lY );
     bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
@@ -244,9 +255,9 @@ void GameController::OnAxis0Event( const float event )
         return;
     }
     
-    gmtl::Matrix44d newTransform;
-    newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
-    
+    gmtl::Matrix44d newTransform;    
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
+
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
@@ -258,16 +269,16 @@ void GameController::OnAxis1Event( const float event )
         return;
     }
 
-    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button2 );//| osgwMx::MxGamePad::Button8 );
+    m_mxGamePadStyle->setButtons( 0 );//osgwMx::MxGamePad::Button2 );//| osgwMx::MxGamePad::Button8 );
     
-    m_mxGamePadStyle->getMxCore()->setByMatrix( 
-        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     // Left stick: Move.
     // Normalize values to range -1.0 to 1.0.
     // These are units to move in world coordinates per event or per frame.
     m_leftStickY = ( ( event - 0.0f ) / 0.5f ) - 1.f;
-    m_leftStickY *= -1.0;
+    //m_leftStickY *= -1.0;
     //float y = normalizeAxisValue( devState.lY );
     bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
@@ -276,13 +287,10 @@ void GameController::OnAxis1Event( const float event )
     {
         return;
     }
-        
-    gmtl::Matrix44d newTransform;
-    newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
-
+    gmtl::Matrix44d newTransform;    
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis2Event( const float event )
@@ -291,10 +299,10 @@ void GameController::OnAxis2Event( const float event )
     {
         return;
     }
-    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button11 );
+    m_mxGamePadStyle->setButtons( 0 );//osgwMx::MxGamePad::Button11 );
 
-    m_mxGamePadStyle->getMxCore()->setByMatrix( 
-        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
 
     // Right stick: Rotate.
     // Base class angle values are in degrees. By calling
@@ -307,6 +315,7 @@ void GameController::OnAxis2Event( const float event )
     //x = -normalizeAxisValue( devState.lRz );
     //y = normalizeAxisValue( devState.lZ );
     m_rightStickX = ( ( event - 0.0f ) / 0.5f ) - 1.f;
+    m_rightStickX *= -1.0;
 
     bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
@@ -315,9 +324,8 @@ void GameController::OnAxis2Event( const float event )
     {
         return;
     }
-    
     gmtl::Matrix44d newTransform;    
-    newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
@@ -328,10 +336,10 @@ void GameController::OnAxis3Event( const float event )
     {
         return;
     }
-    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button11 );
+    m_mxGamePadStyle->setButtons( 0 );//osgwMx::MxGamePad::Button11 );
     
-    m_mxGamePadStyle->getMxCore()->setByMatrix( 
-        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
 
     // Right stick: Rotate.
     // Base class angle values are in degrees. By calling
@@ -344,7 +352,8 @@ void GameController::OnAxis3Event( const float event )
     //x = -normalizeAxisValue( devState.lRz );
     //y = normalizeAxisValue( devState.lZ );
     m_rightStickY = ( ( event - 0.0f ) / 0.5f ) - 1.f;
-    
+    m_rightStickX *= -1.0;
+
     bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
@@ -352,9 +361,8 @@ void GameController::OnAxis3Event( const float event )
     {
         return;
     }
-
     gmtl::Matrix44d newTransform;    
-    newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
@@ -371,16 +379,15 @@ void GameController::OnAxis4Event( gadget::DigitalState::State event )
         return;
     }
     
-    m_mxGamePadStyle->getMxCore()->setByMatrix( 
-        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
 
     switch(event) 
     {
     case gadget::DigitalState::ON:
     {   
-        float distance = 10. * ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime();
-        m_mxGamePadStyle->getMxCore()->move( osg::Vec3d( 0., 0., -distance ) );
-        //m_mxGamePadStyle->getMxCore()->moveWorldCoords( movement );
+        m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button13, 
+            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -394,9 +401,8 @@ void GameController::OnAxis4Event( gadget::DigitalState::State event )
     default:
         break;
     }
-    
     gmtl::Matrix44d newTransform;    
-    newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
@@ -413,16 +419,15 @@ void GameController::OnAxis5Event( gadget::DigitalState::State event )
         return;
     }
     
-    m_mxGamePadStyle->getMxCore()->setByMatrix( 
-        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
     case gadget::DigitalState::ON:
     {        
-        float distance = 10. * ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime();
-        m_mxGamePadStyle->getMxCore()->move( osg::Vec3d( 0., 0., distance ) );
-        //m_mxGamePadStyle->getMxCore()->moveWorldCoords( movement );
+        m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button12, 
+            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -436,9 +441,8 @@ void GameController::OnAxis5Event( gadget::DigitalState::State event )
     default:
         break;
     }
-    
     gmtl::Matrix44d newTransform;    
-    newTransform.set( m_mxGamePadStyle->getMxCore()->getMatrix().ptr() );
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
@@ -455,9 +459,8 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
         return;
     }
     
-    osgwMx::MxCore* core = m_mxGamePadStyle->getMxCore();
-    core->setByMatrix( 
-        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
@@ -467,14 +470,13 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        osg::Vec3d scale = core->getMoveScale();
+        osg::Vec3d scale = m_viewMatrix.getMoveScale();
         scale -= osg::Vec3d( 1., 1., 1. );
         if( scale[ 0 ] < 0. )
         {
             scale = osg::Vec3d( 1., 1., 1. );
         }
-        core->setMoveScale( scale );
-        //_mxCore->setMoveScale( osg::Vec3d( 5., 5., 5. ) );
+        m_viewMatrix.setMoveScale( scale );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
@@ -486,7 +488,7 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
     }
     
     gmtl::Matrix44d newTransform;    
-    newTransform.set( core->getMatrix().ptr() );
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
@@ -503,9 +505,8 @@ void GameController::OnButton2Event( gadget::DigitalState::State event )
         return;
     }
     
-    osgwMx::MxCore* core = m_mxGamePadStyle->getMxCore();
-    core->setByMatrix( 
-        osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
@@ -515,10 +516,9 @@ void GameController::OnButton2Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        osg::Vec3d scale = core->getMoveScale();
+        osg::Vec3d scale = m_viewMatrix.getMoveScale();
         scale += osg::Vec3d( 1., 1., 1. );
-        core->setMoveScale( scale );
-        //_mxCore->setMoveScale( osg::Vec3d( 15., 15., 15. ) );
+        m_viewMatrix.setMoveScale( scale );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
@@ -530,7 +530,7 @@ void GameController::OnButton2Event( gadget::DigitalState::State event )
     }
     
     gmtl::Matrix44d newTransform;    
-    newTransform.set( core->getMatrix().ptr() );
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
@@ -547,9 +547,8 @@ void GameController::OnButton4Event( gadget::DigitalState::State event )
         return;
     }
     
-    osgwMx::MxCore* core = m_mxGamePadStyle->getMxCore();
-    core->setByMatrix( 
-                      osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //                  osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
@@ -560,7 +559,7 @@ void GameController::OnButton4Event( gadget::DigitalState::State event )
     case gadget::DigitalState::TOGGLE_ON:
     {
         //_mxCore->setPosition( osg::Vec3( 0., 0., 0. ) );
-        core->level();
+        m_mxGamePadStyle->getMxCore()->level();
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
@@ -572,7 +571,7 @@ void GameController::OnButton4Event( gadget::DigitalState::State event )
     }
     
     gmtl::Matrix44d newTransform;    
-    newTransform.set( core->getMatrix().ptr() );
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
@@ -589,9 +588,8 @@ void GameController::OnButton5Event( gadget::DigitalState::State event )
         return;
     }
     
-    osgwMx::MxCore* core = m_mxGamePadStyle->getMxCore();
-    core->setByMatrix( 
-                      osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
+    //m_viewMatrix.setByInverseMatrix( 
+    //                  osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
@@ -601,7 +599,7 @@ void GameController::OnButton5Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        core->reset();
+        m_mxGamePadStyle->getMxCore()->reset();
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
@@ -613,7 +611,7 @@ void GameController::OnButton5Event( gadget::DigitalState::State event )
     }
     
     gmtl::Matrix44d newTransform;    
-    newTransform.set( core->getMatrix().ptr() );
+    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
     //Set the activeDCS w/ new transform
     DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }

@@ -809,12 +809,12 @@ void Pointer::UpdatePointer()
         hand_pos_rot = gmtl::convertTo< double >( tempHand );
     }
 
-    gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
-    gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
+    //gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
+    //gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
+    //    gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
     gmtl::Matrix44d tempCamera = 
         ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
-    hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
+    hand_pos_rot = tempCamera * hand_pos_rot;
     m_pointerDCS->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
 
     //gmtl::Matrix44d vrjRHandMat = gmtl::convertTo< double >( hand_pos_rot );

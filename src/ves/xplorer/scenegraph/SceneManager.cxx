@@ -83,6 +83,9 @@
 #include <gmtl/gmtl.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
+// --- osgWorks Includes --- //
+#include <osgwMx/MxGamePad.h>
+
 // --- C/C++ Libraries --- //
 #include <iostream>
 #include <string>
@@ -120,9 +123,21 @@ SceneManager::SceneManager()
     m_screenAlignedNormals( true ),
     m_isMasterNode( true ),
     m_previousTime( 0 ),
-    m_deltaTime( 0 )
+    m_deltaTime( 0 ),
+    m_viewMatrix( new osgwMx::MxCore() )
 {
-    ;
+    gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+    m_zUpTransform = gmtl::makeRot< gmtl::Matrix44d >( gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0 ), x_axis ) );
+    m_defaultView = gmtl::makeRot< gmtl::Matrix44d >( gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+
+    // Set some MxCore defaults:
+    ///This is not really the up or view vector for ves but since we are working
+    ///in Z up space we need an identity matrix for mxcore. This can be 
+    ///accomplished by telling mxcore that we are in Y up space so that it thinks
+    ///we are already in native OpenGL coordinate space.
+    m_viewMatrix->setInitialValues( 
+        osg::Vec3d( 0., 0., 1. ), osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., 0., 0. ) );
+    m_viewMatrix->reset();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize()
@@ -348,6 +363,8 @@ void SceneManager::InitScene()
     m_navDCS->SetName( "World DCS" );
     //Setup world nav switch
     mNavSwitch->addChild( m_navDCS.get() );
+    //Set an initial -90 rotation to put the nav in Z up land
+    m_navDCS->SetMat( m_defaultView );
 
     //Setup logo nav switch
     mNavSwitch->addChild( new ves::xplorer::scenegraph::DCS() );
@@ -485,6 +502,11 @@ osg::Group* SceneManager::GetNetworkDCS() const
     return mNetworkDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
+osgwMx::MxCore& SceneManager::GetMxCoreViewMatrix() const
+{
+    return *m_viewMatrix.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 void SceneManager::ViewLogo( bool trueFalse )
 {
     if( trueFalse )
@@ -582,32 +604,31 @@ void SceneManager::SetActiveSwitchNode( int activeNode )
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::LatePreFrameUpdate()
 {
-    if( !mNavSwitch->getValue( 1 ) )
+    ///If the logo dcs is active no nav is allowed
+    if( mNavSwitch->getValue( 1 ) )
     {
-        gmtl::Matrix44d navMatrix = mActiveNavDCS->GetMat();
-        gmtl::invert( m_invertedNavMatrix, navMatrix );
-        m_invertedNavMatrixOSG.set( m_invertedNavMatrix.mData );
-        
-        m_vrjHeadMatrix = 
-            gmtl::convertTo< double >( m_vrjHead->getData() );
-        const gmtl::AxisAngled myAxisAngle( 
-            osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
-        const gmtl::Matrix44d myMat = 
-            gmtl::make< gmtl::Matrix44d >( myAxisAngle );
-        m_vrjHeadMatrix = myMat * m_vrjHeadMatrix;
-        m_globalViewMatrix =  m_invertedNavMatrix * m_vrjHeadMatrix;
-        m_globalViewMatrixOSG.set( m_globalViewMatrix.mData );
-        
-        gmtl::invert( m_invertedGlobalViewMatrix, m_globalViewMatrix );
-        m_invertedGlobalViewMatrixOSG.set( m_globalViewMatrix.mData );
+        m_viewMatrix->reset();
     }
-    else
-    {
-        m_invertedNavMatrix = gmtl::identity( m_invertedNavMatrix );
-        static_cast< ves::xplorer::scenegraph::DCS* >( 
-            mNavSwitch->getChild( 1 ) )->SetMat( m_invertedNavMatrix );
-    }
+
+    gmtl::Matrix44d navMatrix;    
+    navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
+    mActiveNavDCS->SetMat( navMatrix );
+        
+    m_vrjHeadMatrix = 
+        gmtl::convertTo< double >( m_vrjHead->getData() );
+    m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
+
+    navMatrix = m_zUpTransform * navMatrix;//mActiveNavDCS->GetMat();
     
+    gmtl::invert( m_invertedNavMatrix, navMatrix );
+    m_invertedNavMatrixOSG.set( m_invertedNavMatrix.getData() );
+    
+    m_globalViewMatrix = m_invertedNavMatrix * m_vrjHeadMatrix;
+    m_globalViewMatrixOSG.set( m_globalViewMatrix.getData() );
+    
+    gmtl::invert( m_invertedGlobalViewMatrix, m_globalViewMatrix );
+    m_invertedGlobalViewMatrixOSG.set( m_globalViewMatrix.getData() );
+
     m_deltaTime = mFrameStamp->getSimulationTime() - m_previousTime;
     m_previousTime = mFrameStamp->getSimulationTime();
 

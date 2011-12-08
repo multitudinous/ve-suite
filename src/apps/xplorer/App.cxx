@@ -113,6 +113,10 @@
 
 #include <osgwQuery/QueryBenchmarks.h>
 
+#include <osgwMx/MxCore.h>
+
+#include <osg/io_utils>
+
 // --- BackdropFX Includes --- //
 #include <backdropFX/Version.h>
 #include <backdropFX/Manager.h>
@@ -782,24 +786,6 @@ void App::latePreFrame()
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame SceneManager", 20 );
         scenegraph::SceneManager::instance()->LatePreFrameUpdate();
-        //Need to figure out why osg::LightSource::ABSOLUTE_RF
-        //does not work in a multi-context environment
-        //jbkoch - Since in the CAVE each view is 90 degrees apart,
-        //we do not want the light position relative to those matrix stacks,
-        //we want it relative to the camera matrix
-        gmtl::Matrix44d tempNavMatrix =
-            scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
-        gmtl::Vec4d tempVec( 0.0, -10000.0, 10000.0, 0.0 );
-        tempVec = tempNavMatrix * tempVec;
-        osg::Vec4d position( tempVec[ 0 ], tempVec[ 1 ], tempVec[ 2 ], 0.0 );
-        mSceneRenderToTexture->GetLight0()->setPosition( position );
-        
-        //Sneaky way to set uniform defined in
-        //Access to these types of uniforms needs to be discussed with Paul
-        if( !mRTT )
-        {
-            backdropFX::Manager::instance()->setLightPosition( 0, position );
-        }
     }
     ///////////////////////
     {
@@ -842,9 +828,30 @@ void App::latePreFrame()
     ///////////////////////
     ///Grab nav data
     {
-        mNavPosition = gmtl::convertTo< double >( 
+        mNavPosition.set( 
             ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveNavSwitchNode()->GetMat() );
+            GetMxCoreViewMatrix().getInverseMatrix().ptr() );
+        //Need to figure out why osg::LightSource::ABSOLUTE_RF
+        //does not work in a multi-context environment
+        //jbkoch - Since in the CAVE each view is 90 degrees apart,
+        //we do not want the light position relative to those matrix stacks,
+        //we want it relative to the camera matrix
+        //gmtl::Matrix44d tempNavMatrix =
+        //    scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
+        gmtl::Vec4d tempVec( 0.0, -10000.0, 10000.0, 0.0 );
+        tempVec = scenegraph::SceneManager::instance()->GetInvertedNavMatrix() * tempVec;
+        osg::Vec4d position( tempVec[0], tempVec[1], tempVec[2], 0.0 );
+        mSceneRenderToTexture->GetLight0()->setPosition( position );
+        
+        //Sneaky way to set uniform defined in
+        //Access to these types of uniforms needs to be discussed with Paul
+        if( !mRTT )
+        {
+            backdropFX::Manager::instance()->setLightPosition( 0, position );
+        }
+        /*gmtl::convertTo< double >( 
+            ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveNavSwitchNode()->GetMat() )*/;
     }
     ///////////////////////
     // Signal allowing other listeners to perform processing synced to draw
@@ -1093,11 +1100,11 @@ void App::draw()
 
         //Get the view matrix from vrj and transform into z-up land
         const gmtl::Matrix44d vrjViewMatrix =
-            gmtl::convertTo< double >( project->getViewMatrix() ) *
-            m_sceneGLTransformInfo->GetZUpMatrix();
+            gmtl::convertTo< double >( project->getViewMatrix() );
         //Multiply by the camera matrix (mNavPosition)
         glTI->UpdateViewMatrix( vrjViewMatrix, mNavPosition );
         const osg::Matrixd viewMatrixOSG = glTI->GetViewMatrixOSG();
+        gmtl::Matrix44d tempMat = glTI->GetViewMatrix();
 
         //Get the view matrix from a centered eye position
         m_sceneGLTransformInfo->CalculateCenterViewMatrix( project );
@@ -1111,6 +1118,7 @@ void App::draw()
         //If it is not absolute, Physics and Manipulators will be broken
         sv->setProjectionMatrix( projectionMatrixOSG );
         sv->setViewMatrix( viewMatrixOSG );
+
         if( mRTT )
         {
             osg::Camera* camera = mSceneRenderToTexture->GetPostProcessCamera();

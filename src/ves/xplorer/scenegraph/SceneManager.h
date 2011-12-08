@@ -74,6 +74,11 @@ class System;
 #include <gmtl/Matrix.h>
 #include <gmtl/Point.h>
 
+namespace osgwMx
+{
+class MxCore;
+}
+
 namespace ves
 {
 namespace xplorer
@@ -196,6 +201,9 @@ public:
     ///Return the global view matrix
     ///\return The inverted matrix
     const osg::Matrixd& GetInvertedGlobalViewMatrixOSG() const;
+    
+    ///Get the MxCore object used for view matrix manipulation
+    osgwMx::MxCore& GetMxCoreViewMatrix() const;
     
     ///Initialize member variables for scene manager
     void Initialize();
@@ -407,6 +415,16 @@ private:
     
     ///Delta framestamp
     double m_deltaTime;
+    
+    ///Matrix to transform from VR Juggler space to Z up space
+    gmtl::Matrix44d m_zUpTransform;
+    
+    ///Matrix for the default view to transform from Z up to Z out
+    gmtl::Matrix44d m_defaultView;
+    
+    ///The MxCore class that is used to control the device controlled
+    ///portion of the view matrix
+    osg::ref_ptr< osgwMx::MxCore > m_viewMatrix;    
 };
 } //end scenegraph
 } //end xplorer

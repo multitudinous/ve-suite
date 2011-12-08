@@ -70,14 +70,8 @@ namespace xplorer
 {
 
 /*!\file SceneGLTransformInfo.h
- *
- */
-
-/*!\class ves::xplorer::SceneGLTransformInfo
- *
- */
-
-/*!\namespace ves::xplorer
+ *\class ves::xplorer::SceneGLTransformInfo
+ *\namespace ves::xplorer
  *
  */
 class SceneGLTransformInfo

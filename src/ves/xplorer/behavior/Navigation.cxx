@@ -69,6 +69,9 @@
 
 #include <ves/open/xml/model/Model.h>
 
+//osgWorks
+#include <osgwMx/MxCore.h>
+
 //OSG
 #include <osg/BoundingSphere>
 #include <osg/Vec3d>
@@ -183,8 +186,10 @@ bool Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
     double dx = mouse_evt->getScrollDeltaX();
     double dy = mouse_evt->getScrollDeltaY();
 #else*/
-    double dx = m_currX - m_prevX;
-    double dy = m_currY - m_prevY;
+    //double dx = m_currX - m_prevX;
+    //double dy = m_currY - m_prevY;
+    double dx = m_prevX - m_currX;
+    double dy = m_prevY - m_currY;
 //#endif
     
 //#if !defined( VPR_OS_Windows )
@@ -203,25 +208,20 @@ bool Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
 
     if( buttonState&gadget::BUTTON1_MASK )
     {
+        if( ( m_currX > 0.1 * m_windowWidth ) &&
+           ( m_currX < 0.9 * m_windowWidth ) &&
+           ( m_currY > 0.1 * m_windowHeight ) &&
+           ( m_currY < 0.9 * m_windowHeight ) )
         {
-            
-            {
-                if( ( m_currX > 0.1 * m_windowWidth ) &&
-                   ( m_currX < 0.9 * m_windowWidth ) &&
-                   ( m_currY > 0.1 * m_windowHeight ) &&
-                   ( m_currY < 0.9 * m_windowHeight ) )
-                {
-                    double angle = mMagnitude * 7.0;
-                    Rotate( angle, gmtl::Vec3d( -dy, 0.0, dx ) );
-                }
-                else
-                {
-                    Twist( dx, dy );
-                }
-                
-                ProcessNavigation();
-            }
+            double angle = mMagnitude * 7.0;
+            Rotate( angle, gmtl::Vec3d( -dy, 0.0, dx )  );
         }
+        else
+        {
+            Twist( dx, dy );
+        }
+
+        ProcessNavigation();
         //Mod key shift
         return false;
     }
@@ -358,6 +358,12 @@ void Navigation::Rotate( double angle, gmtl::Vec3d axis )
     gmtl::normalize( axis );
     gmtl::AxisAngled axisAngle( angle, axis );
     mDeltaRotation = gmtl::makeRot< gmtl::Quatd >( axisAngle );
+
+    m_sceneManager.GetMxCoreViewMatrix().rotate( angle, 
+        osg::Vec3d( axis[ 0 ], axis[ 1 ], axis[ 2 ] ), 
+        osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
+                   -m_sceneManager.GetCenterPoint().mData[ 2 ], 
+                    m_sceneManager.GetCenterPoint().mData[ 1 ] ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::SetWindowValues( unsigned int w, unsigned int h )
@@ -385,13 +391,15 @@ void Navigation::ProcessNavigation()
     if( activeDCS->GetName() != cameraDCS->GetName() )
     {
         //If local dcs, transform to camera space
-        coordinateSystemTransform = new scenegraph::CoordinateSystemTransform(
-                                                                              activeSwitchNode, activeDCS, true );
+        coordinateSystemTransform = 
+            new scenegraph::CoordinateSystemTransform( activeSwitchNode, activeDCS, true );
         
         currentTransform = coordinateSystemTransform->GetTransformationMatrix();
     }
     else
     {
+        m_sceneManager.GetMxCoreViewMatrix().moveLiteral( osg::Vec3d( mDeltaTranslation[ 0 ], mDeltaTranslation[ 1 ], mDeltaTranslation[ 2 ] ) );
+
         //If manipulating camera, no transformations are needed
         currentTransform = activeDCS->GetMat();
     }
@@ -418,7 +426,7 @@ void Navigation::ProcessNavigation()
         //Remove local matrix from currentTransform
         //We are multiplying by a new transformed local matrix
         currentTransform =
-        coordinateSystemTransform->GetTransformationMatrix( false );
+            coordinateSystemTransform->GetTransformationMatrix( false );
         
         newTransform = gmtl::invert( currentTransform ) * newTransform;
     }
@@ -457,12 +465,7 @@ void Navigation::SetCenterPointJumpMode( const std::string& jumpMode )
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::ResetToGlobalOrigin()
 {
-    double trans[ 3 ] = { 0., 0., 0. };
-
-    osg::Quat resetQuat;
-    
-    DeviceHandler::instance()->GetActiveDCS()->SetTranslationArray( trans );
-    DeviceHandler::instance()->GetActiveDCS()->SetQuat( resetQuat );
+    m_sceneManager.GetMxCoreViewMatrix().reset();
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

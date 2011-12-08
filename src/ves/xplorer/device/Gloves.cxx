@@ -954,12 +954,12 @@ void Gloves::UpdateRightHandGlove()
         //return;
     }
 
-    gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
-    gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
+    //gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
+    //gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
+    //    gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
     gmtl::Matrix44d tempCamera = 
         ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
-    hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
+    hand_pos_rot = tempCamera * hand_pos_rot;
     mRightHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
     
     double rotArray[ 3 ] = { 180.0, 90.0, 0.0 };
@@ -1036,12 +1036,12 @@ void Gloves::UpdateLeftHandGlove()
         //return;
     }
     
-    gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
-    gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
-                                                             gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
+    //gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
+    //gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
+    //    gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
     gmtl::Matrix44d tempCamera = 
     ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
-    hand_pos_rot = tempCamera * rhRot * hand_pos_rot;
+    hand_pos_rot = tempCamera * hand_pos_rot;
     mLeftHand->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
     
     double rotArray[ 3 ] = { 180.0, 90.0, 0.0 };

@@ -75,6 +75,7 @@
 #include <osg/Array>
 #include <osg/NodeVisitor>
 #include <osg/Matrix>
+#include <osg/io_utils>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -96,7 +97,7 @@ Wand::Wand()
     :
     Device( WAND ),
     cursorLen( 1.0 ),
-    translationStepSize( 0.75 ),
+    translationStepSize( 0.15 ),
     rotationStepSize( 1.0 ),
     rotationFlag( 1 ),
     m_distance( 1000 ),
@@ -578,18 +579,12 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     else if( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
               buttonData[ 2 ] == gadget::Digital::ON )
     {
-        double* tempWandDir = GetDirection();
-        vprDEBUG( vesDBG, 3 ) << "|\tWand direction :"
-            << tempWandDir[ 0 ] << " : "
-            << tempWandDir[ 1 ] << " : " << tempWandDir[ 2 ]
-            << std::endl << vprDEBUG_FLUSH;
-
         m_buttonPushed = true;
         for( int i = 0; i < 3; ++i )
         {
             //Update the translation movement for the objects
             //How much object should move
-            m_worldTrans[ i ] += tempWandDir[ i ] * translationStepSize;
+            m_worldTrans[ i ] += m_dir[ i ] * translationStepSize;
         }
     }
     //Reset back to 0, 0, 0
@@ -640,7 +635,8 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         m_worldQuat *= m_rotIncrement;
 
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
+        Device::EnsureCameraStaysAboveGround( vjHeadMat, m_worldTrans, 
+            m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
 
         activeDCS->SetTranslationArray( m_worldTrans );
         activeDCS->SetQuat( m_worldQuat );
@@ -845,14 +841,14 @@ void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
     const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
     const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
 
-    //gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
-    //gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
-    //    gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+    gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+    gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
 
     ///Transform from juggler space to world space
     vrjWandMat = 
         ves::xplorer::scenegraph::SceneManager::instance()->
-        GetInvertedNavMatrix() * myMat * vrjWandMat;
+        GetInvertedNavMatrix() * myMat * vrjWandMat * zUpMatrix;
     
     const osg::Matrixd tempOsgMatrix( vrjWandMat.getData() );
     m_wandPAT->setMatrix( tempOsgMatrix );
@@ -956,12 +952,11 @@ void Wand::UpdateObjectHandler()
 void Wand::SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
     double* wandPosition = GetObjLocation();
-    double* wandDirection = GetDirection();
     double wandEndPoint[ 3 ];
 
     for( int i = 0; i < 3; ++i )
     {
-        wandEndPoint[ i ] = ( wandDirection [ i ] * m_distance );
+        wandEndPoint[ i ] = ( m_dir[ i ] * m_distance );
     }
 
     startPoint.set( wandPosition[ 0 ], wandPosition[ 1 ], wandPosition[ 2 ] );
@@ -1015,9 +1010,9 @@ void Wand::UpdateWandLocalDirection()
     gmtl::normalize( vjVec );
 
     //Transform from juggler to osg...
-    dir[0] =  vjVec[ 0 ];
-    dir[1] = -vjVec[ 2 ];
-    dir[2] =  vjVec[ 1 ];
+    m_dir[0] =  vjVec[ 0 ];
+    m_dir[1] = -vjVec[ 2 ];
+    m_dir[2] =  vjVec[ 1 ];
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateWandGlobalLocation()
@@ -1043,11 +1038,6 @@ void Wand::UpdateWandGlobalLocation()
 double* Wand::GetObjLocation()
 {
     return objLoc;
-}
-////////////////////////////////////////////////////////////////////////////////
-double* Wand::GetDirection()
-{
-    return dir;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void Wand::UpdateDeltaWandPosition()
@@ -1169,11 +1159,9 @@ void Wand::MakeWandLine()
     {
         return;
     }
-    ///The beam is drawn in y up land because we put a transform above it to
-    ///transform the data coming from the and into z up land therefore the
-    ///drawn data needs to be in the same coordinate space as the wand.
+
     osg::Vec3 start( 0.0, 0.0, 0.0 );
-    osg::Vec3 end( 0.0, 0.0, -m_distance );
+    osg::Vec3 end( 0.0, m_distance, 0. );
 
     osg::ref_ptr< osg::Geode > beamGeode = new osg::Geode();
     beamGeode->setName( "Wand Beam Geode" );
@@ -1455,19 +1443,17 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
     
     if( event == gadget::DigitalState::TOGGLE_ON ||
        event == gadget::DigitalState::ON )
-    {
-        double* tempWandDir = GetDirection();
-        vprDEBUG( vesDBG, 3 ) << "|\tWand direction :"
-        << tempWandDir[ 0 ] << " : "
-        << tempWandDir[ 1 ] << " : " << tempWandDir[ 2 ]
-        << std::endl << vprDEBUG_FLUSH;
-        
+    {        
+        gmtl::Vec3d wandDirVec;
+        wandDirVec.set( 0.0f, 0.0f, -1.0f );        
+        gmtl::xform( wandDirVec, gmtl::convertTo< double >( m_wand->getData() ), wandDirVec );
+        gmtl::normalize( wandDirVec );
         m_buttonPushed = true;
         for( int i = 0; i < 3; ++i )
         {
             //Update the translation movement for the objects
             //How much object should move
-            m_worldTrans[ i ] += tempWandDir[ i ] * translationStepSize;
+            m_worldTrans[ i ] = m_worldTrans[ i ] + (wandDirVec[ i ] * translationStepSize);
         }
     }
     //Reset back to 0, 0, 0
@@ -1838,7 +1824,7 @@ void Wand::PostProcessNav()
         {
             m_worldTrans[ i ] = -m_worldTrans[ i ];
         }
-        
+
         m_worldQuat *= m_rotIncrement;
         
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );

@@ -54,6 +54,8 @@
 #include <osg/ComputeBoundsVisitor>
 #include <osg/BoundingBox>
 
+#include <osgwMx/MxUtils.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/AxisAngle.h>
 #include <gmtl/Generate.h>
@@ -79,7 +81,6 @@ FrameAll::~FrameAll()
 ////////////////////////////////////////////////////////////////////////////////
 void FrameAll::DoFrameAll()
 {
-
     scenegraph::SceneManager& m_sceneManager =
             *( ves::xplorer::scenegraph::SceneManager::instance() );
 
@@ -93,7 +94,35 @@ void FrameAll::DoFrameAll()
         << "|\tRadius " << bb.radius() << std::endl
         << "|\tMin " << bb._min << std::endl
         << "|\tMax " << bb._max << std::endl;
-    
+    //osg::BoundingSphered bs( bb.center(), bb.radius() );
+    osgwMx::MxCore& core = m_sceneManager.GetMxCoreViewMatrix();
+    double mFoVZ = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
+    /*mFoVZ = osg::RadiansToDegrees( mFoVZ );
+    std::cout << mFoVZ << std::endl;
+    double mxdistance = osgwMx::computeInitialDistanceFromFOVY( bs, mFoVZ );
+    std::cout << mxdistance << std::endl;
+    gmtl::Point3d jugglerHeadPoint1 =
+    gmtl::makeTrans< gmtl::Point3d >( m_sceneManager.GetHeadMatrix() );
+
+    //std::cout << endPoint << " " << bb.center() << std::endl;
+    //Set the current switch node's matrix w/ the new "frame all" transform
+    //scenegraph::DCS* activeNavSwitchNode = m_sceneManager.GetActiveNavSwitchNode();
+    mxdistance = -mxdistance + jugglerHeadPoint1.mData[ 1 ];
+    //activeNavSwitchNode->setPosition( osg::Vec3d( 0., 0., mxdistance ) );
+    //gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+    //gmtl::Quatd m_defaultView = gmtl::makeRot< gmtl::Quatd >( gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+    //osg::Quat resetQuat( m_defaultView[ 0 ], m_defaultView[ 1 ], m_defaultView[ 2 ], m_defaultView[ 3 ] );
+    //activeNavSwitchNode->setAttitude( resetQuat );
+    //activeNavSwitchNode->setAttitude( osg::Quat( 0., 0., 0., 1. ) );
+    core.reset();
+    core.setPosition( osg::Vec3d( 0., mxdistance, 0. ) );
+
+    //Get the new center of the bounding sphere in camera space
+    //osg::Vec3d center =
+    //bb.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
+    //m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
+     
+    return;*/
     //Meters to feet conversion
     double m2ft = 3.2808399;
 
@@ -102,16 +131,15 @@ void FrameAll::DoFrameAll()
     {
         //Note: for osg we are in z up land
         gmtl::Point3d jugglerHeadPoint =
-            gmtl::makeTrans< gmtl::Point3d >( m_sceneManager.GetHeadMatrix() );
+        gmtl::makeTrans< gmtl::Point3d >( m_sceneManager.GetHeadMatrix() );
 
         //We have to offset negative m_currX because the
         //view and frustum are drawn for the left eye
         startPoint.set(
-            jugglerHeadPoint.mData[ 0 ] - ( 0.0345 * m2ft ),
+            jugglerHeadPoint.mData[ 0 ],// - ( 0.0345 * m2ft ),
             jugglerHeadPoint.mData[ 1 ],
             jugglerHeadPoint.mData[ 2 ] );
     }
-
 
     // Get the screen corner values from EnvironmentHandler
     ves::xplorer::cfdDisplaySettings* displaySettings =
@@ -132,7 +160,7 @@ void FrameAll::DoFrameAll()
     double mAspectRatio =
             static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
 
-    double mFoVZ = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
+    mFoVZ = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
 
     //Set the end point
     osg::Vec3d endPoint( 0.0, 0.0, 0.0 );
@@ -165,8 +193,8 @@ void FrameAll::DoFrameAll()
         {
             theta *= mAspectRatio;
         }
-        double distance;
-        distance = ( bb.radius() / tan( theta ) );
+        //double distance;
+        double distance = ( bb.radius() / tan( theta ) );
 
         //Now we can get our center frustum vector
         osg::Vec3d vecNear = centerPosition - startPoint;
@@ -179,11 +207,17 @@ void FrameAll::DoFrameAll()
             distance,
             startPoint.z() + ( vecNear.z() * ratio ) );
     }
-
     //Set the current switch node's matrix w/ the new "frame all" transform
     scenegraph::DCS* activeNavSwitchNode = m_sceneManager.GetActiveNavSwitchNode();
-    activeNavSwitchNode->setPosition( endPoint - bb.center() );
-    activeNavSwitchNode->setAttitude( osg::Quat( 0.0, 0.0, 0.0, 1.0 ) );
+    osg::Vec3d tempPoint = bb.center() - endPoint;
+    //activeNavSwitchNode->setPosition( osg::Vec3d( tempPoint[ 0 ], tempPoint[ 2 ], -tempPoint[ 1 ] ) );
+    gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+    gmtl::Quatd m_defaultView = gmtl::makeRot< gmtl::Quatd >( gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+    osg::Quat resetQuat( m_defaultView[ 0 ], m_defaultView[ 1 ], m_defaultView[ 2 ], m_defaultView[ 3 ] );
+    //activeNavSwitchNode->setAttitude( resetQuat );
+    //activeNavSwitchNode->setAttitude( osg::Quat( 0., 0., 0., 1. ) );
+    core.reset();
+    core.setPosition( tempPoint );
 
     //Get the new center of the bounding sphere in camera space
     osg::Vec3d center =

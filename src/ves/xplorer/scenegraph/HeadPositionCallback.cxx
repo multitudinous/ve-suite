@@ -74,25 +74,18 @@ HeadPositionCallback::HeadPositionCallback( const HeadPositionCallback& ctc, con
 void HeadPositionCallback::operator()(
     osg::Node* node, osg::NodeVisitor* nv )
 {
-    //Do work to place texture 
-    gmtl::Point3d jugglerHeadPoint =
-        gmtl::makeTrans< gmtl::Point3d >( vxs::SceneManager::instance()->GetHeadMatrix() );
     gmtl::Point3d startPoint;
-    startPoint.set(
-                   jugglerHeadPoint.mData[ 0 ] - 3.5f,
-                   jugglerHeadPoint.mData[ 1 ] + 9.0f,
-                   jugglerHeadPoint.mData[ 2 ] + 0.0f);
-    
+    startPoint.set( -3.5f, 9.0f, 0.0f);
+
     gmtl::Matrix44d worldMat = 
-        vxs::SceneManager::instance()->GetInvertedNavMatrix();
-    
+        vxs::SceneManager::instance()->GetGlobalViewMatrix();
     startPoint = worldMat * startPoint;
+
     gmtl::Quatd invertedQuat = gmtl::makeRot< gmtl::Quatd >( worldMat );
     osg::Quat quat;
     quat.set( invertedQuat.mData[ 0 ], invertedQuat.mData[ 1 ],
              invertedQuat.mData[2],invertedQuat.mData[ 3 ]);
-    //We have to offset negative mX because the
-    //view and frustum are drawn for the left eye
+
     static_cast< osg::PositionAttitudeTransform* >( node )->setPosition(
         osg::Vec3d( startPoint.mData[ 0 ], startPoint.mData[ 1 ], startPoint.mData[ 2 ] ) );
 

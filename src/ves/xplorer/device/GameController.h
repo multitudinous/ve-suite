@@ -63,6 +63,8 @@ class InputArea;
 namespace osgwMx
 {
 class MxGamePad;
+class FunctionalMap;
+class MxCore;
 }
 
 // --- OSG Includes --- //
@@ -204,7 +206,12 @@ private:
     float m_rightStickX;
     float m_rightStickY;
     
+    ///Button enum container
     unsigned int m_buttons;
+    ///Hold the mapping from buttons to functions
+    osg::ref_ptr< osgwMx::FunctionalMap > m_buttonMap;
+    ///MxCore pointer
+    osgwMx::MxCore& m_viewMatrix;
 };
 
 } //end device

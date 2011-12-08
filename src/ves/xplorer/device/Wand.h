@@ -135,11 +135,6 @@ public:
     ///Performs translation through scene
     void TranslateObject();
 
-    //osg::MatrixTransform* getMatrixTransform( void );
-
-    ///Get the current direction of the wand
-    double* GetDirection();
-
     ///Get the current object location
     double* GetObjLocation();
 
@@ -250,7 +245,7 @@ private:
 
     gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
 
-    double dir[ 3 ]; ///<Direction of the wand
+    double m_dir[ 3 ]; ///<Direction of the wand
     double worldLoc[ 3 ]; ///<Location of the objects with respect to the virtual space
     double cursorLoc[ 3 ]; ///<Location of the cursor with respect to the virtual space
     double objLoc[ 3 ]; ///<Location with respect to data set (the actual location to interact with data

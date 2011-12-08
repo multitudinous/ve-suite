@@ -348,14 +348,14 @@ void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, do
     
 	if( m_subzeroFlag )
     {
-        if( worldTranslation[ 2 ] > 0 )
+        if( worldTranslation[ 1 ] > 0 )
         {
-            worldTranslation[ 2 ] = 0;
+            worldTranslation[ 1 ] = 0;
         }
     }
 	if( m_zEqualsZeroFlag )
 	{
-            worldTranslation[ 2 ] = 0;
+            worldTranslation[ 1 ] = 0;
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////

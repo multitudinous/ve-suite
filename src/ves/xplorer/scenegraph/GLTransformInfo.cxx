@@ -352,21 +352,21 @@ void GLTransformInfo::UpdateViewMatrix(
     gmtl::Matrix44d const& cameraMatrix )
 {
     m_vrjViewMatrix = vrjViewMatrix;
-    m_vrjViewMatrixOSG.set( m_vrjViewMatrix.mData );
+    m_vrjViewMatrixOSG.set( m_vrjViewMatrix.getData() );
     m_cameraMatrix = cameraMatrix;
-    m_cameraMatrixOSG.set( m_cameraMatrix.mData );
+    m_cameraMatrixOSG.set( m_cameraMatrix.getData() );
     m_viewMatrix = m_vrjViewMatrix * m_cameraMatrix;
-    m_viewMatrixOSG.set( m_viewMatrix.mData );
+    m_viewMatrixOSG.set( m_viewMatrix.getData() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  GLTransformInfo::UpdateCenterViewMatrix(
     gmtl::Matrix44d const& vrjViewMatrix )
 {
     m_vrjCenterViewMatrix = vrjViewMatrix;
-    m_vrjCenterViewMatrixOSG.set( m_vrjCenterViewMatrix.mData );
+    m_vrjCenterViewMatrixOSG.set( m_vrjCenterViewMatrix.getData() );
 
     m_centerViewMatrix = m_vrjCenterViewMatrix * m_cameraMatrix;
-    m_centerViewMatrixOSG.set( m_centerViewMatrix.mData );
+    m_centerViewMatrixOSG.set( m_centerViewMatrix.getData() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLTransformInfo::UpdateViewportValues(
@@ -419,7 +419,7 @@ void GLTransformInfo::UpdateProjectionMatrix()
         ( -2.0 * m_farFrustum * m_nearFrustum ) /
                ( m_farFrustum - m_nearFrustum );
 
-    m_projectionMatrixOSG.set( m_projectionMatrix.mData );
+    m_projectionMatrixOSG.set( m_projectionMatrix.getData() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GLTransformInfo::UpdateWindowMatrix()
@@ -429,9 +429,9 @@ void GLTransformInfo::UpdateWindowMatrix()
     m_windowMatrix.mData[ 12 ] = m_windowMatrix.mData[ 0 ] + m_viewportOriginX;
     m_windowMatrix.mData[ 13 ] = m_windowMatrix.mData[ 5 ] + m_viewportOriginY;
 
-    m_windowMatrixOSG.set( m_windowMatrix.mData );
+    m_windowMatrixOSG.set( m_windowMatrix.getData() );
 
     gmtl::invert( m_invertedWindowMatrix, m_windowMatrix );
-    m_invertedWindowMatrixOSG.set( m_invertedWindowMatrix.mData );
+    m_invertedWindowMatrixOSG.set( m_invertedWindowMatrix.getData() );
 }
 ////////////////////////////////////////////////////////////////////////////////
