@@ -56,7 +56,7 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 #include <gadget/Event/DigitalEventInterface.h>
-#include <gadget/Event/DigitalMultiClickEventInterface.h>
+#include <gadget/Event/DigitalClickEventInterface.h>
 #include <gadget/Event/EventPtr.h>
 
 // --- OSG Includes --- //
@@ -209,7 +209,7 @@ private:
     void OnWandButton5Event( gadget::DigitalState::State event );
 
     /// Interface to receive double-click events from gadgeteer
-    typedef gadget::DigitalMultiClickEventInterface< 2,
+    typedef gadget::DigitalClickEventInterface< 2,
         gadget::event::all_events_tag,
         gadget::event::immediate_tag > WandDoubleClickInterface;
     WandDoubleClickInterface m_wandButton0DoubleClickEventInterface;

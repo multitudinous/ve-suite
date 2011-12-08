@@ -113,27 +113,27 @@ Wand::Wand()
     // Connect to Juggler's new event handling interface
     m_wandButton0DoubleClickEventInterface.setClickTime(300);
     m_wandButton0DoubleClickEventInterface.init("VJButton0");
-    m_wandButton0DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton0DoubleClick, this, _1));
+    m_wandButton0DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton0DoubleClick, this, _1));
     
     m_wandButton1DoubleClickEventInterface.setClickTime(300);
     m_wandButton1DoubleClickEventInterface.init("VJButton1");
-    m_wandButton1DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton1DoubleClick, this, _1));
+    m_wandButton1DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton1DoubleClick, this, _1));
 
     m_wandButton2DoubleClickEventInterface.setClickTime(300);
     m_wandButton2DoubleClickEventInterface.init("VJButton2");
-    m_wandButton2DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton2DoubleClick, this, _1));
+    m_wandButton2DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton2DoubleClick, this, _1));
 
     m_wandButton3DoubleClickEventInterface.setClickTime(300);
     m_wandButton3DoubleClickEventInterface.init("VJButton3");
-    m_wandButton3DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton3DoubleClick, this, _1));
+    m_wandButton3DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton3DoubleClick, this, _1));
 
     m_wandButton4DoubleClickEventInterface.setClickTime(300);
     m_wandButton4DoubleClickEventInterface.init("VJButton4");
-    m_wandButton4DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton4DoubleClick, this, _1));
+    m_wandButton4DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton4DoubleClick, this, _1));
 
     m_wandButton5DoubleClickEventInterface.setClickTime(300);
     m_wandButton5DoubleClickEventInterface.init("VJButton5");
-    m_wandButton5DoubleClickEventInterface.addCallback(boost::bind(&Wand::OnWandButton5DoubleClick, this, _1));
+    m_wandButton5DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton5DoubleClick, this, _1));
 
     
     m_wandButton0EventInterface.init("VJButton0");

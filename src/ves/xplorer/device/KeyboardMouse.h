@@ -54,7 +54,7 @@
 #include <gadget/Type/PositionInterface.h>
 
 #include <gadget/Event/KeyboardMouseEventInterface.h>
-#include <gadget/Event/MouseMultiClickEventInterface.h>
+#include <gadget/Event/MouseClickEventInterface.h>
 #include <gadget/Event/MouseClickEventInterface.h>
 #include <gadget/Event/EventPtr.h>
 
