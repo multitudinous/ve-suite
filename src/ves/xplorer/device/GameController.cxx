@@ -352,7 +352,7 @@ void GameController::OnAxis3Event( const float event )
     //x = -normalizeAxisValue( devState.lRz );
     //y = normalizeAxisValue( devState.lZ );
     m_rightStickY = ( ( event - 0.0f ) / 0.5f ) - 1.f;
-    m_rightStickX *= -1.0;
+    m_rightStickY *= -1.0;
 
     bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
