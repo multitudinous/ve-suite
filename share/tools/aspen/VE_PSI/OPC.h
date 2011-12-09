@@ -151,7 +151,7 @@ private:
     IOPCServer* m_Server;
     IOPCBrowse* browse;  
     //OPCItemsPtr items;
-    IOPCItemMgt* items;
+    IOPCItemMgt* m_IOPCItemMgt;
     //IOPCGroupPtr group;
     //IOPCGroupsPtr groups;
     //OPCBrowserPtr browser;
@@ -159,6 +159,7 @@ private:
     std::vector< std::string > tempVars;
     std::vector< BSTR > bItemIDs;
     std::ofstream logFile;
+    std::vector< LPWSTR > m_szItemID;
 
     void ParseBranch(  _bstr_t name, std::string prefix );
 

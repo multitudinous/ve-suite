@@ -91,6 +91,9 @@ bool OPC::ConnectToOPCServer()
     
 	// Let's instantiante the IOPCServer interface and get a pointer of it:
 	m_Server = InstantiateServer(OPC_SERVER_NAME);
+    //add a group
+	AddTheGroup(m_Server, m_IOPCItemMgt, hServerGroup);
+
     //m_Server->QueryInterface(&browse);
     //Parse( "" );
 
@@ -208,141 +211,72 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
 {
     logFile.open("log.txt");
     
+    //attach the browser to the server
     m_Server->QueryInterface(&browse);
+
+    //Parse through all the available items
     Parse( "" );
 
-/*    //Get a list of the available OPC variables for a given unit op
-    browser = m_server->CreateBrowser();
-    browser->AccessRights = OPCWritable | OPCReadable;
-    browser.AddRef();
+    //define local variales
+    OPCITEMRESULT *pResults = NULL;
+    HRESULT *pErrors = NULL;
+    int count = varsAndVals.size();
     
-    //Get the items from the first level
-    //hierarchical
-    //browser->ShowLeafs(false);
-    browser->ShowLeafs(true);
-    long leafCount = browser->GetCount();
-    if( leafCount > 0 )
-    {
-        //std::vector< std::string > tempVars;
-                    logFile<< "leafcount getallvar:"<<leafCount << std::endl;
-        for( long i = 1; i <= leafCount; i++ )
-        {
-            _bstr_t itemName = browser->Item( i );
-            std::string temp = itemName;
-
-            //if( temp.find( modname ) != std::string::npos )
-            {
-                //for some reason the values from the "time slot" from the softing ex
-                //do not work
-                //if( temp.find("time slot") == std::string::npos )
-                {
-                    logFile<< i<<":"<<temp << std::endl;
-                    tempVars.push_back( temp );
-                }
-                //bItemIDs.push_back( browser->GetItemID( itemName ) );
-            }
-        }
+    //create the required OPCITEMDEF array
+    OPCITEMDEF *pItemArray = (OPCITEMDEF *) CoTaskMemAlloc ( count * sizeof (OPCITEMDEF) );
+    for( int i = 0; i < count; i++ )
+    {        
+        pItemArray [i].szAccessPath = NULL;
+        pItemArray [i].szItemID = m_szItemID[i];//pBrowseElements[i].szItemID;
+        pItemArray [i].bActive = true;//pItem->IsActive ();
+        pItemArray [i].hClient = 1; //we need a better client id
+        pItemArray [i].dwBlobSize = 0;
+        pItemArray [i].pBlob = NULL;
+        pItemArray [i].vtRequestedDataType = VT_BSTR;//pItem->GetDataType ();
     }
 
-    //recurse through the other branches
-    browser->ShowBranches();
-    long branchCount = browser->GetCount();
-    
-                    logFile<<"branchcount getallvar:"<< branchCount << std::endl;
-    if( branchCount > 0 )
-    {
-        //std::vector< std::string > tempVars;
-        for( long i = 1; i <= branchCount; i++ )
-        {
-            _bstr_t itemName = browser->Item( i );
-            //browser->MoveTo( itemName );
-            //browser->MoveDown( itemName );
-            //std::string temp = itemName;
-            ParseBranch( itemName, "" );
-            browser->MoveUp();
-            browser->ShowBranches();
-        }
-    }
-    
-                    logFile<< "final tempvar size:"<<tempVars.size() << std::endl;
-    //this call is necessary to correctly obtain the itemIDs using the path
-    //"The server converts the name to an ItemID based on the current
-    //"position" of the browser. It will not correctly translate a name if
-    //MoveUp, MoveDown, etc. has been called since the name was obtained."
-    browser->MoveToRoot();
-
-    itemIDs = new CComSafeArray<BSTR>( tempVars.size() + 1 );
-    clientID = new CComSafeArray<long>( tempVars.size() + 1 );
-    serverID = new CComSafeArray<long>( );
-    serverID->Create();
-    CComSafeArray<long> * errors;
-    errors = new CComSafeArray<long>();
-    errors->Create();
-    
-                    logFile<< "itemIds" << std::endl;
-    //base 1 for safearray
-    for( long i = 0; i < tempVars.size(); i++)
-    {
-            //add all the new variables to the itemIDs for reading values
-        BSTR tempId = browser->GetItemID( tempVars[i].c_str() );
+    //add that array of items to the group
+    m_IOPCItemMgt->AddItems( count, pItemArray, &pResults, &pErrors );
         
-                    logFile<< _bstr_t(tempId) << std::endl;
-            itemIDs->SetAt( i + 1, tempId );//bItemIDs[i] );
-            //itemIDs->SetAt( i + 1, browser->GetItemID( tempVars[i].c_str() ) );//bItemIDs[i] );
-            clientID->SetAt( i + 1, i + 1 );
-    }
-
-    //HRESULT hr = items->AddItems(opcVariables.size(), itemIDs->GetSafeArrayPtr(),
-    //    clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
-    //    errors->GetSafeArrayPtr());
-    HRESULT hr = items->AddItems( tempVars.size(), itemIDs->GetSafeArrayPtr(),
-        clientID->GetSafeArrayPtr(), serverID->GetSafeArrayPtr(),
-        errors->GetSafeArrayPtr());
-
-                    logFile<< "add items completed" << std::endl;
-
-    CComSafeArray<VARIANT> * values;
-    values = new CComSafeArray<VARIANT>();
-    values->Create();
-
-    VARIANT quality;
-    VariantInit(&quality);
-
-    VARIANT timestamp;
-    VariantInit(&timestamp);
-
-    long count = serverID->GetUpperBound();
-    //This function reads the value, quality and timestamp information for one
-    //or more items in a group.
-    group->SyncRead( OPCDataSource::OPCDevice, count, serverID->GetSafeArrayPtr(),
-        values->GetSafeArrayPtr(), errors->GetSafeArrayPtr(), &quality, &timestamp );
-    
-    logFile<< "sync read completed" << std::endl;
-    logFile.close();
-    std::vector< std::pair< std::string, std::string > > varsAndVals;
-    for( int i = 1; i <= count; i++)
+    //create an array of the server's id for the items
+    OPCHANDLE *hServerItem = (OPCHANDLE *) CoTaskMemAlloc ( count * sizeof (OPCHANDLE) );
+    for( int i = 0; i < count; i++ )
     {
-        VARTYPE myVT = values->GetAt(i).vt;
-        //the current implementation doesn't handle arrays properly
-        if( myVT <= VT_ARRAY &&
-            myVT != VT_EMPTY )
-        {
-            values->GetAt(i).ChangeType(VT_BSTR);
-            std::pair< std::string, std::string > varAndVal;
-            std::string temp = _bstr_t( itemIDs->GetAt(i) );
+        hServerItem[i] = pResults[i].hServer;
+    }
+    
+	//get a pointer to the IOPCSyncIOInterface:
+	OPCITEMSTATE* pValue = NULL;
+	IOPCSyncIO* pIOPCSyncIO;
+	m_IOPCItemMgt->QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
 
-            //remove everything but the variable ie remove the unit name
-            //everything before the "."
-            //varAndVal.first = temp.substr( temp.find(".") + 1, temp.size() - temp.find(".") + 1 );
-
-            varAndVal.first = temp;
-            varAndVal.second = _bstr_t( values->GetAt(i).bstrVal );
-            varsAndVals.push_back( varAndVal );
-        }
+	// read the item value from the device:
+	//HRESULT* pErrors = NULL; //to store error code(s)
+    //device - slower but more up to date
+	HRESULT hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, varsAndVals.size(), hServerItem, &pValue, &pErrors);
+    //cache - faster but older data
+	//HRESULT hr = pIOPCSyncIO->Read(OPC_DS_CACHE, varsAndVals.size(), hServerItem, &pValue, &pErrors);
+	
+    //Error handling
+    _ASSERT(!hr);
+	_ASSERT(pValue!=NULL);
+    
+    //loop through all the values and add them to the data to be sent to VES
+    for( int i = 0; i < varsAndVals.size(); i++ )
+    {
+        varsAndVals[i].second = _bstr_t(pValue[i].vDataValue);
     }
 
-    items->Remove( count, serverID->GetSafeArrayPtr(), errors->GetSafeArrayPtr());
-    */
+	//Release memeory allocated by the OPC server:
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+
+	CoTaskMemFree(pValue);
+	pValue = NULL;
+
+	// release the reference to the IOPCSyncIO interface:
+	pIOPCSyncIO->Release();
+    
     //append the flowsheet name
     ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
     varsAndValues->SetCommandName("AllOPCData");
@@ -904,11 +838,16 @@ void OPC::ReadItem(IUnknown* pGroupIUnknown, OPCHANDLE hServerItem, VARIANT& var
 
 	// read the item value from the device:
 	HRESULT* pErrors = NULL; //to store error code(s)
-	HRESULT hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, 1, &hServerItem, &pValue, &pErrors);
+	HRESULT hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, varsAndVals.size(), &hServerItem, &pValue, &pErrors);
 	_ASSERT(!hr);
 	_ASSERT(pValue!=NULL);
 
-	varValue = pValue[0].vDataValue;
+	//varValue = pValue[0].vDataValue;
+
+    for( int i = 0; i < varsAndVals.size(); i++ )
+    {
+        varsAndVals[i].second = _bstr_t(pValue[i].vDataValue);
+    }
 
 	//Release memeory allocated by the OPC server:
 	CoTaskMemFree(pErrors);
@@ -956,7 +895,10 @@ void OPC::RemoveGroup (IOPCServer* pIOPCServer, OPCHANDLE hServerGroup)
 
 void OPC::Parse( std::string name )
 {
-        LPWSTR pszContinuationPoint = NULL; 
+    OPCHANDLE hServerGroup;
+        
+    //read the available vars
+    LPWSTR pszContinuationPoint = NULL; 
     OPCBROWSEELEMENT *pBrowseElements = NULL;  
     long moreElements = 0; 
     //BOOL moreElements = false; 
@@ -969,7 +911,7 @@ void OPC::Parse( std::string name )
 			, CA2W("") // [in, string] LPWSTR szElementNameFilter 
 			, CA2W("") //[in, string] LPWSTR szVendorFilter 
 			, TRUE //[in] BOOL bReturnAllProperties 
-			, FALSE //[in] BOOL bReturnPropertyValues 
+			, TRUE //[in] BOOL bReturnPropertyValues 
 			, 1 //[in] DWORD dwPropertyCount 
 			, &pdwPropertyIDs //[in, size_is(dwPropertyCount)] DWORD * pdwPropertyIDs 
 			, &moreElements //[out] BOOL * pbMoreElements 
@@ -995,8 +937,11 @@ void OPC::Parse( std::string name )
                 {
                     std::pair< std::string, std::string > varAndVal;
                     varAndVal.first = temp;
-                    varAndVal.second = "0";
+                    //VARIANT value = pBrowseElements[i].ItemProperties.pItemProperties[1].vValue;
+                    //varAndVal.second = _bstr_t( value.bstrVal );
+                    varAndVal.second = "missing";
                     varsAndVals.push_back( varAndVal );
+                    m_szItemID.push_back(pBrowseElements[i].szItemID);
                 }
             } 
             
@@ -1016,4 +961,76 @@ void OPC::Parse( std::string name )
 		} 
         output.close();
     }
+        
+  /*  // Don't bother if memory allocation failed:
+                if (pItemArray != NULL)
+                        {
+                        // Fill the item definition array:
+                        for (dwIndex = 0; dwIndex < dwCount; dwIndex++)
+                                {
+                                // Get pointer to item in input array:
+                                pItem = (CKItem *) cItemList [dwIndex];
+                                ASSERT (pItem != NULL);
+
+                                // COM requires that all string be in wide character format.  The
+                                // access path and Item ID properties are strings, so we may have
+                                // to convert their format.
+
+                                // First get the length of access path string:
+                                dwLen = lstrlen (pItem->GetAccessPath ());
+
+                                if (dwLen)
+                                        {
+                                        // Allocate memory for string:
+                                        pItemArray [dwIndex].szAccessPath = (WCHAR *) CoTaskMemAlloc ((dwLen + 1) * sizeof (WCHAR));
+
+#ifdef _UNICODE
+                                        // If Unicode build, string will already be in wide character
+                                        // format, so copy into allocated memory as is:
+                                        lstrcpyn (pItemArray [dwIndex].szAccessPath,  pItem->GetAccessPath (), dwLen + 1);
+#else
+                                        // If ANSI build, then string format needs to be converted.  Place
+                                        // result of conversion into allocated memory:
+                                        MultiByteToWideChar (CP_ACP, 0, pItem->GetAccessPath (), -1, pItemArray [dwIndex].szAccessPath, dwLen + 1);
+#endif
+                                        }
+                                else
+                                        {
+                                        // Access path string length is zero, so set output to NULL:
+                                        pItemArray [dwIndex].szAccessPath = NULL;
+                                        }
+
+                                // Multibyte to wide character conversion for Item ID:
+                                dwLen = lstrlen (pItem->GetItemID ()); // This can't be zero, so no test as above
+                                pItemArray [dwIndex].szItemID = (WCHAR *) CoTaskMemAlloc ((dwLen + 1) * sizeof (WCHAR));
+
+#ifdef _UNICODE
+                                lstrcpyn (pItemArray [dwIndex].szItemID, pItem->GetItemID (), dwLen + 1);
+#else
+                                MultiByteToWideChar (CP_ACP, 0, pItem->GetItemID (), -1, pItemArray [dwIndex].szItemID, dwLen + 1);
+#endif
+
+                                // Set remaining structure members:
+                                // (If requested data type is NULL, the OPC Server should return
+                                // the default type.  The returned canonical data type may not be
+                                // the same as the requested data type.)
+                                pItemArray [dwIndex].bActive = pItem->IsActive ();      // active state
+                                pItemArray [dwIndex].hClient = (OPCHANDLE) pItem;       // our handle to item
+                                pItemArray [dwIndex].dwBlobSize = 0;                            // no blob support
+                                pItemArray [dwIndex].pBlob = NULL;
+                                pItemArray [dwIndex].vtRequestedDataType = pItem->GetDataType (); // Requested data type
+                                }
+*/
+
+//typedef struct {
+//[string] LPWSTR szAccessPath;
+//[string] LPWSTR szItemID;
+//BOOL bActive ;
+//OPCHANDLE hClient;
+//DWORD dwBlobSize;
+//[size_is(dwBlobSize)] BYTE * pBlob;
+//VARTYPE vtRequestedDataType;
+//WORD wReserved;
+//} OPCITEMDEF;
+
 }
