@@ -208,11 +208,11 @@ void Gloves::Initialize()
     float length = 0.8;
 
     /////////
-    osg::ref_ptr< osg::Node > handFile = osgDB::readNodeFile( "handR.ive" );
+    osg::ref_ptr< osg::Node > handFile = osgDB::readNodeFile( "hand.osg" );
     
     if( !handFile.valid() )
     {
-        osg::notify( osg::FATAL ) << "HandNode: Can't load handR.ive. Check osgDB data file search path." << std::endl;
+        osg::notify( osg::FATAL ) << "HandNode: Can't load hand.osg. Check osgDB data file search path." << std::endl;
         //return;
     }
     else
@@ -236,11 +236,11 @@ void Gloves::Initialize()
     /////////
     
     /////////
-    handFile = osgDB::readNodeFile( "handL.ive" );
+    handFile = osgDB::readNodeFile( "hand.osg" );
     
     if( !handFile.valid() )
     {
-        osg::notify( osg::FATAL ) << "HandNode: Can't load handL.ive. Check osgDB data file search path." << std::endl;
+        osg::notify( osg::FATAL ) << "HandNode: Can't load hand.osg. Check osgDB data file search path." << std::endl;
         //return;
     }
     else
