@@ -132,9 +132,6 @@ public:
     ///Update the events done by wand
     void UpdateObjectHandler();
 
-    ///Performs translation through scene
-    void TranslateObject();
-
     ///Get the current object location
     double* GetObjLocation();
 
