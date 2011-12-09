@@ -1822,14 +1822,11 @@ void Wand::PostProcessNav()
                                                     osg::Vec3d( tempHeadMatrix[0][3], 
                                                                tempHeadMatrix[1][3], 
                                                                tempHeadMatrix[2][3] ) );
-        m_worldQuat *= m_rotIncrement;
+        //m_worldQuat *= m_rotIncrement;
         
-        gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround( vjHeadMat, m_worldTrans, 
-            m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
-        
-        //m_activeDCS->SetTranslationArray( m_worldTrans );
-        //m_activeDCS->SetQuat( m_worldQuat );
+        //gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
+        //Device::EnsureCameraStaysAboveGround( vjHeadMat, m_worldTrans, 
+        //    m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
     }
     else if( m_characterController.IsEnabled() )
     {
