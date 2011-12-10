@@ -288,13 +288,13 @@ public:
     double GetDeltaFrameTime();
     
     ///Get the shader program to null out glow for textured objects
-    osg::Program* const GetNullGlowTextureProgram();
+    osg::Program* GetNullGlowTextureProgram();
 
     ///Get the shader program to null out glow for textured objects
-    osg::Uniform* const GetNullGlowTextureUniform();
+    osg::Uniform* GetNullGlowTextureUniform();
     
     ///Get the shader program to null out glow for textured objects
-    osg::Program* const GetNullGlowProgram();
+    osg::Program* GetNullGlowProgram();
     
 protected:
     ///Create the model for the logo

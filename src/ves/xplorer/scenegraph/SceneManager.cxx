@@ -802,17 +802,17 @@ double SceneManager::GetDeltaFrameTime()
     return m_deltaTime;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Program* const SceneManager::GetNullGlowTextureProgram()
+osg::Program* SceneManager::GetNullGlowTextureProgram()
 {
     return m_nullGlowTextureProgram.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const SceneManager::GetNullGlowTextureUniform()
+osg::Uniform* SceneManager::GetNullGlowTextureUniform()
 {
     return m_nullGlowTextureUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Program* const SceneManager::GetNullGlowProgram()
+osg::Program* SceneManager::GetNullGlowProgram()
 {
     return m_nullGlowProgram.get();
 }
