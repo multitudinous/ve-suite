@@ -147,19 +147,19 @@ Gloves::Gloves()
     ves::xplorer::DeviceHandler::instance()->GetDeviceGroup()->addChild( mRootNode.get() );
 
     {
-        std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
-        osg::ref_ptr< osg::Shader > fragShader = 
-            osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
-        
-        osg::ref_ptr< osg::Program > program = new osg::Program();
-        program->addShader( fragShader.get() );
-        
         osg::ref_ptr< osg::StateSet > stateset = 
             mRootNode->getOrCreateStateSet();
+
+        osg::ref_ptr< osg::Program > program = 
+            ves::xplorer::scenegraph::SceneManager::instance()->
+            GetNullGlowTextureProgram();
+        
+        stateset->addUniform( 
+            ves::xplorer::scenegraph::SceneManager::instance()->
+            GetNullGlowTextureUniform() );
+        
         stateset->setAttributeAndModes( program.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        
-        stateset->addUniform( new osg::Uniform( "tex", 0 ) );
     }
     
     Initialize();

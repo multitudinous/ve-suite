@@ -138,6 +138,20 @@ SceneManager::SceneManager()
     m_viewMatrix->setInitialValues( 
         osg::Vec3d( 0., 0., 1. ), osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., 0., 0. ) );
     m_viewMatrix->reset();
+    
+    ///Setup some default uniforms so that they are not replicated all over the
+    ///code base
+    ///For models with textures
+    const std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
+    osg::ref_ptr< osg::Shader > fragShader = 
+        osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+    
+    m_nullGlowTextureProgram = new osg::Program();
+    m_nullGlowTextureProgram->addShader( fragShader.get() );
+    
+    m_nullGlowTextureUniform = new osg::Uniform( "tex", 0 );
+    ///For models without textures
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize()
@@ -786,5 +800,20 @@ gmtl::Point3d& SceneManager::GetCenterPoint()
 double SceneManager::GetDeltaFrameTime()
 {
     return m_deltaTime;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Program* const SceneManager::GetNullGlowTextureProgram()
+{
+    return m_nullGlowTextureProgram.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Uniform* const SceneManager::GetNullGlowTextureUniform()
+{
+    return m_nullGlowTextureUniform.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Program* const SceneManager::GetNullGlowProgram()
+{
+    return m_nullGlowProgram.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

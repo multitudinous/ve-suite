@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/viz/OSGStreamlineStage.h>
 #include <ves/xplorer/scenegraph/Geode.h>
 #include <ves/xplorer/Debug.h>
-
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <osg/PositionAttitudeTransform>
 #include <osg/Texture>
@@ -350,14 +350,15 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
         }
 
         {
-            std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
-            osg::ref_ptr< osg::Shader > fragShader = 
-                osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+            ///The uniform tex is bound up when the instances are created for
+            ///the splotch texture
+            osg::ref_ptr< osg::Program > program = 
+                ves::xplorer::scenegraph::SceneManager::instance()->
+                GetNullGlowTextureProgram();
             
-            program->addShader( fragShader.get() );            
+            ss->setAttributeAndModes( program.get(),
+                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         }
-        ss->setAttributeAndModes( program.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
         // Note:
         // We will render the streamline points with depth test on and depth write disabled,

@@ -216,7 +216,7 @@ void TextTexture::CreateTexturedQuad()
     getOrCreateStateSet()->addUniform(
         new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );
     
-    std::string shaderName = osgDB::findDataFile( "opacity-ignore-white.fs" );
+    const std::string shaderName = osgDB::findDataFile( "opacity-ignore-white.fs" );
     osg::ref_ptr< osg::Shader > fragShader = 
         osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
     
@@ -287,9 +287,7 @@ void TextTexture::CreateText()
         drawable_stateset->setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
         drawable_stateset->setNestRenderBins( false );
         
-        //std::string shaderName = osgDB::findDataFile( "opacity.fs" );
-        //std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
-        std::string shaderName = osgDB::findDataFile( "opacity_osgText.fs" );
+        const std::string shaderName = osgDB::findDataFile( "opacity_osgText.fs" );
         osg::ref_ptr< osg::Shader > fragShader = 
         osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
         
@@ -352,10 +350,8 @@ void TextTexture::CreateText()
         
         drawable_stateset->setRenderBinDetails( 22, std::string( "DepthSortedBin" ) );
         drawable_stateset->setNestRenderBins( false );
-        
-        //std::string shaderName = osgDB::findDataFile( "opacity.fs" );
-        //std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
-        std::string shaderName = osgDB::findDataFile( "opacity_osgText.fs" );
+
+        const std::string shaderName = osgDB::findDataFile( "opacity_osgText.fs" );
         osg::ref_ptr< osg::Shader > fragShader = 
         osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
         

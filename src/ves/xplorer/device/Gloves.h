@@ -268,7 +268,6 @@ private:
 
     gadget::AnalogInterface      mLeftPinkyMCP;
     gadget::AnalogInterface      mLeftPinkyPIP;
-
 };
 } //end device
 } //end xplorer

@@ -287,6 +287,15 @@ public:
     ///Get the delta frame stamp
     double GetDeltaFrameTime();
     
+    ///Get the shader program to null out glow for textured objects
+    osg::Program* const GetNullGlowTextureProgram();
+
+    ///Get the shader program to null out glow for textured objects
+    osg::Uniform* const GetNullGlowTextureUniform();
+    
+    ///Get the shader program to null out glow for textured objects
+    osg::Program* const GetNullGlowProgram();
+    
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -425,6 +434,13 @@ private:
     ///The MxCore class that is used to control the device controlled
     ///portion of the view matrix
     osg::ref_ptr< osgwMx::MxCore > m_viewMatrix;    
+    
+    ///The null glow program for textured objects
+    osg::ref_ptr< osg::Program > m_nullGlowTextureProgram;    
+    osg::ref_ptr< osg::Uniform > m_nullGlowTextureUniform;    
+
+    ///The null glow program for textured objects
+    osg::ref_ptr< osg::Program > m_nullGlowProgram;    
 };
 } //end scenegraph
 } //end xplorer

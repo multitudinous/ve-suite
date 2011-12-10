@@ -281,17 +281,18 @@ void MinervaManager::AddEarthToScene()
 
     _scene = _body->scene();
 
-    osg::ref_ptr< osg::StateSet > tempStateSet = _scene->getOrCreateStateSet();
+    osg::ref_ptr< osg::StateSet > stateset = _scene->getOrCreateStateSet();
 
-    std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
-    osg::ref_ptr< osg::Shader > fragShader = 
-    osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
+    osg::ref_ptr< osg::Program > program = 
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetNullGlowTextureProgram();
 
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( fragShader.get() );
-
-    tempStateSet->setAttributeAndModes( program.get(),
-    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->addUniform( 
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetNullGlowTextureUniform() );
+    
+    stateset->setAttributeAndModes( program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     osg::ref_ptr<osg::Group> root = 
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
