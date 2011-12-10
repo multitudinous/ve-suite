@@ -211,8 +211,11 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
         mFrameStamp->setFrameNumber( 0 );
         
         ///Setup caching so that textures will be cached across files
+        //enum  	CacheHintOptions {
+        //CACHE_NONE = 0, CACHE_NODES = 1<<0, CACHE_IMAGES = 1<<1, CACHE_HEIGHTFIELDS = 1<<2,
+        //CACHE_ARCHIVES = 1<<3, CACHE_OBJECTS = 1<<4, CACHE_SHADERS = 1<<5, CACHE_ALL }
         osgDB::ReaderWriter::Options* opt = new osgDB::ReaderWriter::Options;
-        opt->setObjectCacheHint( osgDB::ReaderWriter::Options::CACHE_ALL );
+        opt->setObjectCacheHint( osgDB::ReaderWriter::Options::CACHE_IMAGES );
         osgDB::Registry::instance()->setOptions( opt );
     }
 
