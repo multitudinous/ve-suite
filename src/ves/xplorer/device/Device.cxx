@@ -343,6 +343,9 @@ void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, do
         }
     }
     else
+#else
+    boost::ignore_unused_variable_warning( headMatrix );
+    boost::ignore_unused_variable_warning( world_quat );
 #endif
 	//If the GIS rendering engine is on then we do not want to lock to z > 0
     
