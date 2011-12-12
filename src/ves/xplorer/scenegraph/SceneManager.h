@@ -51,6 +51,8 @@
 #include <osg/FrameStamp>
 #include <osg/Matrix>
 
+#include <osgwMx/MxCore.h>
+
 #ifdef VE_SOUND
 #include <osgAudio/Config.h>
 
@@ -73,11 +75,6 @@ class System;
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Point.h>
-
-namespace osgwMx
-{
-class MxCore;
-}
 
 namespace ves
 {

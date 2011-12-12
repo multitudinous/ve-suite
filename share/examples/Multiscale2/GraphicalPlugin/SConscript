@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options osgal_options xerces_options vtk_options GetPlatform tao_options' )
+Import( 'baseEnv ves_pkg osgworks_options buildDir RootDir gmtl_options vrjuggler_options osg_options osgal_options xerces_options vtk_options GetPlatform tao_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'Multiscale2', 'GraphicalPlugin' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -35,6 +35,7 @@ if osgal_options.isAvailable():
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 tao_options.apply( lib_env )
+osgworks_options.apply( lib_env )
 
 lib = ves_pkg.createLoadableModule( 'Multiscale2GraphicalPlugin', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'Multiscale2', 'Plugins', 'GE',host_type ) )  

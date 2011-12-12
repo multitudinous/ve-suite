@@ -7,7 +7,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options poco_options' )
-Import( 'osgal_options xerces_options vtk_options GetPlatform tao_options' )
+Import( 'osgal_options xerces_options vtk_options GetPlatform tao_options osgworks_options' )
 
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'dynamic_vehicle_sim_tool', 'GraphicalPlugin' ) )
 sources = sca_util.getSourcesRecursive( openDir )
@@ -32,6 +32,7 @@ xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 poco_options.apply( lib_env )
 tao_options.apply( lib_env )
+osgworks_options.apply( lib_env )
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
    lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )

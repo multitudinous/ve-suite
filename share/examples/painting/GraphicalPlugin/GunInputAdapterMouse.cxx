@@ -13,7 +13,7 @@
 #include "SoundSystem.h"
 #include "RTTScene.h"
 
-extern SoundSystem g_SoundSystem;
+//extern SoundSystem g_SoundSystem;
 
 // **************************************************************************
 // This will move the mouse cursor / pointer object to the current mouse position

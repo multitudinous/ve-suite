@@ -10,7 +10,7 @@ host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir GetPlatform osgworks_options' )
 Import( 'xerces_options vtk_options gmtl_options vrjuggler_options osg_options osgal_options' )
-Import('ApplyBulletVars bullet_options osgbullet_options')
+Import('ApplyBulletVars bullet_options osgbullet_options osgworks_options')
 
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CoinFunnel', 'CoinFunnelGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
@@ -38,6 +38,7 @@ if osgal_options.isAvailable():
 
 osgbullet_options.apply( lib_env )
 bullet_options.apply( lib_env )
+osgworks_options.apply( lib_env )
 
 if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1

@@ -16,7 +16,7 @@ typedef unsigned long VCAS_LONG;
 #else
 typedef unsigned int VCAS_LONG;
 #endif
-
+/*
 #include <osgAudio/SoundManager.h>
 #include <osgAudio/Source.h>
 #include <osgAudio/Sample.h>
@@ -67,3 +67,4 @@ class SoundSystem
       bool sprayLoaded;
 };
 
+*/
