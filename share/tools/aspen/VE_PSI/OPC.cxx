@@ -85,14 +85,18 @@ OPC::OPC( std::string unitName )
 ///////////////////////////////////////////////////////////////////////////////
 bool OPC::ConnectToOPCServer()
 {   
-	IOPCItemMgt* pIOPCItemMgt = NULL; //pointer to IOPCItemMgt interface
-	OPCHANDLE hServerGroup; // server handle to the group
-	OPCHANDLE hServerItem;  // server handle to the item
+	//IOPCItemMgt* pIOPCItemMgt = NULL; //pointer to IOPCItemMgt interface
+	//OPCHANDLE hServerGroup; // server handle to the group
+	//OPCHANDLE hServerItem;  // server handle to the item
     
-	// Let's instantiante the IOPCServer interface and get a pointer of it:
+	// Instantiante the IOPCServer
 	m_Server = InstantiateServer(OPC_SERVER_NAME);
-    //add a group
-	AddTheGroup(m_Server, m_IOPCItemMgt, hServerGroup);
+    //add a group that contains all branches and leaves
+	AddGroup(m_Server, m_AllItemMgt, m_AllGroup, "All");
+    //add the set group
+	AddGroup(m_Server, m_SetItemMgt, m_SetGroup, "Set");
+    //add the monitor group
+	AddGroup(m_Server, m_MonitorItemMgt, m_MonitorGroup, "Monitor");
 
     //m_Server->QueryInterface(&browse);
     //Parse( "" );
@@ -210,6 +214,9 @@ bool OPC::ConnectToOPCServer()
 std::string OPC::GetAllOPCVariables( const std::string& modname )
 {
     logFile.open("log.txt");
+
+    //clear previous requests
+    m_AllVarsAndVals.clear();
     
     //attach the browser to the server
     m_Server->QueryInterface(&browse);
@@ -220,15 +227,16 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     //define local variales
     OPCITEMRESULT *pResults = NULL;
     HRESULT *pErrors = NULL;
-    int count = varsAndVals.size();
+    int count = m_AllVarsAndVals.size();
     
     //create the required OPCITEMDEF array
     OPCITEMDEF *pItemArray = (OPCITEMDEF *) CoTaskMemAlloc ( count * sizeof (OPCITEMDEF) );
     for( int i = 0; i < count; i++ )
     {        
         pItemArray [i].szAccessPath = NULL;
-        pItemArray [i].szItemID = m_szItemID[i];//pBrowseElements[i].szItemID;
-        pItemArray [i].bActive = true;//pItem->IsActive ();
+        //pItemArray [i].szItemID = CA2W( m_AllVarsAndVals[i].first.c_str() );
+        pItemArray [i].szItemID = m_szItemID[i];
+        pItemArray [i].bActive = true;
         pItemArray [i].hClient = 1; //we need a better client id
         pItemArray [i].dwBlobSize = 0;
         pItemArray [i].pBlob = NULL;
@@ -236,7 +244,7 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     }
 
     //add that array of items to the group
-    m_IOPCItemMgt->AddItems( count, pItemArray, &pResults, &pErrors );
+    m_AllItemMgt->AddItems( count, pItemArray, &pResults, &pErrors );
         
     //create an array of the server's id for the items
     OPCHANDLE *hServerItem = (OPCHANDLE *) CoTaskMemAlloc ( count * sizeof (OPCHANDLE) );
@@ -248,24 +256,27 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
 	//get a pointer to the IOPCSyncIOInterface:
 	OPCITEMSTATE* pValue = NULL;
 	IOPCSyncIO* pIOPCSyncIO;
-	m_IOPCItemMgt->QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
+	m_AllItemMgt->QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
 
 	// read the item value from the device:
 	//HRESULT* pErrors = NULL; //to store error code(s)
     //device - slower but more up to date
-	HRESULT hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, varsAndVals.size(), hServerItem, &pValue, &pErrors);
+	HRESULT hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, count, hServerItem, &pValue, &pErrors);
     //cache - faster but older data
-	//HRESULT hr = pIOPCSyncIO->Read(OPC_DS_CACHE, varsAndVals.size(), hServerItem, &pValue, &pErrors);
+	//HRESULT hr = pIOPCSyncIO->Read(OPC_DS_CACHE, m_AllVarsAndVals.size(), hServerItem, &pValue, &pErrors);
 	
     //Error handling
     _ASSERT(!hr);
 	_ASSERT(pValue!=NULL);
     
     //loop through all the values and add them to the data to be sent to VES
-    for( int i = 0; i < varsAndVals.size(); i++ )
+    for( int i = 0; i < m_AllVarsAndVals.size(); i++ )
     {
-        varsAndVals[i].second = _bstr_t(pValue[i].vDataValue);
+        m_AllVarsAndVals[i].second = _bstr_t(pValue[i].vDataValue);
     }
+
+    //Remove the items
+    m_AllItemMgt->RemoveItems( count, hServerItem, &pErrors );
 
 	//Release memeory allocated by the OPC server:
 	CoTaskMemFree(pErrors);
@@ -282,11 +293,11 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     varsAndValues->SetCommandName("AllOPCData");
     //compose return packet
     //loop over the variables and add as dvps
-    for( int i = 0; i < varsAndVals.size(); i++ )
+    for( int i = 0; i < m_AllVarsAndVals.size(); i++ )
     {
          ves::open::xml::DataValuePairPtr
              entry( new ves::open::xml::DataValuePair() );
-        entry->SetData( varsAndVals[i].first, varsAndVals[i].second );
+        entry->SetData( m_AllVarsAndVals[i].first, m_AllVarsAndVals[i].second );
         varsAndValues->AddDataValuePair( entry );
     }
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
@@ -301,7 +312,7 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     return status;
 }
 ///////////////////////////////////////////////////////////////////////////////
-/*void OPC::AddOPCVariable( const std::string& var )
+void OPC::AddOPCVariable( const std::string& var )
 {
     //std::vector<std::string>::const_iterator pos = 
     //    lower_bound( m_opcVariables.begin(), m_opcVariables.end(), var );
@@ -311,7 +322,24 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     if( !found || m_opcVariables.empty() )
     {
         m_opcVariables.push_back( var );
-        UpdateOPCList();
+        //UpdateOPCList();
+
+        //define local variales
+        OPCITEMRESULT *pResults = NULL;
+        HRESULT *pErrors = NULL;
+        //create the required OPCITEMDEF array
+        //OPCITEMDEF *pItemArray = (OPCITEMDEF *) CoTaskMemAlloc ( sizeof (OPCITEMDEF) );
+        OPCITEMDEF pItemArray;
+        pItemArray.szAccessPath = NULL;
+        pItemArray.szItemID = CA2W( var.c_str() );
+        pItemArray.bActive = true;
+        pItemArray.hClient = 1;
+        pItemArray.dwBlobSize = 0;
+        pItemArray.pBlob = NULL;
+        pItemArray.vtRequestedDataType = VT_BSTR;
+        //add that array of items to the group
+        m_MonitorItemMgt->AddItems( 1, &pItemArray, &pResults, &pErrors );
+        m_MonitorServerItem.push_back( pResults[0].hServer );
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -334,7 +362,7 @@ void OPC::UpdateOPCList( )
     //items.AddRef();
     //items->DefaultIsActive = true;
 
-    itemIDs = new CComSafeArray<BSTR>( m_opcVariables.size() + 1 );
+    /*itemIDs = new CComSafeArray<BSTR>( m_opcVariables.size() + 1 );
     clientID = new CComSafeArray<long>( m_opcVariables.size() + 1 );
     serverID = new CComSafeArray<long>();
     serverID->Create();
@@ -360,15 +388,22 @@ void OPC::UpdateOPCList( )
     }
 
     group->IsSubscribed = true;
-    group->IsActive = true;
+    group->IsActive = true;*/
+
+
+    ///
+    ///put new items to be monitored in list
+    ///
+
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
 //std::map< std::string, std::pair< std::string, VARTYPE > > DynSim::ReadVars()
 {
-    UpdateOPCList();
-
+    /*UpdateOPCList();
+    
     CComSafeArray<VARIANT> * values;
     values = new CComSafeArray<VARIANT>();
     values->Create();
@@ -389,9 +424,9 @@ std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
     group->SyncRead( OPCDataSource::OPCDevice, count, serverID->GetSafeArrayPtr(),
         values->GetSafeArrayPtr(), errors->GetSafeArrayPtr(), &quality, &timestamp );
 
-    //std::vector< std::pair< std::string, std::string > > nameAndValues;
+    //std::vector< std::pair< std::string, std::string > > m_MonitorVarsAndVals;
     //nameValVar.clear();
-    nameAndValues.clear();
+    m_MonitorVarsAndVals.clear();
 
     for( int i = 1; i <= count; i++)
     {
@@ -416,10 +451,55 @@ std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
 
 
         //tempNameValVar.second = tempValVar;
-        nameAndValues.push_back( nameNval );
+        m_MonitorVarsAndVals.push_back( nameNval );
+    }
+    */
+
+    ///
+    ///Read the values being monitored and put them back in the vector
+    ///
+
+    //get a pointer to the IOPCSyncIOInterface:
+	OPCITEMSTATE* pValue = NULL;
+	HRESULT* pErrors = NULL;
+	IOPCSyncIO* pIOPCSyncIO;
+	m_MonitorItemMgt->QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
+
+    
+    //create an array of the server's id for the items
+    int count = m_MonitorServerItem.size();
+    OPCHANDLE *hServerItem = (OPCHANDLE *) CoTaskMemAlloc ( count * sizeof (OPCHANDLE) );
+    for( int i = 0; i < count; i++ )
+    {
+        hServerItem[i] = m_MonitorServerItem[i];
     }
 
-    return nameAndValues;
+	// read the item value from the device:
+	HRESULT hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, m_opcVariables.size(), hServerItem, &pValue, &pErrors);
+    
+    //Error handling
+    _ASSERT(!hr);
+	_ASSERT(pValue!=NULL);
+    
+    m_MonitorVarsAndVals.clear();
+    for( int i = 0; i < m_opcVariables.size(); i++)
+    {
+        std::pair< std::string, std::string > nameNval;
+        nameNval.first = m_opcVariables[i];
+        nameNval.second = _bstr_t(pValue[i].vDataValue);
+        m_MonitorVarsAndVals.push_back( nameNval );
+    }
+
+	//Release memeory allocated by the OPC server:
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+
+	CoTaskMemFree(pValue);
+	pValue = NULL;
+
+	// release the reference to the IOPCSyncIO interface:
+	pIOPCSyncIO->Release();
+    return m_MonitorVarsAndVals;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -437,8 +517,8 @@ std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
     
     std::vector< std::pair <std::string, std::string> >::iterator nameValueIter;
     std::string opcValue = "ERROR";
-    for( nameValueIter = nameAndValues.begin();
-        nameValueIter != nameAndValues.end();
+    for( nameValueIter = m_MonitorVarsAndVals.begin();
+        nameValueIter != m_MonitorVarsAndVals.end();
         ++nameValueIter )
     {
         if( !nameValueIter->first.compare( modnameOPC ) )
@@ -464,7 +544,7 @@ std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     return status;
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////////
 //depending on the end desires for the code this function can be combine with ReadVars()
 std::string OPC::GetOPCValues( )
@@ -476,7 +556,7 @@ std::string OPC::GetOPCValues( )
 
     ReadVars();
 
-    if( nameAndValues.empty() )
+    if( m_MonitorVarsAndVals.empty() )
     {
         return "NULL";
     }
@@ -486,11 +566,11 @@ std::string OPC::GetOPCValues( )
     varAndValues->SetCommandName("OPCData");
 
     //loop over the variables and add as dvps
-    for( int i = 0; i < nameAndValues.size(); i++ )
+    for( int i = 0; i < m_MonitorVarsAndVals.size(); i++ )
     {
          ves::open::xml::DataValuePairPtr
              entry( new ves::open::xml::DataValuePair() );
-        entry->SetData( nameAndValues[i].first, nameAndValues[i].second );
+        entry->SetData( m_MonitorVarsAndVals[i].first, m_MonitorVarsAndVals[i].second );
         varAndValues->AddDataValuePair( entry );
     }
 
@@ -522,7 +602,7 @@ std::string OPC::GetOPCValues( )
 ///////////////////////////////////////////////////////////////////////////////
 void OPC::SetOPCValues( std::vector< std::pair < std::string, std::string > > varAndValues )
 {
-    long count = varAndValues.size();
+    /*long count = varAndValues.size();
 
     browser = m_server->CreateBrowser();
     browser.AddRef();
@@ -647,7 +727,79 @@ void OPC::SetOPCValues( std::vector< std::pair < std::string, std::string > > va
         setGroup->SyncWrite( count, setServerID->GetSafeArrayPtr(),
             values->GetSafeArrayPtr(), errors->GetSafeArrayPtr() );
     }
-    groups->Remove( _T( "SetGroup" ) );
+    groups->Remove( _T( "SetGroup" ) );*/
+
+    ///
+    ///Set the values of the requested variables
+    ///
+    OPCITEMRESULT *pResults = NULL;
+	HRESULT* pErrors = NULL;
+    int count = varAndValues.size();
+    
+    //create the required OPCITEMDEF array
+    OPCITEMDEF *pItemArray = (OPCITEMDEF *) CoTaskMemAlloc ( count * sizeof (OPCITEMDEF) );
+    for( int i = 0; i < count; i++ )
+    {   
+        std::string temp = varAndValues[i].first.substr( varAndValues[i].first.find_first_of(".") + 1, varAndValues[i].first.size() - ( varAndValues[i].first.find_first_of(".")+1 ) );
+        pItemArray [i].szAccessPath = NULL;
+        pItemArray [i].szItemID = CA2W( temp.c_str() );
+        //pItemArray [i].szItemID = m_szItemID[117];
+        pItemArray [i].bActive = true;
+        pItemArray [i].hClient = 1; //we need a better client id
+        pItemArray [i].dwBlobSize = 0;
+        pItemArray [i].pBlob = NULL;
+        pItemArray [i].vtRequestedDataType = VT_BSTR;//pItem->GetDataType ();
+    }
+    
+    //add that array of items to the group
+    m_SetItemMgt->AddItems( count, pItemArray, &pResults, &pErrors );
+
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+            
+    //create an array of the server's id for the items
+    OPCHANDLE *hServerItem = (OPCHANDLE *) CoTaskMemAlloc ( count * sizeof (OPCHANDLE) );
+	VARIANT* pValue = (VARIANT *) CoTaskMemAlloc ( count * sizeof (VARIANT) );
+	//OPCITEMVQT *pValue = (OPCITEMVQT *) CoTaskMemAlloc ( count * sizeof (OPCITEMVQT) );
+    //loop over and create a list of server ids and put the values in a list
+    for( int i = 0; i < count; i++ )
+    {
+        hServerItem[i] = pResults[i].hServer;
+
+        pValue[i].vt = VT_BSTR;
+        pValue[i].bstrVal = _bstr_t( varAndValues[i].second.c_str() );
+
+        //pValue[i].vDataValue.vt = VT_BSTR;
+        //pValue[i].vDataValue.bstrVal = _bstr_t( varAndValues[i].second.c_str() );
+        //pValue[i].bQualitySpecified = false;
+        //pValue[i].bTimeStampSpecified = false;
+    }
+
+	//get a pointer to the IOPCSyncIOInterface:
+	IOPCSyncIO* pIOPCSyncIO;
+	//IOPCSyncIO2* pIOPCSyncIO;
+	m_SetItemMgt->QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
+
+    //DWORD cancelID;
+    
+	//OPCITEMSTATE* pValue = NULL;
+	// write the item value(s)
+	HRESULT hr = pIOPCSyncIO->Write( count, hServerItem, pValue, &pErrors);
+	//HRESULT hr = pIOPCSyncIO->WriteVQT( count, hServerItem, pValue, &pErrors);
+    
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+
+    //Remove the items
+    m_SetItemMgt->RemoveItems( count, hServerItem, &pErrors );
+
+	CoTaskMemFree(pResults);
+	pResults = NULL;
+    
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+
+    return;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -655,7 +807,7 @@ bool OPC::IsOPCVarsEmpty()
 {
     return m_opcVariables.empty();
 }
-
+/*
 void OPC::ParseBranch( _bstr_t name, std::string prefix )
 {
     //browser->MoveTo( name );
@@ -756,14 +908,14 @@ IOPCServer* OPC::InstantiateServer(wchar_t ServerName[])
 // Returns a pointer to the IOPCItemMgt interface of the added group
 // and a server opc handle to the added group.
 //
-void OPC::AddTheGroup(IOPCServer* pIOPCServer, IOPCItemMgt* &pIOPCItemMgt, 
-				 OPCHANDLE& hServerGroup)
+void OPC::AddGroup(IOPCServer* pIOPCServer, IOPCItemMgt* &pIOPCItemMgt, 
+				 OPCHANDLE& hServerGroup, char* name)
 {
 	DWORD dwUpdateRate = 0;
 	OPCHANDLE hClientGroup = 0;
 
 	// Add an OPC group and get a pointer to the IUnknown I/F:
-    HRESULT hr = pIOPCServer->AddGroup(/*szName*/ L"Group",
+    HRESULT hr = pIOPCServer->AddGroup(/*szName*/ CA2W(name),
 		/*bActive*/ FALSE,
 		/*dwRequestedUpdateRate*/ dwUpdateRate,
 		/*hClientGroup*/ hClientGroup,
@@ -784,21 +936,21 @@ void OPC::AddTheGroup(IOPCServer* pIOPCServer, IOPCItemMgt* &pIOPCItemMgt,
 // is pointed by pIOPCItemMgt pointer. Return a server opc handle
 // to the item.
  
-void OPC::AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem)
+/*void OPC::AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem)
 {
 	HRESULT hr;
 
 	// Array of items to add:
 	OPCITEMDEF ItemArray[1] =
 	{{
-	/*szAccessPath*/ L"",
-	/*szItemID*/ ITEM_ID,
-	/*bActive*/ FALSE,
-	/*hClient*/ 1,
-	/*dwBlobSize*/ 0,
-	/*pBlob*/ NULL,
-	/*vtRequestedDataType*/ VT,
-	/*wReserved*/0
+	L"",
+	ITEM_ID,
+	FALSE,
+	1,
+	0,
+	NULL,
+	VT,
+	0
 	}};
 
 	//Add Result:
@@ -817,10 +969,10 @@ void OPC::AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem)
 
 	CoTaskMemFree(pAddResult);
 	pAddResult = NULL;
-
+    
 	CoTaskMemFree(pErrors);
 	pErrors = NULL;
-}
+}*/
 
 ///////////////////////////////////////////////////////////////////////////////
 // Read from device the value of the item having the "hServerItem" server 
@@ -829,6 +981,7 @@ void OPC::AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem)
 //
 void OPC::ReadItem(IUnknown* pGroupIUnknown, OPCHANDLE hServerItem, VARIANT& varValue)
 {
+    /*
 	// value of the item:
 	OPCITEMSTATE* pValue = NULL;
 
@@ -838,15 +991,15 @@ void OPC::ReadItem(IUnknown* pGroupIUnknown, OPCHANDLE hServerItem, VARIANT& var
 
 	// read the item value from the device:
 	HRESULT* pErrors = NULL; //to store error code(s)
-	HRESULT hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, varsAndVals.size(), &hServerItem, &pValue, &pErrors);
+	HRESULT hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, m_AllVarsAndVals.size(), &hServerItem, &pValue, &pErrors);
 	_ASSERT(!hr);
 	_ASSERT(pValue!=NULL);
 
 	//varValue = pValue[0].vDataValue;
 
-    for( int i = 0; i < varsAndVals.size(); i++ )
+    for( int i = 0; i < m_AllVarsAndVals.size(); i++ )
     {
-        varsAndVals[i].second = _bstr_t(pValue[i].vDataValue);
+        m_AllVarsAndVals[i].second = _bstr_t(pValue[i].vDataValue);
     }
 
 	//Release memeory allocated by the OPC server:
@@ -858,6 +1011,7 @@ void OPC::ReadItem(IUnknown* pGroupIUnknown, OPCHANDLE hServerItem, VARIANT& var
 
 	// release the reference to the IOPCSyncIO interface:
 	pIOPCSyncIO->Release();
+    */
 }
 
 
@@ -940,7 +1094,7 @@ void OPC::Parse( std::string name )
                     //VARIANT value = pBrowseElements[i].ItemProperties.pItemProperties[1].vValue;
                     //varAndVal.second = _bstr_t( value.bstrVal );
                     varAndVal.second = "missing";
-                    varsAndVals.push_back( varAndVal );
+                    m_AllVarsAndVals.push_back( varAndVal );
                     m_szItemID.push_back(pBrowseElements[i].szItemID);
                 }
             } 
