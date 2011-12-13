@@ -52,9 +52,7 @@ class ExternalPixelBufferObject;
 
 /*!\file cfdUpdateTextureCallback.h
  * cfdUpdateTextureCallback API
- */
-
-/*!\class ves::xplorer::volume::cfdUpdateTextureCallback
+ * \class ves::xplorer::volume::cfdUpdateTextureCallback
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdUpdateTextureCallback :
@@ -73,7 +71,7 @@ public:
     {
         _subloadMode = mode;
     }
-    inline const SubloadMode getSubloadMode() const
+    inline SubloadMode getSubloadMode() const
     {
         return _subloadMode;
     }
