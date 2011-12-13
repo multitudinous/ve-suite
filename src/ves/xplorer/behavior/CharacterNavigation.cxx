@@ -524,13 +524,14 @@ bool CharacterNavigation::ProcessMouseMove( int xPos, int yPos, int zPos, int bu
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessMouseScroll( int deltaX, int deltaY, int x, int y, int buttonState )
 {
-    boost::ignore_unused_variable_warning( deltaY );
+    boost::ignore_unused_variable_warning( deltaX );
     boost::ignore_unused_variable_warning( x );
     boost::ignore_unused_variable_warning( y );
     boost::ignore_unused_variable_warning( buttonState );
+
     //Scroll wheel up
     //case gadget::MBUTTON4:
-    if( deltaX > 0 )
+    if( deltaY > 0 )
     {
         if( m_characterController.IsEnabled() )
         {
@@ -540,7 +541,7 @@ bool CharacterNavigation::ProcessMouseScroll( int deltaX, int deltaY, int x, int
     }
     //Scroll wheel down
     //if( buttonState&gadget::MBUTTON5 )
-    else if( deltaX < 0 )
+    else if( deltaY < 0 )
     {
         if( m_characterController.IsEnabled() )
         {
