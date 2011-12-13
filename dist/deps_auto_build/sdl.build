@@ -2,8 +2,8 @@ PACKAGE_NAME=SDL
 BASE_DIR="${DEV_BASE_DIR}/SDL-1.3"
 
 SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_FORMAT=zip
-SOURCE_URL=http://www.libsdl.org/tmp/SDL-1.3.zip
+SOURCE_FORMAT=tgz
+SOURCE_URL=http://www.libsdl.org/tmp/SDL-1.3.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
@@ -26,8 +26,10 @@ case $PLATFORM in
     #MSVC_SOLUTION="zlib.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
-  Darwin)
-    ;;
-  Linux)
+  Darwin|Linux)
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     ;;
 esac

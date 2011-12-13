@@ -20,8 +20,11 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --with-boost="${BOOST_INSTALL_DIR}" )
     CONFIGURE_PARAMS+=( --with-boost-includes="${BOOST_INSTALL_DIR}/include" )
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --with-sdl="${SDL_INSTALL_DIR}" )
     export LD_LIBRARY_PATH=${BUILD_DIR}/instlinks/lib64:${LD_LIBRARY_PATH}
     export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${CPPDOM_INSTALL_DIR}/lib64
     export FLAGPOLL_PATH=${FLAGPOLL_PATH}:${GMTL_INSTALL_DIR}/share/flagpoll
+    #export ACLOCAL_FLAGS="-I $FLAGPOLL_INSTALL_DIR/share/aclocal" 
     ;;
 esac
+
