@@ -41,9 +41,6 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 
-#include <gadget/Type/PositionInterface.h>
-//#include <gadget/Type/DigitalInterface.h>
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Version>
@@ -238,9 +235,6 @@ protected:
 
     ///The rotated bbox
     mutable osg::ref_ptr< osg::Vec4Array > _tcoordBBox;
-
-    ///vjPosInterface Head Position from Juggler
-    mutable gadget::PositionInterface head;
 
 };
 } //end volume

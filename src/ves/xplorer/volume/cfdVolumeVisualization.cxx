@@ -667,7 +667,7 @@ void cfdVolumeVisualization::_createTexGenNode()
     }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVolumeVisualization::TranslateCenterBy( float* translate )
+void cfdVolumeVisualization::TranslateCenterBy( float* )
 {
     /*if(_vcCbk.valid())
     {

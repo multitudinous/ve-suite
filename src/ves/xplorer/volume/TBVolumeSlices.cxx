@@ -50,7 +50,6 @@
 #include <iostream>
 
 using namespace gmtl;
-using namespace gadget;
 
 using namespace ves::xplorer::volume;
 
@@ -58,13 +57,12 @@ using namespace ves::xplorer::volume;
 TextureBasedVolumeSlices::TextureBasedVolumeSlices()
     :
     osg::Drawable(),
-    _diagonal( 1.0 ),
-    _center( 0.0, 0.0, 0.0 ),
-    _eyeCenter( 0.0, 0.0, 0.0 ),
+    _sliceRenderMethod( "VIEW_ALIGNED_POLYGON_INTERSECT" ),
     _nSlices( 1 ),
     _sliceDeltaRatio( 1.0 ),
-    //_deltaZ( 1.0 ),
-    _sliceRenderMethod( "VIEW_ALIGNED_POLYGON_INTERSECT" )
+    _diagonal( 1.0 ),
+    _center( 0.0, 0.0, 0.0 ),
+    _eyeCenter( 0.0, 0.0, 0.0 )
 {
     _bbox.init();
     _extremaIndicies[ 0 ] = 0;
@@ -95,6 +93,7 @@ TextureBasedVolumeSlices::TextureBasedVolumeSlices(
     :
     osg::Drawable()
 {
+    numberOfSlices = 0;
     _nSlices = 100;
     _deltaZ[ 0 ] = _deltaZ[1] = 1.0;
     _sliceDeltaRatio = 1.0;
@@ -438,7 +437,6 @@ void TextureBasedVolumeSlices::_calculateEdgeIntersections(
                                   0, 0, 0,
                                   0, 0, 0};
 
-        double* tempCoords = 0;
         double lastVert[3] = {0, 0, 0};
         lastVert[0] = initialSlicePoint.x();
         lastVert[1] = initialSlicePoint.y();
@@ -567,7 +565,7 @@ void TextureBasedVolumeSlices::_calculateVertsAndTextureCoordinates(
 }
 ////////////////////////////////////////////////////////////////////////////////
 double TextureBasedVolumeSlices::_calculateSampleDistance(
-    osg::Matrixd iModelView ) const
+    osg::Matrixd ) const
 {
     /*Patrick O'Leary
        Calculate the the minimum and maximum x-, y- or z-position of the
@@ -600,7 +598,6 @@ void TextureBasedVolumeSlices::_findBBoxMinMaxIndicies(
 {
     //this calculation is done in object coordinates
     double extremes[2] = {0, 0};
-    double poleMultiplier = 200.0;
     osg::Vec3d tempCenter( _center.x(), _center.y(), _center.z() );
     osg::Vec3d pole = tempCenter + slicePlaneNormal * _diagonal;
     osg::Vec4d tempbbPoint = rotatedBBox->at( 0 );
