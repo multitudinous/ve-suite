@@ -207,7 +207,7 @@ unsigned int cfdTextureManager::getNextFrame()
         {
             _curField += _direction;
         }
-        else if( _curField == numFields - 1 )
+        else if( size_t( _curField ) == numFields - 1 )
         {
             //we're at the end so we need to
             //return the beginning
@@ -503,7 +503,7 @@ unsigned char* cfdTextureManager::getNextField()
         {
             _curField += _direction;
         }
-        else if( _curField == numFields - 1 )
+        else if( size_t( _curField ) == numFields - 1 )
         {
             //we're at the end so we need to
             //return the beginning

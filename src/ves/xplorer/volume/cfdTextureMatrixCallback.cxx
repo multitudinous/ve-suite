@@ -47,7 +47,9 @@ using namespace ves::xplorer::volume;
 cfdTextureMatrixCallback::cfdTextureMatrixCallback( osg::TexMat* texmat,
                                                     osg::Vec3f center,
                                                     float* scale, float* trans )
-        : _texMat( texmat ), _center( center )
+    :
+    _center( center ),
+    _texMat( texmat ) 
 {
     _scale[0] = scale[0];
     _scale[1] = scale[1];
@@ -60,7 +62,6 @@ cfdTextureMatrixCallback::cfdTextureMatrixCallback( osg::TexMat* texmat,
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTextureMatrixCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
-    //osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
     if( _texMat.valid() )
     {
         osg::Matrixd scale = osg::Matrixd::scale( _scale[0], _scale[1], _scale[2] );

@@ -117,7 +117,7 @@ void cfdScalarShaderManager::Init()
         _ss->setTextureAttributeAndModes( 0,
                                           new osg::TexEnv( osg::TexEnv::REPLACE ),
                                           osg::StateAttribute::ON );
-        int nTransferFunctions = _transferFunctions.size();
+        //int nTransferFunctions = _transferFunctions.size();
         //for(int i =0; i < nTransferFunctions; i++){
         _ss->setTextureAttributeAndModes( 1, _transferFunctions.at( 0 ).get(),
                                           osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
@@ -230,7 +230,8 @@ void cfdScalarShaderManager::_updateTransferFunction( bool fastUpdate )
     if( !_tf )
     {
         std::cout << "Transfer function not set!" << std::endl;
-        std::cout << "cfdScalarShaderManager::_updateTransferFunction" << std::endl;
+        std::cout << "cfdScalarShaderManager::_updateTransferFunction " 
+            << fastUpdate << std::endl;
         return;
     }
     if( _ss.valid() )

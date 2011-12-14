@@ -174,7 +174,7 @@ void cfdOSGTransferShaderManager::SetTextureMatrix( osg::TexMat* tmat )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdOSGTransferShaderManager::SetPropertyTexture( osg::Texture3D* property )
+void cfdOSGTransferShaderManager::SetPropertyTexture( osg::Texture3D* )
 {
     //_property = property;
 }
@@ -304,11 +304,11 @@ void cfdOSGTransferShaderManager::_createTransferFunction( bool useGamma,
 
     //diagonal is the old 1D transfer function
     //Probably should initialize the offdiagonals better but leaving for now
-    for( unsigned int j = 0; j < 256; ++j )
+    for( size_t j = 0; j < 256; ++j )
     {
         if( useGamma )
         {
-            for( int i = 0; i < 256; ++i )
+            for( size_t i = 0; i < 256; ++i )
             {
                 if( i == j )
                 {
@@ -330,7 +330,7 @@ void cfdOSGTransferShaderManager::_createTransferFunction( bool useGamma,
         }
         else
         {
-            for( int i = 0; i < 256; i++ )
+            for( size_t i = 0; i < 256; ++i )
             {
                 if( i == j )
                 {
@@ -388,11 +388,11 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
             _fieldSize[1] &&
             _fieldSize[2] )
     {
-        unsigned int dataSize = _fieldSize[0] * _fieldSize[1] * _fieldSize[2];
+        //unsigned int dataSize = _fieldSize[0] * _fieldSize[1] * _fieldSize[2];
         //unsigned char* data = new unsigned char[dataSize*4];
-        unsigned int i = 0;
-        unsigned int j = 0;
-        unsigned int k = 0;
+        //unsigned int i = 0;
+        //unsigned int j = 0;
+        //unsigned int k = 0;
 
         osg::ref_ptr<osg::Image> propertyField = new osg::Image();
 

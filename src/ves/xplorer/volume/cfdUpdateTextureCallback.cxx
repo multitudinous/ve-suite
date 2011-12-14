@@ -193,8 +193,6 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
         return;
     }
 
-    double currTime = state.getFrameStamp()->getReferenceTime();
-
     if( !_tm )
     {
         return;

@@ -76,7 +76,7 @@ void cfdSimpleTextureCallback::load( const osg::Texture3D& texture, osg::State& 
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdSimpleTextureCallback::subload( const osg::Texture3D& texture, osg::State& state ) const
+void cfdSimpleTextureCallback::subload( const osg::Texture3D&, osg::State& ) const
 {
     ;
 }
