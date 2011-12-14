@@ -77,7 +77,7 @@ TransferFunction::TransferFunction( const TransferFunction& rhs )
     _classification = new float[_resolution[0]*_resolution[1]*_resolution[2]*4];
     _textureData = new unsigned char[_resolution[0]*_resolution[1]*_resolution[2]*4];
 
-    unsigned int resolution = _resolution[0] * _resolution[1] * _resolution[3];
+    unsigned int resolution = _resolution[0] * _resolution[1] * _resolution[2];
     for( unsigned int i = 0; i < resolution; i++ )
     {
         _classification[i] = rhs._classification[i];
@@ -241,7 +241,7 @@ TransferFunction& TransferFunction::operator=( const TransferFunction& rhs )
         _classification = new float[_resolution[0]*_resolution[1]*_resolution[2]*4];
         _textureData = new unsigned char[_resolution[0]*_resolution[1]*_resolution[2]*4];
 
-        unsigned int resolution = _resolution[0] * _resolution[1] * _resolution[3];
+        unsigned int resolution = _resolution[0] * _resolution[1] * _resolution[2];
         for( unsigned int i = 0; i < resolution; i++ )
         {
             _classification[i] = rhs._classification[i];
