@@ -61,7 +61,8 @@ void CameraImageCaptureCallback::operator()( osg::RenderInfo& ri ) const
         << m_filename << " ... " << std::endl;
 
     const osg::Viewport* vp = ri.getState()->getCurrentViewport();    
-    image->readPixels( vp->x(), vp->y(), vp->width(), vp->height(), 
+    image->readPixels( int( vp->x() ), int( vp->y() ), 
+                   int( vp->width() ), int( vp->height() ), 
         GL_RGBA, GL_UNSIGNED_BYTE );
 
     osg::notify( osg::ALWAYS ) << "Writing file " 
