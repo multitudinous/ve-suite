@@ -36,6 +36,8 @@ using namespace ves::xplorer::scenegraph::nurbs;
 //Constructor             //
 ////////////////////////////
 Point::Point()
+    :
+    osg::Vec3d()
 {
     _v[ 0 ] = 0.0;
     _v[ 1 ] = 0.0;
@@ -60,6 +62,8 @@ Point::Point( double x, double y, double z )
 //Copy constructor                               //
 ///////////////////////////////////////////////////
 Point::Point( const Point& rhs )
+    :
+    osg::Vec3d( rhs )
 {
     _v[ 0 ] = rhs._v[ 0 ];
     _v[ 1 ] = rhs._v[ 1 ];
