@@ -46,7 +46,7 @@
 #include <comdef.h>
 #include <fstream>
 
-#import "opcproxy.dll"
+#import <opcproxy.dll>
 using namespace OPCDA;
 typedef DWORD OPCHANDLE;
 typedef tagOPCITEMDEF OPCITEMDEF;
