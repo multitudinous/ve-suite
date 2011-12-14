@@ -48,9 +48,7 @@ namespace volume
 {
 /*!\file cfdUpdateableOSGTexture1d.h
  * cfdUpdateableOSGTexture1d API
- */
-
-/*!\class ves::xplorer::volume::cfdUpdateableOSGTexture1d
+ * \class ves::xplorer::volume::cfdUpdateableOSGTexture1d
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGTexture1d :

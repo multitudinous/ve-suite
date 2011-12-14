@@ -58,12 +58,10 @@ namespace volume
 class cfdPBufferManager;
 
 /*!\file cfdCopyTo3DTextureStage.h
-* cfdCopyTo3DTextureStage API
-*/
-
-/*!\class ves::xplorer::volume::cfdCopyTo3DTextureStage
-*
-*/
+ * cfdCopyTo3DTextureStage API
+ * \class ves::xplorer::volume::cfdCopyTo3DTextureStage
+ *
+ */
 class VE_TEXTURE_BASED_EXPORTS cfdCopyTo3DTextureStage :
     public osgUtil::RenderStage
 {
@@ -140,7 +138,7 @@ protected:
     unsigned int _whichDir;
     int _width;
     int _height;
-    int _nSlices;
+    unsigned int _nSlices;
 
 };
 } //end volume

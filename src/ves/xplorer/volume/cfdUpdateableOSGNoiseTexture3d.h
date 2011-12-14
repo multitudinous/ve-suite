@@ -49,9 +49,7 @@ namespace volume
 {
 /*!\file cfdUpdateableOSGNoiseTexture3d.h
  * cfdUpdateableOSGNoiseTexture3d API
- */
-
-/*!\class ves::xplorer::volume::cfdUpdateableOSGNoiseTexture3d
+ * \class ves::xplorer::volume::cfdUpdateableOSGNoiseTexture3d
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGNoiseTexture3d :

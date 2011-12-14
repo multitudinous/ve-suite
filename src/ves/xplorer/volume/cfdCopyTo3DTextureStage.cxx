@@ -94,13 +94,7 @@ void cfdCopyTo3DTextureStage::reset()
 ////////////////////////////////////////////////////////////////////////////////
 /*void cfdCopyTo3DTextureStage::draw(osg::State& state,
                                osgUtil::RenderLeaf*& previous)*/
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
-void cfdCopyTo3DTextureStage::draw( osg::RenderInfo& renderInfo,
-                                    osgUtil::RenderLeaf*& previous )
-#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
-void cfdCopyTo3DTextureStage::draw( osg::State& state,
-                                    osgUtil::RenderLeaf*& previous )
-#endif
+void cfdCopyTo3DTextureStage::draw( osg::RenderInfo&, osgUtil::RenderLeaf*& )
 {
     if( _stageDrawnThisFrame ) return;
 

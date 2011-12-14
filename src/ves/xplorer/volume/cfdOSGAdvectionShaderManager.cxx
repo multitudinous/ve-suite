@@ -845,7 +845,7 @@ void cfdOSGAdvectionShaderManager::_initLookUpFunction()
         return;
     GLfloat theta = 0;
     GLfloat value = -1;
-    GLfloat dI = 1.0 / 255.0;
+    //GLfloat dI = 1.0 / 255.0;
     GLint hI[256];
     GLint gI[256];
     for( int i = 0; i < 256; i++ )
@@ -874,7 +874,7 @@ void cfdOSGAdvectionShaderManager::_initLookUpFunction()
     }
 
     unsigned char* lutex = new unsigned char[256];
-    GLfloat deltaH = 1.0 / 255.0;
+    //GLfloat deltaH = 1.0 / 255.0;
 
     for( int i = 0; i < 256; i++ )
     {

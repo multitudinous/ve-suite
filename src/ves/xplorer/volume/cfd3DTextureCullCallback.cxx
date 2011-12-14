@@ -135,7 +135,7 @@ void cfd3DTextureCullCallback::operator()( osg::Node* node,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfd3DTextureCullCallback::preRender( osg::Node& node,
+void cfd3DTextureCullCallback::preRender( osg::Node&,
                                           osgUtil::CullVisitor& cv )
 {
     const osg::BoundingSphere& bs = _subgraph->getBound();
@@ -178,8 +178,8 @@ void cfd3DTextureCullCallback::preRender( osg::Node& node,
     float zfar  = 3.0f * bs.radius();
 
     // 2:1 aspect ratio as per flag geomtry below.
-    float top   = 0.25f * znear;
-    float right = 0.5f * znear;
+    //float top   = 0.25f * znear;
+    //float right = 0.5f * znear;
 
     znear *= 0.9f;
     zfar *= 1.1f;

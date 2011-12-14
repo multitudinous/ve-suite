@@ -92,7 +92,7 @@ void cfdScalarVolumeVisHandler::_createDefaultShaders()
 {
     if( !GetShaderManager( "BLUE_RED_LINEAR_SHADER" ) && _tm )
     {
-        int* fieldSize = _tm->fieldResolution();
+        //int* fieldSize = _tm->fieldResolution();
         AddShaderManager( "BLUE_RED_LINEAR_SHADER", new cfdScalarShaderManager() );
         AddShaderManager( "GREY_SCALE_SHADER", new GreyScaleShaderManager() );
         SetActiveShader( "BLUE_RED_LINEAR_SHADER" );
@@ -105,10 +105,10 @@ void cfdScalarVolumeVisHandler::SetTextureManager( cfdTextureManager* tm )
     size_t nShaderManagers = _shaderManagers.size();
     if( nShaderManagers )
     {
-        size_t nShaderManagers = _shaderManagers.size();
+        //size_t nShaderManagers = _shaderManagers.size();
         for( std::map < std::string ,
-                ves::xplorer::volume::cfdOSGShaderManager* >::iterator itr = _shaderManagers.begin();
-                itr != _shaderManagers.end(); itr++ )
+                ves::xplorer::volume::cfdOSGShaderManager* >::const_iterator itr = _shaderManagers.begin();
+                itr != _shaderManagers.end(); ++itr )
         {
             dynamic_cast<ves::xplorer::volume::cfdScalarShaderManager*>( itr->second )->UpdateTextureManager( _tm );
         }

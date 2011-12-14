@@ -45,6 +45,8 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGNoiseTexture3d::cfdUpdateableOSGNoiseTexture3d()
+    :
+    osg::Texture3D::SubloadCallback()
 {
     _textureWidth = 32;
     _textureHeight = 32;
@@ -60,6 +62,8 @@ cfdUpdateableOSGNoiseTexture3d::cfdUpdateableOSGNoiseTexture3d()
 ////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGNoiseTexture3d::cfdUpdateableOSGNoiseTexture3d(
     const cfdUpdateableOSGNoiseTexture3d& uNT )
+    :
+    osg::Texture3D::SubloadCallback( uNT )
 {
     _textureWidth = uNT._textureWidth;
     _textureHeight = uNT._textureHeight;
@@ -112,7 +116,7 @@ void cfdUpdateableOSGNoiseTexture3d::_updateData()
             gI[i] = 255;
         }
     }
-    float taoAlpha = .9;
+    //float taoAlpha = .9;
     //build ga
     for( unsigned int i = 0; i < 256; i++ )
     {

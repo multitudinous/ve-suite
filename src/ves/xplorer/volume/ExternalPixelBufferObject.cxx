@@ -70,10 +70,11 @@ ExternalPixelBufferObject::ExternalPixelBufferObject(
     const ExternalPixelBufferObject& pbo,
     const osg::CopyOp& copyop )
     :
-#if !( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
-    _bufferEntryImagePair( pbo._bufferEntryImagePair ),
-#endif
     osg::BufferObject( pbo, copyop )
+#if !( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
+    ,
+    _bufferEntryImagePair( pbo._bufferEntryImagePair )
+#endif
 {
     ;
 }

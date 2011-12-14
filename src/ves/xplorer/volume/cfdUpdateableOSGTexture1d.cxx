@@ -46,6 +46,8 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d()
+    :
+    osg::Texture1D::SubloadCallback()
 {
     _alphaCutoff = .1;
     _gamma = 1.4;
@@ -60,6 +62,8 @@ cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d()
 ////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d( const
                                                       cfdUpdateableOSGTexture1d& cb )
+    :
+    osg::Texture1D::SubloadCallback( cb )
 {
     _lastAlpha = cb._lastAlpha;
     _lastGamma = cb._lastGamma;
@@ -112,14 +116,14 @@ void cfdUpdateableOSGTexture1d::SetAlphaCutoff( GLfloat aCutoff )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdUpdateableOSGTexture1d::subload( const osg::Texture1D& texture,
-                                         osg::State& state ) const
+void cfdUpdateableOSGTexture1d::subload( const osg::Texture1D&,
+                                         osg::State& ) const
 {
     glTexImage1D( GL_TEXTURE_1D, 0, GL_RGBA, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, _data );
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdUpdateableOSGTexture1d::load( const osg::Texture1D& texture,
+void cfdUpdateableOSGTexture1d::load( const osg::Texture1D&,
                                       osg::State& ) const
 {
     glTexSubImage1D( GL_TEXTURE_1D, 0, 0, 256, GL_RGBA, GL_UNSIGNED_BYTE, _data );
