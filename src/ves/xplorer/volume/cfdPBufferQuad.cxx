@@ -217,7 +217,7 @@ void cfdPBufferQuad::CalculateSlices()
 
         //these are actually the poly slices and the n/f clip planes
         float dz = ( _bounds[5] - _bounds[4] ) / ( _nSlices - 1.0 );
-        float dwz = dz + .001;
+        //float dwz = dz + .001;
         float zDistance = fabs( _eye[2] - _bounds[4] ) + .001;
         float currentZ = zDistance;
         float worldz = _bounds[4];
@@ -284,7 +284,7 @@ void cfdPBufferQuad::_drawAutoTexCoords() const
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdPBufferQuad::_drawHardCodedTCoords( osg::State& state ) const
+void cfdPBufferQuad::_drawHardCodedTCoords( osg::State& ) const
 {
 
     float m[16];
@@ -437,7 +437,7 @@ void cfdPBufferQuad::drawImplementation( osg::State& renderState ) const
 }*/
 ////////////////////////////////////////////////////////////////////////////////
 osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound(
-    const osg::Drawable& quad ) const
+    const osg::Drawable& ) const
 {
     osg::BoundingBox bbox;
     bbox.init();

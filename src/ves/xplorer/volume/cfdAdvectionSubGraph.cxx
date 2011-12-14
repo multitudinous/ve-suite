@@ -59,8 +59,8 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::Group> ves::xplorer::volume::CreateAdvectionSubGraph( cfdTextureManager* tm,
-        cfdPBufferManager* pbm,
-        float deltaZ )
+        cfdPBufferManager*,
+        float )
 {
     if( !tm )
         return 0;
@@ -83,7 +83,7 @@ osg::ref_ptr<osg::Group> ves::xplorer::volume::CreateAdvectionSubGraph( cfdTextu
     bbox.set( osg::Vec3( minBBox[0], minBBox[1], minBBox[2] ),
               osg::Vec3( maxBBox[0], maxBBox[1], maxBBox[2] ) );
 
-    float radius = bbox.radius();
+    //float radius = bbox.radius();
     float center[3] = {0, 0, 0};
 
     center[0] = bbox.center()[0];
