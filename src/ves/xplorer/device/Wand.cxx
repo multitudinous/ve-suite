@@ -358,7 +358,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     if( !commandType.compare( "Navigation_Data" ) )
     {
         DataValuePairPtr commandData = command->GetDataValuePair( 0 );
-        cfdIso_value = commandData->GetDataValue();
+        cfdIso_value = int( commandData->GetDataValue() );
         newCommand = commandData->GetDataName();
     }
 

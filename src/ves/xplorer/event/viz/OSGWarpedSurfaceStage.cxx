@@ -593,3 +593,4 @@ osg::Image* OSGWarpedSurfaceStage::CreateColorTextures( double* dataRange )
         (unsigned char*)newScalarLutArray, osg::Image::NO_DELETE );
     return iColorScale;
 }
+////////////////////////////////////////////////////////////////////////////////

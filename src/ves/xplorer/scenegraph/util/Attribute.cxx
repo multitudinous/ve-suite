@@ -210,7 +210,7 @@ void Attribute::CreateStateSetFromAttribute( CADAttributePtr attribute )
         setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
     }
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Attribute& Attribute::operator=( const osg::StateSet& rhs )
 {
     if( this != &rhs )
@@ -219,3 +219,4 @@ Attribute& Attribute::operator=( const osg::StateSet& rhs )
     }
     return *this;
 }
+////////////////////////////////////////////////////////////////////////////////

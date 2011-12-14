@@ -69,7 +69,6 @@
 
 #include <ves/open/xml/model/Model.h>
 
-#include <ves/xplorer/device/MxInputAdapterGadgeteerGamePad.h>
 #include <osgwMx/MxGamePad.h>
 
 // --- Bullet Includes --- //

@@ -33,9 +33,8 @@
 #ifndef MATERIAL_HELPER_H
 #define MATERIAL_HELPER_H
 /*!\file MaterialHelper.h
-  MaterialHelper API
-  */
-/*!\class ves::xplorer::scenegraph::util::MaterialHelper
+ * MaterialHelper API
+ * \class ves::xplorer::scenegraph::util::MaterialHelper
  * Class that creates an OSG StateSet representing
  * a glsl program.
  */
