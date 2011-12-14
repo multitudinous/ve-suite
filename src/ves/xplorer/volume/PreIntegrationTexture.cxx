@@ -192,11 +192,11 @@ void PreIntegrationTexture2D::FullUpdate()
     //integrate simpsons rule for each sf,sb combination
     int row = -1;
     int col = 0;
-    unsigned char data[4] = {0, 0, 0, 0};
+    //unsigned char data[4] = {0, 0, 0, 0};
     unsigned int index = 0;
     int sliceMin = 0;
     int sliceMax = 0;
-    unsigned char* rawData = _preIntegratedTexture->getImage()->data();
+    //unsigned char* rawData = _preIntegratedTexture->getImage()->data();
     float deltaSlice = 0;
     for( unsigned int i = 0; i < dataDims*dataDims; i++ )
     {

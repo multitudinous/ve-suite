@@ -41,8 +41,6 @@
 #include <osg/Texture3D>
 #include <osg/StateAttribute>
 
-static bool start = false;
-
 using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
