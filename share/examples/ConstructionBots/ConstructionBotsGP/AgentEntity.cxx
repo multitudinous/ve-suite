@@ -459,7 +459,7 @@ void AgentEntity::SetNumBlocksLeft( unsigned int& blocksLeft )
     mNumBlocksLeft = &blocksLeft;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::SetConstraints( int gridSize )
+void AgentEntity::SetConstraints( int )
 {
     btTransform trans;
     trans.setIdentity();
