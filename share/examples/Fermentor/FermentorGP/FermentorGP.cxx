@@ -63,20 +63,21 @@
 VEFermentorGraphicalPlugin::VEFermentorGraphicalPlugin()
     :
     PluginBase(),
+    mSimulationStart( false ),
+    frame_count( 0 ),
+    frame_speed_control( 0 ),
     _agitation( 200 ),
     _air_conc( 1.25 ),
     _ini_ph( 6 ),
     _nitrate_conc( 0.1 ),
     _temperature( 37 ),
     _hours( 240 ),
+    _rot_speed( 0 ),
+    _sim_speed( 0 ),
     _cycle_ID( 0 ),
     _rotation_ID( 0 ),
     _xray_ID( 0 ),
     _loop_ID( 0 ),
-    _rot_speed( 0 ),
-    _sim_speed( 0 ),
-    frame_count( 0 ),
-    frame_speed_control( 0 ),
 
     shader( new Shaders() ),
 
@@ -91,8 +92,7 @@ VEFermentorGraphicalPlugin::VEFermentorGraphicalPlugin()
 
     transform_ferm( new osg::MatrixTransform() ),
     transform_imp( new osg::MatrixTransform() ),
-    transform_tank( new osg::MatrixTransform() ),
-    mSimulationStart( false )
+    transform_tank( new osg::MatrixTransform() )
 {
     mObjectName = "FermentorUI";
 }
