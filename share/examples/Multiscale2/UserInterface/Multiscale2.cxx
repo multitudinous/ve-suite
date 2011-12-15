@@ -66,13 +66,13 @@ std::string Multiscale2::GetName()
 }
 
 
-QWidget* Multiscale2::GetUIWidget( QWidget* parent )
+QWidget* Multiscale2::GetUIWidget( QWidget* )
 {
     return m_UIWidget;
 }
 
 
-QWidget* Multiscale2::GetResultWidget( QWidget* parent )
+QWidget* Multiscale2::GetResultWidget( QWidget* )
 {
     return m_ResultWidget;
 }
@@ -84,12 +84,12 @@ QWidget* Multiscale2::GetFinancialDataWidget()
 }
 
 
-QWidget* Multiscale2::ViewInputVariables( QWidget* parent )
+QWidget* Multiscale2::ViewInputVariables( QWidget* )
 {
     return m_InputVariablesWidget;
 }
 
-QWidget* Multiscale2::ViewResultsVariables( QWidget* parent )
+QWidget* Multiscale2::ViewResultsVariables( QWidget* )
 {
     return m_ResultsVariablesWidget;
 }
