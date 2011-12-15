@@ -49,8 +49,9 @@
 #include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+#include <gadget/Event/KeyboardMouse/KeyEvent.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
+
 #include <gadget/Type/KeyboardMouseInterface.h>
 
 #include <limits>
@@ -240,7 +241,7 @@ void Multiscale2GraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 		
 #ifdef __DO_LATTICE__
 		atoms_t* atoms = new atoms_t(10000000);
-		std::string fnamebase = "/Volumes/Data/traj/filtered/dat.";
+		std::string fnamebase = "/Volumes/MacOS_Data/material_demo/traj/filtered/dat.";
 		char suffix[4];
 		sprintf(suffix, "%d",ii);
 		std::string fn = fnamebase + suffix;
@@ -266,34 +267,27 @@ void Multiscale2GraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 		}
 #else
 		
-		std::string fnamebase = "/Volumes/Data/dem/release/dat.";
+		std::string fnamebase = "/Volumes/MacOS_Data/material_demo/dem/release/dat.";
 		char suffix[4];
 		sprintf(suffix, "%d",ii);
 		std::string fn = fnamebase + suffix;
-		
-		
-		
+
 		struct stat filestatus;
 		
 		stat( fn.c_str(), &filestatus );
 		std::cout <<fn << std::endl;
-		
-		
-		
-		
-		
-		
+    
 		uint numAtoms = filestatus.st_size/(4*sizeof(float));
 		float* buffer, *buffer2;
 		std::cout << numAtoms << std::endl;
 		buffer = new float[numAtoms*4*5];
 		buffer2 = new float[numAtoms*4*5];
 		FILE* fp, *fp2;
-		fp2 = fopen("/Volumes/Data/dem/release/dat.1","rb");
+		fp2 = fopen("/Volumes/MacOS_Data/material_demo/dem/release/dat.1","rb");
 		fp = fopen(fn.c_str(), "rb");
 		fread(buffer, numAtoms, sizeof(float)*4, fp);
 		fread(buffer2, numAtoms, sizeof(float)*4, fp2);
-		std::cout << "made it this far" << std::endl;
+
 		for(uint i = 0; i < numAtoms; i++) {
 		
 				pos.x() = buffer[i*4];
@@ -406,18 +400,10 @@ ds->setNumMultiSamples(16);
 	
 #endif
 	
-		        	
-	
-	
-		
-	
-	
-	
-	
 	//lines data loading
 	for(int ii = 1 ; ii < 98;ii++) {
 		
-		std::string fnamebase = "/Users/abryden/demo-data/srd1d/converted-binary_";
+		std::string fnamebase = "/Volumes/MacOS_Data/material_demo/srd1d/converted-binary_";
 		char suffix[4];
 		sprintf(suffix, "%d",ii);
 		std::string fn = fnamebase + suffix;
@@ -439,12 +425,6 @@ ds->setNumMultiSamples(16);
 		tempGeode->TranslateToGeode( contActor );
 		
 		leswitch->addChild( tempGeode, true );
-		
-		
-		
-		
-		
-	
 	}
 	
 	m_tankDCS->addChild(leswitch);
@@ -453,19 +433,6 @@ ds->setNumMultiSamples(16);
 	leswitch->setSingleChildOn(5);
 	latticeSwitch->setAllChildrenOff();
 	
-	
-	
-	
-	
-	
-	for(int i = 0; i < 100; i++) {
-		std::cout << "test " << i << std::endl;
-	}
-	
-    std::cout << "test" << std::endl;
-	framecount = 0;
-	
-	
 	framecount = 0;
 	latticeEnabled = true;
 	dislocationsEnabled = false;
@@ -473,12 +440,7 @@ ds->setNumMultiSamples(16);
 	latticeSwitch->setNodeMask(0xffffffff);
 	leswitch->setNodeMask(0x0);
 	animating = true;
-	
-	
 }
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 void Multiscale2GraphicalPlugin::PreFrameUpdate()
 {
@@ -499,8 +461,6 @@ void Multiscale2GraphicalPlugin::PreFrameUpdate()
 		framecount++;
 	}
 }
-
-
 ////////////////////////////////////////////////////////////////////////////////
 void Multiscale2GraphicalPlugin::SetCurrentCommand(
     ves::open::xml::CommandPtr command )
