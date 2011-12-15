@@ -34,18 +34,14 @@
 #define VE_POINT_H
 
 /*!\file ControlPoint.h
-  Point and ControlPoint API
-  */
-/*!\file ControlPoint.cxx
-  Point and ControlPoint code
-  */
-/*!\class ves::xplorer::scenegraph::nurbs::ControlPoint
+ * Point and ControlPoint API
+ * \file ControlPoint.cxx
+ * Point and ControlPoint code
+ * \class ves::xplorer::scenegraph::nurbs::ControlPoint
  * Class defining a Control Point for NURBS object.
- */
-/*!\class ves::xplorer::scenegraph::nurbs::Point
+ * \class ves::xplorer::scenegraph::nurbs::Point
  * Class defining a Point for NURBS object.
- */
-/*!\namespace ves::xplorer::scenegraph::nurbs
+ * \namespace ves::xplorer::scenegraph::nurbs
  * NURBS API namespace.
  */
 #include <osg/Vec3d>
