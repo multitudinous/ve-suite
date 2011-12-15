@@ -1,0 +1,30 @@
+PACKAGE_NAME=GLEW
+BASE_DIR="${DEV_BASE_DIR}/glew-1.7.0"
+
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_URL=https://sourceforge.net/projects/glew/files/glew/1.7.0/glew-1.7.0.tgz
+SOURCE_FORMAT=tgz
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+case $PLATFORM in
+  Windows)
+    SCONS_PARAMS+=( MSVC_VERSION=9.0 )
+    if [ "$ARCH" = "64-bit" ]; then
+      SCONS_PARAMS+=( MSVS_ARCH=amd64 )
+      SCONS_PARAMS+=( var_arch=x64 )
+    else
+      SCONS_PARAMS+=( MSVS_ARCH=x86 )
+      SCONS_PARAMS+=( var_arch=ia32 )
+    fi
+    BUILD_TARGET=install
+    ;;
+  Darwin|Linux)
+    export GLEW_DEST=${INSTALL_DIR}
+    BUILD_METHOD=make
+    SKIP_PREBUILD=yes
+    BUILD_TARGET=install
+    ;;
+esac
