@@ -222,6 +222,8 @@ void Multiscale2GraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 	latticeSwitch = new osg::Switch;
 	osg::Geometry* geometry;// = new osg::Geometry;
 	osg::Geode* geode;// = new osg::Geode;
+	
+	//CALL AARON IF YOU NEED TO USE DEM DATA AND HE WILL HELP YOU CHANGE THE NECESSARY CONSTANTS
 	for(int ii = 1; ii < 71; ii++) {
 		
 		geometry = new osg::Geometry;
