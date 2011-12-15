@@ -259,12 +259,12 @@ void BlockSensor::Rotate( bool leftover )
     (*mVertexArray)[ 1 ].y() += mRange * sin( mAngle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool BlockSensor::BlockInView() const
+bool BlockSensor::BlockInView() const
 {
     return mBlockInView;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool BlockSensor::CloseToBlock() const
+bool BlockSensor::CloseToBlock() const
 {
     return mCloseToBlock;
 }

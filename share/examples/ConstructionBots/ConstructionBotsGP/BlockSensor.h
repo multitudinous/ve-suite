@@ -59,10 +59,10 @@ public:
     void Rotate( bool leftover = false );
 
     ///Returns if a block is currently in view
-    const bool BlockInView() const;
+    bool BlockInView() const;
 
     ///Returns if the agent entity is close to the block in view
-    const bool CloseToBlock() const;
+    bool CloseToBlock() const;
 
     ///Get the normalized vector to the block in view
     const btVector3& GetNormalizedBlockVector() const;

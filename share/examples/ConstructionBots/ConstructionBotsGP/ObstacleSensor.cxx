@@ -363,7 +363,7 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
     return mResultantForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool ObstacleSensor::ObstacleDetected() const
+bool ObstacleSensor::ObstacleDetected() const
 {
     return mObstacleDetected;
 }

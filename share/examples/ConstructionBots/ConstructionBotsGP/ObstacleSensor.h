@@ -72,7 +72,7 @@ public:
     const btVector3& GetNormalizedResultantForceVector();
 
     ///Returns is an obstacle has been detected by this obstacle sensor
-    const bool ObstacleDetected() const;
+    bool ObstacleDetected() const;
 
     ///Reset this obstacle sensor
     virtual void Reset();
