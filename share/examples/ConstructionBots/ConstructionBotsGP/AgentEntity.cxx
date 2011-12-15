@@ -82,6 +82,7 @@ AgentEntity::AgentEntity(
     mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
     mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
     mPluginDCS( pluginDCS ),
+    mTargetDCS( NULL ),
 #ifdef VE_SOUND
     mAgentSound( new ves::xplorer::scenegraph::Sound( 
                     "AgentSound", mDCS.get(), soundManager ) ),
@@ -90,7 +91,6 @@ AgentEntity::AgentEntity(
     mAttachBlockSound( new ves::xplorer::scenegraph::Sound( 
                            "AttachBlockSound", mDCS.get(), soundManager ) ),
 #endif
-    mTargetDCS( NULL ),
     mConstraint( NULL ),
     mAgentGeometry( agent ),
     mHeldBlock( NULL )

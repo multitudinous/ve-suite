@@ -26,12 +26,12 @@ void NetworkThreeGP::PreFrameUpdate()
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkThreeGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
+void NetworkThreeGP::SetCurrentCommand( ves::open::xml::CommandPtr )
 {
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkThreeGP::CreateCustomVizFeature( int input )
+void NetworkThreeGP::CreateCustomVizFeature( int )
 {
 
 }

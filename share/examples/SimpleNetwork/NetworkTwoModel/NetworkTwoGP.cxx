@@ -26,12 +26,12 @@ void NetworkTwoGP::PreFrameUpdate()
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkTwoGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
+void NetworkTwoGP::SetCurrentCommand( ves::open::xml::CommandPtr )
 {
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkTwoGP::CreateCustomVizFeature( int input )
+void NetworkTwoGP::CreateCustomVizFeature( int )
 {
 
 }

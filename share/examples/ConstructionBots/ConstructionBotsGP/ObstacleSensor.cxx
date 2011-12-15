@@ -70,9 +70,9 @@ ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
     mForceLineLength( 5.0 ),
     mForceAttractionConstant( 1.0 ),
     mForceRepellingConstant( 1.0 ),
+    mResultantForce( 0.0, 0.0, 0.0 ),
     mDetectorGeometry( NULL ),
     mDetectorVertexArray( NULL ),
-    mResultantForce( 0.0, 0.0, 0.0 ),
     mIntersectorGroup( NULL )
 {
     Initialize();

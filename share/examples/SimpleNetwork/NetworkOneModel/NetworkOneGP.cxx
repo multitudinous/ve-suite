@@ -26,12 +26,12 @@ void NetworkOneGP::PreFrameUpdate()
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkOneGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
+void NetworkOneGP::SetCurrentCommand( ves::open::xml::CommandPtr )
 {
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkOneGP::CreateCustomVizFeature( int input )
+void NetworkOneGP::CreateCustomVizFeature( int )
 {
 
 }
