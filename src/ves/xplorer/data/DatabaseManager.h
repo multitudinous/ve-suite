@@ -45,6 +45,8 @@
 
 #include <ves/VEConfig.h>
 
+#define CURRENT_DB_VERSION 2011.1204
+
 // Forward declarations
 namespace Poco
 {
@@ -157,6 +159,8 @@ private:
 
     /// Singleton declarations
     vprSingletonHeader( DatabaseManager );
+
+    void ConvertFromOld();
 
     /// Holds the session pool
     Poco::Data::SessionPool* mPool;

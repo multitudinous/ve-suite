@@ -35,8 +35,10 @@
 #include <ves/conductor/qt/ui_PreferencesTab.h>
 
 #include <ves/xplorer/data/PreferencesPropertySet.h>
+#include <ves/xplorer/data/DatabaseManager.h>
 
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+
 
 #include <iostream>
 
@@ -54,9 +56,11 @@ PreferencesTab::PreferencesTab(QWidget *parent) :
     m_featureBrowser = new PropertyBrowser( this );
 
     m_propertySet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::PreferencesPropertySet() );
+    m_propertySet->SetPropertyValue( "DatabaseVersion", CURRENT_DB_VERSION );
+
     m_propertySet->WriteToDatabase();
     
-    // Let the PropertyBrowser container pars the initial property set
+    // Let the PropertyBrowser container parse the initial property set
     m_featureBrowser->ParsePropertySet( m_propertySet );
     
     // ui.preferencesPropertyBrowser is an instance of GenericPropertyBrowser, 

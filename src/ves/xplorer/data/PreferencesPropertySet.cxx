@@ -95,6 +95,10 @@ PreferencesPropertySet::~PreferencesPropertySet()
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::CreateSkeleton()
 {
+
+    AddProperty( "DatabaseVersion", 0, "DatabaseVersion: Not visible in UI" );
+    SetPropertyAttribute( "DatabaseVersion", "userVisible", false );
+
     /// LOD tools
     {
         AddProperty( "GeometryLODScale", 1.00, "Geometry LOD Scale" );

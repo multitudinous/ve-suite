@@ -33,6 +33,31 @@
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 
+#include <ves/xplorer/data/CADPropertySet.h>
+#include <ves/xplorer/data/CADSubNodePropertySet.h>
+#include <ves/xplorer/data/ContourPlanePropertySet.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
+#include <ves/xplorer/data/IsosurfacePropertySet.h>
+#include <ves/xplorer/data/PolydataPropertySet.h>
+#include <ves/xplorer/data/PreferencesPropertySet.h>
+#include <ves/xplorer/data/StreamlinePropertySet.h>
+#include <ves/xplorer/data/VectorPlanePropertySet.h>
+#include <ves/xplorer/data/VolumeVisPropertySet.h>
+
+#include <ves/xplorer/data/constraints/AngularSpringConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/LinearAndAngularSpringConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/LinearSpringConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/BallAndSocketConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/BoxConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/CardanConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/FixedConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/HingeConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/PlanarConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/RagdollConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/SliderConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/TwistSliderConstraintPropertySet.h>
+#include <ves/xplorer/data/constraints/WheelSuspensionConstraintPropertySet.h>
+
 // --- Poco includes --- //
 #include <Poco/Data/SessionPool.h>
 #include <Poco/Data/SQLite/Connector.h>
@@ -46,8 +71,6 @@
 
 #include <iostream>
 #include <boost/smart_ptr/shared_array.hpp>
-
-//#include "DatabaseManager.h"
 
 namespace ves
 {
@@ -196,7 +219,7 @@ void DatabaseManager::ResetAll()
             for( size_t rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
             {
                 std::string tableName = recordset.value( 0, rowIndex ).convert< std::string > ();
-                if( tableName != "sqlite_sequence" )
+                if( (tableName != "sqlite_sequence") && (tableName != "XplorerPreferences") )
                 {
                     session << "DROP TABLE " << tableName, Poco::Data::now;
                 }
@@ -240,7 +263,6 @@ bool DatabaseManager::LoadFrom( const std::string& path )
     //    changed.
 
     Shutdown();
-
     try
     {
         boost::filesystem::path from( path );
@@ -256,9 +278,87 @@ bool DatabaseManager::LoadFrom( const std::string& path )
     }
     SetDatabasePath( m_path );
 
+    // Check DB version. If it's older than current, load in all the core propertyset
+    // types, wipe the respective tables, and write them back out again. This will
+    // ensure that any changes to the core propertysets are reflected in the database.
+    PreferencesPropertySet pref;
+    std::vector<std::string> ids;
+    double dbVersion = 0.0;
+    ids = DatabaseManager::instance()->GetStringVector( pref.GetTableName(), "uuid" );
+    if( !ids.empty() )
+    {
+        pref.SetUUID( ids.at( 0 ) );
+        pref.LoadFromDatabase();
+        if( pref.PropertyExists( "DatabaseVersion" ) )
+        {
+            dbVersion = boost::any_cast<double>( pref.GetPropertyValue("DatabaseVersion") );
+        }
+    }
+    if( dbVersion < CURRENT_DB_VERSION )
+    {
+        ConvertFromOld();
+    }
+
     m_resyncFromDatabase();
 
     return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DatabaseManager::ConvertFromOld()
+{
+    std::vector<PropertySetPtr> propList;
+
+    propList.push_back( PropertySetPtr( new CADPropertySet() ) );
+    propList.push_back( PropertySetPtr( new CADSubNodePropertySet() ) );
+    propList.push_back( PropertySetPtr( new ContourPlanePropertySet() ) );
+    propList.push_back( PropertySetPtr( new DatasetPropertySet() ) );
+    propList.push_back( PropertySetPtr( new IsosurfacePropertySet() ) );
+    propList.push_back( PropertySetPtr( new PolydataPropertySet() ) );
+    propList.push_back( PropertySetPtr( new StreamlinePropertySet() ) );
+    propList.push_back( PropertySetPtr( new VectorPlanePropertySet() ) );
+    propList.push_back( PropertySetPtr( new VolumeVisPropertySet() ) );
+
+    using namespace ves::xplorer::data::constraints;
+    propList.push_back( PropertySetPtr( new AngularSpringConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new LinearAndAngularSpringConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new LinearSpringConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new BallAndSocketConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new BoxConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new CardanConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new FixedConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new HingeConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new PlanarConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new RagdollConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new SliderConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new TwistSliderConstraintPropertySet() ) );
+    propList.push_back( PropertySetPtr( new WheelSuspensionConstraintPropertySet() ) );
+
+    std::vector<std::string> ids;
+    std::vector<PropertySetPtr> properties;
+    PropertySetPtr propSet;
+
+    for( size_t listIndex = 0; listIndex < propList.size(); ++listIndex )
+    {
+        propSet = propList.at( listIndex )->CreateNew();
+        ids = DatabaseManager::instance()->GetStringVector( propSet->GetTableName(), "uuid" );
+        for( size_t index = 0; index < ids.size(); ++index )
+        {
+            propSet = propList.at( listIndex )->CreateNew();
+            propSet->SetUUID( ids.at( index ) );
+            propSet->LoadFromDatabase();
+            properties.push_back( propSet );
+        }
+        Poco::Data::Session session( mPool->get() );
+        if(TableExists( propSet->GetTableName() ))
+        {
+            session << "DROP TABLE " << propSet->GetTableName(), Poco::Data::now;
+        }
+    }
+
+    for( size_t index = 0; index < properties.size(); ++index )
+    {
+        properties.at( index )->WriteToDatabase();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }// namespace data

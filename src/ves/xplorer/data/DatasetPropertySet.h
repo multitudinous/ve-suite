@@ -61,6 +61,9 @@ public:
     ///Override to handle live events
     virtual void EnableLiveProperties( bool live );
 
+    /// Factory ctor
+    virtual PropertySetPtr CreateNew();
+
 protected:
     ///Handle loading transient texture data
     void LoadVTIScalars( PropertyPtr& property );
