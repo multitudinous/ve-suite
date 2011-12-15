@@ -276,12 +276,12 @@ void SiteSensor::Rotate( bool leftover )
     (*mVertexArray)[ 1 ].y() += mRange * sin( mAngle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool SiteSensor::SiteInView() const
+bool SiteSensor::SiteInView() const
 {
     return mSiteInView;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool SiteSensor::CloseToSite() const
+bool SiteSensor::CloseToSite() const
 {
     return mCloseToSite;
 }

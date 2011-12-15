@@ -60,7 +60,7 @@ public:
     virtual ~PerimeterSensor();
 
     ///Returns if the agent entity is aligned with a block in the structure
-    const bool Aligned() const;
+    bool Aligned() const;
 
     ///Collect information from the environment
     virtual void CollectInformation();
@@ -75,7 +75,7 @@ public:
     const double& GetRange() const;
 
     ///Returns if the perimeter was detected
-    const bool PerimeterDetected() const;
+    bool PerimeterDetected() const;
 
     ///Reset this perimeter sensor
     void Reset();
@@ -99,7 +99,7 @@ private:
     */
     void CalculateLocalPositions();
 
-    const bool CollisionTest();
+    bool CollisionTest();
 
     ///Tells if the agent entity is aligned with a block in the structure
     bool mAligned;

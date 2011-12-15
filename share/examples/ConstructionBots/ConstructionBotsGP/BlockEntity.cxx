@@ -146,7 +146,7 @@ void BlockEntity::CalculateLocalPositions()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool BlockEntity::AttachUpdate( bool isStartBlock )
+bool BlockEntity::AttachUpdate( bool isStartBlock )
 {
     //Update the connected blocks for this and neighbors
     ConnectionDetection();
@@ -159,9 +159,8 @@ const bool BlockEntity::AttachUpdate( bool isStartBlock )
     }
 
     //Get coordinates and occupancy matrix from neighbors
-    std::map< unsigned int, bots::BlockEntity* >::const_iterator itr =
-        mConnectedBlocks.begin();
-    for( itr; itr != mConnectedBlocks.end(); ++itr )
+    for( std::map< unsigned int, bots::BlockEntity* >::const_iterator itr =
+        mConnectedBlocks.begin(); itr != mConnectedBlocks.end(); ++itr )
     {
         if( itr->second )
         {
@@ -248,7 +247,8 @@ void BlockEntity::UpdateSideStates()
 {
     std::map< const osg::Drawable*, bool >::iterator itrSS;
     std::map< unsigned int, bots::BlockEntity* >::const_iterator itr;
-    for( itrSS = mSideStates.begin(), itr = mConnectedBlocks.begin();
+    for( itrSS = mSideStates.begin(), 
+        itr = mConnectedBlocks.begin();
          itrSS != mSideStates.end(), itr != mConnectedBlocks.end();
          ++itrSS, ++itr )
     {
@@ -363,12 +363,12 @@ void BlockEntity::UpdateSideStates()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool BlockEntity::IsAttached() const
+bool BlockEntity::IsAttached() const
 {
     return mAttached;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool BlockEntity::PermissionToAttach(
+bool BlockEntity::PermissionToAttach(
     const osg::Drawable* drawable ) const
 {
     std::map< const osg::Drawable*, bool >::const_iterator itr =
@@ -407,9 +407,8 @@ void BlockEntity::ConnectionDetection()
         {
             const osgUtil::LineSegmentIntersector::Intersections&
                 intersections = mLineSegmentIntersector->getIntersections();
-            std::multiset< osgUtil::LineSegmentIntersector::Intersection >::
-                const_iterator itr = intersections.begin();
-            for( itr; itr != intersections.end(); ++itr )
+            for( std::multiset< osgUtil::LineSegmentIntersector::Intersection >::
+                const_iterator itr = intersections.begin(); itr != intersections.end(); ++itr )
             {
                 osg::Drawable* const drawable = itr->drawable.get();
                 const osg::Vec4Array* const tempArray =
@@ -541,7 +540,7 @@ void BlockEntity::SetBlockEntityMap(
     mBlockEntityMap = &blockEntityMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BlockEntity::SetConstraints( int gridSize )
+void BlockEntity::SetConstraints( int )
 {
     btTransform trans;
     trans.setIdentity();

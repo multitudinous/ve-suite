@@ -81,7 +81,7 @@ PerimeterSensor::~PerimeterSensor()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool PerimeterSensor::Aligned() const
+bool PerimeterSensor::Aligned() const
 {
     return mAligned;
 }
@@ -194,7 +194,7 @@ void PerimeterSensor::CalculateLocalPositions()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool PerimeterSensor::CollisionTest()
+bool PerimeterSensor::CollisionTest()
 {
     bool collision( false );
     std::map< std::string, bots::BlockEntity* >::const_iterator
@@ -398,7 +398,7 @@ const double& PerimeterSensor::GetRange() const
     return mRange;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool PerimeterSensor::PerimeterDetected() const
+bool PerimeterSensor::PerimeterDetected() const
 {
     return mPerimeterDetected;
 }

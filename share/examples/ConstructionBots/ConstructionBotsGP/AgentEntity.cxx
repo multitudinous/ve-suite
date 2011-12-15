@@ -271,7 +271,8 @@ void AgentEntity::Build()
     {
         std::map< std::string, bots::BlockEntity* >::const_iterator itr;
         itr = (*mBlockEntityMap).begin();
-        for( itr; itr != (*mBlockEntityMap).end(); ++itr )
+        for( std::map< std::string, bots::BlockEntity* >::const_iterator 
+            itr = (*mBlockEntityMap).begin(); itr != (*mBlockEntityMap).end(); ++itr )
         {
             if( itr->second->IsAttached() )
             {

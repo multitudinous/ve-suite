@@ -136,7 +136,7 @@ void HoldBlockSensor::CollectInformation()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool HoldBlockSensor::HoldingBlock() const
+bool HoldBlockSensor::HoldingBlock() const
 {
     return mHoldingBlock;
 }

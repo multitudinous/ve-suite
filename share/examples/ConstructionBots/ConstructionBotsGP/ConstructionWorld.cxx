@@ -89,22 +89,22 @@ ConstructionWorld::ConstructionWorld(
     mNumAgents( 1 ),
     mMaxNumAgents( 24 ),
     mDeltaAgents( 1 ),
+    // --- Ensure that the grid size is odd for centrality purposes --- //
+    mGridSize( 51 ),
     mMinBlockSensorRange( 10.0 ),
     // --- This gets calculated later based off the grid size --- //
     mMaxBlockSensorRange( 0.0 ),
     mDeltaBlockSensorRange( 2.0 ),
     mBlockSensorRange( mMinBlockSensorRange ),
-    // --- Ensure that the grid size is odd for centrality purposes --- //
-    mGridSize( 51 ),
-    mGrid( NULL ),
-    mAgentEntities(),
-    mStartBlock( NULL ),
     mPluginDCS( pluginDCS ),
 #ifdef VE_SOUND
     mSoundManager( soundManager ),
     mAmbientSound( new ves::xplorer::scenegraph::Sound(
-                       "AmbientSound", pluginDCS, soundManager ) ),
+        "AmbientSound", pluginDCS, soundManager ) ),
 #endif
+    mGrid( NULL ),
+    mStartBlock( NULL ),
+    mAgentEntities(),
     mPhysicsSimulator( physicsSimulator ),
     mSimulationData( "Data/simulation.dat", std::ios::out | std::ios::app )
 {
@@ -340,23 +340,19 @@ void ConstructionWorld::CalculateMaxBlockSensorRange()
     a1 = sqrt( 2.0 * pow( 0.5, 2 ) );
     b1 = sqrt( 2.0 * pow( mGridSize * 0.5, 2 ) );
     c1 = sqrt( pow( a1, 2 ) + pow( b1, 2 ) );
-    //std::cout << c1 << std::endl;
 
     double alpha( 0.0 ), beta( 0.0 ), theta( 0.0 );
     alpha = asin( a1 / c1 );
     alpha *= oneEightyDivPI;
     beta = 135.0 - alpha;
     theta = 180.0 - beta;
-    //std::cout << theta << std::endl;
 
-    double a2( 0.0 ), b2( 0.0 ), c2( 0.0 );
+    double a2( 0.0 ), c2( 0.0 );
     a2 = ( mGridSize * 0.5 ) - 0.5;
     c2 = a2 / sin( theta * piDivOneEighty );
-    //std::cout << c2 << std::endl;
 
     mMaxBlockSensorRange = c1 + c2 - ( 2.0 * a1 );
     mMaxBlockSensorRange = ceil( mMaxBlockSensorRange );
-    //std::cout << mMaxBlockSensorRange << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::CreateAgentEntity()
@@ -401,9 +397,8 @@ void ConstructionWorld::CreateAgentEntity()
 void ConstructionWorld::CreateRandomPositions()
 {
     std::vector< ves::xplorer::scenegraph::CADEntity* > entities;
-    std::map< std::string, bots::BlockEntity* >::iterator itr =
-        mBlockEntities.begin(); ++itr;
-    for( itr; itr != mBlockEntities.end(); ++itr )
+    for( std::map< std::string, bots::BlockEntity* >::iterator itr =
+        mBlockEntities.begin(); itr != mBlockEntities.end(); ++itr )
     {
         entities.push_back( itr->second );
     }
@@ -577,9 +572,9 @@ void ConstructionWorld::ResetSimulation()
     }
 
     //Reset the occupancy matrix
-    std::map< std::pair< int, int >, std::pair< bool, bool > >::iterator
-        occMatItr = mOccupancyMatrix.begin();
-    for( occMatItr; occMatItr != mOccupancyMatrix.end(); ++occMatItr )
+    for( std::map< std::pair< int, int >, std::pair< bool, bool > >::iterator
+        occMatItr = mOccupancyMatrix.begin(); 
+        occMatItr != mOccupancyMatrix.end(); ++occMatItr )
     {
         occMatItr->second.second = false;
     }
@@ -588,9 +583,8 @@ void ConstructionWorld::ResetSimulation()
     //Nothing needed to reset grid at this time
 
     //Reset the blocks
-    std::map< std::string, bots::BlockEntity* >::iterator blockIter =
-        mBlockEntities.begin();
-    for( blockIter; blockIter != mBlockEntities.end(); ++blockIter )
+    for( std::map< std::string, bots::BlockEntity* >::iterator blockIter =
+        mBlockEntities.begin(); blockIter != mBlockEntities.end(); ++blockIter )
     {
         blockIter->second->Reset();
     }

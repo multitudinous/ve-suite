@@ -59,10 +59,10 @@ public:
     void Rotate( bool leftover = false );
 
     ///Returns if the site is currently in view
-    const bool SiteInView() const;
+    bool SiteInView() const;
 
     ///Returns if the agent entity is close to the site
-    const bool CloseToSite() const;
+    bool CloseToSite() const;
 
     ///Get the normalized vector to the site
     const btVector3& GetNormalizedSiteVector() const;

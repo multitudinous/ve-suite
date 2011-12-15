@@ -53,7 +53,7 @@ public:
     virtual void CollectInformation();
 
     ///Returns if the agent entity is holding a block
-    const bool HoldingBlock() const;
+    bool HoldingBlock() const;
 
     ///Reset this hold block sensor
     virtual void Reset();
