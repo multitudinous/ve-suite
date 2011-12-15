@@ -304,9 +304,9 @@ void CameraEntity::CustomKeyboardMouseSelection(
 
     std::pair< unsigned int, unsigned int > quadResolution( 0, 0 );
     quadResolution.first = (*mCameraViewQuadVertices)[ 2 ].x() *
-                           mCameraViewQuadDCS->getScale().x();
+                           int( mCameraViewQuadDCS->getScale().x() );
     quadResolution.second = (*mCameraViewQuadVertices)[ 2 ].y() *
-                            mCameraViewQuadDCS->getScale().y();
+                            int( mCameraViewQuadDCS->getScale().y() );
 
     if( mousePosition.first <= quadResolution.first &&
         mousePosition.second <= quadResolution.second )
