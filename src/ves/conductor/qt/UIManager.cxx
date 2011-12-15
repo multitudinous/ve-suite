@@ -601,6 +601,7 @@ void UIManager::_repaintChildren()
             unsigned char* image_Data = element->RenderElementToImage()->data();
 #else
             osg::Image* image_Data = element->RenderElementToImage();
+            boost::ignore_unused_variable_warning( image_Data );
 #endif
 
             // Only reset the image if element tells us it has changed since 
@@ -1046,7 +1047,7 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
         // Translate mouse coordinates to window coordinates
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
+        y = m_selectedUIElement->GetElementHeight() - y;
         m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
         m_selectedUIElement->SendButtonPressEvent( button, x, y, state );
     }
