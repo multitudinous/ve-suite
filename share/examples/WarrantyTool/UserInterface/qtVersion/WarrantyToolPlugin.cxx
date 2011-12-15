@@ -66,13 +66,13 @@ std::string WarrantyToolPlugin::GetName()
 }
 
 
-QWidget* WarrantyToolPlugin::GetUIWidget( QWidget* parent )
+QWidget* WarrantyToolPlugin::GetUIWidget( QWidget* )
 {
     return m_UIWidget;
 }
 
 
-QWidget* WarrantyToolPlugin::GetResultWidget( QWidget* parent )
+QWidget* WarrantyToolPlugin::GetResultWidget( QWidget* )
 {
     return m_ResultWidget;
 }
@@ -84,12 +84,12 @@ QWidget* WarrantyToolPlugin::GetFinancialDataWidget()
 }
 
 
-QWidget* WarrantyToolPlugin::ViewInputVariables( QWidget* parent )
+QWidget* WarrantyToolPlugin::ViewInputVariables( QWidget* )
 {
     return m_InputVariablesWidget;
 }
 
-QWidget* WarrantyToolPlugin::ViewResultsVariables( QWidget* parent )
+QWidget* WarrantyToolPlugin::ViewResultsVariables( QWidget* )
 {
     return m_ResultsVariablesWidget;
 }

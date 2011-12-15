@@ -66,13 +66,13 @@ std::string TankPlugin::GetName()
 }
 
 
-QWidget* TankPlugin::GetUIWidget( QWidget* parent )
+QWidget* TankPlugin::GetUIWidget( QWidget* )
 {
     return m_UIWidget;
 }
 
 
-QWidget* TankPlugin::GetResultWidget( QWidget* parent )
+QWidget* TankPlugin::GetResultWidget( QWidget* )
 {
     return m_ResultWidget;
 }
@@ -84,12 +84,12 @@ QWidget* TankPlugin::GetFinancialDataWidget()
 }
 
 
-QWidget* TankPlugin::ViewInputVariables( QWidget* parent )
+QWidget* TankPlugin::ViewInputVariables( QWidget* )
 {
     return m_InputVariablesWidget;
 }
 
-QWidget* TankPlugin::ViewResultsVariables( QWidget* parent )
+QWidget* TankPlugin::ViewResultsVariables( QWidget* )
 {
     return m_ResultsVariablesWidget;
 }
