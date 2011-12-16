@@ -137,6 +137,7 @@ SceneManager::SceneManager()
     ///we are already in native OpenGL coordinate space.
     m_viewMatrix->setInitialValues( 
         osg::Vec3d( 0., 0., 1. ), osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., 0., 0. ) );
+    m_viewMatrix->setRotateScale( 1.0 );
     m_viewMatrix->reset();
     
     ///Setup some default uniforms so that they are not replicated all over the
