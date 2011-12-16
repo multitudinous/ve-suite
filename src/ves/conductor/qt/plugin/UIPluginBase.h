@@ -32,11 +32,10 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 /*!\file UIPluginBase.h
-UIPlugin API
-*/
-/*!\class UIPluginBase
-*
-*/
+ * UIPlugin API
+ * \class UIPluginBase
+ *
+ */
 #define QT_NO_KEYWORDS
 
 #include <ves/VEConfig.h>
@@ -53,31 +52,12 @@ UIPlugin API
 
 #include <QtCore/QObject>
 
-namespace ves
-{
-namespace conductor
-{
-//class XMLDataBufferEngine;
-//class UserPreferencesDataBuffer;;
-
-namespace util
-{
-//class CORBAServiceList;
-//class CADNodeManagerDlg;
-//class SoundsPane;
-//class DataSetLoaderUI;
-}
-}
-}
-
 typedef std::vector< ves::open::xml::model::PortPtr > PORT;
 
 namespace ves
 {
 namespace conductor
 {
-
-
 class VE_GUIPLUGINS_EXPORTS UIPluginBase: public QObject
 {
     Q_OBJECT

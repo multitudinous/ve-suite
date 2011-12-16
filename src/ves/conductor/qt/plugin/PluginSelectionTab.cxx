@@ -508,8 +508,7 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
         }
         index++;
     }
-    //QList<QListWidgetItem *> results = ui->m_availablePlugins->findItems( pluginName, Qt::MatchFixedString );
-    //if( results.empty() )
+
     if( !found )
     {
         std::cerr << "ERROR -- PluginSelectionTab::qCreateUIPlugin: No available UI plugin named "
@@ -523,12 +522,7 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
     }
 
     // Create an instance of the plugin from its factory
-    //QListWidgetItem* item = results.at(0);
     QListWidgetItem* item = ui->m_availablePlugins->item( index );
-//    if( !item )
-//    {
-//        return;
-//    }
 
     // Get plugin filename from the current item
     QString fileName = item->data( Qt::UserRole + 1 ).toString();
@@ -539,18 +533,16 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
     {
         return;
     }
-    //std::cout << "|\tPlugin instance valid" << std::endl << std::flush;
+
     UIPluginFactory* factory =
             qobject_cast< UIPluginFactory* >(plugin);
     if( factory )
     {
-        //std::cout << "|\tFactory instance valid" << std::endl << std::flush;
         // Create new instance of the UIPluginInterface object
         // this factory contains.
         UIPluginInterface* interface = factory->CreateInstance();
 
         // Set its name as interfaceName_index
-        //int index = ui->m_instantiatedPlugins->count();
         QList<QListWidgetItem *> results =
                 ui->m_instantiatedPlugins->findItems( QString::fromStdString( interface->GetName() ),
                                                       Qt::MatchStartsWith );
@@ -560,9 +552,6 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
         nameSS << "_";
         nameSS << index;
         interface->SetName( nameSS.str() );
-
-        //std::cout << "|\tSetting interface name to "
-        //    << nameSS.str() << std::endl << std::flush;
 
         // Give the UI plugin a pointer to the xplorer plugin. This
         // will give the UI plugin access to things like the correct model.
@@ -631,15 +620,23 @@ void PluginSelectionTab::RemovePlugin( UIPluginInterface* plugin )
 {
     UIPluginBase* pb = dynamic_cast<UIPluginBase*>( plugin );
     ves::open::xml::model::ModelPtr modelPtr = pb->GetVEModel();
-    
-    ///Remove the data from the ui xml representation
-    XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
-    bool success = mDataBufferEngine->RemoveModelFromSystem( modelPtr );
-    boost::ignore_unused_variable_warning( success );
-
-    ///Remove the graphics side of things
-    ves::xplorer::network::GraphicalPluginManager::instance()->
-    RemovePlugin( modelPtr->GetID() );
+    if( modelPtr )
+    {
+        ///Remove the data from the ui xml representation
+        XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
+        bool success = mDataBufferEngine->RemoveModelFromSystem( modelPtr );
+        boost::ignore_unused_variable_warning( success );
+        
+        ///Remove the graphics side of things
+        ves::xplorer::network::GraphicalPluginManager::instance()->
+            RemovePlugin( modelPtr->GetID() );
+    }
+    else
+    {
+        std::cout 
+            << "|\tUnable to remove the XML data from the System model." 
+            << std::endl;
+    }
     
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.

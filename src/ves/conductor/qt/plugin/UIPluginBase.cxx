@@ -79,6 +79,13 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
 
     if( !m_veModel )
     {
+        if( !m_xplorerPlugin->GetCFDModel() )
+        {
+            std::cout << 
+             "|\tThe UI plugin does not have access to the ves::open::xml::model."
+             << std::endl;
+            return ves::open::xml::model::ModelPtr();
+        }
         m_veModel = m_xplorerPlugin->GetCFDModel()->GetModelData();
     }
 
