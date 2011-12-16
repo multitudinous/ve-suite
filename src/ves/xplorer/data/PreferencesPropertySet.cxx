@@ -191,6 +191,17 @@ void PreferencesPropertySet::CreateSkeleton()
     }
 
     {
+        std::vector< std::string > stringVector;
+        AddProperty( "NavigationRotationMode", stringVector, "Nav Mode" );
+        mPropertyMap["NavigationRotationMode"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        MakeLiveBasePtr p( new MakeLive< std::vector< std::string > const& >( mUUIDString,
+                                                       mPropertyMap["NavigationRotationMode"],
+                                                       "PreferencesPropertySet.NavigationRotationMode",
+                                                       false ));
+        mLiveObjects.push_back( p );
+    }
+    
+    {
         AddProperty( "ShutDownXplorerOption", false, "Shut Down Xplorer Option" );
         mPropertyMap["ShutDownXplorerOption"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
