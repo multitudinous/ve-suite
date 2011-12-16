@@ -485,8 +485,8 @@ void UIElement::GetPointIntersectionInPixels( int& x, int& y, osg::Vec3d& point 
     }
     else
     {
-        x = x - m_uiCorners[ 0 ];
-        y = y - m_uiCorners[ 2 ];
+        x = x - int( m_uiCorners[ 0 ] );
+        y = y - int( m_uiCorners[ 2 ] );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
