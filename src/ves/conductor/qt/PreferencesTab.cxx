@@ -50,13 +50,12 @@ namespace conductor
 PreferencesTab::PreferencesTab(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PreferencesTab)
-{
+{    
     ui->setupUi(this);
     
     m_featureBrowser = new PropertyBrowser( this );
 
     m_propertySet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::PreferencesPropertySet() );
-    m_propertySet->SetPropertyValue( "DatabaseVersion", CURRENT_DB_VERSION );
 
     m_propertySet->WriteToDatabase();
     

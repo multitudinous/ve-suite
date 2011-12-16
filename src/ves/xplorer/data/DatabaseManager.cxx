@@ -33,6 +33,7 @@
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/eventmanager/EventManager.h>
 
+#include <ves/xplorer/data/DatabaseDetailsPropertySet.h>
 #include <ves/xplorer/data/CADPropertySet.h>
 #include <ves/xplorer/data/CADSubNodePropertySet.h>
 #include <ves/xplorer/data/ContourPlanePropertySet.h>
@@ -219,7 +220,7 @@ void DatabaseManager::ResetAll()
             for( size_t rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
             {
                 std::string tableName = recordset.value( 0, rowIndex ).convert< std::string > ();
-                if( (tableName != "sqlite_sequence") && (tableName != "XplorerPreferences") )
+                if( (tableName != "sqlite_sequence") && (tableName != "XplorerDBDetails") )
                 {
                     session << "DROP TABLE " << tableName, Poco::Data::now;
                 }
@@ -238,6 +239,14 @@ void DatabaseManager::ResetAll()
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::SaveAs( const std::string& path )
 {
+    DatabaseDetailsPropertySet details;
+
+    if( !TableExists( details.GetTableName() ) )
+    {
+        details.SetPropertyValue( "DatabaseVersion", CURRENT_DB_VERSION );
+        details.WriteToDatabase();
+    }
+
     try
     {
         boost::filesystem::path from( m_path );
@@ -281,17 +290,17 @@ bool DatabaseManager::LoadFrom( const std::string& path )
     // Check DB version. If it's older than current, load in all the core propertyset
     // types, wipe the respective tables, and write them back out again. This will
     // ensure that any changes to the core propertysets are reflected in the database.
-    PreferencesPropertySet pref;
+    DatabaseDetailsPropertySet details;
     std::vector<std::string> ids;
     double dbVersion = 0.0;
-    ids = DatabaseManager::instance()->GetStringVector( pref.GetTableName(), "uuid" );
+    ids = DatabaseManager::instance()->GetStringVector( details.GetTableName(), "uuid" );
     if( !ids.empty() )
     {
-        pref.SetUUID( ids.at( 0 ) );
-        pref.LoadFromDatabase();
-        if( pref.PropertyExists( "DatabaseVersion" ) )
+        details.SetUUID( ids.at( 0 ) );
+        details.LoadFromDatabase();
+        if( details.PropertyExists( "DatabaseVersion" ) )
         {
-            dbVersion = boost::any_cast<double>( pref.GetPropertyValue("DatabaseVersion") );
+            dbVersion = boost::any_cast<double>( details.GetPropertyValue("DatabaseVersion") );
         }
     }
     if( dbVersion < CURRENT_DB_VERSION )
@@ -307,6 +316,8 @@ bool DatabaseManager::LoadFrom( const std::string& path )
 void DatabaseManager::ConvertFromOld()
 {
     std::vector<PropertySetPtr> propList;
+
+    propList.push_back( PropertySetPtr( new PreferencesPropertySet() ) );
 
     propList.push_back( PropertySetPtr( new CADPropertySet() ) );
     propList.push_back( PropertySetPtr( new CADSubNodePropertySet() ) );
