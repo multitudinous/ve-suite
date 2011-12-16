@@ -321,7 +321,10 @@ void Navigation::Zoom( double dy )
     
     if( viewlength > 11. )
     {
-        m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( osg::Vec3d( 0., 10., 0.) );
+        osg::Vec3d newCenter;
+        newCenter = m_sceneManager.GetMxCoreViewMatrix().getDir() * 15. + m_sceneManager.GetMxCoreViewMatrix().getPosition();
+        //std::cout << newCenter << std::endl;
+        m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( newCenter );
     }
     double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
     mDeltaTranslation.mData[ 1 ] = d;
@@ -375,8 +378,12 @@ void Navigation::Pan( double dx, double dz )
     
     if( d > 11. )
     {
-        m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( osg::Vec3d( 0., 10., 0.) );
-    }
+        osg::Vec3d newCenter;
+        newCenter = m_sceneManager.GetMxCoreViewMatrix().getDir() * 15. + m_sceneManager.GetMxCoreViewMatrix().getPosition();
+        //std::cout << newCenter << std::endl;
+        m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( newCenter );
+    } 
+    
     double theta = fovz * 0.5 ;
     double b = 2.0 * d * tan( theta );
     double dwx = dx * b;
