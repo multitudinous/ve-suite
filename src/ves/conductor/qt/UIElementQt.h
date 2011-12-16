@@ -167,7 +167,8 @@ private:
     QWidget* mTitlebar;
     Ui::titlebar* mQTitlebar;
     QMap<QString, QImage>   update_cache;
-    QMap<QString, QRect>  capture_list;
+    QMap<QString, QRect>  m_captureList;
+    QMutex* m_captureListMutex;
     bool m_firstRender;
     bool m_sizeHasChanged;
     bool m_sizeDirty;

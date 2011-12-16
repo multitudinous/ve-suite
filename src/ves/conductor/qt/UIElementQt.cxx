@@ -117,6 +117,7 @@ UIElementQt::UIElementQt( QWidget *parent )
     mDirty( true ),
     mTitlebar( 0 ),
     mQTitlebar( 0 ),
+    m_captureListMutex( 0 ),
     m_firstRender( true ),
     m_sizeHasChanged( true ),
     m_sizeDirty( true )
@@ -131,6 +132,7 @@ UIElementQt::UIElementQt( QWidget *parent )
     brush.setStyle( Qt::SolidPattern );
     this->setBackgroundBrush( brush );
     mImageMutex = new QMutex();
+    m_captureListMutex = new QMutex();
     _setupKeyMap();
     
     mQTitlebar = new Ui::titlebar();
@@ -427,7 +429,12 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
 
     bool some_update = false;
     int index = 0;
-    const QMap<QString, QRect>& rects = capture_list;
+
+    // Protect capture list against simultaneous read/write
+    QMutexLocker locker( m_captureListMutex );
+    const QMap<QString, QRect> rects = m_captureList;
+    locker.unlock();
+
     Q_FOREACH(const QString key, rects.keys())
     {
         QRect rect = rects[key];
@@ -521,7 +528,10 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
     }
 #endif
 
-    capture_list.clear();
+    {
+        QMutexLocker locker( m_captureListMutex );
+        m_captureList.clear();
+    }
 
     return m_damagedAreas;
 }
@@ -667,7 +677,11 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
                                .arg(r.y())
                                .arg(r.width())
                                .arg(r.height());
-                capture_list[key] = r;
+                {
+                    // Protect capture list against simultaneous read/write
+                    QMutexLocker locker( m_captureListMutex );
+                    m_captureList[key] = r;
+                }
             }
         }
     }
@@ -684,7 +698,7 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
                        .arg(r.y())
                        .arg(r.width())
                        .arg(r.height());
-        capture_list[key] = r;
+        m_captureList[key] = r;
     }
 
     return false;
@@ -835,7 +849,7 @@ void UIElementQt::FreeOldWidgets()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_render()
 {
-    //capture_list.clear();
+    //m_captureList.clear();
 
 #if defined( _DARWIN )
     if( !m_mouseInsideUI )
