@@ -217,10 +217,10 @@ bool Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
             //Rotate( angle, gmtl::Vec3d( -dy, 0.0, dx )  );
             //m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, 
             //    osg::Vec3d( axis[ 0 ], axis[ 1 ], axis[ 2 ] ) );
-            m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
+            /*m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
                 osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
                             m_sceneManager.GetCenterPoint().mData[ 1 ], 
-                            m_sceneManager.GetCenterPoint().mData[ 2 ] ) );
+                            m_sceneManager.GetCenterPoint().mData[ 2 ] ) );*/
 
             gmtl::Vec3d axis = gmtl::Vec3d( -dy, 0.0, dx );
             gmtl::normalize( axis );
@@ -267,10 +267,10 @@ void Navigation::Twist( double dx, double dy )
     //Twist about the y-axis
     //Rotate( angle, gmtl::Vec3d( 0.0, 1.0, 0.0 ) );
     
-    m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
+    /*m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
         osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
                 m_sceneManager.GetCenterPoint().mData[ 1 ], 
-                m_sceneManager.GetCenterPoint().mData[ 2 ] ) );
+                m_sceneManager.GetCenterPoint().mData[ 2 ] ) );*/
     
     m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, m_sceneManager.GetMxCoreViewMatrix().getDir() );    
 }
@@ -310,27 +310,38 @@ void Navigation::Zoom( double dy )
      *mCenterPoint = position;
      */
     
-    double viewlength = m_sceneManager.GetCenterPoint().mData[ 1 ];
-    double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
+    //double viewlength = m_sceneManager.GetCenterPoint().mData[ 1 ];
+    //double viewlength = m_sceneManager.GetMxCoreViewMatrix().getOrbitCenterPoint().y();
+    osg::Vec3d distance = m_sceneManager.GetMxCoreViewMatrix().getOrbitCenterPoint() - m_sceneManager.GetMxCoreViewMatrix().getPosition();
+    double viewlength = distance.y();
+    if( viewlength < 0. )
+    {
+        viewlength *= -1.;
+    }
     
+    if( viewlength > 11. )
+    {
+        m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( osg::Vec3d( 0., 10., 0.) );
+    }
+    double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
     mDeltaTranslation.mData[ 1 ] = d;
-    m_sceneManager.GetCenterPoint().mData[ 1 ] += d;
+    //m_sceneManager.GetCenterPoint().mData[ 1 ] += d;
     
     //Test if center point has breached our specified threshold
-    if( m_sceneManager.GetCenterPoint().mData[ 1 ] < mCenterPointThreshold )
+    //if( m_sceneManager.GetCenterPoint().mData[ 1 ] < mCenterPointThreshold )
     {
         scenegraph::DCS* const selectedDCS = DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
         if( !selectedDCS )
         {
-            m_sceneManager.GetCenterPoint().mData[ 1 ] = mCenterPointJump;
+            //m_sceneManager.GetCenterPoint().mData[ 1 ] = mCenterPointJump;
         }
         //Prevent the center point from jumping
         //if we are manipulating a selected object
         else
         {
-            mDeltaTranslation.mData[ 1 ] = 0.0;
-            m_sceneManager.GetCenterPoint().mData[ 1 ] -= d;
+            //mDeltaTranslation.mData[ 1 ] = 0.0;
+            //m_sceneManager.GetCenterPoint().mData[ 1 ] -= d;
         }
     }
 }
@@ -354,7 +365,18 @@ void Navigation::Pan( double dx, double dz )
      //std::cout << std::endl;
      */
     double fovz = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
-    double d = m_sceneManager.GetCenterPoint().mData[ 1 ];
+    //double d = m_sceneManager.GetCenterPoint().mData[ 1 ];
+    osg::Vec3d distance = m_sceneManager.GetMxCoreViewMatrix().getOrbitCenterPoint() - m_sceneManager.GetMxCoreViewMatrix().getPosition();
+    double d = distance.y();
+    if( d < 0. )
+    {
+        d *= -1.;
+    }
+    
+    if( d > 11. )
+    {
+        m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( osg::Vec3d( 0., 10., 0.) );
+    }
     double theta = fovz * 0.5 ;
     double b = 2.0 * d * tan( theta );
     double dwx = dx * b;
@@ -368,8 +390,8 @@ void Navigation::Pan( double dx, double dz )
     mDeltaTranslation.mData[ 0 ] = dwx;
     mDeltaTranslation.mData[ 2 ] = dwz;
     
-    m_sceneManager.GetCenterPoint().mData[ 0 ] += dwx;
-    m_sceneManager.GetCenterPoint().mData[ 2 ] += dwz;
+    //m_sceneManager.GetCenterPoint().mData[ 0 ] += dwx;
+    //m_sceneManager.GetCenterPoint().mData[ 2 ] += dwz;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::Rotate( double angle, gmtl::Vec3d axis )
@@ -378,10 +400,10 @@ void Navigation::Rotate( double angle, gmtl::Vec3d axis )
     gmtl::AxisAngled axisAngle( angle, axis );
     mDeltaRotation = gmtl::makeRot< gmtl::Quatd >( axisAngle );
 
-    m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
+    /*m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
         osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
                    -m_sceneManager.GetCenterPoint().mData[ 2 ], 
-                   m_sceneManager.GetCenterPoint().mData[ 1 ] ) );
+                   m_sceneManager.GetCenterPoint().mData[ 1 ] ) );*/
 
     m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, 
         osg::Vec3d( axis[ 0 ], axis[ 1 ], axis[ 2 ] ) );

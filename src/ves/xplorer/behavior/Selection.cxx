@@ -426,8 +426,8 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
     }
 
     //In the future the center point will be in world coordinates
-    m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
-
+    //m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix().setOrbitCenterPoint( osg::Vec3d( center.x(), center.y(), center.z() ) );
     //Set the selected DCS
     DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
 

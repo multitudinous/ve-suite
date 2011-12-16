@@ -212,7 +212,8 @@ void FrameAll::DoFrameAll()
     core.reset();
     core.setPosition( tempPoint );
 
-    m_sceneManager.GetCenterPoint().set( bb.center().x(), bb.center().y(), bb.center().z() );
+    //m_sceneManager.GetCenterPoint().set( bb.center().x(), bb.center().y(), bb.center().z() );
+    m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( bb.center() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
