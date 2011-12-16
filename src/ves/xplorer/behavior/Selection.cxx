@@ -425,10 +425,7 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
         sceneManipulator->SetPosition( center );
     }
 
-    //We need to transform center point into camera space
     //In the future the center point will be in world coordinates
-    //center = center * osg::Matrixd( m_sceneManager.GetNavDCS()->GetMat().mData );
-    //center = center * m_currentGLTransformInfo->GetViewMatrixOSG();
     m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
 
     //Set the selected DCS
