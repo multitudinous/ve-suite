@@ -65,13 +65,13 @@ std::string PaintingPlugin::GetName()
 }
 
 
-QWidget* PaintingPlugin::GetUIWidget( QWidget* parent )
+QWidget* PaintingPlugin::GetUIWidget( QWidget* )
 {
     return m_UIWidget;
 }
 
 
-QWidget* PaintingPlugin::GetResultWidget( QWidget* parent )
+QWidget* PaintingPlugin::GetResultWidget( QWidget* )
 {
     return m_ResultWidget;
 }
@@ -83,12 +83,12 @@ QWidget* PaintingPlugin::GetFinancialDataWidget()
 }
 
 
-QWidget* PaintingPlugin::ViewInputVariables( QWidget* parent )
+QWidget* PaintingPlugin::ViewInputVariables( QWidget* )
 {
     return m_InputVariablesWidget;
 }
 
-QWidget* PaintingPlugin::ViewResultsVariables( QWidget* parent )
+QWidget* PaintingPlugin::ViewResultsVariables( QWidget* )
 {
     return m_ResultsVariablesWidget;
 }

@@ -65,13 +65,13 @@ std::string ImageManipulationPlugin::GetName()
 }
 
 
-QWidget* ImageManipulationPlugin::GetUIWidget( QWidget* parent )
+QWidget* ImageManipulationPlugin::GetUIWidget( QWidget* )
 {
     return m_UIWidget;
 }
 
 
-QWidget* ImageManipulationPlugin::GetResultWidget( QWidget* parent )
+QWidget* ImageManipulationPlugin::GetResultWidget( QWidget* )
 {
     return m_ResultWidget;
 }
@@ -83,12 +83,12 @@ QWidget* ImageManipulationPlugin::GetFinancialDataWidget()
 }
 
 
-QWidget* ImageManipulationPlugin::ViewInputVariables( QWidget* parent )
+QWidget* ImageManipulationPlugin::ViewInputVariables( QWidget* )
 {
     return m_InputVariablesWidget;
 }
 
-QWidget* ImageManipulationPlugin::ViewResultsVariables( QWidget* parent )
+QWidget* ImageManipulationPlugin::ViewResultsVariables( QWidget* )
 {
     return m_ResultsVariablesWidget;
 }
