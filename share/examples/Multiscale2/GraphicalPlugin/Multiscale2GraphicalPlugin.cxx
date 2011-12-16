@@ -234,9 +234,8 @@ void Multiscale2GraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 		osg::Vec4ubArray* colours = new osg::Vec4ubArray;
 		
 		osg::Vec3 pos;
-		osg::Vec3 normal(0.0,0.0,1.0);
+		//osg::Vec3 normal(0.0,0.0,1.0);
 		int r=255,g=255,b=255,a=255;
-		char sep;
 		
 		
 #ifdef __DO_LATTICE__
