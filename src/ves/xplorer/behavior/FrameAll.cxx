@@ -208,21 +208,11 @@ void FrameAll::DoFrameAll()
             startPoint.z() + ( vecNear.z() * ratio ) );
     }
     //Set the current switch node's matrix w/ the new "frame all" transform
-    scenegraph::DCS* activeNavSwitchNode = m_sceneManager.GetActiveNavSwitchNode();
     osg::Vec3d tempPoint = bb.center() - endPoint;
-    //activeNavSwitchNode->setPosition( osg::Vec3d( tempPoint[ 0 ], tempPoint[ 2 ], -tempPoint[ 1 ] ) );
-    //gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
-    //gmtl::Quatd m_defaultView = gmtl::makeRot< gmtl::Quatd >( gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
-    //osg::Quat resetQuat( m_defaultView[ 0 ], m_defaultView[ 1 ], m_defaultView[ 2 ], m_defaultView[ 3 ] );
-    //activeNavSwitchNode->setAttitude( resetQuat );
-    //activeNavSwitchNode->setAttitude( osg::Quat( 0., 0., 0., 1. ) );
     core.reset();
     core.setPosition( tempPoint );
 
-    //Get the new center of the bounding sphere in camera space
-    osg::Vec3d center =
-        bb.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
-    m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
+    m_sceneManager.GetCenterPoint().set( bb.center().x(), bb.center().y(), bb.center().z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

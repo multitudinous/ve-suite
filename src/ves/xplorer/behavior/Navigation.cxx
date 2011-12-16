@@ -214,14 +214,26 @@ bool Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
            ( m_currY < 0.9 * m_windowHeight ) )
         {
             double angle = mMagnitude * 7.0;
-            Rotate( angle, gmtl::Vec3d( -dy, 0.0, dx )  );
+            //Rotate( angle, gmtl::Vec3d( -dy, 0.0, dx )  );
+            //m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, 
+            //    osg::Vec3d( axis[ 0 ], axis[ 1 ], axis[ 2 ] ) );
+            m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
+                osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
+                            m_sceneManager.GetCenterPoint().mData[ 1 ], 
+                            m_sceneManager.GetCenterPoint().mData[ 2 ] ) );
+
+            gmtl::Vec3d axis = gmtl::Vec3d( -dy, 0.0, dx );
+            gmtl::normalize( axis );
+
+            m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( axis[ 2 ] * angle, m_sceneManager.GetMxCoreViewMatrix().getUp() );
+            m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( axis[ 0 ] * angle, m_sceneManager.GetMxCoreViewMatrix().getCross() );
         }
         else
         {
             Twist( dx, dy );
         }
 
-        ProcessNavigation();
+        //ProcessNavigation();
         //Mod key shift
         return false;
     }
@@ -253,7 +265,14 @@ void Navigation::Twist( double dx, double dy )
     double angle = currTheta - prevTheta;
     
     //Twist about the y-axis
-    Rotate( angle, gmtl::Vec3d( 0.0, 1.0, 0.0 ) );
+    //Rotate( angle, gmtl::Vec3d( 0.0, 1.0, 0.0 ) );
+    
+    m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
+        osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
+                m_sceneManager.GetCenterPoint().mData[ 1 ], 
+                m_sceneManager.GetCenterPoint().mData[ 2 ] ) );
+    
+    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, m_sceneManager.GetMxCoreViewMatrix().getDir() );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::Zoom( double dy )
@@ -359,11 +378,13 @@ void Navigation::Rotate( double angle, gmtl::Vec3d axis )
     gmtl::AxisAngled axisAngle( angle, axis );
     mDeltaRotation = gmtl::makeRot< gmtl::Quatd >( axisAngle );
 
-    m_sceneManager.GetMxCoreViewMatrix().rotate( angle, 
-        osg::Vec3d( axis[ 0 ], axis[ 1 ], axis[ 2 ] ), 
+    m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
         osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
                    -m_sceneManager.GetCenterPoint().mData[ 2 ], 
-                    m_sceneManager.GetCenterPoint().mData[ 1 ] ) );
+                   m_sceneManager.GetCenterPoint().mData[ 1 ] ) );
+
+    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, 
+        osg::Vec3d( axis[ 0 ], axis[ 1 ], axis[ 2 ] ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::SetWindowValues( unsigned int w, unsigned int h )
