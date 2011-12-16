@@ -40,10 +40,12 @@
 #include <osg/Texture2D>
 
 // --- C/C++ Includes --- //
-
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+
+// --- Boost Includes --- //
+#include <boost/lexical_cast.hpp>
 
 using namespace ves::xplorer::volume;
 
@@ -92,7 +94,8 @@ NoiseTexture2D::NoiseTexture2D( const NoiseTexture2D& rhs )
     _noiseData = new unsigned char[_resolution[0]*_resolution[1]];
     for( unsigned int i = 0; i < _resolution[0]*_resolution[1];++i )
     {
-        _noiseData[i] = 255. * rand() / ( float )RAND_MAX;
+        _noiseData[i] = 
+            boost::lexical_cast< unsigned char >( 255. * rand() / float( RAND_MAX ) );
     }
     _noiseTexture = new osg::Texture2D( *rhs._noiseTexture.get() );
 }
@@ -106,7 +109,8 @@ NoiseTexture2D& NoiseTexture2D::operator=( const NoiseTexture2D& rhs )
         _noiseData = new unsigned char[_resolution[0]*_resolution[1]];
         for( unsigned int i = 0; i < _resolution[0]*_resolution[1];++i )
         {
-            _noiseData[i] = 255. * rand() / ( float )RAND_MAX;
+            _noiseData[i] = 
+                boost::lexical_cast< unsigned char >( 255. * rand() / float( RAND_MAX ) );
         }
         _noiseTexture = new osg::Texture2D( *rhs._noiseTexture.get() );
     }
