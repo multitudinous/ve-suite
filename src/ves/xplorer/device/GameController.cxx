@@ -127,7 +127,7 @@ GameController::GameController()
     m_buttonMap->configure( osgwMx::MxGamePad::Button8, osgwMx::FunctionalMap::MoveModeWorld );
     m_buttonMap->configure( osgwMx::MxGamePad::Button9, osgwMx::FunctionalMap::MoveModeConstrained );
     m_buttonMap->configure( osgwMx::MxGamePad::Button10, osgwMx::FunctionalMap::RotateModeOrbit );
-    m_buttonMap->configure( osgwMx::MxGamePad::Button11, osgwMx::FunctionalMap::RotateModifyRoll );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button11, osgwMx::FunctionalMap::RotateModeLocal );
     m_buttonMap->configure( osgwMx::MxGamePad::Button12, osgwMx::FunctionalMap::MoveUpAtRate );
     m_buttonMap->configure( osgwMx::MxGamePad::Button13, osgwMx::FunctionalMap::MoveDownAtRate );
     ///Initialize the gamepad class
@@ -231,7 +231,7 @@ void GameController::OnAxis0Event( const float event )
         return;
     }
 
-    m_mxGamePadStyle->setButtons( 0 );//osgwMx::MxGamePad::Button2 );//| osgwMx::MxGamePad::Button8 );
+    m_mxGamePadStyle->setButtons( 0 );
 
     //m_viewMatrix.setByInverseMatrix( 
     //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
@@ -263,7 +263,7 @@ void GameController::OnAxis1Event( const float event )
         return;
     }
 
-    m_mxGamePadStyle->setButtons( 0 );//osgwMx::MxGamePad::Button2 );//| osgwMx::MxGamePad::Button8 );
+    m_mxGamePadStyle->setButtons( 0 );
     
     //m_viewMatrix.setByInverseMatrix( 
     //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
@@ -293,7 +293,7 @@ void GameController::OnAxis2Event( const float event )
     {
         return;
     }
-    m_mxGamePadStyle->setButtons( 0 );//osgwMx::MxGamePad::Button11 );
+    m_mxGamePadStyle->setButtons( m_buttons );
 
     //m_viewMatrix.setByInverseMatrix( 
     //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
@@ -330,7 +330,7 @@ void GameController::OnAxis3Event( const float event )
     {
         return;
     }
-    m_mxGamePadStyle->setButtons( 0 );//osgwMx::MxGamePad::Button11 );
+    m_mxGamePadStyle->setButtons( m_buttons );
     
     //m_viewMatrix.setByInverseMatrix( 
     //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
@@ -629,11 +629,11 @@ void GameController::SetRotationMode( std::string rotationMode )
     m_navMode = rotationMode;
     if( m_navMode == "User" )
     {
-        m_buttons = osgwMx::FunctionalMap::RotateModeLocal;
+        m_buttons = osgwMx::MxGamePad::Button11;
     }
     else if( m_navMode == "Orbit" )
     {
-        m_buttons = osgwMx::FunctionalMap::RotateModeOrbit;
+        m_buttons = osgwMx::MxGamePad::Button10;
         m_viewMatrix.lookAtOrbitCenter();
     }
 }
