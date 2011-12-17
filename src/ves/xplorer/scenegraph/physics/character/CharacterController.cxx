@@ -57,6 +57,7 @@
 #include <osg/ShapeDrawable>
 #include <osgDB/ReadFile>
 #include <osg/PositionAttitudeTransform>
+#include <osg/io_utils>
 
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
@@ -718,46 +719,13 @@ void CharacterController::EyeToCenterRayTest(
 void CharacterController::LookAt(
     btVector3& eye, btVector3& center, btVector3& up )
 {
-    btVector3 vVector = eye - center;
+    btVector3 vVector = center - eye;
     vVector.normalize();
-    btVector3 rVector( up.cross( vVector ) );
-    rVector.normalize();
-    btVector3 uVector( vVector.cross( rVector ) );
-    uVector.normalize();
-
-    gmtl::Matrix44d matrix;
-    matrix.mData[ 0 ]  =  rVector[ 0 ];
-    matrix.mData[ 1 ]  = -vVector[ 0 ];
-    matrix.mData[ 2 ]  =  uVector[ 0 ];
-    matrix.mData[ 3 ]  =  0.0;
-
-    matrix.mData[ 4 ]  =  rVector[ 1 ];
-    matrix.mData[ 5 ]  = -vVector[ 1 ];
-    matrix.mData[ 6 ]  =  uVector[ 1 ];
-    matrix.mData[ 7 ]  =  0.0;
-
-    matrix.mData[ 8 ]  =  rVector[ 2 ];
-    matrix.mData[ 9 ]  = -vVector[ 2 ];
-    matrix.mData[ 10 ] =  uVector[ 2 ];
-    matrix.mData[ 11 ] =  0.0;
-
-    matrix.mData[ 12 ] = -rVector.dot( eye );
-    matrix.mData[ 13 ] =  vVector.dot( eye );
-    matrix.mData[ 14 ] = -uVector.dot( eye );
-    matrix.mData[ 15 ] =  1.0;
-
-    ///Lets take into account the current VR Juggler head position
-    ///Invert the Character LookAt matrix so that we can put it into
-    ///local character coordinate space.
-    matrix = gmtl::invert( matrix );
-    const gmtl::Matrix44d tempHeadMatrix = SceneManager::instance()->GetHeadMatrix();
-    const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
-    gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
-    ///Take the current VR Juggler head matrix and transform it into Z up land
-    ///and then move it into the current LookAt space
-    matrix = tempHeadMatrix * myMat * matrix;
     
-    SceneManager::instance()->GetActiveNavSwitchNode()->SetMat( matrix );
+    osgwMx::MxCore& core = SceneManager::instance()->GetMxCoreViewMatrix();
+    core.setDir(      osg::Vec3d( vVector[ 0 ], vVector[ 1 ], vVector[ 2 ] ) );
+    core.setPosition( osg::Vec3d(     eye[ 0 ],     eye[ 1 ],     eye[ 2 ] ) );
+    core.setUp(       osg::Vec3d(      up[ 0 ],      up[ 1 ],      up[ 2 ] ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::OccludeDistanceLERP()
