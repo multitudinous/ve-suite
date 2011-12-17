@@ -114,8 +114,8 @@ GameController::GameController()
     m_leftStickY( 0 ),
     m_rightStickX( 0 ),
     m_rightStickY( 0 ),
-    m_buttonMap( new osgwMx::FunctionalMap() ),
     m_buttons( 0 ),
+    m_buttonMap( new osgwMx::FunctionalMap() ),
     m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() )
 {
     // Create a default functional map.
