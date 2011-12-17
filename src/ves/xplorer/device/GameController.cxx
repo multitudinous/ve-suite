@@ -115,6 +115,7 @@ GameController::GameController()
     m_rightStickX( 0 ),
     m_rightStickY( 0 ),
     m_buttonMap( new osgwMx::FunctionalMap() ),
+    m_buttons( 0 ),
     m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() )
 {
     // Create a default functional map.
@@ -123,8 +124,8 @@ GameController::GameController()
     m_buttonMap->configure( osgwMx::MxGamePad::Button2, osgwMx::FunctionalMap::MoveModifyUpDown );
     m_buttonMap->configure( osgwMx::MxGamePad::Button3, osgwMx::FunctionalMap::JumpToHomePosition );
     m_buttonMap->configure( osgwMx::MxGamePad::Button6, osgwMx::FunctionalMap::MoveModifyScaleSpeedDown );
-    m_buttonMap->configure( osgwMx::MxGamePad::Button7, osgwMx::FunctionalMap::MoveModifyScaleSpeedUp );
-    m_buttonMap->configure( osgwMx::MxGamePad::Button8, osgwMx::FunctionalMap::MoveModeWorld );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button7, osgwMx::FunctionalMap::MoveModeOrbit );
+    m_buttonMap->configure( osgwMx::MxGamePad::Button8, osgwMx::FunctionalMap::MoveModeLocal );
     m_buttonMap->configure( osgwMx::MxGamePad::Button9, osgwMx::FunctionalMap::MoveModeConstrained );
     m_buttonMap->configure( osgwMx::MxGamePad::Button10, osgwMx::FunctionalMap::RotateModeOrbit );
     m_buttonMap->configure( osgwMx::MxGamePad::Button11, osgwMx::FunctionalMap::RotateModeLocal );
@@ -176,6 +177,18 @@ GameController::GameController()
 
     m_button5EventInterface.init( "Joystick0_d5" );
     m_button5EventInterface.addCallback(boost::bind(&GameController::OnButton5Event, this, _1));
+
+    m_button6EventInterface.init( "Joystick0_d6" );
+    m_button6EventInterface.addCallback(boost::bind(&GameController::OnButton6Event, this, _1));
+
+    m_button7EventInterface.init( "Joystick0_d7" );
+    m_button7EventInterface.addCallback(boost::bind(&GameController::OnButton7Event, this, _1));
+
+    m_button10EventInterface.init( "Joystick0_d10" );
+    m_button10EventInterface.addCallback(boost::bind(&GameController::OnButton10Event, this, _1));
+
+    m_button11EventInterface.init( "Joystick0_d11" );
+    m_button11EventInterface.addCallback(boost::bind(&GameController::OnButton11Event, this, _1));
 
     /*eventmanager::EventManager* evm = eventmanager::EventManager::instance();
     using eventmanager::SignalWrapper;
@@ -233,8 +246,6 @@ void GameController::OnAxis0Event( const float event )
 
     m_mxGamePadStyle->setButtons( 0 );
 
-    //m_viewMatrix.setByInverseMatrix( 
-    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     // Left stick: Move.
     // Normalize values to range -1.0 to 1.0.
     // These are units to move in world coordinates per event or per frame.
@@ -248,12 +259,6 @@ void GameController::OnAxis0Event( const float event )
     {
         return;
     }
-    
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis1Event( const float event )
@@ -264,9 +269,6 @@ void GameController::OnAxis1Event( const float event )
     }
 
     m_mxGamePadStyle->setButtons( 0 );
-    
-    //m_viewMatrix.setByInverseMatrix( 
-    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     // Left stick: Move.
     // Normalize values to range -1.0 to 1.0.
@@ -281,10 +283,6 @@ void GameController::OnAxis1Event( const float event )
     {
         return;
     }
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis2Event( const float event )
@@ -294,9 +292,6 @@ void GameController::OnAxis2Event( const float event )
         return;
     }
     m_mxGamePadStyle->setButtons( m_buttons );
-
-    //m_viewMatrix.setByInverseMatrix( 
-    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
 
     // Right stick: Rotate.
     // Base class angle values are in degrees. By calling
@@ -318,10 +313,6 @@ void GameController::OnAxis2Event( const float event )
     {
         return;
     }
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis3Event( const float event )
@@ -332,9 +323,6 @@ void GameController::OnAxis3Event( const float event )
     }
     m_mxGamePadStyle->setButtons( m_buttons );
     
-    //m_viewMatrix.setByInverseMatrix( 
-    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
-
     // Right stick: Rotate.
     // Base class angle values are in degrees. By calling
     // normalizeAxisValue, we pass in -1 to 1 degrees.
@@ -355,10 +343,6 @@ void GameController::OnAxis3Event( const float event )
     {
         return;
     }
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis4Event( gadget::DigitalState::State event )
@@ -373,9 +357,6 @@ void GameController::OnAxis4Event( gadget::DigitalState::State event )
         return;
     }
     
-    //m_viewMatrix.setByInverseMatrix( 
-    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
-
     switch(event) 
     {
     case gadget::DigitalState::ON:
@@ -395,10 +376,6 @@ void GameController::OnAxis4Event( gadget::DigitalState::State event )
     default:
         break;
     }
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis5Event( gadget::DigitalState::State event )
@@ -412,9 +389,6 @@ void GameController::OnAxis5Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
-    //m_viewMatrix.setByInverseMatrix( 
-    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
@@ -435,10 +409,6 @@ void GameController::OnAxis5Event( gadget::DigitalState::State event )
     default:
         break;
     }
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnButton0Event( gadget::DigitalState::State event )
@@ -452,9 +422,6 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
-    //m_viewMatrix.setByInverseMatrix( 
-    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
@@ -480,11 +447,6 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
     default:
         break;
     }
-    
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnButton2Event( gadget::DigitalState::State event )
@@ -498,9 +460,6 @@ void GameController::OnButton2Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
-    //m_viewMatrix.setByInverseMatrix( 
-    //    osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
@@ -522,11 +481,6 @@ void GameController::OnButton2Event( gadget::DigitalState::State event )
     default:
         break;
     }
-    
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnButton4Event( gadget::DigitalState::State event )
@@ -540,9 +494,6 @@ void GameController::OnButton4Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
-    //m_viewMatrix.setByInverseMatrix( 
-    //                  osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
@@ -563,11 +514,6 @@ void GameController::OnButton4Event( gadget::DigitalState::State event )
     default:
         break;
     }
-    
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnButton5Event( gadget::DigitalState::State event )
@@ -581,9 +527,6 @@ void GameController::OnButton5Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
-    //m_viewMatrix.setByInverseMatrix( 
-    //                  osg::Matrix( DeviceHandler::instance()->GetActiveDCS()->GetMat().getData() ) );
     
     switch(event) 
     {
@@ -603,11 +546,156 @@ void GameController::OnButton5Event( gadget::DigitalState::State event )
     default:
         break;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton6Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
     
-    gmtl::Matrix44d newTransform;    
-    newTransform.set( m_viewMatrix.getInverseMatrix().ptr() );
-    //Set the activeDCS w/ new transform
-    DeviceHandler::instance()->GetActiveDCS()->SetMat( newTransform );
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {        
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton7Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {        
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton10Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {        
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        if( m_mxGamePadStyle->getMoveMode() == osgwMx::FunctionalMap::MoveModeOrbit )
+        {
+            //m_buttons = m_buttons | osgwMx::MxGamePad::Button8 | ~osgwMx::MxGamePad::Button7;
+            m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
+        }
+        ///Orbit mode
+        else
+        {
+            m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOrbit );
+
+            //m_buttons = m_buttons | ~osgwMx::MxGamePad::Button8 | osgwMx::MxGamePad::Button7;
+            m_viewMatrix.lookAtOrbitCenter();
+        }
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+}////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton11Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    switch(event) 
+    {
+    case gadget::DigitalState::ON:
+    {        
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        if( m_mxGamePadStyle->getRotateMode() == osgwMx::FunctionalMap::RotateModeOrbit )
+        {
+            //m_buttons = m_buttons | osgwMx::MxGamePad::Button11 | ~osgwMx::MxGamePad::Button10;
+            m_mxGamePadStyle->setRotateMode( osgwMx::FunctionalMap::RotateModeLocal );
+            m_buttons = 0;
+        }
+        ///Orbit mode
+        else
+        {
+            m_mxGamePadStyle->setRotateMode( osgwMx::FunctionalMap::RotateModeOrbit );
+            //m_buttons = m_buttons | ~osgwMx::MxGamePad::Button11 | osgwMx::MxGamePad::Button10;
+            m_viewMatrix.lookAtOrbitCenter();
+            m_buttons = 0;
+        }
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
@@ -618,10 +706,6 @@ void GameController::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPo
     inverseVPW.invert( inverseVPW );
     startPoint = osg::Vec3d( m_currX, m_currY, 0.0f ) * inverseVPW;
     endPoint = osg::Vec3d( m_currX, m_currY, 1.0f ) * inverseVPW;
-    
-    //std::cout << m_currX << " " << m_currY << std::endl << std::flush;
-    //std::cout << "startPoint: " << startPoint << std::endl << std::flush;
-    //std::cout << "endPoint: " << endPoint << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::SetRotationMode( std::string rotationMode )

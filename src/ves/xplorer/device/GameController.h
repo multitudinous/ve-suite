@@ -156,6 +156,14 @@ private:
     void OnButton4Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
     void OnButton5Event( gadget::DigitalState::State event );
+    /// All GameController events get delivered here
+    void OnButton6Event( gadget::DigitalState::State event );
+    /// All GameController events get delivered here
+    void OnButton7Event( gadget::DigitalState::State event );
+    /// All GameController events get delivered here
+    void OnButton10Event( gadget::DigitalState::State event );
+    /// All GameController events get delivered here
+    void OnButton11Event( gadget::DigitalState::State event );
     
     ///Setup the start and end point for a mouse pick 
     void SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
