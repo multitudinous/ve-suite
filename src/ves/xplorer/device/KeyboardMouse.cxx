@@ -47,14 +47,8 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 #include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
-#include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
-
-#include <ves/xplorer/scenegraph/nurbs/NURBS.h>
-#include <ves/xplorer/scenegraph/nurbs/NURBSControlMesh.h>
-#include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
-#include <ves/xplorer/scenegraph/nurbs/PointLineSegmentIntersector.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
@@ -674,10 +668,6 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoi
     inverseVPW.invert( inverseVPW );
     startPoint = osg::Vec3d( m_currX, m_currY, 0.0f ) * inverseVPW;
     endPoint = osg::Vec3d( m_currX, m_currY, 1.0f ) * inverseVPW;
-    
-    //std::cout << m_currX << " " << m_currY << std::endl << std::flush;
-    //std::cout << "startPoint: " << startPoint << std::endl << std::flush;
-    //std::cout << "endPoint: " << endPoint << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::HandleSignal( const int signum )
