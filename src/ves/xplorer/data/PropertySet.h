@@ -236,6 +236,9 @@ public:
     virtual bool WriteToDatabase( Poco::Data::Session* const session, const std::string& TableName, Poco::Data::Statement& statement );
     virtual bool WriteToDatabase( const std::string& DatabaseName );
     virtual bool WriteToDatabase( const std::string& DatabaseName, const std::string& TableName );
+    ///Strictly writes out PropertySet to db; prevents derived-class overrides
+    ///from performing other operations in the process.
+    void WriteToDatabaseNoOverride();
 
     ///A series of methods to delete the current PropertySet from the DB
     virtual bool DeleteFromDatabase();

@@ -1462,7 +1462,7 @@ void PropertySet::SaveLiveProperties( Poco::Timer& timer )
     {
         LOG_INFO( "Changes detected in live property in propertyset " << mUUIDString <<
                 ": auto-saving." );
-        WriteToDatabase();
+        WriteToDatabaseNoOverride();
     }
     else
     {
@@ -1470,6 +1470,21 @@ void PropertySet::SaveLiveProperties( Poco::Timer& timer )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void PropertySet::WriteToDatabaseNoOverride()
+{
+    Poco::Data::SessionPool* pool = ves::xplorer::data::DatabaseManager::
+                                    instance()->GetPool();
+    if( pool == 0 )
+    {
+        return;
+    }
+    Poco::Data::Session session( pool->get() );
+    Poco::Data::Statement statement( session );
+
+    PropertySet::WriteToDatabase( &session, mTableName, statement );
+}
+
+
 }
 }
 }
