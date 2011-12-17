@@ -198,11 +198,11 @@ GameController::GameController()
     
     RegisterButtonSignals();
     RegisterKeySignals();
-    
-    CONNECTSIGNALS_1( "%Exit", void( bool const& ),
-                     &GameController::Exit,
+    */    
+    CONNECTSIGNALS_1( "%NavigationRotationMode", void( std::string ),
+                     &GameController::SetRotationMode,
                      m_connections, any_SignalType, normal_Priority );  
-    */
+
     //Setup the ability to catch shutdowns
     //m_signalHandler = boost::bind(&GameController::HandleSignal, this, _1);
     //vrj::Kernel::instance()->
@@ -217,11 +217,6 @@ GameController::~GameController()
 GameController* GameController::AsGameController()
 {
     return this;
-}
-////////////////////////////////////////////////////////////////////////////////
-void GameController::Exit( bool const& exit )
-{
-    m_exit = exit;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::ProcessEvents( ves::open::xml::CommandPtr )
@@ -627,5 +622,19 @@ void GameController::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPo
     //std::cout << m_currX << " " << m_currY << std::endl << std::flush;
     //std::cout << "startPoint: " << startPoint << std::endl << std::flush;
     //std::cout << "endPoint: " << endPoint << std::endl << std::flush;
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::SetRotationMode( std::string rotationMode )
+{
+    m_navMode = rotationMode;
+    if( m_navMode == "User" )
+    {
+        m_buttons = osgwMx::FunctionalMap::RotateModeLocal;
+    }
+    else if( m_navMode == "Orbit" )
+    {
+        m_buttons = osgwMx::FunctionalMap::RotateModeOrbit;
+        m_viewMatrix.lookAtOrbitCenter();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -189,8 +189,8 @@ private:
             eventmanager::BooleanPropagationCombiner > MouseMoveSignal_type;
     MouseMoveSignal_type m_mouseMove;
 
-    ///Slot to determine if the mouse is inside the UI
-    void Exit( bool const& exit );
+    ///Slot to control the nav mode
+    void SetRotationMode( std::string rotationMode );
 
     /// Scroll signal type
     /// Params are: deltaX, deltaY, x, y, state (modifier mask OR'd with button mask)
@@ -212,6 +212,8 @@ private:
     osg::ref_ptr< osgwMx::FunctionalMap > m_buttonMap;
     ///MxCore pointer
     osgwMx::MxCore& m_viewMatrix;
+    ///Nav mode
+    std::string m_navMode;
 };
 
 } //end device
