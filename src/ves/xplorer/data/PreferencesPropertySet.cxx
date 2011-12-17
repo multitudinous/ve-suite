@@ -192,7 +192,11 @@ void PreferencesPropertySet::CreateSkeleton()
 
     {
         std::vector< std::string > stringVector;
-        AddProperty( "NavigationRotationMode", stringVector, "Nav Mode" );
+        AddProperty( "NavigationRotationMode", 1, "Nav Mode" );
+        stringVector.push_back( "Orbit" );
+        stringVector.push_back( "User" );
+        SetPropertyAttribute( "NavigationRotationMode", "enumValues", stringVector );
+        
         mPropertyMap["NavigationRotationMode"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< std::vector< std::string > const& >( mUUIDString,
                                                        mPropertyMap["NavigationRotationMode"],
