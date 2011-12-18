@@ -344,7 +344,11 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         }
         
         mRB = osgbDynamics::createRigidBody( cr.get() );
-        
+        if( !mRB )
+        {
+            std::cout << "|\tUnable to create a btRigidBody." << std::endl;
+            return;
+        }
         osg::ref_ptr< osgbCollision::RefRigidBody > tempRB =
             new osgbCollision::RefRigidBody( mRB );
         amt->setUserData( tempRB.get() );
