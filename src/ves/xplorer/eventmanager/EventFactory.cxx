@@ -109,6 +109,15 @@ EventFactory::EventFactory():
             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
         m_signals[ "DatasetPropertySet.TBETAddScalarSignal" ] = swb;
     }
+
+    // Scenegraph has changed
+    {
+        SignalWrapperBase* swb =
+            new SignalWrapper< ves::util::VoidSignal_type >( &m_scenegraphChangedSignal );
+        evm->RegisterSignal( swb, "ScenegraphChanged",
+            ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+        m_signals[ "ScenegraphChanged" ] = swb;
+    }
 }
 
 EventFactory::~EventFactory()

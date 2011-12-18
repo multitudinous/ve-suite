@@ -43,6 +43,7 @@
 #include <ves/xplorer/scenegraph/util/ToggleNodeVisitor.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/data/CADPropertySet.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Logging.h>
@@ -599,6 +600,11 @@ static void SetPhysicsOnCADNode( std::string const& nodeID,
             part->GetPhysicsRigidBody()->CleanRigidBody();
         }
     }
+
+    // Scenegraph will have changed after this operation; announce this
+    reinterpret_cast< eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
+    ( eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
+    ->mSignal->operator()();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -136,6 +136,11 @@ TreeTab::TreeTab(QWidget *parent) :
                      &TreeTab::OnNodeAdded,
                      mConnections, normal_Priority );
 
+    CONNECTSIGNAL_0( "ScenegraphChanged",
+                     void( ),
+                     &TreeTab::ScenegraphChanged,
+                     mConnections, normal_Priority );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 TreeTab::~TreeTab()
@@ -442,6 +447,11 @@ std::string TreeTab::GetSelectedNodeID()
 void TreeTab::OnNodeAdded( std::string const& filename )
 {
     NodeAddedQSignal( filename );
+}
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::ScenegraphChanged()
+{
+    NodeAddedQSignal( std::string() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::QueuedNodeAdded( std::string const& )

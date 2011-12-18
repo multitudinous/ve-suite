@@ -104,6 +104,8 @@ private:
     ves::util::VoidSignal_type m_updateNetworkSignal;
     /// Add a texture dataset - Pass PropertySet UUID as arg1, texture directory as arg2
     ves::util::TwoStringSignal_type m_addTBETScalarSignal;
+    /// Scenegraph has changed
+    ves::util::VoidSignal_type m_scenegraphChangedSignal;
     //--------------------------------------
 
     /// Logging tools

@@ -108,6 +108,7 @@ protected:
     void SyncTransformFromDCS( ves::xplorer::scenegraph::DCS* dcs );
 
     void OnNodeAdded( std::string const& filename );
+    void ScenegraphChanged();
 
     void RefreshTree();
 
