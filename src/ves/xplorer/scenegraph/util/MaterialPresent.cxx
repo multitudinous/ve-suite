@@ -51,7 +51,8 @@ using namespace ves::xplorer::scenegraph::util;
 MaterialPresent::MaterialPresent( osg::Node* osg_node )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-    mFileHasMaterial( false )
+    mFileHasMaterial( false ),
+    mHasSecondMaterial( false )
 {
     osg_node->accept( *this );
 }
@@ -66,41 +67,43 @@ bool MaterialPresent::FileHasMaterial()
     return mFileHasMaterial;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool MaterialPresent::FileHasSecondMaterial()
+{
+    return mHasSecondMaterial;
+}
+////////////////////////////////////////////////////////////////////////////////
 void MaterialPresent::apply( osg::Geode& node )
 {
     ///Guard to stop any checking of nodes if this flag has already been set.
-    if( mFileHasMaterial )
+    /*if( mFileHasMaterial && mHasSecondMaterial  )
     {
         return;
-    }
-    
+    }*/
     //Stateset for the geode
-    mFileHasMaterial = CheckStateSet( node.getStateSet() );
-    if( mFileHasMaterial )
+    CheckStateSet( node.getStateSet() );
+    /*if( mFileHasMaterial && mHasSecondMaterial  )
     {
         return;
-    }
+    }*/
     
     for( size_t i = 0; i < node.getNumDrawables(); i++ )
     {
         //Stateset for the drawable of the geode
-        mFileHasMaterial = CheckStateSet( node.getDrawable( i )->getStateSet() );
-        if( mFileHasMaterial )
+        CheckStateSet( node.getDrawable( i )->getStateSet() );
+        /*if( mFileHasMaterial && mHasSecondMaterial  )
         {
             return;
-        }
-
+        }*/
         //StateSet for the Drawables Geometry
         osg::ref_ptr< osg::Geometry > geom = 
             node.getDrawable( i )->asGeometry();
         if( geom.valid() )
         {
-            mFileHasMaterial = CheckStateSet(  geom->getStateSet() );
-            if( mFileHasMaterial )
+            CheckStateSet(  geom->getStateSet() );
+            /*if( mFileHasMaterial && mHasSecondMaterial  )
             {
                 return;
-            }
-
+            }*/
             /*osg::ref_ptr< osg::Vec4Array > color_array = 
                 dynamic_cast< osg::Vec4Array* >( geom->getColorArray() );
             if( color_array.valid() )
@@ -120,16 +123,17 @@ void MaterialPresent::apply( osg::Geode& node )
 void MaterialPresent::apply( osg::Node& node )
 {
     ///Guard to stop any checking of nodes if this flag has already been set.
-    if( mFileHasMaterial )
+    /*if( mFileHasMaterial && mHasSecondMaterial  )
     {
         return;
-    }
+    }*/
 
-    mFileHasMaterial = CheckStateSet( node.getStateSet() );
-    if( mFileHasMaterial )
+    CheckStateSet( node.getStateSet() );
+
+    /*if( mFileHasMaterial && mHasSecondMaterial )
     {
         return;
-    }
+    }*/
 
     osg::NodeVisitor::traverse( node );
 }
@@ -149,9 +153,10 @@ bool MaterialPresent::CheckStateSet( osg::StateSet* stateSet )
         }
         */
 
-        osg::StateSet::TextureAttributeList stateSetTal =
-            tempStateSet->getTextureAttributeList();
-        for( unsigned int i = 0; i < stateSetTal.size(); ++i )
+        //osg::StateSet::TextureAttributeList stateSetTal =
+        //    tempStateSet->getTextureAttributeList();
+        //bool haveTexture = false
+        for( unsigned int i = 0; i < 16; ++i )
         {
             osg::StateAttribute* sa = stateSet->getTextureAttribute(
                 i, osg::StateAttribute::TEXTURE );
@@ -159,18 +164,22 @@ bool MaterialPresent::CheckStateSet( osg::StateSet* stateSet )
             osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
             if( tex2D )
             {
-                //stateSet->setTextureAttributeAndModes(
+                if( i > 0 && mFileHasMaterial )
+                {
+                    mHasSecondMaterial = true;
+                }                //stateSet->setTextureAttributeAndModes(
                 //    i, tex2D, osg::StateAttribute::ON );
                 std::stringstream ss;
                 ss << "tex" << i;
                 stateSet->addUniform( new osg::Uniform( ss.str().c_str(), i ) );
+                mFileHasMaterial = true;
             }
         }
 
-        if( stateSetTal.size() > 0 )
+        /*if( haveTexture )
         {
             return true;
-        }
+        }*/
     }
 
     return false;

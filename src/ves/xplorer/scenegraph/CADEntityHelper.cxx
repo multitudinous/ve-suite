@@ -582,6 +582,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     {
         util::MaterialPresent materialPresent( mCadNode.get() );
         bool hasTexture = materialPresent.FileHasMaterial();
+        bool has2Texture = materialPresent.FileHasSecondMaterial();
         osg::ref_ptr< osg::StateSet > stateset =
             mCadNode->getOrCreateStateSet();
         if( hasTexture )
@@ -594,6 +595,18 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             stateset->addUniform(
                 new osg::Uniform( "textureZeroIsBound", false ) );
         }
+
+        if( has2Texture )
+        {
+            stateset->addUniform(
+                                 new osg::Uniform( "textureOneIsBound", true ) );
+        }
+        else
+        {
+            stateset->addUniform(
+                                 new osg::Uniform( "textureOneIsBound", false ) );
+        }
+        std::cout << hasTexture << " " << has2Texture << std::endl;
     }
     
     {

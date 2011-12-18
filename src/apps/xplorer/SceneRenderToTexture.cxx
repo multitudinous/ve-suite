@@ -211,9 +211,10 @@ void SceneRenderToTexture::InitRootGroup()
         osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
         std::string fragmentSource =
         "uniform bool textureZeroIsBound; \n"
+        "uniform bool textureOneIsBound; \n"
         "uniform vec3 glowColor; \n"
         "uniform sampler2D tex0; \n"
-
+        "uniform sampler2D tex1; \n"
         "void main() \n"
         "{ \n"
         "    gl_FragData[ 0 ] = gl_Color; \n"
@@ -224,6 +225,11 @@ void SceneRenderToTexture::InitRootGroup()
                 //GL_MODULATE
         "        gl_FragData[ 0 ] *= texture2D( tex0, gl_TexCoord[ 0 ].st ); \n"
         "    } \n"
+        //"    if( textureOneIsBound ) \n"
+        //"    { \n"
+        //GL_MODULATE
+        //"        gl_FragData[ 1 ] *= texture2D( tex1, gl_TexCoord[ 1 ].st ); \n"
+        //"    } \n"
         "} \n";
 
         fragmentShader->setType( osg::Shader::FRAGMENT );
@@ -245,6 +251,8 @@ void SceneRenderToTexture::InitRootGroup()
         //are handled appropriately.
         stateset->addUniform(
             new osg::Uniform( "textureZeroIsBound", false ) );
+        stateset->addUniform(
+            new osg::Uniform( "textureOneIsBound", false ) );
         //Default glow color for any children that don't explicitly set it
         stateset->addUniform(
             new osg::Uniform( "glowColor", osg::Vec3( 0.0, 0.0, 0.0 ) ) );

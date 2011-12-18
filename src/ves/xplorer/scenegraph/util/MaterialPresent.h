@@ -66,9 +66,11 @@ public:
     virtual void apply( osg::Geode& node );
 
     bool FileHasMaterial();
-
+    bool FileHasSecondMaterial();
+    
 private:
     bool mFileHasMaterial;
+    bool mHasSecondMaterial;
     bool CheckStateSet( osg::StateSet* stateSet );
 };
 }
