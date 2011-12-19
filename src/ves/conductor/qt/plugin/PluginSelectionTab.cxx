@@ -349,11 +349,6 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
 
         ves::xplorer::ModelHandler::instance()->SetActiveModel( mod->GetID() );
     }
-
-    // Scenegraph will have changed after this operation; announce this
-    reinterpret_cast< ves::xplorer::eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
-    ( ves::xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
-    ->mSignal->operator()();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item )
@@ -568,6 +563,10 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
         nameSS << index;
         interface->SetName( nameSS.str() );
 
+        std::string newName("Plugin_");
+        newName += nameSS.str();
+        xplorerPlugin->GetPluginDCS()->SetName( newName );
+
         // Give the UI plugin a pointer to the xplorer plugin. This
         // will give the UI plugin access to things like the correct model.
         UIPluginBase* base = dynamic_cast<UIPluginBase*>( interface );
@@ -599,6 +598,11 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
         // Store the new interface
         m_itemInterfaceMap[ newItem ] = interface;
     }
+
+    // Scenegraph will have changed after this operation; announce this
+    reinterpret_cast< ves::xplorer::eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
+    ( ves::xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
+    ->mSignal->operator()();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::qFileLoadedSlot( const std::string& fileName )
