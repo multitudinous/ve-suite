@@ -115,7 +115,9 @@ PluginBase::~PluginBase()
 void PluginBase::InitializeNode( osg::Group* veworldDCS )
 {
     mDCS = new ves::xplorer::scenegraph::DCS();
-    mDCS->SetName( "PluginBase" );
+    std::string name("Plugin_");
+    name += GetName();
+    mDCS->SetName( name );
     mWorldDCS = veworldDCS;
     AddSelfToSG();
     mModel = new Model( mDCS.get() );

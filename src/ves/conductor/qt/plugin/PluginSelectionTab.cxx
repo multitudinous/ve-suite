@@ -36,6 +36,9 @@
 #include <ves/conductor/qt/MainWindow.h>
 
 #include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
+
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 // This is temporary until I get this sorted out. moc needs to have the include path
 // set so it can find these things in the correct place.
@@ -308,11 +311,18 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
 
         ///Initialize top level network
         ves::open::xml::model::NetworkPtr tempNetwork( new ves::open::xml::model::Network() );
+        if( !mDataBufferEngine->GetXMLSystemDataObject(
+                        mDataBufferEngine->GetTopSystemId() )->GetNetwork() )
+        {
 
-        ///I am not sure why we need a new network for all new plugins that are
-        ///added. This does not seem to be correct.
-        mDataBufferEngine->GetXMLSystemDataObject(
-            mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
+            mDataBufferEngine->GetXMLSystemDataObject(
+                mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
+        }
+        else
+        {
+            tempNetwork = mDataBufferEngine->GetXMLSystemDataObject(
+                    mDataBufferEngine->GetTopSystemId() )->GetNetwork();
+        }
 
         using namespace ves::open::xml::model;
 
@@ -339,6 +349,11 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
 
         ves::xplorer::ModelHandler::instance()->SetActiveModel( mod->GetID() );
     }
+
+    // Scenegraph will have changed after this operation; announce this
+    reinterpret_cast< ves::xplorer::eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
+    ( ves::xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
+    ->mSignal->operator()();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidgetItem* item )
@@ -646,6 +661,11 @@ void PluginSelectionTab::RemovePlugin( UIPluginInterface* plugin )
     // Deleting the widgets will automatically remove the tabs
     plugin->DeleteWidgets();
     delete plugin;
+
+    // Scenegraph will have changed after this operation; announce this
+    reinterpret_cast< ves::xplorer::eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
+    ( ves::xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
+    ->mSignal->operator()();
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
