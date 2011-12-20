@@ -82,7 +82,7 @@ void GenericPropertyBrowser::RefreshContents( bool autosize )
     else
     {
         this->setResizeMode(QtTreePropertyBrowser::Interactive);
-        this->setSplitterPosition( 100 );
+        this->setSplitterPosition( 175 );
     }
 
     // Get all the QItems from underlying propertybrowser and add to this view
