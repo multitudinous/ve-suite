@@ -74,14 +74,22 @@
      <item>
       <widget class="QPushButton" name="m_addPluginButton">
        <property name="text">
-        <string>Add --&gt;</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../icons.qrc">
+         <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="m_removePluginButton">
        <property name="text">
-        <string>&lt;-- Remove</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../icons.qrc">
+         <normaloff>:/images/remove.png</normaloff>:/images/remove.png</iconset>
        </property>
       </widget>
      </item>
@@ -138,6 +146,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
