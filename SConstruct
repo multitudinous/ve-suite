@@ -513,6 +513,12 @@ if GetPlatform() == 'win32':
     #tempEnv[ 'MSVC_USE_SCRIPT' ] = True
     tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = "1"
     #tempEnv['ENV'][ 'SCONS_MSCOMMON_DEBUG' ] = "test.log"
+    #This explicit additon of the SysWOW64 directory is needed because on
+    #x64 windows platforms the opcproxy.dll is not being picked up by
+    #MSVS at compile time like on x86 paltforms.
+    if tempEnv['MSVS_ARCH'] == 'amd64':
+        os.environ['Path'] = '%s%s%s' %('C:\Windows\SysWOW64', os.path.pathsep, os.environ['Path'])
+
 
 #tempEnv['CCCOMSTR'] = "Compiling static object $TARGET"
 #tempEnv['SHCCCOMSTR'] = "Compiling static object $TARGET"
