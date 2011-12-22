@@ -671,6 +671,17 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
 
                 QPoint p = widget->mapToGlobal( rect.topLeft() );
                 p = this->viewport()->mapFromGlobal( p );
+                // Under certain circumstances (not sure exactly which), either
+                // p.x or p.y is -1. We check for this and set to zero, since
+                // negatives values are invalid.
+                if( p.x() < 0 )
+                {
+                    p.setX( 0 );
+                }
+                if( p.y() < 0 )
+                {
+                    p.setY( 0 );
+                }
                 QRect r = QRect(p, rect.size());
                 QString key = QString("%1x%2x%3x%4")
                                .arg(r.x())
@@ -692,13 +703,28 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
 
         QPoint p = widget->mapToGlobal( r.topLeft() );
         p = this->viewport()->mapFromGlobal( p );
+        // Under certain circumstances (not sure exactly which), either
+        // p.x or p.y is -1. We check for this and set to zero, since
+        // negatives values are invalid.
+        if( p.x() < 0 )
+        {
+            p.setX( 0 );
+        }
+        if( p.y() < 0 )
+        {
+            p.setY( 0 );
+        }
         r = QRect(p, r.size());
         QString key = QString("%1x%2x%3x%4")
                        .arg(r.x())
                        .arg(r.y())
                        .arg(r.width())
                        .arg(r.height());
-        m_captureList[key] = r;
+        {
+            // Protect capture list against simultaneous read/write
+            QMutexLocker locker( m_captureListMutex );
+            m_captureList[key] = r;
+        }
     }
 
     return false;
