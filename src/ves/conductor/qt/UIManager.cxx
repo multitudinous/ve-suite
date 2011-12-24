@@ -627,15 +627,15 @@ void UIManager::_repaintChildren()
 #else
                 //m_subloaders[ element ]->AddUpdate( image_Data, 0, 0 );
 
-                std::vector< std::pair< osg::Image*, std::pair<int, int> > >
+                std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > >
                         regions = element->GetDamagedAreas();
                 //std::cout << "* ";
                 for( size_t index = 0; index < regions.size(); ++index )
                 {
-                    std::pair< osg::Image*, std::pair<int, int> > region =
+                    std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > region =
                             regions.at( index );
                     //std::cout << region.second.first << "," << region.second.second << ";";
-                    m_subloaders[ element ]->AddUpdate( region.first,
+                    m_subloaders[ element ]->AddUpdate( region.first.get(),
                                                         region.second.first,
                                                         region.second.second );
                 }

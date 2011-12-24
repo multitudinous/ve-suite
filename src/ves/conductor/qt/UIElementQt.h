@@ -94,7 +94,7 @@ public:
     virtual osg::Image* RenderElementToImage();
     virtual bool IsDirty();
     virtual void Initialize();
-    virtual std::vector< std::pair< osg::Image*, std::pair< int, int > > > const& GetDamagedAreas();
+    virtual std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > const& GetDamagedAreas();
 
     ///Override this so that we can dirty the image and ask for a draw
     //virtual void MoveCanvas( float dx, float dy, float dz );

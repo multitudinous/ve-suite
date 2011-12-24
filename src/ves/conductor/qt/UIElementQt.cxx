@@ -391,7 +391,7 @@ osg::Image* UIElementQt::RenderElementToImage()
     return m_osgImage.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
+std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > const&
         UIElementQt::GetDamagedAreas()
 {
     RefreshWidgetFilterList();
@@ -486,12 +486,12 @@ std::vector< std::pair< osg::Image*, std::pair< int, int > > > const&
             int s = bounds.at(2).toInt( &ec );
             int t = bounds.at(3).toInt( &ec );
 
-            osg::Image* img = new osg::Image;
+            osg::ref_ptr<osg::Image> img = new osg::Image;
             img->setImage( s, t, 1, 4, GL_BGRA, GL_UNSIGNED_BYTE,
-                           update_cache[key].bits(), osg::Image::USE_NEW_DELETE  );
+                           update_cache[key].bits(), osg::Image::NO_DELETE  );
 
             std::pair< int, int > offset( x, y );
-            std::pair< osg::Image*, std::pair<int,int> > package( img, offset );
+            std::pair< osg::ref_ptr<osg::Image>, std::pair<int,int> > package( img, offset );
             m_damagedAreas.push_back( package );
 
             ++index;

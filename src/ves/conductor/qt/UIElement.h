@@ -170,7 +170,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
     virtual bool SizeDirty();
 
-    virtual std::vector< std::pair< osg::Image*, std::pair< int, int > > > const& GetDamagedAreas();
+    virtual std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > const& GetDamagedAreas();
 
     ///
     virtual void SetMinimized( bool state );
@@ -294,7 +294,7 @@ protected:
     std::pair< int, int > m_uiSize;
 
     osg::ref_ptr< osg::Image > m_osgImage;
-    std::vector< std::pair< osg::Image*, std::pair< int, int > > > m_damagedAreas;
+    std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > m_damagedAreas;
 };
 
 } // namepsace conductor

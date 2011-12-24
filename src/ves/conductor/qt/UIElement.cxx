@@ -543,7 +543,7 @@ osg::Vec2d& UIElement::GetTextureCoords( int x, int y )
     return m_texCoords;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::pair< osg::Image*, std::pair< int, int > > > const& UIElement::GetDamagedAreas()
+std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > const& UIElement::GetDamagedAreas()
 {
     return m_damagedAreas;
 }
