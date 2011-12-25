@@ -519,8 +519,8 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
         newSet.SetPropertyValue( "Transform_Rotation_Z",
                                  nodeRotation->GetElement( 0 ) );
 
-        if( nodeScale->GetElement( 0 ) == nodeScale->GetElement( 1 ) ==
-            nodeScale->GetElement( 2 ) )
+        if( (nodeScale->GetElement( 0 ) == nodeScale->GetElement( 1 )) &&  
+           (nodeScale->GetElement( 1 ) == nodeScale->GetElement( 2 )) )
         {
             newSet.SetPropertyValue( "Transform_Scale_Uniform", true );
         }
