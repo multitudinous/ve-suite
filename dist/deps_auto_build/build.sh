@@ -188,8 +188,11 @@ echo "
             Requires argument to specify number of jobs (1:8) to use
     -U      Subversion username to use for private repo
     -d      Create an installer containing install files for package
+                On linux this copies everything into DEPS_INSTALL_DIR
+                On windows this should run the respective iss file
     -t      Create tag file with exuberant ctags
-    -a      Specify if we want to build 32 bit on 64 bit" >&2
+    -a      Specify if we want to build 32 bit on 64 bit
+    -F      Install all of the valid deps that have been built " >&2
 }
 
 #
