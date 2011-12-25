@@ -225,6 +225,40 @@ function unsetvars()
 }
 
 #
+# search all build files
+#
+function findvaliddeps()
+{
+    echo "Preparing to install valid dependencies."
+    validatedeps *.build
+    echo "Done installing valid dependencies."
+}
+
+#
+# install all of the valid deps
+#
+function validatedeps()
+{
+    if [ ! -d "${DEPS_INSTALL_DIR}" ]; then mkdir -p "${DEPS_INSTALL_DIR}"; fi
+
+    for f in $*; do
+      . "$f"
+      if [ -d "${INSTALL_DIR}" ]; then
+        case $PLATFORM in
+          Windows )
+            if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
+            innosetup;
+            ;;
+          Darwin | Linux )
+            echo "Installing ${INSTALL_DIR}/. to ${DEPS_INSTALL_DIR}"
+            cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
+            ;;
+        esac
+      fi
+    done
+}
+
+#
 # setup the function for controlling innosetup
 #
 function innosetup()
@@ -655,7 +689,7 @@ wget
 #
 # execute the script
 #
-while getopts "hkucpbj:U:dta" opts
+while getopts "hkucpbj:U:dtaF" opts
 do
 case $opts in
   h)
@@ -683,6 +717,9 @@ case $opts in
     platform 32
     arch
     windows
+    ;;
+  F)# install all of the valid deps
+    findvaliddeps
     ;;
   ?)
     echo "Invalid option: $OPTARG" >&2
