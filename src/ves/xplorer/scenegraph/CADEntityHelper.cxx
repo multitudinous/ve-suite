@@ -606,7 +606,6 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             stateset->addUniform(
                                  new osg::Uniform( "textureOneIsBound", false ) );
         }
-        std::cout << hasTexture << " " << has2Texture << std::endl;
     }
     
     {
