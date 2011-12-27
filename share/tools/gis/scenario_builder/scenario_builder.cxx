@@ -65,6 +65,12 @@ XERCES_CPP_NAMESPACE_USE
 
 int main( int argc, char* argv[] )
 {
+    if( argc < 1 )
+    {
+        std::cout << " What ! " << argv[ 0 ] << std::endl;
+        return 1;
+    }
+
     try
     {
         XMLPlatformUtils::Initialize();

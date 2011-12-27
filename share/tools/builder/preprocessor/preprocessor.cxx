@@ -52,7 +52,6 @@ using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
 {
-   int  noOfCellsInOctant = 0;
    int isoNum = 10;
    int xCut = 0;
    int yCut = 0;
@@ -63,7 +62,6 @@ int main( int argc, char *argv[] )
    char surfFname[100], paramFile[100];
 
    bool B_octree = false, B_surface = false, B_iso = false, B_cont = false;
-   bool B_surfFname = true, B_isoNum = true;
 
    int cutPlanesOption = 1;
    int multiPlaneOption;

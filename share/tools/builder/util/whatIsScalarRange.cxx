@@ -71,8 +71,6 @@ int main( int argc, char *argv[] )
       try
       {
           vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*>( dataObject );
-          //unsigned int nGroups = mgd->GetNumberOfGroups();
-          unsigned int nDatasetsInGroup = 0;
           vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
           mgdIterator->SetDataSet( mgd );
           ///For traversal of nested multigroupdatasets
