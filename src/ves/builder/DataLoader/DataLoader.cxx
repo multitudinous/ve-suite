@@ -39,7 +39,7 @@
 #include <ves/builder/DataLoader/cfdDICOMTranslator.h>
 #include <ves/builder/DataLoader/plot3dReader.h>
 #include <ves/builder/DataLoader/StarCDTranslator.h>
-#include <ves/builder/DataLoader/AnsysTranslator.h>
+//#include <ves/builder/DataLoader/AnsysTranslator.h>
 #include <ves/builder/DataLoader/STLTranslator.h>
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
@@ -75,7 +75,7 @@ DataLoader::DataLoader()
     // StarCD
     translatorMap[ "star" ] = new StarCDTranslator();
     // ANSYS
-    translatorMap[ "rst" ] = new AnsysTranslator();
+    //translatorMap[ "rst" ] = new AnsysTranslator();
     // STL
     translatorMap[ "stl" ] = new STLTranslator();
 }
@@ -87,6 +87,9 @@ DataLoader::~DataLoader()
 }
 ///////////////////////////////////////////////////////////////////////////
 DataLoader::DataLoader( const DataLoader& input )
+    :
+    inputDataName( input.inputDataName ),
+    inputDataDir( input.inputDataDir )
 {
     ;
 }

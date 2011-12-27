@@ -61,7 +61,7 @@ void MFIXTranslator::MFIXPreTranslateCbk::Preprocess( int argc, char** argv,
 ////////////////////////////////////////////////////////////////////////////////
 void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataObject*& outputDataset,
                                                  cfdTranslatorToVTK* toVTK,
-                                                 vtkAlgorithm*& dataReader )
+                                                 vtkAlgorithm*& )
 {
     MFIXTranslator* MFIXToVTK =
         dynamic_cast< MFIXTranslator* >( toVTK );

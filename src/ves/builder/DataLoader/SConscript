@@ -16,8 +16,6 @@ sources = Split("""
     plot3dReader.cxx
     StarCDTranslator.cxx
     starReader.cxx
-    AnsysTranslator.cxx
-    ansysReader.cxx
     FluentTranslator.cxx
     MFIXTranslator.cxx
     STLTranslator.cxx
@@ -34,8 +32,6 @@ headers = Split("""
     plot3dReader.h
     StarCDTranslator.h
     starReader.h
-    AnsysTranslator.h
-    ansysReader.h
     FluentTranslator.h
     MFIXTranslator.h
     STLTranslator.h

@@ -82,7 +82,7 @@ void EnSightTranslator::EnSightPreTranslateCbk::Preprocess( int argc, char** arg
 ////////////////////////////////////////////////////////////////////////////////
 void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDataset,
                                                        cfdTranslatorToVTK* toVTK,
-                                                       vtkAlgorithm*& dataReader )
+                                                       vtkAlgorithm*& )
 {
     EnSightTranslator* EnSightToVTK =
         dynamic_cast< EnSightTranslator* >( toVTK );

@@ -62,7 +62,7 @@ void AVSTranslator::AVSPreTranslateCbk::Preprocess( int argc, char** argv,
 ////////////////////////////////////////////////////////////////////////////////
 void AVSTranslator::AVSTranslateCbk::Translate( vtkDataObject*& outputDataset,
                                                cfdTranslatorToVTK* toVTK,
-                                               vtkAlgorithm*& dataReader )
+                                               vtkAlgorithm*& )
 {
     AVSTranslator* AVSToVTK =
         dynamic_cast<AVSTranslator*>( toVTK );

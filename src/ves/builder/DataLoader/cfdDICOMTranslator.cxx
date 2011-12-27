@@ -57,7 +57,7 @@ cfdDICOMTranslator::~cfdDICOMTranslator()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDICOMTranslator::DICOMTranslateCbk::Translate( vtkDataObject*& outputDataset,
                                                       cfdTranslatorToVTK* toVTK,
-                                                      vtkAlgorithm*& dataReader )
+                                                      vtkAlgorithm*& )
 {
     cfdDICOMTranslator* dicomToVTK =
         dynamic_cast<cfdDICOMTranslator*>( toVTK );

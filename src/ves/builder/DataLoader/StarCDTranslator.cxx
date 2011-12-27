@@ -60,7 +60,7 @@ void StarCDTranslator::StarCDPreTranslateCbk::Preprocess( int argc, char** argv,
 ////////////////////////////////////////////////////////////////////////////////
 void StarCDTranslator::StarCDTranslateCbk::Translate( vtkDataObject*& outputDataset,
                                                      cfdTranslatorToVTK* toVTK,
-                                                     vtkAlgorithm*& dataReader )
+                                                     vtkAlgorithm*& )
 {
     StarCDTranslator* starCDToVTK =
         dynamic_cast<StarCDTranslator*>( toVTK );

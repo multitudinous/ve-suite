@@ -34,9 +34,8 @@
 #ifndef _DATA_LOADER_H_
 #define _DATA_LOADER_H_
 /*!\file DataLoader.h
-  *Data Loader API
-  */
-/*!\class VE_Builder::DataLoader
+ * Data Loader API
+ * \class VE_Builder::DataLoader
  * This is an interface that allows you to load data into tool
  * in VE-Suite.
  */

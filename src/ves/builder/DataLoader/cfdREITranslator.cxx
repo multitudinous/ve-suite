@@ -65,7 +65,7 @@ cfdREITranslator::~cfdREITranslator()
 /////////////////////////////////////////
 void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDataset,
                                                    cfdTranslatorToVTK* toVTK,
-                                                   vtkAlgorithm*& dataReader )
+                                                   vtkAlgorithm*& )
 {
     cfdREITranslator* reiTranslator =
         dynamic_cast<cfdREITranslator*>( toVTK );
