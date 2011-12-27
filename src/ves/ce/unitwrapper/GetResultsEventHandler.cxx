@@ -71,7 +71,7 @@ void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObjectPtr model )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObjectPtr > objectToProcess )
+std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObjectPtr > )
 {
     if( !baseModel )
     {

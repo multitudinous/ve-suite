@@ -44,10 +44,15 @@ void StripCharacters( std::string& data, const std::string& character );
 
 int main( int argc, char* argv[] )
 {
+    if( argc < 1 )
+    {
+        std::cout << " What ! " << argv[ 0 ] << std::endl;
+        return 1;
+    }
   string sLine;
   string sCol1, sCol3, sCol4;
-  double fCol2;
-  int iCol5, iCol6;
+  //double fCol2;
+  //int iCol5, iCol6;
 
   CSVParser parser;
 
