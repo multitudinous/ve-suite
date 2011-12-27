@@ -173,7 +173,7 @@ float atoms_t::GetCenterZ(uint index)
 	return atoms[index].z;
 }
 
-float atoms_t::GetRadius(uint index) 
+float atoms_t::GetRadius(uint) 
 {
 	return DEFAULT_RADIUS;
 }
@@ -225,76 +225,76 @@ uint atoms_t::Size()
   return numAtoms;
 }
 
-void atoms_t::writePDB(std::string fn, atoms_t otherAtoms) {
-	
-	FILE *fp = fopen(fn.c_str(), "w");
-	
-	/*ANNpointArray           dataPts;
-	ANNpoint                        queryPt; 
-	
-	ANNidxArray                     nnIdx;                                  // near neighbor indices
-	ANNdistArray            dists;                                  // near neighbor distances
-	ANNkd_tree*                     kdTree;                                 // search structure
-	
-	dataPts = annAllocPts(numAtoms, 3);
-	 queryPt = annAllocPt(3);  
-	for(uint i = 0; i < numAtoms; i+=1) {
-		dataPts[i][0] = atoms[i].x;
-	}
-	nnIdx = new ANNidx[1];
-	dists = new ANNdist[1];*/
-	//kdTree = new ANNkd_tree(dataPts,numAtoms, 3);
-	for(uint i = 0; i < numAtoms; i+=1 ) {
-		int numfound = 0;
-		numfound = 0;
-		//if(i%1000 == 0)
-		//float distsq = pow(atoms[i].x - otherAtoms.atoms[i].x,2) + pow(atoms[i].y - otherAtoms.atoms[i].y,2) +pow(atoms[i].z - otherAtoms.atoms[i].z,2);
-			//printf("%d %f\n",i, distsq );
-		/*for(uint j = 0; j < numAtoms; j+=1) {
-			float distsq;
-			distsq = pow(atoms[i].x-atoms[j].x,2)+pow(atoms[i].y-atoms[j].y,2)+pow(atoms[i].z-atoms[j].z,2);
-			if(distsq<16)
-				numfound++;
-		}*/
-		if(atoms[i].centrosymmetry > 1) {
-		int serial = 1;
-		std::string name = "C";
-		char altLoc = ' ';
-		std::string resName = "C";
-		char chainID ='A';
-		int resSeq = 1;
-		char iCode = ' ';
-		float x = atoms[i].x;
-		float y = atoms[i].y;
-		float z = atoms[i].z;
-		float occ = 1;
-		float temp = 1;
-		std::string element = "C";
-		std::string charge = "1";
-		if(1) {
-	fprintf(fp,"HETATM");
-	fprintf(fp,"%5d ",serial); // note trailing space
-	fprintf(fp,"%-4s",name.c_str());
-	fprintf(fp,"%c",altLoc);
-	fprintf(fp,"%-3s",resName.c_str());
-	fprintf(fp," %c",chainID);
-	fprintf(fp,"%4d",resSeq);
-	fprintf(fp,"%c   ",iCode);      // note 3 spaces
-	fprintf(fp,"%8.3f",clip(x));
-	fprintf(fp,"%8.3f",clip(y));
-	fprintf(fp,"%8.3f",clip(z));
-	fprintf(fp,"%6.2f",occ);
-	fprintf(fp,"%6.2f",temp);
-	fprintf(fp,"          ");       // 10 blank spaces
-	fprintf(fp,"%-2s",element.c_str());
-	fprintf(fp,"%-2s",charge.c_str());
-	fprintf(fp,"\n");
-		}
-		}
-	}
-	fclose(fp);
+void atoms_t::writePDB(std::string fn, atoms_t ) 
+{
+    FILE *fp = fopen(fn.c_str(), "w");
 
-	
-	
+    /*ANNpointArray           dataPts;
+    ANNpoint                        queryPt; 
+
+    ANNidxArray                     nnIdx;                                  // near neighbor indices
+    ANNdistArray            dists;                                  // near neighbor distances
+    ANNkd_tree*                     kdTree;                                 // search structure
+
+    dataPts = annAllocPts(numAtoms, 3);
+    queryPt = annAllocPt(3);  
+    for(uint i = 0; i < numAtoms; i+=1) {
+    dataPts[i][0] = atoms[i].x;
+    }
+    nnIdx = new ANNidx[1];
+    dists = new ANNdist[1];*/
+    //kdTree = new ANNkd_tree(dataPts,numAtoms, 3);
+    for(uint i = 0; i < numAtoms; i+=1 ) 
+    {
+        int numfound = 0;
+        numfound = 0;
+        //if(i%1000 == 0)
+        //float distsq = pow(atoms[i].x - otherAtoms.atoms[i].x,2) + pow(atoms[i].y - otherAtoms.atoms[i].y,2) +pow(atoms[i].z - otherAtoms.atoms[i].z,2);
+        //printf("%d %f\n",i, distsq );
+        /*for(uint j = 0; j < numAtoms; j+=1) {
+        float distsq;
+        distsq = pow(atoms[i].x-atoms[j].x,2)+pow(atoms[i].y-atoms[j].y,2)+pow(atoms[i].z-atoms[j].z,2);
+        if(distsq<16)
+        numfound++;
+        }*/
+        if(atoms[i].centrosymmetry > 1) 
+        {
+            int serial = 1;
+            std::string name = "C";
+            char altLoc = ' ';
+            std::string resName = "C";
+            char chainID ='A';
+            int resSeq = 1;
+            char iCode = ' ';
+            float x = atoms[i].x;
+            float y = atoms[i].y;
+            float z = atoms[i].z;
+            float occ = 1;
+            float temp = 1;
+            std::string element = "C";
+            std::string charge = "1";
+            if(1) 
+            {
+                fprintf(fp,"HETATM");
+                fprintf(fp,"%5d ",serial); // note trailing space
+                fprintf(fp,"%-4s",name.c_str());
+                fprintf(fp,"%c",altLoc);
+                fprintf(fp,"%-3s",resName.c_str());
+                fprintf(fp," %c",chainID);
+                fprintf(fp,"%4d",resSeq);
+                fprintf(fp,"%c   ",iCode);      // note 3 spaces
+                fprintf(fp,"%8.3f",clip(x));
+                fprintf(fp,"%8.3f",clip(y));
+                fprintf(fp,"%8.3f",clip(z));
+                fprintf(fp,"%6.2f",occ);
+                fprintf(fp,"%6.2f",temp);
+                fprintf(fp,"          ");       // 10 blank spaces
+                fprintf(fp,"%-2s",element.c_str());
+                fprintf(fp,"%-2s",charge.c_str());
+                fprintf(fp,"\n");
+            }
+        }
+    }
+    fclose(fp);
 }
 

@@ -82,7 +82,7 @@ void Body_Unit_i::StartCalc()
       //executive_->SetModuleMessage(activeId,msg.c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::error (std::string msg)
+void Body_Unit_i::error( std::string )
 {
 
 }
@@ -92,3 +92,4 @@ void Body_Unit_i::warning (std::string msg)
     msg+="\n";
     executive_->SetModuleMessage(activeId, msg.c_str());
 }
+///////////////////////////////////////////////////////////////////////////////

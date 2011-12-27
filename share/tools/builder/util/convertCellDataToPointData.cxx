@@ -47,52 +47,51 @@ using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
 {    
-   // If the command line contains an input vtk file name and an output file,
-   // set them up.  Otherwise, get them from the user...
+    // If the command line contains an input vtk file name and an output file,
+    // set them up.  Otherwise, get them from the user...
     std::string inFileName;// = NULL;
     std::string outFileName;//std::string = NULL;
-   fileIO::processCommandLineArgs( argc, argv,
-                                   "convert cell-centered data file", 
-                                   inFileName, outFileName );
-   if ( ! inFileName.c_str() ) return 1;
+    fileIO::processCommandLineArgs( argc, argv,
+                               "convert cell-centered data file", 
+                               inFileName, outFileName );
+    if ( ! inFileName.c_str() ) return 1;
 
-   int printInfoToScreen = 0; // "1" means print info to screen
-   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
-   vtkDataObject * dataset = (readVtkThing( inFileName, 1 ));
-   int numArrays;
-   if ( dataset->IsA("vtkCompositeDataSet") )
-   {
-      vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*> ( dataset );
-      numArrays = mgd->GetFieldData()->GetNumberOfArrays();
-   }
-   else
-   {
-      vtkDataSet* ds = dynamic_cast<vtkDataSet*> ( dataset );
-      numArrays = ds->GetCellData()->GetNumberOfArrays();
-   }
-   
-   std::cout<<"Number of arrays :"<<numArrays<<std::endl;
-   if ( numArrays > 0 )
-   {
-      vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
-      converter->SetInput( dataset );
-      //converter->DebugOn();
-      //converter->Print( std::cout );
-      converter->Update();
-      vtkDataSet * pointBasedDataset = converter->GetOutput();
+    ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+    vtkDataObject * dataset = (readVtkThing( inFileName, 1 ));
+    int numArrays;
+    if ( dataset->IsA("vtkCompositeDataSet") )
+    {
+        vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*> ( dataset );
+        numArrays = mgd->GetFieldData()->GetNumberOfArrays();
+    }
+    else
+    {
+        vtkDataSet* ds = dynamic_cast<vtkDataSet*> ( dataset );
+        numArrays = ds->GetCellData()->GetNumberOfArrays();
+    }
 
-      // "1" means write binary
-      writeVtkThing( pointBasedDataset, outFileName, 1 );
+    std::cout<<"Number of arrays :"<<numArrays<<std::endl;
+    if ( numArrays > 0 )
+    {
+        vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
+        converter->SetInput( dataset );
+        //converter->DebugOn();
+        //converter->Print( std::cout );
+        converter->Update();
+        vtkDataSet * pointBasedDataset = converter->GetOutput();
 
-      converter->Delete();
-   }
-   else
-      std::cout << "There are no cell-centered data arrays to convert!" << std::endl;
+        // "1" means write binary
+        writeVtkThing( pointBasedDataset, outFileName, 1 );
 
-   dataset->Delete();
-   inFileName.erase();//delete [] inFileName;   inFileName = NULL;
-   outFileName.erase();//delete [] outFileName;  outFileName = NULL;
+        converter->Delete();
+    }
+    else
+        std::cout << "There are no cell-centered data arrays to convert!" << std::endl;
 
-   return 0;
+    dataset->Delete();
+    inFileName.erase();//delete [] inFileName;   inFileName = NULL;
+    outFileName.erase();//delete [] outFileName;  outFileName = NULL;
+
+    return 0;
 }
 

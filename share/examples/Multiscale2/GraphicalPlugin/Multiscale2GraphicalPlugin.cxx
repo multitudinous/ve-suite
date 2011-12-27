@@ -230,7 +230,7 @@ void Multiscale2GraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 		geometry = new osg::Geometry;
 		geode = new osg::Geode;
 		vertices = new osg::Vec3Array;
-		osg::Vec3Array* normals = new osg::Vec3Array;
+		//osg::Vec3Array* normals = new osg::Vec3Array;
 		osg::Vec4ubArray* colours = new osg::Vec4ubArray;
 		
 		osg::Vec3 pos;

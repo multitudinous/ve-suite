@@ -30,6 +30,11 @@ unsigned int pointCounter = 0;
 
 int main( int argc, char* argv[] )
 {
+    if( argc < 3 )
+    {
+        std::cout << "Error " << std::endl;
+        return 1;
+    }
     columns = std::atoi( argv[ 1 ] );
     rows = std::atoi( argv[ 2 ] );
 

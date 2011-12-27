@@ -229,9 +229,6 @@ void simpleApp::CalculateRegistrationVariables()
     gmtl::Point4d pointerPoint = gmtl::makeTrans< gmtl::Point4d >( pointerMat );
 
     //Create the centroid for the triangle
-    //centroid = ((pt1[0]+pt2[0]+pt3[0])/3.0, \
-    //            (pt1[1]+pt2[1]+pt3[1])/3.0, \
-    //            (pt1[2]+pt2[2]+pt3[2])/3)
     gmtl::Point3d centroid;
     centroid.set( 
         (headPoint[ 0 ] + wandPoint[ 0 ] + pointerPoint[ 0 ])/3.0, 

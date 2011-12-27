@@ -93,15 +93,9 @@ void multiPlaneVtkOutput::writeMultiPlanes( vtkDataSet *unsGrid,
    float dy = ( ymax - ymin ) / (float) ( Y_cutMaxStepRange + 1 );
    float dz = ( zmax - zmin ) / (float) ( Z_cutMaxStepRange + 1 );
 
-/*
-std::cout << xmin << " : " << xmax << std::endl;
-std::cout << ymin << " : " << ymax << std::endl;
-std::cout << zmin << " : " << zmax << std::endl;
-*/
-
    int i;
 
-   vtkAppendPolyData * appendPolyData;
+   vtkAppendPolyData* appendPolyData = 0;
    if ( multiPlaneOption && numProcs == 1 )
    {
       appendPolyData = vtkAppendPolyData::New();
@@ -301,7 +295,7 @@ void multiPlaneVtkOutput::readParamFileandWriteMultiPlanes( vtkDataSet *unsGrid,
 
       if ( numCut == 0 ) continue;
 
-      vtkAppendPolyData * appendPolyData;
+      vtkAppendPolyData * appendPolyData = 0;
       vtkPolyData ** append;
       if ( multiPlaneOption )
       {

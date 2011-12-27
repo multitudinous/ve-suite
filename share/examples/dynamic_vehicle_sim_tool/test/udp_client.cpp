@@ -53,7 +53,12 @@
 
 int main (int argc, char* argv[])
 {
-   /*if ( argc != 3 )
+    if( argc < 1 )
+    {
+        std::cout << " What ! " << argv[ 0 ] << std::endl;
+        return 1;
+    }
+    /*if ( argc != 3 )
    {
       std::cerr << "Usage: " << argv[0] << " <address> <port>" << std::endl;
       return EXIT_FAILURE;

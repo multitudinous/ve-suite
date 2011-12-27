@@ -482,7 +482,7 @@ void UIPluginBase::DeletePort( ves::open::xml::model::PortPtr port  )
     }
 }
 
-void UIPluginBase::TogglePlugin( unsigned int flag )
+void UIPluginBase::TogglePlugin( unsigned int )
 {
 
     // Unclear why toggling other plugins on would be part of a specific plugin

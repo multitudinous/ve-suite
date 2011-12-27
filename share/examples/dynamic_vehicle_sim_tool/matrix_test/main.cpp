@@ -86,8 +86,13 @@ gmtl::Matrix44d GetLookAtMatrix( gmtl::Point4d& frontPoint, gmtl::Point4d& leftR
 }
 
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[])
 {
+    if( argc < 1 )
+    {
+        std::cout << " What ! " << argv[ 0 ] << std::endl;
+        return 1;
+    }
     //0.643805 4.71268 -3.03138
     gmtl::Point4d headPoint;
     headPoint.set( 0.643805, 4.71268, -3.03138, 1.0 );
