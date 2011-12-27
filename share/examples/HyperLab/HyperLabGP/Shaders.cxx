@@ -326,6 +326,11 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
     program = xps::ResourceManager::instance()->
         get< osg::Program, osg::ref_ptr >( options_shader_name );
     stateset->setAttribute( program.get() );
+    
+    if( phong )
+    {
+        ;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Shaders::Lights( osg::ref_ptr< osg::Node > node )
