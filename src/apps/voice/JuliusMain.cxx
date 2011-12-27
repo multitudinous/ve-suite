@@ -79,7 +79,7 @@ void cleanup()
 /**
  * Handles a SIGINT; it stops the parser thread and the data loop.
  */
-int on_sigint(int signum, siginfo_t* si, ucontext_t* ut)
+int on_sigint(int, siginfo_t*, ucontext_t*)
 {
     std::cout << "[DBG] Entering SIGINT handler." << std::endl;
     gSpeechNavigator->stopParserThread();
@@ -92,7 +92,7 @@ int on_sigint(int signum, siginfo_t* si, ucontext_t* ut)
  * This allows an external application to send a SIGUSR1 to stop this
  * app from sending speech recognition results.
  */
-int on_sigusr1(int signum, siginfo_t* si, ucontext_t* ut)
+int on_sigusr1(int, siginfo_t*, ucontext_t*)
 {
     std::cout << "[DBG] Entering SIGUSR1 handler." << std::endl;
     if (gSpeechNavigator && gSpeechNavigator->isParserThreadRunning())
@@ -107,7 +107,7 @@ int on_sigusr1(int signum, siginfo_t* si, ucontext_t* ut)
  * This allows an external application that previously sent a SIGUSR1 to stop
  * the speech recognition to resume speech recogntion.
  */
-int on_sigusr2(int signum, siginfo_t* si, ucontext_t* ut)
+int on_sigusr2(int, siginfo_t*, ucontext_t*)
 {
     std::cout << "[DBG] Entering SIGUSR2 handler." << std::endl;
     if (gSpeechNavigator && !gSpeechNavigator->isParserThreadRunning())

@@ -457,7 +457,7 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolPlugin_UIDialog::InputTextChanged( const QString& text )
+void WarrantyToolPlugin_UIDialog::InputTextChanged( const QString& )
 {
     // TODO: Implement OnCreateInputText
     //Get the text from the user and update the query text display
@@ -547,8 +547,7 @@ void WarrantyToolPlugin_UIDialog::OnPartNumberEntry( wxCommandEvent& WXUNUSED( e
 }
 ////////////////////////////////////////////////////////////////////////////////
 */
-void WarrantyToolPlugin_UIDialog::on_m_displayTextChkList_itemClicked
-        ( QListWidgetItem* item )
+void WarrantyToolPlugin_UIDialog::on_m_displayTextChkList_itemClicked( QListWidgetItem* )
 {
     UpdateQueryDisplay();
 }

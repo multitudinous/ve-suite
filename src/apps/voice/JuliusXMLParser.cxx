@@ -248,8 +248,8 @@ JuliusXMLParser::parse(const std::string& text)
 }
 
 void
-JuliusXMLParser::startElement(const XMLCh* const uri, 
-                              const XMLCh* const localname,
+JuliusXMLParser::startElement(const XMLCh* const, 
+                              const XMLCh* const,
                               const XMLCh* const qname, const Attributes& attrs)
 {
    // TODO:  How to get rid of static variables and preserve spaces

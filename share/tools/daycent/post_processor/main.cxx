@@ -74,6 +74,12 @@ std::string m_dbFilename( "sample.db" );
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char* argv[] )
 {
+    if( argc < 1 )
+    {
+        std::cout << " What ! " << argv[ 0 ] << std::endl;
+        return 1;
+    }
+
     std::string root( "./" );
     std::string extension( ".lis" );
     //Iterate over all of the directories
