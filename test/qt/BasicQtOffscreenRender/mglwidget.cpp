@@ -5,7 +5,7 @@
 
 bool qt_sendSpontaneousEvent( QObject* recv, QEvent* e )
 {
-    QCoreApplication::sendSpontaneousEvent( recv, e );
+    return QCoreApplication::sendSpontaneousEvent( recv, e );
 }
 
 mGLWidget::mGLWidget( QWidget *parent )
