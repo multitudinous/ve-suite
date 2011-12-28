@@ -482,50 +482,7 @@ void OSGParticleStage::createStreamLines( ves::xplorer::scenegraph::Geode* geode
 
         {
             std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
-            /*std::string shaderName(
-        //"uniform vec3 ambientMaterial;\n"
-        //"uniform vec3 diffuseMaterial;\n"
-        //"uniform vec3 specularMaterial;\n"
-        //"uniform float specularPower;\n"
-        "varying float opacityVal;\n"
-        
-        "varying vec3 phongColor;\n"
-        "varying vec3 lightPos;\n"
-        //"varying vec3 objPos;\n"
-        "varying vec3 eyePos;\n"
-        "varying vec3 normal;\n"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "    vec3 ambientMaterial = vec3( 0.368627, 0.368421, 0.368421 );\n"
-        "    vec3 diffuseMaterial = vec3( 0.886275, 0.885003, 0.885003 );\n"
-        "    vec3 specularMaterial = vec3( 0.490196, 0.488722, 0.488722 );\n"
-        "    float specularPower = 20.0;\n"
-        "\n"
-        "    vec3 N=normalize(normal);\n"
-        "    if(gl_SecondaryColor.r < .5)\n"
-        //"    if( !gl_FrontFacing )\n"
-        "    {\n"
-        "       N=-N; \n"
-        "    }\n"
-        "    vec3 L=normalize(lightPos);\n"
-        "    float NDotL=max(dot(N,L),0.0);\n"
-        "\n"
-        "    vec3 V=normalize(eyePos);\n"
-        "    vec3 R=reflect(V,N);\n"
-        "    float RDotL=max(dot(R,L),0.0);\n"
-        "\n"
-        "    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*phongColor;\n"
-        "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*phongColor*NDotL;\n"
-        "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
-        "\n"
-        "    vec4 newColor = vec4(TotalAmbient+TotalDiffuse+TotalSpecular,opacityVal);\n"
-        "    newColor.a = opacityVal;\n"
-        //"    gl_FragColor = newColor;\n"
-        "    gl_FragData[ 0 ] = newColor;\n"
-        "    gl_FragData[ 1 ] = vec4( 0, 0, 0, 1);\n"
-        "}\n"
-        );*/
+
             osg::ref_ptr< osg::Shader > fragShader = 
                 osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
             //ss->addUniform( new osg::Uniform( "tex", 1 ) );
