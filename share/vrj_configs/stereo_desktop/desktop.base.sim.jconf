@@ -229,7 +229,7 @@
          <unit>0</unit>
       </position_proxy>
       <position_proxy name="SimCamera Proxy" version="1">
-         <device>SimHeadPos</device>
+         <device>SimCamera</device>
          <unit>0</unit>
       </position_proxy>
       <alias name="VJWand" version="1">
@@ -500,9 +500,6 @@
          <device>SimulatedVJAxis0</device>
          <unit>0</unit>
       </analog_proxy>
-      <!--alias name="VJAxis0" version="1">
-         <proxy>VJAxis0Proxy</proxy>
-      </alias-->
       <input_manager name="IM SDL Joystick" version="2">
          <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
          <driver>SdlJoystick_drv</driver>
@@ -584,41 +581,102 @@
          <unit>0</unit>
       </analog_proxy>
       <analog_proxy name="VJAxis1" version="1">
-       <device>Joystick0</device>
-       <unit>1</unit>
-     </analog_proxy>
-     <analog_proxy name="VJAxis2" version="1">
-       <device>Joystick0</device>
-       <unit>2</unit>
-     </analog_proxy>
-     <analog_proxy name="VJAxis3" version="1">
-       <device>Joystick0</device>
-       <unit>3</unit>
-     </analog_proxy>
-     <analog_proxy name="Joystick0_a4" version="1">
-       <device>Joystick0</device>
-       <unit>4</unit>
-     </analog_proxy>
-     <analog_proxy name="Joystick0_a5" version="1">
-       <device>Joystick0</device>
-       <unit>5</unit>
-     </analog_proxy>
-     <analog_proxy name="Joystick0_a6" version="1">
-       <device>Joystick0</device>
-       <unit>6</unit>
-     </analog_proxy>
-     <analog_proxy name="Joystick0_a7" version="1">
-       <device>Joystick0</device>
-       <unit>7</unit>
-     </analog_proxy>
-     <analog_proxy name="Joystick0_a8" version="1">
-       <device>Joystick0</device>
-       <unit>8</unit>
-     </analog_proxy>
-     <analog_proxy name="Joystick0_a9" version="1">
-       <device>Joystick0</device>
-       <unit>9</unit>
-     </analog_proxy>
+         <device>Joystick0</device>
+         <unit>1</unit>
+      </analog_proxy>
+      <analog_proxy name="VJAxis2" version="1">
+         <device>Joystick0</device>
+         <unit>2</unit>
+      </analog_proxy>
+      <analog_proxy name="VJAxis3" version="1">
+         <device>Joystick0</device>
+         <unit>3</unit>
+      </analog_proxy>
+      <simulated_positional_device name="SimCamera" version="3">
+         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 2" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 3" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 4" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 5" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 6" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 7" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 8" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 9" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 10" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 11" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>2.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.1</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>0</translation_coordinate_system>
+         <rotation_coordinate_system>0</rotation_coordinate_system>
+      </simulated_positional_device>
    </elements>
 </configuration>
 
