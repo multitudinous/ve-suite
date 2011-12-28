@@ -41,8 +41,6 @@
 
 #include <ves/conductor/qt/UITabs.h>
 
-//#include "csvparser.h"
-
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
