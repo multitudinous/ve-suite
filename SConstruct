@@ -97,6 +97,11 @@ def GetSVNVersion( dir = ''):
 Export('GetSVNVersion')
 
 ################################################################################
+def AppendOptions( opts, optArray, dep ):
+    opts.AddOption( dep )
+    optArray.append( dep )
+
+################################################################################
 ########### Setup build dir and name
 buildPlatform = distutils.util.get_platform()
 ##setup platform specific information
@@ -209,6 +214,8 @@ opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
 
 options_db_cache = options_cache + SCons.dblite.dblite_suffix
 SConsignFile(options_db_cache)
+#setup array to enable building dependency installation
+options = []
 
 if GetPlatform() == 'win32':
     vtk_options = fp_option.FlagPollBasedOption("VTK",
@@ -227,17 +234,18 @@ else:
         vtkBaseDir = ARGUMENTS["vtk"]
         vtk_options.setInitial( {'vtk_incdir' : pj(vtkBaseDir,'include','vtk-5.8'),
                 'vtk_libdir': pj(vtkBaseDir,'lib','vtk-5.8')} )
-opts.AddOption( vtk_options )
+AppendOptions( opts, options, vtk_options )
 
 #opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.8')
 hdf5_options = HDF5.HDF5("hdf5","1.6.5", False, True, ['hdf5','hdf5_cpp','hdf5_hl','sz'])
-opts.AddOption(hdf5_options)
+AppendOptions( opts, options, hdf5_options )
+
 hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','df','jpeg'])
-opts.AddOption(hdf4_options)
+AppendOptions( opts, options, hdf4_options )
 
 osg_options = fp_option.FlagPollBasedOption("OpenSceneGraph",
                                                "openscenegraph", "2.8", True, True, compileTest=True)
-opts.AddOption( osg_options )
+AppendOptions( opts, options, osg_options )
 
 if GetPlatform() == 'win32':
    xerces_options = fp_option.FlagPollBasedOption("xerces",
@@ -246,26 +254,18 @@ else:
    xerces_options = SConsAddons.Options.StandardPackageOption("xercesc",
       "Xerces-C library options, default : xercesc_incdir=<xercesc>/include xercesc_libdir=<xercesc>/lib(64)", 
       pj('xercesc','util','XercesVersion.hpp'), library=['xerces-c'], symbol="main", required=True)
-   
-opts.AddOption( xerces_options )
+AppendOptions( opts, options, xerces_options )
 
-#if GetPlatform() == 'win32':
 lemon_options = fp_option.FlagPollBasedOption("lemon",
          "lemon", "1.2", False, True, helpText="Lemon graph library", compileTest=True, headerToCheck=pj('lemon','core.h') )
-
-#else:
-#   lemon_options = SConsAddons.Options.StandardPackageOption("lemon",
-#      "Lemon graph library options, default : lemon_incdir=<lemon>/include lemon_libdir=<lemon>/lib(64)", 
-#      pj('lemon','core.h'), library=['emon.a'], symbol="main", required=False)
-   
-opts.AddOption( lemon_options )
+AppendOptions( opts, options, lemon_options )
 
 if GetPlatform() == 'win32':
    wxwidgets_options = fp_option.FlagPollBasedOption("wxWidgets",
          "wxWidgets", "2.8", False, True, compileTest=True)
 else:
    wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", False, True)
-opts.AddOption( wxwidgets_options )
+AppendOptions( opts, options, wxwidgets_options )
 
 #opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 opts.Add('VRJugglerVersion', 'Set the VRJuggler version so that the proper flagpoll files can be found', '2.0.2')
@@ -286,7 +286,7 @@ opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should
 opts.Add('MakeAspenSupport', 'If "yes", make aspen support', 'no')
 opts.Add('MakeDynSimSupport', 'If "yes", make dynsim support', 'no')
 opts.Add('MakePowersimSupport', 'If "yes", make powersim support', 'no')
-#opts.Add('MakeMinervaSupport', 'If "yes", add GIS support with minerva', 'no')
+#opts.Add('deps', 'If "yes", install any available deeps', 'no')
 opts.Add('tecplot_sdk', 'Provide the directory to the root of the Tecplot SDK.', '')
 
 opts.Add('ARCH', 'CPU architecture (ia32, x64)', GetArch() )
@@ -306,45 +306,56 @@ if GetPlatform() == 'win32':
 bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
                                                "bullet", "2.77", True, True, helpText=None, compileTest=True,
                                                headerToCheck="btBulletCollisionCommon.h")
+AppendOptions( opts, options, bullet_options )
 
 #need to do a flagpoll check to see if TAO pc or fpc files are available
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
                                                "1.5", True, True, helpText=None, compileTest=True,
                                                headerToCheck="ace/ACE.h")
+AppendOptions( opts, options, tao_options )
 
 boost_header_options = fp_option.FlagPollBasedOption("Boost Headers",
         "Boost", "1.46", True, True, helpText=None, compileTest=True)
+AppendOptions( opts, options, boost_header_options )
 
 boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
         "Boost.Filesystem", "1.46", True, True, helpText=None, compileTest=True)
+AppendOptions( opts, options, boost_options )
 
 boost_program_options = fp_option.FlagPollBasedOption("Boost Program Options Libraries",
         "Boost.program_options", "1.46", True, True, helpText=None, compileTest=True)
+AppendOptions( opts, options, boost_program_options )
 
 boost_signals_options = fp_option.FlagPollBasedOption("Boost Signals Libraries",
         "Boost.Signals", "1.46", True, True, helpText=None, compileTest=True)
+AppendOptions( opts, options, boost_signals_options )
 
 gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
                                              "gmtl", "0.5", True, True,
                                              None,
                                              compileTest=True, headerToCheck="gmtl/gmtl.h")
+AppendOptions( opts, options, gmtl_options )
 
 vpr_options = fp_option.FlagPollBasedOption("Vapor",
                                             "vpr", "2.0", True, True,
                                             None,
                                             compileTest=True, headerToCheck="vpr/vpr.h")
+AppendOptions( opts, options, vpr_options )
 
 gadgeteer_options = fp_option.FlagPollBasedOption("Gadgeteer",
                                                   "gadgeteer", "1.0", True, True,
                                                   None,
                                                   compileTest=True, headerToCheck="gadget/gadgetConfig.h")
+AppendOptions( opts, options, gadgeteer_options )
 
 vrjuggler_options = SConsAddons.Options.VRJuggler.VRJ.VRJ("VR Juggler", "2.0.2")
+AppendOptions( opts, options, vrjuggler_options )
 
 osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, True, 
                                               None, 
                                               compileTest=True, headerToCheck="osgAudio/SoundNode.h")
+AppendOptions( opts, options, osgal_options )
 
 # Setup POCO library
 if GetPlatform() == 'win32':
@@ -355,6 +366,7 @@ else:
       "POCO library options, default : POCO_incdir=<POCO>/include POCO_libdir=<POCO>/lib(64)", 
       pj('Poco','Data','SQLite','SQLite.h'), library=['PocoFoundation','PocoData',
       'PocoNet','PocoDataSQLite','PocoUtil','PocoXML','PocoZip'], symbol="main", required=True)
+AppendOptions( opts, options, poco_options )
 
 # Setup osgWorks library
 if GetPlatform() == 'win32':
@@ -364,25 +376,24 @@ else:
     osgworks_options = SConsAddons.Options.StandardPackageOption("osgWorks",
       "osgWorks utility library, default : osgWorks_incdir=<osgWorks>/include osgWorks_libdir=<osgWorks>/lib(64)", 
       pj('osgwTools','Export.h'), library=['osgwTools','osgwMx','osgwQuery'], symbol="main", required=True)
+AppendOptions( opts, options, osgworks_options )
 
 #Setup minerva library
 minerva_options = fp_option.FlagPollBasedOption( "Minerva", "Minerva", "1.0", False, True, None, 
 									  compileTest = True, headerToCheck = "Minerva/Version.h" )
+AppendOptions( opts, options, minerva_options )
 
 osgbullet_options = fp_option.FlagPollBasedOption("osgBullet",
                                                   "osgbullet", "1.0", True, True,
                                                   None,
                                                   compileTest=True, headerToCheck="osgbDynamics/PhysicsState.h")
-
-#osgbulletplus_options = fp_option.FlagPollBasedOption("osgBulletPlus",
-#                                                  "osgbulletplus", "1.0", True, True,
-#                                                  None,
-#                                                  compileTest=True, headerToCheck="osgbBulletPlus/DataLoader.h")
+AppendOptions( opts, options, osgbullet_options )
 
 bdfx_options = fp_option.FlagPollBasedOption("backdropFX",
                                                   "backdropfx", "0.1.0", True, True,
                                                   None,
                                                   compileTest=True, headerToCheck="backdropFX/Effect.h")
+AppendOptions( opts, options, bdfx_options )
 
 #Setup qt on linux
 if GetPlatform() != 'darwin':
@@ -390,28 +401,8 @@ if GetPlatform() != 'darwin':
       "QtCore QtDesigner QtGui QtOpenGL QtScript QtSvg QtXml",
       "4.0", True, True, helpText=None, compileTest=True,
       headerToCheck="QtCore/qglobal.h")
-   opts.AddOption( qt_options )
+   AppendOptions( opts, options, qt_options )
    Export('qt_options')
-
-#opts.AddOption( apr_options )
-#opts.AddOption( apu_options )
-opts.AddOption( bullet_options )
-opts.AddOption( tao_options )
-opts.AddOption( boost_header_options )
-opts.AddOption( boost_options )
-opts.AddOption( boost_signals_options )
-opts.AddOption( boost_program_options )
-opts.AddOption( gmtl_options )
-opts.AddOption( vpr_options )
-opts.AddOption( gadgeteer_options )
-opts.AddOption( vrjuggler_options )
-opts.AddOption( osgal_options )
-opts.AddOption( poco_options )
-opts.AddOption( minerva_options )
-opts.AddOption( osgworks_options )
-opts.AddOption( osgbullet_options )
-#opts.AddOption( osgbulletplus_options )
-opts.AddOption( bdfx_options )
 
 Export( 'opts', 'vtk_options', 'osg_options', 
         'xerces_options','wxwidgets_options',
@@ -727,11 +718,7 @@ if not SConsAddons.Util.hasHelpFlag():
     shareSubdirs = pj(buildDir,'share')
     lokiSubdirs = pj( buildDir, 'external', lokiBaseVar )
     minervaDataSubdirs = pj( buildDir, 'external', 'gdal_data')
-    #osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
     osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
-    #osgBulletSubdirs = pj( buildDir, 'external', osgbulletBaseVar)
-    #osgBulletPlusSubdirs = pj( buildDir, 'external', 'osgBulletPlus')
-    #bullet = pj( buildDir, 'external', bulletBaseVar)
     test = pj( buildDir, 'test', 'osg')
     issBuilder = pj(buildDir,'dist','win','iss')
     qtTestBuilder = pj(buildDir,'test','qt','BasicQtOffscreenRender')
@@ -789,11 +776,18 @@ if not SConsAddons.Util.hasHelpFlag():
     if GetPlatform() == 'win32':
         SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg, 'VisualStudio')
 
+    #Build up the deps builder for installing available deps
+    #baseEnv.Alias('deps')
+    #if 'deps' in COMMAND_LINE_TARGETS:
+    #    for k in options:
+    #        if k.isAvailable():
+    #            print "Deps %s" %k.name
+
     ##Setup the install flag to install VE-Suite
     if 'install' in COMMAND_LINE_TARGETS:
         ves_pkg.build( install=True )
     else:
         ves_pkg.build( install=False )
-         
+ 
     baseEnv.Alias('install', PREFIX)
     Default('.')
