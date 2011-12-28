@@ -73,6 +73,7 @@ namespace
         JuliusNetworkClient* client = 
             reinterpret_cast<JuliusNetworkClient*>(arg);
         client->startDataLoop();
+        return NULL;
     }
 }
 
