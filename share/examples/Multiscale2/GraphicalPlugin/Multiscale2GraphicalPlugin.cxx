@@ -253,7 +253,7 @@ void Multiscale2GraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 				pos.z() = atoms->GetCenterZ(i);
 				vertices->push_back(pos);
 				//normals->push_back(normal);
-				r = atoms->GetCentrosymmetry(i)*20;
+				r = int( atoms->GetCentrosymmetry(i)*20.0 );
 				if(i%100000==0)
 					std::cout << atoms->GetCentrosymmetry(i) << " ";
 				if(r>255)

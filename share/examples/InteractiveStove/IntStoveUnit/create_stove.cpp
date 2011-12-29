@@ -29,31 +29,31 @@ void Create_stove::RunNewStove( int baffnumUI, vector<double> baffle1,
     {
         if ( numBaffs > 0 )
         {
-            baff[i] = baffle1[i];
+            baff[i] = int( baffle1[i] );
         }
         if ( numBaffs > 1 )
         {
-            baff[i+5] = baffle2[i];
+            baff[i+5] = int( baffle2[i] );
         }
         if ( numBaffs > 2 )
         {
-            baff[i+10] = baffle3[i];
+            baff[i+10] = int( baffle3[i] );
         }
         if ( numBaffs > 3 )
         {
-            baff[i+15] = baffle4[i];
+            baff[i+15] = int( baffle4[i] );
         }
         if ( numBaffs > 4 )
         {
-            baff[i+20] = baffle5[i];
+            baff[i+20] = int( baffle5[i] );
         }
         if ( numBaffs > 5 )
         {
-            baff[i+25] = baffle6[i];
+            baff[i+25] = int( baffle6[i] );
         }
         if ( numBaffs > 6 )
         {
-            baff[i+30] = baffle7[i];
+            baff[i+30] = int( baffle7[i] );
         }
     }
 

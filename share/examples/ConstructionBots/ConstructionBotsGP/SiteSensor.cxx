@@ -69,7 +69,7 @@ SiteSensor::SiteSensor( bots::AgentEntity* agentEntity )
     mAngleLeftover( 0.0 ),
     mRotationsPerFrame( 0.0 ),
     mRange( 0.0 ),
-    mNormalizedSiteVector( 0.0, 0.0, 0.0 )
+    mNormalizedSiteVector( 0, 0, 0 )
 {
     Initialize();
 }
