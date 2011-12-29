@@ -36,7 +36,7 @@ static Geometry* createTexturedQuadGeometryLocal(const Vec3& corner,const Vec3& 
 // non-screen-space elements in the graph under the top-level child.
 // See BuildBackground below.
 
-void createMainRenderGraph( osg::Camera *mainCamera, osg::Texture2D* tex)
+void createMainRenderGraph( osg::Camera *mainCamera, osg::Texture2D* )
 {
 	// Configure Camera to draw fullscreen textured quad
 	mainCamera->setClearColor( osg::Vec4( 0., 1., 0., 1. ) ); // should never see this.

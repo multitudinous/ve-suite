@@ -1862,7 +1862,6 @@ void PaintingGP::QueryUserDefinedAndHighlightParts( const std::string& queryStri
     }
     
     bool failedLoad = false;
-    float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
     std::string partNumber;
     std::string partNumberHeader;
 //    ves::xplorer::scenegraph::TextTexture* tempText = 0;

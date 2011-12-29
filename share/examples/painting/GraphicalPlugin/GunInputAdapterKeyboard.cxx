@@ -3,8 +3,7 @@
 // **************************************************************************
 // Handle the keyboard and mouse button presses.
 
-bool GunInputAdapterKeyboard::handle(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &aa)
-
+bool GunInputAdapterKeyboard::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& )
 {
    switch (ea.getEventType())
       {
@@ -14,6 +13,8 @@ bool GunInputAdapterKeyboard::handle(const osgGA::GUIEventAdapter &ea, osgGA::GU
       case osgGA::GUIEventAdapter::KEYUP:
          KeyRelease(ea);
          break;
+      default:
+         break;
       }
    return false;
 }
@@ -21,7 +22,6 @@ bool GunInputAdapterKeyboard::handle(const osgGA::GUIEventAdapter &ea, osgGA::GU
 // **************************************************************************
 
 void GunInputAdapterKeyboard::KeyPress(const osgGA::GUIEventAdapter &ea)
-
 {
    if (_gun.valid() == false)
       return;
@@ -65,7 +65,6 @@ void GunInputAdapterKeyboard::KeyPress(const osgGA::GUIEventAdapter &ea)
 
 // **************************************************************************
 
-void GunInputAdapterKeyboard::KeyRelease(const osgGA::GUIEventAdapter &ea)
-
+void GunInputAdapterKeyboard::KeyRelease(const osgGA::GUIEventAdapter& )
 {
 }
