@@ -92,23 +92,26 @@ using namespace std;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
 ///////////////////////////////////////////////////////////////////////////////
-VEIntStovemod::VEIntStovemod( void ) : 
+VEIntStovemod::VEIntStovemod( void ) 
+    : 
     PluginBase(),
+    m_stoveData( 0 ),
+    m_contourPlane( 0 ),
+    m_vectorPlane( 0 ),
+    
     setcount( 0 ), 
     _outFileName( 0 ),
     _dataSet( 0 ),
     color( 1 ),
     transFlag( 1 ),
+    
     baffleOne( 0 ),
     baffleTwo( 0 ),
     baffleThree( 0 ),
     baffleFour( 0 ),
     baffleFive( 0 ),
     baffleSix( 0 ),
-    baffleSeven( 0 ),
-    m_stoveData( 0 ),
-    m_contourPlane( 0 ),
-    m_vectorPlane( 0 )
+    baffleSeven( 0 )
 {
     mObjectName = "IntStoves";
 
@@ -205,7 +208,7 @@ void VEIntStovemod::PreFrameUpdate( void )
     //CreateContourPlane();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void VEIntStovemod::CreateCustomVizFeature( int input )
+void VEIntStovemod::CreateCustomVizFeature( int  )
 {
     LoadStoveDataSet();
     if( showContour )
@@ -484,7 +487,7 @@ void VEIntStovemod::CreateVectorPlane()
     ptmask->SetInputConnection( cutter->GetOutputPort() );
     ptmask->SetOnRatio( 1 );
 
-    ves::xplorer::DataSet* dataset = new ves::xplorer::DataSet();
+    //ves::xplorer::DataSet* dataset = new ves::xplorer::DataSet();
 
     vtkGlyph3D* glyph = vtkGlyph3D::New();
     glyph->SetInputConnection( ptmask->GetOutputPort() );

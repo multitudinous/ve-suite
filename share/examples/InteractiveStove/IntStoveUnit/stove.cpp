@@ -32,7 +32,7 @@ int  Stove::last_cell   = 100000;
 using namespace std;
 
 ///////////////////////////////////////////////////////////////////////////////
-Stove::Stove(int baffCount0, int *params, int in, int out)
+Stove::Stove(int baffCount0, int *params, int, int)
 {
     baffCount = baffCount0;  
     for( int i = 0; i < baffCount; i ++ )
@@ -47,7 +47,7 @@ Stove::Stove(int baffCount0, int *params, int in, int out)
 ///////////////////////////////////////////////////////////////////////////////
 Stove::~Stove() 
 {
-    for ( int i = 0; i < bafflelist.size(); i ++ )
+    for ( size_t i = 0; i < bafflelist.size(); i ++ )
     {
         delete bafflelist[i];
     }
@@ -342,7 +342,7 @@ void Stove::mutateBaff()
     //GOOD: Checked May 9,2002  mutation type 2
     int mutbaf,mutloc;
     int *baff = new int[5];
-    int which;
+    int which = 0;
     if ( in_out )
       which = Rand()%2;
     mutbaf = Rand()%baffCount;
@@ -381,8 +381,7 @@ void Stove::mutateBaff()
 ///////////////////////////////////////////////////////////////////////////////
 bool Stove::checkBaffles()
 {
-    bool x, y;
-    static int test =0;
+    bool x;
     for(int i=0;i<(int)bafflelist.size();i++)
     {
         x = bafflelist[i]->intoWall();
@@ -427,7 +426,7 @@ bool Stove::doubleBaffle( void )
                                     bafflelist[j]->baff[0] + 
                                     bafflelist[j]->baff[3])
                                 {
-                                    return 1;
+                                    return true;
                                 }
                             }
                         } 
@@ -438,7 +437,7 @@ bool Stove::doubleBaffle( void )
                                 bafflelist[i]->baff[3] >= 
                                 bafflelist[j]->baff[0] )
                             {
-                                return 1;        
+                                return true;        
                             }
                         }
                         break;
@@ -452,7 +451,7 @@ bool Stove::doubleBaffle( void )
                                     bafflelist[j]->baff[1] + 
                                     bafflelist[j]->baff[3])
                                 {
-                                    return 1;
+                                    return true;
                                 }
                             }
                         }
@@ -463,14 +462,15 @@ bool Stove::doubleBaffle( void )
                                 bafflelist[i]->baff[3] >= 
                                 bafflelist[j]->baff[1] )
                             {
-                                return 1;
+                                return true;
                             }
                         }
                         break;
             }    
-            return 0;
+            return false;
         }
     }
+    return false;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Stove::writeStove( FILE *log )
@@ -529,7 +529,7 @@ double Stove::Distance( Stove *s_compare )
     return dist;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Stove::CompileAndExecu( int runnum )
+void Stove::CompileAndExecu( int )
 {
     baffleWrite();
     fhist.clear();
@@ -569,7 +569,7 @@ void Stove::CompileAndExecu( int runnum )
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Stove::BuildBaffSTL( int runnum )
+void Stove::BuildBaffSTL( int )
 {
 /*
    char infilename[100];
@@ -656,7 +656,7 @@ void Stove::BuildBaffSTL( int runnum )
 */
 }
 ///////////////////////////////////////////////////////////////////////////////
-void *Stove::ExecuStarCD( void *args ) 
+void *Stove::ExecuStarCD( void* ) 
 {
     cout << "Executing 1" << endl;
     system( "./STAR/execu > /dev/null" );
@@ -815,8 +815,8 @@ void Stove::mutateInletOutlet( InletOutlet *stuff )
 ///////////////////////////////////////////////////////////////////////////////
 void Stove::writeBoundaryFile( void )
 {
-    int i, j, flag, bloc, flag2;
-    float x0, x1, xs, y0, y1, ys, z0, z1, zs;
+    //int i, j, flag, bloc, flag2;
+    //float x0, x1, xs, y0, y1, ys, z0, z1, zs;
     
     FILE *fp = fopen( "./STAR/setup", "w" );   
     fprintf( fp, "#! /bin/csh -f\n" );
@@ -928,7 +928,7 @@ void Stove::writeBoundaryFile( void )
     }
 
    fprintf( fp, " \n" );
-  /* //Define outlet boundaries
+    //Define outlet boundaries
     bloc = 2;
     for ( i = 0; i < outlet->top.size(); i ++ ) {
       

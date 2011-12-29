@@ -281,7 +281,7 @@ char * Body_Unit_i::GetName (
     return CORBA::string_dup(UnitName_.c_str());
   }
 */
-void Body_Unit_i::error (std::string msg)
+void Body_Unit_i::error( std::string )
 {
   //Package p;
   //const char* result;
@@ -296,7 +296,7 @@ void Body_Unit_i::error (std::string msg)
   //executive_->SetModuleResult(id_, result); //this marks the end the execution
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Body_Unit_i::warning ( std::string msg )
+void Body_Unit_i::warning( std::string msg )
 {
     msg+="\n";
     executive_->SetModuleMessage(activeId, msg.c_str());
