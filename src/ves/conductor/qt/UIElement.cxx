@@ -479,9 +479,9 @@ void UIElement::GetPointIntersectionInPixels( int& x, int& y, osg::Vec3d& point 
 {
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
-        x = (point.x() - (*m_vertices)[0].x()) * m_pixelUIRatio;
+        x = int( (point.x() - (*m_vertices)[0].x()) * m_pixelUIRatio );
         //Z is up in OSG and VE-Suite land
-        y = (point.z() - (*m_vertices)[0].z()) * m_pixelUIRatio;
+        y = int( (point.z() - (*m_vertices)[0].z()) * m_pixelUIRatio );
     }
     else
     {

@@ -1095,7 +1095,7 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
         // Translate mouse coordinates to window coordinates
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
+        y = m_selectedUIElement->GetElementHeight() - y;
         m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
         m_selectedUIElement->SendButtonReleaseEvent( button, x, y, state );
     }
@@ -1131,7 +1131,7 @@ bool UIManager::MouseScrollEvent( int deltaX, int deltaY, int x, int y, int stat
         osg::Vec3d tempPoint;
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, tempPoint );
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
+        y = m_selectedUIElement->GetElementHeight() - y;
         m_selectedUIElement->SendScrollEvent( deltaX, deltaY, x, y, state );
     }
 
@@ -1204,7 +1204,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
         // Translate mouse coordinates to window coordinates
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
+        y = m_selectedUIElement->GetElementHeight() - y;
         m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
         m_selectedUIElement->SendMouseMoveEvent( x, y, z, state );
     }
@@ -1241,7 +1241,7 @@ bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z,
         // Translate mouse coordinates to window coordinates
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         // Flip y mouse coordinate to origin GUI expects
-        y = static_cast < double >( m_selectedUIElement->GetElementHeight() ) - y;
+        y = m_selectedUIElement->GetElementHeight() - y;
         m_selectedUIElement->SendDoubleClickEvent( button, x, y, state );
     }
     else
