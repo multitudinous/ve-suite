@@ -27,7 +27,7 @@ extern Lesson gLesson;
 // **************************************************************************
 // Handle input for application global things.
 
-bool InputHandler::handle(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &aa)
+bool InputHandler::handle(const osgGA::GUIEventAdapter& , osgGA::GUIActionAdapter& )
 
 {
 	/*switch (ea.getEventType())

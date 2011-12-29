@@ -19,7 +19,7 @@
 // This will move the mouse cursor / pointer object to the current mouse position
 // in order to act as a 3D mouse pointer object.
 
-bool MouseTracker::handle(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &aa, osg::Object *object, osg::NodeVisitor *visitor)
+bool MouseTracker::handle(const osgGA::GUIEventAdapter& , osgGA::GUIActionAdapter& , osg::Object* , osg::NodeVisitor* )
 
 {
 	/*osgGA::GUIEventAdapter::EventType evtType = ea.getEventType();
@@ -33,7 +33,7 @@ bool MouseTracker::handle(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdap
 
 // **************************************************************************
 
-bool GunInputAdapterMouse::handle(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &aa)
+bool GunInputAdapterMouse::handle(const osgGA::GUIEventAdapter& , osgGA::GUIActionAdapter& )
 
 {
    /*switch (ea.getEventType())
