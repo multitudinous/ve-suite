@@ -217,19 +217,21 @@ void SceneRenderToTexture::InitRootGroup()
         "uniform sampler2D tex1; \n"
         "void main() \n"
         "{ \n"
-        "    gl_FragData[ 0 ] = gl_Color; \n"
-        "    gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-        "\n"
+        "    vec4 diffuseColor; \n"
+        "    diffuseColor = gl_Color; \n"
+        " \n"
         "    if( textureZeroIsBound ) \n"
         "    { \n"
                 //GL_MODULATE
-        "        gl_FragData[ 0 ] *= texture2D( tex0, gl_TexCoord[ 0 ].st ); \n"
+        "        diffuseColor *= texture2D( tex0, gl_TexCoord[ 0 ].st ); \n"
         "    } \n"
-        //"    if( textureOneIsBound ) \n"
-        //"    { \n"
-        //GL_MODULATE
-        //"        gl_FragData[ 1 ] *= texture2D( tex1, gl_TexCoord[ 1 ].st ); \n"
-        //"    } \n"
+        "    if( textureOneIsBound ) \n"
+        "    { \n"
+                //GL_MODULATE
+        "        diffuseColor *= texture2D( tex1, gl_TexCoord[ 1 ].st ); \n"
+        "    } \n"
+        "    gl_FragData[ 0 ] = diffuseColor; \n"
+        "    gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
         "} \n";
 
         fragmentShader->setType( osg::Shader::FRAGMENT );
