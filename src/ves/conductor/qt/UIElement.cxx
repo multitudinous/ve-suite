@@ -128,15 +128,15 @@ void UIElement::PostConstructor()
     geometry->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
     geometry->setTexCoordArray( 0, texture_coordinates.get() );
-    /*osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array( 1 );
-    ( *colors )[0].set( 1.0f, 1.0f, 0.0f, 0.2f );
+#if 0
+    osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array( 1 );
+    ( *colors )[0].set( 1.0f, 1.0f, 0.0f, 1.0f );
     geometry->setColorArray( colors.get() );
-    geometry->setColorBinding( osg::Geometry::BIND_OVERALL );*/
-
+    geometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+#endif
     //
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
     geode->setCullingActive( false );
-    geode->setDataVariance( osg::Object::DYNAMIC );
     geode->addDrawable( geometry.get() );
     mGeode = geode.get();
     mGeode->setName( "Qt UI" );
@@ -148,7 +148,6 @@ void UIElement::PostConstructor()
     osg::ref_ptr< osg::Texture2D > texture = new osg::Texture2D();
     texture->setResizeNonPowerOfTwoHint( false );
     texture->setImage( image.get() );
-    texture->setDataVariance( osg::Object::DYNAMIC );
 
     //Create stateset for adding texture
     osg::ref_ptr< osg::StateSet > stateset = mGeode->getOrCreateStateSet();

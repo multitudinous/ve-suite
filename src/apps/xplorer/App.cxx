@@ -387,14 +387,15 @@ void App::contextInit()
     //Add the tree to the scene viewer and set properties
     {
         vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
-        new_sv->getCamera()->setName( "SV Camera" );
-        new_sv->getCamera()->setPreDrawCallback( new osgwQuery::InitCallback() );
+        osg::Camera* camera = new_sv->getCamera();
+        camera->setName( "SV Camera" );
+        camera->setPreDrawCallback( new osgwQuery::InitCallback() );
 
         *mViewportsChanged = false;
         m_sceneGLTransformInfo->Initialize();
         mSceneRenderToTexture->InitializeRTT();
         
-        ves::conductor::UIManager::instance()->AddUIToNode( new_sv->getCamera() );
+        //ves::conductor::UIManager::instance()->AddUIToNode( camera );
         m_numContexts += 1;
     }
 

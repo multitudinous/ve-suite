@@ -773,6 +773,7 @@ osg::Geode* SceneRenderToTexture::CreateClearColorQuad(
     "{ \n"
         //Ignore MVP transformation as vertices are already in Normalized Device Coord
         "gl_Position = gl_Vertex; \n"
+        "gl_FrontColor = gl_Color;\n"
     "} \n";
 
     vertexShader->setType( osg::Shader::VERTEX );
@@ -865,6 +866,7 @@ osg::Geode* SceneRenderToTexture::CreateRTTQuad( osg::Texture2D* texture )
         //Ignore MVP transformation as vertices are already in Normalized Device Coord.
         "gl_Position = gl_Vertex; \n"
         "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+        "gl_FrontColor = gl_Color;\n"
     "} \n";
 
     vertexShader->setType( osg::Shader::VERTEX );
@@ -1281,17 +1283,8 @@ void SceneRenderToTexture::Update(
     {
         if( !m_isUIAdded )
         {
-            if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
-            {
-                (*iter)->addChild( 
-                    ves::conductor::UIManager::instance()->
-                    GetUIRootNode().getParent( 0 ) );
-            }
-            else
-            {
-                (*iter)->addChild( 
-                    &ves::conductor::UIManager::instance()->GetUIRootNode() );
-            }
+            ves::conductor::UIManager::instance()->AddUIToNode( (*iter) );
+
             m_isUIAdded = true;
         }
 

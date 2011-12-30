@@ -401,7 +401,6 @@ void UIManager::Initialize( osg::Group* )
 
     mUIGroup = new osg::Switch();
     mUIGroup->setName( "Qt UI Group" );
-    mUIGroup->setDataVariance( osg::Object::DYNAMIC );
     mUIGroup->setUpdateCallback( mUIUpdateCallback.get() );
 
     //Setup the shaders
@@ -417,6 +416,7 @@ void UIManager::Initialize( osg::Group* )
             //Ignore MVP transformation as vertices are already in Normalized Device Coord.
             "gl_Position = gl_Vertex; \n"
             "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+            "gl_FrontColor = gl_Color;\n"
             "} \n";
         
         vertexShader->setType( osg::Shader::VERTEX );
@@ -467,7 +467,7 @@ void UIManager::Initialize( osg::Group* )
         osg::Camera* postRenderCamera = new osg::Camera();
         postRenderCamera->setName( "Post Render UI Desktop Camera" );
         postRenderCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-        postRenderCamera->setRenderOrder( osg::Camera::POST_RENDER, 0 );
+        postRenderCamera->setRenderOrder( osg::Camera::POST_RENDER, 1 );
         postRenderCamera->setClearMask( GL_DEPTH_BUFFER_BIT );
         postRenderCamera->setComputeNearFarMode(
             osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
@@ -1288,7 +1288,6 @@ bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
         m_selectedUIElement->SendKeyPressEvent( key, modifiers, unicode );
     }
 
-
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1429,7 +1428,14 @@ void UIManager::SetCameraForSceneDebug( osg::Camera* camera )
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::AddUIToNode( osg::Group* node )
 {
-    node->addChild( mUIGroup.get() );
+    if( m_isDesktopMode )
+    {
+        node->addChild( mUIGroup->getParent( 0 ) );
+    }
+    else
+    {
+        node->addChild( mUIGroup.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
