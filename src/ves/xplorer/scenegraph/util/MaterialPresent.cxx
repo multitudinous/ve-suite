@@ -74,47 +74,13 @@ bool MaterialPresent::FileHasSecondMaterial()
 ////////////////////////////////////////////////////////////////////////////////
 void MaterialPresent::apply( osg::Geode& node )
 {
-    ///Guard to stop any checking of nodes if this flag has already been set.
-    /*if( mFileHasMaterial && mHasSecondMaterial  )
-    {
-        return;
-    }*/
     //Stateset for the geode
     CheckStateSet( node.getStateSet() );
-    /*if( mFileHasMaterial && mHasSecondMaterial  )
-    {
-        return;
-    }*/
-    
-    for( size_t i = 0; i < node.getNumDrawables(); i++ )
+
+    for( size_t i = 0; i < node.getNumDrawables(); ++i )
     {
         //Stateset for the drawable of the geode
         CheckStateSet( node.getDrawable( i )->getStateSet() );
-        /*if( mFileHasMaterial && mHasSecondMaterial  )
-        {
-            return;
-        }*/
-        //StateSet for the Drawables Geometry
-        osg::ref_ptr< osg::Geometry > geom = 
-            node.getDrawable( i )->asGeometry();
-        if( geom.valid() )
-        {
-            CheckStateSet(  geom->getStateSet() );
-            /*if( mFileHasMaterial && mHasSecondMaterial  )
-            {
-                return;
-            }*/
-            /*osg::ref_ptr< osg::Vec4Array > color_array = 
-                dynamic_cast< osg::Vec4Array* >( geom->getColorArray() );
-            if( color_array.valid() )
-            {
-                if( color_array->size() > 0 )
-                {
-                    mFileHasMaterial = true;
-                    return;
-                }
-            }*/
-        }
     }
 
     osg::NodeVisitor::traverse( node );
@@ -122,18 +88,7 @@ void MaterialPresent::apply( osg::Geode& node )
 ////////////////////////////////////////////////////////////////////////////////
 void MaterialPresent::apply( osg::Node& node )
 {
-    ///Guard to stop any checking of nodes if this flag has already been set.
-    /*if( mFileHasMaterial && mHasSecondMaterial  )
-    {
-        return;
-    }*/
-
     CheckStateSet( node.getStateSet() );
-
-    /*if( mFileHasMaterial && mHasSecondMaterial )
-    {
-        return;
-    }*/
 
     osg::NodeVisitor::traverse( node );
 }
@@ -143,19 +98,8 @@ bool MaterialPresent::CheckStateSet( osg::StateSet* stateSet )
     osg::ref_ptr< osg::StateSet > tempStateSet = stateSet;
     if( tempStateSet.valid() )
     {
-        /*
-        osg::ref_ptr< osg::Material > material = 
-            static_cast< osg::Material* >( tempStateSet->
-            getAttribute( osg::StateAttribute::MATERIAL ) );
-        if( material.valid() )
-        {
-            return true;
-        }
-        */
-
         //osg::StateSet::TextureAttributeList stateSetTal =
         //    tempStateSet->getTextureAttributeList();
-        //bool haveTexture = false
         for( unsigned int i = 0; i < 16; ++i )
         {
             osg::StateAttribute* sa = stateSet->getTextureAttribute(
@@ -164,22 +108,32 @@ bool MaterialPresent::CheckStateSet( osg::StateSet* stateSet )
             osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
             if( tex2D )
             {
+                //std::cout << tex2D->getImage()->getFileName() << std::endl;
+                stateSet->setTextureAttributeAndModes(
+                    i, tex2D, 
+                    osg::StateAttribute::ON|
+                    osg::StateAttribute::PROTECTED|
+                    osg::StateAttribute::OVERRIDE );
+                std::stringstream ss;
+                ss << "tex" << i;
+                //std::cout << ss.str().c_str() << std::endl;
+                stateSet->addUniform( new osg::Uniform( ss.str().c_str(), i ) );
+                mFileHasMaterial = true;
+                if( i == 0 )
+                {
+                    stateSet->addUniform(
+                        new osg::Uniform( "textureZeroIsBound", true ) );
+                }
+                /*
                 if( i > 0 && mFileHasMaterial )
                 {
                     mHasSecondMaterial = true;
-                }                //stateSet->setTextureAttributeAndModes(
-                //    i, tex2D, osg::StateAttribute::ON );
-                std::stringstream ss;
-                ss << "tex" << i;
-                stateSet->addUniform( new osg::Uniform( ss.str().c_str(), i ) );
-                mFileHasMaterial = true;
+                    stateSet->addUniform(
+                    new osg::Uniform( "textureOneIsBound", true ) );
+                    
+                }*/   
             }
         }
-
-        /*if( haveTexture )
-        {
-            return true;
-        }*/
     }
 
     return false;
