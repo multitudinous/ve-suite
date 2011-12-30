@@ -35,11 +35,10 @@
 #define VES_XPLORER_SCENEGRAPH_UTIL_MATERIAL_PRESENT_H
 
 /*!\file MaterialPresent.h
-MaterialPresent API
-*/
-/*!\class MaterialPresent
-*
-*/
+ * MaterialPresent API
+ * \class MaterialPresent
+ *
+ */
 
 // --- VES Includes --- //
 #include <ves/VEConfig.h>
