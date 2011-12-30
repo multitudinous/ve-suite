@@ -475,7 +475,10 @@ void UIManager::Initialize( osg::Group* )
         postRenderCamera->setThreadSafeRefUnref( true );
         postRenderCamera->setViewMatrix( osg::Matrix::identity() );
         postRenderCamera->setProjectionMatrix( osg::Matrix::identity() );
-        
+        ///This postRenderCamera is added to the scene graph in the
+        ///void UIManager::AddUIToNode( osg::Group* node ) function. Again
+        ///this is only needed in desktop mode to correct the ui rendering 
+        ///problems.
         postRenderCamera->addChild( mUIGroup.get() );
     }
 
