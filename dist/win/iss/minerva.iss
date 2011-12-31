@@ -1,8 +1,8 @@
 ; Minerva installer script
 #include <vesenv.iss>
-#define MyAppVer "1.2.0-397"
+#define MyAppVer "1.2.0-07242011"
 #define MyAppName "Minerva Pre-Compile"
-#define MyAppVerName "MinervaBoost142"
+#define MyAppVerName "MinervaBoost144"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
 

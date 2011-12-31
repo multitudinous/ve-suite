@@ -72,8 +72,11 @@ Source: {#VRJUGGLER_DEPS_INST_LOCATION}\share\*; DestDir: {app}\share; Flags: ig
 Source: {#VRJUGGLER_DEPS_INST_LOCATION}\share\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Driver specific files
+#ifdef x64
+Source: {#TRACKDAPIHOME}\lib64\win_vc8\trackdAPI_MT.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist
+#else
 Source: {#TRACKDAPIHOME}\lib32\win_vc8\trackdAPI_MT.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist
-
+#endif
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

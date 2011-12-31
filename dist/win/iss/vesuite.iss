@@ -27,7 +27,7 @@ DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
 OutputBaseFilename={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
-Compression=lzma
+Compression=lzma/Max
 SolidCompression=true
 ChangesEnvironment=true
 ShowLanguageDialog=yes
@@ -40,8 +40,8 @@ WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WindowVisible=true
 WizardImageBackColor=clWhite
 ChangesAssociations=true
-BackColor=$a16502
-BackColor2=$1b84f7
+BackColor=$00A16502
+BackColor2=$001B84F7
 SetupIconFile={#VEDEVHOME}\dist\installerImages\{#VesIcon}
 PrivilegesRequired=none
 UsePreviousGroup=false
@@ -49,7 +49,6 @@ VersionInfoVersion=1.0.0
 VersionInfoCompany=SMDS
 VersionInfoProductVersion=1.0.0
 AppVersion=1.0.0
-UninstallDisplayIcon={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
 
 [Types]
