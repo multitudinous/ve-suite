@@ -63,7 +63,7 @@ class TextureSubloader : public osg::Texture2D::SubloadCallback
       mutable std::vector< int > xOffsets;                              // the X offset for the next subload operation.
       mutable std::vector< int > yOffsets;                              // the Y offset for the next subload operation.
       mutable bool doSubload;                   // true if should do a subload copy with next subload() callback for the texture.
-      mutable std::vector< osg::Image* > subImgs;  // a pointer to an image to overlay onto the texture for this.
+      mutable std::vector< osg::ref_ptr< osg::Image > > subImgs;  // a pointer to an image to overlay onto the texture for this.
    };
 
 }

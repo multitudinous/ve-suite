@@ -1,5 +1,7 @@
 #include <ves/conductor/qt/TextureSubloader.h>
 
+#include <iostream>
+
 namespace ves
 {
 namespace conductor
@@ -34,7 +36,7 @@ void TextureSubloader::subload(const osg::Texture2D&, osg::State& ) const
         return;
     }
 
-    osg::Image* subImg = 0;
+    osg::ref_ptr< osg::Image > subImg;
     int xOffset = 0;
     int yOffset = 0;
     for( size_t c = 0; c < subImgs.size(); ++c )
