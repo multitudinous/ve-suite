@@ -24,7 +24,7 @@ int main( int argc, char* argv[] )
     double h1, h2, w1, w2;
     model.GetPatternDimensions( h1, h2, w1, w2 );
 
-    std::cout << te << " " << flowrate << " " << h1 << " " 
+    std::cout << te << " " << flowrate << std::endl << h1 << " " 
         << h2 << " " << w1 << " " << w2 << std::endl;
     return 0;
 }
