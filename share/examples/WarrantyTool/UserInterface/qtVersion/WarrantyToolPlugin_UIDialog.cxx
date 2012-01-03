@@ -1244,7 +1244,7 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
 
     ves::conductor::UITabs::instance()->
             ActivateTab( ves::conductor::UITabs::instance()->
-                         AddTab( queryResults, title.toStdString() ) );
+                         AddTab( queryResults, title.toStdString(), true ) );
 
     while (more)
     {
