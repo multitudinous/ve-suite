@@ -1,6 +1,6 @@
 /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2011 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2012 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2011-10-07 16:20:34 -0500 (Fri, 07 Oct 2011) $
- * Version:       $Rev: 16404 $
- * Author:        $Author: tjordan $
- * Id:            $Id: Multiscale2Factory.h 16404 2011-10-07 21:20:34Z tjordan $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/

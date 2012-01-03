@@ -50,7 +50,7 @@ options = ArgvOptionsParser.parse(ARGV)
 copyright = []
 copyright << "/*************** <auto-copyright.rb BEGIN do not edit this line> **************\n"
 copyright << " *\n"
-copyright << " * VE-Suite is (C) Copyright 1998-2011 by Iowa State University\n"
+copyright << " * VE-Suite is (C) Copyright 1998-2012 by Iowa State University\n"
 copyright << " *\n"
 copyright << " * Original Development Team:\n"
 copyright << " *   - ISU's Thermal Systems Virtual Engineering Group,\n"
