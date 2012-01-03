@@ -360,11 +360,12 @@ void MainWindow::changeEvent(QEvent* e)
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-int MainWindow::AddTab( QWidget* widget, const std::string& tabLabel )
+int MainWindow::AddTab( QWidget* widget, const std::string& tabLabel, bool deleteOnClose )
 {
     int index = ui->tabWidget->addTab( widget, 
                                        QString::fromStdString( tabLabel ) );
-    mTabbedWidgets[ tabLabel ] = widget;
+    mTabbedWidgets[ tabLabel ] = std::pair< QWidget*, bool>
+                                 ( widget, deleteOnClose );
     return index;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -379,11 +380,16 @@ void MainWindow::RemoveTab( QWidget* widget )
     ui->tabWidget->removeTab( ui->tabWidget->indexOf( widget ) );
     
     // Remove this tab from mTabbedWidgets map
-    std::map< std::string, QWidget* >::iterator iter;
+    std::map< std::string, std::pair< QWidget*, bool > >::iterator iter;
     for( iter = mTabbedWidgets.begin(); iter != mTabbedWidgets.end(); iter++ )
     {
-        if( iter->second == widget )
+        if( iter->second.first == widget )
         {
+            // If tab was setup with deleteOnClose true...
+            if( iter->second.second )
+            {
+                delete iter->second.first;
+            }
             mTabbedWidgets.erase( iter );
             break;
         }
@@ -392,16 +398,27 @@ void MainWindow::RemoveTab( QWidget* widget )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::RemoveTab( const std::string& tabLabel )
 {
-    std::map< std::string, QWidget* >::iterator marked = mTabbedWidgets.find( tabLabel );
+    std::map< std::string, std::pair< QWidget*, bool > >::iterator marked = mTabbedWidgets.find( tabLabel );
     if( marked != mTabbedWidgets.end() )
     {
-        RemoveTab( marked->second );
+        RemoveTab( marked->second.first );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::RemoveAllTabs()
 {
     ui->tabWidget->clear();
+
+    // Handle any tabs that require deleteOnClose behavior
+    std::map< std::string, std::pair< QWidget*, bool > >::iterator iter;
+    for( iter = mTabbedWidgets.begin(); iter != mTabbedWidgets.end(); iter++ )
+    {
+        if( iter->second.second )
+        {
+            delete iter->second.first;
+        }
+    }
+
     mTabbedWidgets.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -413,12 +430,12 @@ void MainWindow::ActivateTab( QWidget* widget )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::ActivateTab( const std::string& tabLabel )
 {
-    std::map< std::string, QWidget* >::iterator iter = 
+    std::map< std::string, std::pair< QWidget*, bool > >::iterator iter =
         mTabbedWidgets.find( tabLabel );
     if( iter != mTabbedWidgets.end() )
     {
         // Get the associated widget and call the (QWidget*) overloaded version
-        ActivateTab( iter->second );
+        ActivateTab( iter->second.first );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

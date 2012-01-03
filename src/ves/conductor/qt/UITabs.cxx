@@ -21,9 +21,9 @@ void UITabs::SetChild( ves::conductor::MainWindow* child )
     m_child = child;
 }
 
-int UITabs::AddTab( QWidget* widget, const std::string& tabLabel )
+int UITabs::AddTab( QWidget* widget, const std::string& tabLabel, bool deleteOnClose )
 {
-    return m_child->AddTab( widget, tabLabel );
+    return m_child->AddTab( widget, tabLabel, deleteOnClose );
 }
 
 void UITabs::RemoveTab( QWidget* widget )

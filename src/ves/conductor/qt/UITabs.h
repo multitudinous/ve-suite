@@ -34,7 +34,7 @@ public:
     void SetChild( ves::conductor::MainWindow* child );
 
     /// Adds @c widget to tabs and gives tab the label @c tabLabel.
-    int AddTab( QWidget* widget, const std::string& tabLabel );
+    int AddTab( QWidget* widget, const std::string& tabLabel, bool deleteOnClose = false );
 
     /// Remove tab containing @c widget. Does not delete the widget.
     void RemoveTab( QWidget* widget );

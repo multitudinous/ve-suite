@@ -95,7 +95,7 @@ public:
     virtual ~MainWindow();
     
     /// Adds @c widget to tabs and gives tab the label @c tabLabel.
-    int AddTab( QWidget* widget, const std::string& tabLabel );
+    int AddTab( QWidget* widget, const std::string& tabLabel, bool deleteOnClose = false );
     
     /// Remove tab containing @c widget. Does not delete the widget.
     void RemoveTab( QWidget* widget );
@@ -321,8 +321,9 @@ private:
     ves::conductor::IconStack* m_viewMenuStack;
     ///Tree tab
     ves::conductor::TreeTab* mScenegraphTreeTab;
-    ///The map of tabs
-    std::map< std::string, QWidget* > mTabbedWidgets;
+    ///The map of all tabs:
+    ///label, (widget,deleteOnClose)
+    std::map< std::string, std::pair< QWidget*, bool > > mTabbedWidgets;
     ///Active tab key
     std::string mActiveTab;
     
