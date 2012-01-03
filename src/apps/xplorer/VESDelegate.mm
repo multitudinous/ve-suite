@@ -1,11 +1,10 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2010 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2012 by Iowa State University
  *
- * Original Authors:
- *   Allen Bierbaum, Christopher Just,
- *   Patrick Hartling, Kevin Meinert,
- *   Carolina Cruz-Neira, Albert Baker
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,8 +21,14 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
-
+ * -----------------------------------------------------------------
+ * Date modified: $Date: 2011-12-30 16:58:13 -0600 (Fri, 30 Dec 2011) $
+ * Version:       $Rev: 16779 $
+ * Author:        $Author: mccdo $
+ * Id:            $Id: App.cxx 16779 2011-12-30 22:58:13Z mccdo $
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <vrj/vrjConfig.h>
 
 #import <Foundation/NSDictionary.h>

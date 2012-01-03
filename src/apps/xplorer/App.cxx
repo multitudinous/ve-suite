@@ -5,7 +5,6 @@
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
  *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
- *   - Reaction Engineering International, www.reaction-eng.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
