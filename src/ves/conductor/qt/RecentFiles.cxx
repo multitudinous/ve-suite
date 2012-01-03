@@ -49,7 +49,8 @@ namespace conductor
 RecentFiles::RecentFiles(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RecentFiles),
-    m_lastChanged( 0 )
+    m_lastChanged( 0 ),
+    block( false )
 {
     ui->setupUi(this);
 
@@ -113,6 +114,13 @@ void RecentFiles::changeEvent(QEvent *e)
 ////////////////////////////////////////////////////////////////////////////////
 void RecentFiles::onFileListItemAccepted( QListWidgetItem* selected )
 {
+    if( block )
+    {
+        return;
+    }
+
+    block = true;
+
     QString selectedFile = "";
     if( selected )
     {
@@ -141,6 +149,8 @@ void RecentFiles::Clear()
 ////////////////////////////////////////////////////////////////////////////////
 void RecentFiles::on_m_recentFilesList_itemEntered( QListWidgetItem* item )
 {
+    block = false;
+
     // Restore the color of the most recently changed item
     if( m_lastChanged )
     {

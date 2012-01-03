@@ -70,6 +70,7 @@ protected Q_SLOTS:
 private:
     Ui::RecentFiles *ui;
     QListWidgetItem* m_lastChanged;
+    bool block;
 };
 
 }
