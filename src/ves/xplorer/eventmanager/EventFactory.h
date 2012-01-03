@@ -1,7 +1,7 @@
 #if 1
 /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2011 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2012 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
