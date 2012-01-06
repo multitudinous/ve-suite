@@ -136,8 +136,10 @@ SceneManager::SceneManager()
     ///accomplished by telling mxcore that we are in Y up space so that it thinks
     ///we are already in native OpenGL coordinate space.
     m_viewMatrix->setInitialValues( 
-        osg::Vec3d( 0., 0., 1. ), osg::Vec3d( 0., 1., 0. ), osg::Vec3d( 0., 0., 0. ) );
-    m_viewMatrix->setRotateScale( 1.0 );
+        osg::Vec3d( 0., 0., 1. ), 
+        osg::Vec3d( 0., 1., 0. ), 
+        osg::Vec3d( 0., 0., 0. ) );
+    m_viewMatrix->setRotateScale( 0.75 );
     m_viewMatrix->setOrbitCenterPoint( osg::Vec3d( 0., 10., 0. ) );
     m_viewMatrix->reset();
     

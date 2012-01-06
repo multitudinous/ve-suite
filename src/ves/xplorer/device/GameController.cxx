@@ -632,15 +632,14 @@ void GameController::OnButton10Event( gadget::DigitalState::State event )
     {
         if( m_mxGamePadStyle->getMoveMode() == osgwMx::FunctionalMap::MoveModeOrbit )
         {
-            //m_buttons = m_buttons | osgwMx::MxGamePad::Button8 | ~osgwMx::MxGamePad::Button7;
             m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
+            m_mxGamePadStyle->setStickRate( 10.0 );
         }
         ///Orbit mode
         else
         {
             m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOrbit );
-
-            //m_buttons = m_buttons | ~osgwMx::MxGamePad::Button8 | osgwMx::MxGamePad::Button7;
+            m_mxGamePadStyle->setStickRate( 1.0 );
             m_viewMatrix.lookAtOrbitCenter();
         }
         break;
@@ -675,7 +674,6 @@ void GameController::OnButton11Event( gadget::DigitalState::State event )
     {
         if( m_mxGamePadStyle->getRotateMode() == osgwMx::FunctionalMap::RotateModeOrbit )
         {
-            //m_buttons = m_buttons | osgwMx::MxGamePad::Button11 | ~osgwMx::MxGamePad::Button10;
             m_mxGamePadStyle->setRotateMode( osgwMx::FunctionalMap::RotateModeLocal );
             m_buttons = 0;
         }
@@ -683,7 +681,6 @@ void GameController::OnButton11Event( gadget::DigitalState::State event )
         else
         {
             m_mxGamePadStyle->setRotateMode( osgwMx::FunctionalMap::RotateModeOrbit );
-            //m_buttons = m_buttons | ~osgwMx::MxGamePad::Button11 | osgwMx::MxGamePad::Button10;
             m_viewMatrix.lookAtOrbitCenter();
             m_buttons = 0;
         }
