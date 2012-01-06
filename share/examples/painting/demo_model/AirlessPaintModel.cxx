@@ -115,7 +115,7 @@ std::string AirlessPaintModel::DetermineDropletBinLetter( double& size )
     return std::string();
 }
 ////////////////////////////////////////////////////////////////////////////////
-double AirlessPaintModel::CalculateTransferEffenciency( double& pressure, std::string& bin, double& distance )
+double AirlessPaintModel::CalculateTransferEffenciency( double& pressure, std::string const& bin, double& distance )
 {
     //y = 4E-06x - 0.0308
     double teDescreasePerInch = 0.000004 * pressure - 0.0308;
@@ -130,7 +130,7 @@ double AirlessPaintModel::CalculateTransferEffenciency( double& pressure, std::s
     return transferEffeciency;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double AirlessPaintModel::DetermineTEDecrease( std::string& bin )
+double AirlessPaintModel::DetermineTEDecrease( std::string const& bin )
 {
     if( bin == "A" )
     {
@@ -233,7 +233,8 @@ void AirlessPaintModel::UpdateModel()
 {
     m_flowrate = CalculateFlowrate();
     
-    std::string dropletBin = CalculateDropletSize( m_tipDiameter, m_viscosity );
+    std::string const dropletBin = 
+        CalculateDropletSize( m_tipDiameter, m_viscosity );
     
     m_te = CalculateTransferEffenciency( m_airPressure, dropletBin, m_gunToPartDistance );
     

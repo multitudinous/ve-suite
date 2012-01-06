@@ -41,7 +41,7 @@ private:
     std::string DetermineDropletBinLetter( double& size );
 
     ///Calculate the transfer effencieny
-    double CalculateTransferEffenciency( double& pressure, std::string& bin, double& distance );
+    double CalculateTransferEffenciency( double& pressure, std::string const& bin, double& distance );
     
     ///Calculate the fluid flowrate
     double CalculateFlowrate();
@@ -50,7 +50,7 @@ private:
     void CalculatePatternDimension();
     
     ///Determine the TE decrease based on droplet size bin
-    double DetermineTEDecrease( std::string& bin );
+    double DetermineTEDecrease( std::string const& bin );
 
     ///The distance of the gun from the part
     double m_gunToPartDistance;
