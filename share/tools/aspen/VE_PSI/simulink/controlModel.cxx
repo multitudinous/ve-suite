@@ -147,7 +147,25 @@ int main( int argc, char** argv )
         out << i;
         //data is stored in cells rather than directly as strings
         //thus can't access as blks(i). Instead use blks{i,1}.
-        std::cout << GetStringFromMatlabCommand( ep, "blks{" + out.str() + ",1};" ) << std::endl;
+        std::string blockName = GetStringFromMatlabCommand( ep, "blks{" + out.str() + ",1};" );
+
+        // get list of parameter names in a 1x1 struct
+        matlabCommand = "parameters = fieldnames(get_param('" + blockName + "','dialogparameters'));";
+        engEvalString(ep, matlabCommand.c_str() );
+
+        int numParameters = GetResultFromMatlabCommand( ep, "length(parameters);" );
+        std::cout << blockName << ", numParameters = " << numParameters << std::endl;
+
+        for( int j=1; j<= numParameters; j++ )
+        {
+            std::stringstream jj;
+            jj << j;
+
+            std::string parameterName = GetStringFromMatlabCommand( ep, "parameters{" + jj.str() + "};" );
+            std::cout << "   " << parameterName << std::endl;
+            //std::string parameterValue = GetStringFromMatlabCommand( ep, "get_param('" + blockName + "','" + parameterName + "');" );
+            //std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
+        }
     }
 
 /*
