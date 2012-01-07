@@ -310,6 +310,10 @@ function source_retrieval()
       cd "${DEV_BASE_DIR}";
       hg clone ${SOURCE_URL} "${BASE_DIR}";
       ;;
+    git)
+      cd "${DEV_BASE_DIR}";
+      git clone ${SOURCE_URL} "${BASE_DIR}";
+      ;;
     private-svn)
       cd "${DEV_BASE_DIR}";
       SVN_CO="svn co"
@@ -449,6 +453,18 @@ function e()
           cd "${BASE_DIR}";
           hg pull;
           hg update;
+        else
+          echo "${BASE_DIR} non-existent, checking out ...."
+          [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
+          [ -z "${SOURCE_RETRIEVAL_METHOD}" ] && ( echo "SOURCE_RETRIEVAL_METHOD undefined in package $package"; return; )
+
+          source_retrieval;
+        fi
+        ;;
+      git)
+        if [ -d "${BASE_DIR}" ]; then
+          cd "${BASE_DIR}";
+          git pull;
         else
           echo "${BASE_DIR} non-existent, checking out ...."
           [ -z "${SOURCE_URL}" ] && ( echo "SOURCE_URL undefined in package $package"; return; )
