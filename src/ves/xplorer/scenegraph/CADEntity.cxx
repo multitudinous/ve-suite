@@ -184,14 +184,14 @@ CADEntity::~CADEntity()
 
     if( mPhysicsRigidBody )
     {
-        if( mPhysicsSimulator )
+        /*if( mPhysicsSimulator )
         {
             if( mPhysicsRigidBody->GetbtRigidBody() )
             {
                 mPhysicsSimulator->GetDynamicsWorld()->
                     removeRigidBody( mPhysicsRigidBody->GetbtRigidBody() );
             }
-        }
+        }*/
 
         delete mPhysicsRigidBody;
     }
