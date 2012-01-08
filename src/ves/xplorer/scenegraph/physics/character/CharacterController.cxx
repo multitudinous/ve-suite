@@ -64,6 +64,7 @@
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <BulletCollision/CollisionShapes/btCapsuleShape.h>
+#include <osgbCollision/Utils.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -408,6 +409,60 @@ void CharacterController::Rotate( double dx, double dy )
     mDeltaTurnAngleZ += z;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CharacterController::SetPhysicsWorldTransform()
+{
+    // Account for MxCore orientation.
+    osg::Matrix orient = osg::Matrix::rotate( -osg::PI_2, 1., 0., 0. );
+    osg::Matrix worldMatrix = 
+        orient * SceneManager::instance()->GetMxCoreViewMatrix().getMatrix();
+    
+    osg::Vec3 deltaStep = worldMatrix.getTrans() - m_lastPosition;
+    setDisplacement( osgbCollision::asBtVector3( deltaStep ) );
+
+    double yaw, pitch, roll;
+    
+    SceneManager::instance()->GetMxCoreViewMatrix().getYawPitchRoll( yaw, pitch, roll, true );
+    yaw = -osg::DegreesToRadians( yaw );
+    pitch = -osg::DegreesToRadians( pitch );
+    roll = -osg::DegreesToRadians( roll );
+
+    mTurnAngleX = pitch;
+    //Restrict movement about the x-axis from -PI/2 to PI/2
+    if( mTurnAngleX < -gmtl::Math::PI_OVER_2 )
+    {
+        mTurnAngleX = -gmtl::Math::PI_OVER_2;
+    }
+    else if( mTurnAngleX > gmtl::Math::PI_OVER_2 )
+    {
+        mTurnAngleX = gmtl::Math::PI_OVER_2;
+    }
+    
+    mTurnAngleZ = yaw;
+    //Restrict angles about the z-axis from 0 to 2PI
+    if( mTurnAngleZ >= gmtl::Math::TWO_PI )
+    {
+        mTurnAngleZ -= gmtl::Math::TWO_PI;
+        
+    }
+    else if( mTurnAngleZ < 0.0 )
+    {
+        mTurnAngleZ += gmtl::Math::TWO_PI;
+    }
+    
+    //Set the camera rotation about the x-axis
+    mCameraRotationX.setX( sin( 0.5 * mTurnAngleX ) );
+    mCameraRotationX.setW( cos( 0.5 * mTurnAngleX ) );
+    
+    //Set the camera rotation about the z-axis
+    mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
+    mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
+    
+    //Set the total camera rotation
+    mCameraRotation = mCameraRotationX * mCameraRotationZ;
+    
+    SetRotationFromCamera();
+}
+////////////////////////////////////////////////////////////////////////////////
 void CharacterController::SetCameraRotationSLERP( bool onOff )
 {
     mCameraRotationSLERP = onOff;
@@ -513,6 +568,8 @@ void CharacterController::Move( btScalar dt )
 
         //Update the character translation
         UpdateTranslation( dt );
+        
+        //SetPhysicsWorldTransform();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -529,6 +586,7 @@ void CharacterController::UpdateCamera()
         CameraDistanceLERP();
     }
 
+    
     //Get the current camera's rotation
     btMatrix3x3 basis( mCameraRotation );
 
@@ -560,6 +618,8 @@ void CharacterController::UpdateCamera()
 
     //Move the camera to look at the center of the character
     LookAt( eye, center, up );
+    
+    m_lastPosition = osgbCollision::asOsgVec3( eye );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Zoom( bool inOut )
@@ -828,7 +888,6 @@ void CharacterController::UpdateRotation()
     if( mTurnAngleZ >= gmtl::Math::TWO_PI )
     {
         mTurnAngleZ -= gmtl::Math::TWO_PI;
-
     }
     else if( mTurnAngleZ < 0.0 )
     {

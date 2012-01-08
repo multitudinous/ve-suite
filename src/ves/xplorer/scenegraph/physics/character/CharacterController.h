@@ -229,6 +229,9 @@ private:
     ///Update the proposed delta rotation for the character from the head tracker
     void UpdateRotationTrackedHead();
 
+    ///Set the new position of the character through the mxCore matrix
+    void SetPhysicsWorldTransform();
+
     ///Tracks the on/off status of the character controller
     bool m_enabled;
 
@@ -342,6 +345,9 @@ private:
 
     ///
     btQuaternion mCameraRotationZ;
+
+    ///The last position of the character
+    osg::Vec3 m_lastPosition;
 
     ///For character animations
     osg::ref_ptr< osg::Switch > mCharacterAnimations;
