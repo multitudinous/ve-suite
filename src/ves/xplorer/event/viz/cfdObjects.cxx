@@ -60,6 +60,7 @@ cfdObjects::cfdObjects( void )
     pointSource( 0 ),
     m_multiGroupGeomFilter( vtkCompositeDataGeometryFilter::New() ),
     m_geometryFilter( vtkGeometryFilter::New() ),
+    m_surfaceFilter( vtkDataSetSurfaceFilter::New() ),
     updateFlag( false ),
     vtkToPFDebug( 0 ),
     objectType( 0 ),
@@ -68,7 +69,6 @@ cfdObjects::cfdObjects( void )
     usePreCalcData( false ),
     m_gpuTools( false )
 {
-    m_surfaceFilter = vtkDataSetSurfaceFilter::New();
     for( size_t i = 0; i < 3; ++i )
     {
         origin[ i ] = 0;
@@ -89,6 +89,7 @@ cfdObjects::cfdObjects( const cfdObjects& src )
     pointSource( src.pointSource ),
     m_multiGroupGeomFilter( vtkCompositeDataGeometryFilter::New() ),
     m_geometryFilter( vtkGeometryFilter::New() ),
+    m_surfaceFilter( vtkDataSetSurfaceFilter::New() ),
     updateFlag( false ),
     vtkToPFDebug( 0 ),
     objectType( src.objectType ),
@@ -97,7 +98,6 @@ cfdObjects::cfdObjects( const cfdObjects& src )
     usePreCalcData( false ),
     m_gpuTools( false )
 {
-    m_surfaceFilter = vtkDataSetSurfaceFilter::New();
     for( size_t i = 0; i < 3; ++i )
     {
         origin[ i ] = 0;
@@ -115,6 +115,7 @@ cfdObjects::~cfdObjects()
 {
     m_multiGroupGeomFilter->Delete();
     m_geometryFilter->Delete();
+    m_surfaceFilter->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdObjects::SetObjectType( int type )
