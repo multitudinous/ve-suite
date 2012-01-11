@@ -42,6 +42,10 @@
 
 #include <ves/xplorer/scenegraph/util/CharacterAnimation.h>
 
+#include <ves/xplorer/eventmanager/EventMapper.h>
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
+
 // --- VRJuggler Includes --- //
 #include <gmtl/Misc/MatrixConvert.h>
 #include <gmtl/Xforms.h>
@@ -122,10 +126,15 @@ CharacterController::CharacterController()
     mCameraRotationZ( 0.0, 0.0, 1.0, 1.0 ),
     mCharacterAnimations( NULL ),
     mMatrixTransform( NULL ),
-    mLineSegmentIntersector( NULL )
+    mLineSegmentIntersector( NULL ),
+    m_axisInputUpdate( false )
 {
     head.init( "VJHead" );
     wand.init( "VJWand" );
+
+    CONNECTSIGNAL_1( "GameController.UpdateData", void( bool const& ),
+                     &CharacterController::SetGameControllerAxisUpdate,
+                     m_connections, normal_Priority );  
 
     Initialize();
 
@@ -411,17 +420,22 @@ void CharacterController::Rotate( double dx, double dy )
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::SetPhysicsWorldTransform()
 {
+    if( !m_axisInputUpdate )
+    {
+        return;
+    }
+
     // Account for MxCore orientation.
     osg::Matrix orient = osg::Matrix::rotate( -osg::PI_2, 1., 0., 0. );
     osg::Matrix worldMatrix = 
         orient * SceneManager::instance()->GetMxCoreViewMatrix().getMatrix();
-    
+
     osg::Vec3 deltaStep = worldMatrix.getTrans() - m_lastPosition;
     setDisplacement( osgbCollision::asBtVector3( deltaStep ) );
 
     double yaw, pitch, roll;
-    
-    SceneManager::instance()->GetMxCoreViewMatrix().getYawPitchRoll( yaw, pitch, roll, true );
+    SceneManager::instance()->
+        GetMxCoreViewMatrix().getYawPitchRoll( yaw, pitch, roll, true );
     yaw = -osg::DegreesToRadians( yaw );
     pitch = -osg::DegreesToRadians( pitch );
     roll = -osg::DegreesToRadians( roll );
@@ -460,7 +474,17 @@ void CharacterController::SetPhysicsWorldTransform()
     //Set the total camera rotation
     mCameraRotation = mCameraRotationX * mCameraRotationZ;
     
-    SetRotationFromCamera();
+    
+    if( mCameraDistance <= (mMinCameraDistance + 0.5) )
+    {
+        SetRotationFromCamera();
+    }
+    
+    /*else if( mCameraDistance > (mMinCameraDistance + 0.5) )
+    {
+        mCharacterAnimations->setNodeMask( 1 );
+    }*/
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::SetCameraRotationSLERP( bool onOff )
@@ -569,7 +593,7 @@ void CharacterController::Move( btScalar dt )
         //Update the character translation
         UpdateTranslation( dt );
         
-        //SetPhysicsWorldTransform();
+        SetPhysicsWorldTransform();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1254,3 +1278,9 @@ void CharacterController::InitializeCharacters()
     mMatrixTransform->addChild( scaleDown.get() );
 
 }
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::SetGameControllerAxisUpdate( bool const& data )
+{
+    m_axisInputUpdate = data;
+}
+////////////////////////////////////////////////////////////////////////////////

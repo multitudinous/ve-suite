@@ -226,10 +226,10 @@ ModelHandler::ModelHandler()
                     &ModelHandler::SetActiveModel,
                     m_connections, normal_Priority );
 
-    CONNECTSIGNAL_1( "%dbPresent",
+    CONNECTSIGNALS_1( "%dbPresent",
                     void( bool const& ),
                     &ModelHandler::SetDBPresent,
-                    m_connections, normal_Priority );
+                    m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler()

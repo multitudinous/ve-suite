@@ -36,6 +36,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 #include <ves/xplorer/device/Device.h>
 
 #include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
@@ -222,6 +224,10 @@ private:
     osgwMx::MxCore& m_viewMatrix;
     ///Nav mode
     std::string m_navMode;
+    ///The signature to tell others the game pad is active
+    ves::util::BoolSignal_type m_updateData;
+    ///Control the data flow
+    bool m_success;
 };
 
 } //end device

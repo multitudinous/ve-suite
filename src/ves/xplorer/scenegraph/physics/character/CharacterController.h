@@ -37,6 +37,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+
 #include <ves/xplorer/scenegraph/physics/character/KinematicCharacterController.h>
 
 class CharacterAnimation;
@@ -232,6 +234,9 @@ private:
     ///Set the new position of the character through the mxCore matrix
     void SetPhysicsWorldTransform();
 
+    ///Set the game controller input flag
+    void SetGameControllerAxisUpdate( bool const& data );
+    
     ///Tracks the on/off status of the character controller
     bool m_enabled;
 
@@ -379,6 +384,16 @@ private:
 
     ///The vector to hold all of the animations for the character
     std::vector< CharacterAnimation* > m_fbxCharacters;
+    
+    ///Head point from the last frame
+    gmtl::Point3d m_lastHeadPoint;
+    
+    ///The game pad axis input flag
+    bool m_axisInputUpdate;
+
+    /// Required to be able to connect up to signals.
+    /// Required for connecting to signals via EventManager
+    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
     
     class CharacterTransformCallback : public osg::NodeCallback
     {

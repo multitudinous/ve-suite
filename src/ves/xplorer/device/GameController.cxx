@@ -116,7 +116,8 @@ GameController::GameController()
     m_rightStickY( 0 ),
     m_buttons( 0 ),
     m_buttonMap( new osgwMx::FunctionalMap() ),
-    m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() )
+    m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() ),
+    m_success( false )
 {
     // Create a default functional map.
     m_buttonMap->configure( osgwMx::MxGamePad::Button0, osgwMx::FunctionalMap::JumpToWorldOrigin );
@@ -216,6 +217,11 @@ GameController::GameController()
                      &GameController::SetRotationMode,
                      m_connections, any_SignalType, normal_Priority );  
 
+    // Register signal(s) with EventManager
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
+        "GameController.UpdateData");
+    
     //Setup the ability to catch shutdowns
     //m_signalHandler = boost::bind(&GameController::HandleSignal, this, _1);
     //vrj::Kernel::instance()->
@@ -255,10 +261,15 @@ void GameController::OnAxis0Event( const float event )
     bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
-    if( !success )
+    if( m_success )
     {
+        m_updateData( m_success );
         return;
     }
+
+    m_success = success;
+
+    m_updateData( m_success );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis1Event( const float event )
@@ -279,10 +290,15 @@ void GameController::OnAxis1Event( const float event )
     bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
-    if( !success )
+    if( m_success )
     {
+        m_updateData( m_success );
         return;
     }
+    
+    m_success = success;
+    
+    m_updateData( m_success );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis2Event( const float event )
@@ -309,10 +325,15 @@ void GameController::OnAxis2Event( const float event )
     bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
-    if( !success )
+    if( m_success )
     {
+        m_updateData( m_success );
         return;
     }
+    
+    m_success = success;
+    
+    m_updateData( m_success );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis3Event( const float event )
@@ -339,10 +360,15 @@ void GameController::OnAxis3Event( const float event )
     bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
-    if( !success )
+    if( m_success )
     {
+        m_updateData( m_success );
         return;
     }
+    
+    m_success = success;
+    
+    m_updateData( m_success );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis4Event( gadget::DigitalState::State event )
@@ -651,7 +677,8 @@ void GameController::OnButton10Event( gadget::DigitalState::State event )
     default:
         break;
     }
-}////////////////////////////////////////////////////////////////////////////////
+}
+////////////////////////////////////////////////////////////////////////////////
 void GameController::OnButton11Event( gadget::DigitalState::State event )
 {
     if( m_exit )
