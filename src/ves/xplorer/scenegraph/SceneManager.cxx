@@ -50,6 +50,7 @@
 #include <osg/Switch>
 #include <osg/MatrixTransform>
 #include <osg/PositionAttitudeTransform>
+#include <osg/io_utils>
 
 #include <osgDB/Registry>
 #include <osgDB/ReaderWriter>
@@ -131,10 +132,7 @@ SceneManager::SceneManager()
     m_defaultView = gmtl::makeRot< gmtl::Matrix44d >( gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
 
     // Set some MxCore defaults:
-    ///This is not really the up or view vector for ves but since we are working
-    ///in Z up space we need an identity matrix for mxcore. This can be 
-    ///accomplished by telling mxcore that we are in Y up space so that it thinks
-    ///we are already in native OpenGL coordinate space.
+
     m_viewMatrix->setInitialValues( 
         osg::Vec3d( 0., 0., 1. ), 
         osg::Vec3d( 0., 1., 0. ), 
@@ -208,7 +206,19 @@ void SceneManager::InitScene()
         << std::endl;
 
     m_vrjHead.init( "VJHead" );
-
+    m_vrjHeadMatrix = 
+        gmtl::convertTo< double >( m_vrjHead->getData() );
+    m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
+    
+    osg::Vec3d up, dir, pos;
+    double fovy;
+    m_viewMatrix->getInitialValues( up, dir, pos, fovy );
+    m_lastHeadLocation = gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
+    pos[ 0 ] = m_vrjHeadMatrix.mData[ 12 ];
+    pos[ 1 ] = m_vrjHeadMatrix.mData[ 13 ];
+    pos[ 2 ] = m_vrjHeadMatrix.mData[ 14 ];
+    m_viewMatrix->setInitialValues( up, dir, pos, fovy );
+                
     //mRootNode = new ves::xplorer::scenegraph::Group();
     if( !mRootNode.valid() )
     {
@@ -625,22 +635,54 @@ void SceneManager::LatePreFrameUpdate()
     ///If the logo dcs is active no nav is allowed
     if( mNavSwitch->getValue( 1 ) )
     {
+        osg::Vec3d up, dir, pos;
+        double fovy;
+        m_viewMatrix->getInitialValues( up, dir, pos, fovy );
+        m_lastHeadLocation = gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
+        pos[ 0 ] = m_vrjHeadMatrix.mData[ 12 ];
+        pos[ 1 ] = m_vrjHeadMatrix.mData[ 13 ];
+        pos[ 2 ] = m_vrjHeadMatrix.mData[ 14 ];
+        m_viewMatrix->setInitialValues( up, dir, pos, fovy );
         m_viewMatrix->reset();
     }
+    
+    m_vrjHeadMatrix = gmtl::convertTo< double >( m_vrjHead->getData() );
+    ///Convert the head matrix to Z up land and then back out purely the
+    ///rotation component to get a pure matrix with head rotation and 
+    ///position in Z up land.
+    m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
 
+    ///Get the tracked head location for and create a delta that can be added
+    ///to the current matrix stack in MxCore. This delta is in Z up land and 
+    ///needs to be a delta so that it is an adder to whatever is being done
+    ///by the user through input devices.
+    gmtl::Point3d headLocation = 
+        gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
+    gmtl::Point3d deltaHeadLocation = headLocation - m_lastHeadLocation;
+    osg::Vec3d deltaHeadPosition( deltaHeadLocation.mData[ 0 ], 
+                                 deltaHeadLocation.mData[ 1 ], 
+                                 deltaHeadLocation.mData[ 2 ] );
+
+    m_viewMatrix->setPosition( m_viewMatrix->getPosition() + deltaHeadPosition );
+    m_lastHeadLocation = headLocation;
+    
     gmtl::Matrix44d navMatrix;    
     navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
     mActiveNavDCS->SetMat( navMatrix );
-        
-    m_vrjHeadMatrix = 
-        gmtl::convertTo< double >( m_vrjHead->getData() );
-    m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
 
-    navMatrix = m_zUpTransform * navMatrix;//mActiveNavDCS->GetMat();
+    navMatrix = m_zUpTransform * navMatrix;
     
     gmtl::invert( m_invertedNavMatrix, navMatrix );
     m_invertedNavMatrixOSG.set( m_invertedNavMatrix.getData() );
-    
+    ///We need to remove the position from the head matrix because it is
+    ///already being accounted for in the navMatrix for MxCore. The
+    ///m_globalViewMatrix is the matrix that we need to use throughout ves
+    ///for the view matrix. It includes everything except for the final
+    ///transformation for a given projection for a given context and viewport.
+    m_vrjHeadMatrix.mData[ 12 ] = 0.0;
+    m_vrjHeadMatrix.mData[ 13 ] = 0.0;
+    m_vrjHeadMatrix.mData[ 14 ] = 0.0;
+    m_vrjHeadMatrix.mData[ 15 ] = 1.0;
     m_globalViewMatrix = m_invertedNavMatrix * m_vrjHeadMatrix;
     m_globalViewMatrixOSG.set( m_globalViewMatrix.getData() );
     

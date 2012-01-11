@@ -758,6 +758,10 @@ void App::latePreFrame()
         }
     }
     ///////////////////////
+    {
+        ;
+    }
+    ///////////////////////
     CharacterController& characterController =
         SceneManager::instance()->GetCharacterController();
     {
@@ -1102,12 +1106,17 @@ void App::draw()
         const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
 
         //Get the view matrix from vrj and transform into z-up land
-        const gmtl::Matrix44d vrjViewMatrix =
+        gmtl::Matrix44d vrjViewMatrix =
             gmtl::convertTo< double >( project->getViewMatrix() );
+        vrjViewMatrix.mData[ 12 ] = 0.0;
+        vrjViewMatrix.mData[ 13 ] = 0.0;
+        vrjViewMatrix.mData[ 14 ] = 0.0;
+        vrjViewMatrix.mData[ 15 ] = 1.0;
+
         //Multiply by the camera matrix (mNavPosition)
         glTI->UpdateViewMatrix( vrjViewMatrix, mNavPosition );
         const osg::Matrixd viewMatrixOSG = glTI->GetViewMatrixOSG();
-        gmtl::Matrix44d tempMat = glTI->GetViewMatrix();
+        //gmtl::Matrix44d tempMat = glTI->GetViewMatrix();
 
         //Get the view matrix from a centered eye position
         m_sceneGLTransformInfo->CalculateCenterViewMatrix( project );

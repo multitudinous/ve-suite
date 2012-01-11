@@ -428,6 +428,9 @@ private:
     ///Matrix for the default view to transform from Z up to Z out
     gmtl::Matrix44d m_defaultView;
     
+    ///Head location for the point
+    gmtl::Point3d m_lastHeadLocation;
+    
     ///The MxCore class that is used to control the device controlled
     ///portion of the view matrix
     osg::ref_ptr< osgwMx::MxCore > m_viewMatrix;    
