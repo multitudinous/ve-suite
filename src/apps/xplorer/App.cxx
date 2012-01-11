@@ -1108,6 +1108,10 @@ void App::draw()
         //Get the view matrix from vrj and transform into z-up land
         gmtl::Matrix44d vrjViewMatrix =
             gmtl::convertTo< double >( project->getViewMatrix() );
+        ///We remove the translation component from the head matrix because
+        ///the position is accounted for in the MxCore matrix so we need to
+        ///remove it here. It gets multiplied in through the UpdateViewMatrix
+        ///function call.
         vrjViewMatrix.mData[ 12 ] = 0.0;
         vrjViewMatrix.mData[ 13 ] = 0.0;
         vrjViewMatrix.mData[ 14 ] = 0.0;
@@ -1116,7 +1120,6 @@ void App::draw()
         //Multiply by the camera matrix (mNavPosition)
         glTI->UpdateViewMatrix( vrjViewMatrix, mNavPosition );
         const osg::Matrixd viewMatrixOSG = glTI->GetViewMatrixOSG();
-        //gmtl::Matrix44d tempMat = glTI->GetViewMatrix();
 
         //Get the view matrix from a centered eye position
         m_sceneGLTransformInfo->CalculateCenterViewMatrix( project );
