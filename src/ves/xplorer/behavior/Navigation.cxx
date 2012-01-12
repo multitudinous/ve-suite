@@ -448,7 +448,8 @@ void Navigation::ProcessNavigation()
     }
     else
     {
-        m_sceneManager.GetMxCoreViewMatrix().moveLocal( osg::Vec3d( mDeltaTranslation[ 0 ], mDeltaTranslation[ 2 ], -mDeltaTranslation[ 1 ] ) );
+        m_sceneManager.GetMxCoreViewMatrix().moveLocal( 
+            osg::Vec3d( mDeltaTranslation[ 0 ], mDeltaTranslation[ 2 ], -mDeltaTranslation[ 1 ] ) );
 
         //If manipulating camera, no transformations are needed
         currentTransform = activeDCS->GetMat();

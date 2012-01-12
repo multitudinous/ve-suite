@@ -1115,6 +1115,10 @@ void App::draw()
         const float eye_offset(interocular_dist * 0.5f);
         
         // NOTE: Eye coord system is -z forward, x-right, y-up
+        ///We remove the translation component from the head matrix because
+        ///the position is accounted for in the MxCore matrix so we need to
+        ///remove it here. It gets multiplied in through the UpdateViewMatrix
+        ///function call.
         if( project->getEye() == vrj::Projection::LEFT )
         {            
             const gmtl::Point3f left_eye_point( -eye_offset, 0, 0 );
@@ -1130,18 +1134,9 @@ void App::draw()
                                        positionScale);
         }
 
-        //Get the view matrix from vrj and transform into z-up land
-        gmtl::Matrix44d vrjViewMatrix =
+        //Get the view matrix from vrj
+        const gmtl::Matrix44d vrjViewMatrix =
             gmtl::convertTo< double >( project->getViewMatrix() );
-
-        ///We remove the translation component from the head matrix because
-        ///the position is accounted for in the MxCore matrix so we need to
-        ///remove it here. It gets multiplied in through the UpdateViewMatrix
-        ///function call.
-        //vrjViewMatrix.mData[ 12 ] = 0.0;
-        //vrjViewMatrix.mData[ 13 ] = 0.0;
-        //vrjViewMatrix.mData[ 14 ] = 0.0;
-        //vrjViewMatrix.mData[ 15 ] = 1.0;
         
         //Multiply by the camera matrix (mNavPosition)
         glTI->UpdateViewMatrix( vrjViewMatrix, mNavPosition );
