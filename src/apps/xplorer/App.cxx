@@ -1105,18 +1105,44 @@ void App::draw()
         //Get the projection matrix
         const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
 
+        // Compute location of left and right eyes
+        const float positionScale = getDrawScaleFactor();
+
+        float interocular_dist = viewport->getUser()->getInterocularDistance();
+        interocular_dist *= positionScale; // Scale eye separation
+        
+        // Distance to move eye.
+        const float eye_offset(interocular_dist * 0.5f);
+        
+        // NOTE: Eye coord system is -z forward, x-right, y-up
+        if( project->getEye() == vrj::Projection::LEFT )
+        {            
+            const gmtl::Point3f left_eye_point( -eye_offset, 0, 0 );
+            project->calcViewMatrix( gmtl::MAT_IDENTITY44F, left_eye_point,
+                                      positionScale);
+        }
+        
+        if( project->getEye() == vrj::Projection::RIGHT )
+        {
+            const gmtl::Point3f right_eye_point( eye_offset, 0, 0 );
+            
+            project->calcViewMatrix( gmtl::MAT_IDENTITY44F, right_eye_point,
+                                       positionScale);
+        }
+
         //Get the view matrix from vrj and transform into z-up land
         gmtl::Matrix44d vrjViewMatrix =
             gmtl::convertTo< double >( project->getViewMatrix() );
+
         ///We remove the translation component from the head matrix because
         ///the position is accounted for in the MxCore matrix so we need to
         ///remove it here. It gets multiplied in through the UpdateViewMatrix
         ///function call.
-        vrjViewMatrix.mData[ 12 ] = 0.0;
-        vrjViewMatrix.mData[ 13 ] = 0.0;
-        vrjViewMatrix.mData[ 14 ] = 0.0;
-        vrjViewMatrix.mData[ 15 ] = 1.0;
-
+        //vrjViewMatrix.mData[ 12 ] = 0.0;
+        //vrjViewMatrix.mData[ 13 ] = 0.0;
+        //vrjViewMatrix.mData[ 14 ] = 0.0;
+        //vrjViewMatrix.mData[ 15 ] = 1.0;
+        
         //Multiply by the camera matrix (mNavPosition)
         glTI->UpdateViewMatrix( vrjViewMatrix, mNavPosition );
         const osg::Matrixd viewMatrixOSG = glTI->GetViewMatrixOSG();
