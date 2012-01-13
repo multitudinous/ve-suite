@@ -646,17 +646,17 @@ void UIElementQt::RefreshWidgetFilterList()
         widget->installEventFilter(this);
 
     //clock_gettime(CLOCK_MONOTONIC, &te);
-    //std::cout << "UIElementQt::RefreshWidgetFilterList " << te.tv_nsec - ts.tv_nsec << std::endl << std::flush;
+    //std::cout << "UIElementQt::RefreshWidgetFilterList "
+    //    << te.tv_nsec - ts.tv_nsec << std::endl << std::flush;
     //QCoreApplication::instance()->installEventFilter( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElementQt::eventFilter(QObject *object, QEvent *event)
 {
-    //std::cout << "eventFilter: " << std::flush;
     if(event->type() == QEvent::Paint)
     {
         //std::cout << "paint event" << std::flush;
-        QPaintEvent* paint_event = (QPaintEvent *)event;
+        QPaintEvent* paint_event = dynamic_cast< QPaintEvent* >( event );
         if(paint_event)
         {
             // we can either take the larger paint_event->rect(), which
@@ -665,23 +665,38 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
             // not sure which is best -- all the little ones just add up to
             // the large one.
 
-            QWidget* widget = (QWidget*)object;
+            QWidget* widget = static_cast< QWidget* >( object );
             Q_FOREACH(const QRect rect, paint_event->region().rects())
             {
 
                 QPoint p = widget->mapToGlobal( rect.topLeft() );
-                p = this->viewport()->mapFromGlobal( p );
+                //p = this->viewport()->mapFromGlobal( p );
+                QPoint g = p;
+                p = this->mapFromGlobal( p );
                 // Under certain circumstances (not sure exactly which), either
                 // p.x or p.y is -1. We check for this and set to zero, since
                 // negatives values are invalid.
                 if( p.x() < 0 )
                 {
+                    /*std::cout << "@@ " << p.x() << ", " << p.y() << " from "
+                    << widget->objectName().toStdString()
+                    << " G:(" << g.x() << "," << g.y() << ")  L:("
+                    << rect.topLeft().x() << "," << rect.topLeft().y()
+                    << ")"
+                    << std::endl << std::flush;  */                  
                     p.setX( 0 );
                 }
                 if( p.y() < 0 )
                 {
+                    /*std::cout << "@@ " << p.x() << ", " << p.y() << " from "
+                    << widget->objectName().toStdString()
+                    << " G:(" << g.x() << "," << g.y() << ")  L:("
+                    << rect.topLeft().x() << "," << rect.topLeft().y()
+                    << ")"
+                    << std::endl << std::flush;*/
                     p.setY( 0 );
                 }
+                
                 QRect r = QRect(p, rect.size());
                 QString key = QString("%1x%2x%3x%4")
                                .arg(r.x())
