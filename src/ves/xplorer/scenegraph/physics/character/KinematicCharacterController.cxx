@@ -142,9 +142,14 @@ public:
         else
         {
             //Need to transform normal into worldspace
-            hitNormalWorld =
-                m_hitCollisionObject->getWorldTransform().getBasis() *
-                convexResult.m_hitNormalLocal;
+            //hitNormalWorld =
+            //    m_hitCollisionObject->getWorldTransform().getBasis() *
+            //    convexResult.m_hitNormalLocal;
+            ///New code from Skew-Matrix example:
+            ///need to transform normal into worldspace
+			hitNormalWorld = 
+                convexResult.m_hitCollisionObject->
+                getWorldTransform().getBasis()*convexResult.m_hitNormalLocal;
         }
 
         btScalar dotUp = m_up.dot( hitNormalWorld );
@@ -292,6 +297,11 @@ KinematicCharacterController::~KinematicCharacterController()
 ////////////////////////////////////////////////////////////////////////////////
 void KinematicCharacterController::SetConvexShape( btConvexShape* convexShape )
 {
+    if( m_convexShape != NULL )
+    {    
+        delete( m_convexShape );
+    }
+    
     m_convexShape = convexShape;
     m_ghostObject->setCollisionShape( m_convexShape );
     m_ghostObject->setCollisionFlags( btCollisionObject::CF_CHARACTER_OBJECT );
@@ -498,7 +508,12 @@ void KinematicCharacterController::stepForwardAndStrafe(
             m_ghostObject->getBroadphaseHandle()->m_collisionFilterGroup;
         callback.m_collisionFilterMask =
             m_ghostObject->getBroadphaseHandle()->m_collisionFilterMask;
-
+        
+        ///New code from Skew-Matrix example:
+        // Do not return hits for default objects. We want our character to bash into
+        // these and knock them around.
+        callback.m_collisionFilterMask &= ~btBroadphaseProxy::DefaultFilter;
+        
         btScalar margin = m_convexShape->getMargin();
         m_convexShape->setMargin( margin + m_addedMargin );
 
@@ -597,7 +612,25 @@ void KinematicCharacterController::stepDown(
     //
     if( callback.hasHit() )
     {
-        //We dropped a fraction of the height -> hit floor
+        if( ( callback.m_hitCollisionObject->getCollisionFlags() &
+             btCollisionObject::CF_STATIC_OBJECT ) == 0 )
+        {
+            // It's dynamic. Make it respond a little.
+            // This allows the fulcrum / lever to work; otherwise, the lever would
+            // be completely immobile when we're standing on the end.
+            btVector3 response = ( m_targetPosition - m_currentPosition ) * callback.m_closestHitFraction * .01;
+            btTransform wt = callback.m_hitCollisionObject->getWorldTransform();
+            wt.setOrigin( wt.getOrigin() + response );
+            callback.m_hitCollisionObject->setWorldTransform( wt );
+            
+            // Now that we've moved the dynamic object just slightly, make sure we leave
+            // the kinematic character at the collision point, leaving just a slight gap
+            // between the character and the object we just moved. That allows the dynamic
+            // object to "spring back" if it is over-constrained (such as, pinned between
+            // the character and the ground).
+        }
+        
+        // we dropped a fraction of the height -> hit floor
         m_currentPosition.setInterpolate3(
             m_currentPosition, m_targetPosition, callback.m_closestHitFraction );
         m_verticalVelocity = 0.0;

@@ -97,14 +97,8 @@ enum Enum
 } //end TranslateType
 
 /*!\file CharacterController.h
- *
- */
-
-/*!\class ves::xplorer::scenegraph::CharacterController
- *
- */
-
-/*!\namespace ves::xplorer::scenegraph
+ * \class ves::xplorer::scenegraph::CharacterController
+ * \namespace ves::xplorer::scenegraph
  *
  */
 class VE_SCENEGRAPH_EXPORTS CharacterController :
@@ -237,6 +231,9 @@ private:
     ///Set the game controller input flag
     void SetGameControllerAxisUpdate( bool const& data );
     
+    ///Update the character shape
+    void UpdateCapsuleShape();
+
     ///Tracks the on/off status of the character controller
     bool m_enabled;
 

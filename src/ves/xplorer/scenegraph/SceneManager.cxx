@@ -125,7 +125,8 @@ SceneManager::SceneManager()
     m_isMasterNode( true ),
     m_previousTime( 0 ),
     m_deltaTime( 0 ),
-    m_viewMatrix( new osgwMx::MxCore() )
+    m_viewMatrix( new osgwMx::MxCore() ),
+    m_userHeight( 5.0 )
 {
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     m_zUpTransform = gmtl::makeRot< gmtl::Matrix44d >( gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0 ), x_axis ) );
@@ -666,6 +667,10 @@ void SceneManager::LatePreFrameUpdate()
     m_viewMatrix->setPosition( m_viewMatrix->getPosition() + deltaHeadPosition );
     m_lastHeadLocation = headLocation;
     
+    ///This is the distance from the VR Juggler defined ground plane to the
+    ///users head so we do not care what coordinate system they are relative to.
+    m_userHeight = headLocation.mData[ 2 ];
+    
     gmtl::Matrix44d navMatrix;    
     navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
     mActiveNavDCS->SetMat( navMatrix );
@@ -683,6 +688,7 @@ void SceneManager::LatePreFrameUpdate()
     m_vrjHeadMatrix.mData[ 13 ] = 0.0;
     m_vrjHeadMatrix.mData[ 14 ] = 0.0;
     m_vrjHeadMatrix.mData[ 15 ] = 1.0;
+
     m_globalViewMatrix = m_invertedNavMatrix * m_vrjHeadMatrix;
     m_globalViewMatrixOSG.set( m_globalViewMatrix.getData() );
     
@@ -861,5 +867,10 @@ osg::Uniform* SceneManager::GetNullGlowTextureUniform()
 osg::Program* SceneManager::GetNullGlowProgram()
 {
     return m_nullGlowProgram.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+double const& SceneManager::GetUserHeight() const
+{
+    return m_userHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////

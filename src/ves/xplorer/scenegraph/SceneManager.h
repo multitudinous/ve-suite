@@ -293,6 +293,10 @@ public:
     ///Get the shader program to null out glow for textured objects
     osg::Program* GetNullGlowProgram();
     
+    ///Get the users current as defined by the tracking hardware or predefined 
+    ///simulated position.
+    double const& GetUserHeight() const;
+
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -440,7 +444,14 @@ private:
     osg::ref_ptr< osg::Uniform > m_nullGlowTextureUniform;    
 
     ///The null glow program for textured objects
-    osg::ref_ptr< osg::Program > m_nullGlowProgram;    
+    osg::ref_ptr< osg::Program > m_nullGlowProgram;
+    
+    ///Store the current height of the user
+    ///This is set via the tracker head position along the Z axis which is the 
+    ///distance from the users head to the ground plane defined in VR Juggler
+    ///This value is in feet.
+    double m_userHeight;
+
 };
 } //end scenegraph
 } //end xplorer

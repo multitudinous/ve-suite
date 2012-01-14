@@ -587,12 +587,16 @@ void CharacterController::Move( btScalar dt )
     }
     else
     {
+        //Update the character physics btCapsuleShapeZ
+        UpdateCapsuleShape();
+        
         //Update the character rotation
         UpdateRotation();
 
         //Update the character translation
         UpdateTranslation( dt );
         
+        ///Update the character based on game controller input
         SetPhysicsWorldTransform();
     }
 }
@@ -610,7 +614,6 @@ void CharacterController::UpdateCamera()
         CameraDistanceLERP();
     }
 
-    
     //Get the current camera's rotation
     btMatrix3x3 basis( mCameraRotation );
 
@@ -1282,5 +1285,23 @@ void CharacterController::InitializeCharacters()
 void CharacterController::SetGameControllerAxisUpdate( bool const& data )
 {
     m_axisInputUpdate = data;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CharacterController::UpdateCapsuleShape()
+{
+    double const& height = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetUserHeight();
+    
+    if( height < 1.5f )
+    {
+        return;
+    }
+    
+    m_characterHeight = height;
+        
+    btCapsuleShapeZ* shape = new btCapsuleShapeZ( m_characterWidth,
+                                        height - ( m_characterWidth * 2. ) );
+
+    SetConvexShape( shape );
 }
 ////////////////////////////////////////////////////////////////////////////////
