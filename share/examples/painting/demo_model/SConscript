@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import('ves_pkg buildDir RootDir osg_options xerces_options tao_options GetPlatform vpr_options vrjuggler_options')
+Import('ves_pkg buildDir RootDir GetPlatform boost_options')
 
 lib_env = ves_pkg.getEnv().Clone()
 #lib_env.Append(LIBS = ['ves_open_xml', 'ves_ce_unitwrapper', 'ves_open_module'])
@@ -17,10 +17,10 @@ lib_env = ves_pkg.getEnv().Clone()
 #if GetPlatform() == 'win32':
 #   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
 
-#tao_options.apply( lib_env )
-#osg_options.apply( lib_env )
-#xerces_options.apply( lib_env )
-#vrjuggler_options.apply( lib_env )
+boost_options.apply( lib_env )
+
+#lib_env.AppendUnique( LINKFLAGS = ['-lboost_serialization'] )
+lib_env.AppendUnique( LIBS = ['boost_serialization'] )
 
 srcs = Split("""
     main.cxx

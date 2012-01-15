@@ -2,16 +2,53 @@
 
 #include <cmath>
 #include <iostream>
+#include <map>
 
 ////////////////////////////////////////////////////////////////////////////////
 AirlessPaintModel::AirlessPaintModel()
     :
+    m_percentIncrease( 175.0f ),
+    m_measuredFlowRate( 3.75f ),
+    m_pressureIncreasePer750( 40. ),
     m_gunToPartDistance( 0. ),
     m_airPressure( 0. ),
     m_viscosity( 0. ),
     m_tipDiameter( 0. )
 {
-    ;
+    //10	100	250	500	750	1000
+    //0	-40	-60	-80	-90	-95
+    //std::map< double, double > flowRateReductionMap;
+    m_flowRateReductionMap[ 10. ] = 0.;
+    m_flowRateReductionMap[ 100. ] = -40.;
+    m_flowRateReductionMap[ 250. ] = -60.;
+    m_flowRateReductionMap[ 500. ] = -80.;
+    m_flowRateReductionMap[ 750. ] = -90.;
+    m_flowRateReductionMap[ 1000. ] = -95.;
+    
+    //750	1500	2250	3000	3750	4500
+    //-0.028	-0.026	-0.020	-0.018	-0.015	-0.013
+    m_teDecreaseMap[ 750. ] = -0.028;
+    m_teDecreaseMap[ 1500. ] = -0.026;
+    m_teDecreaseMap[ 2250. ] = -0.020;
+    m_teDecreaseMap[ 3000. ] = -0.018;
+    m_teDecreaseMap[ 3750. ] = -0.015;
+    m_teDecreaseMap[ 4500. ] = -0.013;
+    
+    //Distance Factor (Per Inch) H1	H2	W1	W2
+    //Percent Decrease -10% -10% -10% -10%
+    //IF(D6<D3,(D3-D6)*(J4)*(B9)+(B9)
+    m_patternPercentDecrease.push_back( -10.0 );
+    m_patternPercentDecrease.push_back( -10.0 );
+    m_patternPercentDecrease.push_back( -10.0 );
+    m_patternPercentDecrease.push_back( -10.0 );
+
+    //Distance Factor (Per Inch) H1 H2 W1 W2
+    //Percent Increase 2% 5% 2% 3%
+    //IF(D6>D3,(D6-D3)*(J3)*(B9)+B9,)
+    m_patternPercentIncrease.push_back( 2.0 );
+    m_patternPercentIncrease.push_back( 5.0 );
+    m_patternPercentIncrease.push_back( 2.0 );
+    m_patternPercentIncrease.push_back( 3.0 );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 AirlessPaintModel::~AirlessPaintModel()
@@ -117,9 +154,8 @@ std::string AirlessPaintModel::DetermineDropletBinLetter( double& size )
 ////////////////////////////////////////////////////////////////////////////////
 double AirlessPaintModel::CalculateTransferEffenciency( double& pressure, std::string const& bin, double& distance )
 {
-    //y = 4E-06x - 0.0308
-    double teDescreasePerInch = 0.000004 * pressure - 0.0308;
-    
+    double teDescreasePerInch = Interpolate( m_teDecreaseMap, pressure );    
+
     double dropletSizeDecrease = DetermineTEDecrease( bin );
     
     double nominalTE = 100.0;
@@ -162,25 +198,21 @@ double AirlessPaintModel::DetermineTEDecrease( std::string const& bin )
 ////////////////////////////////////////////////////////////////////////////////
 double AirlessPaintModel::CalculateFlowrate()
 {
-    //=-20.99*LN(E30) + 51.692
-    double flowRateReduction = -20.99 * ::log( m_viscosity ) + 51.692;
+    double flowRateReduction = Interpolate( m_flowRateReductionMap, m_viscosity );
+
     std::cout << "Flowrate reduction = " << flowRateReduction << std::endl;
-    
-    double percentIncrease = 175.0f;
-    double measuredFlowRate = 3.75f;
+
     double numberOfNozzleIncrements = ( m_tipDiameter - 0.0070 ) / 0.0020;
     //=B29*(C29*0.01)*A33+B29
-    double baseFlowRate = measuredFlowRate * ( percentIncrease * 0.01 ) * numberOfNozzleIncrements + measuredFlowRate;
+    double baseFlowRate = m_measuredFlowRate * ( m_percentIncrease * 0.01 ) * numberOfNozzleIncrements + m_measuredFlowRate;
     std::cout << "Base flowrate = " << baseFlowRate << std::endl;
 
     //=L8*0.01+F30+L8
     double flowRate = baseFlowRate * 0.01 * flowRateReduction + baseFlowRate;
     std::cout << "Reduced flowrate by viscosity constant = " << flowRate << std::endl;
     
-    //Fluid Pressure Increase per 750
-    double pressureIncreasePercent = 40.0;
     //=(O9*K10)*G23+O9
-    flowRate = ((m_airPressure/750) - 1) * pressureIncreasePercent * 0.01 * flowRate + flowRate;
+    flowRate = ((m_airPressure/750) - 1) * m_pressureIncreasePer750 * 0.01 * flowRate + flowRate;
     std::cout << "Final flowrate = " << flowRate << std::endl; 
     
     return flowRate;
@@ -209,20 +241,20 @@ void AirlessPaintModel::CalculatePatternDimension()
         //Distance Factor (Per Inch) H1	H2	W1	W2
         //Percent Decrease -10% -10% -10% -10%
         //IF(D6<D3,(D3-D6)*(J4)*(B9)+(B9)
-        m_h1 = (nominalDistance - m_gunToPartDistance) * (-10.0 * 0.01) * nomh1 + nomh1;
-        m_h2 = (nominalDistance - m_gunToPartDistance) * (-10.0 * 0.01) * nomh2 + nomh2;
-        m_w1 = (nominalDistance - m_gunToPartDistance) * (-10.0 * 0.01) * nomw1 + nomw1;
-        m_w2 = (nominalDistance - m_gunToPartDistance) * (-10.0 * 0.01) * nomw2 + nomw2;
+        m_h1 = (nominalDistance - m_gunToPartDistance) * (m_patternPercentDecrease.at( 0 ) * 0.01) * nomh1 + nomh1;
+        m_h2 = (nominalDistance - m_gunToPartDistance) * (m_patternPercentDecrease.at( 1 ) * 0.01) * nomh2 + nomh2;
+        m_w1 = (nominalDistance - m_gunToPartDistance) * (m_patternPercentDecrease.at( 2 ) * 0.01) * nomw1 + nomw1;
+        m_w2 = (nominalDistance - m_gunToPartDistance) * (m_patternPercentDecrease.at( 3 ) * 0.01) * nomw2 + nomw2;
     }
     else if( m_gunToPartDistance > nominalDistance )
     {
         //Distance Factor (Per Inch) H1 H2 W1 W2
         //Percent Increase 2% 5% 2% 3%
         //IF(D6>D3,(D6-D3)*(J3)*(B9)+B9,)
-        m_h1 = (m_gunToPartDistance - nominalDistance) * (2.0 * 0.01) * nomh1 + nomh1;
-        m_h2 = (m_gunToPartDistance - nominalDistance) * (5.0 * 0.01) * nomh2 + nomh2;
-        m_w1 = (m_gunToPartDistance - nominalDistance) * (2.0 * 0.01) * nomw1 + nomw1;
-        m_w2 = (m_gunToPartDistance - nominalDistance) * (3.0 * 0.01) * nomw2 + nomw2;
+        m_h1 = (m_gunToPartDistance - nominalDistance) * (m_patternPercentIncrease.at( 0 ) * 0.01) * nomh1 + nomh1;
+        m_h2 = (m_gunToPartDistance - nominalDistance) * (m_patternPercentIncrease.at( 1 ) * 0.01) * nomh2 + nomh2;
+        m_w1 = (m_gunToPartDistance - nominalDistance) * (m_patternPercentIncrease.at( 2 ) * 0.01) * nomw1 + nomw1;
+        m_w2 = (m_gunToPartDistance - nominalDistance) * (m_patternPercentIncrease.at( 3 ) * 0.01) * nomw2 + nomw2;
     }
     
     std::cout << "Pattern = " << m_h1 << " " << m_h2 << " " 
@@ -257,5 +289,26 @@ double AirlessPaintModel::GetTE()
 double AirlessPaintModel::GetFlowRate()
 {
     return m_flowrate;
+}
+////////////////////////////////////////////////////////////////////////////////
+double AirlessPaintModel::Interpolate( std::map< double, double >& dataMap, double input )
+{
+    double result = 0.0;
+    typedef std::map< double, double >::const_iterator BoundIter;
+    BoundIter equalPoint = dataMap.find( input );
+    if( equalPoint == dataMap.end() )
+    {
+        BoundIter upperBound = dataMap.upper_bound( input );
+        BoundIter lowerBound = upperBound;
+        lowerBound--;
+        
+        result = lowerBound->second + ( input - lowerBound->first ) * 
+        ( ( upperBound->second - lowerBound->second ) / ( upperBound->first - lowerBound->first ) );
+    }
+    else
+    {
+        result = equalPoint->second;
+    }
+    return result;
 }
 ////////////////////////////////////////////////////////////////////////////////

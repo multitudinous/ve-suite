@@ -1,9 +1,37 @@
 #pragma once
 
 #include <string>
+#include <iostream>
+#include <map>
+#include <vector>
+
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/utility.hpp>
+//#include <boost/serialization/list.hpp>
+//#include <boost/serialization/assume_abstract.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
 
 class AirlessPaintModel
 {
+    friend std::ostream & operator<<(std::ostream& os, const AirlessPaintModel& gp )
+    {
+        return os << ' ' << gp.m_percentIncrease << ' ' << gp.m_measuredFlowRate << ' ';
+    }
+    
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize( Archive& ar, const unsigned int /* file_version */)
+    {        
+        ar & boost::serialization::make_nvp( "m_percentIncrease", m_percentIncrease ) 
+            & boost::serialization::make_nvp( "m_measuredFlowRate", m_measuredFlowRate )
+            & boost::serialization::make_nvp( "m_pressureIncreasePer750", m_pressureIncreasePer750 )
+            & boost::serialization::make_nvp( "m_flowRateReductionMap", m_flowRateReductionMap )
+            & boost::serialization::make_nvp( "m_teDecreaseMap", m_teDecreaseMap )
+            & boost::serialization::make_nvp( "m_patternPercentIncrease", m_patternPercentIncrease )
+            & boost::serialization::make_nvp( "m_patternPercentDecrease", m_patternPercentDecrease );
+    }
 public:
     ///Constructor
     AirlessPaintModel();
@@ -52,6 +80,19 @@ private:
     ///Determine the TE decrease based on droplet size bin
     double DetermineTEDecrease( std::string const& bin );
 
+    double Interpolate( std::map< double, double >& dataMap, double input );
+    
+    ///////
+    ///Model Constants
+    double m_percentIncrease;
+    double m_measuredFlowRate;
+    double m_pressureIncreasePer750;
+    std::map< double, double > m_flowRateReductionMap;
+    std::map< double, double > m_teDecreaseMap;
+    std::vector< double > m_patternPercentIncrease;
+    std::vector< double > m_patternPercentDecrease;
+    ///////
+    
     ///The distance of the gun from the part
     double m_gunToPartDistance;
     ///The air pressure
