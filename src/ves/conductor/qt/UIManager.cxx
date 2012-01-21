@@ -30,7 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//#define NO_SUBLOAD
+#ifdef WIN32
+#define NO_SUBLOAD
+#endif
+
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElement.h>
@@ -54,7 +57,6 @@
 #include <osg/Geode>
 #include <osg/StateAttribute>
 #include <osg/Geometry>
-//#include <osg/Texture2D>
 #include <osg/Projection>
 #include <osg/NodeCallback>
 #include <osg/BlendFunc>
@@ -74,6 +76,7 @@
 #include <boost/concept_check.hpp>
 
 //#define VES_QT_RENDER_DEBUG
+//#include <osg/Texture2D>
 
 namespace ves
 {
