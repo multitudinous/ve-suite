@@ -159,7 +159,7 @@ void Manager::OneTimeSetup()
     {
         std::string tempHome("./");
         //std::cout << "TECSDKHOME=" << tempHome << std::endl;
-        ret = init( tempHome, "IowaStateBrydenResearchGroup 112 01/02/2012 0 0673200413" );
+        ret = init( tempHome, "IowaStateBrydenResearchGroup 112 06/30/2012 0 4146873032" );
         //std::cerr << "The environment variable TECSDKHOME must be defined to run Tecplot SDK applications.\n" << std::endl;
         //ret = Manager::ManagerStartReturnCode_HomeDirectoryNotSpecified;
     }
