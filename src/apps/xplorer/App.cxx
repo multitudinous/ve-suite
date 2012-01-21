@@ -396,6 +396,10 @@ void App::contextInit()
         
         //ves::conductor::UIManager::instance()->AddUIToNode( camera );
         m_numContexts += 1;
+        if(  m_vm.count("VESDesktop") )
+        {
+            m_numContexts = 1;
+        }
     }
 
     ( *sceneViewer ) = new_sv;
@@ -1047,6 +1051,7 @@ void App::draw()
 
     if( !m_render )
     {
+        std::cout << "Cannot render yet." << std::endl;
         return;
     }
     
