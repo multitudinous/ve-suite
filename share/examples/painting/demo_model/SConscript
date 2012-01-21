@@ -16,11 +16,11 @@ lib_env = ves_pkg.getEnv().Clone()
 
 #if GetPlatform() == 'win32':
 #   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
-
+if GetPlatform() != 'win32':
+    #lib_env.AppendUnique( LINKFLAGS = ['-lboost_serialization'] )
+    lib_env.AppendUnique( LIBS = ['boost_serialization'] )
+    #boost_serialization-vc90-mt
 boost_options.apply( lib_env )
-
-#lib_env.AppendUnique( LINKFLAGS = ['-lboost_serialization'] )
-lib_env.AppendUnique( LIBS = ['boost_serialization'] )
 
 srcs = Split("""
     main.cxx
