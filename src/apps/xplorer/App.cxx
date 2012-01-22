@@ -396,10 +396,6 @@ void App::contextInit()
         
         //ves::conductor::UIManager::instance()->AddUIToNode( camera );
         m_numContexts += 1;
-        if(  m_vm.count("VESDesktop") )
-        {
-            m_numContexts = 1;
-        }
     }
 
     ( *sceneViewer ) = new_sv;
@@ -424,6 +420,11 @@ void App::contextClose()
         _pbuffer = 0;
     }
 #endif
+
+    {
+        vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
+        m_numContexts -= 1;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _PBUFFER
