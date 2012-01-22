@@ -637,13 +637,17 @@ void UIElementQt::SetWidget( QWidget* widget )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::RefreshWidgetFilterList()
 {
+    QMutexLocker locker( mImageMutex );
+
     //timespec ts, te;
     //clock_gettime(CLOCK_MONOTONIC, &ts);
     // for each child widget on the dialog, install an event filter
     // for it that redirects to our eventFilter() method.
     QList<QWidget *> widgets = mWidget->findChildren<QWidget *>();
     Q_FOREACH(QWidget* widget, widgets)
+    {
         widget->installEventFilter(this);
+    }
 
     //clock_gettime(CLOCK_MONOTONIC, &te);
     //std::cout << "UIElementQt::RefreshWidgetFilterList "
@@ -917,7 +921,11 @@ void UIElementQt::_render()
             QPainter m_imagePainter( mImage );
             QRect m_Rectangle( 0, 0, mWidth, mHeight );
             this->render( &m_imagePainter, m_Rectangle, m_Rectangle );
-            m_imagePainter.end();
+            bool flag = m_imagePainter.end();
+            if( !flag )
+            {
+                std::cout << "QPainter is still working..." << std::endl;
+            }
         }
     } // Leave critical section
 
