@@ -68,28 +68,8 @@ vrjuggler_options.apply( env )
 osgworks_options.apply( env )
 xerces_options.apply( env )
 
-if baseEnv['MakeQtSupport'] == "yes":
-    if GetPlatform() != 'darwin':
-        Import('qt_options')
-        qt_options.apply(env)
-        env.AppendUnique( CPPDEFINES = ['QT_ON','QT_QTPROPERTYBROWSER_IMPORT'] )
-        env.Append(LIBS = ['QtSolutions_PropertyBrowser-2.5'])
-        env.Append(LIBPATH = [pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src')])
-        env.Append(LIBS = ['osgQtTree'])
-        env.Append(LIBPATH = [pj('#', buildDir, 'external', 'osgQtTree')])
-    else:
-        import qt46
-        qt46.applyQtBuildFlags(env)
-        srcs.append(pj('VESDelegate.mm'))
-        srcs.append(pj('CocoaHelper.mm'))
-
-    env.AppendUnique(LIBS = ['ves_conductor_qtui','ves_xplorer_data','ves_xplorer_eventmanager'])
-    env.AppendUnique(LIBPATH = [pj('#',buildDir,'src','ves','conductor','qt'),
-                                pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
-                                pj('#', buildDir, 'src','ves','xplorer','eventmanager')])
-else:
-   headers.remove( pj( 'NonQtMainThread.h') )
-   srcs.remove( pj( 'NonQtMainThread.cxx') )
+headers.remove( pj( 'NonQtMainThread.h') )
+srcs.remove( pj( 'NonQtMainThread.cxx') )
 
 resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns'), 
     pj( RootDir, 'src', 'apps', 'xplorer','vrjuggler.plist')]
