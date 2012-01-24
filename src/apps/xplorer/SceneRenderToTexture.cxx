@@ -1278,16 +1278,32 @@ void SceneRenderToTexture::Update(
         tempCommandName = tempCommand->GetCommandName();
     }
     
+    ///Add the ui to all of the cameras.
+    if( !m_isUIAdded )
+    {
+        if( scenegraph::SceneManager::instance()->IsDesktopMode() )
+        {
+            for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
+                iter != m_updateList.end(); ++iter )
+            {
+                ves::conductor::UIManager::instance()->AddUIToNode( (*iter) );
+                m_isUIAdded = true;
+            }
+        }
+        else
+        {
+            if( m_rootGroup.valid() )
+            {
+                ves::conductor::UIManager::instance()->AddUIToNode( m_rootGroup.get() ); 
+                m_isUIAdded = true;
+            }
+        }
+    }
+        
+    ///Update all of the cameras
     for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
         iter != m_updateList.end(); ++iter )
     {
-        if( !m_isUIAdded )
-        {
-            ves::conductor::UIManager::instance()->AddUIToNode( (*iter) );
-
-            m_isUIAdded = true;
-        }
-
         (*iter)->accept( *updateVisitor );
 
         //This code came from osgViewer::Viewer::setSceneData
