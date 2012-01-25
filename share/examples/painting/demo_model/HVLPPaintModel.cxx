@@ -12,10 +12,12 @@ HVLPPaintModel::HVLPPaintModel()
     m_pressureIncreasePer750( 40. ),
     m_needlePosition( 100.0 ),
     m_atomizingAirPressure( 100.0 ),
-    m_gunToPartDistance( 0. ),
+    m_gunToPartDistance( 6. ),
     m_airPressure( 0. ),
     m_viscosity( 0. ),
-    m_tipDiameter( 0. )
+    m_tipDiameter( 0. ),
+    m_dropletBin( "A" ),
+    m_fanAdjustment( 100.0 )
 {
     ///Viscosity reduction map
     //Scale Max			0	100	250	500	750	1000
@@ -64,20 +66,22 @@ HVLPPaintModel::HVLPPaintModel()
         
     //750	1500	2250	3000	3750	4500
     //-0.028	-0.026	-0.020	-0.018	-0.015	-0.013
-    m_teDecreaseMap[ 750. ] = -0.028;
-    m_teDecreaseMap[ 1500. ] = -0.026;
-    m_teDecreaseMap[ 2250. ] = -0.020;
-    m_teDecreaseMap[ 3000. ] = -0.018;
-    m_teDecreaseMap[ 3750. ] = -0.015;
-    m_teDecreaseMap[ 4500. ] = -0.013;
+    //Fluid Pressure 	0	20	40	60	80	100
+    //TE Decrease/ Inch	-0.0275	-0.026	-0.02	-0.0175	-0.015	-0.0125
+    m_teDecreaseMap[   0.0 ] = -0.0275;
+    m_teDecreaseMap[  20.0 ] = -0.026;
+    m_teDecreaseMap[  40.0 ] = -0.020;
+    m_teDecreaseMap[  60.0 ] = -0.0175;
+    m_teDecreaseMap[  80.0 ] = -0.015;
+    m_teDecreaseMap[ 100.0 ] = -0.0125;
     
     //Distance Factor (Per Inch) H1	H2	W1	W2
     //Percent Decrease -10% -10% -10% -10%
     //IF(D6<D3,(D3-D6)*(J4)*(B9)+(B9)
-    m_patternPercentDecrease.push_back( -10.0 );
-    m_patternPercentDecrease.push_back( -10.0 );
-    m_patternPercentDecrease.push_back( -10.0 );
-    m_patternPercentDecrease.push_back( -10.0 );
+    m_patternPercentDecrease.push_back( -12.0 );
+    m_patternPercentDecrease.push_back( -15.0 );
+    m_patternPercentDecrease.push_back(  -6.0 );
+    m_patternPercentDecrease.push_back(  -8.0 );
 
     //Distance Factor (Per Inch) H1 H2 W1 W2
     //Percent Increase 2% 5% 2% 3%
@@ -85,7 +89,127 @@ HVLPPaintModel::HVLPPaintModel()
     m_patternPercentIncrease.push_back( 2.0 );
     m_patternPercentIncrease.push_back( 5.0 );
     m_patternPercentIncrease.push_back( 2.0 );
-    m_patternPercentIncrease.push_back( 3.0 );    
+    m_patternPercentIncrease.push_back( 3.0 );
+    
+    ///Base numbers for the pattern shape
+    //H1	H2	W1 	W2
+    //% Change	8.00	150%	40%	60%
+    m_patternBasePercents.push_back(   8.0 );
+    m_patternBasePercents.push_back( 150.0 );
+    m_patternBasePercents.push_back(  40.0 );
+    m_patternBasePercents.push_back(  60.0 );
+
+    ///Calculate patter shape constants
+    
+    //Table5: Pattern Shape						
+    //Function: Reduce the table 4 pattern dimensions based on the yellow highlighted values.						
+    /*H1	H2	W1	W2
+    A			100% 100%	50%	100%
+    B			80%	100%	60%	100%
+    C			100% 100%	100%	100%
+    D			75%	100%	50%	100%
+    E			30%	60%	80%	100%*/
+    m_dropletSizeH1PatternMap[ "A" ] = 100.0;
+    m_dropletSizeH1PatternMap[ "B" ] =  80.0;
+    m_dropletSizeH1PatternMap[ "C" ] = 100.0;
+    m_dropletSizeH1PatternMap[ "D" ] =  75.0;
+    m_dropletSizeH1PatternMap[ "E" ] =  30.0;
+
+    m_dropletSizeH2PatternMap[ "A" ] = 100.0;
+    m_dropletSizeH2PatternMap[ "B" ] = 100.0;
+    m_dropletSizeH2PatternMap[ "C" ] = 100.0;
+    m_dropletSizeH2PatternMap[ "D" ] = 100.0;
+    m_dropletSizeH2PatternMap[ "E" ] =  60.0;
+
+    m_dropletSizeW1PatternMap[ "A" ] =  50.0;
+    m_dropletSizeW1PatternMap[ "B" ] =  60.0;
+    m_dropletSizeW1PatternMap[ "C" ] = 100.0;
+    m_dropletSizeW1PatternMap[ "D" ] =  50.0;
+    m_dropletSizeW1PatternMap[ "E" ] =  80.0;
+
+    m_dropletSizeW2PatternMap[ "A" ] = 100.0;
+    m_dropletSizeW2PatternMap[ "B" ] = 100.0;
+    m_dropletSizeW2PatternMap[ "C" ] = 100.0;
+    m_dropletSizeW2PatternMap[ "D" ] = 100.0;
+    m_dropletSizeW2PatternMap[ "E" ] = 100.0;
+    
+    //Table 6: Needle Travel Distance						
+    //Function: The corresponding % change relationships will effect the pattern dimensions from table 5						
+    //Adjusted % Change: The actual % change relationship based on Table 2 trigger pull % (cell D13). 						
+    /*H1	H2	W1	W2
+    100			0%	0%	0%	0%
+    80			-5%	-5%	-5%	-5%
+    60			-10%	-10%	-10%	-10%
+    40			-25%	-25%	-25%	-25%
+    20			-50%	-50%	-50%	-50%
+    0			-100%	-100%	-100%	-100%
+    Adjusted % Change			0%	0%	0%	0%*/
+    m_needleTravelH1PatternMap[ 100.0 ] =    0.0;
+    m_needleTravelH1PatternMap[  80.0 ] =   -5.0;
+    m_needleTravelH1PatternMap[  60.0 ] =  -10.0;
+    m_needleTravelH1PatternMap[  40.0 ] =  -25.0;
+    m_needleTravelH1PatternMap[  20.0 ] =  -50.0;
+    m_needleTravelH1PatternMap[   0.0 ] = -100.0;
+
+    m_needleTravelH2PatternMap[ 100.0 ] =    0.0;
+    m_needleTravelH2PatternMap[  80.0 ] =   -5.0;
+    m_needleTravelH2PatternMap[  60.0 ] =  -10.0;
+    m_needleTravelH2PatternMap[  40.0 ] =  -25.0;
+    m_needleTravelH2PatternMap[  20.0 ] =  -50.0;
+    m_needleTravelH2PatternMap[   0.0 ] = -100.0;
+
+    m_needleTravelW1PatternMap[ 100.0 ] =    0.0;
+    m_needleTravelW1PatternMap[  80.0 ] =   -5.0;
+    m_needleTravelW1PatternMap[  60.0 ] =  -10.0;
+    m_needleTravelW1PatternMap[  40.0 ] =  -25.0;
+    m_needleTravelW1PatternMap[  20.0 ] =  -50.0;
+    m_needleTravelW1PatternMap[   0.0 ] = -100.0;
+
+    m_needleTravelW2PatternMap[ 100.0 ] =    0.0;
+    m_needleTravelW2PatternMap[  80.0 ] =   -5.0;
+    m_needleTravelW2PatternMap[  60.0 ] =  -10.0;
+    m_needleTravelW2PatternMap[  40.0 ] =  -25.0;
+    m_needleTravelW2PatternMap[  20.0 ] =  -50.0;
+    m_needleTravelW2PatternMap[   0.0 ] = -100.0;
+    
+    //Table 7: Fan Adjustment Knob						
+    //Function: The corresponding % change relationships will effect the pattern dimensions from table 6.						
+    //Adjusted % Change: The actual % change relationship based on Table 2 Fan Pattern % (cell D14). 						
+    /*H1	H2	W1	W2
+    100			0%	0%	0%	0%
+    80			-5%	-5%	-5%	-5%
+    60			-10%	-10%	-10%	-10%
+    40			-25%	-25%	-15%	-15%
+    20			-50%	-50%	-20%	-20%
+    0			-75%	-75%	-37%	-42%
+    Adjusted % Change			0%	0%	0%	0%*/
+    m_fanAdjustmentH1PatternMap[ 100.0 ] =    0.0;
+    m_fanAdjustmentH1PatternMap[  80.0 ] =   -5.0;
+    m_fanAdjustmentH1PatternMap[  60.0 ] =  -10.0;
+    m_fanAdjustmentH1PatternMap[  40.0 ] =  -25.0;
+    m_fanAdjustmentH1PatternMap[  20.0 ] =  -50.0;
+    m_fanAdjustmentH1PatternMap[   0.0 ] =  -75.0;
+
+    m_fanAdjustmentH2PatternMap[ 100.0 ] =    0.0;
+    m_fanAdjustmentH2PatternMap[  80.0 ] =   -5.0;
+    m_fanAdjustmentH2PatternMap[  60.0 ] =  -10.0;
+    m_fanAdjustmentH2PatternMap[  40.0 ] =  -25.0;
+    m_fanAdjustmentH2PatternMap[  20.0 ] =  -50.0;
+    m_fanAdjustmentH2PatternMap[   0.0 ] =  -75.0;
+
+    m_fanAdjustmentW1PatternMap[ 100.0 ] =    0.0;
+    m_fanAdjustmentW1PatternMap[  80.0 ] =   -5.0;
+    m_fanAdjustmentW1PatternMap[  60.0 ] =  -10.0;
+    m_fanAdjustmentW1PatternMap[  40.0 ] =  -15.0;
+    m_fanAdjustmentW1PatternMap[  20.0 ] =  -20.0;
+    m_fanAdjustmentW1PatternMap[   0.0 ] =  -37.0;
+
+    m_fanAdjustmentW2PatternMap[ 100.0 ] =    0.0;
+    m_fanAdjustmentW2PatternMap[  80.0 ] =   -5.0;
+    m_fanAdjustmentW2PatternMap[  60.0 ] =  -10.0;
+    m_fanAdjustmentW2PatternMap[  40.0 ] =  -15.0;
+    m_fanAdjustmentW2PatternMap[  20.0 ] =  -20.0;
+    m_fanAdjustmentW2PatternMap[   0.0 ] =  -42.0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 HVLPPaintModel::~HVLPPaintModel()
@@ -274,7 +398,7 @@ double HVLPPaintModel::CalculateFlowrate()
     ///=(W12*S14)*((P14-10)/10)+W12
     flowRate = ( flowRate * 0.01 * fluidPressureFlowRateReduction ) * ( m_airPressure - 10. )/10. + flowRate;
 
-    ///Take into atomizing air pressure on flowrate
+    ///Take into account atomizing air pressure on flowrate
     //=(W14*S15)*(P15/10)+W14
     flowRate = ( flowRate * 0.01 * atomizingPressureReduction ) * (m_atomizingAirPressure/10.0) + flowRate;
 
@@ -288,14 +412,18 @@ double HVLPPaintModel::CalculateFlowrate()
 void HVLPPaintModel::CalculatePatternDimension()
 {    
 	//H1	H2	W1 	W2
-    //Nominal	6.00	8.40	2.40	3.60
+    //Standard	8	12	3	5
     double nomh1, nomh2, nomw1, nomw2;
-    nomh1 = 6.00;
-    nomh2 = 8.40;
-    nomw1 = 2.40;
-    nomw2 = 3.60;
-    double nominalDistance = 12.0;
+    nomh1 =  m_patternBasePercents.at( 0 );
+    nomh2 =  nomh1 * m_patternBasePercents.at( 1 ) * 0.01;
+    nomw1 =  nomh1 * m_patternBasePercents.at( 2 ) * 0.01;
+    nomw2 =  nomh1 * m_patternBasePercents.at( 3 ) * 0.01;
+    double nominalDistance = 6.0;
 
+    //std::cout << "Pattern = " << nomh1 << " " << nomh2 << " " 
+    //<< nomw1 << " " << nomw2 << std::endl;
+
+    ///Take into account gun to part distance
     if( m_gunToPartDistance == nominalDistance )
     {
         m_h1 = nomh1;
@@ -324,6 +452,36 @@ void HVLPPaintModel::CalculatePatternDimension()
         m_w2 = (m_gunToPartDistance - nominalDistance) * (m_patternPercentIncrease.at( 3 ) * 0.01) * nomw2 + nomw2;
     }
     
+    //std::cout << "Pattern = " << m_h1 << " " << m_h2 << " " 
+    //<< m_w1 << " " << m_w2 << std::endl;
+
+    ///Take into account Table 5: pattern shape
+    m_h1 = m_h1 * m_dropletSizeH1PatternMap[ m_dropletBin ] * 0.01;
+    m_h2 = m_h2 * m_dropletSizeH2PatternMap[ m_dropletBin ] * 0.01;
+    m_w1 = m_w1 * m_dropletSizeW1PatternMap[ m_dropletBin ] * 0.01;
+    m_w2 = m_w2 * m_dropletSizeW2PatternMap[ m_dropletBin ] * 0.01;
+
+    //std::cout << "Pattern = " << m_h1 << " " << m_h2 << " " 
+    //<< m_w1 << " " << m_w2 << std::endl;
+
+    ///Take into account Table 6: Needle Travel Distance - these are negative
+    ///percentages so we have to add in the base value of the pattern
+    m_h1 = m_h1 * Interpolate( m_needleTravelH1PatternMap, m_needlePosition ) * 0.01 + m_h1;
+    m_h2 = m_h2 * Interpolate( m_needleTravelH2PatternMap, m_needlePosition ) * 0.01 + m_h2;
+    m_w1 = m_w1 * Interpolate( m_needleTravelW1PatternMap, m_needlePosition ) * 0.01 + m_w1;
+    m_w2 = m_w2 * Interpolate( m_needleTravelW2PatternMap, m_needlePosition ) * 0.01 + m_w2;
+
+    //std::cout << "Pattern = " << m_h1 << " " << m_h2 << " " 
+    //<< m_w1 << " " << m_w2 << std::endl;
+
+    ///Take into account Table 7: Fan adjustment knob - these are negative
+    ///percentages so we have to add in the base value of the pattern
+    m_h1 = m_h1 * Interpolate( m_fanAdjustmentH1PatternMap, m_fanAdjustment ) * 0.01 + m_h1;
+    m_h2 = m_h2 * Interpolate( m_fanAdjustmentH2PatternMap, m_fanAdjustment ) * 0.01 + m_h2;
+    m_w1 = m_w1 * Interpolate( m_fanAdjustmentW1PatternMap, m_fanAdjustment ) * 0.01 + m_w1;
+    m_w2 = m_w2 * Interpolate( m_fanAdjustmentW2PatternMap, m_fanAdjustment ) * 0.01 + m_w2;
+    
+    ///Lets see what it looks like
     std::cout << "Pattern = " << m_h1 << " " << m_h2 << " " 
         << m_w1 << " " << m_w2 << std::endl;
 }
@@ -334,12 +492,12 @@ void HVLPPaintModel::UpdateModel()
     
     double atomizingRatio = m_flowrate / m_atomizingAirPressure;
 
-    std::string const dropletBin = 
+    m_dropletBin = 
         CalculateDropletSize( atomizingRatio, m_viscosity );
     
-    //m_te = CalculateTransferEffenciency( m_airPressure, dropletBin, m_gunToPartDistance );
+    m_te = CalculateTransferEffenciency( m_airPressure, m_dropletBin, m_gunToPartDistance );
     
-    //CalculatePatternDimension();
+    CalculatePatternDimension();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HVLPPaintModel::GetPatternDimensions( double& h1, double& h2, double& w1, double& w2 )

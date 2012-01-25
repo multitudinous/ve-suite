@@ -20,7 +20,7 @@ int main( int argc, char* argv[] )
     boost::archive::text_iarchive ia(ifs);
     ia >> model;
     std::cout << model << std::endl;*/
-    double distance = 18.0;
+    double distance = 6.0;
     double pressure = 10.0;
     double viscosity = 95.0;
     double diameter = 1.4;

@@ -99,6 +99,25 @@ private:
     std::map< double, double > m_teDecreaseMap;
     std::vector< double > m_patternPercentIncrease;
     std::vector< double > m_patternPercentDecrease;
+    std::vector< double > m_patternBasePercents;
+
+    ///Pattern shape constants
+    std::map< std::string, double > m_dropletSizeH1PatternMap;
+    std::map< std::string, double > m_dropletSizeH2PatternMap;
+    std::map< std::string, double > m_dropletSizeW1PatternMap;
+    std::map< std::string, double > m_dropletSizeW2PatternMap;
+
+    ///Needle travel constants
+    std::map< double, double > m_needleTravelH1PatternMap;
+    std::map< double, double > m_needleTravelH2PatternMap;
+    std::map< double, double > m_needleTravelW1PatternMap;
+    std::map< double, double > m_needleTravelW2PatternMap;
+
+    ///Fan adjustment constants
+    std::map< double, double > m_fanAdjustmentH1PatternMap;
+    std::map< double, double > m_fanAdjustmentH2PatternMap;
+    std::map< double, double > m_fanAdjustmentW1PatternMap;
+    std::map< double, double > m_fanAdjustmentW2PatternMap;
     ///////
     
     ///The distance of the gun from the part
@@ -116,5 +135,9 @@ private:
     double m_flowrate;
     
     double m_te;
+    
+    std::string m_dropletBin;
+    
+    double m_fanAdjustment;
 };
 
