@@ -25,6 +25,7 @@ boost_options.apply( lib_env )
 srcs = Split("""
     main.cxx
     AirlessPaintModel.cxx 
+    HVLPPaintModel.cxx 
 """)
 
 prog1 = ves_pkg.createProgram('airless_paint' + lib_env["PROGSUFFIX"], lib_env,
