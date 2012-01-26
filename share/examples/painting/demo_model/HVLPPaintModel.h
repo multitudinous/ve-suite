@@ -24,14 +24,31 @@ class HVLPPaintModel
     template<class Archive>
     void serialize( Archive& ar, const unsigned int /* file_version */)
     {        
-        ar & boost::serialization::make_nvp( "m_viscosityReductionMap", m_viscosityReductionMap ) 
-            & boost::serialization::make_nvp( "m_fluidNeedleReductionMap", m_fluidNeedleReductionMap )
-            & boost::serialization::make_nvp( "m_atomizingPressureReductionMap", m_atomizingPressureReductionMap )
-            & boost::serialization::make_nvp( "m_fluidPressureReductionMap", m_fluidPressureReductionMap )
-            & boost::serialization::make_nvp( "m_atomizingPressureNeedleReductionMap", m_atomizingPressureNeedleReductionMap )
-            & boost::serialization::make_nvp( "m_teDecreaseMap", m_teDecreaseMap )
-            & boost::serialization::make_nvp( "m_patternPercentIncrease", m_patternPercentIncrease )
-            & boost::serialization::make_nvp( "m_patternPercentDecrease", m_patternPercentDecrease );
+        ar  & boost::serialization::make_nvp( "Table_1_m_percentIncrease", m_percentIncrease )
+            & boost::serialization::make_nvp( "Table_1_m_measuredFlowRate", m_measuredFlowRate )
+            & boost::serialization::make_nvp( "Table_2_m_viscosityReductionMap", m_viscosityReductionMap ) 
+            & boost::serialization::make_nvp( "Table_3_m_fluidPressureReductionMap", m_fluidPressureReductionMap )
+            & boost::serialization::make_nvp( "Table_4_m_atomizingPressureReductionMap", m_atomizingPressureReductionMap )
+            & boost::serialization::make_nvp( "Table_5_m_fluidNeedleReductionMap", m_fluidNeedleReductionMap )
+            & boost::serialization::make_nvp( "Table_6_m_atomizingPressureNeedleReductionMap", m_atomizingPressureNeedleReductionMap )
+            
+            & boost::serialization::make_nvp( "Table_1_m_teDecreaseMap", m_teDecreaseMap )
+            
+            & boost::serialization::make_nvp( "Table_4_m_patternPercentIncrease", m_patternPercentIncrease )
+            & boost::serialization::make_nvp( "Table_4_m_patternPercentDecrease", m_patternPercentDecrease )
+            & boost::serialization::make_nvp( "Table_3_m_patternBasePercents", m_patternBasePercents )
+            & boost::serialization::make_nvp( "Table_5_m_dropletSizeH1PatternMap", m_dropletSizeH1PatternMap )
+            & boost::serialization::make_nvp( "Table_5_m_dropletSizeH2PatternMap", m_dropletSizeH2PatternMap )
+            & boost::serialization::make_nvp( "Table_5_m_dropletSizeW1PatternMap", m_dropletSizeW1PatternMap )
+            & boost::serialization::make_nvp( "Table_5_m_dropletSizeW2PatternMap", m_dropletSizeW2PatternMap )
+            & boost::serialization::make_nvp( "Table_6_m_needleTravelH1PatternMap", m_needleTravelH1PatternMap )
+            & boost::serialization::make_nvp( "Table_6_m_needleTravelH2PatternMap", m_needleTravelH2PatternMap )
+            & boost::serialization::make_nvp( "Table_6_m_needleTravelW1PatternMap", m_needleTravelW1PatternMap )
+            & boost::serialization::make_nvp( "Table_6_m_needleTravelW2PatternMap", m_needleTravelW2PatternMap )
+            & boost::serialization::make_nvp( "Table_7_m_fanAdjustmentH1PatternMap", m_fanAdjustmentH1PatternMap )
+            & boost::serialization::make_nvp( "Table_7_m_fanAdjustmentH2PatternMap", m_fanAdjustmentH2PatternMap )
+            & boost::serialization::make_nvp( "Table_7_m_fanAdjustmentW1PatternMap", m_fanAdjustmentW1PatternMap )
+            & boost::serialization::make_nvp( "Table_7_m_fanAdjustmentW2PatternMap", m_fanAdjustmentW2PatternMap );
     }
 public:
     ///Constructor
@@ -68,6 +85,8 @@ private:
     std::string CalculateDropletSize( double& diameter, double& viscosity );
     ///Determine the droplet size bin
     std::string DetermineDropletBinLetter( double& size );
+    ///Determine the pattern shape bin letter
+    std::string DeterminePatternShapeBinLetter( double& size );
 
     ///Calculate the transfer effencieny
     double CalculateTransferEffenciency( double& pressure, std::string const& bin, double& distance );
@@ -87,7 +106,6 @@ private:
     ///Model Constants
     double m_percentIncrease;
     double m_measuredFlowRate;
-    double m_pressureIncreasePer750;
     double m_needlePosition;
     double m_atomizingAirPressure;
 
@@ -138,6 +156,8 @@ private:
     
     std::string m_dropletBin;
     
+    std::string m_patternBin;
+
     double m_fanAdjustment;
 };
 

@@ -20,10 +20,10 @@ int main( int argc, char* argv[] )
     boost::archive::text_iarchive ia(ifs);
     ia >> model;
     std::cout << model << std::endl;*/
-    double distance = 6.0;
-    double pressure = 10.0;
-    double viscosity = 95.0;
-    double diameter = 1.4;
+    double distance = 15.0;
+    double pressure = 30.0;
+    double viscosity = 50.0;
+    double diameter = 2.2;
     //AirlessPaintModel model;
     model.SetGunToPartDistance( distance );
     model.SetAirPressure( pressure );
