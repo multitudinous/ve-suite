@@ -1440,6 +1440,7 @@ void UIManager::AddUIToNode( osg::Group* node )
     }
     else
     {
+        std::cout << " *********** " << mUIGroup.valid() << std::endl;
         node->addChild( mUIGroup.get() );
     }
 }

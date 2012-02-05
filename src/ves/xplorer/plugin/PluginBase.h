@@ -92,9 +92,7 @@ namespace plugin
 {
 /*!\file PluginBase.h
  * PluginBase API
- */
-
-/*!\class ves::xplorer::plugin::PluginBase
+ * \class ves::xplorer::plugin::PluginBase
  *
  */
 class VE_GRAPHICALPLUGINS_EXPORTS PluginBase
