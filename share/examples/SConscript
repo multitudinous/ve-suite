@@ -25,6 +25,7 @@ exampleSubdirs = Split("""
     painting
     Multiscale2
     image_manipulation
+    constraint_demo
 """)
 #VascularSimViewer
 #sensor_overlay

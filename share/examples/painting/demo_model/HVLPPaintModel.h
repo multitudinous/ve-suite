@@ -106,8 +106,6 @@ private:
     ///Model Constants
     double m_percentIncrease;
     double m_measuredFlowRate;
-    double m_needlePosition;
-    double m_atomizingAirPressure;
 
     std::map< double, double > m_viscosityReductionMap;
     std::map< double, double > m_fluidNeedleReductionMap;
@@ -137,6 +135,8 @@ private:
     std::map< double, double > m_fanAdjustmentW1PatternMap;
     std::map< double, double > m_fanAdjustmentW2PatternMap;
     ///////
+    double m_needlePosition;
+    double m_atomizingAirPressure;
     
     ///The distance of the gun from the part
     double m_gunToPartDistance;
