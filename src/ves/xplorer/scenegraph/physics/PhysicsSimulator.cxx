@@ -525,10 +525,23 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::StepSimulation()
 {
+    mDebugBulletFlag = m_debugDrawer->getEnabled();
+    
+    if( mDebugBulletFlag )
+    {
+        m_debugDrawer->BeginDraw();
+    }
+
     if( mIdle )
     {
         //no need to pause simulation since the simulation is alreayd paused
         mDynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
+    }
+
+    if( mDebugBulletFlag )
+    {
+        mDynamicsWorld->debugDrawWorld();
+        m_debugDrawer->EndDraw();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -547,12 +560,14 @@ void PhysicsSimulator::ResetScene()
     bool currentIdle = GetIdle();
     SetIdle( true );
 
+    StepSimulation();
+    
     //This code is take from Bullet in
     //Demos/OpenGL/DemoApplication.cpp
-    if( mDynamicsWorld )
-    {
-        mDynamicsWorld->stepSimulation( 1.0 / 60.0, 0 );
-    }
+    //if( mDynamicsWorld )
+    //{
+    //    mDynamicsWorld->stepSimulation( 1.0 / 60.0, 0 );
+    //}
 
     int numObjects = mDynamicsWorld->getNumCollisionObjects();
 
