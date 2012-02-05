@@ -54,6 +54,12 @@
 #include <Poco/Data/Statement.h>
 #include <Poco/Data/RecordSet.h>
 
+class btDiscreteDynamicsWorld;
+namespace osgbInteraction
+{
+    class SaveRestoreHandler;
+}
+
 namespace ves
 {
 namespace xplorer
@@ -90,54 +96,21 @@ private:
     ///Initialize the vpaint demo graph
     int InitializeConstraintGraph();
 
-    ///Create the db for the tool to grab dat from
-    void CreateDB();
-    ///Create the list of textures
-    void CreateTextTextures();
-    ///Strip characters from datafile
-    void StripCharacters( std::string& data, const std::string& character );
-    ///Parse the db file selected by the user
-    void ParseDataBase( const std::string& csvFilename );
-    ///Render the displays
-    void RenderTextualDisplay( bool onOff );
-    ///Create a db query from the ui
-    void CreateDBQuery( ves::open::xml::DataValuePairPtr dvp );
-    ///Strip dollar signs from a string
-    void StripDollarCharacters( std::string& data );
-    ///Replace spaces in a string with under scores
-    void ReplaceSpacesCharacters( std::string& data );
-    ///Find a list of nodes with part number names
-    bool FindPartNodeAndHighlightNode();
-    ///Get the part number from the node name
-    void GetPartNumberFromNodeName( std::string& nodeName );
-    ///Change text textures
-    void PickTextTextures();
-    ///Clear the db of all the user defined tables
-    void ClearDatabaseUserTables();
-    ///Query specifically for the join command
-    void QueryTableAndHighlightParts( const std::string& tableName, 
-                                     osg::Vec3& glowColor );
-    ///Basic user defined custom query
-    void QueryUserDefinedAndHighlightParts( const std::string& queryString );
-    ///Query and highlight for a join query 
-    void QueryInnerJoinAndHighlightParts( const std::string& queryString );
-    ///Query 3 sets of data to create 3 highlighted group of parts
-    void HighlightPartsInJoinedTabled( const std::string& queryString );
-    ///Write out the current query to a file
-    void SaveCurrentQuery( const std::string& filename );
+    ///
+    osg::Node* fixWalls( osg::Node* wallsNode );
+    
+    ///
+    void makeStaticObject( btDiscreteDynamicsWorld* bw, 
+        osg::Node* node, const osg::Matrix& m );
 
     ///
-    void SetComputerInfo( std::string const& ip, std::string const& port );
+    osg::Transform* makeGate( btDiscreteDynamicsWorld* bw, 
+        osgbInteraction::SaveRestoreHandler* srh, osg::Node* node, 
+        const osg::Matrix& m );
+
     ///
-    void SimulatorCaptureThread();
-    ///Set the position data
-    void SetPositionData( std::vector< double >& temp );
-    ///Get the position data
-    void GetPositionData( std::vector< double >& temp );
-    ///
-    void CreateSensorGrid();
-    ///
-    void LoadModels();
+    osg::Node* findNamedNode( osg::Node* model, const std::string& name, 
+        osg::Matrix& xform );
 
     
     std::vector< std::string > mPartNumberList;
@@ -206,6 +179,8 @@ private:
     ves::xplorer::scenegraph::CADEntity* m_sensorRack;
     ///
     ves::xplorer::scenegraph::CADEntity* m_stovesLab;
+    
+    btRigidBody* gateBody;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( ConstraintGP )
