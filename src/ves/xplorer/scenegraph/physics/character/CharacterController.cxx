@@ -425,6 +425,12 @@ void CharacterController::SetPhysicsWorldTransform()
         return;
     }
 
+    ///Reset this flag so that the game controller input is basically just 
+    ///sending true to the controller class
+    m_axisInputUpdate = false;
+    
+    m_translateType = TranslateType::NONE;
+
     // Account for MxCore orientation.
     osg::Matrix orient = osg::Matrix::rotate( -osg::PI_2, 1., 0., 0. );
     osg::Matrix worldMatrix = 

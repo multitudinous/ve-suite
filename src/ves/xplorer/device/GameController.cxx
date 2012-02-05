@@ -261,9 +261,8 @@ void GameController::OnAxis0Event( const float event )
     bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
-    if( m_success )
+    if( !success )
     {
-        m_updateData( m_success );
         return;
     }
 
@@ -290,9 +289,8 @@ void GameController::OnAxis1Event( const float event )
     bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
-    if( m_success )
+    if( !success )
     {
-        m_updateData( m_success );
         return;
     }
     
@@ -325,9 +323,8 @@ void GameController::OnAxis2Event( const float event )
     bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
-    if( m_success )
+    if( !success )
     {
-        m_updateData( m_success );
         return;
     }
     
@@ -360,9 +357,8 @@ void GameController::OnAxis3Event( const float event )
     bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
-    if( m_success )
+    if( !success )
     {
-        m_updateData( m_success );
         return;
     }
     
