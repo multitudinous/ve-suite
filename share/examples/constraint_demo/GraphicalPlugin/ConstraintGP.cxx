@@ -59,8 +59,6 @@
 
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/environment/TextTextureCallback.h>
-
 #include <ves/xplorer/EnvironmentHandler.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
@@ -83,15 +81,7 @@ extern osg::ref_ptr<osg::Texture2D> RTTtex;
 
 #include "ConstraintGP.h"
 
-#include <Poco/SharedPtr.h>
-#include <Poco/Tuple.h>
-#include <Poco/DateTimeFormatter.h>
-#include <Poco/DateTimeParser.h>
-
-#include <Poco/Data/SessionFactory.h>
-#include <Poco/Data/Session.h>
-#include <Poco/Data/RecordSet.h>
-#include <Poco/Data/SQLite/Connector.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <osgbDynamics/MotionState.h>
 #include <osgbDynamics/CreationRecord.h>
@@ -216,40 +206,16 @@ void ConstraintGP::InitializeNode(
 {
     PluginBase::InitializeNode( veworldDCS );
     
-    m_keyboard = 
-        dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
-
-    /*{
-        m_textTrans = new ves::xplorer::scenegraph::DCS();
-        std::vector< double > data;
-        data.push_back( -1.43 );
-        data.push_back(   6.5 );
-        data.push_back( -0.70 );
-        m_textTrans->SetTranslationArray( data );
-        
-        mDCS->addChild( m_textTrans.get() );
-    }
-
-    CONNECTSIGNAL_2( "%ConnectToSensorServer",
-                    void( std::string const&, std::string const& ),
-                    &ConstraintGP::SetComputerInfo,
-                    m_connections, normal_Priority );
-
-    CreateSensorGrid();
-    
-    LoadModels();*/
-    
     InitializeConstraintGraph();
 }
 ////////////////////////////////////////////////////////////////////////////////
 int ConstraintGP::InitializeConstraintGraph()
 {    
-    btDiscreteDynamicsWorld* bulletWorld = 0;//initPhysics();
-    osg::Group* root = new osg::Group;
-    
-    osg::Group* launchHandlerAttachPoint = new osg::Group;
-    root->addChild( launchHandlerAttachPoint );
-    
+    btDiscreteDynamicsWorld* bulletWorld = 
+        dynamic_cast< btDiscreteDynamicsWorld* >( mPhysicsSimulator->GetDynamicsWorld() );
+    osg::Group* root = new osg::Group();
+
+    mDCS->addChild( root );
     
     osg::ref_ptr< osg::Node > rootModel = osgDB::readNodeFile( "GateWall.flt" );
     if( !rootModel.valid() )
@@ -280,12 +246,9 @@ int ConstraintGP::InitializeConstraintGraph()
     //
     // END WALL FIX
     
-    
-    osg::ref_ptr< osgbInteraction::SaveRestoreHandler > srh = new
-    osgbInteraction::SaveRestoreHandler;
-    
+        
     // Make Bullet rigid bodies and collision shapes for the gate...
-    makeGate( bulletWorld, srh.get(), gateNode, gateXform );
+    makeGate( bulletWorld, 0, gateNode, gateXform );
     // ...and the two walls.
     makeStaticObject( bulletWorld, wallsNode, wallXform );
     makeStaticObject( bulletWorld, otherWall, otherWallXform );
@@ -379,7 +342,7 @@ void ConstraintGP::makeStaticObject( btDiscreteDynamicsWorld* bw, osg::Node* nod
     bw->addRigidBody( rb, COL_WALL, wallCollidesWith );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Transform* ConstraintGP::makeGate( btDiscreteDynamicsWorld* bw, osgbInteraction::SaveRestoreHandler* srh, osg::Node* node, const osg::Matrix& m )
+osg::Transform* ConstraintGP::makeGate( btDiscreteDynamicsWorld* bw, osgbInteraction::SaveRestoreHandler*, osg::Node* node, const osg::Matrix& m )
 {
     osgwTools::AbsoluteModelTransform* amt = new osgwTools::AbsoluteModelTransform;
     amt->setDataVariance( osg::Object::DYNAMIC );
@@ -401,7 +364,6 @@ osg::Transform* ConstraintGP::makeGate( btDiscreteDynamicsWorld* bw, osgbInterac
     // Save RB in global, as AMT UserData (for DragHandler), and in SaveRestoreHandler.
     gateBody = rb;
     amt->setUserData( new osgbCollision::RefRigidBody( rb ) );
-    srh->add( "gate", rb );
     
     return( amt );
 }
