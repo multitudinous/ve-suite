@@ -27,11 +27,17 @@ function usage()
 
 function postinstall()
 {
-    echo \"
-  Before using VE-Suite you must set up your environment:
+    if [ \$SHELL = \"/bin/bash\" ]
+    then
+        echo \"export PATH=\$VES_INSTALL_PREFIX/bin:\$PATH\" >> \$HOME/VE-Suite_Env
+        echo \"export LD_LIBRARY_PATH=\$VES_INSTALL_PREFIX/lib:\$VES_INSTALL_PREFIX/lib/vtk-5.8:\$VES_INSTALL_PREFIX/lib64:\$LD_LIBRARY_PATH\" >> \$HOME/VE-Suite_Env
+    else
+        echo \"setenv PATH=\$VES_INSTALL_PREFIX/bin:\$PATH\" >> \$HOME/VE-Suite_Env
+        echo \"setenv LD_LIBRARY_PATH=\$VES_INSTALL_PREFIX/lib:\$VES_INSTALL_PREFIX/lib/vtk-5.8:\$VES_INSTALL_PREFIX/lib64:\$LD_LIBRARY_PATH\" >> \$HOME/VE-Suite_Env
+    fi
 
-  Add \$VES_INSTALL_PREFIX to your PATH
-  Add \$VES_INSTALL_PREFIX/lib:\$VES_INSTALL_PREFIX/lib64 to your LD_LIBRARY_PATH\"
+    echo \"Required environment variables have been written to \$HOME/VE-Suite_Env.\"
+    echo \"Source this file in your shell's rc file.\"
 }
 
 while getopts \"p:\" SCRIPT_ARGS
