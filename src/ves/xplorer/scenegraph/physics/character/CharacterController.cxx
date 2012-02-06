@@ -288,6 +288,12 @@ void CharacterController::Enable( const bool& enable )
         m_dynamicsWorld.addAction( this );
 
         Reset();
+        
+        osg::Matrix orient = osg::Matrix::rotate( -osg::PI_2, 1., 0., 0. );
+        osg::Matrix worldMatrix = 
+            orient * SceneManager::instance()->GetMxCoreViewMatrix().getMatrix();
+        osg::Vec3 deltaStep = worldMatrix.getTrans();
+        warp( osgbCollision::asBtVector3( deltaStep ) );
     }
     else
     {
@@ -481,7 +487,7 @@ void CharacterController::SetPhysicsWorldTransform()
     mCameraRotation = mCameraRotationX * mCameraRotationZ;
     
     
-    if( mCameraDistance <= (mMinCameraDistance + 0.5) )
+    //if( mCameraDistance <= (mMinCameraDistance + 0.5) )
     {
         SetRotationFromCamera();
     }
