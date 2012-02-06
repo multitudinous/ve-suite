@@ -261,6 +261,13 @@ void CharacterController::Initialize()
         SceneManager::instance()->GetModelRoot()->
             addChild( mMatrixTransform.get() );
     }
+    
+    ///In non desktop mode make the camera the character
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        mCameraDistance = mMinCameraDistance;
+        mCharacterAnimations->setNodeMask( 0 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::Destroy()
