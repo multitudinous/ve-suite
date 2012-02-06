@@ -41,21 +41,11 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/OneDStringArray.h>
 
-#include <ves/xplorer/scenegraph/util/TransparencySupport.h>
-#include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
-#include <ves/xplorer/scenegraph/util/FindChildWithNameVisitor.h>
-#include <ves/xplorer/scenegraph/util/ToggleNodesVisitor.h>
+#include <ves/xplorer/scenegraph/util/MaterialPresent.h>
 
-#include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
-#include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
-#include <ves/xplorer/scenegraph/TextTexture.h>
-#include <ves/xplorer/scenegraph/GroupedTextTextures.h>
-#include <ves/xplorer/scenegraph/HeadPositionCallback.h>
-#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
-#include <ves/xplorer/scenegraph/Geode.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -183,21 +173,10 @@ unsigned int defaultCollidesWith( COL_GATE | COL_WALL | COL_DEFAULT );
 ConstraintGP::ConstraintGP()
     :
     PluginBase(),
-    mAddingParts( false ),
-    m_keyboard( 0 ),
-    m_groupedTextTextures( 0 ),
-    m_cadRootNode( 0 ),
-    m_hasPromiseDate( false ),
-    m_mouseSelection( false ),
-    m_currentStatement( 0 ),
-    m_sampleThread( 0 ),
-    m_computerName( "" ),
-    m_computerPort( "" ),
-    m_runSampleThread( false )
+    m_keyboard( 0 )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "ConstraintPlugin";
-    m_dbFilename = "sample.db";
 }
 ////////////////////////////////////////////////////////////////////////////////
 ConstraintGP::~ConstraintGP()
@@ -226,6 +205,11 @@ int ConstraintGP::InitializeConstraintGraph()
         osg::notify( osg::FATAL ) << "hinge: Can't load data file \"GateWall.ive\"." << std::endl;
         return( 1 );
     }
+    
+    {
+        util::MaterialPresent materialPresent( rootModel.get() );
+    }
+    
     
     // Scale to feet.
     {

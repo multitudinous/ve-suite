@@ -112,37 +112,8 @@ private:
     osg::Node* findNamedNode( osg::Node* model, const std::string& name, 
         osg::Matrix& xform );
 
-    
-    std::vector< std::string > mPartNumberList;
-    ///PArt numbers loaded from the csv files
-    std::vector< std::string > mLoadedPartNumbers;
-    ///Description of part numbers loaded from csv files
-    std::vector< std::string > mPartNumberDescriptions;
-    
-    std::string m_lastPartNumber;
-    ves::xplorer::scenegraph::CADEntity* cadEntity;
-    ///Adding parts
-    bool mAddingParts;
-    std::map< std::string, std::vector< std::pair< std::string, std::string > > > m_dataMap;
-    osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
     ves::xplorer::device::KeyboardMouse* m_keyboard;
-    osg::ref_ptr< ves::xplorer::scenegraph::GroupedTextTextures > m_groupedTextTextures;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_textTrans;
 
-    typedef Poco::Tuple< std::string, std::string, int, double, double, double, std::string > Part;
-	typedef std::vector<Part> Assembly;
-    ///All of the currently highlighted parts
-    std::vector< std::string > m_assemblyPartNumbers;
-    ///All of the currently highlighted joined parts
-    std::vector< std::string > m_joinedPartNumbers;
-    ///insert some rows
-	Assembly m_selectedAssembly;
-    ///Command being processed
-    ves::open::xml::CommandPtr m_currentCommand;
-    ///db filename
-    std::string m_dbFilename;
-    ///Root of the CAD models
-    ves::xplorer::scenegraph::DCS* m_cadRootNode;
     ///Column number for the promise date
     size_t m_promiseDateColumn;
     ///Determine if we have a promise date column
@@ -153,32 +124,14 @@ private:
     std::map< int, std::vector< std::string > > m_csvDataMap;
     ///Control mouse selection
     bool m_mouseSelection;
-    ///Container for the two currently active table names
-    std::pair< std::string, std::string > m_tableNames;
-    ///The current select statement
-    Poco::Data::Statement* m_currentStatement;
-    //Poco::Data::RecordSet m_currentStatement;
     
     /// Required to be able to connect up to signals.
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
-    ///Sample thread
-    vpr::Thread* m_sampleThread;
-    ///
-    std::string m_computerName;
-    ///
-    std::string m_computerPort;
+
     ///Control wether the thread continues to run
     bool m_runSampleThread;
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
-    ///Position buffer
-    std::vector< double > m_positionBuffer;
-    ///
-    osg::ref_ptr< osg::Geode > m_contourGeode;
-    ///
-    ves::xplorer::scenegraph::CADEntity* m_sensorRack;
-    ///
-    ves::xplorer::scenegraph::CADEntity* m_stovesLab;
     
     btRigidBody* gateBody;
 };
