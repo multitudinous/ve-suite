@@ -65,6 +65,8 @@
 
 #include <osgDB/ReadFile>
 #include <osgUtil/LineSegmentIntersector>
+#include <osgUtil/Optimizer>
+
 #include <osg/Depth>
 
 #include <sstream>
@@ -158,6 +160,7 @@ public:
 };
 /* \endcond */
 
+#define METERS2FEET 3.28
 
 // Filter out collisions between the gate and walls.
 //
@@ -217,11 +220,22 @@ int ConstraintGP::InitializeConstraintGraph()
 
     mDCS->addChild( root );
     
-    osg::ref_ptr< osg::Node > rootModel = osgDB::readNodeFile( "GateWall.flt" );
+    osg::ref_ptr< osg::Node > rootModel = osgDB::readNodeFile( "Models/GateWall.ive" );
     if( !rootModel.valid() )
     {
-        osg::notify( osg::FATAL ) << "hinge: Can't load data file \"GateWall.flt\"." << std::endl;
+        osg::notify( osg::FATAL ) << "hinge: Can't load data file \"GateWall.ive\"." << std::endl;
         return( 1 );
+    }
+    
+    // Scale to feet.
+    {
+        osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform(
+            osg::Matrix::scale( osg::Vec3( METERS2FEET, METERS2FEET, METERS2FEET ) ) );
+        mt->setDataVariance( osg::Object::STATIC );
+        mt->addChild( rootModel.get() );
+        
+        osgUtil::Optimizer optimizer;
+        optimizer.optimize( mt.get(), osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS );
     }
     
     root->addChild( rootModel.get() );
@@ -232,7 +246,10 @@ int ConstraintGP::InitializeConstraintGraph()
     osg::Node* wallsNode = findNamedNode( rootModel.get(), "Walls", wallXform );
     osg::Node* gateNode = findNamedNode( rootModel.get(), "DOF_Gate", gateXform );
     if( ( wallsNode == NULL ) || ( gateNode == NULL ) )
+    {
+        std::cout << "Could not find the Gate or walls." << std::endl;
         return( 1 );
+    }
     
     // BEGIN WALL FIX
     //
@@ -256,7 +273,7 @@ int ConstraintGP::InitializeConstraintGraph()
     // Add ground
     const osg::Vec4 plane( 0., 0., 1., 0. );
     root->addChild( osgbDynamics::generateGroundPlane( plane, bulletWorld,
-                                                      NULL, COL_DEFAULT, defaultCollidesWith ) );
+                                                      NULL ) );//, COL_DEFAULT, defaultCollidesWith ) );
     
     
     // Create the hinge constraint.
@@ -265,7 +282,7 @@ int ConstraintGP::InitializeConstraintGraph()
         // Note that the gate is COM-adjusted, so the pivot point must also be
         // in the gate's COM-adjusted object space.
         // TBD extract this from hinge data fine.
-        const btVector3 btPivot( -0.498f, -0.019f, 0.146f );
+        const btVector3 btPivot( btVector3( -0.498f, -0.019f, 0.146f ) * METERS2FEET );
         
         btVector3 btAxisA( 0., 0., 1. );
         btHingeConstraint* hinge = new btHingeConstraint( *gateBody, btPivot, btAxisA );
@@ -273,6 +290,7 @@ int ConstraintGP::InitializeConstraintGraph()
         bulletWorld->addConstraint( hinge, true );
     }
 
+    std::cout << "Loaded all of the models and physics for the Gate." << std::endl;
     return( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -339,7 +357,9 @@ void ConstraintGP::makeStaticObject( btDiscreteDynamicsWorld* bw, osg::Node* nod
     cr->_mass = 0.f;
     btRigidBody* rb = osgbDynamics::createRigidBody( cr.get() );
     
-    bw->addRigidBody( rb, COL_WALL, wallCollidesWith );
+    bw->addRigidBody( rb, 
+                     COL_WALL, 
+                     wallCollidesWith|btBroadphaseProxy::CharacterFilter );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Transform* ConstraintGP::makeGate( btDiscreteDynamicsWorld* bw, osgbInteraction::SaveRestoreHandler*, osg::Node* node, const osg::Matrix& m )
@@ -357,8 +377,7 @@ osg::Transform* ConstraintGP::makeGate( btDiscreteDynamicsWorld* bw, osgbInterac
     cr->_restitution = .5f;
     btRigidBody* rb = osgbDynamics::createRigidBody( cr.get() );
     
-    
-    bw->addRigidBody( rb, COL_GATE, gateCollidesWith );
+    bw->addRigidBody( rb, COL_GATE, gateCollidesWith|btBroadphaseProxy::CharacterFilter );
     rb->setActivationState( DISABLE_DEACTIVATION );
     
     // Save RB in global, as AMT UserData (for DragHandler), and in SaveRestoreHandler.
