@@ -119,7 +119,8 @@ UIManager::UIManager() :
     m_updateBBoxes( false ),
     m_bringToFront( 0 ),
     m_isDesktopMode( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() ),
-    m_isWandIntersection( false )
+    m_isWandIntersection( false ),
+    m_useSubloadPaint( false )
 {
     // Register signals
     ves::xplorer::eventmanager::EventManager* evm = ves::xplorer::eventmanager::EventManager::instance();
@@ -555,34 +556,35 @@ void UIManager::_insertNodesToAdd()
     {
         osg::Node* node = ( *vec_iterator ).get();
         mUIGroup->addChild( node );
-#ifndef NO_SUBLOAD
-        osg::Geode* tempGeode = 0;
-        if( m_isDesktopMode )
+        if( m_useSubloadPaint )
         {
-            tempGeode = node->asGeode();
-        }
-        else
-        {
-            tempGeode = node->asGroup()->getChild( 0 )->asGeode();
-        }
+            osg::Geode* tempGeode = 0;
+            if( m_isDesktopMode )
+            {
+                tempGeode = node->asGeode();
+            }
+            else
+            {
+                tempGeode = node->asGroup()->getChild( 0 )->asGeode();
+            }
 
-        ElementMap_type::const_iterator iter = mElements.find( tempGeode );
+            ElementMap_type::const_iterator iter = mElements.find( tempGeode );
 
-        if( iter != mElements.end() )
-        {
-            osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
-            UIElement* element = iter->second;
-            osg::Image* img = new osg::Image;
-            img->allocateImage(element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE);
-            texture->setImage( img );
-            texture->setSubloadCallback( m_subloaders[ element ].get() );
-            tempGeode->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
+            if( iter != mElements.end() )
+            {
+                osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+                UIElement* element = iter->second;
+                osg::Image* img = new osg::Image;
+                img->allocateImage(element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE);
+                texture->setImage( img );
+                texture->setSubloadCallback( m_subloaders[ element ].get() );
+                tempGeode->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
+            }
+            else
+            {
+                std::cout << "UIManager::_insertNodesToAdd : no elements yet " << mElements.size() << std::endl;
+            }
         }
-        else
-        {
-            std::cout << "UIManager::_insertNodesToAdd : no elements yet " << mElements.size() << std::endl;
-        }
-#endif
     }
 
     mNodesToAdd.clear();
@@ -603,50 +605,52 @@ void UIManager::_repaintChildren()
             m_aspectRatioUniform->set( uiAspectRatio );
             element->Update();
             ///This code must be left here to correctly update the UI.
-#ifdef NO_SUBLOAD
+
             unsigned char* image_Data = element->RenderElementToImage()->data();
-#else
-            osg::Image* image_Data = element->RenderElementToImage();
-            boost::ignore_unused_variable_warning( image_Data );
-#endif
+//            osg::Image* image_Data = element->RenderElementToImage();
+//            boost::ignore_unused_variable_warning( image_Data );
+
 
             // Only reset the image if element tells us it has changed since 
             // last time
             if( element->IsDirty() )
             {
-#ifdef NO_SUBLOAD
-                osg::StateSet* state = element->GetGeode()
-                        ->getOrCreateStateSet();
-                if( element->SizeDirty() )
+                if(!m_useSubloadPaint)
                 {
-                    state->getTextureAttribute(0, osg::StateAttribute::TEXTURE )
-                        ->asTexture()->dirtyTextureObject();
+                    osg::StateSet* state = element->GetGeode()
+                            ->getOrCreateStateSet();
+                    if( element->SizeDirty() )
+                    {
+                        state->getTextureAttribute(0, osg::StateAttribute::TEXTURE )
+                            ->asTexture()->dirtyTextureObject();
+                    }
+                    osg::Image* image =
+                            state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
+                            ->asTexture()->getImage( 0 );
+                    image->setImage( element->GetImageWidth(),
+                                     element->GetImageHeight(), 1, 4,
+                                     GL_BGRA, GL_UNSIGNED_BYTE,
+                                     image_Data, osg::Image::NO_DELETE );
+                    image->dirty();
                 }
-                osg::Image* image =
-                        state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
-                        ->asTexture()->getImage( 0 );
-                image->setImage( element->GetImageWidth(),
-                                 element->GetImageHeight(), 1, 4,
-                                 GL_BGRA, GL_UNSIGNED_BYTE,
-                                 image_Data, osg::Image::NO_DELETE );
-                image->dirty();
-#else
-                //m_subloaders[ element ]->AddUpdate( image_Data, 0, 0 );
+                else
+                {
+                    //m_subloaders[ element ]->AddUpdate( image_Data, 0, 0 );
 
-                std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > >
-                        regions = element->GetDamagedAreas();
-                //std::cout << "* ";
-                for( size_t index = 0; index < regions.size(); ++index )
-                {
-                    std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > region =
-                            regions.at( index );
-                    //std::cout << region.second.first << "," << region.second.second << ";";
-                    m_subloaders[ element ]->AddUpdate( region.first.get(),
-                                                        region.second.first,
-                                                        region.second.second );
+                    std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > >
+                            regions = element->GetDamagedAreas();
+                    //std::cout << "* ";
+                    for( size_t index = 0; index < regions.size(); ++index )
+                    {
+                        std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > region =
+                                regions.at( index );
+                        //std::cout << region.second.first << "," << region.second.second << ";";
+                        m_subloaders[ element ]->AddUpdate( region.first.get(),
+                                                            region.second.first,
+                                                            region.second.second );
+                    }
+                    //std::cout << std::endl << std::flush;
                 }
-                //std::cout << std::endl << std::flush;
-#endif
             }
         }
     }
@@ -1444,6 +1448,15 @@ void UIManager::AddUIToNode( osg::Group* node )
         node->addChild( mUIGroup.get() );
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::SetSubloadPaintOn( bool useSubloadPaint )
+{
+    if( mElements.empty() )
+    {
+        m_useSubloadPaint = useSubloadPaint;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 }
 }

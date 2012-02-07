@@ -242,6 +242,16 @@ public:
 
     ///Add the ui to a render camera
     void AddUIToNode( osg::Group* node );
+
+    /// Turn on texture subloading. This defaults to off during creation of
+    /// UIManager, meaning the entire texture for each UIElement will be moved
+    /// across the graphics bus with each update. When subload is on, only the
+    /// changed regions of the texture are moved across. Under certain
+    /// circumstances, this may yield better performance, but is known to be
+    /// problematic on certain platforms. This method should be called after
+    /// creating an instance of UIManager, but before adding the first
+    /// UIElement. It cannot not be changed thereafter.
+    void SetSubloadPaintOn( bool useSubloadPaint );
     
 private:
     // Set this class up as a singleton
@@ -406,6 +416,8 @@ private:
     bool m_isDesktopMode;
     ///Is the wand in the UI
     bool m_isWandIntersection;
+
+    bool m_useSubloadPaint;
 };
 
 } //end conductor
