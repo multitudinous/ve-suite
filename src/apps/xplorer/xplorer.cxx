@@ -157,6 +157,9 @@ int main( int argc, char* argv[] )
     xplorer_desc.add_options()("VESLogPath", po::value< std::string >(),
         "Full path to log file, including filename");
 
+    xplorer_desc.add_options()("SubloadUI", po::bool_switch(),
+        "Use texture subloading when rendering UI");
+
     // jconf files can be given as positional arguments.
     //po::positional_options_description pos_desc;
     //pos_desc.add("jconf", -1);

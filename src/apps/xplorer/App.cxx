@@ -1314,6 +1314,12 @@ void App::LoadUI()
     ves::conductor::UIManager* m_UIManager =
         ves::conductor::UIManager::instance();
 
+    // Check commandline args for "--SubloadUI" and that on if found
+    if( m_vm.count("SubloadUI") )
+    {
+        m_UIManager->SetSubloadPaintOn( true );
+    }
+
     // Wrap the widget in a UIElement
     ves::conductor::UIElementQt* element = new ves::conductor::UIElementQt();
     QWidget* mainUIWidget = new MainWindow( 0 );
