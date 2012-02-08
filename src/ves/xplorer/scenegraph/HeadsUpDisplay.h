@@ -68,9 +68,7 @@ class CADEntity;
 
 /*!\file HeadsUpDisplay.h
  * HeadsUpDisplay API
- */
-
-/*!\class ves::xplorer::scenegraph::HeadsUpDisplay
+ * \class ves::xplorer::scenegraph::HeadsUpDisplay
  *
  */
 class VE_SCENEGRAPH_EXPORTS HeadsUpDisplay
