@@ -854,8 +854,8 @@ void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
 
     vrjWandMat = myMat * vrjWandMat * zUpMatrix;
     
-    std::cout << " 1 " << std::endl << ves::xplorer::scenegraph::SceneManager::instance()->
-    GetPureNavMatrix() << std::endl << vrjWandMat << std::endl;;
+    //std::cout << " 1 " << std::endl << ves::xplorer::scenegraph::SceneManager::instance()->
+    //GetPureNavMatrix() << std::endl << vrjWandMat << std::endl;;
     
     ///Transform from juggler space to world space
     vrjWandMat = 
