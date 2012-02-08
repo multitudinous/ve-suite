@@ -1318,9 +1318,12 @@ void App::LoadUI()
         ves::conductor::UIManager::instance();
 
     // Check commandline args for "--SubloadUI" and that on if found
-    if( m_vm.count("SubloadUI") )
     {
-        m_UIManager->SetSubloadPaintOn( true );
+        bool subload = m_vm["SubloadUI"].as<bool>();
+        if( subload )
+        {
+            m_UIManager->SetSubloadPaintOn( true );
+        }   
     }
 
     // Wrap the widget in a UIElement
