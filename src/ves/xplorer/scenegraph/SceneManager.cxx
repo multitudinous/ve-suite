@@ -526,6 +526,11 @@ const osg::Matrixd& SceneManager::GetInvertedGlobalViewMatrixOSG() const
     return m_invertedGlobalViewMatrixOSG;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& SceneManager::GetPureNavMatrix() const
+{
+    return m_pureNav;
+}
+////////////////////////////////////////////////////////////////////////////////
 osg::Group* SceneManager::GetNetworkDCS() const
 {
     return mNetworkDCS.get();
@@ -674,11 +679,18 @@ void SceneManager::LatePreFrameUpdate()
     gmtl::Matrix44d navMatrix;    
     navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
     mActiveNavDCS->SetMat( navMatrix );
-
-    navMatrix = m_zUpTransform * navMatrix;
     
+    navMatrix = m_zUpTransform * navMatrix;
+            
     gmtl::invert( m_invertedNavMatrix, navMatrix );
     m_invertedNavMatrixOSG.set( m_invertedNavMatrix.getData() );
+
+    m_pureNav = navMatrix;
+    
+    m_pureNav.mData[ 12 ] = m_pureNav.mData[ 12 ] + deltaHeadLocation.mData[ 0 ];
+    m_pureNav.mData[ 13 ] = m_pureNav.mData[ 13 ] + deltaHeadLocation.mData[ 1 ];
+    m_pureNav.mData[ 14 ] = m_pureNav.mData[ 14 ] + deltaHeadLocation.mData[ 2 ];
+    
     ///We need to remove the position from the head matrix because it is
     ///already being accounted for in the navMatrix for MxCore. The
     ///m_globalViewMatrix is the matrix that we need to use throughout ves

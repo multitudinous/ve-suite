@@ -248,6 +248,11 @@ Wand::Wand()
         new SignalWrapper< WandMoveSignal_type >( &m_wandMove ),
         "Wand.WandMove", eventmanager::EventManager::mouse_SignalType );
     
+    // Register signal(s) with EventManager
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
+        "Wand.UpdateData");
+    
     CONNECTSIGNAL_0( "App.LatePreFrame", void(), &Wand::LatePreFrameUpdate,
                     m_connections, highest_Priority );
 
@@ -843,16 +848,20 @@ void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
     const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
     const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
-
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
         gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
 
+    vrjWandMat = myMat * vrjWandMat * zUpMatrix;
+    
+    std::cout << " 1 " << std::endl << ves::xplorer::scenegraph::SceneManager::instance()->
+    GetPureNavMatrix() << std::endl << vrjWandMat << std::endl;;
+    
     ///Transform from juggler space to world space
     vrjWandMat = 
         ves::xplorer::scenegraph::SceneManager::instance()->
-        GetInvertedNavMatrix() * myMat * vrjWandMat * zUpMatrix;
-    
+        GetPureNavMatrix() * vrjWandMat;
+
     const osg::Matrixd tempOsgMatrix( vrjWandMat.getData() );
     m_wandPAT->setMatrix( tempOsgMatrix );
 }
@@ -969,7 +978,7 @@ void Wand::SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
     {
         osg::Matrixd inverseCameraTransform(
             ves::xplorer::scenegraph::SceneManager::instance()->
-            GetInvertedNavMatrix().getData() );
+            GetPureNavMatrix().getData() );
         
         startPoint = startPoint * inverseCameraTransform;
         endPoint = endPoint * inverseCameraTransform;
@@ -1146,22 +1155,24 @@ void Wand::MakeWandLine()
     beamGeode->addDrawable( beamGeometry.get() );
 
     osg::ref_ptr< osg::Vec3Array > beamVertices = new osg::Vec3Array;
+    ///Bottom
     beamVertices->push_back(
-        osg::Vec3( start[ 0 ] - 0.05, start[ 1 ] - 0.05, start[ 2 ]) );
+        osg::Vec3( start[ 0 ] - 0.05, start[ 1 ], start[ 2 ] - 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3( start[ 0 ] + 0.05, start[ 1 ] - 0.05, start[ 2 ]) );
+        osg::Vec3( start[ 0 ] + 0.05, start[ 1 ], start[ 2 ] - 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3(   end[ 0 ] + 0.05,   end[ 1 ] - 0.05,   end[ 2 ]) );
+        osg::Vec3(   end[ 0 ] + 0.05,   end[ 1 ],   end[ 2 ] - 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3(   end[ 0 ] - 0.05,   end[ 1 ] - 0.05,   end[ 2 ]) );
+        osg::Vec3(   end[ 0 ] - 0.05,   end[ 1 ],   end[ 2 ] - 0.05 ) );
+    ///Top
     beamVertices->push_back(
-        osg::Vec3( start[ 0 ] - 0.05, start[ 1 ] + 0.05, start[ 2 ]) );
+        osg::Vec3( start[ 0 ] - 0.05, start[ 1 ], start[ 2 ] + 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3( start[ 0 ] + 0.05, start[ 1 ] + 0.05, start[ 2 ]) );
+        osg::Vec3( start[ 0 ] + 0.05, start[ 1 ], start[ 2 ] + 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3(   end[ 0 ] + 0.05,   end[ 1 ] + 0.05,   end[ 2 ]) );
+        osg::Vec3(   end[ 0 ] + 0.05,   end[ 1 ],   end[ 2 ] + 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3(   end[ 0 ] - 0.05,   end[ 1 ] + 0.05,   end[ 2 ]) );
+        osg::Vec3(   end[ 0 ] - 0.05,   end[ 1 ],   end[ 2 ] + 0.05 ) );
 
     beamGeometry->setVertexArray( beamVertices.get() );
 
@@ -1800,7 +1811,7 @@ void Wand::PostProcessNav()
     }
 
     ///If we actually pushed a button then move things
-    if( !m_characterController.IsEnabled() )
+    //if( !m_characterController.IsEnabled() )
     {
         //Set the DCS postion based off of previous
         //manipulation of the worldTrans array
@@ -1816,19 +1827,21 @@ void Wand::PostProcessNav()
         gmtl::AxisAngled axisAngle = gmtl::makeRot< gmtl::AxisAngled >( tempQuat );
         
         const gmtl::Matrix44d tempHeadMatrix = m_sceneManager.GetGlobalViewMatrix();
+        m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( 
+            osg::Vec3d( tempHeadMatrix[0][3], tempHeadMatrix[1][3], tempHeadMatrix[2][3] ) );
 
-        m_sceneManager.GetMxCoreViewMatrix().rotate( axisAngle[ 0 ], 
-                                                    osg::Vec3d( axisAngle[ 1 ], axisAngle[ 2 ], axisAngle[ 3 ] ), 
-                                                    osg::Vec3d( tempHeadMatrix[0][3], 
-                                                               tempHeadMatrix[1][3], 
-                                                               tempHeadMatrix[2][3] ) );
+        m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( axisAngle[ 0 ], 
+            osg::Vec3d( axisAngle[ 1 ], axisAngle[ 2 ], axisAngle[ 3 ] ) );
+
+        m_updateData( true );
+
         //m_worldQuat *= m_rotIncrement;
         
         //gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
         //Device::EnsureCameraStaysAboveGround( vjHeadMat, m_worldTrans, 
         //    m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
     }
-    else if( m_characterController.IsEnabled() )
+    /*else if( m_characterController.IsEnabled() )
     {
         //Set the DCS postion based off of previous
         //manipulation of the worldTrans array
@@ -1862,7 +1875,7 @@ void Wand::PostProcessNav()
         {
             m_characterController.StepForward( true );
         }
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::MatrixTransform& Wand::GetWandTransform()

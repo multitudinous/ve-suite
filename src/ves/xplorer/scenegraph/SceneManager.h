@@ -198,6 +198,10 @@ public:
     ///Return the global view matrix
     ///\return The inverted matrix
     const osg::Matrixd& GetInvertedGlobalViewMatrixOSG() const;
+
+    ///Return the pure nav matrix
+    ///\return The nav matrix
+    const gmtl::Matrix44d& GetPureNavMatrix() const;
     
     ///Get the MxCore object used for view matrix manipulation
     osgwMx::MxCore& GetMxCoreViewMatrix() const;
@@ -435,6 +439,9 @@ private:
     ///Head location for the point
     gmtl::Point3d m_lastHeadLocation;
     
+    ///Pure nav position with no head position
+    gmtl::Matrix44d m_pureNav;
+
     ///The MxCore class that is used to control the device controlled
     ///portion of the view matrix
     osg::ref_ptr< osgwMx::MxCore > m_viewMatrix;    

@@ -37,6 +37,8 @@
 // --- VE-Suite Includes
 #include <ves/VEConfig.h>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 #include <ves/xplorer/device/Device.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -319,6 +321,9 @@ private:
     typedef boost::signals2::signal< void ( int, int, int, int ) > WandMoveSignal_type;
     WandMoveSignal_type m_wandMove;
     
+    ///The signature to tell others the game pad is active
+    ves::util::BoolSignal_type m_updateData;
+
     ///Wand event management
     ves::xplorer::behavior::WandEvents* m_wandEvents;
     ///Selection ray start point
