@@ -1320,6 +1320,7 @@ void App::LoadUI()
     // Check commandline args for "--SubloadUI" and that on if found
     {
         bool subload = m_vm["SubloadUI"].as<bool>();
+        std::cout << "|\tTurning Subload textures on for the UI " << subload << std::endl;
         if( subload )
         {
             m_UIManager->SetSubloadPaintOn( true );
