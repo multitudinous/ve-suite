@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifdef WIN32
+//#ifdef WIN32
 #define NO_SUBLOAD
-#endif
+//#endif
 
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIManager.h>
@@ -232,7 +232,7 @@ osg::Geode* UIManager::AddElement( UIElement* element )
     {
         m_rttQuadTransform = new osg::PositionAttitudeTransform();
         m_rttQuadTransform->addChild( geode );
-        m_rttQuadTransform->setUpdateCallback( new ves::xplorer::scenegraph::HeadPositionCallback() );
+        m_rttQuadTransform->setUpdateCallback( new ves::xplorer::scenegraph::HeadPositionCallback( gmtl::Point3d( 0.0, 8.0, -2.0 ) ) );
         mNodesToAdd.push_back( m_rttQuadTransform.get() );
     }
 
@@ -604,8 +604,8 @@ void UIManager::_repaintChildren()
                 float( element->GetImageHeight() ) / float( element->GetImageWidth() );
             m_aspectRatioUniform->set( uiAspectRatio );
             element->Update();
-            ///This code must be left here to correctly update the UI.
 
+            ///This code must be left here to correctly update the UI.
             unsigned char* image_Data = element->RenderElementToImage()->data();
 //            osg::Image* image_Data = element->RenderElementToImage();
 //            boost::ignore_unused_variable_warning( image_Data );
@@ -615,7 +615,7 @@ void UIManager::_repaintChildren()
             // last time
             if( element->IsDirty() )
             {
-                if(!m_useSubloadPaint)
+                if( !m_useSubloadPaint )
                 {
                     osg::StateSet* state = element->GetGeode()
                             ->getOrCreateStateSet();
@@ -1444,7 +1444,6 @@ void UIManager::AddUIToNode( osg::Group* node )
     }
     else
     {
-        std::cout << " *********** " << mUIGroup.valid() << std::endl;
         node->addChild( mUIGroup.get() );
     }
 }

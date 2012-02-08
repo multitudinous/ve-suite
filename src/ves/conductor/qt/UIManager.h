@@ -251,6 +251,7 @@ public:
     /// problematic on certain platforms. This method should be called after
     /// creating an instance of UIManager, but before adding the first
     /// UIElement. It cannot not be changed thereafter.
+    /// It is controlled through --SubloadUI command line argument.
     void SetSubloadPaintOn( bool useSubloadPaint );
     
 private:

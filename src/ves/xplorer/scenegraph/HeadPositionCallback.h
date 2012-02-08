@@ -40,9 +40,7 @@
 #include <osg/ref_ptr>
 #include <osg/NodeCallback>
 
-// --- C/C++ Includes --- //
-#include <vector>
-#include <deque>
+#include <gmtl/Point.h>
 
 namespace ves
 {
@@ -61,9 +59,9 @@ class VE_SCENEGRAPH_EXPORTS HeadPositionCallback : public osg::NodeCallback
 {
 public:
     ///Constructor
-    HeadPositionCallback();
+    HeadPositionCallback( gmtl::Point3d transformPoint = gmtl::Point3d( -3.5, 9.0, 0.0 ) );
 
-    META_Object(ves::xplorer::scenegraph, HeadPositionCallback);
+    //META_Object(ves::xplorer::scenegraph, HeadPositionCallback);
     
     ///Copy Constructor
     HeadPositionCallback( const HeadPositionCallback& ctc, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
@@ -76,6 +74,7 @@ protected:
     virtual ~HeadPositionCallback();
 
 private:
+    gmtl::Point3d m_transformPoint;
 };
 } // end scenegraph
 } // end xplorer

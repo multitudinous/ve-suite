@@ -50,10 +50,11 @@ using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-HeadPositionCallback::HeadPositionCallback()
+HeadPositionCallback::HeadPositionCallback( gmtl::Point3d transformPoint )
     :
     osg::Object(),
-    osg::NodeCallback()
+    osg::NodeCallback(),
+    m_transformPoint( transformPoint )
 {
     ;
 }
@@ -73,13 +74,10 @@ HeadPositionCallback::HeadPositionCallback( const HeadPositionCallback& ctc, con
 ////////////////////////////////////////////////////////////////////////////////
 void HeadPositionCallback::operator()(
     osg::Node* node, osg::NodeVisitor* nv )
-{
-    gmtl::Point3d startPoint;
-    startPoint.set( -3.5f, 9.0f, 0.0f);
-
+{    
     gmtl::Matrix44d worldMat = 
         vxs::SceneManager::instance()->GetGlobalViewMatrix();
-    startPoint = worldMat * startPoint;
+    gmtl::Point3d transformPoint = worldMat * m_transformPoint;
 
     gmtl::Quatd invertedQuat = gmtl::makeRot< gmtl::Quatd >( worldMat );
     osg::Quat quat;
@@ -87,7 +85,8 @@ void HeadPositionCallback::operator()(
              invertedQuat.mData[2],invertedQuat.mData[ 3 ]);
 
     static_cast< osg::PositionAttitudeTransform* >( node )->setPosition(
-        osg::Vec3d( startPoint.mData[ 0 ], startPoint.mData[ 1 ], startPoint.mData[ 2 ] ) );
+        osg::Vec3d( transformPoint.mData[ 0 ], transformPoint.mData[ 1 ], 
+        transformPoint.mData[ 2 ] ) );
 
     static_cast< osg::PositionAttitudeTransform* >( node )->setAttitude( quat );
     
