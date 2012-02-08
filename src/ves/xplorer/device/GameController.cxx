@@ -66,6 +66,7 @@
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/open/xml/model/Model.h>
 
@@ -221,11 +222,14 @@ GameController::GameController()
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
         "GameController.UpdateData");
-    
-    //Setup the ability to catch shutdowns
-    //m_signalHandler = boost::bind(&GameController::HandleSignal, this, _1);
-    //vrj::Kernel::instance()->
-    //    addHandlerPreCallback( boost::bind(&GameController::HandleSignal, this, _1) );
+
+    //m_hideShowUI =
+    //    reinterpret_cast< eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
+    //    ( eventmanager::EventFactory::instance()->GetSignal( "EventMapper.HideShowUI" ) )
+    //    ->mSignal;
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_hideShowUI ),
+        "GameController.HideShowUI");
 }
 ////////////////////////////////////////////////////////////////////////////////
 GameController::~GameController()
@@ -590,6 +594,7 @@ void GameController::OnButton6Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
+        m_hideShowUI();
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:

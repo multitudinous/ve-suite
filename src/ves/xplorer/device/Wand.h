@@ -198,6 +198,7 @@ private:
     WandClickInterface m_wandButton3EventInterface;
     WandClickInterface m_wandButton4EventInterface;
     WandClickInterface m_wandButton5EventInterface;
+    WandClickInterface m_wandButton6EventInterface;
 
     /// All keyboardmouse events get delivered here
     void OnWandButton0Event( gadget::DigitalState::State event );
@@ -206,6 +207,7 @@ private:
     void OnWandButton3Event( gadget::DigitalState::State event );
     void OnWandButton4Event( gadget::DigitalState::State event );
     void OnWandButton5Event( gadget::DigitalState::State event );
+    void OnWandButton6Event( gadget::DigitalState::State event );
 
     /// Interface to receive double-click events from gadgeteer
     typedef gadget::DigitalClickEventInterface< 2,
@@ -323,6 +325,9 @@ private:
     
     ///The signature to tell others the game pad is active
     ves::util::BoolSignal_type m_updateData;
+
+    ///Hide show ui signal type
+    ves::util::VoidSignal_type m_hideShowUI;
 
     ///Wand event management
     ves::xplorer::behavior::WandEvents* m_wandEvents;

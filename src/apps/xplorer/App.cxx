@@ -256,6 +256,9 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_sceneGLTransformInfo = SceneGLTransformInfoPtr( new SceneGLTransformInfo(
         ortho2DMatrix, identityMatrix, zUpMatrix ) );
 
+    ///Setup the event mapper to initialize the default signals
+    ves::xplorer::eventmanager::EventMapper::instance();
+
     //Set the current database file and clear it out in case it contains data
     //from a previous session
     std::string dbPath;

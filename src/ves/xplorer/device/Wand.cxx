@@ -60,6 +60,7 @@
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/conductor/qt/UIManager.h>
 
@@ -156,6 +157,9 @@ Wand::Wand()
 
     m_wandButton5EventInterface.init("VJButton5");
     m_wandButton5EventInterface.addCallback(boost::bind(&Wand::OnWandButton5Event, this, _1));
+
+    m_wandButton6EventInterface.init("VJButton6");
+    m_wandButton6EventInterface.addCallback(boost::bind(&Wand::OnWandButton6Event, this, _1));
     
     ///Setup the ves signals generated from the VR Juggler events
     m_wandButtonPressSignalMap["Wand.ButtonPress0"] = new WandButtonPressSignal_type;
@@ -256,6 +260,15 @@ Wand::Wand()
     CONNECTSIGNAL_0( "App.LatePreFrame", void(), &Wand::LatePreFrameUpdate,
                     m_connections, highest_Priority );
 
+    //m_hideShowUI =
+    //    reinterpret_cast< eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
+    //    ( eventmanager::EventFactory::instance()->GetSignal( "EventMapper.HideShowUI" ) )
+    //    ->mSignal;
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_hideShowUI ),
+        "Wand.HideShowUI");
+    
+    
     // trigger (and top right button) used for the selection line
     digital[ 0 ].init( "VJButton0" );
     // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
@@ -1364,7 +1377,6 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
             else
             {
                 m_buttonPushed = true;
-                std::cout << " here 1 " << std::endl;
                 FreeRotateAboutWand();
             }
         }
@@ -1700,6 +1712,39 @@ void Wand::OnWandButton5Event( gadget::DigitalState::State event )
             }
             return;
         }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton6Event( gadget::DigitalState::State event )
+{
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    m_triggerWandMove = false;
+
+    switch(event) 
+    {
+        case gadget::DigitalState::ON:
+        {
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn6"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_ON:
+        {
+            m_hideShowUI();
+            
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress6"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_OFF:
+        {
+            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease6"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            break;
+        }
+        default:
+            break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

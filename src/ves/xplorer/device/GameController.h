@@ -199,6 +199,9 @@ private:
             eventmanager::BooleanPropagationCombiner > MouseMoveSignal_type;
     MouseMoveSignal_type m_mouseMove;
 
+    ///Hide show ui signal type
+    ves::util::VoidSignal_type m_hideShowUI;
+
     ///Slot to control the nav mode
     void SetRotationMode( std::string rotationMode );
 
