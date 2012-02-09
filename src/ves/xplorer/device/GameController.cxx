@@ -120,6 +120,8 @@ GameController::GameController()
     m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() ),
     m_success( false )
 {
+    m_gamecontroller.init( "VESJoystick" );
+    
     // Create a default functional map.
     m_buttonMap->configure( osgwMx::MxGamePad::Button0, osgwMx::FunctionalMap::JumpToWorldOrigin );
     m_buttonMap->configure( osgwMx::MxGamePad::Button1, osgwMx::FunctionalMap::LevelView );
@@ -254,6 +256,8 @@ void GameController::OnAxis0Event( const float event )
         return;
     }
 
+    UpdateForwardAndUp();
+
     m_mxGamePadStyle->setButtons( 0 );
 
     // Left stick: Move.
@@ -282,6 +286,8 @@ void GameController::OnAxis1Event( const float event )
         return;
     }
 
+    UpdateForwardAndUp();
+
     m_mxGamePadStyle->setButtons( 0 );
     
     // Left stick: Move.
@@ -309,6 +315,9 @@ void GameController::OnAxis2Event( const float event )
     {
         return;
     }
+
+    UpdateForwardAndUp();
+
     m_mxGamePadStyle->setButtons( m_buttons );
 
     // Right stick: Rotate.
@@ -343,6 +352,9 @@ void GameController::OnAxis3Event( const float event )
     {
         return;
     }
+
+    UpdateForwardAndUp();
+
     m_mxGamePadStyle->setButtons( m_buttons );
     
     // Right stick: Rotate.
@@ -382,11 +394,12 @@ void GameController::OnAxis4Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     switch(event) 
     {
     case gadget::DigitalState::ON:
     {   
+        UpdateForwardAndUp();
         m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button13, 
             ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
         break;
@@ -420,6 +433,7 @@ void GameController::OnAxis5Event( gadget::DigitalState::State event )
     {
     case gadget::DigitalState::ON:
     {        
+        UpdateForwardAndUp();
         m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button12, 
             ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
         break;
@@ -529,6 +543,7 @@ void GameController::OnButton4Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
+        UpdateForwardAndUp();
         //_mxCore->setPosition( osg::Vec3( 0., 0., 0. ) );
         m_mxGamePadStyle->getMxCore()->level();
         break;
@@ -745,5 +760,31 @@ void GameController::SetRotationMode( std::string rotationMode )
         m_buttons = osgwMx::MxGamePad::Button10;
         m_viewMatrix.lookAtOrbitCenter();
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::UpdateForwardAndUp()
+{
+    if( m_gamecontroller->isStupefied() )
+    {
+        return;
+    }
+    
+    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_gamecontroller->getData() );
+    const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
+    const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+    gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+    gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+    
+    vrjWandMat = myMat * vrjWandMat * zUpMatrix;
+    
+    gmtl::Vec3d vjVec;
+    vjVec.set( 0.0f, 0.0f, 1.0f );
+    gmtl::xform( vjVec, vrjWandMat, vjVec );
+    gmtl::normalize( vjVec );
+        
+    vjVec.set( 0.0f, 1.0f, 0.0f );
+    gmtl::xform( vjVec, vrjWandMat, vjVec );
+    gmtl::normalize( vjVec );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -113,6 +113,14 @@ public:
     virtual void ProcessEvents( ves::open::xml::CommandPtr command );
 
 private:
+    ///Update the forward and up vector for the game controller
+    void UpdateForwardAndUp();// const osg::Vec3d&, const osg::Vec3d& );
+
+    ///Track the position of the game controller so that we can tell what the
+    ///current orientation of the controller is for updating the 
+    ///up and forward vectors of the controller.
+    gadget::PositionInterface m_gamecontroller;
+
     typedef gadget::AnalogEventInterface<gadget::event::all_events_tag,
         gadget::event::synchronized_tag> AnalogAxisInterface;
     AnalogAxisInterface m_analogAxis0EventInterface;
