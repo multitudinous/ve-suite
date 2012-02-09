@@ -30,9 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//#ifdef WIN32
-#define NO_SUBLOAD
-//#endif
 
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIManager.h>
@@ -1455,7 +1452,6 @@ void UIManager::SetSubloadPaintOn( bool useSubloadPaint )
         m_useSubloadPaint = useSubloadPaint;
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 }
 }
