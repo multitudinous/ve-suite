@@ -877,6 +877,8 @@ void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
 
     const osg::Matrixd tempOsgMatrix( vrjWandMat.getData() );
     m_wandPAT->setMatrix( tempOsgMatrix );
+    
+    //UpdateForwardAndUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //The current implemention uses VJButton0 to select an object then if VJButton3
@@ -1965,5 +1967,32 @@ void Wand::OnWandMoveTimer( Poco::Util::TimerTask& task )
         m_triggerWandMove = true;
         m_previousWandMat = vrjWandMat;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void Wand::UpdateForwardAndUp()
+{
+    if( m_wand->isStupefied() )
+    {
+        return;
+    }
+    
+    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
+    const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
+    const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+    gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+    gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+    
+    vrjWandMat = myMat * vrjWandMat * zUpMatrix;
+    
+    gmtl::Vec3d vjVec;
+    vjVec.set( 0.0f, 0.0f, 1.0f );
+    gmtl::xform( vjVec, vrjWandMat, vjVec );
+    gmtl::normalize( vjVec );
+        
+    vjVec.set( 0.0f, 1.0f, 0.0f );
+    gmtl::xform( vjVec, vrjWandMat, vjVec );
+    gmtl::normalize( vjVec );
 }
 ////////////////////////////////////////////////////////////////////////////////

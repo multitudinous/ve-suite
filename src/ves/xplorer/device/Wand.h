@@ -188,6 +188,8 @@ protected:
     ///Preprocess data for nav
     void PostProcessNav();
     
+    void UpdateForwardAndUp();// const osg::Vec3d&, const osg::Vec3d& );
+
 private:
     /// The keyboardmouse device needed for juggler >= 3.1
     typedef gadget::DigitalEventInterface<gadget::event::all_events_tag,
