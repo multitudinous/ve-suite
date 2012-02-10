@@ -782,9 +782,13 @@ void GameController::UpdateForwardAndUp()
     vjVec.set( 0.0f, 0.0f, 1.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
     gmtl::normalize( vjVec );
-        
+    osg::Vec3d upVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
+    m_viewMatrix.setUp( upVec );
+
     vjVec.set( 0.0f, 1.0f, 0.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
     gmtl::normalize( vjVec );
+    osg::Vec3d dirVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
+    m_viewMatrix.setDir( dirVec );
 }
 ////////////////////////////////////////////////////////////////////////////////

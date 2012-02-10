@@ -864,16 +864,11 @@ void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
         gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
-
-    vrjWandMat = myMat * vrjWandMat * zUpMatrix;
-    
-    //std::cout << " 1 " << std::endl << ves::xplorer::scenegraph::SceneManager::instance()->
-    //GetPureNavMatrix() << std::endl << vrjWandMat << std::endl;;
     
     ///Transform from juggler space to world space
     vrjWandMat = 
         ves::xplorer::scenegraph::SceneManager::instance()->
-        GetPureNavMatrix() * vrjWandMat;
+        GetInvertedNavMatrix() * myMat * vrjWandMat * zUpMatrix;
 
     const osg::Matrixd tempOsgMatrix( vrjWandMat.getData() );
     m_wandPAT->setMatrix( tempOsgMatrix );
@@ -993,7 +988,7 @@ void Wand::SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
     {
         osg::Matrixd inverseCameraTransform(
             ves::xplorer::scenegraph::SceneManager::instance()->
-            GetPureNavMatrix().getData() );
+            GetInvertedNavMatrix().getData() );
         
         startPoint = startPoint * inverseCameraTransform;
         endPoint = endPoint * inverseCameraTransform;

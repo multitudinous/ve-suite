@@ -638,12 +638,20 @@ void SceneManager::SetActiveSwitchNode( int activeNode )
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::LatePreFrameUpdate()
 {
+    m_vrjHeadMatrix = gmtl::convertTo< double >( m_vrjHead->getData() );
+    ///Convert the head matrix to Z up land and then back out purely the
+    ///rotation component to get a pure matrix with head rotation and 
+    ///position in Z up land.
+    m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
+
     ///If the logo dcs is active no nav is allowed
     if( mNavSwitch->getValue( 1 ) )
     {
         osg::Vec3d up, dir, pos;
         double fovy;
         m_viewMatrix->getInitialValues( up, dir, pos, fovy );
+        ///We grab the head location her so that we have a base location for 
+        ///where the head is in the scene
         m_lastHeadLocation = gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
         pos[ 0 ] = m_vrjHeadMatrix.mData[ 12 ];
         pos[ 1 ] = m_vrjHeadMatrix.mData[ 13 ];
@@ -652,12 +660,6 @@ void SceneManager::LatePreFrameUpdate()
         m_viewMatrix->reset();
     }
     
-    m_vrjHeadMatrix = gmtl::convertTo< double >( m_vrjHead->getData() );
-    ///Convert the head matrix to Z up land and then back out purely the
-    ///rotation component to get a pure matrix with head rotation and 
-    ///position in Z up land.
-    m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
-
     ///Get the tracked head location for and create a delta that can be added
     ///to the current matrix stack in MxCore. This delta is in Z up land and 
     ///needs to be a delta so that it is an adder to whatever is being done
@@ -665,6 +667,7 @@ void SceneManager::LatePreFrameUpdate()
     gmtl::Point3d headLocation = 
         gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
     gmtl::Point3d deltaHeadLocation = headLocation - m_lastHeadLocation;
+
     osg::Vec3d deltaHeadPosition( deltaHeadLocation.mData[ 0 ], 
                                  deltaHeadLocation.mData[ 1 ], 
                                  deltaHeadLocation.mData[ 2 ] );
@@ -681,25 +684,22 @@ void SceneManager::LatePreFrameUpdate()
     mActiveNavDCS->SetMat( navMatrix );
     
     navMatrix = m_zUpTransform * navMatrix;
-            
-    gmtl::invert( m_invertedNavMatrix, navMatrix );
-    m_invertedNavMatrixOSG.set( m_invertedNavMatrix.getData() );
 
-    m_pureNav = navMatrix;
-    
-    m_pureNav.mData[ 12 ] = m_pureNav.mData[ 12 ] + deltaHeadLocation.mData[ 0 ];
-    m_pureNav.mData[ 13 ] = m_pureNav.mData[ 13 ] + deltaHeadLocation.mData[ 1 ];
-    m_pureNav.mData[ 14 ] = m_pureNav.mData[ 14 ] + deltaHeadLocation.mData[ 2 ];
+    gmtl::invert( m_invertedNavMatrix, navMatrix );
+    ///Take the VR Juggler head position out of the view matrix
+    ///so that we have pure nav data.
+    m_invertedNavMatrix.mData[ 12 ] = m_invertedNavMatrix.mData[ 12 ] - m_lastHeadLocation.mData[ 0 ];
+    m_invertedNavMatrix.mData[ 13 ] = m_invertedNavMatrix.mData[ 13 ] - m_lastHeadLocation.mData[ 1 ];
+    m_invertedNavMatrix.mData[ 14 ] = m_invertedNavMatrix.mData[ 14 ] - m_lastHeadLocation.mData[ 2 ];
+
+    m_invertedNavMatrixOSG.set( m_invertedNavMatrix.getData() );
     
     ///We need to remove the position from the head matrix because it is
     ///already being accounted for in the navMatrix for MxCore. The
     ///m_globalViewMatrix is the matrix that we need to use throughout ves
     ///for the view matrix. It includes everything except for the final
     ///transformation for a given projection for a given context and viewport.
-    m_vrjHeadMatrix.mData[ 12 ] = 0.0;
-    m_vrjHeadMatrix.mData[ 13 ] = 0.0;
-    m_vrjHeadMatrix.mData[ 14 ] = 0.0;
-    m_vrjHeadMatrix.mData[ 15 ] = 1.0;
+    //gmtl::Matrix44d headRotMat = m_vrjHeadMatrix;
 
     m_globalViewMatrix = m_invertedNavMatrix * m_vrjHeadMatrix;
     m_globalViewMatrixOSG.set( m_globalViewMatrix.getData() );
