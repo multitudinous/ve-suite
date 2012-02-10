@@ -132,9 +132,9 @@ CharacterController::CharacterController()
     head.init( "VJHead" );
     wand.init( "VJWand" );
 
-    CONNECTSIGNAL_1( "GameController.UpdateData", void( bool const& ),
+    CONNECTSIGNALS_1( "%UpdateData", void( bool const& ),
                      &CharacterController::SetGameControllerAxisUpdate,
-                     m_connections, normal_Priority );  
+                     m_connections, any_SignalType, normal_Priority );  
 
     Initialize();
 
