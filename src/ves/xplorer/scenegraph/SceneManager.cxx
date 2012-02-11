@@ -682,15 +682,16 @@ void SceneManager::LatePreFrameUpdate()
     gmtl::Matrix44d navMatrix;    
     navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
     mActiveNavDCS->SetMat( navMatrix );
-    
+
     navMatrix = m_zUpTransform * navMatrix;
 
-    gmtl::invert( m_invertedNavMatrix, navMatrix );
     ///Take the VR Juggler head position out of the view matrix
     ///so that we have pure nav data.
-    m_invertedNavMatrix.mData[ 12 ] = m_invertedNavMatrix.mData[ 12 ] - m_lastHeadLocation.mData[ 0 ];
-    m_invertedNavMatrix.mData[ 13 ] = m_invertedNavMatrix.mData[ 13 ] - m_lastHeadLocation.mData[ 1 ];
-    m_invertedNavMatrix.mData[ 14 ] = m_invertedNavMatrix.mData[ 14 ] - m_lastHeadLocation.mData[ 2 ];
+    navMatrix.mData[ 12 ] = navMatrix.mData[ 12 ] + m_lastHeadLocation.mData[ 0 ];
+    navMatrix.mData[ 13 ] = navMatrix.mData[ 13 ] + m_lastHeadLocation.mData[ 1 ];
+    navMatrix.mData[ 14 ] = navMatrix.mData[ 14 ] + m_lastHeadLocation.mData[ 2 ];
+
+    gmtl::invert( m_invertedNavMatrix, navMatrix );
 
     m_invertedNavMatrixOSG.set( m_invertedNavMatrix.getData() );
     
@@ -699,9 +700,12 @@ void SceneManager::LatePreFrameUpdate()
     ///m_globalViewMatrix is the matrix that we need to use throughout ves
     ///for the view matrix. It includes everything except for the final
     ///transformation for a given projection for a given context and viewport.
-    //gmtl::Matrix44d headRotMat = m_vrjHeadMatrix;
-
-    m_globalViewMatrix = m_invertedNavMatrix * m_vrjHeadMatrix;
+    gmtl::Matrix44d headRotMat = m_vrjHeadMatrix;
+    //headRotMat.mData[ 12 ] = 0.0;
+    //headRotMat.mData[ 13 ] = 0.0;
+    //headRotMat.mData[ 14 ] = 0.0;
+    
+    m_globalViewMatrix = m_invertedNavMatrix * headRotMat;
     m_globalViewMatrixOSG.set( m_globalViewMatrix.getData() );
     
     gmtl::invert( m_invertedGlobalViewMatrix, m_globalViewMatrix );
