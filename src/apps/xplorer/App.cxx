@@ -1317,7 +1317,7 @@ void App::LoadUI()
     ves::conductor::UIManager* m_UIManager =
         ves::conductor::UIManager::instance();
 
-    // Check commandline args for "--SubloadUI" and that on if found
+    // Check commandline args for "--SubloadUI"
     {
         bool subload = m_vm["SubloadUI"].as<bool>();
         std::cout << "|\tTurning Subload textures on for the UI " << subload << std::endl;
