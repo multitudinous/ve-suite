@@ -1046,6 +1046,14 @@ double* Wand::GetObjLocation()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::FreeRotateAboutWand( const bool freeRotate )
 {
+    //gmtl::Quatd tempQuat;
+    //tempQuat.set( m_rotIncrement[ 0 ], m_rotIncrement[ 1 ], m_rotIncrement[ 2 ], m_rotIncrement[ 3 ] );
+    //gmtl::AxisAngled axisAngle = gmtl::makeRot< gmtl::AxisAngled >( tempQuat );
+    
+    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( osg::DegreesToRadians( -rotationStepSize ), 
+        osg::Vec3d( 0.0, 0.0, 1.0 ) );
+    return;
+
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
 
@@ -1442,26 +1450,9 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
     if( event == gadget::DigitalState::TOGGLE_ON ||
        event == gadget::DigitalState::ON )
     {        
-        gmtl::Vec3d wandDirVec;
-        wandDirVec.set( 0.0f, 0.0f, -1.0f );        
-        gmtl::xform( wandDirVec, gmtl::convertTo< double >( m_wand->getData() ), wandDirVec );
-        gmtl::normalize( wandDirVec );
         m_buttonPushed = true;
-        for( int i = 0; i < 3; ++i )
-        {
-            //Update the translation movement for the objects
-            //How much object should move
-            //m_worldTrans[ i ] = m_worldTrans[ i ] + (wandDirVec[ i ] * translationStepSize);
-            m_worldTrans[ i ] = wandDirVec[ i ] * translationStepSize;
-        }
-    }
-    //Reset back to 0, 0, 0
-    else if( event == gadget::DigitalState::TOGGLE_OFF )
-    {
-        if( m_characterController.IsEnabled() )
-        {
-            m_characterController.StepForward( false );
-        }
+        m_sceneManager.GetMxCoreViewMatrix().moveLiteral( 
+            osg::Vec3d( m_worldTrans[ 0 ], m_worldTrans[ 1 ], m_worldTrans[ 2 ] ) );
     }
     
     PostProcessNav();
@@ -1837,12 +1828,15 @@ void Wand::PreProcessNav()
     m_worldTrans[ 0 ] = 0.;
     m_worldTrans[ 1 ] = 0.;
     m_worldTrans[ 2 ] = 0.;
-    //m_worldQuat = m_activeDCS->getAttitude();
     
-    /*double* tempWorldTrans = m_activeDCS->GetVETranslationArray();
-    m_worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
-    m_worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
-    m_worldTrans[ 2 ] = -tempWorldTrans[ 2 ];*/
+    UpdateForwardAndUp();
+    
+    //const gmtl::Matrix44d tempHeadMatrix = m_sceneManager.GetGlobalViewMatrix();
+    //std::cout << " head " << std::endl << m_sceneManager.GetHeadMatrix() << std::endl << m_sceneManager.GetInvertedNavMatrix() << std::endl;
+    const gmtl::Point4d tempHeadMatrix = m_sceneManager.GetInvertedNavMatrix() * gmtl::makeTrans< gmtl::Point4d >( m_sceneManager.GetHeadMatrix() );
+    //std::cout << tempHeadMatrix << std::endl;
+    m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( 
+        osg::Vec3d( tempHeadMatrix.mData[0], tempHeadMatrix.mData[1], tempHeadMatrix.mData[2] ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::PostProcessNav()
@@ -1861,19 +1855,14 @@ void Wand::PostProcessNav()
         {
             m_worldTrans[ i ] = -m_worldTrans[ i ];
         }*/
-        m_sceneManager.GetMxCoreViewMatrix().moveLiteral( osg::Vec3d( m_worldTrans[ 0 ], -m_worldTrans[ 2 ], m_worldTrans[ 1 ] ) );
         //m_sceneManager.GetMxCoreViewMatrix().setPosition( osg::Vec3d( m_worldTrans[ 0 ], m_worldTrans[ 1 ], m_worldTrans[ 2 ] ) );
 
-        gmtl::Quatd tempQuat;
+        /*gmtl::Quatd tempQuat;
         tempQuat.set( m_rotIncrement[ 0 ], m_rotIncrement[ 1 ], m_rotIncrement[ 2 ], m_rotIncrement[ 3 ] );
         gmtl::AxisAngled axisAngle = gmtl::makeRot< gmtl::AxisAngled >( tempQuat );
-        
-        const gmtl::Matrix44d tempHeadMatrix = m_sceneManager.GetGlobalViewMatrix();
-        m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( 
-            osg::Vec3d( tempHeadMatrix[0][3], tempHeadMatrix[1][3], tempHeadMatrix[2][3] ) );
 
         m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( axisAngle[ 0 ], 
-            osg::Vec3d( axisAngle[ 1 ], axisAngle[ 2 ], axisAngle[ 3 ] ) );
+            osg::Vec3d( axisAngle[ 1 ], axisAngle[ 2 ], axisAngle[ 3 ] ) );*/
 
         m_updateData( true );
 
@@ -1964,7 +1953,6 @@ void Wand::OnWandMoveTimer( Poco::Util::TimerTask& task )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateForwardAndUp()
 {
     if( m_wand->isStupefied() )
@@ -1985,9 +1973,17 @@ void Wand::UpdateForwardAndUp()
     vjVec.set( 0.0f, 0.0f, 1.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
     gmtl::normalize( vjVec );
-        
-    vjVec.set( 0.0f, 1.0f, 0.0f );
+    osg::Vec3d upVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
+    //m_sceneManager.GetMxCoreViewMatrix().setUp( upVec );
+    
+    vjVec.set( m_sceneManager.GetMxCoreViewMatrix().getDir().ptr() );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
     gmtl::normalize( vjVec );
+    osg::Vec3d dirVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
+    //m_sceneManager.GetMxCoreViewMatrix().setDir( dirVec );
+    //std::cout << " wand dir " << vjVec << std::endl;
+    m_worldTrans[ 0 ] = vjVec.mData[ 0 ] * translationStepSize;
+    m_worldTrans[ 1 ] = vjVec.mData[ 1 ] * translationStepSize;
+    m_worldTrans[ 2 ] = vjVec.mData[ 2 ] * translationStepSize;
 }
 ////////////////////////////////////////////////////////////////////////////////
