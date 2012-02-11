@@ -214,7 +214,7 @@ private:
     /// Interface to receive double-click events from gadgeteer
     typedef gadget::DigitalClickEventInterface< 2,
         gadget::event::all_events_tag,
-        gadget::event::immediate_tag > WandDoubleClickInterface;
+        gadget::event::synchronized_tag > WandDoubleClickInterface;
     WandDoubleClickInterface m_wandButton0DoubleClickEventInterface;
     WandDoubleClickInterface m_wandButton1DoubleClickEventInterface;
     WandDoubleClickInterface m_wandButton2DoubleClickEventInterface;
