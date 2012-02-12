@@ -66,8 +66,6 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/device/KeyboardMouse.h>
-
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/Depth>
 
@@ -104,6 +102,9 @@ using namespace warrantytool;
 #include <gmtl/gmtl.h>
 #include <gmtl/Point.h>
 #include <gmtl/Misc/MatrixConvert.h>
+
+
+#include <ves/xplorer/device/KeyboardMouse.h>
 
 //Define to test any of the dvst code
 //#define DVST_TEST 1
