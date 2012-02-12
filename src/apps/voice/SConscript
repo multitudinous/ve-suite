@@ -37,7 +37,7 @@ env.AppendUnique( CPPPATH = [pj('#', 'external', 'cxxtest-3.10.1'),
                                 'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
 
 if GetPlatform() == 'linux':
-   lib_env.AppendUnique(LIBS = ['pthread'])
+   env.AppendUnique(LIBS = ['pthread'])
 
 app = ves_pkg.createProgram('JuliusSpeechNavigator' + env["PROGSUFFIX"], env, 'bin')
 app.addSources( srcs )
