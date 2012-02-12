@@ -51,8 +51,6 @@
 
 #include <ves/xplorer/EnvironmentHandler.h>
 
-#include <ves/xplorer/device/KeyboardMouse.h>
-
 #include <osgDB/ReadFile>
 #include <osgUtil/LineSegmentIntersector>
 #include <osgUtil/Optimizer>
@@ -172,8 +170,7 @@ unsigned int defaultCollidesWith( COL_GATE | COL_WALL | COL_DEFAULT );
 ////////////////////////////////////////////////////////////////////////////////
 ConstraintGP::ConstraintGP()
     :
-    PluginBase(),
-    m_keyboard( 0 )
+    PluginBase()
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "ConstraintPlugin";
@@ -280,11 +277,6 @@ int ConstraintGP::InitializeConstraintGraph()
 ////////////////////////////////////////////////////////////////////////////////
 void ConstraintGP::PreFrameUpdate()
 {    
-    if( !m_keyboard )
-    {
-        return;
-    }
-    
     return;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -64,8 +64,6 @@
 
 #include <ves/xplorer/EnvironmentHandler.h>
 
-#include <ves/xplorer/device/KeyboardMouse.h>
-
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/Depth>
 
@@ -99,6 +97,8 @@ using namespace warrantytool;
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string/find.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+
+#include <ves/xplorer/device/KeyboardMouse.h>
 
 using namespace Poco::Data;
 

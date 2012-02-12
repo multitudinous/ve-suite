@@ -63,8 +63,6 @@
 
 #include <ves/xplorer/EnvironmentHandler.h>
 
-#include <ves/xplorer/device/KeyboardMouse.h>
-
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkDataSet.h>
@@ -129,7 +127,6 @@ SensorDemoPluginGP::SensorDemoPluginGP()
     :
     PluginBase(),
     mAddingParts( false ),
-    m_keyboard( 0 ),
     m_groupedTextTextures( 0 ),
     m_cadRootNode( 0 ),
     m_hasPromiseDate( false ),
@@ -155,9 +152,6 @@ void SensorDemoPluginGP::InitializeNode(
 {
     PluginBase::InitializeNode( veworldDCS );
     
-    m_keyboard = 
-        dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
-
     {
         m_textTrans = new ves::xplorer::scenegraph::DCS();
         std::vector< double > data;
@@ -182,11 +176,6 @@ void SensorDemoPluginGP::InitializeNode(
 void SensorDemoPluginGP::PreFrameUpdate()
 {
     CreateSensorGrid();
-    
-    if( !m_keyboard )
-    {
-        return;
-    }
         
     if( m_groupedTextTextures.valid() )
     {
