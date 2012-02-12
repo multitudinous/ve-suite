@@ -119,7 +119,9 @@ using namespace ves::xplorer::scenegraph;
 KeyboardMouse::KeyboardMouse()
     :
     Device( GAME_CONTROLLER ),
-    m_exit( false )
+    m_exit( false ),
+    m_logger( Poco::Logger::get("xplorer.kbm.EventDebug") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     // Connect to Juggler's new event handling interface
     m_mouseDoubleClickEventInterface.setClickTime(300);
@@ -287,6 +289,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             return;
         }
         
+        //LOG_INFO( "KeyboardMouse:: Mouse button press" );
+
         //Send current Start and end points
         SetStartEndPoint( m_startPoint, m_endPoint );
         m_startEndPointSignal( m_startPoint, m_endPoint );

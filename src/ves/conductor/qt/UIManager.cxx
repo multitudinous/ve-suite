@@ -117,7 +117,9 @@ UIManager::UIManager() :
     m_bringToFront( 0 ),
     m_isDesktopMode( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() ),
     m_isWandIntersection( false ),
-    m_useSubloadPaint( false )
+    m_useSubloadPaint( false ),
+    m_logger( Poco::Logger::get("conductor.EventDebug") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     // Register signals
     ves::xplorer::eventmanager::EventManager* evm = ves::xplorer::eventmanager::EventManager::instance();
@@ -1002,6 +1004,7 @@ void UIManager::ToggleElementVisibility( UIElement* element )
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
+    //LOG_INFO("UIManager::ButtonPressEvent");
     if( !_okayToSendEvent() )
     {
         return false;
@@ -1057,6 +1060,7 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
         y = m_selectedUIElement->GetElementHeight() - y;
         m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
         m_selectedUIElement->SendButtonPressEvent( button, x, y, state );
+        //LOG_INFO("UIManager::SendButtonPressEvent");
     }
     else
     {

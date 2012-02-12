@@ -49,6 +49,9 @@
 
 #include <ves/xplorer/eventmanager/InteractionEvent.h>
 
+#include <ves/xplorer/Logging.h>
+
+// --- POCO Includes --- //
 #include <Poco/Util/Timer.h>
 
 // --- VR Juggler Includes --- //
@@ -345,6 +348,10 @@ private:
     bool m_shutdown;
     ///Store the previous wand matrix to see if it is moving at all
     gmtl::Matrix44d m_previousWandMat;
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 } //end device
 } //end xplorer

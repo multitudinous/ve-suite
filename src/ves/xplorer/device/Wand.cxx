@@ -109,7 +109,9 @@ Wand::Wand()
     m_cadSelectionMode( false ),
     m_wandEvents( new ves::xplorer::behavior::WandEvents ),
     m_triggerWandMove( false ),
-    m_shutdown( false )
+    m_shutdown( false ),
+    m_logger( Poco::Logger::get("xplorer.wand.EventDebug") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     m_wand.init( "VJWand" );
     head.init( "VJHead" );
@@ -308,7 +310,7 @@ void Wand::Initialize()
     {
         Poco::Util::TimerTask::Ptr moveTask = 
             new Poco::Util::TimerTaskAdapter<Wand>(*this, &Wand::OnWandMoveTimer);
-        m_wandMoveTimer.schedule( moveTask, 500, 500 );
+        m_wandMoveTimer.schedule( moveTask, 500, 250 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1025,7 +1027,7 @@ void Wand::UpdateWandGlobalLocation()
 
     for( size_t i = 0; i < 3; ++i )
     {
-        LastWandPosition[ i ] = objLoc[ i ];
+        //LastWandPosition[ i ] = objLoc[ i ];
         //cursorLoc[ i ] = this->loc[ i ];// + this->dir[ i ] * this->cursorLen;
         objLoc[ i ] = osgPointLoc[ i ];
     }
@@ -1268,6 +1270,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 {
     if( event == gadget::DigitalState::OFF )
     {
+        //LOG_INFO( "OnWandButton0Event: DigitalState::OFF" );
         return;
     }
 
@@ -1275,7 +1278,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 
     PreProcessNav();
     
-    SetupStartEndPoint( m_startPoint, m_endPoint );
+    //SetupStartEndPoint( m_startPoint, m_endPoint );
     m_startEndPointSignal( m_startPoint, m_endPoint );
 
     ///For now we are going to map Wand button 0 to Mouse button 1
@@ -1283,6 +1286,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     {
     case gadget::DigitalState::ON:
     {
+        //LOG_INFO( "OnWandButton0Event: DigitalState::ON" );
         UpdateSelectionLine( true );
 
         (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
@@ -1293,11 +1297,13 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
+        //LOG_INFO( "OnWandButton0Event: DigitalState::TOGGLE_ON" );
         (*(m_wandButtonPressSignalMap["Wand.ButtonPress0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
+        //LOG_INFO( "OnWandButton0Event: DigitalState::TOGGLE_OFF" );
         UpdateSelectionLine( false );
 
         (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_UP );
@@ -1743,6 +1749,7 @@ void Wand::OnWandButton0DoubleClick( gadget::DigitalState::State event )
         return;
     }
     
+    //LOG_INFO( "OnWandButton0DoubleClick: DigitalState::ON" );
     (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick0"]))( gadget::MBUTTON1, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1807,15 +1814,15 @@ void Wand::PreProcessNav()
     m_buttonPushed = false;
     
     //Update the wand direction every frame
-    UpdateWandLocalDirection();
-    UpdateWandGlobalLocation();
+    //UpdateWandLocalDirection();
+    //UpdateWandGlobalLocation();
 
-    m_activeDCS =
+    /*m_activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     if( !m_activeDCS )
     {
         return;
-    }
+    }*/
 
     buttonData[ 0 ] = digital[ 0 ]->getData();
     buttonData[ 1 ] = digital[ 1 ]->getData();
@@ -1930,7 +1937,7 @@ void Wand::LatePreFrameUpdate()
     m_triggerWandMove = false;
 
     PreProcessNav();
-    SetupStartEndPoint( m_startPoint, m_endPoint );
+    //SetupStartEndPoint( m_startPoint, m_endPoint );
     m_startEndPointSignal( m_startPoint, m_endPoint );
     m_wandMove( 0, 0, 0, 0 );
 }
@@ -1969,6 +1976,11 @@ void Wand::UpdateForwardAndUp()
     
     vrjWandMat = myMat * vrjWandMat * zUpMatrix;
     
+    const gmtl::Point4d tempWandPoint = m_sceneManager.GetInvertedNavMatrix() * 
+        gmtl::makeTrans< gmtl::Point4d >( vrjWandMat );
+    
+    m_startPoint.set( tempWandPoint.mData[ 0 ], tempWandPoint.mData[ 1 ], tempWandPoint.mData[ 2 ] );
+    
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, 1.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
@@ -1985,5 +1997,7 @@ void Wand::UpdateForwardAndUp()
     m_worldTrans[ 0 ] = vjVec.mData[ 0 ] * translationStepSize;
     m_worldTrans[ 1 ] = vjVec.mData[ 1 ] * translationStepSize;
     m_worldTrans[ 2 ] = vjVec.mData[ 2 ] * translationStepSize;
+    
+    m_endPoint.set( vjVec.mData[ 0 ] * m_distance, vjVec.mData[ 1 ] * m_distance, vjVec.mData[ 2 ] * m_distance );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -42,6 +42,8 @@
 
 #include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
 
+#include <ves/xplorer/Logging.h>
+
 // --- vrJuggler Includes --- //
 #include <vrj/Display/DisplayPtr.h>
 
@@ -286,6 +288,11 @@ private:
 
     typedef std::map< std::string, KeyReleaseSignal_type* > mKeyReleaseSignalHolder_type;
     mKeyReleaseSignalHolder_type mKeyReleaseSignalHolder;
+
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 } //end device

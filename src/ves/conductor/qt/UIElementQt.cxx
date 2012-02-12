@@ -120,7 +120,9 @@ UIElementQt::UIElementQt( QWidget *parent )
     m_captureListMutex( 0 ),
     m_firstRender( true ),
     m_sizeHasChanged( true ),
-    m_sizeDirty( true )
+    m_sizeDirty( true ),
+    m_logger( Poco::Logger::get("conductor.EventDebug") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     _debug( "ctor" );
 
@@ -674,7 +676,6 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
             {
 
                 QPoint p = widget->mapToGlobal( rect.topLeft() );
-                //p = this->viewport()->mapFromGlobal( p );
                 QPoint g = p;
                 p = this->mapFromGlobal( p );
                 // Under certain circumstances (not sure exactly which), either
@@ -934,11 +935,13 @@ void UIElementQt::_render()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonPressEvent( gadget::Keys button, int x, int y, int state )
 {
+    //LOG_INFO( "UIElementQt::_buttonPressEvent" );
     _buttonEvent( 1, button, x, y, state );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
+    //LOG_INFO( "UIElementQt::_buttonReleaseEvent" );
     _buttonEvent( 0, button, x, y, state );
 }
 ////////////////////////////////////////////////////////////////////////////////

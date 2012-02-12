@@ -35,10 +35,14 @@
 #define VES_CONDUCTOR_UI_MANAGER_H
 
 // --- VES Includes --- //
+#include <ves/VEConfig.h>
+
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/xplorer/eventmanager/ConnectionMonopoly.h>
-#include <ves/VEConfig.h>
+
 #include <ves/conductor/qt/TextureSubloader.h>
+
+#include <ves/xplorer/Logging.h>
 
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
@@ -419,6 +423,10 @@ private:
     bool m_isWandIntersection;
 
     bool m_useSubloadPaint;
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 } //end conductor

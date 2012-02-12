@@ -35,9 +35,12 @@
 #define QT_NO_KEYWORDS
 
 // Base class header
+#include <ves/VEConfig.h>
+
 #include <ves/conductor/qt/UIElement.h>
 #include <ves/conductor/qt/NonScrollGraphicsView.h>
-#include <ves/VEConfig.h>
+
+#include <ves/xplorer/Logging.h>
 
 #include <QtCore/QObject>
 #include <QtGui/QWidget>
@@ -215,7 +218,11 @@ protected Q_SLOTS:
     void PutRaise();
     void PutLower();
 
-
+protected:
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 } // namespace conductor
