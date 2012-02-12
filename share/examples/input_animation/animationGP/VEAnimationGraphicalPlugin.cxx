@@ -44,7 +44,6 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
 #include <gadget/Event/KeyboardMouse/KeyEvent.h>
@@ -61,6 +60,8 @@
 
 #include <osgDB/ReadFile>
 #include <osgDB/FileUtils>
+
+#include <osgUtil/LineSegmentIntersector>
 
 #include <osgSim/ColorRange>
 #include <osg/Vec3d>
@@ -116,9 +117,6 @@ VEAnimationGraphicalPlugin::~VEAnimationGraphicalPlugin()
 void VEAnimationGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
-
-    m_keyboard = 
-        dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 
     {
         ////////////////////////OLD//////////////////////////////////////////
@@ -320,7 +318,7 @@ void VEAnimationGraphicalPlugin::PreFrameUpdate()
     ////////////////////////////////////////////////////////////////////////////
     
     //Process key board event
-    if( m_keyboard )
+    //if( m_keyboard )
     {
         //If the mouse made a pick event
         /*if( !m_keyboard->GetMousePickEvent() )

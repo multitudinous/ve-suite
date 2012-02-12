@@ -290,9 +290,9 @@
                <key>KEY_1</key>
             </key_modifier_pair>
          </key_pair>
-         <initial_position>0.5</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_position>1.0</initial_position>
          <initial_position>-1.0</initial_position>
-         <initial_position>-2.0</initial_position>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
@@ -310,10 +310,6 @@
             </key_modifier_pair>
          </key_pair>
       </simulated_digital_device>
-      <simulated_relative_position name="SimRelativePosition1" version="1">
-         <base_frame_proxy>Head Proxy</base_frame_proxy>
-         <relative_proxy>Wand Proxy</relative_proxy>
-      </simulated_relative_position>
       <simulated_digital_device name="AppDigitalSim" version="2">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
@@ -467,7 +463,7 @@
          <unit>0</unit>
       </position_proxy>
       <alias name="VJWand" version="1">
-         <proxy>RelativeWand Proxy</proxy>
+         <proxy>Wand Proxy</proxy>
       </alias>
       <alias name="VJSystemStopKernel" version="1">
          <proxy>VJSystemStopKernelProxy</proxy>
@@ -496,10 +492,6 @@
       <alias name="VJButton0" version="1">
          <proxy>Button0Proxy</proxy>
       </alias>
-      <position_proxy name="RelativeWand Proxy" version="1">
-         <device>SimRelativePosition1</device>
-         <unit>0</unit>
-      </position_proxy>
       <position_proxy name="Head Proxy" version="1">
          <device>SimHeadPos</device>
          <unit>0</unit>
@@ -558,7 +550,7 @@
          <hide_mouse>false</hide_mouse>
          <full_screen>false</full_screen>
          <always_on_top>false</always_on_top>
-         <active>false</active>
+         <active>true</active>
          <simulator_viewports>
             <simulator_viewport name="CHANGEME" version="3">
                <origin>0.0</origin>
@@ -572,7 +564,7 @@
                <simulator_plugin>
                   <default_simulator name="CHANGEME" version="3">
                      <camera_pos>SimCamera Proxy</camera_pos>
-                     <wand_pos />
+                     <wand_pos>VJWand</wand_pos>
                      <draw_projections>true</draw_projections>
                      <surface_color>1.0</surface_color>
                      <surface_color>0.0</surface_color>
@@ -665,7 +657,7 @@
          </key_pair>
          <initial_position>0.0</initial_position>
          <initial_position>1.0668</initial_position>
-         <initial_position>0.0</initial_position>
+         <initial_position>2.0</initial_position>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>

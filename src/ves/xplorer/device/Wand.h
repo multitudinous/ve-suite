@@ -137,15 +137,6 @@ public:
     ///Update the events done by wand
     void UpdateObjectHandler();
 
-    ///Get the current object location
-    double* GetObjLocation();
-
-    ///Transform direction from VRJuggler to OSG
-    void UpdateWandLocalDirection();
-
-    ///Transform wand point into global space
-    void UpdateWandGlobalLocation();
-
     ///Find translation difference from last position to current
     //void UpdateDeltaWandPosition();
     ///Get the plane equation constants normal to the wand in world space
@@ -170,11 +161,6 @@ protected:
     ///\param startPoint The start point
     ///\param endPoint The end point
     virtual void SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint );
-
-    ///Set the start and end position
-    ///\param startPoint The start position
-    ///\param endPoint The end position
-    void SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
 
     ///Make the raw geometry for the wand line
     void MakeWandLine();

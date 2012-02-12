@@ -46,7 +46,6 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
 #include <gadget/Event/KeyboardMouse/KeyEvent.h>
@@ -216,7 +215,6 @@ void Multiscale2GraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 	//start off displaying the lattice and not the dislocations because the lattice looks quite a bit better
 	latticeEnabled = true;
 	dislocationsEnabled = false;
-    m_keyboard = dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
         
 	
 	leswitch = new osg::Switch;

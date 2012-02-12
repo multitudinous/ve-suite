@@ -25,6 +25,8 @@ lib_env.Append(LIBPATH = [pj(RootDir, buildDir, 'src', 'ves', 'open'),
 
 if GetPlatform() == 'win32':
    lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
+elif GetPlatform() == 'linux':
+   lib_env.AppendUnique(LIBS = ['pthread'])
 
 tao_options.apply( lib_env )
 osg_options.apply( lib_env )

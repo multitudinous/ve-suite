@@ -339,8 +339,8 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     m_buttonPushed = false;
 
     //Update the wand direction every frame
-    UpdateWandLocalDirection();
-    UpdateWandGlobalLocation();
+    //UpdateWandLocalDirection();
+    //UpdateWandGlobalLocation();
     
     buttonData[ 0 ] = digital[ 0 ]->getData();
     buttonData[ 1 ] = digital[ 1 ]->getData();
@@ -711,13 +711,7 @@ void Wand::SetHeadRotationFlag( int input )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateSelectionLine( bool drawLine )
-{
-    /*osg::Vec3d startPoint, endPoint;
-    SetupStartEndPoint( startPoint, endPoint );
-    m_beamLineSegment->reset();
-    m_beamLineSegment->setStart( startPoint );
-    m_beamLineSegment->setEnd( endPoint );*/
-    
+{    
     if( drawLine )
     {
         m_wandPAT->setNodeMask( 1 );
@@ -971,71 +965,6 @@ void Wand::UpdateObjectHandler()
         TranslateObject();
     }
     */
-}
-////////////////////////////////////////////////////////////////////////////////
-void Wand::SetupStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
-{
-    double* wandPosition = GetObjLocation();
-    double wandEndPoint[ 3 ];
-
-    for( int i = 0; i < 3; ++i )
-    {
-        wandEndPoint[ i ] = ( m_dir[ i ] * m_distance );
-    }
-
-    startPoint.set( wandPosition[ 0 ], wandPosition[ 1 ], wandPosition[ 2 ] );
-    endPoint.set( wandEndPoint[ 0 ], wandEndPoint[ 1 ], wandEndPoint[ 2 ] );
-    
-    //Need to negate the the camera transform that is multiplied into the view
-    {
-        osg::Matrixd inverseCameraTransform(
-            ves::xplorer::scenegraph::SceneManager::instance()->
-            GetInvertedNavMatrix().getData() );
-        
-        startPoint = startPoint * inverseCameraTransform;
-        endPoint = endPoint * inverseCameraTransform;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateWandLocalDirection()
-{
-    //Get the normalized direction relative to the juggler frame
-    gmtl::Vec3d vjVec;
-    vjVec.set( 0.0f, 0.0f, -1.0f );
-    Matrix44d vjMat = gmtl::convertTo< double >( m_wand->getData() );
-
-    gmtl::xform( vjVec, vjMat, vjVec );
-    gmtl::normalize( vjVec );
-
-    //Transform from juggler to osg...
-    m_dir[0] =  vjVec[ 0 ];
-    m_dir[1] = -vjVec[ 2 ];
-    m_dir[2] =  vjVec[ 1 ];
-}
-////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateWandGlobalLocation()
-{
-    //Transform wand point into global space get juggler Matrix of worldDCS
-    //Note:: for osg we are in z up land
-    gmtl::Point3d loc_temp, osgPointLoc;
-    Matrix44d vjMat = gmtl::convertTo< double >( m_wand->getData() );
-
-    gmtl::setTrans( loc_temp, vjMat );
-    osgPointLoc[ 0 ] =  loc_temp[ 0 ];
-    osgPointLoc[ 1 ] = -loc_temp[ 2 ];
-    osgPointLoc[ 2 ] =  loc_temp[ 1 ];
-
-    for( size_t i = 0; i < 3; ++i )
-    {
-        //LastWandPosition[ i ] = objLoc[ i ];
-        //cursorLoc[ i ] = this->loc[ i ];// + this->dir[ i ] * this->cursorLen;
-        objLoc[ i ] = osgPointLoc[ i ];
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-double* Wand::GetObjLocation()
-{
-    return objLoc;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void Wand::UpdateDeltaWandPosition()
