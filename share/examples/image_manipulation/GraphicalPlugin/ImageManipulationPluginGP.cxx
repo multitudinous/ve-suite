@@ -63,8 +63,6 @@
 
 #include <ves/xplorer/EnvironmentHandler.h>
 
-#include <ves/xplorer/device/KeyboardMouse.h>
-
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkDataSet.h>
@@ -119,6 +117,8 @@
 #include <Poco/Data/Session.h>
 #include <Poco/Data/RecordSet.h>
 #include <Poco/Data/SQLite/Connector.h>
+
+#include <ves/xplorer/device/KeyboardMouse.h>
 
 using namespace Poco::Data;
 using namespace ves::xplorer::scenegraph;
