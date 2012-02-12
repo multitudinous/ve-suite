@@ -44,12 +44,9 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
-//#include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Event/KeyboardMouse/KeyEvent.h>
-//#include <gadget/Type/KeyboardMouse/MouseEvent.h>
 #include <gadget/Event/KeyboardMouse/MouseEvent.h>
 #include <gadget/Type/KeyboardMouseInterface.h>
 
@@ -92,9 +89,6 @@ TankGraphicalPlugin::~TankGraphicalPlugin()
 void TankGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
-
-    m_keyboard = 
-        dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
         
     //do we want to provide default CAD?
     //If so initialize
