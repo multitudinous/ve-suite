@@ -37,12 +37,12 @@
 // --- VES Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/Logging.h>
+
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/xplorer/eventmanager/ConnectionMonopoly.h>
 
 #include <ves/conductor/qt/TextureSubloader.h>
-
-#include <ves/xplorer/Logging.h>
 
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
