@@ -1218,7 +1218,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
         //LOG_INFO( "OnWandButton0Event: DigitalState::ON" );
         UpdateSelectionLine( true );
 
-        (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN);//|gadget::BUTTON1_MASK );
+        (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
 
         m_wandMove( 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
         
@@ -1227,7 +1227,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     case gadget::DigitalState::TOGGLE_ON:
     {
         //LOG_INFO( "OnWandButton0Event: DigitalState::TOGGLE_ON" );
-        (*(m_wandButtonPressSignalMap["Wand.ButtonPress0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN);//|gadget::BUTTON1_MASK );
+        (*(m_wandButtonPressSignalMap["Wand.ButtonPress0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
@@ -1259,12 +1259,12 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
     {
         case gadget::DigitalState::ON:
         {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN);//|gadget::BUTTON2_MASK );
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN|gadget::BUTTON2_MASK );
             break;
         }
         case gadget::DigitalState::TOGGLE_ON:
         {
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN);//|gadget::BUTTON2_MASK );
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN|gadget::BUTTON2_MASK );
             break;
         }
         case gadget::DigitalState::TOGGLE_OFF:
@@ -1365,12 +1365,12 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
     {
         case gadget::DigitalState::ON:
         {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN);//|gadget::BUTTON3_MASK );
+            (*(m_wandButtonOnSignalMap["Wand.ButtonOn2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN|gadget::BUTTON3_MASK );
             break;
         }
         case gadget::DigitalState::TOGGLE_ON:
         {
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN);//|gadget::BUTTON3_MASK );
+            (*(m_wandButtonPressSignalMap["Wand.ButtonPress2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN|gadget::BUTTON3_MASK );
             break;
         }
         case gadget::DigitalState::TOGGLE_OFF:
