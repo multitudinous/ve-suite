@@ -227,7 +227,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         }
 
         // Emit the keypress signal associated with this particular key
-        KeyPressSignalMapType::iterator itr = 
+        KeyPressSignalMapType::const_iterator itr = 
             mKeyPressSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyPressSignalMap.end() )
         {
@@ -257,7 +257,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             boost::static_pointer_cast< gadget::KeyEvent >( event );
 
         // Emit the keypress signal associated with this particular key
-        KeyReleaseSignalMapType::iterator itr = mKeyReleaseSignalMap.find( keyEvt->getKey() );
+        KeyReleaseSignalMapType::const_iterator itr = mKeyReleaseSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyReleaseSignalMap.end() )
         {
             (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask(),
@@ -301,7 +301,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
             << std::endl << vprDEBUG_FLUSH;*/
 
-        ButtonPressSignalMapType::iterator itr = mButtonPressSignalMap.find( mouseEvt->getButton() );
+        ButtonPressSignalMapType::const_iterator itr = mButtonPressSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonPressSignalMap.end() )
         {
             (*(itr->second))( mouseEvt->getButton(), mouseEvt->getX(), mouseEvt->getY(), mouseEvt->getState() );
