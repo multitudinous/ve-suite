@@ -257,7 +257,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             boost::static_pointer_cast< gadget::KeyEvent >( event );
 
         // Emit the keypress signal associated with this particular key
-        KeyReleaseSignalMapType::const_iterator itr = mKeyReleaseSignalMap.find( keyEvt->getKey() );
+        KeyReleaseSignalMapType::const_iterator itr = 
+            mKeyReleaseSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyReleaseSignalMap.end() )
         {
             (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask(),
@@ -301,10 +302,12 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
             << std::endl << vprDEBUG_FLUSH;*/
 
-        ButtonPressSignalMapType::const_iterator itr = mButtonPressSignalMap.find( mouseEvt->getButton() );
+        ButtonPressSignalMapType::const_iterator itr = 
+            mButtonPressSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonPressSignalMap.end() )
         {
-            (*(itr->second))( mouseEvt->getButton(), mouseEvt->getX(), mouseEvt->getY(), mouseEvt->getState() );
+            (*(itr->second))( mouseEvt->getButton(), mouseEvt->getX(), 
+                             mouseEvt->getY(), mouseEvt->getState() );
         }
 
         break;
@@ -328,10 +331,12 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         SetStartEndPoint( m_startPoint, m_endPoint );
         m_startEndPointSignal( m_startPoint, m_endPoint );
         
-        ButtonReleaseSignalMapType::iterator itr = mButtonReleaseSignalMap.find( mouseEvt->getButton() );
+        ButtonReleaseSignalMapType::const_iterator itr = 
+            mButtonReleaseSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonReleaseSignalMap.end() )
         {
-            (*(itr->second))( mouseEvt->getButton(), mouseEvt->getX(), mouseEvt->getY(), mouseEvt->getState() );
+            (*(itr->second))( mouseEvt->getButton(), mouseEvt->getX(), 
+                             mouseEvt->getY(), mouseEvt->getState() );
         }
 
         break;
