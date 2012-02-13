@@ -973,9 +973,11 @@ void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int stat
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int state )
 {
-    QWidget *vw = this->childAt( x, y );
+    QWidget* vw = this->childAt( x, y );
 
     if( vw == NULL ) return;
+
+    //LOG_INFO( "UIElementQt::_buttonEvent " << x << " " << y );
 
     Qt::MouseButton qbutton = _extractButton( button );
     Qt::MouseButtons buttons = _extractButtons( state );
