@@ -1054,6 +1054,7 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
     // Only send events if element is visible and not minimzed
     if( ( visible ) && ( !minimized ) )
     {
+        //LOG_INFO( "UIManager::ButtonPressEvent point " << m_intersectionPoint.x() << " " << m_intersectionPoint.y() );
         // Translate mouse coordinates to window coordinates
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         // Flip y mouse coordinate to origin GUI expects
