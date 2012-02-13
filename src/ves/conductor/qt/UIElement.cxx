@@ -56,6 +56,8 @@
 
 #include <boost/concept_check.hpp>
 
+#include <boost/math/special_functions/trunc.hpp>
+
 namespace ves
 {
 namespace conductor
@@ -478,14 +480,16 @@ void UIElement::GetPointIntersectionInPixels( int& x, int& y, osg::Vec3d& point 
 {
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
-        x = int( (point.x() - (*m_vertices)[0].x()) * m_pixelUIRatio );
+        double xVal = (point.x() - (*m_vertices)[0].x()) * m_pixelUIRatio;
         //Z is up in OSG and VE-Suite land
-        y = int( (point.z() - (*m_vertices)[0].z()) * m_pixelUIRatio );
+        double yVal = (point.z() - (*m_vertices)[0].z()) * m_pixelUIRatio;
+        x = boost::math::itrunc( xVal );
+        y = boost::math::itrunc( yVal );
     }
     else
     {
-        x = x - int( m_uiCorners[ 0 ] );
-        y = y - int( m_uiCorners[ 2 ] );
+        x = x - boost::math::itrunc( m_uiCorners[ 0 ] );
+        y = y - boost::math::itrunc( m_uiCorners[ 2 ] );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
