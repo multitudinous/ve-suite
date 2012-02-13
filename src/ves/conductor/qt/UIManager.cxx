@@ -1418,6 +1418,7 @@ bool UIManager::TestWandIntersection()
         m_intersectionPoint = tempIntersection.getLocalIntersectPoint();
         
         m_selectedUINode = *(tempIntersection.nodePath.rbegin());
+        //LOG_INFO( "UIManager::TestWandIntersection " << m_intersectionPoint.x() << " " << m_intersectionPoint.y() );
         //std::cout << "Wand intersection at " << m_intersectionPoint 
         //    << " with the this UI node "
         //    << m_selectedUINode->getName() << std::endl;
