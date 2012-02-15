@@ -161,6 +161,8 @@ int main( int argc, char* argv[] )
                     
                     boost::gil::fill_pixels( boost::gil::view( blobImage ), alphaPixel );
 
+                    //write text file out with pixel info
+                    
                     counter += 1;
                 }
             }
