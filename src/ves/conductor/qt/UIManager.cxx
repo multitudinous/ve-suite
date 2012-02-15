@@ -555,7 +555,7 @@ void UIManager::_insertNodesToAdd()
     {
         osg::Node* node = ( *vec_iterator ).get();
         mUIGroup->addChild( node );
-        if( m_useSubloadPaint )
+        //if( m_useSubloadPaint )
         {
             osg::Geode* tempGeode = 0;
             if( m_isDesktopMode )
@@ -605,8 +605,8 @@ void UIManager::_repaintChildren()
             element->Update();
 
             ///This code must be left here to correctly update the UI.
-            unsigned char* image_Data = element->RenderElementToImage()->data();
-//            osg::Image* image_Data = element->RenderElementToImage();
+//            unsigned char* image_Data = element->RenderElementToImage()->data();
+            osg::Image* image_Data = element->RenderElementToImage();
 //            boost::ignore_unused_variable_warning( image_Data );
 
 
@@ -616,26 +616,28 @@ void UIManager::_repaintChildren()
             {
                 if( !m_useSubloadPaint )
                 {
-                    osg::StateSet* state = element->GetGeode()
-                            ->getOrCreateStateSet();
-                    if( element->SizeDirty() )
-                    {
-                        state->getTextureAttribute(0, osg::StateAttribute::TEXTURE )
-                            ->asTexture()->dirtyTextureObject();
-                    }
-                    osg::Image* image =
-                            state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
-                            ->asTexture()->getImage( 0 );
-                    image->setImage( element->GetImageWidth(),
-                                     element->GetImageHeight(), 1, 4,
-                                     GL_BGRA, GL_UNSIGNED_BYTE,
-                                     image_Data, osg::Image::NO_DELETE );
-                    image->dirty();
+//                    osg::StateSet* state = element->GetGeode()
+//                            ->getOrCreateStateSet();
+//                    if( element->SizeDirty() )
+//                    {
+//                        state->getTextureAttribute(0, osg::StateAttribute::TEXTURE )
+//                            ->asTexture()->dirtyTextureObject();
+//                    }
+//                    osg::Image* image =
+//                            state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
+//                            ->asTexture()->getImage( 0 );
+//                    image->setImage( element->GetImageWidth(),
+//                                     element->GetImageHeight(), 1, 4,
+//                                     GL_BGRA, GL_UNSIGNED_BYTE,
+//                                     image_Data, osg::Image::NO_DELETE );
+//                    image->dirty();
+
+                    // Use texture subload, but don't use region damaging --
+                    // just push the entire texture as a subload
+                    m_subloaders[ element ]->AddUpdate( image_Data, 0, 0 );
                 }
                 else
                 {
-                    //m_subloaders[ element ]->AddUpdate( image_Data, 0, 0 );
-
                     std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > >
                             regions = element->GetDamagedAreas();
                     //std::cout << "* ";
