@@ -50,7 +50,9 @@ RecentFiles::RecentFiles(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RecentFiles),
     m_lastChanged( 0 ),
-    block( false )
+    block( false ),
+    m_logger( Poco::Logger::get("conductor.RecentFiles") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     ui->setupUi(this);
 
@@ -71,6 +73,9 @@ RecentFiles::RecentFiles(QWidget *parent) :
 
     QSettings settings( QSettings::IniFormat, QSettings::UserScope,
                             "VE Suite", "VE Xplorer" );
+    settings.setFallbacksEnabled( false );
+
+    LOG_INFO( "Pulling recent files list from: " << settings.fileName().toStdString() );
 
     QStringList files = settings.value("recentProjectList").toStringList();
     QListWidget* recent = ui->m_recentFilesList;
@@ -138,6 +143,7 @@ void RecentFiles::Clear()
 {
     QSettings settings( QSettings::IniFormat, QSettings::UserScope,
                             "VE Suite", "VE Xplorer" );
+    settings.setFallbacksEnabled( false );
     QStringList files = settings.value("recentFileList").toStringList();
     files.clear();
     settings.setValue( "recentProjectList", files );

@@ -35,6 +35,8 @@
 #include <QtGui/QDialog>
 #include <QtGui/QListWidgetItem>
 
+#include <ves/xplorer/Logging.h>
+
 namespace Ui {
     class RecentFiles;
 }
@@ -71,6 +73,11 @@ private:
     Ui::RecentFiles *ui;
     QListWidgetItem* m_lastChanged;
     bool block;
+
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 }

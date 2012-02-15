@@ -657,6 +657,7 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
 
             QSettings settings( QSettings::IniFormat, QSettings::UserScope,
                                     "VE Suite", "VE Xplorer" );
+            settings.setFallbacksEnabled( false );
             QStringList files = settings.value("recentProjectList").toStringList();
             files.removeAll( fileNames.at(index) );
             files.prepend( fileNames.at(index) );
@@ -684,6 +685,7 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         {
             QSettings settings( QSettings::IniFormat, QSettings::UserScope,
                                     "VE Suite", "VE Xplorer" );
+            settings.setFallbacksEnabled( false );
             QStringList files = settings.value("recentCADList").toStringList();
             files.removeAll( fileNames.at(index) );
             files.prepend( fileNames.at(index) );
@@ -701,6 +703,7 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         {
             QSettings settings( QSettings::IniFormat, QSettings::UserScope,
                                     "VE Suite", "VE Xplorer" );
+            settings.setFallbacksEnabled( false );
             QStringList files = settings.value("recentDataList").toStringList();
             files.removeAll( fileNames.at(index) );
             files.prepend( fileNames.at(index) );
