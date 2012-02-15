@@ -61,7 +61,7 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --no-tests )
     CONFIGURE_PARAMS+=( --no-samples )
     CONFIGURE_PARAMS+=( --omit=Data/MySQL )
-    CONFIGURE_PARAMS+=( --config=Darwin64 )
+    #CONFIGURE_PARAMS+=( --config=Darwin )
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     ;;
   Linux)
