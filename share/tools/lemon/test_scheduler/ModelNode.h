@@ -34,15 +34,24 @@
 
 #include <string>
 
+#include <lemon/list_graph.h>
+
 namespace iaf
 {
 namespace scheduler
 {
-class ModelNode
+class ModelNode : public lemon::ListDigraph::Node
 {
 public:
-    ModelNode();
-    ~ModelNode();
+    ModelNode( lemon::ListDigraph::Node& node );
+    
+    ///Copy Construstor
+    ModelNode( ModelNode const&, lemon::ListDigraph::Node const& node );
+    
+    ///equal operator
+    ModelNode& operator= ( ModelNode const& );
+    
+    virtual ~ModelNode();
     
     void Preprocess();
 
@@ -56,6 +65,7 @@ public:
     
 private:
     std::string m_modelName;
+    std::string m_results;
 };
 }
 }

@@ -39,9 +39,34 @@ namespace iaf
 namespace scheduler
 {
 ////////////////////////////////////////////////////////////////////////////////
-ModelNode::ModelNode()
+ModelNode::ModelNode( lemon::ListDigraph::Node& node )
+    :
+    lemon::ListDigraph::Node()
 {
-    ;
+    this->id = lemon::ListDigraph::id( node );
+}
+////////////////////////////////////////////////////////////////////////////////
+ModelNode::ModelNode( ModelNode const& input, lemon::ListDigraph::Node const& node )
+    :
+    lemon::ListDigraph::Node()
+{
+    this->id = lemon::ListDigraph::id( node );
+
+    m_modelName = input.m_modelName;
+    m_results = input.m_results;
+}
+////////////////////////////////////////////////////////////////////////////////
+ModelNode& ModelNode::operator=( ModelNode const& input )
+{
+    if( this != &input )
+    {
+        //lemon::ListDigraph::Node::operator =( input );
+        this->id = lemon::ListDigraph::id( input );
+
+        m_modelName = input.m_modelName;
+        m_results = input.m_results;
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelNode::~ModelNode()
