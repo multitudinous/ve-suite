@@ -1283,6 +1283,9 @@ void SceneRenderToTexture::Update(
     {
         if( scenegraph::SceneManager::instance()->IsDesktopMode() )
         {
+            ///In desktop mode multiple contexts are opened an closed and we
+            ///need to make sure we are on everyone. This loop gets added 
+            ///to every sv camera that is created.
             for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
                 iter != m_updateList.end(); ++iter )
             {
@@ -1300,13 +1303,21 @@ void SceneRenderToTexture::Update(
         }
     }
     
-    m_rootGroup->accept( *updateVisitor );
+    ///Do not run the update visitor on every camera because that forces an
+    ///update multiple times across all cameras.
+    if( !scenegraph::SceneManager::instance()->IsDesktopMode() )
+    {
+        m_rootGroup->accept( *updateVisitor );
+    }
     
     ///Update all of the cameras
     for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
         iter != m_updateList.end(); ++iter )
     {
-        //(*iter)->accept( *updateVisitor );
+        if( scenegraph::SceneManager::instance()->IsDesktopMode() )
+        {
+            (*iter)->accept( *updateVisitor );
+        }
 
         //This code came from osgViewer::Viewer::setSceneData
         //The resize stuff is what is critical not sure how important it is
