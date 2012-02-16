@@ -591,6 +591,7 @@ void UIManager::_insertNodesToAdd()
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_repaintChildren()
 {
+    ///Update all of the elements and textures
     for( std::list< UIElement* >::const_iterator z_order = m_zOrder.begin(); 
         z_order != m_zOrder.end(); ++z_order )
     {
@@ -606,7 +607,7 @@ void UIManager::_repaintChildren()
 
             ///This code must be left here to correctly update the UI.
 //            unsigned char* image_Data = element->RenderElementToImage()->data();
-            osg::Image* image_Data = element->RenderElementToImage();
+            osg::ref_ptr< osg::Image > image_Data = element->RenderElementToImage();
 //            boost::ignore_unused_variable_warning( image_Data );
 
 
@@ -634,7 +635,7 @@ void UIManager::_repaintChildren()
 
                     // Use texture subload, but don't use region damaging --
                     // just push the entire texture as a subload
-                    m_subloaders[ element ]->AddUpdate( image_Data, 0, 0 );
+                    m_subloaders[ element ]->AddUpdate( image_Data.get(), 0, 0 );
                 }
                 else
                 {

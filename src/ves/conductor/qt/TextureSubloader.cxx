@@ -6,15 +6,17 @@ namespace ves
 {
 namespace conductor
 {
-
+////////////////////////////////////////////////////////////////////////////////
 TextureSubloader::TextureSubloader() 
     :
     doSubload(false)
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 TextureSubloader::~TextureSubloader()
 {
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // create the OpenGL texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
@@ -27,11 +29,11 @@ void TextureSubloader::load(const osg::Texture2D& texture, osg::State& ) const
         glTexImage2D(GL_TEXTURE_2D, 0, image->getPixelFormat(), image->s(), image->t(), 0, image->getPixelFormat(), image->getDataType(), image->data());
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 // overlay the image onto the texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
 void TextureSubloader::subload(const osg::Texture2D&, osg::State& ) const
 {
-    if( (doSubload == false) || (subImgs.size() == 0) )
+    if( subImgs.size() == 0 )
     {
         return;
     }
@@ -56,21 +58,31 @@ void TextureSubloader::subload(const osg::Texture2D&, osg::State& ) const
         glTexSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, subImg->s(), subImg->t(), subImg->getPixelFormat(), subImg->getDataType(), subImg->data());
         subImg = 0;                      // don't hold on to the image pointer any longer.
     }
-    subImgs.clear();
-    xOffsets.clear();
-    yOffsets.clear();
+
     doSubload = false;               // completed the subload. Need another call to DoImageUpdate() before the next one.
 }
-
+////////////////////////////////////////////////////////////////////////////////
 // tell the next subload callback to copy the input image to the specified offsets
 // in the texture for this.
 void TextureSubloader::AddUpdate( osg::Image *img, int xOffset, int yOffset )
 {
+    if( !doSubload )
+    {
+        ClearData();
+    }
+
     subImgs.push_back(img);
     xOffsets.push_back(xOffset);
     yOffsets.push_back(yOffset);
     doSubload = true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void TextureSubloader::ClearData()
+{
+    subImgs.clear();
+    xOffsets.clear();
+    yOffsets.clear();
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 }
