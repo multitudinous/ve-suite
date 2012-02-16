@@ -49,9 +49,7 @@ namespace volume
 {
 /*!\file cfdSimpleTextureCallback.h
  * cfdSimpleTextureCallback API
- */
-
-/*!\class ves::xplorer::volume::cfdSimpleTextureCallback
+ * \class ves::xplorer::volume::cfdSimpleTextureCallback
  *
  */
 class VE_TEXTURE_BASED_EXPORTS cfdSimpleTextureCallback :
