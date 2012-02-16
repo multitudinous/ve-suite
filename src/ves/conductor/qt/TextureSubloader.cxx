@@ -55,11 +55,14 @@ void TextureSubloader::subload(const osg::Texture2D&, osg::State& ) const
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         // copy the image into place.
-        glTexSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, subImg->s(), subImg->t(), subImg->getPixelFormat(), subImg->getDataType(), subImg->data());
+        glTexSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, subImg->s(), 
+            subImg->t(), subImg->getPixelFormat(), 
+            subImg->getDataType(), subImg->data());
         subImg = 0;                      // don't hold on to the image pointer any longer.
     }
 
-    doSubload = false;               // completed the subload. Need another call to DoImageUpdate() before the next one.
+    // completed the subload. Need another call to DoImageUpdate() before the next one.
+    doSubload = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // tell the next subload callback to copy the input image to the specified offsets
