@@ -1299,12 +1299,14 @@ void SceneRenderToTexture::Update(
             }
         }
     }
-        
+    
+    m_rootGroup->accept( *updateVisitor );
+    
     ///Update all of the cameras
     for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
         iter != m_updateList.end(); ++iter )
     {
-        (*iter)->accept( *updateVisitor );
+        //(*iter)->accept( *updateVisitor );
 
         //This code came from osgViewer::Viewer::setSceneData
         //The resize stuff is what is critical not sure how important it is
