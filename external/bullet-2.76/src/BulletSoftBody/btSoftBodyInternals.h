@@ -172,8 +172,13 @@ public:
 template <typename T>
 static inline void			ZeroInitialize(T& value)
 {
-	static const T	zerodummy;
-	value=zerodummy;
+	//static const T	zerodummy;
+	//value=zerodummy;
+	//
+	// Fix for building with GCC 4.6
+	// See: http://code.google.com/p/bullet/issues/detail?id=481
+
+	memset( &value, 0, sizeof(T) );
 }
 //
 template <typename T>
