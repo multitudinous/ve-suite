@@ -303,6 +303,7 @@ function source_retrieval()
       SVN_CO="svn co"
       if [ -n "${SOURCE_REVISION:+x}" ]; then
         SVN_CO="${SVN_CO} -r ${SOURCE_REVISION}";
+        echo "using custom command ${SVN_CO}" 
       fi
       ${SVN_CO} ${SOURCE_URL} "${BASE_DIR}"
       ;;
@@ -435,8 +436,11 @@ function e()
     case ${SOURCE_RETRIEVAL_METHOD} in
       svn | private-svn)
         if [ -d "${BASE_DIR}" ]; then
-          cd "${BASE_DIR}";
-          svn up;
+            # If we have defined svn version there is no need to update the code
+            if [ ! -n "${SOURCE_REVISION:+x}" ]; then
+                cd "${BASE_DIR}";
+                svn up;
+            fi
 
         # Assume that if the base directory does not exist, it has not been checked out
         # test and perform a checkout
