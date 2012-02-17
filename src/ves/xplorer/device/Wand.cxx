@@ -1929,6 +1929,8 @@ void Wand::UpdateForwardAndUp()
     m_worldTrans[ 1 ] = vjVec.mData[ 1 ] * translationStepSize;
     m_worldTrans[ 2 ] = vjVec.mData[ 2 ] * translationStepSize;
     
-    m_endPoint.set( vjVec.mData[ 0 ] * m_distance, vjVec.mData[ 1 ] * m_distance, vjVec.mData[ 2 ] * m_distance );
+    m_endPoint.set( tempWandPoint.mData[ 0 ] + vjVec.mData[ 0 ] * m_distance, 
+                   tempWandPoint.mData[ 1 ] + vjVec.mData[ 1 ] * m_distance, 
+                   tempWandPoint.mData[ 2 ] + vjVec.mData[ 2 ] * m_distance );
 }
 ////////////////////////////////////////////////////////////////////////////////
