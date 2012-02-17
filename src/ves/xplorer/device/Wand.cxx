@@ -1905,10 +1905,12 @@ void Wand::UpdateForwardAndUp()
     
     vrjWandMat = myMat * vrjWandMat * zUpMatrix;
     
-    const gmtl::Point4d tempWandPoint = m_sceneManager.GetInvertedNavMatrix() * 
-        gmtl::makeTrans< gmtl::Point4d >( vrjWandMat );
-    
-    m_startPoint.set( tempWandPoint.mData[ 0 ], tempWandPoint.mData[ 1 ], tempWandPoint.mData[ 2 ] );
+    gmtl::Point4d tempWandPoint = gmtl::makeTrans< gmtl::Point4d >( vrjWandMat );
+    tempWandPoint = m_sceneManager.GetInvertedNavMatrix() * tempWandPoint;
+
+    m_startPoint.set( tempWandPoint.mData[ 0 ], 
+                     tempWandPoint.mData[ 1 ], 
+                     tempWandPoint.mData[ 2 ] );
     
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, 1.0f );
