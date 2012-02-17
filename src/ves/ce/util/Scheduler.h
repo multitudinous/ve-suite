@@ -36,7 +36,6 @@
 #include <vector>
 #include <stack>
 #include <set>
-#include <cstddef> // for std::size_t
 
 namespace VE_CE
 {
@@ -85,7 +84,7 @@ private:
     int visit( int k, std::set<int> connid_ignore,
                    std::vector<std::vector<int> > & sccs );
     void visit( std::vector<std::vector<int> > adj,
-                size_t k,  std::vector<int>& order );
+                std::size_t k,  std::vector<int>& order );
     int  breakdown( std::vector<int> S, std::set<int> connid_ignore,
                         node_loop &node_loop );
 

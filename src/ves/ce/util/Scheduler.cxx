@@ -266,7 +266,7 @@ int Scheduler::visit( int k, std::set<int> connid_ignore,
     Module *module = _net->GetModule( k - 1 );
 
     int m;
-    for( size_t i = 0; i < module->numOPorts(); i++ )
+    for( std::size_t i = 0; i < module->numOPorts(); i++ )
     {
         OPort *oport = module->getOPort( i );
         for( int c = 0; c < oport->nconnections(); c++ )
@@ -304,12 +304,12 @@ int Scheduler::visit( int k, std::set<int> connid_ignore,
     return min;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scheduler::visit( std::vector<std::vector<int> > adj, size_t k,
+void Scheduler::visit( std::vector<std::vector<int> > adj, std::size_t k,
                        std::vector<int>& order )
 {
     visit_val[k] = ++visit_id;
 
-    for( size_t i = 0; i < adj[k].size(); i++ )
+    for( std::size_t i = 0; i < adj[k].size(); i++ )
         if (( adj[k][i] == 1 ) && ( visit_val[i] == 0 ) )
             visit( adj, i, order );
 
