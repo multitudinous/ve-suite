@@ -36,6 +36,7 @@
 #include <vector>
 #include <stack>
 #include <set>
+#include <cstddef> // for std::size_t
 
 namespace VE_CE
 {
