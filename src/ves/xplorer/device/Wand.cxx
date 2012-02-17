@@ -1897,11 +1897,11 @@ void Wand::UpdateForwardAndUp()
     }
     
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
-    const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
-    const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
-    gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
+    const gmtl::Vec3d x_axis( 1., 0., 0. );
+    const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( 
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( 90. ), x_axis ) );
     gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+        gmtl::AxisAngled( gmtl::Math::deg2Rad( 270. ), x_axis ) );
     
     vrjWandMat = myMat * vrjWandMat * zUpMatrix;
     
