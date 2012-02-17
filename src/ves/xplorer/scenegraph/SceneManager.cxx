@@ -130,7 +130,7 @@ SceneManager::SceneManager()
 {
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     m_zUpTransform = gmtl::makeRot< gmtl::Matrix44d >( gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0 ), x_axis ) );
-    m_defaultView = gmtl::makeRot< gmtl::Matrix44d >( gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+    m_defaultView = gmtl::makeRot< gmtl::Matrix44d >( gmtl::AxisAngled( gmtl::Math::deg2Rad( 270.0 ), x_axis ) );
 
     // Set some MxCore defaults:
 
