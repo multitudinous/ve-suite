@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv buildDir RootDir vrjuggler_options tao_options xerces_options ves_pkg lokiBaseVar')
+Import('baseEnv buildDir RootDir GetPlatform vrjuggler_options tao_options xerces_options ves_pkg lokiBaseVar')
 Import('wxwidgets_options')
 
 env = ves_pkg.getEnv().Clone()
@@ -36,6 +36,9 @@ env.AppendUnique( CPPPATH = [pj('#', 'external', 'cxxtest-3.10.1'),
                   LIBS = ['ves_open_module', 'ves_open_xml', 'loki.0.1.7'],
                   CPPDEFINES = ['LOKI_ENABLE_FUNCTION','LOKI_OBJECT_LEVEL_THREADING','LOKI_DLL',
                                 'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
+
+if GetPlatform() == 'linux':
+   env.AppendUnique( LIBS = ['pthread'] )
 
 app = ves_pkg.createProgram('JuliusSpeechNavigator' + env["PROGSUFFIX"], env, 'bin')
 app.addSources( srcs )
