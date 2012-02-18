@@ -804,6 +804,11 @@ void App::latePreFrame()
     }
     ///////////////////////
     {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame UIManager", 20 );
+        ves::conductor::UIManager::instance()->UpdateUIQuadPosition();
+    }
+    ///////////////////////
+    {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame ModelHandler", 20 );
         ModelHandler::instance()->PreFrameUpdate();
     }

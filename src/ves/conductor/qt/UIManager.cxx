@@ -46,6 +46,10 @@
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 #include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Misc/MatrixConvert.h>
+
 // --- OSG Includes --- //
 //#include <osg/Geometry>
 #include <osg/Group>
@@ -74,6 +78,9 @@
 
 //#define VES_QT_RENDER_DEBUG
 //#include <osg/Texture2D>
+
+using namespace ves::xplorer::scenegraph;
+namespace vxs = ves::xplorer::scenegraph;
 
 namespace ves
 {
@@ -231,7 +238,7 @@ osg::Geode* UIManager::AddElement( UIElement* element )
     {
         m_rttQuadTransform = new osg::PositionAttitudeTransform();
         m_rttQuadTransform->addChild( geode );
-        m_rttQuadTransform->setUpdateCallback( new ves::xplorer::scenegraph::HeadPositionCallback( gmtl::Point3d( 0.0, 8.0, -2.0 ) ) );
+        //m_rttQuadTransform->setUpdateCallback( new ves::xplorer::scenegraph::HeadPositionCallback( gmtl::Point3d( 0.0, 8.0, -2.0 ) ) );
         mNodesToAdd.push_back( m_rttQuadTransform.get() );
     }
 
@@ -1462,6 +1469,31 @@ void UIManager::SetSubloadPaintOn( bool useSubloadPaint )
     {
         m_useSubloadPaint = useSubloadPaint;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::UpdateUIQuadPosition()
+{
+    if( !_okayToSendEvent() )
+    {
+        return;
+    }
+    gmtl::Point3d headPoint = 
+        gmtl::makeTrans< gmtl::Point3d >( vxs::SceneManager::instance()->GetHeadMatrix() );
+    gmtl::Matrix44d worldMat = 
+        vxs::SceneManager::instance()->GetInvertedNavMatrix();//GetGlobalViewMatrix();
+    gmtl::Point3d transformPoint = worldMat * gmtl::Point3d( 0.0, 8.0, -2.0 );
+    transformPoint += headPoint;
+
+    gmtl::Quatd invertedQuat = gmtl::makeRot< gmtl::Quatd >( worldMat );
+    osg::Quat quat;
+    quat.set( invertedQuat.mData[ 0 ], invertedQuat.mData[ 1 ],
+             invertedQuat.mData[2],invertedQuat.mData[ 3 ]);
+    
+    m_rttQuadTransform->setPosition(
+        osg::Vec3d( transformPoint.mData[ 0 ], transformPoint.mData[ 1 ], 
+        transformPoint.mData[ 2 ] ) );
+    
+    m_rttQuadTransform->setAttitude( quat );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

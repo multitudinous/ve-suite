@@ -258,6 +258,9 @@ public:
     /// It is controlled through --SubloadUI command line argument.
     void SetSubloadPaintOn( bool useSubloadPaint );
     
+    ///Update the UI quad with new position information
+    void UpdateUIQuadPosition();
+
 private:
     // Set this class up as a singleton
     ///Constructor
