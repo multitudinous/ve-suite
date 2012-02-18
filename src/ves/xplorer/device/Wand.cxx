@@ -1866,8 +1866,8 @@ void Wand::LatePreFrameUpdate()
     m_triggerWandMove = false;
 
     PreProcessNav();
-    //SetupStartEndPoint( m_startPoint, m_endPoint );
     m_startEndPointSignal( m_startPoint, m_endPoint );
+    //UpdateSelectionLine( true );
     m_wandMove( 0, 0, 0, 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
