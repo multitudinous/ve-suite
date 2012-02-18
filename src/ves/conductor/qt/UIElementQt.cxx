@@ -661,7 +661,6 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
 {
     if(event->type() == QEvent::Paint)
     {
-        //std::cout << "paint event" << std::flush;
         QPaintEvent* paint_event = dynamic_cast< QPaintEvent* >( event );
         if(paint_event)
         {

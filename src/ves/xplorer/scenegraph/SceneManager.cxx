@@ -674,7 +674,7 @@ void SceneManager::LatePreFrameUpdate()
 
     m_viewMatrix->setPosition( m_viewMatrix->getPosition() + deltaHeadPosition );
     m_lastHeadLocation = headLocation;
-    
+
     ///This is the distance from the VR Juggler defined ground plane to the
     ///users head so we do not care what coordinate system they are relative to.
     m_userHeight = headLocation.mData[ 2 ];
