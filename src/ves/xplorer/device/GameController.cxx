@@ -118,7 +118,8 @@ GameController::GameController()
     m_buttons( 0 ),
     m_buttonMap( new osgwMx::FunctionalMap() ),
     m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() ),
-    m_success( false )
+    m_success( false ),
+    m_uiMode( false )
 {
     m_gamecontroller.init( "VESJoystick" );
     
@@ -266,17 +267,24 @@ void GameController::OnAxis0Event( const float event )
     m_leftStickX = ( ( event - 0.0f ) / 0.5f ) - 1.f;
     //m_leftStickX *= -1.0;
     //float y = normalizeAxisValue( devState.lY );
-    bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-
-    if( !success )
+    if( !m_uiMode )
     {
-        return;
+        bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
+            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+        
+        if( !success )
+        {
+            return;
+        }
+        
+        m_success = success;
+        
+        m_updateData( m_success );
     }
-
-    m_success = success;
-
-    m_updateData( m_success );
+    else
+    {
+        ;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis1Event( const float event )
@@ -296,17 +304,24 @@ void GameController::OnAxis1Event( const float event )
     m_leftStickY = ( ( event - 0.0f ) / 0.5f ) - 1.f;
     //m_leftStickY *= -1.0;
     //float y = normalizeAxisValue( devState.lY );
-    bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-
-    if( !success )
+    if( !m_uiMode )
     {
-        return;
+        bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
+            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+
+        if( !success )
+        {
+            return;
+        }
+        
+        m_success = success;
+        
+        m_updateData( m_success );
     }
-    
-    m_success = success;
-    
-    m_updateData( m_success );
+    else
+    {
+        ;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis2Event( const float event )
@@ -331,19 +346,26 @@ void GameController::OnAxis2Event( const float event )
     //x = -normalizeAxisValue( devState.lRz );
     //y = normalizeAxisValue( devState.lZ );
     m_rightStickX = ( ( event - 0.0f ) / 0.5f ) - 1.f;
-    m_rightStickX *= -1.0;
-
-    bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-
-    if( !success )
+    if( !m_uiMode )
     {
-        return;
+        m_rightStickX *= -1.0;
+        
+        bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
+            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+        
+        if( !success )
+        {
+            return;
+        }
+        
+        m_success = success;
+        
+        m_updateData( m_success );
     }
-    
-    m_success = success;
-    
-    m_updateData( m_success );
+    else
+    {
+        ;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis3Event( const float event )
@@ -368,19 +390,26 @@ void GameController::OnAxis3Event( const float event )
     //x = -normalizeAxisValue( devState.lRz );
     //y = normalizeAxisValue( devState.lZ );
     m_rightStickY = ( ( event - 0.0f ) / 0.5f ) - 1.f;
-    m_rightStickY *= -1.0;
-
-    bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-
-    if( !success )
+    if( !m_uiMode )
     {
-        return;
+        m_rightStickY *= -1.0;
+        
+        bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
+            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+        
+        if( !success )
+        {
+            return;
+        }
+        
+        m_success = success;
+        
+        m_updateData( m_success );
     }
-    
-    m_success = success;
-    
-    m_updateData( m_success );
+    else
+    {
+        ;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis4Event( gadget::DigitalState::State event )

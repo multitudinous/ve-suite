@@ -233,12 +233,14 @@ private:
     osg::ref_ptr< osgwMx::FunctionalMap > m_buttonMap;
     ///MxCore pointer
     osgwMx::MxCore& m_viewMatrix;
-    ///Nav mode
+    ///Nav mode wether orbit or view
     std::string m_navMode;
     ///The signature to tell others the game pad is active
     ves::util::BoolSignal_type m_updateData;
     ///Control the data flow
     bool m_success;
+    ///If the game controller is being used for nav or to move the cursor
+    bool m_uiMode;
 };
 
 } //end device
