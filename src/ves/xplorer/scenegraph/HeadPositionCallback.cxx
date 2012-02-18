@@ -46,6 +46,7 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
+//#define ALIGN_WITH_HEAD
 using namespace ves::xplorer::scenegraph;
 namespace vxs = ves::xplorer::scenegraph;
 
@@ -75,9 +76,21 @@ HeadPositionCallback::HeadPositionCallback( const HeadPositionCallback& ctc, con
 void HeadPositionCallback::operator()(
     osg::Node* node, osg::NodeVisitor* nv )
 {    
+
+#ifndef ALIGN_WITH_HEAD
+    gmtl::Matrix44d worldMat = 
+        vxs::SceneManager::instance()->GetInvertedNavMatrix();
+#else
     gmtl::Matrix44d worldMat = 
         vxs::SceneManager::instance()->GetGlobalViewMatrix();
+#endif
+
     gmtl::Point3d transformPoint = worldMat * m_transformPoint;
+#ifndef ALIGN_WITH_HEAD
+    gmtl::Point3d headPoint = 
+        gmtl::makeTrans< gmtl::Point3d >( vxs::SceneManager::instance()->GetHeadMatrix() );
+    transformPoint += headPoint;
+#endif
 
     gmtl::Quatd invertedQuat = gmtl::makeRot< gmtl::Quatd >( worldMat );
     osg::Quat quat;
