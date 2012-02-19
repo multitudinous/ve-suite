@@ -550,7 +550,7 @@ std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > cons
 {
     return m_damagedAreas;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 } // namepsace conductor
 } // namespace ves
 
