@@ -650,7 +650,7 @@ void SceneManager::LatePreFrameUpdate()
         osg::Vec3d up, dir, pos;
         double fovy;
         m_viewMatrix->getInitialValues( up, dir, pos, fovy );
-        ///We grab the head location her so that we have a base location for 
+        ///We grab the head location here so that we have a base location for 
         ///where the head is in the scene
         m_lastHeadLocation = gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
         pos[ 0 ] = m_vrjHeadMatrix.mData[ 12 ];
@@ -679,6 +679,7 @@ void SceneManager::LatePreFrameUpdate()
     ///users head so we do not care what coordinate system they are relative to.
     m_userHeight = headLocation.mData[ 2 ];
     
+    gmtl::identity( m_invertedNavMatrix );
     gmtl::Matrix44d navMatrix;    
     navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
     mActiveNavDCS->SetMat( navMatrix );
@@ -690,6 +691,7 @@ void SceneManager::LatePreFrameUpdate()
     navMatrix.mData[ 12 ] = navMatrix.mData[ 12 ] + m_lastHeadLocation.mData[ 0 ];
     navMatrix.mData[ 13 ] = navMatrix.mData[ 13 ] + m_lastHeadLocation.mData[ 1 ];
     navMatrix.mData[ 14 ] = navMatrix.mData[ 14 ] + m_lastHeadLocation.mData[ 2 ];
+    //navMatrix.mState = gmtl::Matrix44d::FULL;
 
     gmtl::invert( m_invertedNavMatrix, navMatrix );
 
@@ -705,9 +707,11 @@ void SceneManager::LatePreFrameUpdate()
     //headRotMat.mData[ 13 ] = 0.0;
     //headRotMat.mData[ 14 ] = 0.0;
     
+    gmtl::identity( m_globalViewMatrix );
     m_globalViewMatrix = m_invertedNavMatrix * headRotMat;
     m_globalViewMatrixOSG.set( m_globalViewMatrix.getData() );
     
+    gmtl::identity( m_invertedGlobalViewMatrix );
     gmtl::invert( m_invertedGlobalViewMatrix, m_globalViewMatrix );
     m_invertedGlobalViewMatrixOSG.set( m_globalViewMatrix.getData() );
 
