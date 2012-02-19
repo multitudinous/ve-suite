@@ -174,13 +174,19 @@ protected:
     ///Preprocess data for nav
     void PreProcessNav();
 
-    ///Preprocess data for nav
+    ///Postprocess data for nav
     void PostProcessNav();
     
-    void UpdateForwardAndUp();// const osg::Vec3d&, const osg::Vec3d& );
+    ///Update the main components of the wand positional information
+    void UpdateForwardAndUp();
+
+    ///Check and see if we should send a wand move event
+    bool WandMoveUpdate();
 
 private:
     /// The keyboardmouse device needed for juggler >= 3.1
+    //gadget::event::last_event_tag
+    //gadget::event::all_events_tag
     typedef gadget::DigitalEventInterface<gadget::event::all_events_tag,
         gadget::event::synchronized_tag> WandClickInterface;
     WandClickInterface m_wandButton0EventInterface;
@@ -338,6 +344,10 @@ private:
     Poco::Logger& m_logger;
     ///Actual stream for this class
     ves::xplorer::LogStreamPtr m_logStream;
+    ///Wand move button state
+    unsigned int m_buttonMoveState;
+    ///Trigger periodic wand move
+    bool m_periodicWandMove;
 };
 } //end device
 } //end xplorer

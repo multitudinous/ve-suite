@@ -108,10 +108,12 @@ Wand::Wand()
     m_buttonPushed( false ),
     m_cadSelectionMode( false ),
     m_wandEvents( new ves::xplorer::behavior::WandEvents ),
-    m_triggerWandMove( false ),
+    m_triggerWandMove( true ),
     m_shutdown( false ),
     m_logger( Poco::Logger::get("xplorer.wand.EventDebug") ),
-    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) ),
+    m_buttonMoveState( 0 ),
+    m_periodicWandMove( false )
 {
     m_wand.init( "VJWand" );
     head.init( "VJHead" );
@@ -1200,6 +1202,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     if( event == gadget::DigitalState::OFF )
     {
         //LOG_INFO( "OnWandButton0Event: DigitalState::OFF" );
+        //m_buttonMoveState = 0;
         return;
     }
 
@@ -1220,6 +1223,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 
         (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
 
+        //m_buttonMoveState = gadget::KEY_DOWN|gadget::BUTTON1_MASK;
         m_wandMove( 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
         
         break;
@@ -1236,6 +1240,9 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
         UpdateSelectionLine( false );
 
         (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_UP );
+        m_triggerWandMove = true;
+        
+        //m_buttonMoveState = 0;
         break;
     }
     default:
@@ -1270,6 +1277,7 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
         case gadget::DigitalState::TOGGLE_OFF:
         {
             (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_UP );
+            m_triggerWandMove = true;
             break;
         }
         default:
@@ -1376,6 +1384,7 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
         case gadget::DigitalState::TOGGLE_OFF:
         {
             (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_UP );
+            m_triggerWandMove = true;
             break;
         }
         default:
@@ -1419,6 +1428,7 @@ void Wand::OnWandButton3Event( gadget::DigitalState::State event )
         case gadget::DigitalState::TOGGLE_OFF:
         {
             (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease3"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            m_triggerWandMove = true;
             break;
         }
         default:
@@ -1461,6 +1471,7 @@ void Wand::OnWandButton4Event( gadget::DigitalState::State event )
         case gadget::DigitalState::TOGGLE_OFF:
         {
             (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease4"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            m_triggerWandMove = true;
             break;
         }
         default:
@@ -1525,6 +1536,7 @@ void Wand::OnWandButton5Event( gadget::DigitalState::State event )
         case gadget::DigitalState::TOGGLE_OFF:
         {
             (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease5"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            m_triggerWandMove = true;
             break;
         }
         default:
@@ -1664,6 +1676,7 @@ void Wand::OnWandButton6Event( gadget::DigitalState::State event )
         case gadget::DigitalState::TOGGLE_OFF:
         {
             (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease6"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+            m_triggerWandMove = true;
             break;
         }
         default:
@@ -1857,13 +1870,11 @@ void Wand::LatePreFrameUpdate()
     {
         return;
     }
-    
-    if( !m_triggerWandMove )
+
+    if( !m_triggerWandMove || !WandMoveUpdate() )
     {
         return;
     }
-
-    m_triggerWandMove = false;
 
     PreProcessNav();
     m_startEndPointSignal( m_startPoint, m_endPoint );
@@ -1879,14 +1890,23 @@ void Wand::OnWandMoveTimer( Poco::Util::TimerTask& task )
         return;
     }
 
+    m_periodicWandMove = true;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Wand::WandMoveUpdate()
+{
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
     ///If our wand is not moving let the keyboard potentially interface with 
     ///the ui. We may need a better way to handle this.
+    bool triggerWandMove = false;
     if( m_previousWandMat != vrjWandMat )
     {
-        m_triggerWandMove = true;
+        triggerWandMove = m_periodicWandMove;
         m_previousWandMat = vrjWandMat;
+        m_periodicWandMove = false;
     }
+
+    return triggerWandMove;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateForwardAndUp()
