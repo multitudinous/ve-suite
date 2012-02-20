@@ -1473,6 +1473,11 @@ void UIManager::SetSubloadPaintOn( bool useSubloadPaint )
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::UpdateUIQuadPosition()
 {
+    if( m_isDesktopMode )
+    {
+        return;
+    }
+
     if( !_okayToSendEvent() )
     {
         return;
