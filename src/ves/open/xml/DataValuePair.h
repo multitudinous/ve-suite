@@ -35,13 +35,11 @@
 #include <ves/open/xml/DataValuePairPtr.h>
 
 /*!\file DataValuePair.h
-  *Data value pairs API
-  */
-
-/*!\class VE_XML::DataValuePair
- *Class that manages data value pairs.
- *Pairs consist of a name and a value which can be of types:
- *float,float array,string and transform
+ * Data value pairs API
+ * \class VE_XML::DataValuePair
+ * Class that manages data value pairs.
+ * Pairs consist of a name and a value which can be of types:
+ * float,float array,string and transform
  */
 #include <string>
 #include <vector>

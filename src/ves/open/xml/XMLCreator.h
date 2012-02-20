@@ -33,9 +33,8 @@
 #ifndef XML_CREATOR_H
 #define XML_CREATOR_H
 /*!\file XMLCreator.h
-  XMLCreator API
-  */
-/*!\class VE_XML::XMLCreator
+ * XMLCreator API
+ * \class VE_XML::XMLCreator
  * Create XMLObject.
  */
 
