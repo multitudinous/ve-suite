@@ -348,6 +348,8 @@ private:
     unsigned int m_buttonMoveState;
     ///Trigger periodic wand move
     bool m_periodicWandMove;
+    ///Rotation direction
+    double m_rotationDirection;
 };
 } //end device
 } //end xplorer

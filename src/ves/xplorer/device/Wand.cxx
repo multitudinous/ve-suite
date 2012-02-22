@@ -113,7 +113,8 @@ Wand::Wand()
     m_logger( Poco::Logger::get("xplorer.wand.EventDebug") ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) ),
     m_buttonMoveState( 0 ),
-    m_periodicWandMove( false )
+    m_periodicWandMove( false ),
+    m_rotationDirection( 1.0 )
 {
     m_wand.init( "VJWand" );
     head.init( "VJHead" );
@@ -983,7 +984,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
     //tempQuat.set( m_rotIncrement[ 0 ], m_rotIncrement[ 1 ], m_rotIncrement[ 2 ], m_rotIncrement[ 3 ] );
     //gmtl::AxisAngled axisAngle = gmtl::makeRot< gmtl::AxisAngled >( tempQuat );
     
-    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( osg::DegreesToRadians( -rotationStepSize ), 
+    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( osg::DegreesToRadians( m_rotationDirection * rotationStepSize ), 
         osg::Vec3d( 0.0, 0.0, 1.0 ) );
     return;
 
@@ -1945,6 +1946,16 @@ void Wand::UpdateForwardAndUp()
     osg::Vec3d dirVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
     //m_sceneManager.GetMxCoreViewMatrix().setDir( dirVec );
     //std::cout << " wand dir " << vjVec << std::endl;
+    
+    if( vjVec.mData[ 0 ] < 0.0 )
+    {
+        m_rotationDirection = 1.0;
+    }
+    else
+    {
+        m_rotationDirection = -1.0;
+    }
+
     m_worldTrans[ 0 ] = vjVec.mData[ 0 ] * translationStepSize;
     m_worldTrans[ 1 ] = vjVec.mData[ 1 ] * translationStepSize;
     m_worldTrans[ 2 ] = vjVec.mData[ 2 ] * translationStepSize;
