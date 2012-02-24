@@ -68,12 +68,15 @@ tar xf ./ve-suite.tar -C \$VES_INSTALL_PREFIX
 echo \"Unarchiving VE-Suite dependencies...\"
 tar xf ./ve-suite-deps.tar -C \$VES_INSTALL_PREFIX
 
-cd extra
-for extra_tar in *.tar
-do
-    echo \"Unarchiving \$extra_tar...\"
-    tar xf ./\$extra_tar -C \$VES_INSTALL_PREFIX
-done
+if [ \"\$(ls -A extra/)\" ]
+then
+    cd extra
+    for extra_tar in *.tar
+    do
+        echo \"Unarchiving \$extra_tar...\"
+        tar xf ./\$extra_tar -C \$VES_INSTALL_PREFIX
+    done
+fi
 
 echo \"Finished!\"
 postinstall
