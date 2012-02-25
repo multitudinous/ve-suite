@@ -472,10 +472,16 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
     //Now update the simulation by all bullet objects new positions
 #if !MULTITHREADED_OSGBULLET
+    //http://www.bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_the_World
     //Setting max substeps to 10 gives us frame independent physics simulation
     //for frame rates above 6fps, anything below this will result in slowed
     //physics simulation clamped to 6fps
-    mDynamicsWorld->stepSimulation( dt, 10 );//, btScalar( 1.0 ) / btScalar( 120.0 ) );
+    //From Bullet:
+    //It's important that timeStep is always less than maxSubSteps*fixedTimeStep, 
+    //otherwise you are losing time. Mathematically,
+    //timeStep < maxSubSteps * fixedTimeStep
+    //mDynamicsWorld->stepSimulation( dt, 10 );//, btScalar( 1.0 ) / btScalar( 120.0 ) );
+    mDynamicsWorld->stepSimulation( dt, 5 );
 #else
     osgbDynamics::TripleBufferMotionStateUpdate(
         m_motionStateList, &m_tripleDataBuffer );
