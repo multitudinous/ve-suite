@@ -934,13 +934,13 @@ void UIElementQt::_render()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonPressEvent( gadget::Keys button, int x, int y, int state )
 {
-    //LOG_INFO( "UIElementQt::_buttonPressEvent" );
+    //LOG_INFO( "UIElementQt::_buttonPressEvent " << x << " " << y );
     _buttonEvent( 1, button, x, y, state );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonReleaseEvent( gadget::Keys button, int x, int y, int state )
 {
-    //LOG_INFO( "UIElementQt::_buttonReleaseEvent" );
+    //LOG_INFO( "UIElementQt::_buttonReleaseEvent " << x << " " << y );
     _buttonEvent( 0, button, x, y, state );
 }
 ////////////////////////////////////////////////////////////////////////////////
