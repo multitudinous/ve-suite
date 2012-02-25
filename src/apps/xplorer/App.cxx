@@ -783,6 +783,7 @@ void App::latePreFrame()
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame PhysicsSimulator", 20 );
+        //LOG_INFO( "Physics dt " << mFrameDT );
         PhysicsSimulator::instance()->UpdatePhysics( mFrameDT );
     }
     ///////////////////////
