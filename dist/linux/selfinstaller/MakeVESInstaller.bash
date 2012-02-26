@@ -27,17 +27,79 @@ function usage()
 
 function postinstall()
 {
+    SETVAR_COMMAND=\"\"
+    SETVAR_DELIMITER=\"\"
+
     if [ \$SHELL = \"/bin/bash\" ]
     then
-        echo \"export PATH=\$VES_INSTALL_PREFIX/bin:\$PATH\" >> \$HOME/VE-Suite_Env
-        echo \"export LD_LIBRARY_PATH=\$VES_INSTALL_PREFIX/lib:\$VES_INSTALL_PREFIX/lib/vtk-5.8:\$VES_INSTALL_PREFIX/lib64:\$LD_LIBRARY_PATH\" >> \$HOME/VE-Suite_Env
+        SETVAR_COMMAND=\"export\"
+        SETVAR_DELIMITER=\"=\"
     else
-        echo \"setenv PATH=\$VES_INSTALL_PREFIX/bin:\$PATH\" >> \$HOME/VE-Suite_Env
-        echo \"setenv LD_LIBRARY_PATH=\$VES_INSTALL_PREFIX/lib:\$VES_INSTALL_PREFIX/lib/vtk-5.8:\$VES_INSTALL_PREFIX/lib64:\$LD_LIBRARY_PATH\" >> \$HOME/VE-Suite_Env
+        SETVAR_COMMAND=\"setvar\"
+        SETVAR_DELIMITER=\" \"
     fi
 
-    echo \"Required environment variables have been written to \$HOME/VE-Suite_Env.\"
-    echo \"Source this file in your shell's rc file.\"
+    if [ -e \$HOME/VE-SuiteEnv ]
+    then
+        rm \$HOME/VE-SuiteEnv
+    fi
+
+    # set up VES_PREFIX
+    var_assign_string=\"\$SETVAR_COMMAND VES_PREFIX\$SETVAR_DELIMITER\"
+    var_value_string=\$1
+
+    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+
+    # set up PATH
+    var_assign_string=\"\$SETVAR_COMMAND PATH\$SETVAR_DELIMITER\"
+    var_value_string='\$VES_PREFIX/bin:\$PATH'
+
+    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+
+    # set up LD_LIBRARY_PATH
+    var_assign_string=\"\$SETVAR_COMMAND LD_LIBRARY_PATH\$SETVAR_DELIMITER\"
+    var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.8:\$VES_PREFIX/lib64:\$LD_LIBRARY_PATH'
+
+    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+
+    # set up OSG_FILE_PATH
+    var_assign_string=\"\$SETVAR_COMMAND OSG_FILE_PATH\$SETVAR_DELIMITER\"
+    var_value_string='\$VES_PREFIX/share/osgBullet/data:\$VES_PREFIX/share/osgWorks/data:\$VES_PREFIX/share/backdropFX/data'
+
+    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+
+    # set up VJ_BASE_DIR
+    if [ -n \"\$VJ_BASE_DIR\" ]
+    then
+        var_assign_string=\"\$SETVAR_COMMAND VJ_BASE_DIR\$SETVAR_DELIMITER\"
+        var_value_string='\$VES_PREFIX'
+
+        echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+    fi
+
+    # set up OSGNOTIFYLEVEL
+    var_assign_string=\"\$SETVAR_COMMAND OSGNOTIFYLEVEL\$SETVAR_DELIMITER\"
+    var_value_string='WARNING'
+
+    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+
+    # set up PYTHONPATH, if necessary
+    current_working_dir=\$(pwd)
+    cd \$1
+    wxpython_base_dir=\$(find lib64 -type d -name \"python*\")
+    if [ -n \"\$wxpython_base_dir\" ]
+    then
+        var_assign_string=\"\$SETVAR_COMMAND PYTHONPATH\$SETVAR_DELIMITER\"
+        var_value_string='/site-packages/wx-2.8-gtk2-unicode:\$PYTHONPATH'
+        ves_prefix_string='\$VES_PREFIX/'
+
+        echo \$var_assign_string\$ves_prefix_string\$wxpython_base_dir\$var_value_string >> \$HOME/VE-SuiteEnv
+    fi
+    cd \$current_working_dir
+
+    echo \"\"
+    echo \"  A file to aid setting up the VE-Suite environment has been written to \$HOME/VE-SuiteEnv.\"
+    echo \"  Source this file in your shell's rc file.\"
 }
 
 while getopts \"p:\" SCRIPT_ARGS
@@ -79,7 +141,7 @@ then
 fi
 
 echo \"Finished!\"
-postinstall
+postinstall \$VES_INSTALL_PREFIX
 
 cd .." > $INSTALLER_PAYLOAD_DIR/install
 
