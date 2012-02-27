@@ -167,7 +167,9 @@ echo "#!/bin/bash
 function usage()
 {
 echo \"
-  Usage: \$0 -p <prefix>\"
+  Usage: \$0 -p <prefix>
+
+         Where <prefix> is the full path to the VE-Suite install directory.\"
 }
 
 INSTALL_PREFIX=\"\"
