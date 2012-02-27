@@ -63,8 +63,14 @@
 
 // --- Poco Includes --- //
 #include <Poco/Logger.h>
+#include <Poco/SplitterChannel.h>
 
 class QApplication;
+
+namespace Poco
+{
+    class SplitterChannel;
+}
 
 namespace osg
 {
@@ -105,7 +111,7 @@ class App : public vrj::osg::App
 {
 public:
     ///Contructor
-    App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm );
+    App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm, Poco::SplitterChannel* splitter );
 
     ///Destructor
     virtual ~App();
@@ -362,6 +368,11 @@ private:
     //osg::ref_ptr< osg::Group > m_uiGroup;
     ///Holds the command line options
     boost::program_options::variables_map m_vm;
+
+    /// Holds the log splitter. This allows us to attach new log output channels
+    /// after the initial setup of the log mechanism (which happens in
+    /// xplorer.cxx)
+    Poco::SplitterChannel* m_logSplitter;
 };
 } //end xplorer
 } //end ves

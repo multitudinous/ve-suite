@@ -33,7 +33,7 @@ void TextureSubloader::load(const osg::Texture2D& texture, osg::State& ) const
 // overlay the image onto the texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
 void TextureSubloader::subload(const osg::Texture2D&, osg::State& ) const
 {
-    if( (doSubload == false) || (subImgs.size() == 0) )
+    if( subImgs.empty() )
     {
         return;
     }
@@ -74,10 +74,13 @@ void TextureSubloader::AddUpdate( osg::Image *img, int xOffset, int yOffset )
         ClearData();
     }
 
-    subImgs.push_back(img);
-    xOffsets.push_back(xOffset);
-    yOffsets.push_back(yOffset);
-    doSubload = true;
+    if( img != 0 )
+    {
+        subImgs.push_back(img);
+        xOffsets.push_back(xOffset);
+        yOffsets.push_back(yOffset);
+        doSubload = true;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TextureSubloader::ClearData()

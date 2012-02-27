@@ -112,8 +112,6 @@ UIManager::UIManager() :
     mCurrentZPointer( 0 ),
     mMinimizeXOffset( 10.0f ),
     mMoveElement( 0 ),
-    mMinimizeElement( 0 ),
-    mUnminimizeElement( 0 ),
     mMouseInsideUI( true ), // We start out true, since no Qt events will happen
                             // if we start out false. And that means no UI would
                             // ever appear.
@@ -124,7 +122,7 @@ UIManager::UIManager() :
     m_bringToFront( 0 ),
     m_isDesktopMode( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() ),
     m_isWandIntersection( false ),
-    m_useSubloadPaint( false ),
+    m_useRegionDamaging( false ),
     m_logger( Poco::Logger::get("conductor.EventDebug") ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
@@ -562,35 +560,34 @@ void UIManager::_insertNodesToAdd()
     {
         osg::Node* node = ( *vec_iterator ).get();
         mUIGroup->addChild( node );
-        //if( m_useSubloadPaint )
+
+        osg::Geode* tempGeode = 0;
+        if( m_isDesktopMode )
         {
-            osg::Geode* tempGeode = 0;
-            if( m_isDesktopMode )
-            {
-                tempGeode = node->asGeode();
-            }
-            else
-            {
-                tempGeode = node->asGroup()->getChild( 0 )->asGeode();
-            }
-
-            ElementMap_type::const_iterator iter = mElements.find( tempGeode );
-
-            if( iter != mElements.end() )
-            {
-                osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
-                UIElement* element = iter->second;
-                osg::Image* img = new osg::Image;
-                img->allocateImage(element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE);
-                texture->setImage( img );
-                texture->setSubloadCallback( m_subloaders[ element ].get() );
-                tempGeode->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
-            }
-            else
-            {
-                std::cout << "UIManager::_insertNodesToAdd : no elements yet " << mElements.size() << std::endl;
-            }
+            tempGeode = node->asGeode();
         }
+        else
+        {
+            tempGeode = node->asGroup()->getChild( 0 )->asGeode();
+        }
+
+        ElementMap_type::const_iterator iter = mElements.find( tempGeode );
+
+        if( iter != mElements.end() )
+        {
+            osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+            UIElement* element = iter->second;
+            osg::Image* img = new osg::Image;
+            img->allocateImage(element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE);
+            texture->setImage( img );
+            texture->setSubloadCallback( m_subloaders[ element ].get() );
+            tempGeode->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
+        }
+        else
+        {
+            std::cout << "UIManager::_insertNodesToAdd : no elements yet " << mElements.size() << std::endl;
+        }
+
     }
 
     mNodesToAdd.clear();
@@ -613,33 +610,14 @@ void UIManager::_repaintChildren()
             element->Update();
 
             ///This code must be left here to correctly update the UI.
-//            unsigned char* image_Data = element->RenderElementToImage()->data();
             osg::ref_ptr< osg::Image > image_Data = element->RenderElementToImage();
-//            boost::ignore_unused_variable_warning( image_Data );
-
 
             // Only reset the image if element tells us it has changed since 
             // last time
             if( element->IsDirty() )
             {
-                if( !m_useSubloadPaint )
+                if( !m_useRegionDamaging )
                 {
-//                    osg::StateSet* state = element->GetGeode()
-//                            ->getOrCreateStateSet();
-//                    if( element->SizeDirty() )
-//                    {
-//                        state->getTextureAttribute(0, osg::StateAttribute::TEXTURE )
-//                            ->asTexture()->dirtyTextureObject();
-//                    }
-//                    osg::Image* image =
-//                            state->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )
-//                            ->asTexture()->getImage( 0 );
-//                    image->setImage( element->GetImageWidth(),
-//                                     element->GetImageHeight(), 1, 4,
-//                                     GL_BGRA, GL_UNSIGNED_BYTE,
-//                                     image_Data, osg::Image::NO_DELETE );
-//                    image->dirty();
-
                     // Use texture subload, but don't use region damaging --
                     // just push the entire texture as a subload
                     m_subloaders[ element ]->AddUpdate( image_Data.get(), 0, 0 );
@@ -648,18 +626,21 @@ void UIManager::_repaintChildren()
                 {
                     std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > >
                             regions = element->GetDamagedAreas();
-                    //std::cout << "* ";
                     for( size_t index = 0; index < regions.size(); ++index )
                     {
                         std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > region =
                                 regions.at( index );
-                        //std::cout << region.second.first << "," << region.second.second << ";";
                         m_subloaders[ element ]->AddUpdate( region.first.get(),
                                                             region.second.first,
                                                             region.second.second );
                     }
-                    //std::cout << std::endl << std::flush;
                 }
+            }
+            else
+            {
+                // Add a null image update to clear out subloader in single-context
+                // situations.
+                m_subloaders[ element ]->AddUpdate( 0, 0, 0 );
             }
         }
     }
@@ -800,18 +781,27 @@ void UIManager::MinimizeAllElements()
     mMinimize = true;
 
     // Ensure that everything gets minimized
-    mMinimizeElement = false;
+    //mMinimizeElement = false;
+    m_MinimizeElements.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_doMinimize()
 {
-    if( mMinimizeElement )
+    if( !m_MinimizeElements.empty() )
     {
-        _doMinMaxElement( mMinimizeElement, true );
-        mMinimizeElement = 0;
+        // Minimize only what's been placed in m_MinimizeElements
+        std::vector< UIElement* >::iterator it = m_MinimizeElements.begin();
+        while( it != m_MinimizeElements.end() )
+        {
+            _doMinMaxElement( *it, true );
+            ++it;
+            //mMinimizeElement = 0;
+        }
+        m_MinimizeElements.clear();
     }
     else
     {
+        // Minimize everything
         ElementMap_type::const_iterator map_iterator;
         for( map_iterator = mElements.begin(); map_iterator != mElements.end();
                 ++map_iterator )
@@ -920,13 +910,20 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::_doUnminimize()
 {
-    if( mUnminimizeElement )
+    if( !m_UnminimizeElements.empty() )
     {
-        _doMinMaxElement( mUnminimizeElement, false );
-        mUnminimizeElement = 0;
+        // Minimize only what's in m_UnminimizeElements
+        std::vector< UIElement* >::iterator it = m_UnminimizeElements.begin();
+        while( it != m_UnminimizeElements.end() )
+        {
+            _doMinMaxElement( *it, false );
+            ++it;
+        }
+        m_UnminimizeElements.clear();
     }
     else
     {
+        // Unminimize everything
         ElementMap_type::const_iterator map_iterator;
         for( map_iterator = mElements.begin(); map_iterator != mElements.end();
                 ++map_iterator )
@@ -970,13 +967,13 @@ void UIManager::InitiateMoveElement( UIElement* element )
 void UIManager::MinimizeElement( UIElement* element )
 {
     mMinimize = true;
-    mMinimizeElement = element;
+    m_MinimizeElements.push_back( element );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::UnminimizeElement( UIElement* element )
 {
     mUnminimize = true;
-    mUnminimizeElement = element;
+    m_UnminimizeElements.push_back( element );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::HideElement( UIElement* element )
@@ -1078,7 +1075,8 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
     else
     {
         mUnminimize = true;
-        mUnminimizeElement = m_selectedUIElement;
+        //mUnminimizeElement = m_selectedUIElement;
+        m_UnminimizeElements.push_back( m_selectedUIElement );
     }
 
     return false;
@@ -1463,11 +1461,11 @@ void UIManager::AddUIToNode( osg::Group* node )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::SetSubloadPaintOn( bool useSubloadPaint )
+void UIManager::SetRegionDamaging( bool useRegionDamaging )
 {
     if( mElements.empty() )
     {
-        m_useSubloadPaint = useSubloadPaint;
+        m_useRegionDamaging = useRegionDamaging;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

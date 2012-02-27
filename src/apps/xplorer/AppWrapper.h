@@ -38,6 +38,11 @@
 // --- VR Juggler Includes --- //
 #include <vrj/vrjParam.h>
 
+namespace Poco
+{
+    class SplitterChannel;
+}
+
 namespace ves
 {
 namespace xplorer
@@ -56,7 +61,7 @@ class AppWrapper
 {
 public:
     ///Contructor
-    AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::program_options::variables_map vm );
+    AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::program_options::variables_map vm, Poco::SplitterChannel* splitter );
 
     ///destructor
     ~AppWrapper();

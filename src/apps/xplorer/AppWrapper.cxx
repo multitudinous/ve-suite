@@ -62,7 +62,7 @@
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
-AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::program_options::variables_map vm )
+AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::program_options::variables_map vm, Poco::SplitterChannel* splitter )
     :
     m_cfdApp( 0 ),
     m_jugglerIsRunning( false ),
@@ -98,7 +98,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
     //Setup the juggler kernel now
     // block it on another thread
     // Delcare an instance of my application
-    m_cfdApp = new App( m_argc, m_argv, enableRTT, vm );
+    m_cfdApp = new App( m_argc, m_argv, enableRTT, vm, splitter );
     m_cfdApp->SetWrapper( m_vjObsWrapper );
     
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel

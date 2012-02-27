@@ -45,11 +45,13 @@
 #include <ves/open/xml/model/SystemPtr.h>
 
 #include <ves/VEConfig.h>
+#include <ves/conductor/qt/QtLogChannel.h>
+#include <Poco/SplitterChannel.h>
 
 #include <string>
 #include <map>
 
-namespace ves 
+namespace ves
 { 
 namespace conductor 
 { 
@@ -114,6 +116,8 @@ public:
     
     /// Activate tab at index @c index
     void ActivateTab( int index );
+
+    void SetLogSplitter( Poco::SplitterChannel* splitter );
 
 protected:
     void changeEvent(QEvent* e);
@@ -369,6 +373,8 @@ private:
 
     /// Stores which UI features to display
     QStringList m_displayFeatures;
+
+    QtLogChannel* m_qtLogView;
 };
     
 }

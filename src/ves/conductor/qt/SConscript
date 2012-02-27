@@ -53,6 +53,9 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'RecentFiles.h')]
 cppSources += lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'QtLogChannel.h')]
+cppSources += lib_env.qt_moc(source)
+
 source = [pj(buildSrcDir,'extendedWidgets','ExtendedToolBar.h')]
 cppSources += lib_env.qt_moc(source)
 

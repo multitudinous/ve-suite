@@ -43,7 +43,6 @@
 #include <ves/xplorer/eventmanager/ConnectionMonopoly.h>
 
 #include <ves/conductor/qt/TextureSubloader.h>
-
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
 #include <gadget/Type/KeyboardMouse/Keys.h>
@@ -256,11 +255,10 @@ public:
     /// creating an instance of UIManager, but before adding the first
     /// UIElement. It cannot not be changed thereafter.
     /// It is controlled through --SubloadUI command line argument.
-    void SetSubloadPaintOn( bool useSubloadPaint );
+    void SetRegionDamaging( bool useRegionDamaging );
     
     ///Update the UI quad with new position information
     void UpdateUIQuadPosition();
-
 private:
     // Set this class up as a singleton
     ///Constructor
@@ -349,8 +347,8 @@ private:
     float mMinimizeXOffset;
 
     UIElement* mMoveElement;
-    UIElement* mMinimizeElement;
-    UIElement* mUnminimizeElement;
+    std::vector< UIElement* > m_MinimizeElements;
+    std::vector< UIElement* > m_UnminimizeElements;
 
     /// Helper function to add in nodes during update if necessary
     void _insertNodesToAdd();
@@ -425,7 +423,7 @@ private:
     ///Is the wand in the UI
     bool m_isWandIntersection;
 
-    bool m_useSubloadPaint;
+    bool m_useRegionDamaging;
     ///Logger reference
     Poco::Logger& m_logger;
     ///Actual stream for this class

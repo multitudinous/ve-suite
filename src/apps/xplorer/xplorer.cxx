@@ -66,11 +66,14 @@
 #include <Poco/FormattingChannel.h>
 #include <Poco/PatternFormatter.h>
 #include <Poco/FileChannel.h>
+#include <Poco/SplitterChannel.h>
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
 using namespace ves::xplorer;
+
+Poco::SplitterChannel* m_splitterChannel;
 
 void SetupLogger( const std::string& logFile );
 
@@ -157,8 +160,8 @@ int main( int argc, char* argv[] )
     xplorer_desc.add_options()("VESLogPath", po::value< std::string >(),
         "Full path to log file, including filename");
 
-    xplorer_desc.add_options()("SubloadUI", po::bool_switch(),
-        "Use texture subloading when rendering UI");
+    xplorer_desc.add_options()("RegionDamaging", po::bool_switch(),
+        "Use region damaging with the UI");
 
     // jconf files can be given as positional arguments.
     //po::positional_options_description pos_desc;
@@ -367,7 +370,7 @@ int main( int argc, char* argv[] )
             return 0;
         }
 
-        AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper, vm );
+        AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper, vm, m_splitterChannel );
 
         kernel->waitForKernelStop();              // Block until kernel stops
 
@@ -494,12 +497,15 @@ void SetupLogger( const std::string& logFile )
     fileChannel->setProperty( "archive", "number" );
     fileChannel->setProperty( "purgeCount", "5" );
 
+    m_splitterChannel = new Poco::SplitterChannel;
+    m_splitterChannel->addChannel( fileChannel );
+
     // Format the logged output as
     // time_with_microseconds [thread number] (priority) source message extra_crlf
     Poco::PatternFormatter* formatter = new Poco::PatternFormatter;
     formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%l) %s: %t");
     formatter->setProperty("times", "local");
-    Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , fileChannel );
+    Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , m_splitterChannel );
 
     rootLogger.setChannel( formattingChannel );
     // Default log level will log messages with priorities error, critical, and

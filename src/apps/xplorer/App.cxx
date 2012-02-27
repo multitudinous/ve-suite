@@ -170,7 +170,7 @@ using namespace ves::xplorer::network;
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm )
+App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm, Poco::SplitterChannel* splitter )
     :
     vrj::osg::App( vrj::Kernel::instance() ),
     m_captureNextFrame( false ),
@@ -194,7 +194,8 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_nearFarRatio( 0.0005 ),
     m_frameSetNearFarRatio( 0 ),
     m_exitApp( false ),
-    m_vm( vm )
+    m_vm( vm ),
+    m_logSplitter( splitter )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO("Starting App");
@@ -1323,19 +1324,24 @@ void App::LoadUI()
     ves::conductor::UIManager* m_UIManager =
         ves::conductor::UIManager::instance();
 
-    // Check commandline args for "--SubloadUI"
+    // Check commandline args for "--RegionDamaging"
     {
-        bool subload = m_vm["SubloadUI"].as<bool>();
-        std::cout << "|\tTurning Subload textures on for the UI " << subload << std::endl;
-        if( subload )
+        bool regionDamage = m_vm["RegionDamaging"].as<bool>();
+        if( regionDamage )
         {
-            m_UIManager->SetSubloadPaintOn( true );
-        }   
+            (*logStream).information() << "Turning region damaging on for the UI" << std::endl;
+        }
+        else
+        {
+            (*logStream).information() << "Region damaging is off for the UI" << std::endl;
+        }
+        m_UIManager->SetRegionDamaging( regionDamage );
     }
 
     // Wrap the widget in a UIElement
     ves::conductor::UIElementQt* element = new ves::conductor::UIElementQt();
     QWidget* mainUIWidget = new MainWindow( 0 );
+    static_cast<ves::conductor::MainWindow*>(mainUIWidget)->SetLogSplitter( m_logSplitter );
 
     // Make UIManager's projection take up the entire viewable area of
     // the GL window

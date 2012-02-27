@@ -138,7 +138,7 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
 {
     setMouseTracking( true );
     ui->setupUi(this);
-    m_messageBox = new QMessageBox(this);    
+    //m_messageBox = new QMessageBox(this);
     ui->menuBar->setContextMenuPolicy( Qt::PreventContextMenu );
 
     QToolBar* toolbar = new ExtendedToolBar(this);
@@ -1631,6 +1631,14 @@ void MainWindow::on_tabWidget_tabCloseRequested ( int index )
 {
     RemoveTab( ui->tabWidget->tabText( index ).toStdString() );
 }
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::SetLogSplitter( Poco::SplitterChannel* splitter )
+{
+    boost::ignore_unused_variable_warning( splitter );
+    //m_qtLogView = new QtLogChannel();
+    //splitter->addChannel( m_qtLogView );
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // TESTPLOT
