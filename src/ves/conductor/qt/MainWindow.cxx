@@ -121,7 +121,7 @@ using namespace ves::conductor;
 ///queued connections in Qt-signals
 Q_DECLARE_METATYPE(std::string)
 ////////////////////////////////////////////////////////////////////////////////
-MainWindow::MainWindow(QWidget* parent) :
+MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
     QMainWindow(parent),
     ui( new Ui::MainWindow ),
     mFileDialog( 0 ),
@@ -138,10 +138,7 @@ MainWindow::MainWindow(QWidget* parent) :
 {
     setMouseTracking( true );
     ui->setupUi(this);
-    m_messageBox = new QMessageBox(this);
-        
-    //ui->menuBar->close();
-
+    m_messageBox = new QMessageBox(this);    
     ui->menuBar->setContextMenuPolicy( Qt::PreventContextMenu );
 
     QToolBar* toolbar = new ExtendedToolBar(this);
@@ -150,6 +147,17 @@ MainWindow::MainWindow(QWidget* parent) :
     toolbar->setIconSize(QSize(32,32));
     toolbar->setMovable( false );
     this->addToolBar( toolbar );
+
+    QString tempFeatures = QString::fromStdString( features );
+    // Set up the default options
+    // This is where to add anything that should be in the default features
+    if( tempFeatures == "VESDefault" )
+    {
+        tempFeatures.clear();
+        tempFeatures.append( "Physics,Manipulator,Navigation,Plugins," );
+        tempFeatures.append( "Constraints,Visualization,Tree,GIS");
+    }
+    m_displayFeatures = tempFeatures.split( "," );
     
     ///The file menu stack
     {
@@ -165,6 +173,7 @@ MainWindow::MainWindow(QWidget* parent) :
     }
 
     ///The physics menu stack
+    if( m_displayFeatures.contains( "Physics" ) )
     {
         toolbar->addAction( ui->actionPhysicsStack );
         
@@ -179,6 +188,7 @@ MainWindow::MainWindow(QWidget* parent) :
     }
 
     ///The manipulator menu stack
+    if( m_displayFeatures.contains( "Manipulator" ) )
     {
         toolbar->addAction( ui->actionManipulatorStack );
         
@@ -200,6 +210,7 @@ MainWindow::MainWindow(QWidget* parent) :
     }
     
     ///The nav menu stack
+    if( m_displayFeatures.contains( "Navigation" ) )
     {
         toolbar->addAction( ui->actionNavigationStack );
 
@@ -228,9 +239,15 @@ MainWindow::MainWindow(QWidget* parent) :
             widgetForAction( ui->actionViewStack ), this );
         m_viewMenuStack->SetExtendedToolBarParent( toolbar );
         m_viewMenuStack->AddAction( ui->actionShowPreferencesTab );
-        m_viewMenuStack->AddAction( ui->actionShowPluginsTab );
+        if( m_displayFeatures.contains( "Plugins" ) )
+        {
+            m_viewMenuStack->AddAction( ui->actionShowPluginsTab );
+        }
         m_viewMenuStack->AddAction( ui->actionRecent );
-        m_viewMenuStack->AddAction( ui->actionConstraints );
+        if( m_displayFeatures.contains( "Constraints" ) )
+        {
+            m_viewMenuStack->AddAction( ui->actionConstraints );
+        }
         m_viewMenuStack->AddAction( ui->actionShowTestPlot );
         m_viewMenuStack->setObjectName( "m_viewMenuStack" );
     }
@@ -239,11 +256,23 @@ MainWindow::MainWindow(QWidget* parent) :
     //setStatusBar(0);
     
     // Create set of default dialogs that can be added as tabs
-    mVisualizationTab = new ves::conductor::Visualization( 0 );
-    mScenegraphTreeTab = new ves::conductor::TreeTab( 0 );
+    if( m_displayFeatures.contains( "Visualization" ) )
+    {
+        mVisualizationTab = new ves::conductor::Visualization( 0 );
+    }
+    if( m_displayFeatures.contains( "Tree" ) )
+    {
+        mScenegraphTreeTab = new ves::conductor::TreeTab( 0 );
+    }
     m_preferencesTab = new ves::conductor::PreferencesTab( 0 );
-    m_pluginsTab = new ves::conductor::PluginSelectionTab( this, 0 );
-    m_constraintsTab = new ves::conductor::Constraints( 0 );
+    if( m_displayFeatures.contains( "Plugins" ) )
+    {
+        m_pluginsTab = new ves::conductor::PluginSelectionTab( this, 0 );
+    }
+    if( m_displayFeatures.contains( "Constraints" ) )
+    {
+        m_constraintsTab = new ves::conductor::Constraints( 0 );
+    }
 
     this->on_actionRecent_triggered();
 
@@ -909,7 +938,11 @@ void MainWindow::LoadDataFile( std::string filename )
     }
     veCommand->AddDataValuePair( dataSetName );
     ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
-    ActivateTab( AddTab( mVisualizationTab, "Visualization" ) );
+
+    if( m_displayFeatures.contains( "Visualization" ) )
+    {
+        ActivateTab( AddTab( mVisualizationTab, "Visualization" ) );
+    }
 
     // Unclear why this is needed here, but for some reason mFileDialog is not
     // otherwise being nulled out when loading datasets.
@@ -1053,27 +1086,38 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
     //Put the preferences tab first
     AddTab( m_preferencesTab, "Preferences" );
 
-    AddTab( m_pluginsTab, "Plugins" );
-
-    // Show visualization tab?
-    ves::xplorer::Model* model =
-        ves::xplorer::ModelHandler::instance()->GetActiveModel();
-    //Only if we have datasets
-    if( model->GetNumberOfCfdDataSets() > 0 )
+    if( m_displayFeatures.contains( "Plugins" ) )
     {
-        AddTab( mVisualizationTab, "Visualization" );
+        AddTab( m_pluginsTab, "Plugins" );
     }
 
-    //AddTab( m_constraintsTab, "Constraints" );
+    ves::xplorer::Model* model =
+        ves::xplorer::ModelHandler::instance()->GetActiveModel();
+
+    // Show visualization tab?
+    if( m_displayFeatures.contains( "Visualization" ) )
+    {
+        //Only if we have datasets
+        if( model->GetNumberOfCfdDataSets() > 0 )
+        {
+            AddTab( mVisualizationTab, "Visualization" );
+        }
+    }
 
     // Show the scenegraph tree
-    AddTab( mScenegraphTreeTab, "Layers" );
+    if( m_displayFeatures.contains( "Tree" ) )
+    {
+        AddTab( mScenegraphTreeTab, "Layers" );
+    }
 
     // Reactivate the last-known active tab
     // If there was no active tab, activate vis tab, if it exists
     if( LastKnownActive.empty() || ( LastKnownActive == "" && model->GetNumberOfCfdDataSets() > 0 ) )
     {
-        ActivateTab( "Visualization" );
+        if( m_displayFeatures.contains( "Visualization" ) )
+        {
+            ActivateTab( "Visualization" );
+        }
     }
     else
     {
@@ -1091,12 +1135,15 @@ void MainWindow::on_actionAdd_Planet_triggered ( bool )
         on_actionRemove_Planet_triggered( false );
     }
 
-    mMinervaStackedWidget = new ves::conductor::qt::minerva::StackedWidget();
-    mMinervaStackedWidget->
-        setFeature( ves::xplorer::minerva::MinervaManager::instance()->
-        GetTileEngineBody()->container() );
-    ui->tabWidget->
-        setCurrentIndex( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
+    if( m_displayFeatures.contains( "GIS" ) )
+    {
+        mMinervaStackedWidget = new ves::conductor::qt::minerva::StackedWidget();
+        mMinervaStackedWidget->
+            setFeature( ves::xplorer::minerva::MinervaManager::instance()->
+            GetTileEngineBody()->container() );
+        ui->tabWidget->
+            setCurrentIndex( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionRemove_Planet_triggered ( bool )
@@ -1333,6 +1380,8 @@ void MainWindow::on_actionViewStack_triggered( )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionShowPluginsTab_triggered()
 {
+    if( m_displayFeatures.contains( "Plugins" ) )
+    {
     int index = AddTab( m_pluginsTab, "Plugins" );
 
     // Coming soon...
@@ -1340,7 +1389,8 @@ void MainWindow::on_actionShowPluginsTab_triggered()
 //    tb->setText( "x" );
 //    tb->setAutoRaise( true );
 //    ui->tabWidget->SetTabButton( index, tb );
-    ActivateTab( index );
+        ActivateTab( index );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionShowPreferencesTab_triggered()
@@ -1571,7 +1621,10 @@ void MainWindow::onRecentFileRejected()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionConstraints_triggered()
 {
-    ActivateTab( AddTab( m_constraintsTab, "Constraints" ) );
+    if( m_displayFeatures.contains( "Constraints" ) )
+    {
+        ActivateTab( AddTab( m_constraintsTab, "Constraints" ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_tabWidget_tabCloseRequested ( int index )

@@ -91,7 +91,7 @@ class VE_CONDUCTOR_QTUI_EXPORTS MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    MainWindow(QWidget* parent = 0);
+    MainWindow( QWidget* parent = 0, const std::string& features = "VESDefault" );
     virtual ~MainWindow();
     
     /// Adds @c widget to tabs and gives tab the label @c tabLabel.
@@ -366,6 +366,9 @@ private:
     /// Stores absolute path of currently open file so it can be saved out
     /// when the save action is triggered.
     QString m_saveFileName;
+
+    /// Stores which UI features to display
+    QStringList m_displayFeatures;
 };
     
 }
