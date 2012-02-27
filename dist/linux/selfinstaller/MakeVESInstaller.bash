@@ -120,7 +120,17 @@ then
     exit 1
 fi
 
-mkdir -p \$VES_INSTALL_PREFIX
+if [ -d \"\$VES_INSTALL_PREFIX\" ]
+then
+    if [ \"\$(ls -A \$VES_INSTALL_PREFIX)\" ]
+    then
+        echo \"ERROR! \$VES_INSTALL_PREFIX is not empty. Bailing out...\"
+        exit 1
+    fi
+else
+    echo \"\$VES_INSTALL_PREFIX does not exist. Creating it...\"
+    mkdir -p \$VES_INSTALL_PREFIX
+fi
 
 # Install VE-Suite
 echo \"Installing...\"
