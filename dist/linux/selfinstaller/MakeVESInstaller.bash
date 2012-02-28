@@ -144,18 +144,18 @@ fi
 
 # Install VE-Suite
 echo \"Installing...\"
-echo \"Unarchiving VE-Suite...\"
+echo \"...Stage 1...\"
 tar xf ./ve-suite.tar -C \$VES_INSTALL_PREFIX
 
-echo \"Unarchiving VE-Suite dependencies...\"
+echo \"...Stage 2...\"
 tar xf ./ve-suite-deps.tar -C \$VES_INSTALL_PREFIX
 
 if [ \"\$(ls -A extra/)\" ]
 then
+    echo \"...Stage 3...\"
     cd extra
     for extra_tar in *.tar
     do
-        echo \"Unarchiving \$extra_tar...\"
         tar xf ./\$extra_tar -C \$VES_INSTALL_PREFIX
     done
 fi
