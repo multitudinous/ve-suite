@@ -58,7 +58,12 @@ function postinstall()
 
     # set up LD_LIBRARY_PATH
     var_assign_string=\"\$SETVAR_COMMAND LD_LIBRARY_PATH\$SETVAR_DELIMITER\"
-    var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.8:\$VES_PREFIX/lib64:\$LD_LIBRARY_PATH'
+    if [ -n \"\$LD_LIBRARY_PATH\" ]
+    then
+        var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.8:\$VES_PREFIX/lib64:\$LD_LIBRARY_PATH'
+    else
+        var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.8:\$VES_PREFIX/lib64'
+    fi
 
     echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
 
@@ -90,7 +95,12 @@ function postinstall()
     if [ -n \"\$wxpython_base_dir\" ]
     then
         var_assign_string=\"\$SETVAR_COMMAND PYTHONPATH\$SETVAR_DELIMITER\"
-        var_value_string='/site-packages/wx-2.8-gtk2-unicode:\$PYTHONPATH'
+        if [ -n \"\$PYTHONPATH\" ]
+        then
+            var_value_string='/site-packages/wx-2.8-gtk2-unicode:\$PYTHONPATH'
+        else
+            var_value_string='/site-packages/wx-2.8-gtk2-unicode'
+        fi
         ves_prefix_string='\$VES_PREFIX/'
 
         echo \$var_assign_string\$ves_prefix_string\$wxpython_base_dir\$var_value_string >> \$HOME/VE-SuiteEnv
