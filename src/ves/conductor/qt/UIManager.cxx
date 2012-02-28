@@ -634,13 +634,11 @@ void UIManager::_repaintChildren()
                                                             region.second.first,
                                                             region.second.second );
                     }
+                    if( regions.empty() )
+                    {
+                        m_subloaders[ element ]->AddUpdate( 0, 0, 0 );
+                    }
                 }
-            }
-            else
-            {
-                // Add a null image update to clear out subloader in single-context
-                // situations.
-                m_subloaders[ element ]->AddUpdate( 0, 0, 0 );
             }
         }
     }
