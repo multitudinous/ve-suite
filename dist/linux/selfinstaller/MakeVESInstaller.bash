@@ -35,7 +35,7 @@ function postinstall()
         SETVAR_COMMAND=\"export\"
         SETVAR_DELIMITER=\"=\"
     else
-        SETVAR_COMMAND=\"setvar\"
+        SETVAR_COMMAND=\"setenv\"
         SETVAR_DELIMITER=\" \"
     fi
 
