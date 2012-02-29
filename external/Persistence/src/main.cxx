@@ -92,8 +92,11 @@ int main(int argc, char *argv[])
     //manager.AttachStore( sqstore, Store::WORKINGSTORE_ROLE );
 
     // Add a mongoDB store
+    //cout << "Creating MongoStore" << endl << flush;
     DataAbstractionLayerPtr mongostore( new MongoStore );
+    //cout << "Setting MongoStore Path" << endl << flush;
     static_cast<MongoStore*>(mongostore.get())->SetStorePath("localhost");
+    //cout << "Attaching MongoStore" << endl << flush;
     manager.AttachStore( mongostore, Store::BACKINGSTORE_ROLE );
 
     // Build up a persistable with some useful test types
@@ -117,14 +120,17 @@ int main(int argc, char *argv[])
     dubs.push_back(3.141592653587);
     q.AddDatum( "DubVec", dubs );
 
+    static_cast<MongoStore*>(mongostore.get())->Drop( "TestType" );
+
     // Ensure that persistable is saved to backing as well as working dbs.
     // Normally, persistables will just be saved to the working db, but there
     // are cases when we may wish to explicitly place something in a backing
     // store, so we test that here.
+    //cout << "Saving Persistable" << endl << flush;
     manager.Save( q );
     manager.Save( q, Store::BACKING_ROLE );
 
-    cout << "Loading..." << endl << flush;
+    //cout << "Loading..." << endl << flush;
 
     // Set the value of "Num" field to some other value. When we load below, this
     // value will be reset to 1234.98735 if the load was successful. We then
@@ -148,6 +154,43 @@ int main(int argc, char *argv[])
     {
         cout << "\t" << dout.at(i) << endl;
     }
+
+    Persistable one;
+    one.SetTypeName( "MRIN" );
+    one.AddDatum( "Num", 1 );
+
+    Persistable two;
+    two.SetTypeName( "MRIN" );
+    two.AddDatum( "Num", 2 );
+
+    Persistable three;
+    three.SetTypeName( "MRIN" );
+    three.AddDatum( "Num", 2.5 );
+
+    // Drop all records with typename MRIN and MROUT
+    manager.Drop( "MRIN" );
+    manager.Drop( "MROUT" );
+
+    manager.Save( one );
+    manager.Save( two );
+    manager.Save( three );
+
+    // Placeholder persistable for output of MapReduce. Creating this first
+    // gives us a UUID that can be passed into the Map function.
+    Persistable mrout;
+    mrout.SetTypeName( "MROUT" );
+    mrout.AddDatum( "count", 0 );
+    mrout.AddDatum( "sum", 0 );
+
+    std::string mapF = "function() {emit( \"";
+    mapF += mrout.GetUUIDAsString();
+    mapF += "\", {count: 1, num: this.Num} );}";
+    std::string reduceF = "function(key, values) {var result = {count: 0, sum: 0};values.forEach(function(value) {result.count += value.count;result.sum += value.num;});return result;}";
+    static_cast<MongoStore*>(mongostore.get())->MapReduce( "MRIN", mapF, reduceF, mongo::BSONObj(), "MROUT" );
+
+    manager.Load( mrout );
+    cout << "MapReduce output: count = " << mrout.GetDatumValue<int>("count")
+         << ", sum = " << mrout.GetDatumValue<double>("sum") << endl;
 
     return 0;
 }

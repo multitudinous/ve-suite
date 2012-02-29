@@ -37,6 +37,7 @@ public:
     /// by derived classes, which should instead override LoadImpl.
     void Load( Persistable& persistable, Role role = DEFAULT_ROLE );
 
+
 protected:
     /// Derived classes should override this to do their actual save operation
     virtual void SaveImpl( const Persistable& persistable,

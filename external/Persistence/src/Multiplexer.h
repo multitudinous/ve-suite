@@ -24,6 +24,8 @@ public:
                          /*criteria,*/
                          std::vector< std::string >& resultIDs );
 
+    virtual void Drop( const std::string& typeName, Role role = DEFAULT_ROLE  );
+
     void ProcessBackgroundTasks();
 
     // Attaches and detaches stores from the data access flow

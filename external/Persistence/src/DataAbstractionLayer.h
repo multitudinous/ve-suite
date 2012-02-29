@@ -50,6 +50,9 @@ public:
     /// local processing occurs.
     virtual void SetChild( DataAbstractionLayerPtr child );
 
+    /// Delete all records with typename typeName in all stores of with role Role
+    virtual void Drop( const std::string& typeName, Role role = DEFAULT_ROLE  );
+
 protected:
     /// Holds the store-side child of this DAL
     DataAbstractionLayerPtr m_child;

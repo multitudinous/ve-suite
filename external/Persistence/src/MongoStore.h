@@ -2,7 +2,6 @@
 
 #include "Store.h"
 #include "mongo/client/dbclient.h"
-#include "blat.h"
 
 namespace Persistence
 {
@@ -45,6 +44,14 @@ public:
 
     //virtual void SetChild( DataAbstractionLayerPtr child );
 
+    virtual void Drop( const std::string& typeName, Role role = DEFAULT_ROLE  );
+
+    void MapReduce( const std::string& typeName,
+                    const std::string& jsMapFunction,
+                    const std::string& jsReduceFunction,
+                    mongo::BSONObj queryObj,
+                    const std::string& outputcollection = "" );
+
 protected:
     virtual void SaveImpl( const Persistable& persistable,
                            Role role = DEFAULT_ROLE  );
@@ -59,7 +66,7 @@ private:
     /// Holds the current db path
     std::string m_path;
 
-    mongo::DBClientConnection m_connection;
+    mongo::DBClientConnection* m_connection;
 };
 
 } // namespace Persistence

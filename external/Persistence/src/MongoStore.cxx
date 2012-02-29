@@ -30,6 +30,7 @@ void MongoStore::SetStorePath( const std::string& path )
 ////////////////////////////////////////////////////////////////////////////////
 void MongoStore::Attach()
 {
+    //std::cout << "MongoStore::Attach" << std::endl << std::flush;
     if( !m_connection )
     {
         m_connection = new mongo::DBClientConnection;
@@ -46,6 +47,7 @@ bool MongoStore::HasTypename( const std::string& typeName )
 ////////////////////////////////////////////////////////////////////////////////
 void MongoStore::Detach()
 {
+    //std::cout << "MongoStore::Detach" << std::endl << std::flush;
     if( m_connection )
     {
         delete m_connection;
@@ -141,8 +143,7 @@ void MongoStore::SaveImpl( const Persistable& persistable,
         ++it;
     }
 
-    std::string dbNamespace = "ves";
-    dbNamespace += ".";
+    std::string dbNamespace = "ves.";
     dbNamespace += persistable.GetTypeName();
     m_connection->insert( dbNamespace, builder.obj() );
 }
@@ -150,8 +151,7 @@ void MongoStore::SaveImpl( const Persistable& persistable,
 void MongoStore::LoadImpl( Persistable& persistable, Role role )
 {
     //std::cout << "MongoStore::LoadImpl" << std::endl << std::flush;
-    std::string dbNamespace = "ves";
-    dbNamespace += ".";
+    std::string dbNamespace = "ves.";
     dbNamespace += persistable.GetTypeName();
 
     std::auto_ptr<mongo::DBClientCursor> cursor =
@@ -236,8 +236,7 @@ void MongoStore::LoadImpl( Persistable& persistable, Role role )
 ////////////////////////////////////////////////////////////////////////////////
 void MongoStore::Remove( Persistable& persistable )
 {
-    std::string dbNamespace = "ves";
-    dbNamespace += ".";
+    std::string dbNamespace = "ves.";
     dbNamespace += persistable.GetTypeName();
 
     m_connection->remove(dbNamespace,
@@ -248,8 +247,7 @@ bool MongoStore::HasIDForTypename( const boost::uuids::uuid& id,
                                    const std::string& typeName )
 {
     //std::cout << "MongoStore::HasIDForTypename" << std::endl << std::flush;
-    std::string dbNamespace = "ves";
-    dbNamespace += ".";
+    std::string dbNamespace = "ves.";
     dbNamespace += typeName;
 
     std::string idString = boost::lexical_cast< std::string >( id );
@@ -269,16 +267,15 @@ bool MongoStore::HasIDForTypename( const boost::uuids::uuid& id,
 void MongoStore::GetIDsForTypename( const std::string& typeName,
                                 std::vector< std::string >& resultIDs )
 {
-    std::string dbNamespace = "ves";
-    dbNamespace += ".";
+    std::string dbNamespace = "ves.";
     dbNamespace += typeName;
 
     std::auto_ptr<mongo::DBClientCursor> cursor =
-            m_connection->query( dbNamespace, mongo::emptyObj );
+            m_connection->query( dbNamespace, mongo::BSONObj() );
 
     while( cursor->more() )
     {
-        BSONObj rec = cursor->next();
+        mongo::BSONObj rec = cursor->next();
         resultIDs.push_back( rec.getStringField("_id") );
     }
 }
@@ -287,18 +284,17 @@ void MongoStore::Search( const std::string& typeName,
                      /*criteria,*/
                      std::vector< std::string >& resultIDs )
 {
-    std::string dbNamespace = "ves";
-    dbNamespace += ".";
+    std::string dbNamespace = "ves.";
     dbNamespace += typeName;
 
-    std::auto_ptr<mongo::DBClientCursor> cursor =
-            m_connection->query( dbNamespace, QUERY( /*criteria*/ ) );
+//    std::auto_ptr<mongo::DBClientCursor> cursor =
+//            m_connection->query( dbNamespace, QUERY( /*criteria*/ ) );
 
-    while( cursor->more() )
-    {
-        BSONObj rec = cursor->next();
-        resultIDs.push_back( rec.getStringField("_id") );
-    }
+//    while( cursor->more() )
+//    {
+//        mongo::BSONObj rec = cursor->next();
+//        resultIDs.push_back( rec.getStringField("_id") );
+//    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MongoStore::ProcessBackgroundTasks()
@@ -330,5 +326,25 @@ unsigned int MongoStore::GetBoostAnyVectorSize( const boost::any& value )
 
     return size;
 }
+////////////////////////////////////////////////////////////////////////////////
+void MongoStore::MapReduce( const std::string& typeName,
+                const std::string& jsMapFunction,
+                const std::string& jsReduceFunction,
+                mongo::BSONObj queryObj,
+                const std::string& outputcollection )
+{
+    std::string ns = "ves.";
+    ns += typeName;
+    m_connection->mapreduce( ns, jsMapFunction, jsReduceFunction, queryObj,
+                             outputcollection );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MongoStore::Drop( const std::string& typeName, Role role )
+{
+    std::string dbNamespace = "ves.";
+    dbNamespace += typeName;
+    m_connection->dropCollection( dbNamespace );
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace Persistence

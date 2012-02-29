@@ -44,6 +44,8 @@ public:
 
     virtual void ProcessBackgroundTasks();
 
+    virtual void Drop( const std::string& typeName, Role role = DEFAULT_ROLE  );
+
     //virtual void SetChild( DataAbstractionLayerPtr child );
 
     ///

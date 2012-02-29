@@ -150,7 +150,7 @@ void Multiplexer::GetIDsForTypename( const std::string& typeName,
     }
     case WORKING_ROLE:
     {
-        m_workingStore->GetIDsForTypename( typeName, resultIDs );;
+        m_workingStore->GetIDsForTypename( typeName, resultIDs );
         break;
     }
     case DEFAULT_ROLE:
@@ -209,6 +209,8 @@ void Multiplexer::AttachStore( DataAbstractionLayerPtr store,
     {
         m_backingStores.push_back( store );
     }
+
+    static_cast< Store* >(store.get())->Attach();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Multiplexer::DetachStore( DataAbstractionLayerPtr store )
@@ -226,5 +228,41 @@ void Multiplexer::DetachStore( DataAbstractionLayerPtr store )
     }
     throw "DetachStore: unable to find store.";
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void Multiplexer::Drop( const std::string& typeName, Role role  )
+{
+    switch( role )
+    {
+    case VERSIONING_ROLE:
+    {
+        m_fullVersioningStore->Drop( typeName, role );
+        break;
+    }
+    case WORKING_ROLE:
+    {
+        m_workingStore->Drop( typeName, role );
+        break;
+    }
+    case DEFAULT_ROLE:
+    {
+        m_workingStore->Drop( typeName, role );
+        // DEFAULT_ROLE always falls through to BACKING_ROLE
+    }
+    case BACKING_ROLE:
+    {
+        std::vector< DataAbstractionLayerPtr >::iterator it = m_backingStores.begin();
+        while( it != m_backingStores.end() )
+        {
+            (*it)->Drop( typeName, role );
+            ++it;
+        }
+        break;
+    }
+    default:
+    {
+        ;// do nothing
+    }
+    } // switch( role )
+}
+////////////////////////////////////////////////////////////////////////////////
 } // namespace Persistence

@@ -890,4 +890,14 @@ unsigned int SQLiteStore::GetBoostAnyVectorSize( const boost::any& value )
     return size;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SQLiteStore::Drop( const std::string& typeName, Role role )
+{
+    Poco::Data::Session session( GetPool()->get() );
+
+    if( _tableExists( session, typeName ) )
+    {
+        session << "DROP TABLE " << typeName, Poco::Data::now;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 } // namespace Persistence
