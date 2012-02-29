@@ -616,11 +616,14 @@ void UIManager::_repaintChildren()
             // last time
             if( element->IsDirty() )
             {
+                std::map< UIElement*, osg::ref_ptr< TextureSubloader > >::const_iterator 
+                    subIter = m_subloaders.find( element );
+                osg::ref_ptr< TextureSubloader > subloader = subIter->second.get();
                 if( !m_useRegionDamaging )
                 {
                     // Use texture subload, but don't use region damaging --
                     // just push the entire texture as a subload
-                    m_subloaders[ element ]->AddUpdate( image_Data.get(), 0, 0 );
+                    subloader->AddUpdate( image_Data.get(), 0, 0 );
                 }
                 else
                 {
@@ -630,13 +633,14 @@ void UIManager::_repaintChildren()
                     {
                         std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > region =
                                 regions.at( index );
-                        m_subloaders[ element ]->AddUpdate( region.first.get(),
-                                                            region.second.first,
-                                                            region.second.second );
+                        subloader->AddUpdate( region.first.get(),
+                                                region.second.first,
+                                                region.second.second );
                     }
+                    
                     if( regions.empty() )
                     {
-                        m_subloaders[ element ]->AddUpdate( 0, 0, 0 );
+                        subloader->ClearData();
                     }
                 }
             }
