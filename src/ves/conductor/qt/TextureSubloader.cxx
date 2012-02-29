@@ -38,6 +38,13 @@ void TextureSubloader::subload(const osg::Texture2D&, osg::State& ) const
         return;
     }
 
+    /*const unsigned int contextID = state.getContextID();
+    if( _contexts.find( contextID ) != _contexts.end() )
+    {
+        return;
+    }
+    _contexts.insert( contextID );*/
+    
     osg::ref_ptr< osg::Image > subImg;
     int xOffset = 0;
     int yOffset = 0;

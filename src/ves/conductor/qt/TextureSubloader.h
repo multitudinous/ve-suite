@@ -39,23 +39,23 @@ namespace ves
 {
 namespace conductor
 {
-
-
 class TextureSubloader : public osg::Texture2D::SubloadCallback
 {
 public:
+    ///Constructor
     TextureSubloader();
+    ///Destructor
     virtual ~TextureSubloader();
 
-    // create the OpenGL texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
+    ///create the OpenGL texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
     virtual void load(const osg::Texture2D &texture, osg::State &state) const;
 
 
-    // overlay the image onto the texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
+    ///overlay the image onto the texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
     virtual void subload(const osg::Texture2D &texture, osg::State &state) const;
 
-    // tell the next subload callback to copy the input image to the specified offsets
-    // in the texture for this.
+    ///tell the next subload callback to copy the input image to the specified offsets
+    ///in the texture for this.
     void AddUpdate(osg::Image *img, int xOff, int yOff);
 
     ///Clear the current vectors of data
@@ -66,6 +66,9 @@ protected:
     mutable std::vector< int > yOffsets;                              // the Y offset for the next subload operation.
     mutable bool doSubload;                   // true if should do a subload copy with next subload() callback for the texture.
     mutable std::vector< osg::ref_ptr< osg::Image > > subImgs;  // a pointer to an image to overlay onto the texture for this.
+
+    typedef std::set< unsigned int > ContextSet;
+    mutable ContextSet _contexts;
 };
 
 }
