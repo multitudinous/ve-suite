@@ -43,8 +43,11 @@
 #include <vrj/vrjParam.h>
 
 #include <vrj/Draw/OpenGL/ContextData.h>
+#include <vrj/Display/ViewportPtr.h>
+#include <vrj/Display/Frustum.h>
 
 #include <gmtl/Matrix.h>
+#include <gmtl/Point.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -117,6 +120,10 @@ public:
     ///Left/Right combo for the view
     void CalculateCenterViewMatrix( vrj::ProjectionPtr const projection );
     
+    ///Calculate the frustum value based on the ves matrix stack
+    ///\param viewport The current viewport
+    vrj::Frustum CalculateFrustum( vrj::ViewportPtr const viewport, gmtl::Point3f const& eyePoint );
+
 protected:
 
 private:    

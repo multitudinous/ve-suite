@@ -203,6 +203,10 @@ public:
     ///\return The nav matrix
     const gmtl::Matrix44d& GetPureNavMatrix() const;
     
+    ///Return the pure nav matrix
+    ///\return The nav matrix
+    const gmtl::Matrix44d& GetFullMatrix() const;
+    
     ///Get the MxCore object used for view matrix manipulation
     osgwMx::MxCore& GetMxCoreViewMatrix() const;
     
@@ -211,6 +215,9 @@ public:
 
     ///Initialize the scene
     void InitScene();
+
+    ///Update the view matrix before physics info
+    void PrePhysicsLatePreFrameUpdate();
 
     ///LatePreFrameUpdate call to sync DCS information across cluster
     void LatePreFrameUpdate();
@@ -439,8 +446,14 @@ private:
     ///Head location for the point
     gmtl::Point3d m_lastHeadLocation;
     
+    ///Delta head location for the point
+    gmtl::Point3d m_deltaHeadLocation;
+
     ///Pure nav position with no head position
     gmtl::Matrix44d m_pureNav;
+
+    ///Pure nav position with no head position
+    gmtl::Matrix44d m_pureFull;
 
     ///The MxCore class that is used to control the device controlled
     ///portion of the view matrix

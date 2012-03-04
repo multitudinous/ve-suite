@@ -49,6 +49,7 @@
 #include <vrj/Display/Frustum.h>
 #include <vrj/Display/Projection.h>
 #include <vrj/Display/DisplayManager.h>
+#include <vrj/Display/SurfaceProjection.h>
 
 #include <vrj/Kernel/User.h>
 
@@ -226,5 +227,58 @@ void SceneGLTransformInfo::CalculateCenterViewMatrix( vrj::ProjectionPtr const p
         gmtl::convertTo< double >( projection->getViewMatrix() ) * GetZUpMatrix();
     scenegraph::GLTransformInfoPtr glTI = GetGLTransformInfo( viewport );
     glTI->UpdateCenterViewMatrix( viewMatrix );
+}
+////////////////////////////////////////////////////////////////////////////////
+vrj::Frustum SceneGLTransformInfo::CalculateFrustum( vrj::ViewportPtr const viewport,
+                                                    gmtl::Point3f const& eyePoint )
+{
+    vrj::SurfaceViewportPtr surfaceViewport = 
+        boost::static_pointer_cast< vrj::SurfaceViewport >( viewport );
+
+    /*if( !surfaceViewport )
+    {
+        vrj::Frustum temp;
+        return temp;
+    }*/
+
+    gmtl::Point3f llCorner;
+    gmtl::Point3f lrCorner;
+    gmtl::Point3f urCorner;
+    gmtl::Point3f ulCorner;
+
+    surfaceViewport->getCorners( llCorner, lrCorner, urCorner, ulCorner );
+
+    const float positionScale = 
+        vrj::opengl::DrawManager::instance()->getApp()->getDrawScaleFactor();
+    
+    gmtl::Matrix44f viewMatrix = 
+        gmtl::convertTo< float >( scenegraph::SceneManager::instance()->GetPureNavMatrix() );
+
+    /*gmtl::Matrix44f headPos = 
+        viewport->getUser()->getHeadPosProxy()->getData(positionScale);
+    std::cout << viewMatrix << std::endl << headPos << std::endl;*/
+
+    /*viewMatrix.mData[ 12 ] = viewMatrix.mData[ 12 ] - headPos.mData[ 12 ];
+    viewMatrix.mData[ 13 ] = viewMatrix.mData[ 13 ] - headPos.mData[ 13 ];
+    viewMatrix.mData[ 14 ] = viewMatrix.mData[ 14 ] - headPos.mData[ 14 ];*/
+    
+    //std::cout << viewMatrix << std::endl;
+
+    const float invScale = 1./positionScale;
+    viewMatrix.mData[ 12 ] = viewMatrix.mData[ 12 ] * invScale;
+    viewMatrix.mData[ 13 ] = viewMatrix.mData[ 13 ] * invScale;
+    viewMatrix.mData[ 14 ] = viewMatrix.mData[ 14 ] * invScale;
+    
+    llCorner = viewMatrix * llCorner;
+    lrCorner = viewMatrix * lrCorner;
+    urCorner = viewMatrix * urCorner;
+    ulCorner = viewMatrix * ulCorner;
+
+    vrj::SurfaceProjectionPtr tempProjection =
+        vrj::SurfaceProjection::create( llCorner, lrCorner, urCorner, ulCorner );
+    
+    tempProjection->calcViewMatrix( gmtl::MAT_IDENTITY44F, eyePoint, positionScale );
+    
+    return tempProjection->getFrustum();
 }
 ////////////////////////////////////////////////////////////////////////////////

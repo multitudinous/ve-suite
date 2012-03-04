@@ -531,6 +531,11 @@ const gmtl::Matrix44d& SceneManager::GetPureNavMatrix() const
     return m_pureNav;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const gmtl::Matrix44d& SceneManager::GetFullMatrix() const
+{
+    return m_pureFull;
+}
+////////////////////////////////////////////////////////////////////////////////
 osg::Group* SceneManager::GetNetworkDCS() const
 {
     return mNetworkDCS.get();
@@ -636,14 +641,14 @@ void SceneManager::SetActiveSwitchNode( int activeNode )
     ///information is defined on a per node basis.
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneManager::LatePreFrameUpdate()
+void SceneManager::PrePhysicsLatePreFrameUpdate()
 {
     m_vrjHeadMatrix = gmtl::convertTo< double >( m_vrjHead->getData() );
     ///Convert the head matrix to Z up land and then back out purely the
     ///rotation component to get a pure matrix with head rotation and 
     ///position in Z up land.
     m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
-
+    
     ///If the logo dcs is active no nav is allowed
     if( mNavSwitch->getValue( 1 ) )
     {
@@ -666,31 +671,66 @@ void SceneManager::LatePreFrameUpdate()
     ///by the user through input devices.
     gmtl::Point3d headLocation = 
         gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
-    gmtl::Point3d deltaHeadLocation = headLocation - m_lastHeadLocation;
-
-    osg::Vec3d deltaHeadPosition( deltaHeadLocation.mData[ 0 ], 
-                                 deltaHeadLocation.mData[ 1 ], 
-                                 deltaHeadLocation.mData[ 2 ] );
-
+    m_deltaHeadLocation = headLocation - m_lastHeadLocation;
+    
+    osg::Vec3d deltaHeadPosition( m_deltaHeadLocation.mData[ 0 ], 
+                                 m_deltaHeadLocation.mData[ 1 ], 
+                                 m_deltaHeadLocation.mData[ 2 ] );
+    
     m_viewMatrix->setPosition( m_viewMatrix->getPosition() + deltaHeadPosition );
     m_lastHeadLocation = headLocation;
-
+    
+    m_pureFull.set( m_viewMatrix->getMatrix().ptr() );
+    if( mNavSwitch->getValue( 1 ) )
+    {
+        //m_deltaHeadLocation = headLocation;
+    }
     ///This is the distance from the VR Juggler defined ground plane to the
     ///users head so we do not care what coordinate system they are relative to.
     m_userHeight = headLocation.mData[ 2 ];
-    
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::LatePreFrameUpdate()
+{
     gmtl::identity( m_invertedNavMatrix );
-    gmtl::Matrix44d navMatrix;    
-    navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
-    mActiveNavDCS->SetMat( navMatrix );
 
+    m_pureNav.set( m_viewMatrix->getMatrix().ptr() );
+    /*gmtl::Vec3d finalLoc = gmtl::makeTrans< gmtl::Vec3d >( m_pureNav );
+    gmtl::Vec3d initialLoc = gmtl::makeTrans< gmtl::Vec3d >( m_pureFull );
+    gmtl::Vec3d lenghtVec = finalLoc - initialLoc;
+    gmtl::Vec3d deltaVec = m_deltaHeadLocation;
+    bool subtractNav = false;
+    if( gmtl::length( lenghtVec ) >= gmtl::length( deltaVec ) )
+    {
+        std::cout << " need to subtract nav " << std::endl;
+        subtractNav = true;
+    }*/
+    m_pureNav = m_defaultView * m_pureNav;
+    m_pureFull = m_pureNav;
+    
+    //if( subtractNav )
+    {
+        gmtl::Matrix44d headPos =
+            gmtl::convertTo< double >( m_vrjHead->getData() );
+        
+        m_pureNav.mData[ 12 ] = m_pureNav.mData[ 12 ] - headPos.mData[ 12 ];
+        m_pureNav.mData[ 13 ] = m_pureNav.mData[ 13 ] - headPos.mData[ 13 ];
+        m_pureNav.mData[ 14 ] = m_pureNav.mData[ 14 ] - headPos.mData[ 14 ];
+    }
+    
+    gmtl::Matrix44d navMatrix;
+    navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
+    //mActiveNavDCS->SetMat( navMatrix );
     navMatrix = m_zUpTransform * navMatrix;
 
     ///Take the VR Juggler head position out of the view matrix
     ///so that we have pure nav data.
-    navMatrix.mData[ 12 ] = navMatrix.mData[ 12 ] + m_lastHeadLocation.mData[ 0 ];
-    navMatrix.mData[ 13 ] = navMatrix.mData[ 13 ] + m_lastHeadLocation.mData[ 1 ];
-    navMatrix.mData[ 14 ] = navMatrix.mData[ 14 ] + m_lastHeadLocation.mData[ 2 ];
+    //if( subtractNav )
+    {
+        navMatrix.mData[ 12 ] = navMatrix.mData[ 12 ] + m_lastHeadLocation.mData[ 0 ];
+        navMatrix.mData[ 13 ] = navMatrix.mData[ 13 ] + m_lastHeadLocation.mData[ 1 ];
+        navMatrix.mData[ 14 ] = navMatrix.mData[ 14 ] + m_lastHeadLocation.mData[ 2 ];
+    }
     //navMatrix.mState = gmtl::Matrix44d::FULL;
 
     gmtl::invert( m_invertedNavMatrix, navMatrix );

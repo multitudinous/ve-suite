@@ -133,6 +133,8 @@
 
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Viewport.h>
+#include <vrj/Display/SurfaceProjection.h>
+#include <vrj/Display/Frustum.h>
 
 #include <vpr/Perf/ProfileManager.h>
 #include <vpr/System.h>
@@ -768,6 +770,11 @@ void App::latePreFrame()
     }
     ///////////////////////
     {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Pre Physics SceneManager", 20 );
+        scenegraph::SceneManager::instance()->PrePhysicsLatePreFrameUpdate();
+    }
+    ///////////////////////
+    {
         ;
     }
     ///////////////////////
@@ -816,6 +823,12 @@ void App::latePreFrame()
     }
     ///////////////////////
     {
+        //This call may need to be split similar to the SceneManager
+        //Technically the navigation selection by the user should be processed
+        //before the character or any of the physics processing is done
+        //so that the position of the character reflects the current state of
+        //all of the current user input. With the device processing here
+        //the user input for nav with the character will lag 1 frame.
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame EnvironmentHandler", 20 );
         EnvironmentHandler::instance()->LatePreFrameUpdate();
     }
@@ -853,6 +866,7 @@ void App::latePreFrame()
         mNavPosition.set( 
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetMxCoreViewMatrix().getInverseMatrix().ptr() );
+        //std::cout << mNavPosition << std::endl;
         //Need to figure out why osg::LightSource::ABSOLUTE_RF
         //does not work in a multi-context environment
         //jbkoch - Since in the CAVE each view is 90 degrees apart,
@@ -1096,31 +1110,23 @@ void App::draw()
     //vprASSERT( glDrawManager != NULL );
     const vrj::opengl::UserData* userData = glDrawManager->currentUserData();
     const vrj::ViewportPtr viewport = userData->getViewport();
-    const vrj::ProjectionPtr project = userData->getProjection();
-    const vrj::Frustum frustum = project->getFrustum();
-
+    vrj::ProjectionPtr project = userData->getProjection();
+    //const vrj::Frustum frustum = project->getFrustum();
+    vrj::Frustum frustum = project->getFrustum();
+    
     //Get the frustum values
-    double l = frustum[ vrj::Frustum::VJ_LEFT ];
-    double r = frustum[ vrj::Frustum::VJ_RIGHT ];
-    double b = frustum[ vrj::Frustum::VJ_BOTTOM ];
-    double t = frustum[ vrj::Frustum::VJ_TOP ];
-    double n = frustum[ vrj::Frustum::VJ_NEAR ];
-    double f = frustum[ vrj::Frustum::VJ_FAR ];
+    double l = 0.0;//frustum[ vrj::Frustum::VJ_LEFT ];
+    double r = 0.0;//frustum[ vrj::Frustum::VJ_RIGHT ];
+    double b = 0.0;//frustum[ vrj::Frustum::VJ_BOTTOM ];
+    double t = 0.0;//frustum[ vrj::Frustum::VJ_TOP ];
+    double n = 0.0;//frustum[ vrj::Frustum::VJ_NEAR ];
+    double f = 0.0;//frustum[ vrj::Frustum::VJ_FAR ];
 
     //Get and set the GLTransformInfo associated w/ this viewport and context
     scenegraph::GLTransformInfoPtr glTI =
         m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
     if( glTI )
     {
-        ///Remember that the VR Juggler near/far values are hard coded to 
-        ///0.1 and 10000. With OSG set to auto compute the near and far planes
-        ///these values are overriden. If we use GLTransformInfo just after
-        ///these values are set the projection matrix will not reflect
-        ///what OSG is actually using for rendering.
-        glTI->UpdateFrustumValues( l, r, b, t, n, f );
-        //Get the projection matrix
-        const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
-
         // Compute location of left and right eyes
         const float positionScale = getDrawScaleFactor();
 
@@ -1137,23 +1143,44 @@ void App::draw()
         ///function call.
         if( project->getEye() == vrj::Projection::LEFT )
         {            
-            const gmtl::Point3f left_eye_point( -eye_offset, 0, 0 );
+            gmtl::Point3f eyePoint( eye_offset, 0, 0 );
+            const gmtl::Point3f left_eye_point = eyePoint;
             project->calcViewMatrix( gmtl::MAT_IDENTITY44F, left_eye_point,
-                                      positionScale);
+                                      positionScale );
+            const gmtl::Matrix44d viewMatrix = 
+            scenegraph::SceneManager::instance()->GetFullMatrix();
+            eyePoint = gmtl::convertTo< float >( viewMatrix ) * eyePoint;
+            const vrj::SurfaceProjectionPtr tempPtr = 
+                boost::dynamic_pointer_cast< vrj::SurfaceProjection >( project );
+            if( tempPtr )
+            {
+                frustum = 
+                    m_sceneGLTransformInfo->CalculateFrustum( viewport, eyePoint );
+            }
         }
         
         if( project->getEye() == vrj::Projection::RIGHT )
         {
-            const gmtl::Point3f right_eye_point( eye_offset, 0, 0 );
-            
+            gmtl::Point3f eyePoint( eye_offset, 0, 0 );
+            const gmtl::Point3f right_eye_point = eyePoint;
             project->calcViewMatrix( gmtl::MAT_IDENTITY44F, right_eye_point,
-                                       positionScale);
+                                       positionScale );
+            const gmtl::Matrix44d viewMatrix = 
+            scenegraph::SceneManager::instance()->GetFullMatrix();
+            eyePoint = gmtl::convertTo< float >( viewMatrix ) * eyePoint;
+            const vrj::SurfaceProjectionPtr tempPtr = 
+                boost::dynamic_pointer_cast< vrj::SurfaceProjection >( project );
+            if( tempPtr )
+            {
+                frustum = 
+                    m_sceneGLTransformInfo->CalculateFrustum( viewport, eyePoint );
+            }
         }
 
         //Get the view matrix from vrj
         const gmtl::Matrix44d vrjViewMatrix =
             gmtl::convertTo< double >( project->getViewMatrix() );
-        
+
         //Multiply by the camera matrix (mNavPosition)
         glTI->UpdateViewMatrix( vrjViewMatrix, mNavPosition );
         const osg::Matrixd viewMatrixOSG = glTI->GetViewMatrixOSG();
@@ -1161,6 +1188,24 @@ void App::draw()
         //Get the view matrix from a centered eye position
         m_sceneGLTransformInfo->CalculateCenterViewMatrix( project );
 
+        //Now lets setup the frustum values for OSG
+        //Get the frustum values
+        l = frustum[ vrj::Frustum::VJ_LEFT ];
+        r = frustum[ vrj::Frustum::VJ_RIGHT ];
+        b = frustum[ vrj::Frustum::VJ_BOTTOM ];
+        t = frustum[ vrj::Frustum::VJ_TOP ];
+        n = frustum[ vrj::Frustum::VJ_NEAR ];
+        f = frustum[ vrj::Frustum::VJ_FAR ];
+
+        ///Remember that the VR Juggler near/far values are hard coded to 
+        ///0.1 and 10000. With OSG set to auto compute the near and far planes
+        ///these values are overriden. If we use GLTransformInfo just after
+        ///these values are set the projection matrix will not reflect
+        ///what OSG is actually using for rendering.
+        glTI->UpdateFrustumValues( l, r, b, t, n, f );
+        //Get the projection matrix
+        const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
+                
         //Can't set viewport larger than fbo texture for rtt camera
         //We have to set the viewport for the frame buffer
         //Would like to inherit viewport from sv all way down but not possible
@@ -1169,7 +1214,8 @@ void App::draw()
         //AbsoluteModelTransform::computeLocalToWorldMatrix()
         //If it is not absolute, Physics and Manipulators will be broken
         sv->setProjectionMatrix( projectionMatrixOSG );
-        sv->setViewMatrix( viewMatrixOSG );
+        // osg::Matrix::identity() ); //
+        sv->setViewMatrix(viewMatrixOSG );
 
         if( mRTT )
         {
