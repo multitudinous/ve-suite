@@ -209,7 +209,10 @@ CharacterNavigation::~CharacterNavigation()
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modifierState, char keyChar )
 { 
-    boost::ignore_unused_variable_warning( modifierState );
+    if( modifierState != gadget::KEY_NONE )
+    {
+        return false;
+    }
     boost::ignore_unused_variable_warning( keyChar );
 
     switch( buttonKey )
@@ -292,7 +295,10 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int modifierState, char keyChar )
 {
-    boost::ignore_unused_variable_warning( modifierState );
+    if( modifierState != gadget::KEY_NONE )
+    {
+        return false;
+    }
     boost::ignore_unused_variable_warning( keyChar );
 
     switch( buttonKey )
