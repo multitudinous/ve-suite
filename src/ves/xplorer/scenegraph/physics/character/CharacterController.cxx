@@ -266,7 +266,58 @@ void CharacterController::Initialize()
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
         mCameraDistance = mMinCameraDistance;
-        mCharacterAnimations->setNodeMask( 0 );
+        mCharacterAnimations->setNodeMask( 1 );
+
+        //Setup the shaders
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->setName( "VS UI Quad Program" );
+        
+        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+        std::string fragmentSource =
+        "uniform sampler2D baseMap;\n"
+        "uniform vec3 glowColor;\n"
+        "uniform float opacityVal;\n"
+        
+        "void main()\n"
+        "{\n"
+        "vec3 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ).rgb;\n"
+        
+        "gl_FragData[ 0 ] = vec4( baseColor, opacityVal );\n"
+        "gl_FragData[ 1 ] = vec4( glowColor, opacityVal );\n"
+        "}\n";
+        
+        fragmentShader->setType( osg::Shader::FRAGMENT );
+        fragmentShader->setShaderSource( fragmentSource );
+        fragmentShader->setName( "VS UI Quad Fragment Shader" );
+        program->addShader( fragmentShader.get() );
+                
+        osg::ref_ptr< osg::StateSet > stateset = 
+            mCharacterAnimations->getOrCreateStateSet();
+        {
+            stateset->setRenderBinDetails( 99, "RenderBin" );
+        }
+        
+        //Create stateset for adding texture
+        osg::StateAttribute::GLModeValue glModeValue =
+            osg::StateAttribute::ON |
+            osg::StateAttribute::PROTECTED |
+            osg::StateAttribute::OVERRIDE;
+        stateset->setAttributeAndModes( program.get(), glModeValue );
+        stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
+        
+        {
+            osg::Uniform* m_opacityUniform = new osg::Uniform( "opacityVal", float( 0.5 ) );
+            stateset->addUniform( m_opacityUniform );
+        }
+        
+        {
+            osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
+            bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
+                            osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+            stateset->setMode( GL_BLEND, glModeValue );
+            stateset->setAttributeAndModes( bf.get(), glModeValue );
+        }
+        
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -554,7 +605,6 @@ void CharacterController::Move( btScalar dt )
     bool headTracked = false;
     if( headTracked )
     {
-        //std::cout << " Move character with head position" << std::endl;
         //we have access to 5000 previous samples if needed
 #if __GADGET_version > 2001000
         const buffer_type& headSampleBuffer =
@@ -1092,7 +1142,6 @@ void CharacterController::UpdateTranslationTrackedHead()
     //tracker VJHead position
     btVector3 displacement( 0.0, 0.0, 0.0 );
 
-    //std::cout << " UpdateTranslationTrackedHead " << std::endl;
     if( m_translateType & TranslateType::STEP_FORWARD_BACKWARD )
     {
         /*btVector3 forwardBackwardDisplacement( 0.0, 0.0, 0.0 );
@@ -1143,8 +1192,6 @@ void CharacterController::UpdateTranslationTrackedHead()
     displacement[ 1 ] += (-jugglerHeadPoint1[ 2 ] + jugglerHeadPoint2[ 2 ]);
     displacement[ 2 ] += ( jugglerHeadPoint1[ 1 ] - jugglerHeadPoint2[ 1 ]);
 
-    //std::cout << displacement[ 0 ] << " " << displacement[ 1 ] 
-    //    << " " << displacement[ 2 ] << " " << std::endl;
     //slerp mCameraRotation if necessary
     if( mCameraRotationSLERP )
     {
@@ -1322,5 +1369,7 @@ void CharacterController::UpdateCapsuleShape()
                                         height - ( m_characterWidth * 2. ) );
 
     SetConvexShape( shape );
+    
+    mLookAtOffsetZ.setZ( m_characterHeight * 0.5 );
 }
 ////////////////////////////////////////////////////////////////////////////////
