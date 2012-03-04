@@ -50,10 +50,6 @@
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
-#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
-#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
-
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
 #include <ves/xplorer/scenegraph/highlight/CircleHighlight.h>
@@ -62,13 +58,6 @@
 
 #include <ves/xplorer/eventmanager/EventManager.h>
 #include <ves/xplorer/eventmanager/SignalWrapper.h>
-
-// --- Bullet Includes --- //
-#include <LinearMath/btVector3.h>
-
-#include <BulletDynamics/Dynamics/btDynamicsWorld.h>
-
-#include <BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h>
 
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
