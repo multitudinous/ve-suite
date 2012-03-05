@@ -1143,7 +1143,7 @@ void App::draw()
         ///function call.
         if( project->getEye() == vrj::Projection::LEFT )
         {            
-            gmtl::Point3f eyePoint( eye_offset, 0, 0 );
+            gmtl::Point3f eyePoint( -eye_offset, 0, 0 );
             const gmtl::Point3f left_eye_point = eyePoint;
             project->calcViewMatrix( gmtl::MAT_IDENTITY44F, left_eye_point,
                                       positionScale );
