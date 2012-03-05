@@ -254,16 +254,6 @@ vrj::Frustum SceneGLTransformInfo::CalculateFrustum( vrj::ViewportPtr const view
     gmtl::Matrix44f viewMatrix = 
         gmtl::convertTo< float >( scenegraph::SceneManager::instance()->GetPureNavMatrix() );
 
-    /*gmtl::Matrix44f headPos = 
-        viewport->getUser()->getHeadPosProxy()->getData(positionScale);
-    std::cout << viewMatrix << std::endl << headPos << std::endl;*/
-
-    /*viewMatrix.mData[ 12 ] = viewMatrix.mData[ 12 ] - headPos.mData[ 12 ];
-    viewMatrix.mData[ 13 ] = viewMatrix.mData[ 13 ] - headPos.mData[ 13 ];
-    viewMatrix.mData[ 14 ] = viewMatrix.mData[ 14 ] - headPos.mData[ 14 ];*/
-    
-    //std::cout << viewMatrix << std::endl;
-
     const float invScale = 1./positionScale;
     viewMatrix.mData[ 12 ] = viewMatrix.mData[ 12 ] * invScale;
     viewMatrix.mData[ 13 ] = viewMatrix.mData[ 13 ] * invScale;
