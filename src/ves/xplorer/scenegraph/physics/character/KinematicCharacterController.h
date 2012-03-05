@@ -114,8 +114,11 @@ public:
     ///
     void jump();
 
-    ///
+    ///Tell if the character is on the ground
     bool onGround() const;
+
+    ///Tell if the character is colliding with a static object
+    bool isColliding() const;
 
     ///
     void preStep( btCollisionWorld* collisionWorld );
@@ -339,6 +342,8 @@ protected:
     ///so we store it here to avoid upcast
     btConvexShape* m_convexShape;
 
+    ///Tell whether the character is colliding with a static object
+    bool m_isColliding;
 private:
     ///
     void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );

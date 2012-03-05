@@ -30,12 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #ifndef VES_XPLORER_SCENEGRAPH_SCENEMANAGER_H
 #define VES_XPLORER_SCENEGRAPH_SCENEMANAGER_H
 
 // --- VES Includes --- //
 #include <ves/VEConfig.h>
+
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -312,6 +313,12 @@ protected:
     ///Create the model for the logo
     void _createLogo();
 
+    ///Update the head position constant with the latest tracker information
+    bool CheckCharacterCollisionState() const;
+
+    ///Check to see if the character is on and has collided with a static object
+    void UpdateHeadPositionConstants();
+
 private:
     //Required so that vpr::Singleton can instantiate this class
     //Friend class vpr::Singleton< SceneManager >;
@@ -369,6 +376,9 @@ private:
     ///VR Juggler head matrix
     gmtl::Matrix44d m_vrjHeadMatrix;
 
+    ///VR Juggler head matrix
+    gmtl::Matrix44d m_previousVRJHeadMatrix;
+
     ///Inverteded world dcs values
     gmtl::Matrix44d m_invertedNavMatrix;
 
@@ -386,6 +396,12 @@ private:
 
     ///Inverted OSG view matrix
     osg::Matrixd m_globalViewMatrixOSG;
+
+    ///The last valid head position in Y up coordinates
+    gmtl::Point3d m_lastValidVRJHeadLocation;
+
+    ///The last valid head position in Y up coordinates
+    gmtl::Point3d m_lastValidHeadLocation;
 
 #ifdef VE_SOUND
     ///Sound file to play as background audio for VE-Suite
@@ -472,6 +488,8 @@ private:
     ///This value is in feet.
     double m_userHeight;
 
+    ///The signature to tell others the game pad is active
+    ves::util::BoolSignal_type m_updateData;
 };
 } //end scenegraph
 } //end xplorer

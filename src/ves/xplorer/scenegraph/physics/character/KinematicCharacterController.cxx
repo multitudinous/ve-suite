@@ -251,6 +251,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_manifoldArray(),
     m_ghostObject( new btPairCachingGhostObject() ),
     m_convexShape( NULL ),
+    m_isColliding( false ),
 
     m_lineGeode( NULL )
 {
@@ -342,6 +343,7 @@ bool KinematicCharacterController::recoverFromPenetration(
             btPersistentManifold* manifold = m_manifoldArray[ j ];
             btScalar directionSign =
                 manifold->getBody0() == m_ghostObject ? btScalar( -1.0 ) : btScalar( 1.0 );
+            
             for( int p = 0; p < manifold->getNumContacts(); ++p )
             {
                 const btManifoldPoint&pt = manifold->getContactPoint( p );
@@ -356,8 +358,24 @@ bool KinematicCharacterController::recoverFromPenetration(
                         //??
                         m_touchingNormal = pt.m_normalWorldOnB * directionSign;
                     }
+                    
+                    btVector3 currentDir = pt.m_normalWorldOnB * directionSign;
+                    btScalar distance3 = currentDir.length2();
+                    
+                    if( distance3 > SIMD_EPSILON )
+                    {
+                        if( onGround() )
+                        {
+                            btVector3 forwardDir( 0., 1., 0. );
+                            //maybe use m_normalizedDirection
+                            if( currentDir.dot( forwardDir ) > btScalar( 0.05 ) )
+                            {
+                                m_isColliding = true;
+                            }
+                        }
+                    }
 
-                    m_currentPosition += pt.m_normalWorldOnB * directionSign * dist * btScalar( 0.2 );
+                    m_currentPosition += currentDir * dist * btScalar( 0.2 );
                     penetration = true;
                 }
                 else
@@ -527,6 +545,7 @@ void KinematicCharacterController::stepForwardAndStrafe(
 
         if( callback.hasHit() )
         {
+            m_isColliding = true;
             //We moved only a fraction
             //btScalar hitDistance =
                 //( callback.m_hitPointWorld - m_currentPosition ).length();
@@ -537,6 +556,7 @@ void KinematicCharacterController::stepForwardAndStrafe(
             updateTargetPositionBasedOnCollision( callback.m_hitNormalWorld );
             btVector3 currentDir = m_targetPosition - m_currentPosition;
             distance2 = currentDir.length2();
+
             if( distance2 > SIMD_EPSILON )
             {
                 currentDir.normalize();
@@ -663,6 +683,7 @@ void KinematicCharacterController::DrawLine(
 void KinematicCharacterController::setDisplacement(
     const btVector3& displacement )
 {
+    m_isColliding = false;
     m_useWalkDirection = true;
     m_displacement = displacement;
     m_normalizedDirection = getNormalizedVector( m_displacement );
@@ -675,6 +696,7 @@ void KinematicCharacterController::setVelocityForTimeInterval(
     //printf( "  interval: %f\n", timeInterval );
     //printf( "  velocity: ( %f, %f, %f )\n", velocity.x(), velocity.y(), velocity.z() );
 
+    m_isColliding = false;
     m_useWalkDirection = false;
     m_displacement = velocity;
     m_normalizedDirection = getNormalizedVector( m_displacement );
@@ -838,6 +860,11 @@ bool KinematicCharacterController::IsFlying() const
 bool KinematicCharacterController::canJump() const
 {
     return onGround();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool KinematicCharacterController::isColliding() const
+{
+    return m_isColliding;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KinematicCharacterController::jump()

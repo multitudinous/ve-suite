@@ -36,6 +36,10 @@
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
+
 #ifdef VE_SOUND
 #include <ves/xplorer/scenegraph/Sound.h>
 #endif
@@ -154,7 +158,10 @@ SceneManager::SceneManager()
     
     m_nullGlowTextureUniform = new osg::Uniform( "tex", 0 );
     ///For models without textures
-    
+
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
+        "SceneManager.UpdateData");
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize()
@@ -210,7 +217,8 @@ void SceneManager::InitScene()
     m_vrjHeadMatrix = 
         gmtl::convertTo< double >( m_vrjHead->getData() );
     m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
-    
+    m_previousVRJHeadMatrix = m_vrjHeadMatrix;
+
     osg::Vec3d up, dir, pos;
     double fovy;
     m_viewMatrix->getInitialValues( up, dir, pos, fovy );
@@ -649,6 +657,18 @@ void SceneManager::PrePhysicsLatePreFrameUpdate()
     ///position in Z up land.
     m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
     
+    //If we do not constantly send this signal when we are using a tracked 
+    //head position the character controller will become out of sync with
+    //the view position and the head constants. The update signal forces
+    //the character controller to update the character position based
+    //on the current view matrix.
+    if( !m_isDesktopMode && mCharacterController->IsEnabled() )
+    {
+        m_updateData( true );
+    }
+
+    m_previousVRJHeadMatrix = m_vrjHeadMatrix;
+
     ///If the logo dcs is active no nav is allowed
     if( mNavSwitch->getValue( 1 ) )
     {
@@ -672,19 +692,13 @@ void SceneManager::PrePhysicsLatePreFrameUpdate()
     gmtl::Point3d headLocation = 
         gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
     m_deltaHeadLocation = headLocation - m_lastHeadLocation;
-    
+
     osg::Vec3d deltaHeadPosition( m_deltaHeadLocation.mData[ 0 ], 
                                  m_deltaHeadLocation.mData[ 1 ], 
                                  m_deltaHeadLocation.mData[ 2 ] );
     
     m_viewMatrix->setPosition( m_viewMatrix->getPosition() + deltaHeadPosition );
-    m_lastHeadLocation = headLocation;
-    
-    m_pureFull.set( m_viewMatrix->getMatrix().ptr() );
-    if( mNavSwitch->getValue( 1 ) )
-    {
-        //m_deltaHeadLocation = headLocation;
-    }
+
     ///This is the distance from the VR Juggler defined ground plane to the
     ///users head so we do not care what coordinate system they are relative to.
     m_userHeight = headLocation.mData[ 2 ];
@@ -692,45 +706,36 @@ void SceneManager::PrePhysicsLatePreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::LatePreFrameUpdate()
 {
-    gmtl::identity( m_invertedNavMatrix );
-
-    m_pureNav.set( m_viewMatrix->getMatrix().ptr() );
-    /*gmtl::Vec3d finalLoc = gmtl::makeTrans< gmtl::Vec3d >( m_pureNav );
-    gmtl::Vec3d initialLoc = gmtl::makeTrans< gmtl::Vec3d >( m_pureFull );
-    gmtl::Vec3d lenghtVec = finalLoc - initialLoc;
-    gmtl::Vec3d deltaVec = m_deltaHeadLocation;
-    bool subtractNav = false;
-    if( gmtl::length( lenghtVec ) >= gmtl::length( deltaVec ) )
+    //Check to see if the character has run into any static objects
+    //If the character is not enabled or is not in contact with static objects
+    //then the view position constants will be updated.
+    if( !CheckCharacterCollisionState() )
     {
-        std::cout << " need to subtract nav " << std::endl;
-        subtractNav = true;
-    }*/
+        UpdateHeadPositionConstants();
+    }
+
+    gmtl::identity( m_invertedNavMatrix );
+    
+    //Create the OpenGL oriented matrices used in the frustum calculations so
+    //that the character, physics and the tracked head position will render
+    //properly.
+    m_pureNav.set( m_viewMatrix->getMatrix().ptr() );
     m_pureNav = m_defaultView * m_pureNav;
     m_pureFull = m_pureNav;
-    
-    //if( subtractNav )
-    {
-        gmtl::Matrix44d headPos =
-            gmtl::convertTo< double >( m_vrjHead->getData() );
-        
-        m_pureNav.mData[ 12 ] = m_pureNav.mData[ 12 ] - headPos.mData[ 12 ];
-        m_pureNav.mData[ 13 ] = m_pureNav.mData[ 13 ] - headPos.mData[ 13 ];
-        m_pureNav.mData[ 14 ] = m_pureNav.mData[ 14 ] - headPos.mData[ 14 ];
-    }
+            
+    m_pureNav.mData[ 12 ] = m_pureNav.mData[ 12 ] - m_lastValidVRJHeadLocation.mData[ 0 ];
+    m_pureNav.mData[ 13 ] = m_pureNav.mData[ 13 ] - m_lastValidVRJHeadLocation.mData[ 1 ];
+    m_pureNav.mData[ 14 ] = m_pureNav.mData[ 14 ] - m_lastValidVRJHeadLocation.mData[ 2 ];
     
     gmtl::Matrix44d navMatrix;
     navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
-    //mActiveNavDCS->SetMat( navMatrix );
     navMatrix = m_zUpTransform * navMatrix;
 
     ///Take the VR Juggler head position out of the view matrix
     ///so that we have pure nav data.
-    //if( subtractNav )
-    {
-        navMatrix.mData[ 12 ] = navMatrix.mData[ 12 ] + m_lastHeadLocation.mData[ 0 ];
-        navMatrix.mData[ 13 ] = navMatrix.mData[ 13 ] + m_lastHeadLocation.mData[ 1 ];
-        navMatrix.mData[ 14 ] = navMatrix.mData[ 14 ] + m_lastHeadLocation.mData[ 2 ];
-    }
+    navMatrix.mData[ 12 ] = navMatrix.mData[ 12 ] + m_lastValidHeadLocation.mData[ 0 ];
+    navMatrix.mData[ 13 ] = navMatrix.mData[ 13 ] + m_lastValidHeadLocation.mData[ 1 ];
+    navMatrix.mData[ 14 ] = navMatrix.mData[ 14 ] + m_lastValidHeadLocation.mData[ 2 ];
     //navMatrix.mState = gmtl::Matrix44d::FULL;
 
     gmtl::invert( m_invertedNavMatrix, navMatrix );
@@ -759,6 +764,35 @@ void SceneManager::LatePreFrameUpdate()
     m_previousTime = mFrameStamp->getSimulationTime();
 
     m_cameraManager->LatePreFrameUpdate();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool SceneManager::CheckCharacterCollisionState() const
+{
+    if( !m_isDesktopMode )
+    {
+        //gmtl::Vec3d deltaVec = m_deltaHeadLocation;    
+        //double changeInHeadPosition = gmtl::length( deltaVec );
+        
+        if( mCharacterController->IsEnabled() )
+        {
+            if( mCharacterController->isColliding() )
+            {
+                //std::cout << " is colliding " << changeInHeadPosition <<std::endl;
+                return true;
+            }
+            //std::cout << " not colliding " << changeInHeadPosition << std::endl;
+        }
+    }
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::UpdateHeadPositionConstants()
+{
+    m_lastHeadLocation = 
+        gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
+    m_lastValidHeadLocation = m_lastHeadLocation;
+    m_lastValidVRJHeadLocation = 
+        gmtl::makeTrans< gmtl::Point3d >( gmtl::convertTo< double >( m_vrjHead->getData() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PostFrameUpdate()
