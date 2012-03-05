@@ -53,8 +53,6 @@
 #include <ves/xplorer/scenegraph/manipulator/RotateTwist.h>
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-#include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
-
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
@@ -326,7 +324,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
 {
     vprDEBUG( vesDBG, 3 ) << "|\tWand::ProcessEvents" 
         << std::endl << vprDEBUG_FLUSH;
-    ves::xplorer::scenegraph::DCS* const activeDCS =
+    /*ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     if( !activeDCS )
     {
@@ -397,17 +395,6 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     {
 		Device::SetZEqualsZeroFlag( cfdIso_value );
     }
-    /*else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
-    {
-        for( unsigned int i = 0; i < 3; ++i )
-        {
-            m_worldTrans[ i ] = 0.0f;
-            world_quat[ i ] = 0.0f;
-            mCenterPoint->mData[ i ] = 0.0f;
-        }
-
-        world_quat[ 3 ] = 1.0f;
-    }*/
     else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )
     {
         //This equation returns a range of ~ 0.01' -> 220'
@@ -698,7 +685,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         {
             m_characterController.StepForward( true );
         }
-    }
+    }*/
 
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Wand::ProcessEvents" << std::endl << vprDEBUG_FLUSH;
 }
