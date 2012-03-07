@@ -162,7 +162,7 @@ Gloves::Gloves()
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
     
-    Initialize();
+    //Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Gloves* Gloves::AsGloves()
