@@ -111,7 +111,7 @@ class App : public vrj::osg::App
 {
 public:
     ///Contructor
-    App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm, Poco::SplitterChannel* splitter );
+    explicit App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm, Poco::SplitterChannel* splitter );
 
     ///Destructor
     virtual ~App();
