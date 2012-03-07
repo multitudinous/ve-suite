@@ -261,7 +261,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_ghostObject->setWorldTransform( btTransform::getIdentity() );
 
     btCapsuleShapeZ* convexShape =
-        new btCapsuleShapeZ( m_characterWidth, m_characterHeight );
+        new btCapsuleShapeZ( m_characterWidth, m_characterHeight - ( m_characterWidth * 2. ) );
     SetConvexShape( convexShape );
 
     //Create the shader used to render the lines and points
@@ -711,7 +711,8 @@ void KinematicCharacterController::Reset()
         m_ghostObject->getBroadphaseHandle(), dispatcher );
 
     //Move the character so that its entire body is above the zero ground plane
-    warp( btVector3( 0.0, 0.0, m_characterHeight ) );
+    //Remember that the origin of the capsule is in the middle of the character
+    warp( btVector3( 0.0, 0.0, m_characterHeight * 0.5 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KinematicCharacterController::EnableFlying( bool const& canFly )
