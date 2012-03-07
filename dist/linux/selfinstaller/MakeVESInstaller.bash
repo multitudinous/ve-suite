@@ -22,14 +22,24 @@ VES_INSTALL_PREFIX=\"\"
 
 function usage()
 {
-    echo \"usage: \$0 -p <prefix>\"
+    echo \"usage: \$0 -p <prefix> [ -r ]\"
 }
 
 function postinstall()
 {
     SETVAR_COMMAND=\"\"
     SETVAR_DELIMITER=\"\"
+    prefix=\$1
+    place_env_file_at_install_root=\$2
+    env_file_dir=\$HOME
 
+    if [ \$place_env_file_at_install_root = 1 ]
+    then
+        env_file_dir=\$prefix
+    fi
+
+    env_file_path=\$env_file_dir/VE-SuiteEnv
+     
     if [ \$SHELL = \"/bin/bash\" ]
     then
         SETVAR_COMMAND=\"export\"
@@ -39,22 +49,22 @@ function postinstall()
         SETVAR_DELIMITER=\" \"
     fi
 
-    if [ -e \$HOME/VE-SuiteEnv ]
+    if [ -e \$env_file_path ]
     then
-        rm \$HOME/VE-SuiteEnv
+        rm \$env_file_path
     fi
 
     # set up VES_PREFIX
     var_assign_string=\"\$SETVAR_COMMAND VES_PREFIX\$SETVAR_DELIMITER\"
-    var_value_string=\$1
+    var_value_string=\$prefix
 
-    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+    echo \$var_assign_string\$var_value_string >> \$env_file_path
 
     # set up PATH
     var_assign_string=\"\$SETVAR_COMMAND PATH\$SETVAR_DELIMITER\"
     var_value_string='\$VES_PREFIX/bin:\$PATH'
 
-    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+    echo \$var_assign_string\$var_value_string >> \$env_file_path
 
     # set up LD_LIBRARY_PATH
     var_assign_string=\"\$SETVAR_COMMAND LD_LIBRARY_PATH\$SETVAR_DELIMITER\"
@@ -65,13 +75,13 @@ function postinstall()
         var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.8:\$VES_PREFIX/lib64'
     fi
 
-    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+    echo \$var_assign_string\$var_value_string >> \$env_file_path
 
     # set up OSG_FILE_PATH
     var_assign_string=\"\$SETVAR_COMMAND OSG_FILE_PATH\$SETVAR_DELIMITER\"
     var_value_string='\$VES_PREFIX/share/osgBullet/data:\$VES_PREFIX/share/osgWorks/data:\$VES_PREFIX/share/backdropFX/data'
 
-    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+    echo \$var_assign_string\$var_value_string >> \$env_file_path
 
     # set up VJ_BASE_DIR
     if [ -n \"\$VJ_BASE_DIR\" ]
@@ -79,14 +89,14 @@ function postinstall()
         var_assign_string=\"\$SETVAR_COMMAND VJ_BASE_DIR\$SETVAR_DELIMITER\"
         var_value_string='\$VES_PREFIX'
 
-        echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+        echo \$var_assign_string\$var_value_string >> \$env_file_path
     fi
 
     # set up OSGNOTIFYLEVEL
     var_assign_string=\"\$SETVAR_COMMAND OSGNOTIFYLEVEL\$SETVAR_DELIMITER\"
     var_value_string='WARNING'
 
-    echo \$var_assign_string\$var_value_string >> \$HOME/VE-SuiteEnv
+    echo \$var_assign_string\$var_value_string >> \$env_file_path
 
     # set up PYTHONPATH, if necessary
     current_working_dir=\$(pwd)
@@ -103,20 +113,25 @@ function postinstall()
         fi
         ves_prefix_string='\$VES_PREFIX/'
 
-        echo \$var_assign_string\$ves_prefix_string\$wxpython_base_dir\$var_value_string >> \$HOME/VE-SuiteEnv
+        echo \$var_assign_string\$ves_prefix_string\$wxpython_base_dir\$var_value_string >> \$env_file_path
     fi
     cd \$current_working_dir
 
     echo \"\"
-    echo \"  A file to aid setting up the VE-Suite environment has been written to \$HOME/VE-SuiteEnv.\"
+    echo \"  A file to aid setting up the VE-Suite environment has been written to \$env_file_path.\"
     echo \"  Source this file in your shell's rc file.\"
 }
 
-while getopts \"p:\" SCRIPT_ARGS
+place_env_file_at_install_root=0
+
+while getopts \"p:r\" SCRIPT_ARGS
 do
     case \$SCRIPT_ARGS in
     p)
         VES_INSTALL_PREFIX=\$OPTARG
+        ;;
+    r)
+        place_env_file_at_install_root=1
         ;;
     ?)
         usage
@@ -161,7 +176,7 @@ then
 fi
 
 echo \"Finished!\"
-postinstall \$VES_INSTALL_PREFIX
+postinstall \$VES_INSTALL_PREFIX \$place_env_file_at_install_root
 
 cd .." > $INSTALLER_PAYLOAD_DIR/install
 
@@ -177,18 +192,27 @@ echo "#!/bin/bash
 function usage()
 {
 echo \"
-  Usage: \$0 -p <prefix>
+  Usage: \$0 -p <prefix> [ -r ]
 
-         Where <prefix> is the full path to the VE-Suite install directory.\"
+  OPTIONS:
+   -p <prefix> : the full path to the VE-Suite install directory (REQUIRED)
+   -r          : if this flag is specified, place the environment file
+                 at the root of the VE-Suite install instead of your
+                 home directory (OPTIONAL)
+\"
 }
 
 INSTALL_PREFIX=\"\"
+place_env_file_at_install_root=0
 
-while getopts \"p:\" SCRIPT_ARGS
+while getopts \"p:r\" SCRIPT_ARGS
 do
     case \$SCRIPT_ARGS in
     p)
         INSTALL_PREFIX=\$OPTARG
+        ;;
+    r)
+        place_env_file_at_install_root=1
         ;;
     ?)
         usage
@@ -214,7 +238,12 @@ echo \"Finished decompressing\"
 
 CURRENT_WORKING_DIR=\`pwd\`
 cd \$DECOMPRESS_DIR
-./install -p \$INSTALL_PREFIX
+if [ \$place_env_file_at_install_root = 1 ]
+then
+    ./install -p \$INSTALL_PREFIX -r
+else
+    ./install -p \$INSTALL_PREFIX
+fi
 
 cd \$CURRENT_WORKING_DIR
 rm -rf \$DECOMPRESS_DIR
