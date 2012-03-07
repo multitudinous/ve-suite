@@ -3,14 +3,15 @@
 function usage()
 {
 echo "
-  Usage: $0 -p <VE-Suite install prefix> -d <deps tar file> [ -x <extra tar file> ]
+  Usage: $0 -p <VE-Suite install prefix> -d <deps tar file> [ -x <extra tar file> ] [ -s <extra string> ]
 
     Options:
 
     -p  The directory where VE-Suite is installed (REQUIRED)
     -d  The path to a tar file of VE-Suite's dependencies (REQUIRED)
     -x  Path to a tar file to add to the installer's payload (OPTIONAL)
-        NOTE: The -x flag may be used as many times as is necessary"
+        NOTE: The -x flag may be used as many times as is necessary
+    -s  An extra string to include in the installer file name (OPTIONAL)"
 }
 
 ### echos the install script into the temporary directory
@@ -258,8 +259,9 @@ chmod +x $INSTALLER_ROOT_DIR/decompress
 VES_INSTALL_PREFIX=""
 VES_DEPS_TAR_FILE=""
 EXTRA_PAYLOAD_TAR_FILES=()
+extra_filename_string=""
 
-while getopts "p:d:x:" SCRIPT_ARGS
+while getopts "p:d:x:s:" SCRIPT_ARGS
 do
     case $SCRIPT_ARGS in
     p)
@@ -270,6 +272,9 @@ do
         ;;
     x)
         EXTRA_PAYLOAD_TAR_FILES=( ${EXTRA_PAYLOAD_TAR_FILES[@]} $OPTARG )
+        ;;
+    s)
+        extra_filename_string=$OPTARG
         ;;
     ?)
         usage
@@ -305,7 +310,13 @@ ves_major_version=$(awk '/VES_MAJOR_VERSION/ {print $3;}' $VES_INSTALL_PREFIX/in
 ves_minor_version=$(awk '/VES_MINOR_VERSION/ {print $3;}' $VES_INSTALL_PREFIX/include/ves/VEConfig.h)
 ves_patch_version=$(awk '/VES_PATCH_VERSION/ {print $3;}' $VES_INSTALL_PREFIX/include/ves/VEConfig.h)
 
-installer_file_name="VE-SuiteInstall-$ves_major_version.$ves_minor_version.$ves_patch_version.bash"
+if [ ! -z "$extra_filename_string" ]
+then
+    # if the string is not empty, prepend a hyphen
+    extra_filename_string="-$extra_filename_string"
+fi
+
+installer_file_name="VE-SuiteInstall-$ves_major_version.$ves_minor_version.$ves_patch_version$extra_filename_string.bash"
 
 echo "Creating temporary directory structure at $INSTALLER_ROOT_DIR..."
 mkdir -p $INSTALLER_EXTRA_PAYLOAD_DIR
