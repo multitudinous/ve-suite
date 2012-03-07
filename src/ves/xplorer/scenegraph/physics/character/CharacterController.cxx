@@ -266,8 +266,8 @@ void CharacterController::Initialize()
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
         mCameraDistance = mMinCameraDistance;
-        mCharacterAnimations->setNodeMask( 1 );
-
+        mCharacterAnimations->setNodeMask( 0 );
+        /*
         //Setup the shaders
         osg::ref_ptr< osg::Program > program = new osg::Program();
         program->setName( "VS UI Quad Program" );
@@ -317,7 +317,7 @@ void CharacterController::Initialize()
             stateset->setMode( GL_BLEND, glModeValue );
             stateset->setAttributeAndModes( bf.get(), glModeValue );
         }
-        
+        */
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1327,12 +1327,12 @@ void CharacterController::InitializeCharacters()
     mCharacterAnimations->setName( "Character Switch Control" );
 
     //for scaling if necessary
-    osg::ref_ptr< osg::PositionAttitudeTransform > scaleDown = new osg::PositionAttitudeTransform(); 
-    scaleDown->setName( "Character Scale Transform" );
-    scaleDown->addChild( mCharacterAnimations.get() );
+    m_scaleDown = new osg::PositionAttitudeTransform(); 
+    m_scaleDown->setName( "Character Scale Transform" );
+    m_scaleDown->addChild( mCharacterAnimations.get() );
 
     //orients the character in the proper direction
-    scaleDown->setAttitude( osg::Quat(
+    m_scaleDown->setAttitude( osg::Quat(
         //roll
         osg::DegreesToRadians( 180.0 ), osg::Vec3f( 0.0, 1.0, 0.0 ),
         //pitch
@@ -1340,11 +1340,11 @@ void CharacterController::InitializeCharacters()
         //heading
         osg::DegreesToRadians( 0.0 ), osg::Vec3f( 0.0, 0.0, 1.0 )) );
 
-    scaleDown->setScale( osg::Vec3d( 1.058, 1.058, 1.058 ) );
+    m_scaleDown->setScale( osg::Vec3d( 1.058, 1.058, 1.058 ) );
 
-    scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -4.4 ) );
+    m_scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -2.8 ) );
 
-    mMatrixTransform->addChild( scaleDown.get() );
+    mMatrixTransform->addChild( m_scaleDown.get() );
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1357,16 +1357,25 @@ void CharacterController::UpdateCapsuleShape()
 {
     double const& height = 
         ves::xplorer::scenegraph::SceneManager::instance()->GetUserHeight();
-    
+
     if( height < 1.5f )
     {
         return;
     }
     
     m_characterHeight = height;
-        
+
+    //2.8 is how far the character is off the ground in the osg model
+    //The character is 6.0 feet tall
+    //8.8 = 2.8 + 6.0
+    //8.3 = 3.2 + 5.1
+    //7.3 = 3.8 + 3.5
+    //Offset
+    float offset = (6. - m_characterHeight) * 0.5 + 2.8;
+    m_scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -offset ) );
+    
     btCapsuleShapeZ* shape = new btCapsuleShapeZ( m_characterWidth,
-                                        height - ( m_characterWidth * 2. ) );
+                            m_characterHeight - ( m_characterWidth * 2. ) );
 
     SetConvexShape( shape );
     

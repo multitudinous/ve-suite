@@ -392,6 +392,9 @@ private:
     /// Required for connecting to signals via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
     
+    ///
+    osg::ref_ptr< osg::PositionAttitudeTransform > m_scaleDown;
+    
     class CharacterTransformCallback : public osg::NodeCallback
     {
     public:
