@@ -41,6 +41,7 @@
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADPart.h>
 #include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/model/Model.h>
 
 #include <iostream>
 using namespace ves::xplorer::event;
@@ -50,7 +51,8 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADAddNodeEventHandler::CADAddNodeEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    :
+    ves::xplorer::event::CADEventHandler()
 {
     eventmanager::EventManager::instance()->RegisterSignal(
        new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_CADNodeAdded ),
@@ -85,16 +87,31 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         CADNodePtr tempNode( boost::dynamic_pointer_cast<CADNode>( cadNode->GetDataXMLObject() ) );
         std::string nodeType =  tempNode->GetNodeType();
 
+        //Get the xml model pointer so that the pointers used by the cad handler
+        //are in the same memory space as the xml model in the ves::xplorer::Model.
+        ves::open::xml::model::ModelPtr tempXmlModel = m_activeModel->GetModelData();
+        CADAssemblyPtr rootAssembly = 
+            boost::dynamic_pointer_cast<CADAssembly>( tempXmlModel->GetGeometry() );
+
         CADNodePtr node;
         CADAssemblyPtr assembly;
         CADPartPtr part;
-        //ves::xplorer::scenegraph::DCS* parentAssembly = 0;
-
+        
         if( nodeType == "Assembly" )
         {
+            if( tempNode->GetID() == rootAssembly->GetID() )
+            {
+                assembly = rootAssembly;
+            }
+            else
+            {
+                assembly = 
+                    boost::dynamic_pointer_cast< CADAssembly >( 
+                    rootAssembly->SearchAllChildren( tempNode->GetID() ) );
+            }
 
-            assembly = boost::dynamic_pointer_cast<CADAssembly>( cadNode->GetDataXMLObject() );
             node = boost::dynamic_pointer_cast<CADNode>( assembly );
+
             if( m_cadHandler->AssemblyExists( node->GetID() ) )
             {
                 throw( "Assembly already exists" );
@@ -102,7 +119,9 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         }
         else if( nodeType == "Part" )
         {
-            part = boost::dynamic_pointer_cast<CADPart>( cadNode->GetDataXMLObject() );
+            part = 
+                boost::dynamic_pointer_cast<CADPart>( 
+                rootAssembly->SearchAllChildren( tempNode->GetID() ) );
             node = boost::dynamic_pointer_cast<CADNode>( part );
 
             if( m_cadHandler->PartExists( node->GetID() ) )
