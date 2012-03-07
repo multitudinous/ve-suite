@@ -481,7 +481,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     //otherwise you are losing time. Mathematically,
     //timeStep < maxSubSteps * fixedTimeStep
     //mDynamicsWorld->stepSimulation( dt, 10 );//, btScalar( 1.0 ) / btScalar( 120.0 ) );
-    mDynamicsWorld->stepSimulation( dt, 5 );
+    mDynamicsWorld->stepSimulation( dt, 7, btScalar( 1.0 ) / btScalar( 240.0 ) );
 #else
     osgbDynamics::TripleBufferMotionStateUpdate(
         m_motionStateList, &m_tripleDataBuffer );
