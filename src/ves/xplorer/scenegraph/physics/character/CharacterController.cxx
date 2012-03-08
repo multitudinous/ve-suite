@@ -120,7 +120,7 @@ CharacterController::CharacterController()
     mTurnSpeed( 7.0 ),
     mWeightModifier( 0.0 ),
     mTotalWeight( 0.0 ),
-    mLookAtOffsetZ( 0.0, 0.0, (m_characterHeight - 0.5) - 4.4 /*current character offset*/ ),//m_characterHeight * 0.5 ),
+    mLookAtOffsetZ( 0.0, 0.0, (m_characterHeight * 0.5) /*current character offset*/ ),//m_characterHeight * 0.5 ),
     mCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
     mCameraRotationX( 1.0, 0.0, 0.0, 1.0 ),
     mCameraRotationZ( 0.0, 0.0, 1.0, 1.0 ),
