@@ -1930,13 +1930,9 @@ void Wand::UpdateForwardAndUp()
     osg::Vec3d upVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
     //m_sceneManager.GetMxCoreViewMatrix().setUp( upVec );
     
-    vjVec.set( m_sceneManager.GetMxCoreViewMatrix().getDir().ptr() );
+    vjVec.set( 0.0f, 1.0f, 0.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
     gmtl::normalize( vjVec );
-    osg::Vec3d dirVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
-    //m_sceneManager.GetMxCoreViewMatrix().setDir( dirVec );
-    //std::cout << " wand dir " << vjVec << std::endl;
-    
     if( vjVec.mData[ 0 ] < 0.0 )
     {
         m_rotationDirection = 1.0;
@@ -1945,7 +1941,13 @@ void Wand::UpdateForwardAndUp()
     {
         m_rotationDirection = -1.0;
     }
+    //osg::Vec3d dirVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
+    vjVec = m_sceneManager.GetInvertedNavMatrix() * vjVec;
+    //m_sceneManager.GetMxCoreViewMatrix().setDir( dirVec );
+    //std::cout << " wand dir " << vjVec << std::endl;
+    
 
+    //vjVec.set( m_sceneManager.GetMxCoreViewMatrix().getDir().ptr() );
     m_worldTrans[ 0 ] = vjVec.mData[ 0 ] * translationStepSize;
     m_worldTrans[ 1 ] = vjVec.mData[ 1 ] * translationStepSize;
     m_worldTrans[ 2 ] = vjVec.mData[ 2 ] * translationStepSize;
