@@ -80,6 +80,8 @@ int main( int argc, char* argv[] )
         return 1;
     }
 
+    std::string junk; std::cin >> junk;
+
     std::string root( "./" );
     std::string extension( ".lis" );
     //Iterate over all of the directories
@@ -94,8 +96,13 @@ int main( int argc, char* argv[] )
         std::string dbTableName = lisFiles.at( i );
         boost::algorithm::replace_first( dbTableName, root, "" );
         boost::algorithm::replace_last( dbTableName, extension, "" );
+
         boost::algorithm::replace_all( dbTableName, "/", "_" );
         boost::algorithm::replace_all( dbTableName, " ", "_" );
+        //Special cases for windows
+        boost::algorithm::replace_all( dbTableName, ".\\", "" );
+        boost::algorithm::replace_all( dbTableName, "\\", "_" );
+
         std::cout << dbTableName << " " << lisFiles.at( i ) << std::endl;
         
         ParseDataFile( lisFiles.at( i ), dbTableName );
