@@ -225,6 +225,7 @@ function unsetvars()
   unset POST_RETRIEVAL_METHOD
   unset POST_BUILD_METHOD
   unset SOURCE_REVISION
+  unset GIT_BRANCH_VERSION
 }
 
 #
@@ -314,6 +315,12 @@ function source_retrieval()
     git)
       cd "${DEV_BASE_DIR}";
       git clone ${SOURCE_URL} "${BASE_DIR}";
+      if [ -n "${GIT_BRANCH_VERSION:+x}" ]; then
+        cd "${BASE_DIR}";
+        git checkout -t origin/${GIT_BRANCH_VERSION}
+        git pull
+        echo "using custom command ${GIT_BRANCH_VERSION}" 
+      fi 
       ;;
     private-svn)
       cd "${DEV_BASE_DIR}";
