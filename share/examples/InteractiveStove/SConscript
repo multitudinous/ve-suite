@@ -32,10 +32,10 @@ fileBundle.addFiles( 'RunUnit.csh' )
 
 InteractiveStoveSubdirs = Split("""
     IntStoveModel
-    IntStovePlugin
     IntStoveUnit
     Int_Stove_EconUIPlugin
 """)
+#    IntStovePlugin
 
 ##Run SConscript files in all of these folders.
 for d in InteractiveStoveSubdirs:
