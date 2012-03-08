@@ -181,6 +181,8 @@ fi
 echo \"Finished!\"
 postinstall \$VES_INSTALL_PREFIX \$place_env_file_at_install_root
 
+chmod -R 755 \$VES_INSTALL_PREFIX
+
 cd .." > $INSTALLER_PAYLOAD_DIR/install
 
 chmod +x $INSTALLER_PAYLOAD_DIR/install
