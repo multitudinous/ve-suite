@@ -43,6 +43,7 @@ namespace scheduler
 class ModelNode : public lemon::ListDigraph::Node
 {
 public:
+    ModelNode(){;}
     ModelNode( lemon::ListDigraph::Node& node );
     
     ///Copy Construstor
