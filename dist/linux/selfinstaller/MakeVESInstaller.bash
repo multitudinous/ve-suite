@@ -7,11 +7,13 @@ echo "
 
     Options:
 
-    -p  The directory where VE-Suite is installed (REQUIRED)
-    -d  The path to a tar file of VE-Suite's dependencies (REQUIRED)
+    -p  The full path to the VE-Suite install directory (REQUIRED)
+    -d  The full path to a tar file of VE-Suite's dependencies (REQUIRED)
+    -t  The full path to the VE-Suite source tree (REQUIRED)
     -x  Path to a tar file to add to the installer's payload (OPTIONAL)
         NOTE: The -x flag may be used as many times as is necessary
-    -s  An extra string to include in the installer file name (OPTIONAL)"
+    -s  An extra string to include in the installer file name (OPTIONAL)
+"
 }
 
 ### echos the install script into the temporary directory
@@ -258,10 +260,11 @@ chmod +x $INSTALLER_ROOT_DIR/decompress
 
 VES_INSTALL_PREFIX=""
 VES_DEPS_TAR_FILE=""
+VES_SOURCE_TREE_DIR=""
 EXTRA_PAYLOAD_TAR_FILES=()
 extra_filename_string=""
 
-while getopts "p:d:x:s:" SCRIPT_ARGS
+while getopts "p:d:t:x:s:" SCRIPT_ARGS
 do
     case $SCRIPT_ARGS in
     p)
@@ -269,6 +272,9 @@ do
         ;;
     d)
         VES_DEPS_TAR_FILE=$OPTARG
+        ;;
+    t)
+        VES_SOURCE_TREE_DIR=$OPTARG
         ;;
     x)
         EXTRA_PAYLOAD_TAR_FILES=( ${EXTRA_PAYLOAD_TAR_FILES[@]} $OPTARG )
@@ -295,6 +301,12 @@ then
     exit 1
 fi
 
+if [ -z $VES_SOURCE_TREE_DIR ]
+then
+    usage
+    exit 1
+fi
+
 INSTALLER_ROOT_DIR=`mktemp -d /tmp/ves-installer-rootdir.XXXXXX`
 INSTALLER_PAYLOAD_DIR="$INSTALLER_ROOT_DIR/installer/payload"
 INSTALLER_EXTRA_PAYLOAD_DIR="$INSTALLER_PAYLOAD_DIR/extra"
@@ -310,13 +322,24 @@ ves_major_version=$(awk '/VES_MAJOR_VERSION/ {print $3;}' $VES_INSTALL_PREFIX/in
 ves_minor_version=$(awk '/VES_MINOR_VERSION/ {print $3;}' $VES_INSTALL_PREFIX/include/ves/VEConfig.h)
 ves_patch_version=$(awk '/VES_PATCH_VERSION/ {print $3;}' $VES_INSTALL_PREFIX/include/ves/VEConfig.h)
 
+svn_revision_number=$(svnversion $VES_SOURCE_TREE_DIR)
+
+if [[ "$svn_revision_number" == *:* ]]
+then
+    echo "ERROR!. svnversion reports that your working copy at"
+    echo "$VES_SOURCE_TREE_DIR is a mixed-revision working copy."
+    echo "Update your working copy and try again."
+    rm -rf $INSTALLER_ROOT_DIR
+    exit 1
+fi 
+
 if [ ! -z "$extra_filename_string" ]
 then
     # if the string is not empty, prepend a hyphen
     extra_filename_string="-$extra_filename_string"
 fi
 
-installer_file_name="VE-SuiteInstall-$ves_major_version.$ves_minor_version.$ves_patch_version$extra_filename_string.bash"
+installer_file_name="VE-SuiteInstall-$ves_major_version.$ves_minor_version.$ves_patch_version-r$svn_revision_number$extra_filename_string.bash"
 
 echo "Creating temporary directory structure at $INSTALLER_ROOT_DIR..."
 mkdir -p $INSTALLER_EXTRA_PAYLOAD_DIR
