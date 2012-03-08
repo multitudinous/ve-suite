@@ -1486,19 +1486,21 @@ void UIManager::UpdateUIQuadPosition()
         gmtl::makeTrans< gmtl::Point3d >( vxs::SceneManager::instance()->GetHeadMatrix() );
     gmtl::Matrix44d worldMat = 
         vxs::SceneManager::instance()->GetInvertedNavMatrix();//GetGlobalViewMatrix();
-    gmtl::Point3d transformPoint = worldMat * gmtl::Point3d( 0.0, 8.0, -2.0 );
+    gmtl::Point3d transformPoint = gmtl::Point3d( 0.0, 8.0, -2.0 );
     transformPoint += headPoint;
 
+    transformPoint = worldMat * transformPoint;
+    
     gmtl::Quatd invertedQuat = gmtl::makeRot< gmtl::Quatd >( worldMat );
     osg::Quat quat;
     quat.set( invertedQuat.mData[ 0 ], invertedQuat.mData[ 1 ],
              invertedQuat.mData[2],invertedQuat.mData[ 3 ]);
-    
+    m_rttQuadTransform->setAttitude( quat );
+
     m_rttQuadTransform->setPosition(
         osg::Vec3d( transformPoint.mData[ 0 ], transformPoint.mData[ 1 ], 
         transformPoint.mData[ 2 ] ) );
     
-    m_rttQuadTransform->setAttitude( quat );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
