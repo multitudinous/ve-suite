@@ -542,7 +542,9 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* const session,
         property = iterator->second;
         if( property->IsVectorized() )
         {
-            std::string fieldName = boost::any_cast<std::string > ( property->GetAttribute( "nameInSet" ) );
+            //std::string fieldName = boost::any_cast<std::string >
+            //                        ( property->GetAttribute( "nameInSet" ) );
+            std::string fieldName = iterator->first;
             Poco::Data::Statement statement( ( *session ) );
             statement << "SELECT " << fieldName << " FROM " << mTableName
                     << "_" << iterator->first << " WHERE PropertySetParentID=:0"
@@ -1055,8 +1057,9 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
                 // [ParentTableName]_[currentFieldName]
                 std::string newTableName( m_TableName );
                 newTableName += "_";
-                std::string fieldName( boost::any_cast<std::string > (
-                                       property->GetAttribute( "nameInSet" ) ) );
+                //std::string fieldName( boost::any_cast<std::string > (
+                //                       property->GetAttribute( "nameInSet" ) ) );
+                std::string fieldName = iterator->first;
                 newTableName += fieldName;
 
                 // Check for existing table; if table doesn't exist, create it.
