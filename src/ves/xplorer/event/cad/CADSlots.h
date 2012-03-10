@@ -597,7 +597,8 @@ static void SetPhysicsOnCADNode( std::string const& nodeID,
         if( part->HavePhysics() )
         {
             std::cout << "Cleaning physics rigid body." << std::endl;
-            part->GetPhysicsRigidBody()->CleanRigidBody();
+            //part->GetPhysicsRigidBody()->CleanRigidBody();
+            part->DisablePhysics();
         }
     }
 

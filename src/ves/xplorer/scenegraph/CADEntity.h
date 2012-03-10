@@ -144,6 +144,9 @@ public:
     ///Determine if physics have been enabled
     bool HavePhysics();
 
+    ///Turn physics off
+    void DisablePhysics();
+
 protected:
     ///The current state of physics for CADEntity
     bool mPhysicsFlag;

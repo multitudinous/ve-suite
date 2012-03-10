@@ -290,7 +290,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
             ( eventmanager::EventFactory::instance()->GetSignal( "ChangeActiveModel" ) )
             ->mSignal->operator()( modelID );
     }
-    
+
     //Now manage the data that is user specific to this ves file
     UserPtr userInfo = 
         XMLDataBufferEngine::instance()->GetXMLUserDataObject( "Network" );
@@ -425,16 +425,35 @@ void NetworkLoader::OnActiveModelChanged( const std::string& )
     while( idIter != ids.end() )
     {
         ves::xplorer::data::CADPropertySet cadSet;
+        ves::xplorer::data::CADPropertySet tcadSet;
 
         // Turn on all live properties. This will ensure that physics meshes
         // and all the other good stuff is turned on too. Note that dynamics
         // data would be loaded and run even without this call since it is
         // a permanently live property -- i.e. not one made live with
         // MakeLive.
-        cadSet.EnableLiveProperties( true );
 
+        // To eliminate excess creation of PhysicsRigidBodies, we
+        // first we load the CADPropertySet into tcadset so we can
+        // read whether physics is enabled. Then we set physics to true on
+        // cadSet, turn on live properties, and then set physics false on
+        // cadSet. This ensures that physics is completely turned off before we
+        // start touching physics properties in the propertyset. After the set
+        // has been loaded and the live physics properties have been dealt
+        // with, we turn physics back on. The slot for turning physics on will
+        // in turn set all the other physics properties on the rigid body.
+        tcadSet.SetUUID( *idIter );
+        tcadSet.LoadFromDatabase( );
+        bool physics = boost::any_cast<bool>( tcadSet.GetPropertyValue( "Physics_Enable" ));
         cadSet.SetUUID( *idIter );
+        cadSet.SetPropertyValue( "Physics_Enable", true );
+        cadSet.EnableLiveProperties( true );
+        cadSet.SetPropertyValue( "Physics_Enable", false );
         cadSet.LoadFromDatabase( );
+        if( physics )
+        {
+            cadSet.SetPropertyValue( "Physics_Enable", true );
+        }
         ++idIter;
     }
 

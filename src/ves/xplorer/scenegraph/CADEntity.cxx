@@ -199,6 +199,7 @@ CADEntity::~CADEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics()
 {
+    mPhysicsFlag = true;
     if( !mPhysicsRigidBody )
     {
         mPhysicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
@@ -207,6 +208,12 @@ void CADEntity::InitPhysics()
     }
     
     return;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::DisablePhysics()
+{
+    GetPhysicsRigidBody()->CleanRigidBody();
+    mPhysicsFlag = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::CADEntityHelper* CADEntity::GetNode() const
@@ -271,7 +278,7 @@ void CADEntity::Save()
 ////////////////////////////////////////////////////////////////////////////////
 bool CADEntity::HavePhysics()
 {
-    if ( mPhysicsRigidBody )
+    if ( mPhysicsRigidBody && mPhysicsFlag )
     {
         return true;
     }
