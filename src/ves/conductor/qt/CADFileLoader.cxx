@@ -115,10 +115,10 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
 
     ves::xplorer::scenegraph::DCS* cad =
         model->GetModelCADHandler()->GetAssembly( parentID );
-    CADAssemblyPtr assembly = 
+    CADAssemblyPtr assembly =
         boost::dynamic_pointer_cast<CADAssembly>( cad->GetCADPart() );
     assembly->AddChild( newCADPart );
-    newCADPart->SetParent( assembly->GetID() );
+    //newCADPart->SetParent( assembly->GetID() );
     
     // Send node off to xplorer
     ves::open::xml::DataValuePairPtr cadNode( new ves::open::xml::DataValuePair() );
