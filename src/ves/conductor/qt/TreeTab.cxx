@@ -469,8 +469,7 @@ void TreeTab::RefreshTree()
 void TreeTab::on_m_searchBox_textEdited( const QString& pattern )
 {
     ui->mTreeView->expandAll();
-    QString fullPattern = "DCS: " + pattern;
-    ui->mTreeView->keyboardSearch( fullPattern );
+    ui->mTreeView->keyboardSearch( pattern );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_m_deleteButton_clicked()
