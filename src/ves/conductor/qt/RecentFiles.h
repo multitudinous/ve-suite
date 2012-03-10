@@ -53,6 +53,7 @@ class RecentFiles : public QDialog
 public:
     explicit RecentFiles(QWidget *parent = 0);
     ~RecentFiles();
+    void RefreshFiles();
 
     //const QString& GetSelectedFile();
 

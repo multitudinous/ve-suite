@@ -46,6 +46,7 @@
 
 #include <ves/VEConfig.h>
 #include <ves/conductor/qt/QtLogChannel.h>
+#include <ves/xplorer/Logging.h>
 #include <Poco/SplitterChannel.h>
 
 #include <string>
@@ -375,6 +376,11 @@ private:
     QStringList m_displayFeatures;
 
     QtLogChannel* m_qtLogView;
+
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
     
 }

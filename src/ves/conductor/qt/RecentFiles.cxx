@@ -71,32 +71,7 @@ RecentFiles::RecentFiles(QWidget *parent) :
     connect( ui->m_recentFilesList, SIGNAL(	itemClicked(QListWidgetItem*)),
              this, SLOT(onFileListItemAccepted(QListWidgetItem*)) );
 
-    QSettings settings( QSettings::IniFormat, QSettings::UserScope,
-                            "VE Suite", "VE Xplorer" );
-    settings.setFallbacksEnabled( false );
-
-    LOG_INFO( "Pulling recent files list from: " << settings.fileName().toStdString() );
-
-    QStringList files = settings.value("recentProjectList").toStringList();
-    QListWidget* recent = ui->m_recentFilesList;
-    recent->addItem( tr("Recent Projects") );
-    QFont font = recent->item( 0 )->font();
-    font.setPointSize( font.pointSize() + 2 );
-    font.setWeight( QFont::Bold );
-    recent->item(0)->setFont( font );
-    recent->addItems( files );
-
-    files = settings.value("recentCADList").toStringList();
-    recent->addItem( tr("") );
-    recent->addItem( tr("Recent CAD") );
-    recent->item( (recent->count() - 1) )->setFont( font );
-    recent->addItems( files );
-
-    files = settings.value("recentDataList").toStringList();
-    recent->addItem( tr("") );
-    recent->addItem( tr("Recent Datasets") );
-    recent->item( (recent->count() - 1) )->setFont( font );
-    recent->addItems( files );
+    RefreshFiles();
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,6 +90,38 @@ void RecentFiles::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void RecentFiles::RefreshFiles()
+{
+    QSettings settings( QSettings::IniFormat, QSettings::UserScope,
+                            "VE Suite", "VE Xplorer" );
+    settings.setFallbacksEnabled( false );
+
+    LOG_INFO( "Pulling recent files list from: " << settings.fileName().toStdString() );
+
+    QStringList files = settings.value("recentProjectList").toStringList();
+    QListWidget* recent = ui->m_recentFilesList;
+    recent->clear();
+
+    recent->addItem( tr("Recent Projects") );
+    QFont font = recent->item( 0 )->font();
+    font.setPointSize( font.pointSize() + 2 );
+    font.setWeight( QFont::Bold );
+    recent->item(0)->setFont( font );
+    recent->addItems( files );
+
+    files = settings.value("recentCADList").toStringList();
+    recent->addItem( tr("") );
+    recent->addItem( tr("Recent CAD") );
+    recent->item( (recent->count() - 1) )->setFont( font );
+    recent->addItems( files );
+
+    files = settings.value("recentDataList").toStringList();
+    recent->addItem( tr("") );
+    recent->addItem( tr("Recent Datasets") );
+    recent->item( (recent->count() - 1) )->setFont( font );
+    recent->addItems( files );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RecentFiles::onFileListItemAccepted( QListWidgetItem* selected )

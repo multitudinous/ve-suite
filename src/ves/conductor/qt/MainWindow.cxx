@@ -30,9 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #define QT_NO_KEYWORDS
-
 #include "MainWindow.h"
 
 #include <QtGui/QPaintEvent>
@@ -134,7 +132,9 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
     m_preferencesTab( 0 ),
     m_pluginsTab( 0 ),
     m_constraintsTab( 0 ),
-    m_recentTab( 0 )
+    m_recentTab( 0 ),
+    m_logger( Poco::Logger::get("conductor.MainWindow") ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     setMouseTracking( true );
     ui->setupUi(this);
@@ -1006,8 +1006,8 @@ void MainWindow::on_actionSaveAs_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileSaveSelected( const QString& fileName )
 {
+    LOG_TRACE( "onFileSaveSelected" );
     m_saveFileName = fileName;
-    //std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
 
     // Close out the fileDialog tab and kill the file dialog
     RemoveTab( mFileDialog );
@@ -1050,10 +1050,25 @@ void MainWindow::onFileSaveSelected( const QString& fileName )
     vesFileName.append( ".ves" );
     //ves::conductor::XMLDataBufferEngine::instance()->SaveVESData( vesFileName );
     SaveSytemToFile( system, vesFileName );
+
+    // Put this file at the top of the RecentFiles projects list
+    QSettings settings( QSettings::IniFormat, QSettings::UserScope,
+                            "VE Suite", "VE Xplorer" );
+    settings.setFallbacksEnabled( false );
+    QStringList files = settings.value("recentProjectList").toStringList();
+    files.removeAll( QString::fromStdString(vesFileName) );
+    files.prepend( QString::fromStdString(vesFileName) );
+    settings.setValue( "recentProjectList", files );
+
+    if( m_recentTab )
+    {
+        m_recentTab->RefreshFiles();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::string fileName )
 {
+    LOG_TRACE( "SaveSystemToFile: " << fileName );
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >(
                          system, "veSystem" ) );
@@ -1457,8 +1472,6 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     }
 
     m_saveFileName.clear();
-    //std::cout << "Working Dir is: " 
-    //    << workingDir.toStdString() << std::endl << std::flush;
 
     // Change to the new working directory
     std::cout << "Setting working directory to " 
