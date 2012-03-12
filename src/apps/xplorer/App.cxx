@@ -540,8 +540,11 @@ void App::SetWrapper( VjObsWrapper* input )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::initScene()
-{
+{        
     vprDEBUG( vesDBG, 0 ) << "|App::initScene" << std::endl << vprDEBUG_FLUSH;
+    m_vrjHeadInterface.init("VJHead");
+    m_startFrameInt = m_vrjHeadInterface->getTimeStamp();
+
     //Initialize all the XML objects
     XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new XMLCreator() );
     XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new shader::ShaderCreator() );
@@ -712,21 +715,22 @@ void App::latePreFrame()
     
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
-        float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
-        float deltaTime = 0;
+        //float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
+        m_currentFrameInt = m_vrjHeadInterface->getTimeStamp();
+        double current_time = m_currentFrameInt.secd() - m_startFrameInt.secd();
+        m_lastFrameInt = m_currentFrameInt;
         //This is order dependent
         //don't move above function call
         mFrameStamp->setFrameNumber( _frameNumber );
         mFrameStamp->setReferenceTime( current_time );
 
         double tempSimTime = mFrameStamp->getSimulationTime();
-
         mFrameDT = current_time - mLastFrameTime;
         mLastFrameTime = current_time;
-
         mFrameStamp->setSimulationTime( tempSimTime + mFrameDT );
 
         //This is a frame rate calculation
+        double deltaTime = 0;
         deltaTime = current_time - mLastTime;
         if( deltaTime > 1 )
         {

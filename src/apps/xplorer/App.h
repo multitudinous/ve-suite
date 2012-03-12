@@ -51,6 +51,8 @@
 #include <vrj/Draw/OSG/App.h>
 #include <vrj/Draw/OpenGL/ContextData.h>
 
+#include <gadget/Type/PositionInterface.h>
+
 // --- OSG Includes --- //
 #include <osg/Version>
 #include <osg/ref_ptr>
@@ -373,6 +375,15 @@ private:
     /// after the initial setup of the log mechanism (which happens in
     /// xplorer.cxx)
     Poco::SplitterChannel* m_logSplitter;
+
+    ///The previous timestamp for a frame
+    vpr::Interval m_lastFrameInt;
+    ///The currrent timestamp for a frame
+    vpr::Interval m_currentFrameInt;
+    ///The starting time for the application
+    vpr::Interval m_startFrameInt;
+    ///The gadget object used to aquire timestamps during runtime
+    gadget::PositionInterface m_vrjHeadInterface;
 };
 } //end xplorer
 } //end ves
