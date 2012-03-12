@@ -351,7 +351,12 @@ void CharacterController::Enable( const bool& enable )
         osg::Matrix worldMatrix = 
             orient * SceneManager::instance()->GetMxCoreViewMatrix().getMatrix();
         osg::Vec3 deltaStep = worldMatrix.getTrans();
+
+        deltaStep[ 2 ] = deltaStep[ 2 ] - (m_characterHeight * 0.5);
         warp( osgbCollision::asBtVector3( deltaStep ) );
+        
+        btVector3 tempVec = m_ghostObject->getWorldTransform().getOrigin() + mLookAtOffsetZ;
+        m_lastPosition = osgbCollision::asOsgVec3( tempVec );
     }
     else
     {

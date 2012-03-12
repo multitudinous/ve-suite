@@ -350,6 +350,9 @@ private:
 
     ///
     osg::ref_ptr< osg::Geode > m_lineGeode;
+    
+    ///Moved the whole way when in displacement mode
+    bool m_moveComplete;
 
 };
 

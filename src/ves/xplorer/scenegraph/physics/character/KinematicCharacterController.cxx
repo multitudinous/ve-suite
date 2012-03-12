@@ -253,7 +253,9 @@ KinematicCharacterController::KinematicCharacterController()
     m_convexShape( NULL ),
     m_isColliding( false ),
 
-    m_lineGeode( NULL )
+    m_lineGeode( NULL ),
+    
+    m_moveComplete( false )
 {
     //Set max slope for character climbing
     setMaxSlope( btRadians( 45.0 ) );
@@ -610,7 +612,7 @@ void KinematicCharacterController::stepDown(
     btVector3 step_drop = getUpAxisDirections()[ m_upAxis ] *
                           ( m_currentStepOffset + downVelocity );
     m_targetPosition -= step_drop;
-
+    
     btTransform start( btMatrix3x3::getIdentity() );
     btTransform end( btMatrix3x3::getIdentity() );
 
@@ -642,7 +644,7 @@ void KinematicCharacterController::stepDown(
             btTransform wt = callback.m_hitCollisionObject->getWorldTransform();
             wt.setOrigin( wt.getOrigin() + response );
             callback.m_hitCollisionObject->setWorldTransform( wt );
-            
+                        
             // Now that we've moved the dynamic object just slightly, make sure we leave
             // the kinematic character at the collision point, leaving just a slight gap
             // between the character and the object we just moved. That allows the dynamic
@@ -685,6 +687,7 @@ void KinematicCharacterController::setDisplacement(
 {
     m_isColliding = false;
     m_useWalkDirection = true;
+    m_moveComplete = false;
     m_displacement = displacement;
     m_normalizedDirection = getNormalizedVector( m_displacement );
 }
@@ -769,7 +772,7 @@ void KinematicCharacterController::playerStep(
     //printf( "playerStep(): " );
     //printf( "  dt = %f", dt );
 
-    //Quick check...
+    //Quick check for complete motion when not using the walk direction...
     if( !m_useWalkDirection && m_velocityTimeInterval <= 0.0 )
     {
         //printf( "\n" );
@@ -777,26 +780,32 @@ void KinematicCharacterController::playerStep(
         return;
     }
 
+    //Check for no motion when using the walk direction
+    if( m_useWalkDirection && m_moveComplete )
+    {
+        //No motion
+        return;
+    }
+    
     m_wasOnGround = onGround();
 
     if( !m_fly )
     {
-    //Update fall velocity
-    m_verticalVelocity -= m_gravity * dt;
-    if( m_verticalVelocity > 0.0 && m_verticalVelocity > m_jumpSpeed )
-    {
-        m_verticalVelocity = m_jumpSpeed;
-    }
-    if( m_verticalVelocity < 0.0 && btFabs( m_verticalVelocity ) > btFabs( m_fallSpeed ) )
-    {
-        m_verticalVelocity = -btFabs( m_fallSpeed );
-    }
-    m_verticalOffset = m_verticalVelocity * dt;
+        //Update fall velocity
+        m_verticalVelocity -= m_gravity * dt;
+        if( m_verticalVelocity > 0.0 && m_verticalVelocity > m_jumpSpeed )
+        {
+            m_verticalVelocity = m_jumpSpeed;
+        }
+        if( m_verticalVelocity < 0.0 && btFabs( m_verticalVelocity ) > btFabs( m_fallSpeed ) )
+        {
+            m_verticalVelocity = -btFabs( m_fallSpeed );
+        }
+        m_verticalOffset = m_verticalVelocity * dt;
     }
 
     btTransform xform;
     xform = m_ghostObject->getWorldTransform();
-
     //printf( "walkDirection( %f, %f, %f )\n", walkDirection[ 0 ], walkDirection[ 1 ], walkDirection[ 2 ] );
     //printf( "walkSpeed = %f\n", walkSpeed );
 
@@ -810,6 +819,15 @@ void KinematicCharacterController::playerStep(
     if( m_useWalkDirection )
     {
         stepForwardAndStrafe( collisionWorld, m_displacement );
+
+        btScalar newLength = (m_currentPosition - xform.getOrigin()).length();
+        if( m_wasOnGround && (m_displacement.length() <= newLength) )
+        {
+            m_moveComplete = true;
+            m_displacement[ 0 ] = 0.;
+            m_displacement[ 1 ] = 0.;
+            m_displacement[ 2 ] = 0.;
+        }
     }
     else
     {
@@ -827,7 +845,7 @@ void KinematicCharacterController::playerStep(
         //Okay, step
         stepForwardAndStrafe( collisionWorld, move );
     }
-
+    
     //Do sweep test below the character
     if( !m_fly )
     {
