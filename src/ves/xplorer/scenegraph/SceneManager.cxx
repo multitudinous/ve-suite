@@ -709,7 +709,7 @@ void SceneManager::LatePreFrameUpdate()
     //Check to see if the character has run into any static objects
     //If the character is not enabled or is not in contact with static objects
     //then the view position constants will be updated.
-    if( !CheckCharacterCollisionState() )
+    //if( !CheckCharacterCollisionState() )
     {
         UpdateHeadPositionConstants();
     }
@@ -722,7 +722,7 @@ void SceneManager::LatePreFrameUpdate()
     m_pureNav.set( m_viewMatrix->getMatrix().ptr() );
     m_pureNav = m_defaultView * m_pureNav;
     m_pureFull = m_pureNav;
-            
+
     m_pureNav.mData[ 12 ] = m_pureNav.mData[ 12 ] - m_lastValidVRJHeadLocation.mData[ 0 ];
     m_pureNav.mData[ 13 ] = m_pureNav.mData[ 13 ] - m_lastValidVRJHeadLocation.mData[ 1 ];
     m_pureNav.mData[ 14 ] = m_pureNav.mData[ 14 ] - m_lastValidVRJHeadLocation.mData[ 2 ];
@@ -966,5 +966,10 @@ osg::Program* SceneManager::GetNullGlowProgram()
 double const& SceneManager::GetUserHeight() const
 {
     return m_userHeight;
+}
+////////////////////////////////////////////////////////////////////////////////
+double SceneManager::GetCurrentTime() const
+{
+    return m_vrjHead->getTimeStamp().secd();
 }
 ////////////////////////////////////////////////////////////////////////////////

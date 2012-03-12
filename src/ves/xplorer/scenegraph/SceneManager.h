@@ -309,6 +309,9 @@ public:
     ///simulated position.
     double const& GetUserHeight() const;
 
+    ///Return the current time from the VR Juggler time stamp
+    double GetCurrentTime() const;
+    
 protected:
     ///Create the model for the logo
     void _createLogo();
