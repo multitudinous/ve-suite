@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="verg_model.xsd">
+
+  <veSystem id="7e7e5757-d8a3-4f83-859b-1b896fbde993">
+    <network/>
+    <model ID="0" id="060e529c-a77c-44ed-bf13-496b9800d48a" name="DefaultPlugin" plugintype="DefaultPlugin" vendorUnit="DefaultPlugin">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string"></icon>
+      <iconLocation xLocation="0" yLocation="0"/>
+    </model>
+    <model ID="0" id="94f1ee04-fcfd-4893-862e-5111674448d1" name="Constraint Plugin" plugintype="ConstraintPlugin" vendorUnit="Constraint Plugin">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string"></icon>
+      <iconLocation xLocation="0" yLocation="0"/>
+    </model>
+    <dbReference type="xs:string">constraint_demo.db</dbReference>
+  </veSystem>
+
+</network>
