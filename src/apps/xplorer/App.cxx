@@ -1158,8 +1158,8 @@ void App::draw()
                 boost::dynamic_pointer_cast< vrj::SurfaceProjection >( project );
             if( tempPtr )
             {
-                frustum = 
-                    m_sceneGLTransformInfo->CalculateFrustum( viewport, eyePoint );
+                //frustum = 
+                //    m_sceneGLTransformInfo->CalculateFrustum( viewport, eyePoint );
             }
         }
         
@@ -1176,8 +1176,8 @@ void App::draw()
                 boost::dynamic_pointer_cast< vrj::SurfaceProjection >( project );
             if( tempPtr )
             {
-                frustum = 
-                    m_sceneGLTransformInfo->CalculateFrustum( viewport, eyePoint );
+                //frustum = 
+                //    m_sceneGLTransformInfo->CalculateFrustum( viewport, eyePoint );
             }
         }
 
