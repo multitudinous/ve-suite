@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="verg_model.xsd">
+
+  <veSystem id="9ff530d8-4caf-4362-8cac-7601ed42343d">
+    <network/>
+    <model ID="0" id="573eb0d3-7218-462c-977e-b218fd4a683b" name="DefaultPlugin" plugintype="DefaultPlugin" vendorUnit="DefaultPlugin">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string"></icon>
+      <iconLocation xLocation="0" yLocation="0"/>
+      <geometry associatedDataset="NONE" id="6827eefa-4d46-4e07-9d85-8f962760c47b" latitude="0" longitude="0" makeTransparentOnVis="true" opacity="1" physics="false" visibility="true">
+        <type>Assembly</type>
+        <name>Model_Geometry</name>
+        <parent type="xs:string"></parent>
+        <transform>
+          <translation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </translation>
+          <scale>
+            <value>1</value>
+            <value>1</value>
+            <value>1</value>
+          </scale>
+          <rotation>
+            <value>-0</value>
+            <value>0</value>
+            <value>-0</value>
+          </rotation>
+        </transform>
+        <children>
+          <child id="bb7dfc25-9771-40e0-8832-e3f753d104f8" latitude="0" longitude="0" makeTransparentOnVis="true" occlusionCulling="Off" opacity="1" physics="false" visibility="true">
+            <type>Part</type>
+            <name>New_Surface0.75</name>
+            <parent type="xs:string">6827eefa-4d46-4e07-9d85-8f962760c47b</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName type="xs:string">Surface0.75.stl</fileName>
+          </child>
+          <child id="bc25022b-1ab4-4673-bf00-3b750b482b95" latitude="0" longitude="0" makeTransparentOnVis="true" occlusionCulling="Off" opacity="1" physics="false" visibility="true">
+            <type>Part</type>
+            <name>New_terrain</name>
+            <parent type="xs:string">6827eefa-4d46-4e07-9d85-8f962760c47b</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName type="xs:string">terrain.ive</fileName>
+          </child>
+          <child id="7ea21925-50cb-4d92-927f-be1f4f9c8091" latitude="0" longitude="0" makeTransparentOnVis="true" occlusionCulling="Off" opacity="1" physics="false" visibility="true">
+            <type>Part</type>
+            <name>New_Surface0.75</name>
+            <parent type="xs:string">6827eefa-4d46-4e07-9d85-8f962760c47b</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName type="xs:string">Surface0.75.stl</fileName>
+          </child>
+        </children>
+      </geometry>
+    </model>
+    <dbReference type="xs:string">simple_character.db</dbReference>
+  </veSystem>
+
+</network>
