@@ -8,7 +8,8 @@ Import( 'RootDir ves_pkg GetPlatform poco_options' )
 fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'constraint_demo' ) )
 ConstraintDemoDir = pj( RootDir, 'share', 'examples', 'constraint_demo' )
 
-#fileBundle.addFiles( [ 'warrantytool.ves' ] )
+fileBundle.addFiles( [ 'constraint_demo.db' ] )
+fileBundle.addFiles( [ 'constraint_demo.ves' ] )
 iveFile = sca_util.getFilesRecursiveByExt( ConstraintDemoDir, [ '.ive' ] )
 fileBundle.addFiles( iveFile )
 
