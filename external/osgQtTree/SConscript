@@ -4,7 +4,7 @@
 import os, sys, string, glob
 pj = os.path.join
 import SConsAddons.Util as sca_util
-Import('baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform osg_options')
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform osg_options osgworks_options')
 
 openDir = os.path.abspath( pj(RootDir, 'external', 'osgQtTree') )
 buildSrcDir = pj('#',buildDir,'external','osgQtTree')
@@ -32,6 +32,7 @@ sources = map(lambda s: os.path.basename(s), sources_list)
 sources += cppSources
 
 osg_options.apply( lib_env )
+osgworks_options.apply( lib_env )
 
 lib_env.AppendUnique( CPPDEFINES = ['OSGQTTREE_LIBRARY'] )
 

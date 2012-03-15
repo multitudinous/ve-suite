@@ -181,7 +181,7 @@ void TreeTab::PopulateWithRoot( osg::Node* root )
     
     // Create a node visitor that will add items into the tree model, and
     // turn it loose on the root node of the scenegraph
-    osgQtTree::PopulateTreeControlWithNodeVisitor populator( mModel );
+    osgQtTree::PopulateTreeControlWithNodeVisitor populator( (ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()), mModel );
     root->accept( populator );
 
     mModel->EndReset();
@@ -238,10 +238,12 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
 
     // Get the node associated with this QModelIndex
     osg::Node* node = 0;
+    std::string nodepath;
     if( index != QModelIndex() )
     {
         osgQtTree::osgTreeItem* item = static_cast< osgQtTree::osgTreeItem* >( index.internalPointer() );
         node = item->GetNode();
+        nodepath = item->GetNodePath();
     }
 
     // See if this node has a VE_XML_ID
@@ -349,9 +351,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     if( highlight && type == "CAD" )
     {
         //Set the selected DCS
-        std::string pathString = boost::any_cast< std::string >
-                                 ( mActiveSet->GetPropertyValue( "NodePath" ) );
-        osg::NodePath nodePath = osgwTools::stringToNodePath( pathString,
+        osg::NodePath nodePath = osgwTools::stringToNodePath( nodepath,
              ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode());
         m_highlightAndSetManipulators( nodePath );
     }
@@ -359,8 +359,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     if( type == "CAD" )
     {
         LOG_DEBUG( "Firing CADNodeSelected signal" );
-        m_CADNodeSelected( boost::any_cast< std::string >
-                       ( mActiveSet->GetPropertyValue( "NodePath" ) ));
+        m_CADNodeSelected( nodepath );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -464,6 +463,7 @@ void TreeTab::RefreshTree()
     // Read the scenegraph and rebuild tree.
     PopulateWithRoot(
         &(ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager()) );
+    ui->m_expandAllButton->setText( "Expand All" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::on_m_searchBox_textEdited( const QString& pattern )

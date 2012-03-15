@@ -10,6 +10,7 @@
 #include <QtGui/QTreeView>
 #include <QtCore/QModelIndex>
 
+#include <osgwTools/NodePathUtils.h>
 
 #include <iostream>
 #include <sstream>
@@ -18,12 +19,15 @@ namespace osgQtTree {
 
 
 osgTreeItem*
-getOrCreateTreeRoot( TreeModel *tree, osgTreeItem* currentRoot, osg::Node *node )
+getOrCreateTreeRoot( TreeModel *tree, osgTreeItem* currentRoot, osg::Node *node, osg::Node* rootnode )
 {
     osgTreeItem* newItem = currentRoot;
     if( newItem == 0 )
     {
-        newItem = addTreeItem( tree->GetRoot(), node );
+        // The nodepath here is not actually correct since we don't use the
+        // proper root node.
+        std::string nodepath = getNodePathString( rootnode, node );
+        newItem = addTreeItem( tree->GetRoot(), node, nodepath );
     }
 
     return( newItem );
@@ -32,8 +36,9 @@ getOrCreateTreeRoot( TreeModel *tree, osgTreeItem* currentRoot, osg::Node *node 
 void
 PopulateTreeControlWithNodeVisitor::apply( osg::Node& node )
 {
-    activeGroup_ = getOrCreateTreeRoot( tree_, activeGroup_, &node );
-    activeChild_ = osgQtTree::addTreeItem( activeGroup_, &node );
+    activeGroup_ = getOrCreateTreeRoot( tree_, activeGroup_, &node, rootnode_ );
+    std::string nodepath = getNodePathString( rootnode_, &node );
+    activeChild_ = osgQtTree::addTreeItem( activeGroup_, &node, nodepath );
 
     traverse( node );
 }
@@ -46,17 +51,24 @@ PopulateTreeControlWithNodeVisitor::apply( osg::Group& group )
     if( tree_->GetRoot()->childCount() == 0 )
     {
         // First item
-        activeGroup_ = getOrCreateTreeRoot( tree_, activeGroup_, &group );
+        activeGroup_ = getOrCreateTreeRoot( tree_, activeGroup_, &group, rootnode_ );
     }
     else
     {
         pushgroup = activeGroup_;
-        activeGroup_ = osgQtTree::addTreeItem( activeGroup_, &group );
+        std::string nodepath = getNodePathString( rootnode_, &group );
+        activeGroup_ = osgQtTree::addTreeItem( activeGroup_, &group, nodepath );
     }
 
     traverse( group );
 
     activeGroup_ = pushgroup;
+}
+
+void 
+PopulateTreeControlWithNodeVisitor::setRootNode( osg::Node* rootnode )
+{
+    rootnode_ = rootnode;
 }
 
 QModelIndex
@@ -137,6 +149,7 @@ openToAndSelect( QTreeView* view, TreeModel* model, const osg::NodePath& nodepat
 
 osgTreeItem* addTreeItem( TreeItem* parent,
                           osg::Node* node,
+                          const std::string& nodepath,
                           const std::string& name )
 {
     std::string nodename( "NULL" );
@@ -150,9 +163,28 @@ osgTreeItem* addTreeItem( TreeItem* parent,
     QList<QVariant> viewData;
     viewData << QString::fromStdString(nodename);
     
-    osgTreeItem* child = new osgTreeItem( viewData, parent, node);
+    osgTreeItem* child = new osgTreeItem( viewData, parent, node, nodepath );
     parent->appendChild( child );
     return( child );
+}
+
+std::string getNodePathString( osg::Node* const startNode,
+                                                 osg::Node* endNode )
+{
+    // Walk up from end to start
+    osg::NodePath nodePath;
+    nodePath.push_back( endNode );
+    while( (endNode->getNumParents() != 0) && (endNode != startNode) )
+    {
+        endNode = endNode->getParent( 0 );
+        nodePath.push_back( endNode );
+    }
+
+    // Reverse the nodePath so that it points from start to end
+    osg::NodePath temp;
+    temp.assign( nodePath.rbegin(), nodePath.rend() );
+
+    return osgwTools::nodePathToString( temp );
 }
 
 

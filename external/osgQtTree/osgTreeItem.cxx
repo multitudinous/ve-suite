@@ -3,9 +3,13 @@
 namespace osgQtTree
 {
 
-osgTreeItem::osgTreeItem( const QList<QVariant> &data, TreeItem *parent, osg::Node* node ):
+osgTreeItem::osgTreeItem( const QList<QVariant> &data, 
+                          TreeItem *parent, 
+                          osg::Node* node, 
+                          const std::string& nodepath ):
         TreeItem( data, parent ),
-        mNode( node )
+        mNode( node ),
+        mNodePath( nodepath )
 {
 }
 
@@ -18,5 +22,16 @@ osg::Node* osgTreeItem::GetNode()
 {
     return mNode;
 }
+
+void osgTreeItem::SetNodePath( const std::string& nodepath )
+{
+    mNodePath = nodepath;
+}
+
+const std::string& osgTreeItem::GetNodePath()
+{
+    return mNodePath;
+}
+
 
 } // namespace osgQtTree
