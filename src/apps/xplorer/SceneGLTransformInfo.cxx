@@ -264,8 +264,8 @@ vrj::Frustum SceneGLTransformInfo::CalculateFrustum( vrj::ViewportPtr const view
     urCorner = viewMatrix * urCorner;
     ulCorner = viewMatrix * ulCorner;
 
-    vrj::SurfaceProjectionPtr tempProjection =
-        vrj::SurfaceProjection::create( llCorner, lrCorner, urCorner, ulCorner );
+    vrj::SurfaceProjectionPtr tempProjection;
+        //vrj::SurfaceProjection::create( llCorner, lrCorner, urCorner, ulCorner );
     
     tempProjection->calcViewMatrix( gmtl::MAT_IDENTITY44F, eyePoint, positionScale );
     
