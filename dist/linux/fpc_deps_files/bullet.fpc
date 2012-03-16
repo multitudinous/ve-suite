@@ -7,7 +7,7 @@ Name: Bullet
 Description: Bullet Physics release Pre-Compiled for VES
 Provides: bullet Bullet
 Requires:
-Version: 2.79
+Version: 2.80
 Cflags: -I${includedir} -DBT_USE_DOUBLE_PRECISION
 Libs: -L${libdir} -lBulletCollision -lBulletDynamics -lLinearMath -lBulletMultiThreaded
 Arch: noarch
