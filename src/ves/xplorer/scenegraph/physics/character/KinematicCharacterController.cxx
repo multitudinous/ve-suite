@@ -134,6 +134,12 @@ public:
             return btScalar( 1.0 );
         }
 
+        //for trigger filtering
+        if( !convexResult.m_hitCollisionObject->hasContactResponse() )
+        {
+            return btScalar(1.0);
+        }
+
         btVector3 hitNormalWorld;
         if( normalInWorldSpace )
         {
@@ -221,7 +227,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_maxSlopeCosine( 0.0 ),
     m_gravity( -m_dynamicsWorld.getGravity().z() ),
     //m_turnAngle( 0.0 ),
-    m_stepHeight( 2.0 ),
+    m_stepHeight( 1.0 ),
     m_addedMargin( 0.02 ),
     m_currentStepOffset( 0.0 ),
     m_velocityTimeInterval( 0.0 ),
@@ -237,7 +243,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_jumpHeight( 0.0 ),
     m_jumpTime( 0.0 ),
     //m_characterWidth( 2.0/*1.83*/ ),
-    m_characterWidth( 1.5 ),
+    m_characterWidth( 1. ),
     //The average height of a male in the U.S. is 5.83 ft
     //m_characterHeight( 5.83 ),
     m_characterHeight( 6.0 ),
@@ -258,7 +264,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_moveComplete( false )
 {
     //Set max slope for character climbing
-    setMaxSlope( btRadians( 45.0 ) );
+    setMaxSlope( btRadians( 60.0 ) );
 
     m_ghostObject->setWorldTransform( btTransform::getIdentity() );
 
@@ -308,6 +314,8 @@ void KinematicCharacterController::SetConvexShape( btConvexShape* convexShape )
     m_convexShape = convexShape;
     m_ghostObject->setCollisionShape( m_convexShape );
     m_ghostObject->setCollisionFlags( btCollisionObject::CF_CHARACTER_OBJECT );
+    //m_ghostObject->setCollisionFlags( m_ghostObject->getCollisionFlags() |
+    //                         btCollisionObject::CF_NO_CONTACT_RESPONSE);
 }
 ////////////////////////////////////////////////////////////////////////////////
 btPairCachingGhostObject* KinematicCharacterController::GetGhostObject() const
@@ -335,6 +343,13 @@ bool KinematicCharacterController::recoverFromPenetration(
 
         btBroadphasePair* collisionPair = &btHOPC->getOverlappingPairArray()[ i ];
 
+        //for trigger filtering
+        if (!static_cast<btCollisionObject*>(collisionPair->m_pProxy0->m_clientObject)->hasContactResponse()
+            || !static_cast<btCollisionObject*>(collisionPair->m_pProxy1->m_clientObject)->hasContactResponse())
+        {
+            continue;
+        }
+            
         if( collisionPair->m_algorithm )
         {
             collisionPair->m_algorithm->getAllContactManifolds( m_manifoldArray );
@@ -420,7 +435,8 @@ void KinematicCharacterController::stepUp( btCollisionWorld* world )
 
     //Find only sloped/flat surface hits, avoid wall and ceiling hits...
     btKinematicClosestNotMeConvexResultCallback callback(
-        m_ghostObject, -getUpAxisDirections()[ m_upAxis ], btScalar( 0.0 ) );
+        //m_ghostObject, -getUpAxisDirections()[ m_upAxis ], btScalar( 0.7071 ) );
+        m_ghostObject, -getUpAxisDirections()[ m_upAxis ], btScalar( 0. ) );
     callback.m_collisionFilterGroup =
         m_ghostObject->getBroadphaseHandle()->m_collisionFilterGroup;
     callback.m_collisionFilterMask =
@@ -505,15 +521,13 @@ void KinematicCharacterController::stepForwardAndStrafe(
     btScalar distance2 = ( m_currentPosition - m_targetPosition ).length2();
     //printf( "distance2 = %f\n", distance2 );
 
-    /*
-    if( m_touchingContact )
+    /*if( m_touchingContact )
     {
         if( m_normalizedDirection.dot( m_touchingNormal ) > btScalar( 0.0 ) )
         {
             updateTargetPositionBasedOnCollision( m_touchingNormal );
         }
-    }
-    */
+    }*/
 
     int maxIter = 10;
 
@@ -524,6 +538,10 @@ void KinematicCharacterController::stepForwardAndStrafe(
 
         btKinematicClosestNotMeConvexResultCallback callback(
             m_ghostObject, getUpAxisDirections()[ m_upAxis ], btScalar( -1.0 ) );
+        //From the skew matrix example:
+        //btVector3 sweepDirNegative(m_currentPosition - m_targetPosition);
+        //btKinematicClosestNotMeConvexResultCallback callback (m_ghostObject, sweepDirNegative, btScalar(0.0));
+
         callback.m_collisionFilterGroup =
             m_ghostObject->getBroadphaseHandle()->m_collisionFilterGroup;
         callback.m_collisionFilterMask =
@@ -611,6 +629,7 @@ void KinematicCharacterController::stepDown(
 
     btVector3 step_drop = getUpAxisDirections()[ m_upAxis ] *
                           ( m_currentStepOffset + downVelocity );
+
     m_targetPosition -= step_drop;
     
     btTransform start( btMatrix3x3::getIdentity() );
@@ -750,6 +769,15 @@ void KinematicCharacterController::preStep( btCollisionWorld* collisionWorld )
 {
     unsigned int numPenetrationLoops( 0 );
     m_touchingContact = false;
+    //With this code in place the character slides on surfaces like they are ice
+    //and the character is unable to move up sloped surfaces with the
+    //setVelocityForTimeInterval method. The setDisplacement will enable the
+    //character to move up the surface but the character will still slide down 
+    //the surface once input has stopped for the character movement. These
+    //problems were introduced somewhere between bullet 2.77 and bullet 2.78.
+    //More info:
+    //http://irrlicht.sourceforge.net/forum/viewtopic.php?t=42478
+    //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?t=5684
     while( recoverFromPenetration( collisionWorld ) )
     {
         ++numPenetrationLoops;
