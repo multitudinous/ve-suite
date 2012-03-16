@@ -50,7 +50,7 @@ std::string HyperLabICEPluginFactory::GetFactoryClassName()
 
 std::string HyperLabICEPluginFactory::GetFactoryDisplayName()
 {
-    return std::string( "Hyper Lab ICE Plugin" );
+    return std::string( "HyperLabICEPlugin" );
 }
 
 double HyperLabICEPluginFactory::GetVersion()

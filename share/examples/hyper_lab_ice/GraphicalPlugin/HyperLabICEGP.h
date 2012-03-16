@@ -94,23 +94,7 @@ protected:
 
 private:
     ///Initialize the vpaint demo graph
-    int InitializeConstraintGraph();
-
-    ///
-    osg::Node* fixWalls( osg::Node* wallsNode );
-    
-    ///
-    void makeStaticObject( btDiscreteDynamicsWorld* bw, 
-        osg::Node* node, const osg::Matrix& m );
-
-    ///
-    osg::Transform* makeGate( btDiscreteDynamicsWorld* bw, 
-        osgbInteraction::SaveRestoreHandler* srh, osg::Node* node, 
-        const osg::Matrix& m );
-
-    ///
-    osg::Node* findNamedNode( osg::Node* model, const std::string& name, 
-        osg::Matrix& xform );
+    int InitializeLabModels();
 
     ves::xplorer::device::KeyboardMouse* m_keyboard;
 

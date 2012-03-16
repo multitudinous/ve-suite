@@ -70,6 +70,7 @@ extern osg::ref_ptr<osg::Texture2D> RTTtex;
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "HyperLabICEGP.h"
+#include "RenderPrep.h"
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
@@ -148,23 +149,7 @@ public:
 };
 /* \endcond */
 
-#define METERS2FEET 3.28
-
-// Filter out collisions between the gate and walls.
-//
-// Bullet collision filtering tutorial:
-//   http://www.bulletphysics.com/mediawiki-1.5.8/index.php?title=Collision_Filtering
-//
-// Define filter groups
-enum CollisionTypes {
-    COL_GATE = 0x1 << 0,
-    COL_WALL = 0x1 << 1,
-    COL_DEFAULT = 0x1 << 2,
-};
-// Define filter masks
-unsigned int gateCollidesWith( COL_DEFAULT );
-unsigned int wallCollidesWith( COL_DEFAULT );
-unsigned int defaultCollidesWith( COL_GATE | COL_WALL | COL_DEFAULT );
+#define CM2FEET 0.0328
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -185,10 +170,10 @@ void HyperLabICEGP::InitializeNode(
 {
     PluginBase::InitializeNode( veworldDCS );
     
-    InitializeConstraintGraph();
+    InitializeLabModels();
 }
 ////////////////////////////////////////////////////////////////////////////////
-int HyperLabICEGP::InitializeConstraintGraph()
+int HyperLabICEGP::InitializeLabModels()
 {    
     btDiscreteDynamicsWorld* bulletWorld = 
         dynamic_cast< btDiscreteDynamicsWorld* >( mPhysicsSimulator->GetDynamicsWorld() );
@@ -196,80 +181,54 @@ int HyperLabICEGP::InitializeConstraintGraph()
 
     mDCS->addChild( root );
     
-    osg::ref_ptr< osg::Node > rootModel = osgDB::readNodeFile( "Models/GateWall.ive" );
-    if( !rootModel.valid() )
+    osg::ref_ptr< osgDB::ReaderWriter::Options > options = new osgDB::ReaderWriter::Options;
+    options->setOptionString( "dds_flip" );
+    
+    //osg::ref_ptr< osg::Group > root = new osg::Group;
+    osg::ref_ptr< osg::Node > models = osgDB::readNodeFile( "Models/ControlRoom_v9.osg", options.get() );
+    if( !( models.valid() ) )
     {
-        osg::notify( osg::FATAL ) << "hinge: Can't load data file \"GateWall.ive\"." << std::endl;
+        osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
         return( 1 );
     }
     
     {
-        util::MaterialPresent materialPresent( rootModel.get() );
+        // Main prep work for rendering.
+        float textSize( 0.f );
+        bool parallaxMap( false );
+        RenderPrep renderPrep( models.get(), textSize, parallaxMap );
     }
     
+    osg::ref_ptr< osg::Node > facility = osgDB::readNodeFile( "Models/HyperLab_Facility_v1.osg", options.get() );
+    if( !( facility.valid() ) )
+    {
+        osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
+        return( 1 );
+    }
     
+    /*osg::ref_ptr< osg::Node > collisions = osgDB::readNodeFile( "Models/HyperLab_Collision_v1.osg", options.get() );
+    if( !( collisions.valid() ) )
+    {
+        osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
+        return( 1 );
+    }*/
+
     // Scale to feet.
     {
         osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform(
-            osg::Matrix::scale( osg::Vec3( METERS2FEET, METERS2FEET, METERS2FEET ) ) );
+            osg::Matrix::scale( osg::Vec3( CM2FEET, CM2FEET, CM2FEET ) ) );
         mt->setDataVariance( osg::Object::STATIC );
-        mt->addChild( rootModel.get() );
+        mt->addChild( models.get() );
+        mt->addChild( facility.get() );
+        //mt->addChild( collisions.get() );
         
         osgUtil::Optimizer optimizer;
         optimizer.optimize( mt.get(), osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS );
     }
     
-    root->addChild( rootModel.get() );
-    
-    // Get Node pointers and parent transforms for the wall and gate.
-    // (Node names are taken from the osgWorks osgwnames utility.)
-    osg::Matrix wallXform, gateXform;
-    osg::Node* wallsNode = findNamedNode( rootModel.get(), "Walls", wallXform );
-    osg::Node* gateNode = findNamedNode( rootModel.get(), "DOF_Gate", gateXform );
-    if( ( wallsNode == NULL ) || ( gateNode == NULL ) )
-    {
-        std::cout << "Could not find the Gate or walls." << std::endl;
-        return( 1 );
-    }
-    
-    // BEGIN WALL FIX
-    //
-    // Unfortunately, the two walls come to us as a single Geode with
-    // a single Geometry and single PrimitiveSet. Break that into two Geodes, a
-    // left wall and a right wall, so we can make a collision shape for each.
-    osg::Node* otherWall = fixWalls( wallsNode );
-    wallsNode->getParent( 0 )->addChild( otherWall );
-    otherWall->setName( "otherWall" );
-    osg::Matrix otherWallXform = wallXform;
-    //
-    // END WALL FIX
-    
-        
-    // Make Bullet rigid bodies and collision shapes for the gate...
-    makeGate( bulletWorld, 0, gateNode, gateXform );
-    // ...and the two walls.
-    makeStaticObject( bulletWorld, wallsNode, wallXform );
-    makeStaticObject( bulletWorld, otherWall, otherWallXform );
-    
-    // Add ground
-    const osg::Vec4 plane( 0., 0., 1., 0. );
-    root->addChild( osgbDynamics::generateGroundPlane( plane, bulletWorld,
-                                                      NULL ) );//, COL_DEFAULT, defaultCollidesWith ) );
-    
-    
-    // Create the hinge constraint.
-    {
-        // Pivot point and pivot axis are both in the gate's object space.
-        // Note that the gate is COM-adjusted, so the pivot point must also be
-        // in the gate's COM-adjusted object space.
-        // TBD extract this from hinge data fine.
-        const btVector3 btPivot( btVector3( -0.498f, -0.019f, 0.146f ) * METERS2FEET );
-        
-        btVector3 btAxisA( 0., 0., 1. );
-        btHingeConstraint* hinge = new btHingeConstraint( *gateBody, btPivot, btAxisA );
-        hinge->setLimit( -1.5f, 1.5f );
-        bulletWorld->addConstraint( hinge, true );
-    }
+    root->addChild( models.get() );
+    root->addChild( facility.get() );
+    //root->addChild( collisions.get() );
 
     std::cout << "Loaded all of the models and physics for the Gate." << std::endl;
     return( 0 );
@@ -287,93 +246,6 @@ void HyperLabICEGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     {
         return;
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Node* HyperLabICEGP::fixWalls( osg::Node* wallsNode )
-{
-    osg::ref_ptr< osg::Node > otherWall;
-    {
-        osg::ref_ptr< osg::Group > srcTempGroup = new osg::Group;
-        srcTempGroup->addChild( wallsNode );
-        osg::ref_ptr< osg::Group > otherWallTempGroup = new osg::Group( *srcTempGroup,
-                                                                       osg::CopyOp::DEEP_COPY_NODES | osg::CopyOp::DEEP_COPY_DRAWABLES | osg::CopyOp::DEEP_COPY_PRIMITIVES );
-        otherWall = otherWallTempGroup->getChild( 0 );
-    }
-    
-    unsigned int count;
-    {
-        osg::ref_ptr< FindGeomOp > findGeom = new FindGeomOp;
-        osgwTools::GeometryModifier modifier( findGeom.get() );
-        wallsNode->accept( modifier );
-        
-        osg::Geometry* geom = findGeom->_target.get();
-        osg::DrawArrays* da = dynamic_cast< osg::DrawArrays* >( geom->getPrimitiveSet( 0 ) );
-        count = da->getCount();
-        da->setCount( count / 2 );
-    }
-    {
-        osg::ref_ptr< FindGeomOp > findGeom = new FindGeomOp;
-        osgwTools::GeometryModifier modifier( findGeom.get() );
-        otherWall->accept( modifier );
-        
-        osg::Geometry* geom = findGeom->_target.get();
-        osg::DrawArrays* da = dynamic_cast< osg::DrawArrays* >( geom->getPrimitiveSet( 0 ) );
-        da->setFirst( count / 2 );
-        da->setCount( count / 2 );
-    }
-    
-    return( otherWall.release() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void HyperLabICEGP::makeStaticObject( btDiscreteDynamicsWorld* bw, osg::Node* node, const osg::Matrix& )
-{
-    osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
-    cr->_sceneGraph = node;
-    cr->_shapeType = CONVEX_HULL_SHAPE_PROXYTYPE;
-    cr->_mass = 0.f;
-    btRigidBody* rb = osgbDynamics::createRigidBody( cr.get() );
-    
-    bw->addRigidBody( rb, 
-                     COL_WALL, 
-                     wallCollidesWith|btBroadphaseProxy::CharacterFilter );
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Transform* HyperLabICEGP::makeGate( btDiscreteDynamicsWorld* bw, osgbInteraction::SaveRestoreHandler*, osg::Node* node, const osg::Matrix& m )
-{
-    osgwTools::AbsoluteModelTransform* amt = new osgwTools::AbsoluteModelTransform;
-    amt->setDataVariance( osg::Object::DYNAMIC );
-    osgwTools::insertAbove( node, amt );
-    
-    osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
-    cr->_sceneGraph = amt;
-    cr->_shapeType = CONVEX_HULL_SHAPE_PROXYTYPE;
-    cr->setCenterOfMass( node->getBound().center() );
-    cr->_parentTransform = m;
-    cr->_mass = 1.f;
-    cr->_restitution = .5f;
-    btRigidBody* rb = osgbDynamics::createRigidBody( cr.get() );
-    
-    bw->addRigidBody( rb, COL_GATE, gateCollidesWith|btBroadphaseProxy::CharacterFilter );
-    rb->setActivationState( DISABLE_DEACTIVATION );
-    
-    // Save RB in global, as AMT UserData (for DragHandler), and in SaveRestoreHandler.
-    gateBody = rb;
-    amt->setUserData( new osgbCollision::RefRigidBody( rb ) );
-    
-    return( amt );
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Node* HyperLabICEGP::findNamedNode( osg::Node* model, const std::string& name, osg::Matrix& xform )
-{
-    osgwTools::FindNamedNode fnn( name );
-    model->accept( fnn );
-    if( fnn._napl.empty() )
-    {
-        osg::notify( osg::FATAL ) << "hinge: Can't find node names \"" << name << "\"." << std::endl;
-        return( NULL );
-    }
-    xform = osg::computeLocalToWorld( fnn._napl[ 0 ].second );
-    return( fnn._napl[ 0 ].first );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::RemoveSelfFromSG()

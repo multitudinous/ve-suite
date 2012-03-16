@@ -48,7 +48,7 @@ HyperLabICEPlugin::HyperLabICEPlugin():
     m_FinancialDataWidget(0),
     m_InputVariablesWidget(0),
     m_ResultsVariablesWidget(0),
-    m_name("Constraint Demo")
+    m_name("HyperLabICEPlugin")
 {
     m_UIWidget = new HyperLabICEPlugin_UIDialog( 0 );
 }
