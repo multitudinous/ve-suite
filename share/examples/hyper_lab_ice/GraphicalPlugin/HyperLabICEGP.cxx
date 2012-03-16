@@ -70,7 +70,9 @@ extern osg::ref_ptr<osg::Texture2D> RTTtex;
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "HyperLabICEGP.h"
+#ifdef NETL_DEMO
 #include "RenderPrep.h"
+#endif
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
@@ -194,9 +196,11 @@ int HyperLabICEGP::InitializeLabModels()
     
     {
         // Main prep work for rendering.
+#ifdef NETL_DEMO
         float textSize( 0.f );
         bool parallaxMap( false );
         RenderPrep renderPrep( models.get(), textSize, parallaxMap );
+#endif
     }
     
     osg::ref_ptr< osg::Node > facility = osgDB::readNodeFile( "Models/HyperLab_Facility_v1.osg", options.get() );
