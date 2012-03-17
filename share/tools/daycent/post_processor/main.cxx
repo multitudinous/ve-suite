@@ -99,6 +99,7 @@ int main( int argc, char* argv[] )
 
         boost::algorithm::replace_all( dbTableName, "/", "_" );
         boost::algorithm::replace_all( dbTableName, " ", "_" );
+        boost::algorithm::replace_all( dbTableName, "-", "_" );
         //Special cases for windows
         boost::algorithm::replace_all( dbTableName, ".\\", "" );
         boost::algorithm::replace_all( dbTableName, "\\", "_" );
@@ -240,7 +241,17 @@ void ParseDataFile( std::string csvFilename, std::string dbTableName )
     // drop sample table, if it exists
     std::ostringstream dropTable;
     dropTable << "DROP TABLE IF EXISTS " << dbTableName;
-    session << dropTable.str().c_str(), Poco::Data::now;
+    try
+    {
+        session << dropTable.str().c_str(), Poco::Data::now;
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << "Problem with table name " << dbTableName 
+            << std::endl << ex.displayText() << std::endl;
+        return;
+    }
+
     
     std::ostringstream createCommand;
     createCommand << "CREATE TABLE " << dbTableName << " (";
