@@ -56,7 +56,7 @@
 #define VESINSTALLDIR "install-32-bit"
 #endif
 #define BDFXDIRNAME "bdfx"
-#define BULLETDIRNAME "bullet-2.77"
+#define BULLETDIRNAME "bullet-2.80"
 #define PNGDIRNAME "libpng-1.5.2"
 #define OSGDIRNAME "osg_2.8.5"
 #define OSGBULLETDIRNAME "osgBullet"
