@@ -232,9 +232,9 @@
          <device>SimCamera</device>
          <unit>0</unit>
       </position_proxy>
-      <alias name="VJWand" version="1">
+      <!--alias name="VJWand" version="1">
          <proxy>RelativeWand Proxy</proxy>
-      </alias>
+      </alias-->
       <alias name="VJSystemStopKernel" version="1">
          <proxy>VJSystemStopKernelProxy</proxy>
       </alias>
@@ -244,7 +244,7 @@
       <alias name="VJHead" version="1">
          <proxy>Head Proxy</proxy>
       </alias>
-      <alias name="VJButton5" version="1">
+      <!--alias name="VJButton5" version="1">
          <proxy>NONE</proxy>
       </alias>
       <alias name="VJButton4" version="1">
@@ -261,7 +261,7 @@
       </alias>
       <alias name="VJButton0" version="1">
          <proxy>NONE</proxy>
-      </alias>
+      </alias-->
       <position_proxy name="RelativeWand Proxy" version="1">
          <device>SimRelativePosition1</device>
          <unit>0</unit>
@@ -505,15 +505,15 @@
          <driver>SdlJoystick_drv</driver>
           <driver>DirectXJoystick_drv</driver>
       </input_manager>
-       <!--sdl_joystick name="Joystick0" version="1">
+       <sdl_joystick name="Joystick0" version="1">
          <device>0</device>
          <min>0.0</min>
          <max>255.0</max>
-      </sdl_joystick-->
-       <directx_joystick name="Joystick0" version="1">
+      </sdl_joystick>
+       <!--directx_joystick name="Joystick0" version="1">
            <min>0.0</min>
            <max>255.0</max>
-       </directx_joystick>
+       </directx_joystick-->
       <rumble_proxy name="Rumble0" version="1">
          <device>Joystick0</device>
       </rumble_proxy>
