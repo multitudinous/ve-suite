@@ -503,12 +503,17 @@
       <input_manager name="IM SDL Joystick" version="2">
          <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
          <driver>SdlJoystick_drv</driver>
+          <driver>DirectXJoystick_drv</driver>
       </input_manager>
-      <sdl_joystick name="Joystick0" version="1">
+       <!--sdl_joystick name="Joystick0" version="1">
          <device>0</device>
          <min>0.0</min>
          <max>255.0</max>
-      </sdl_joystick>
+      </sdl_joystick-->
+       <directx_joystick name="Joystick0" version="1">
+           <min>0.0</min>
+           <max>255.0</max>
+       </directx_joystick>
       <rumble_proxy name="Rumble0" version="1">
          <device>Joystick0</device>
       </rumble_proxy>
