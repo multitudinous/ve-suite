@@ -396,6 +396,10 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
         return;
     }
 
+    //Remove custom glows
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlight2( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(), "", false, true );
+
     //
     osg::Vec3d center( 0.0, 0.0, 0.0 );
     //If dcs is from a camera object, we want to rotate about local zero point
