@@ -11,6 +11,11 @@ buildSrcDir = pj('#',buildDir,'external','osgQtTree')
 
 lib_env = ves_pkg.getEnv().Clone()
 
+### rcc files
+source = [pj(buildSrcDir,'treeicons.qrc')]
+cppSources = lib_env.qt_rcc(source)
+###
+
 mocced = []
 mocsources = [pj(buildSrcDir,'treemodel.h')]
 
@@ -19,7 +24,9 @@ for x in mocsources:
 
 openDir2 = os.path.abspath( pj(RootDir,buildDir,'external','osgQtTree') )
 #cppSources1 = map(lambda s: pj(openDir2, '%s' ) %(s), cppSources)
-cppSources = map(lambda s: pj(openDir2, '%s' ) %(s), mocced )
+cppSources += map(lambda s: pj(openDir2, '%s' ) %(s), mocced )
+
+
 
 lib_env.Append( CPPPATH = [pj(openDir2)] )
 lib_env.Append(CPPPATH = [pj('#','external')])
@@ -30,6 +37,8 @@ headers = map(lambda s: os.path.basename(s), headers_list)
 sources_list = glob.glob(pj(RootDir, 'external', 'osgQtTree','*.cxx'))
 sources = map(lambda s: os.path.basename(s), sources_list)
 sources += cppSources
+
+
 
 osg_options.apply( lib_env )
 osgworks_options.apply( lib_env )

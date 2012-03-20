@@ -78,11 +78,14 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
+        
+    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+
+    if (role == Qt::DecorationRole)
+        return item->GetIcon();
 
     if (role != Qt::DisplayRole)
         return QVariant();
-
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
 
     return item->data(index.column());
 }

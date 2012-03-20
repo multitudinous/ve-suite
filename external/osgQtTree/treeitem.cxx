@@ -94,3 +94,12 @@ int TreeItem::row() const
     return 0;
 }
 
+void TreeItem::SetIcon(const QIcon& icon)
+{
+    m_icon = icon;
+}
+
+QIcon TreeItem::GetIcon()
+{
+    return m_icon;
+}

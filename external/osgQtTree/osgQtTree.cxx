@@ -164,6 +164,30 @@ osgTreeItem* addTreeItem( TreeItem* parent,
     viewData << QString::fromStdString(nodename);
     
     osgTreeItem* child = new osgTreeItem( viewData, parent, node, nodepath );
+
+    if( node )
+    {
+        osg::Node::DescriptionList descList = node->getDescriptions();
+        for( size_t i = 0; i < descList.size(); ++i )
+        {
+            if( (descList.at( i ) == "Assembly") || (descList.at( i ) == "Part") )
+            {
+                child->SetIcon(QIcon(
+                ":/tree/cadicon.png"));
+            }
+            else if( descList.at( i ) == "VE_DATA_NODE" )
+            {
+                child->SetIcon(QIcon(
+                ":/tree/dataseticon.png"));
+            }
+            else if( descList.at( i ) == "VE_XPLORER_PLUGIN_ID" )
+            {
+                child->SetIcon(QIcon(
+                ":/tree/pluginicon.jpg"));
+            }
+        }
+    }
+
     parent->appendChild( child );
     return( child );
 }

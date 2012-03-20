@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/tree">
+        <file>cadicon.png</file>
+        <file>dataseticon.png</file>
+        <file>pluginicon.jpg</file>
+    </qresource>
+</RCC>

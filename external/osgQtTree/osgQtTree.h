@@ -17,6 +17,10 @@
 #include <osg/NodeVisitor>
 #include <osg/Group>
 
+void initResources()
+{
+    Q_INIT_RESOURCE(treeicons);
+}
 
 namespace osgQtTree {
 
@@ -30,6 +34,7 @@ public:
         activeGroup_( NULL ),
         activeChild_( NULL )
     {
+        initResources();
         setTraversalMask( 0xffffffff );
         setNodeMaskOverride( 0xffffffff );
     }

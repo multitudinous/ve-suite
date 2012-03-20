@@ -43,6 +43,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include "Export.h"
 
 class OSGQTTREE_EXPORT TreeItem
@@ -59,10 +60,13 @@ public:
     QVariant data(int column) const;
     int row() const;
     TreeItem *parent();
+    QIcon GetIcon();
+    void SetIcon(const QIcon& icon);
 
 private:
     QList<TreeItem*> childItems;
     QList<QVariant> itemData;
     TreeItem *parentItem;
+    QIcon m_icon;
 };
 
