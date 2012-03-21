@@ -56,11 +56,15 @@ Scheduler::~Scheduler()
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::SetGraph( lemon::ListDigraph& g, std::map< lemon::ListDigraph::Node, std::string >& modelIDMap, std::map< std::string, iaf::scheduler::ModelNode* >& modelMap )
 {
-    m_modelMap = modelMap;
+    //m_modelMap = modelMap;
     lemon::ListDigraph::NodeMap< lemon::ListDigraph::Node > nr(m_g);
     lemon::digraphCopy( g, m_g ).nodeCrossRef(nr).run();
     for( lemon::ListDigraph::NodeIt n( m_g ); n != lemon::INVALID; ++n )
     {
+        m_modelMap[ modelIDMap[ nr[ n ] ] ] = new iaf::scheduler::ModelNode( (*modelMap[ modelIDMap[ nr[ n ] ] ]), n );
+
+        m_modelBimap.insert( position( modelIDMap[ nr[ n ] ], iaf::scheduler::ModelNode( (*modelMap[ modelIDMap[ nr[ n ] ] ]), n ) ) );
+
         m_modelIDMap[ n ] = modelIDMap[ nr[ n ] ];
     }
 }
@@ -341,8 +345,14 @@ void Scheduler::DumpCompleteGraph()
         //std::cout << std::endl;
     }
     
-    for( std::map< int, lemon::ListDigraph::Node >::const_iterator it = orderMap.begin(); it != orderMap.end(); ++it )
+    for( std::map< int, lemon::ListDigraph::Node >::const_iterator it = 
+        orderMap.begin(); it != orderMap.end(); ++it )
     {
+        lemon::ListDigraph::Node tempNode = it->second;
+        //std::string id = m_modelBimap.right.at( tempNode );
+        lemon::ListDigraph::Node tempNode1 = m_modelBimap.left.at( " " );
+
+        //std::cout <<  << std::endl;
         std::cout << m_modelIDMap[it->second] << " ";
         if( lemon::countOutArcs( m_g, it->second ) == 0 )
         {
@@ -351,8 +361,8 @@ void Scheduler::DumpCompleteGraph()
     }
     std::cout << std::endl;
     std::cout << "We have a directed graph with " 
-    << lemon::countNodes( m_g ) << " node(s) "
-    << "and " << lemon::countArcs( m_g ) << " arc(s)." << std::endl;
+        << lemon::countNodes( m_g ) << " node(s) "
+        << "and " << lemon::countArcs( m_g ) << " arc(s)." << std::endl;
     
     {
         std::ofstream lgfFile( "complete.lgf" );       
@@ -365,16 +375,19 @@ void Scheduler::DumpCompleteGraph()
         std::ofstream dotFile( "complete.dot" );
         dotFile << "digraph complete_dot {" << std::endl;
         dotFile << "  size=\"8,6\"; ratio=fill;" << std::endl;
-        dotFile << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
+        dotFile << "  node [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" 
+            << std::endl;
         for( lemon::ListDigraph::NodeIt n( m_g ); n!=lemon::INVALID; ++n)
         {
             const std::string nodeName = m_modelIDMap[n];
-            boost::iterator_range<std::string::const_iterator>::iterator stringIter = boost::find_first( nodeName, "scheduler" ).begin();
+            boost::iterator_range<std::string::const_iterator>::iterator 
+                stringIter = boost::find_first( nodeName, "scheduler" ).begin();
             
             if( stringIter != nodeName.end() )
             {
                 dotFile << "  n" <<  m_g.id(n) 
-                << " [ label=\"" << nodeName << "\", color=orange ]; " << std::endl;
+                << " [ label=\"" << nodeName << "\", color=orange ]; " 
+                << std::endl;
             }
             else
             {
@@ -382,7 +395,8 @@ void Scheduler::DumpCompleteGraph()
                 << " [ label=\"" << nodeName << "\" ]; " << std::endl;
             }
         }
-        dotFile << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" << std::endl;
+        dotFile << "  edge [ shape=ellipse, fontname=Helvetica, fontsize=10 ];" 
+            << std::endl;
         for(lemon::ListDigraph::ArcIt e( m_g ); e!=lemon::INVALID; ++e) 
         {
             const std::string sourceName = 
@@ -390,20 +404,25 @@ void Scheduler::DumpCompleteGraph()
             const std::string targetName = 
             m_modelIDMap[m_g.target(e)];
             
-            boost::iterator_range<std::string::const_iterator>::iterator stringIter1 = boost::find_first( sourceName, "scheduler" ).begin();
-            boost::iterator_range<std::string::const_iterator>::iterator stringIter2 = boost::find_first( targetName, "scheduler" ).begin();
+            boost::iterator_range<std::string::const_iterator>::iterator 
+                stringIter1 = boost::find_first( sourceName, "scheduler" ).begin();
+            boost::iterator_range<std::string::const_iterator>::iterator 
+                stringIter2 = boost::find_first( targetName, "scheduler" ).begin();
             
             if( stringIter1 != sourceName.end() )
             {
-                dotFile << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" << m_g.id(m_g.target(e)) << " [ color=orange ];" <<std::endl;
+                dotFile << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" 
+                    << m_g.id(m_g.target(e)) << " [ color=orange ];" <<std::endl;
             }
             else if( stringIter2 != targetName.end() )
             {
-                dotFile << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" << m_g.id(m_g.target(e)) << " [ color=blue ];" <<std::endl;
+                dotFile << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" 
+                    << m_g.id(m_g.target(e)) << " [ color=blue ];" <<std::endl;
             }
             else
             {
-                dotFile << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" << m_g.id(m_g.target(e)) <<std::endl;
+                dotFile << "  n" << m_g.id(m_g.source(e)) << " -> " << " n" 
+                    << m_g.id(m_g.target(e)) <<std::endl;
             }
         } 
         dotFile << "}" << std::endl;
@@ -412,23 +431,31 @@ void Scheduler::DumpCompleteGraph()
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::RunModels()
 {
-    for( std::map< int, lemon::ListDigraph::Node >::const_iterator iter = m_scheduleModelMap.begin(); iter != m_scheduleModelMap.end(); ++iter )
+    for( std::map< int, lemon::ListDigraph::Node >::const_iterator iter = 
+        m_scheduleModelMap.begin(); iter != m_scheduleModelMap.end(); ++iter )
     {
-        std::cout << "Execute model " << iter->first << " " << m_modelIDMap[ iter->second ] << std::endl << std::endl;
-        std::map< std::string, lemon::ListDigraph::Node >::const_iterator infoIter = m_infoNameMap.find( m_modelIDMap[ iter->second ] );
+        std::cout << "Execute model " << iter->first << " " 
+            << m_modelIDMap[ iter->second ] << std::endl << std::endl;
+        std::map< std::string, lemon::ListDigraph::Node >::const_iterator 
+            infoIter = m_infoNameMap.find( m_modelIDMap[ iter->second ] );
         if( infoIter != m_infoNameMap.end() )
         {
             lemon::ListDigraph::Node tempInfoNode = infoIter->second;
-            for( lemon::ListDigraph::InArcIt m( m_infoSubgraph, tempInfoNode ); m != lemon::INVALID; ++m )
+            for( lemon::ListDigraph::InArcIt m( m_infoSubgraph, tempInfoNode ); 
+                m != lemon::INVALID; ++m )
             {
-                lemon::ListDigraph::Node tempGNode = m_infoToGNameMap[ m_infoSubgraph.source( m ) ];
-                iaf::scheduler::ModelNode* tempModel = m_modelMap[ m_modelIDMap[ tempGNode ] ];
+                lemon::ListDigraph::Node tempGNode = 
+                    m_infoToGNameMap[ m_infoSubgraph.source( m ) ];
+                iaf::scheduler::ModelNode* tempModel = 
+                    m_modelMap[ m_modelIDMap[ tempGNode ] ];
                 std::string results = tempModel->GetResults();
-                std::cout << m_modelIDMap[ tempGNode ] << " " << results << std::endl;
+                std::cout << m_modelIDMap[ tempGNode ] << " " << results 
+                    << std::endl;
             }
         }
         std::cout << std::endl;
-        iaf::scheduler::ModelNode* tempModel = m_modelMap[ m_modelIDMap[ iter->second ] ];
+        iaf::scheduler::ModelNode* tempModel = 
+            m_modelMap[ m_modelIDMap[ iter->second ] ];
         tempModel->Preprocess();
         tempModel->RunModel();
         tempModel->Postprocess();

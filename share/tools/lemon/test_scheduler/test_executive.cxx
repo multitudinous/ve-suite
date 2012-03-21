@@ -264,47 +264,47 @@ int main(int argc, char *argv[])
     //Setup the nodes
     lemon::ListDigraph::Node spatial = g.addNode();
     modelIDMap[ spatial ] = "spatial";
-    modelMap[ "spatial" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "spatial" ] = new iaf::scheduler::ModelNode( spatial );
     modelMap[ "spatial" ]->SetModelName( "spatial" );
     
     lemon::ListDigraph::Node schedule1 = g.addNode();
     modelIDMap[ schedule1 ] = "scheduler1";
-    modelMap[ "scheduler1" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "scheduler1" ] = new iaf::scheduler::ModelNode( schedule1 );
     modelMap[ "scheduler1" ]->SetModelName( "scheduler1" );
 
     lemon::ListDigraph::Node soil = g.addNode();
     modelIDMap[ soil ] = "soil";
-    modelMap[ "soil" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "soil" ] = new iaf::scheduler::ModelNode( soil );
     modelMap[ "soil" ]->SetModelName( "soil" );
     lemon::ListDigraph::Node climate = g.addNode();
     modelIDMap[ climate ] = "climate";
-    modelMap[ "climate" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "climate" ] = new iaf::scheduler::ModelNode( climate );
     modelMap[ "climate" ]->SetModelName( "climate" );
     lemon::ListDigraph::Node management = g.addNode();
     modelIDMap[ management ] = "management";
-    modelMap[ "management" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "management" ] = new iaf::scheduler::ModelNode( management );
     modelMap[ "management" ]->SetModelName( "management" );
 
     lemon::ListDigraph::Node schedule2 = g.addNode();
     modelIDMap[ schedule2 ] = "scheduler2";
-    modelMap[ "scheduler2" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "scheduler2" ] = new iaf::scheduler::ModelNode( schedule2 );
     modelMap[ "scheduler2" ]->SetModelName( "scheduler2" );
 
     lemon::ListDigraph::Node weps = g.addNode();
     modelIDMap[ weps ] = "weps";
-    modelMap[ "weps" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "weps" ] = new iaf::scheduler::ModelNode( weps );
     modelMap[ "weps" ]->SetModelName( "weps" );
     lemon::ListDigraph::Node rusle2 = g.addNode();
     modelIDMap[ rusle2 ] = "rusle2";
-    modelMap[ "rusle2" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "rusle2" ] = new iaf::scheduler::ModelNode( rusle2 );
     modelMap[ "rusle2" ]->SetModelName( "rusle2" );
     lemon::ListDigraph::Node inlsoilerosion = g.addNode();
     modelIDMap[ inlsoilerosion ] = "inlsoilerosion";
-    modelMap[ "inlsoilerosion" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "inlsoilerosion" ] = new iaf::scheduler::ModelNode( inlsoilerosion );
     modelMap[ "inlsoilerosion" ]->SetModelName( "inlsoilerosion" );
     lemon::ListDigraph::Node daycent = g.addNode();
     modelIDMap[ daycent ] = "daycent";
-    modelMap[ "daycent" ] = new iaf::scheduler::ModelNode();
+    modelMap[ "daycent" ] = new iaf::scheduler::ModelNode( daycent );
     modelMap[ "daycent" ]->SetModelName( "daycent" );
 
     //Setup the arcs

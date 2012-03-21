@@ -40,6 +40,8 @@
 #include <lemon/lp.h>
 #include <lemon/adaptors.h>
 
+#include <boost/bimap.hpp>
+
 #include <vector>
 
 #include "ModelNode.h"
@@ -85,7 +87,10 @@ private:
     std::map< int, lemon::ListDigraph::Node > m_scheduleModelMap;
     std::map< std::string, lemon::ListDigraph::Node > m_infoNameMap;
     std::map< lemon::ListDigraph::Node, lemon::ListDigraph::Node > m_infoToGNameMap;
-
+    
+    typedef boost::bimap< std::string, iaf::scheduler::ModelNode > model_bimap;
+    typedef model_bimap::value_type position;
+    model_bimap m_modelBimap;
 };
 }
 }
