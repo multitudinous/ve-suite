@@ -17,7 +17,7 @@
 #include <osg/NodeVisitor>
 #include <osg/Group>
 
-void initResources()
+OSGQTTREE_EXPORT void initResources()
 {
     Q_INIT_RESOURCE(treeicons);
 }
