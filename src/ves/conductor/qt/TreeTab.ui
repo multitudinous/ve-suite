@@ -93,7 +93,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="icons.qrc">
            <normaloff>:/images/remove.png</normaloff>:/images/remove.png</iconset>
          </property>
         </widget>
@@ -104,7 +104,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="icons.qrc">
            <normaloff>:/images/refresh-32.png</normaloff>:/images/refresh-32.png</iconset>
          </property>
         </widget>
@@ -115,7 +115,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="icons.qrc">
            <normaloff>:/images/ok.png</normaloff>:/images/ok.png</iconset>
          </property>
         </widget>
@@ -138,7 +138,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="propertyBrowser/icons.qrc"/>
+  <include location="icons.qrc"/>
  </resources>
  <connections/>
 </ui>
