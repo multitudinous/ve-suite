@@ -15,8 +15,14 @@
 #include <iostream>
 #include <sstream>
 
-namespace osgQtTree {
 
+void initResources()
+{
+    Q_INIT_RESOURCE(treeicons);
+}
+
+namespace osgQtTree 
+{
 
 osgTreeItem*
 getOrCreateTreeRoot( TreeModel *tree, osgTreeItem* currentRoot, osg::Node *node, osg::Node* rootnode )

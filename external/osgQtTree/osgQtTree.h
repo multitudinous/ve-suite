@@ -17,10 +17,8 @@
 #include <osg/NodeVisitor>
 #include <osg/Group>
 
-OSGQTTREE_EXPORT void initResources()
-{
-    Q_INIT_RESOURCE(treeicons);
-}
+//http://msdn.microsoft.com/en-us/library/62688esh.aspx
+OSGQTTREE_EXPORT void initResources();
 
 namespace osgQtTree {
 
