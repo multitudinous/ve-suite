@@ -32,9 +32,22 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
+// --- Boost Includes --- //
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/sequenced_index.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index/mem_fun.hpp>
+
+// --- STL Includes --- //
 #include <string>
 
 #include <lemon/list_graph.h>
+
+///Structs to help Boost multi index work better
+struct INFOID{};
+struct NODEID{};
 
 namespace iaf
 {
@@ -68,5 +81,30 @@ private:
     std::string m_modelName;
     std::string m_results;
 };
+/*
+typedef boost::multi_index_container<
+iaf::scheduler::ModelNode*,
+boost::multi_index::indexed_by<
+//Sort by the nodes m_infoGraphId
+boost::multi_index::ordered_non_unique< 
+boost::multi_index::tag< INFOID >,
+BOOST_MULTI_INDEX_CONST_MEM_FUN( ModelNode, int const&, GetInfoGraphId ) >,
+
+//Sort by the nodes lemon node id
+boost::multi_index::ordered_unique< 
+boost::multi_index::tag< NODEID >,
+BOOST_MULTI_INDEX_CONST_MEM_FUN( ModelNode, int const&, GetId ) >
+>
+> ScheduleNetwork;
+
+///Iterator for sorting through by the info id
+typedef boost::multi_index::nth_index< ScheduleNetwork, 0 >::type InfoGraphSort;
+///Iterator for sorting through by the node id
+typedef boost::multi_index::nth_index< ScheduleNetwork, 1 >::type MainGraphSort;
+///Sort by tags
+typedef ScheduleNetwork::index< INFOID >::type ModelByInfoId;
+///Sort by tags
+typedef ScheduleNetwork::index< NODEID >::type ModelByNodeId;
+*/
 }
 }
