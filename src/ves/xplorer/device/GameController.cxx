@@ -220,6 +220,10 @@ GameController::GameController()
     CONNECTSIGNALS_1( "%NavigationRotationMode", void( std::string ),
                      &GameController::SetRotationMode,
                      m_connections, any_SignalType, normal_Priority );  
+    
+    CONNECTSIGNALS_1( "%CharacterUpdate", void( bool const& ),
+                     &GameController::SetCharacterState,
+                     m_connections, any_SignalType, normal_Priority );  
 
     // Register signal(s) with EventManager
     eventmanager::EventManager::instance()->RegisterSignal(
@@ -238,6 +242,18 @@ GameController::GameController()
 GameController::~GameController()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::SetCharacterState( bool const& enable )
+{
+    if( enable )
+    {
+        m_mxGamePadStyle->setStickRate( 0.75 );
+    }
+    else
+    {
+        m_mxGamePadStyle->setStickRate( 10.0 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 GameController* GameController::AsGameController()

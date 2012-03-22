@@ -178,6 +178,9 @@ private:
     ///Setup the start and end point for a mouse pick 
     void SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
 
+    ///Set the character state to enable controlling the nav step size
+    void SetCharacterState( bool const& enable );
+    
     ///The current X mouse position
     int m_currX;
     

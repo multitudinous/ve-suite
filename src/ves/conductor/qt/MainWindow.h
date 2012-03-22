@@ -42,6 +42,8 @@
 
 #include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 #include <ves/open/xml/model/SystemPtr.h>
 
 #include <ves/VEConfig.h>
@@ -356,9 +358,13 @@ private:
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal< void ( const std::string ) > NavJumpSignal_type;
     NavJumpSignal_type m_jumpSignal;  
+    
+    ///Control the syncing of the ves db
+    //ves::util::VoidSignal_type m_resyncFromDB;
 
-    boost::signals2::signal< void () > m_resyncFromDB;
-
+    ///Let everyone know when the character is turned off/on
+    ves::util::BoolSignal_type m_characterEnable;
+    
     void SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::string fileName );
 
     QMessageBox* m_messageBox;

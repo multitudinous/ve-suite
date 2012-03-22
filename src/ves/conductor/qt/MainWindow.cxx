@@ -230,6 +230,10 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
         eventmanager::EventManager::instance()->RegisterSignal(
            new eventmanager::SignalWrapper< NavJumpSignal_type >( &m_jumpSignal ),
            "MainWindow.JumpSignal" );
+
+        eventmanager::EventManager::instance()->RegisterSignal(
+            new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_characterEnable ),
+            "MainWindow.CharacterUpdate" );
     }
 
     // The view stack
@@ -1369,6 +1373,8 @@ void MainWindow::on_actionCharacterNavigation_triggered( bool triggered )
     characterController.Enable( triggered );
     
     ui->actionCharacterFlyMode->setEnabled( !triggered );
+    
+    m_characterEnable( triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionCharacterFlyMode_triggered( bool triggered )
