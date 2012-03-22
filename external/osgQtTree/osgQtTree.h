@@ -17,25 +17,15 @@
 #include <osg/NodeVisitor>
 #include <osg/Group>
 
-//http://msdn.microsoft.com/en-us/library/62688esh.aspx
-OSGQTTREE_EXPORT void initResources();
-
 namespace osgQtTree {
 
 class OSGQTTREE_EXPORT PopulateTreeControlWithNodeVisitor : public osg::NodeVisitor
 {
 public:
-    PopulateTreeControlWithNodeVisitor( osg::Node* rootnode, TreeModel* tree, osg::NodeVisitor::TraversalMode travMode = osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
-      : osg::NodeVisitor( travMode ),
-        tree_( tree ),
-        rootnode_( rootnode ),
-        activeGroup_( NULL ),
-        activeChild_( NULL )
-    {
-        initResources();
-        setTraversalMask( 0xffffffff );
-        setNodeMaskOverride( 0xffffffff );
-    }
+    PopulateTreeControlWithNodeVisitor( osg::Node* rootnode,
+                                        TreeModel* tree,
+                                        osg::NodeVisitor::TraversalMode travMode
+                                        = osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
 
     virtual void apply( osg::Node& node );
     virtual void apply( osg::Group& group );

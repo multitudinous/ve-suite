@@ -39,6 +39,19 @@ getOrCreateTreeRoot( TreeModel *tree, osgTreeItem* currentRoot, osg::Node *node,
     return( newItem );
 }
 
+PopulateTreeControlWithNodeVisitor::PopulateTreeControlWithNodeVisitor( osg::Node* rootnode, TreeModel* tree, osg::NodeVisitor::TraversalMode travMode )
+  : osg::NodeVisitor( travMode ),
+    tree_( tree ),
+    rootnode_( rootnode ),
+    activeGroup_( NULL ),
+    activeChild_( NULL )
+{
+    initResources();
+    setTraversalMask( 0xffffffff );
+    setNodeMaskOverride( 0xffffffff );
+}
+
+
 void
 PopulateTreeControlWithNodeVisitor::apply( osg::Node& node )
 {
