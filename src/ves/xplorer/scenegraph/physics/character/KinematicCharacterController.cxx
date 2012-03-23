@@ -264,7 +264,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_moveComplete( false )
 {
     //Set max slope for character climbing
-    setMaxSlope( btRadians( 60.0 ) );
+    setMaxSlope( btRadians( 45.0 ) );
 
     m_ghostObject->setWorldTransform( btTransform::getIdentity() );
 
@@ -326,7 +326,11 @@ btPairCachingGhostObject* KinematicCharacterController::GetGhostObject() const
 bool KinematicCharacterController::recoverFromPenetration(
     btCollisionWorld* collisionWorld )
 {
+    std::cout << "***************************************" << std::endl << std::endl;
     bool penetration = false;
+    btVector3 forwardDir( 0., 1., 0. );
+    btVector3 lateralDir( 1., 0., 0. );
+    btVector3 upDir( 0., 0., 1. );
 
     btHashedOverlappingPairCache* btHOPC =
         m_ghostObject->getOverlappingPairCache();
@@ -360,13 +364,16 @@ bool KinematicCharacterController::recoverFromPenetration(
             btPersistentManifold* manifold = m_manifoldArray[ j ];
             btScalar directionSign =
                 manifold->getBody0() == m_ghostObject ? btScalar( -1.0 ) : btScalar( 1.0 );
-            
+            //In bullet 2.78 or greater the number of contact points is greater
+            //than 1. In bullet 2.77 that was not the case. So in the recover
+            //function we must manage the different forces that are on the chracter 
+            //so that the appropriate response is achieved with the interactions
+            //with the ground and other objects.
             for( int p = 0; p < manifold->getNumContacts(); ++p )
             {
                 const btManifoldPoint&pt = manifold->getContactPoint( p );
 
                 btScalar dist = pt.getDistance();
-
                 if( dist < 0.0 )
                 {
                     if( dist < maxPen )
@@ -377,7 +384,7 @@ bool KinematicCharacterController::recoverFromPenetration(
                     }
                     
                     btVector3 currentDir = pt.m_normalWorldOnB * directionSign;
-                    btScalar distance3 = currentDir.length2();
+                    /*btScalar distance3 = currentDir.length2();
                     
                     if( distance3 > SIMD_EPSILON )
                     {
@@ -390,9 +397,23 @@ bool KinematicCharacterController::recoverFromPenetration(
                                 m_isColliding = true;
                             }
                         }
-                    }
+                    }*/
 
-                    m_currentPosition += currentDir * dist * btScalar( 0.2 );
+                    //If we are a contact point pushing up
+                    if( currentDir.dot( upDir ) > btScalar( 0.05 ) )
+                    {
+                        m_currentPosition += currentDir * dist * btScalar( 0.1 );
+                    }
+                    //if something is in front of us then take into account 
+                    //ground friction
+                    //( currentDir.dot( forwardDir ) > btScalar( 0.05 ) )
+                    //( currentDir.dot( lateralDir ) > btScalar( 0.05 ) )
+                    else
+                    {
+                        m_isColliding = true;
+                        m_currentPosition += currentDir * dist * btScalar( 0.002 );
+                    }
+                    
                     penetration = true;
                 }
                 else
@@ -404,7 +425,6 @@ bool KinematicCharacterController::recoverFromPenetration(
             //manifold->clearManifold();
         }
     }
-
     btTransform newTrans = m_ghostObject->getWorldTransform();
     newTrans.setOrigin( m_currentPosition );
     m_ghostObject->setWorldTransform( newTrans );
