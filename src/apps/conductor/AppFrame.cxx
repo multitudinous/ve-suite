@@ -902,7 +902,7 @@ void AppFrame::CreateMenu()
     xplorerMenu->Append( APPFRAME_XPLORER_CPT, _( "Camera Placement Pane" ) );
     xplorerMenu->Append( APPFRAME_XPLORER_UNSELECT_ALL, _( "Un-select All" ) );
 
-    xplorerMenu->Append( APPFRAME_XPLORER_EPHEMERIS, _( "Ephemeris Data" ) );
+    xplorerMenu->Append( APPFRAME_XPLORER_EPHEMERIS, _( "Sky Background" ) );
     //xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
     //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
     xplorerMenu->Append( APPFRAME_XPLORER_DEVICE,     _( "Devices" ),

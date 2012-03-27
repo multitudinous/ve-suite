@@ -334,8 +334,11 @@ void SceneManager::InitScene()
     _createLogo();
 
 #ifdef VE_SOUND
-    //m_sound = new ves::xplorer::scenegraph::Sound( mLogoNode.get() );
-    //m_sound->LoadFile( "C:/TSVEG/Dependencies/osgal-0.6.1/data/bee.wav" );
+    m_sound = new ves::xplorer::scenegraph::Sound( "wind_blowing", mLogoNode.get() );
+    m_sound->LoadFile( "wind_blowing1.wav" );
+    m_sound->GetSoundState()->setLooping( true );
+    m_sound->GetSoundState()->setGain( 1.0 );
+    m_sound->Play();
 #endif
 
     mLogoSwitch->addChild( mModelRoot.get() );
