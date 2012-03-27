@@ -1,0 +1,13 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=VE-Xuite Clear Cluster
+Categories=Graphics;Science;DataVisualization;Engineering;X-VESuite;
+MimeType=application/x-vesuite;
+Exec=clearCluster.sh
+Icon=ve-suite
+Type=Application
+Terminal=true
+NoDisplay=false
+Name[en_US]=VE-Suite Clear Cluster
