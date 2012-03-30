@@ -326,7 +326,6 @@ btPairCachingGhostObject* KinematicCharacterController::GetGhostObject() const
 bool KinematicCharacterController::recoverFromPenetration(
     btCollisionWorld* collisionWorld )
 {
-    std::cout << "***************************************" << std::endl << std::endl;
     bool penetration = false;
     btVector3 forwardDir( 0., 1., 0. );
     btVector3 lateralDir( 1., 0., 0. );
