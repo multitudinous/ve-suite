@@ -89,15 +89,15 @@ int main(int argc, char *argv[])
     // Add an SQLite store
     DataAbstractionLayerPtr sqstore( new SQLiteStore );
     static_cast<SQLiteStore*>(sqstore.get())->SetStorePath( "/tmp/DALTest.db" );
-    //manager.AttachStore( sqstore, Store::WORKINGSTORE_ROLE );
+    manager.AttachStore( sqstore, Store::WORKINGSTORE_ROLE );
 
     // Add a mongoDB store
     //cout << "Creating MongoStore" << endl << flush;
-    DataAbstractionLayerPtr mongostore( new MongoStore );
+    //DataAbstractionLayerPtr mongostore( new MongoStore );
     //cout << "Setting MongoStore Path" << endl << flush;
-    static_cast<MongoStore*>(mongostore.get())->SetStorePath("localhost");
+    //static_cast<MongoStore*>(mongostore.get())->SetStorePath("localhost");
     //cout << "Attaching MongoStore" << endl << flush;
-    manager.AttachStore( mongostore, Store::BACKINGSTORE_ROLE );
+    //manager.AttachStore( mongostore, Store::BACKINGSTORE_ROLE );
 
     // Build up a persistable with some useful test types
     Persistable q;
@@ -120,7 +120,12 @@ int main(int argc, char *argv[])
     dubs.push_back(3.141592653587);
     q.AddDatum( "DubVec", dubs );
 
-    static_cast<MongoStore*>(mongostore.get())->Drop( "TestType" );
+    std::string bdata( "0123456789 10111213141516171819 20212223242526272829" );
+    std::vector<char> blob( bdata.begin(), bdata.end() );
+    q.AddDatum( "ABlob", blob );
+
+
+    //static_cast<MongoStore*>(mongostore.get())->Drop( "TestType" );
 
     // Ensure that persistable is saved to backing as well as working dbs.
     // Normally, persistables will just be saved to the working db, but there
@@ -128,7 +133,7 @@ int main(int argc, char *argv[])
     // store, so we test that here.
     //cout << "Saving Persistable" << endl << flush;
     manager.Save( q );
-    manager.Save( q, Store::BACKING_ROLE );
+    //manager.Save( q, Store::BACKING_ROLE );
 
     //cout << "Loading..." << endl << flush;
 
@@ -155,6 +160,14 @@ int main(int argc, char *argv[])
         cout << "\t" << dout.at(i) << endl;
     }
 
+    // Re-form a string from the chars that should be stored in ABlob
+    cout << "Chars in ABlob field, re-string-ized:" << endl;
+    std::vector<char> bout = q.GetDatumValue<std::vector< char > >("ABlob");
+    char* pb = &(bout[0]);
+    string bstr( pb, bout.size() );
+    cout << "\t" << bstr << endl;
+
+#if 0
     Persistable one;
     one.SetTypeName( "MRIN" );
     one.AddDatum( "Num", 1 );
@@ -191,6 +204,7 @@ int main(int argc, char *argv[])
     manager.Load( mrout );
     cout << "MapReduce output: count = " << mrout.GetDatumValue<int>("count")
          << ", sum = " << mrout.GetDatumValue<double>("sum") << endl;
+#endif
 
     return 0;
 }

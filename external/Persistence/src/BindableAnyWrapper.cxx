@@ -34,6 +34,7 @@
 
 #include <Poco/Data/Binding.h>
 #include <Poco/Data/Statement.h>
+#include <Poco/Data/BLOBStream.h>
 
 #include <iostream>
 
@@ -85,6 +86,13 @@ bool BindableAnyWrapper::BindValue( Poco::Data::Statement* statement,
     {
         mString = boost::any_cast< std::string > ( value );
         (*statement), Poco::Data::use( mString );
+        returnValue = true;
+    }
+    else if( boost::any_cast< std::vector<char> >( &value ) )
+    {
+        std::vector<char> data = boost::any_cast< std::vector<char> >( value );
+        mBLOB.operator =( data );
+        (*statement), Poco::Data::use( mBLOB );
         returnValue = true;
     }
 

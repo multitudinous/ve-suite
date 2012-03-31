@@ -89,55 +89,31 @@ void MongoStore::SaveImpl( const Persistable& persistable,
         {
             builder.append( name, datum->extract< std::string >() );
         }
+        else if( datum->IsBLOB() )
+        {
+            // This is way more efficient than storing a BSON array of char.
+            std::vector< char > vec = datum->extract< std::vector< char > >();
+            if( !vec.empty() )
+            {
+                void* data = &(vec[0]);
+                builder.appendBinData( name, vec.size(), mongo::BinDataGeneral, data );
+            }
+        }
         else if( datum->IsIntVector() )
         {
-            mongo::BSONObjBuilder array;
-            std::vector< int > vec = datum->extract< std::vector< int > >();
-            for( size_t index = 0; index < vec.size(); ++index )
-            {
-                std::stringstream label;
-                label << index;
-                array.append( label.str(), vec.at( index ) );
-            }
-            builder.append( name, array.obj() );
+            builder.append( name, datum->extract< std::vector< int > >() );
         }
         else if( datum->IsFloatVector() )
         {
-            mongo::BSONObjBuilder array;
-            std::vector< float > vec = datum->extract< std::vector< float > >();
-            for( size_t index = 0; index < vec.size(); ++index )
-            {
-                std::stringstream label;
-                label << index;
-                array.append( label.str(), vec.at( index ) );
-            }
-            builder.append( name, array.obj() );
+            builder.append( name, datum->extract< std::vector< float > >() );
         }
         else if( datum->IsDoubleVector() )
         {
-            mongo::BSONObjBuilder array;
-            std::vector< double > vec =
-                    datum->extract< std::vector< double > >();
-            for( size_t index = 0; index < vec.size(); ++index )
-            {
-                std::stringstream label;
-                label << index;
-                array.append( label.str(), vec.at( index ) );
-            }
-            builder.append( name, array.obj() );
+            builder.append( name, datum->extract< std::vector< double > >() );
         }
         else if( datum->IsStringVector() )
         {
-            mongo::BSONObjBuilder array;
-            std::vector< std::string > vec =
-                    datum->extract< std::vector< std::string > >();
-            for( size_t index = 0; index < vec.size(); ++index )
-            {
-                std::stringstream label;
-                label << index;
-                array.append( label.str(), vec.at( index ) );
-            }
-            builder.append( name, array.obj() );
+            builder.append( name, datum->extract< std::vector< std::string > >() );
         }
 
         ++it;
@@ -194,6 +170,12 @@ void MongoStore::LoadImpl( Persistable& persistable, Role role )
                 {
                     std::string val = value.String();
                     datum->SetValue( val );
+                }
+                else if( datum->IsBLOB() )
+                {
+                    int size = value.size();
+                    const char* data = value.binData( size );
+                    std::vector< char > val( data, data + size );
                 }
                 else if( datum->IsIntVector() )
                 {

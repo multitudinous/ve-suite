@@ -34,6 +34,7 @@
 
 #include <string>
 #include <boost/any.hpp>
+#include <Poco/Data/BLOB.h>
 
 namespace Poco
 {
@@ -69,6 +70,7 @@ private:
     float mFloat;
     double mDouble;
     std::string mString;
+    Poco::Data::BLOB mBLOB;
 
 };
 

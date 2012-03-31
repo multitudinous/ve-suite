@@ -7,8 +7,12 @@
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+
 #include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/RecordSet.h>
+#include <Poco/Data/BLOB.h>
+
+
 
 namespace Persistence
 {
@@ -165,7 +169,7 @@ void SQLiteStore::SaveImpl( const Persistable& persistable,
                 // Check for a known type
                 if( ( property->IsBool() ) || ( property->IsDouble() ) ||
                         ( property->IsFloat() ) || ( property->IsInt() ) ||
-                        ( property->IsString() ) )
+                        ( property->IsString() ) || property->IsBLOB() )
                 {
                     // Skip the property if its name contains illegal characters
                     if( !_containsIllegalCharacter( *it ) )
@@ -296,7 +300,7 @@ void SQLiteStore::SaveImpl( const Persistable& persistable,
             ++it;
         }
 
-        std::cout << statement.toString() << std::endl;
+        //std::cout << statement.toString() << std::endl;
 
         statement.execute();
         // If we've made it here, we successfully wrote to database
@@ -533,12 +537,9 @@ void SQLiteStore::LoadImpl( Persistable& persistable, Role role )
     // Get the entire record we need with one query
     //mID = ID;
 
-    std::cout << "SQLiteStore::LoadImpl: 0" << std::endl << std::flush;
     Poco::Data::Statement statement( session );
     statement << "SELECT * FROM \"" << tableName << "\" WHERE uuid=:0", Poco::Data::use( uuidString );
     statement.execute();
-
-    std::cout << "SQLiteStore::LoadImpl: 1" << std::endl << std::flush;
 
     Poco::Data::RecordSet recordset( statement );
 
@@ -607,8 +608,15 @@ void SQLiteStore::LoadImpl( Persistable& persistable, Role role )
                 bValue = value.convert<double>();
                 break;
             case Poco::Data::MetaColumn::FDT_STRING:
-                bValue = value.convert<std::string > ();
+                bValue = value.convert<std::string>();
                 break;
+            case Poco::Data::MetaColumn::FDT_BLOB:
+            {
+                std::string tmp( value.convert<std::string>() );
+                std::vector< char > charVersion( tmp.begin(), tmp.end() );
+                bValue = charVersion;
+                break;
+            }
             default:
                 std::cout << "Didn't find conversion type" << std::endl << std::flush;
             }
@@ -808,6 +816,10 @@ std::string SQLiteStore::_buildColumnHeaderString( const Persistable& persistabl
         else if( property->IsString() )
         {
             dataType = "TEXT";
+        }
+        else if( property->IsBLOB() )
+        {
+            dataType = "BLOB";
         }
         else
         {

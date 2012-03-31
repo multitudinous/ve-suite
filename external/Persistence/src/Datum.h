@@ -54,7 +54,9 @@
 /// PODs. Since part of Datum's intent is to contain data that can be stored
 /// in a persistent store, there may be store-dependent limitations on the
 /// allowable value types. This does not affect Datum per se, but may affect the
-/// ability to store or serialize the data it contains.
+/// ability to store or serialize the data it contains. Values that should be
+/// treated as binary large objects (BLOBs) must passed as a
+/// std::vector< char >.
 ///
 /// Special Types of main value
 ///
@@ -64,6 +66,20 @@
 /// 2) As a copyable reference to an existing string (recommended)
 /// 3) Via in-place construction of a new string object (recommended), eg.
 ///    SetValue( std::string("My string") );
+///
+/// BLOBs: BLOB values must be passed in as a std::vector< char >. No other
+/// data type will be treated as a BLOB. Reasons:
+/// 1) char vectors function exactly like ByteArrays in other languages, so make
+///    sense as a way to deal with binary data
+/// 2) char vectors provide an easy way to provide the size of the binary data
+///    along with the data, without having to know anything about the contents
+///    of the data itself. Such size information would have to be provided
+///    separately if datum were to accept raw pointers to binary data (and a
+///    deep copy would have to be performed, too)
+/// 3) char vectors will usually have a straightforward representation
+///    in any data store that doesn't natively understand BLOBs, and for stores
+///    that do, it is easy to convert a char vector into whatever sort of
+///    array of bytes is required by the store adaptor.
 
 namespace Persistence
 {
@@ -123,8 +139,7 @@ public:
     bool IsFloatVector() const;
     bool IsDoubleVector() const;
     bool IsStringVector() const;
-    /// If it isn't any of the above, it should be treated as a
-    /// Binary (large) object.
+    /// BLOBs have type std::vector< char > -- a containerized byte array.
     bool IsBLOB() const;
 
     /// Returns true is the held value is one of the following:
