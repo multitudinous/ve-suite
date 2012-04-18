@@ -6,7 +6,7 @@
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define VEVERSION "1.2.0"
-#define SVNVERSION "15092"
+#define SVNVERSION "15098"
 #ifdef x64
 #define OSGHOME "C:\dev\deps\auto_deps\osg_2.8.5\install-64-bit"
 #define ZLIBHOME "C:\dev\deps\auto_deps\zlib-1.2.5\install-64-bit"
