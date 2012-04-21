@@ -17,7 +17,7 @@ SKIP_FPC_INSTALL="yes"
 CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
 
 CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
-CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG30_INSTALL_DIR}" )
 
 CMAKE_PARAMS+=( -DGGTInstallType="Alternate Install Location" )
 CMAKE_PARAMS+=( -DGGTInstallLocation="${GMTL_INSTALL_DIR}" )
