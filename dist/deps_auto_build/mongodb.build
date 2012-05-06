@@ -1,0 +1,38 @@
+PACKAGE_NAME=mongodb
+
+SOURCE_RETRIEVAL_METHOD=wget
+
+unset PROJ_STR
+unset BUILD_TARGET
+unset BUILD_DIR
+unset PREBUILD_METHOD
+unset BUILD_METHOD
+    
+case $PLATFORM in
+  Windows)
+    if [ ${ARCH} = "32-bit" ]; then
+      SOURCE_URL=http://downloads.mongodb.org/win32/mongodb-win32-x86_64-2.0.4.zip
+      BASE_DIR="${DEV_BASE_DIR}/mongodb-win32-x86_64-2.0.4"
+    else
+      SOURCE_URL=http://downloads.mongodb.org/win32/mongodb-win32-i386-2.0.4.zip
+      BASE_DIR="${DEV_BASE_DIR}/mongodb-win32-i386-2.0.4"
+    fi
+    SOURCE_FORMAT=zip
+    #SKIP_FPC_INSTALL="no"
+    #FPC_FILE=xerces.fpc
+    ;;
+  Darwin)
+    SOURCE_URL=http://fastdl.mongodb.org/osx/mongodb-osx-x86_64-2.0.4.tgz
+    BASE_DIR="${DEV_BASE_DIR}/mongodb-osx-x86_64-2.0.4"
+    SOURCE_FORMAT=tgz
+    ;;
+  Linux)
+    SOURCE_URL=http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.0.4.tgz
+    BASE_DIR="${DEV_BASE_DIR}/mongodb-linux-x86_64-2.0.4"
+    SOURCE_FORMAT=tgz
+    ;;
+esac
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}"
+INSTALL_DIR="${BASE_DIR}"
