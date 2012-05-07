@@ -40,6 +40,7 @@
 #include <boost/any.hpp>
 
 #include <ves/VEConfig.h>
+#include <Persistence/DatumPtr.h>
 
 // TODO: Check through const status everywhere
 

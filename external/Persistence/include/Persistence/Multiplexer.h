@@ -1,7 +1,7 @@
 #pragma once
 
-#include "DataAbstractionLayer.h"
-#include "Store.h"
+#include <Persistence/DataAbstractionLayer.h>
+#include <Persistence/Store.h>
 
 namespace Persistence
 {
@@ -21,8 +21,9 @@ public:
                                     std::vector< std::string >& resultIDs,
                                     Role role );
     virtual void Search( const std::string& typeName,
-                         /*criteria,*/
-                         std::vector< std::string >& resultIDs );
+                         std::vector< SearchCriterion >& criteria,
+                         const std::string& returnField,
+                         std::vector< std::string >& results );
 
     virtual void Drop( const std::string& typeName, Role role = DEFAULT_ROLE  );
 

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include "BindableAnyWrapper.h"
+#include <Persistence/BindableAnyWrapper.h>
 
 #include <Poco/Data/Binding.h>
 #include <Poco/Data/Statement.h>

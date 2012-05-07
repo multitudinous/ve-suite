@@ -1,5 +1,5 @@
-#include "Multiplexer.h"
-#include "Persistable.h"
+#include <Persistence/Multiplexer.h>
+#include <Persistence/Persistable.h>
 
 namespace Persistence
 {
@@ -176,10 +176,17 @@ void Multiplexer::GetIDsForTypename( const std::string& typeName,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Multiplexer::Search( const std::string& typeName,
-                                    /*criteria,*/
-                                    std::vector< std::string >& resultIDs )
+                          std::vector< SearchCriterion >& criteria,
+                          const std::string& returnField,
+                          std::vector< std::string >& results )
 {
-
+    // For now send all search requests to working_store. Need to think about
+    // whether this method should take a role parameter, and if not, how to
+    // search non=working role stores.
+    if( m_workingStore )
+    {
+        m_workingStore->Search( typeName, criteria, returnField, results );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Multiplexer::ProcessBackgroundTasks()

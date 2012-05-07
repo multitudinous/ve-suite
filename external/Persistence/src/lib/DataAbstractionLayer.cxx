@@ -1,4 +1,5 @@
-#include "DataAbstractionLayer.h"
+#include <Persistence/DataAbstractionLayer.h>
+#include <Persistence/SearchCriterion.h>
 
 namespace Persistence
 {
@@ -43,11 +44,12 @@ void DataAbstractionLayer::GetIDsForTypename( const std::string& typeName, std::
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataAbstractionLayer::Search( const std::string& typeName,
-                                   /*criteria,*/
-                                   std::vector< std::string >& resultIDs )
+                                   std::vector< SearchCriterion >& criteria,
+                                   const std::string& returnField,
+                                   std::vector< std::string >& results )
 {
     if( m_child )
-        m_child->Search( typeName, resultIDs );
+        m_child->Search( typeName, criteria, returnField, results );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataAbstractionLayer::ProcessBackgroundTasks()

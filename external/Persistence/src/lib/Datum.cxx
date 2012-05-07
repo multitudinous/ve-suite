@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include "Datum.h"
+#include <Persistence/Datum.h>
 
 #include <boost/concept_check.hpp>
 

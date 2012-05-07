@@ -1,11 +1,12 @@
 #pragma once
 
-#include "DataAbstractionLayer.h"
-#include "Persistable.h"
-#include "Cache.h"
-#include "BufferBase.h"
-#include "Store.h"
-#include "Multiplexer.h"
+#include <Persistence/DataAbstractionLayer.h>
+#include <Persistence/Persistable.h>
+#include <Persistence/Cache.h>
+#include <Persistence/BufferBase.h>
+#include <Persistence/Store.h>
+#include <Persistence/Multiplexer.h>
+#include <Persistence/SearchCriterion.h>
 
 namespace Persistence
 {
@@ -14,9 +15,8 @@ namespace Persistence
 {
 public:
     DataManager();
-    // Nothing in this class is virtual since it is a singleton that is never
-    // meant to be derived from.
-    ~DataManager();
+
+    virtual ~DataManager();
 
     // Overrides of DataAbstractionLayer
     void ProcessBackgroundTasks();
@@ -38,7 +38,8 @@ public:
     void SetBuffer( DataAbstractionLayerPtr buffer );
 
     // Shared among this class, Cache, and BufferBase
-    void Buffer( std::vector< std::string > ids, BufferBase::BufferPriority priority = BufferBase::NORMAL_PRIORITY );
+    void Buffer( std::vector< std::string > ids,
+                 BufferBase::BufferPriority priority = BufferBase::NORMAL_PRIORITY );
 
 private:
     DataAbstractionLayerPtr m_buffer;

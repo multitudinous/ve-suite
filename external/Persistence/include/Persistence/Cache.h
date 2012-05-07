@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BufferBase.h"
+#include <Persistence/BufferBase.h>
 
 namespace Persistence
 {

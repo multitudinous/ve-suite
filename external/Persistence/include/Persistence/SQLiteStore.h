@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Store.h"
+#include <Persistence/Store.h>
 #include <Poco/Data/SQLite/SQLite.h>
 #include <Poco/Data/Session.h>
 #include <Poco/Data/SessionPool.h>
@@ -39,8 +39,9 @@ public:
                                     std::vector< std::string >& resultIDs );
 
     virtual void Search( const std::string& typeName,
-                         /*criteria,*/
-                         std::vector< std::string >& resultIDs );
+                         std::vector< SearchCriterion >& criteria,
+                         const std::string& returnField,
+                         std::vector< std::string >& results );
 
     virtual void ProcessBackgroundTasks();
 

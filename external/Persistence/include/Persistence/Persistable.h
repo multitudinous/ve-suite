@@ -7,8 +7,8 @@
 #include <boost/any.hpp>
 #include <boost/uuid/uuid.hpp>
 
-#include "DatumPtr.h"
-#include "Datum.h"
+#include <Persistence/Datum.h>
+#include <Persistence/PersistablePtr.h>
 
 // Defines VE_DATA_EXPORTS
 #include <ves/VEConfig.h>

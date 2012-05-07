@@ -1,7 +1,8 @@
-#include "SQLiteStore.h"
-#include "Datum.h"
-#include "Persistable.h"
-#include "BindableAnyWrapper.h"
+#include <Persistence/SQLiteStore.h>
+#include <Persistence/Datum.h>
+#include <Persistence/Persistable.h>
+#include <Persistence/BindableAnyWrapper.h>
+#include <Persistence/SearchCriterion.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -713,7 +714,15 @@ void SQLiteStore::LoadImpl( Persistable& persistable, Role role )
 ////////////////////////////////////////////////////////////////////////////////
 void SQLiteStore::Remove( Persistable& persistable )
 {
-
+    std::string typeName = persistable.GetTypeName();
+    if( HasIDForTypename( persistable.GetUUID(), persistable.GetTypeName() ) )
+    {
+        std::string idString = persistable.GetUUIDAsString();
+        Poco::Data::Session session( GetPool()->get() );
+        session << "DELETE FROM \"" << typeName << "\" WHERE uuid=:uuid",
+                Poco::Data::use( idString ),
+                Poco::Data::now;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool SQLiteStore::HasIDForTypename( const boost::uuids::uuid& id, const std::string& typeName )
@@ -723,18 +732,11 @@ bool SQLiteStore::HasIDForTypename( const boost::uuids::uuid& id, const std::str
     std::string idString = boost::lexical_cast< std::string >( id );
     //std::cout << "SQLiteStore::HasIDForTypename id = " << idString << std::endl << std::flush;
 
-    // This won't work. Can't globally search for an id. Need to require
-    // typename in addition to id, which makes sense because we can't do anything
-    // useful anyway if we don't have a typename. This also greatly limits
-    // the size of the search, and since this is done on every single load op,
-    // this is important.
     Poco::Data::Session session( GetPool()->get() );
     session << "SELECT uuid FROM \"" << typeName << "\" WHERE uuid=:uuid",
             Poco::Data::into( idTest ),
             Poco::Data::use( idString ),
             Poco::Data::now;
-
-
 
     if( idTest.empty() )
     {
@@ -749,14 +751,33 @@ bool SQLiteStore::HasIDForTypename( const boost::uuids::uuid& id, const std::str
 void SQLiteStore::GetIDsForTypename( const std::string& typeName,
                                 std::vector< std::string >& resultIDs )
 {
+    Poco::Data::Session session( GetPool()->get() );
+    Poco::Data::Statement statement( session );
 
+    statement << "SELECT uuid FROM " << typeName, Poco::Data::into( resultIDs );
+    statement.execute();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SQLiteStore::Search( const std::string& typeName,
-                     /*criteria,*/
-                     std::vector< std::string >& resultIDs )
+                          std::vector< SearchCriterion >& criteria,
+                          const std::string& returnField,
+                          std::vector< std::string >& results )
 {
+    // For now, we only treat a single keyvalue criterion. More advanced processing
+    // can be added later.
+    SearchCriterion sc( criteria.at(0) );
+    std::string wherePredicate = sc.m_key;
+    wherePredicate += " ";
+    wherePredicate += sc.m_comparison;
+    wherePredicate += " :0";
 
+    Poco::Data::Session session( GetPool()->get() );
+    Poco::Data::Statement statement( session );
+    statement << "SELECT " << returnField << " FROM \"" << typeName
+              << "\" WHERE " << wherePredicate, Poco::Data::into( results );
+    BindableAnyWrapper bindable;
+    bindable.BindValue( &statement, sc.m_value );
+    statement.execute();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SQLiteStore::ProcessBackgroundTasks()

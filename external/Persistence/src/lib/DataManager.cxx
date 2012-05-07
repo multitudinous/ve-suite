@@ -1,4 +1,4 @@
-#include "DataManager.h"
+#include <Persistence/DataManager.h>
 
 namespace Persistence
 {
@@ -22,12 +22,14 @@ void DataManager::AttachStore( DataAbstractionLayerPtr store,
                                Store::StoreRole role,
                                Store::SyncMode mode )
 {
-    static_cast< Multiplexer* >( m_dataMultiplexer.get() )->AttachStore( store, role, mode );
+    static_cast< Multiplexer* >( m_dataMultiplexer.get() )->
+            AttachStore( store, role, mode );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataManager::DetachStore( DataAbstractionLayerPtr store )
 {
-    static_cast< Multiplexer* >( m_dataMultiplexer.get() )->DetachStore( store );
+    static_cast< Multiplexer* >( m_dataMultiplexer.get() )->
+            DetachStore( store );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataManager::SetCache( DataAbstractionLayerPtr cache )
@@ -42,7 +44,8 @@ void DataManager::SetBuffer( DataAbstractionLayerPtr buffer )
     m_buffer->SetChild( m_dataMultiplexer );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataManager::Buffer( std::vector< std::string > ids, BufferBase::BufferPriority priority )
+void DataManager::Buffer( std::vector< std::string > ids,
+                          BufferBase::BufferPriority priority )
 {
     (static_cast< Cache* >(m_child.get()))->Buffer( ids, priority );
 }

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "DataAbstractionLayerPtr.h"
-#include "Persistable.h"
+#include <Persistence/DataAbstractionLayerPtr.h>
+#include <Persistence/Persistable.h>
+#include <Persistence/SearchCriterion.h>
 
 namespace Persistence
 {
@@ -37,8 +38,9 @@ public:
 
     /// Gets all available IDs for a given type where criteria are met.
     virtual void Search( const std::string& typeName,
-                         /*criteria,*/
-                         std::vector< std::string >& resultIDs );
+                         std::vector< SearchCriterion >& criteria,
+                         const std::string& returnField,
+                         std::vector< std::string >& results );
 
 
     /// Gives the DAL a chance to do background tasks such as buffering data,

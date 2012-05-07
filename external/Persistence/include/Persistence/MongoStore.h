@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Store.h"
+#include <Persistence/Store.h>
 #include "mongo/client/dbclient.h"
 
 namespace Persistence
@@ -37,8 +37,9 @@ public:
                                     std::vector< std::string >& resultIDs );
 
     virtual void Search( const std::string& typeName,
-                         /*criteria,*/
-                         std::vector< std::string >& resultIDs );
+                         std::vector< SearchCriterion >& criteria,
+                         const std::string& returnField,
+                         std::vector< std::string >& results );
 
     virtual void ProcessBackgroundTasks();
 
@@ -50,7 +51,8 @@ public:
                     const std::string& jsMapFunction,
                     const std::string& jsReduceFunction,
                     mongo::BSONObj queryObj,
-                    const std::string& outputcollection = "" );
+                    const std::string& outputUUID,
+                    const std::string& outputcollection = ""  );
 
 protected:
     virtual void SaveImpl( const Persistable& persistable,

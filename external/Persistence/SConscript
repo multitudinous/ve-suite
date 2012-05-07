@@ -1,6 +1,9 @@
 ###############################################################
 ##Builds Persistence library
 #!python
+
+SConscript( dirs = 'src/examples' )
+
 import os, sys, string, glob
 pj = os.path.join
 import SConsAddons.Util as sca_util
@@ -12,37 +15,37 @@ buildSrcDir = pj('#',buildDir,'external','Persistence')
 
 lib_env = ves_pkg.getEnv().Clone()
 
-headers = sca_util.getHeadersRecursive( pj( openDir, 'src') )
-sources = sca_util.getSourcesRecursive( pj( openDir, 'src' ) )
+headers = sca_util.getHeadersRecursive( pj( openDir, 'include','Persistence') )
+sources = sca_util.getSourcesRecursive( pj( openDir, 'src','lib' ) )
 
-headers = map(lambda s: pj('src', s), 
+headers = map(lambda s: pj('include','Persistence', s), 
                 headers)
-sources = map(lambda s: pj('src', s), 
+sources = map(lambda s: pj('src','lib', s), 
                 sources)
 
-lib_env.Append( CPPPATH = [pj(openDir, 'src')] )
-lib_env.Append( CPPPATH = ['/home/penn/dev/deps/mongo-cxx-driver-v2.0'] )
+lib_env.Append( CPPPATH = [pj(openDir, 'include')] )
+lib_env.Append( CPPPATH = ['/home/penn/fire/dev/deps/mongo-cxx-driver-v2.0'] )
 
 lib_env.AppendUnique( CPPDEFINES = ['Persistence_LIBRARY'] )
 
 lib_env.Append( LIBS = [ 'mongoclient'])
 
-lib_env.Append(LIBPATH = ['/home/penn/dev/deps/mongo-cxx-driver-v2.0'])
+lib_env.Append(LIBPATH = ['/home/penn/fire/dev/deps/mongo-cxx-driver-v2.0'])
                         
 poco_options.apply( lib_env )
 boost_options.apply( lib_env )
+#mongo_options.apply( lib_env )
 
 if GetPlatform() == 'linux':
     lib_env.Append( CCFLAGS=['-fPIC'])
 
-#lib = ves_pkg.createSharedLibrary('Persistence', lib_env,
-#                                      installPrefix = LIBDIR)
-#lib.addHeaders(headers)   
-#lib.addSources(sources)
+lib = ves_pkg.createSharedLibrary('Persistence', lib_env,
+                                      installPrefix = LIBDIR)
+lib.addHeaders(headers, pj('..'))   
+lib.addSources(sources)
 
-#lib.build()
+lib.build()
 
-prog = ves_pkg.createProgram('PersistenceTest' + lib_env["PROGSUFFIX"], lib_env, 'bin')
-prog.addSources(sources)
-#prog.addHeaders(headers, pj('test'))
-prog.build()
+#prog = ves_pkg.createProgram('PersistenceTest' + lib_env["PROGSUFFIX"], lib_env, 'bin')
+#prog.addSources(sources)
+#prog.build()

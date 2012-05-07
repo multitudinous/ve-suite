@@ -1,18 +1,18 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "Persistable.h"
-#include "Datum.h"
-#include "DataManager.h"
-#include "NullBuffer.h"
-#include "NullCache.h"
-#include "DataAbstractionLayer.h"
+#include <Persistence/Persistable.h>
+#include <Persistence/Datum.h>
+#include <Persistence/DataManager.h>
+#include <Persistence/NullBuffer.h>
+#include <Persistence/NullCache.h>
+#include <Persistence/DataAbstractionLayer.h>
 
-#include "SQLiteStore.h"
-#include "MongoStore.h"
+#include <Persistence/SQLiteStore.h>
+#include <Persistence/MongoStore.h>
 
-//#include "PropertySet.h"
-//#include "Property.h"
+#include "PropertySet.h"
+#include "Property.h"
 #include <boost/any.hpp>
 
 int main(int argc, char *argv[])
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     d = p.GetDatum( "Test" )->extract< double >( );
     d = p.GetDatumValue< double >("Test");
 
-    cout << d << endl;
+    cout << "Recovering double value: " << d << endl;
 
     cout << "Attempt to cast incorrectly should throw exception..." << endl << "\t";
     // The templated GetDatumValue<>() and Datum->extract<>() will throw
@@ -69,15 +69,32 @@ int main(int argc, char *argv[])
         }
     }
 
-//    PropertySet ps;
-//    ps.AddProperty( "Test", 99.9, "This" );
-//    // We can access the value the old way...
-//    cout << boost::any_cast< double >( ps.GetPropertyValue("Test") ) << endl;
-//    // Or the new way through the base class's interface
-//    cout << ps.GetDatumValue< double >("Test") << endl << flush;
+    ves::xplorer::data::PropertySet ps;
+    cout << "Testing a propertySet..." << endl;
+    ps.SetTypeName( "TestPropertySet" );
+    ps.AddProperty( "Test", 99.9, "This is a ui label" );
+    // We can access the value the old way...
+    cout << "\tTwo ways to access value should yield same value..." << endl;
+    cout << "\t\tOld way: " << boost::any_cast< double >( ps.GetPropertyValue("Test") ) << endl;
+    // Or the new way through the base class's interface
+    cout << "\t\tNew way: " << ps.GetDatumValue< double >("Test") << endl << flush;
 
-//    cout << boost::any_cast< std::string >( ps.GetPropertyAttribute( "Test", "uiLabel" ) ) << endl;
-//    cout << boost::any_cast< std::string >( ps.GetPropertyAttribute( "Test", "nameInSet" ) ) << endl;
+    std::vector< std::string > enums;
+    enums.push_back( "Zero" );
+    enums.push_back( "One" );
+    enums.push_back( "Two" );
+    enums.push_back( "Three" );
+    ps.AddProperty( "ENUM", std::string("This value won't stay after the enum vector is set. It will revert to zero then."), "An Enumerated Value");
+    ps.SetPropertyAttribute( "ENUM", "enumValues", enums );
+
+    cout << "\tuiLabel: "
+         << ps.GetPropertyAttributeValue< std::string >( "Test", "uiLabel" ) << endl;
+    cout << "\tProperty name in set: "
+         << ps.GetPropertyAttributeValue< std::string >( "Test", "nameInSet" ) << endl;
+    cout << "\tENUM value: "
+         << ps.GetDatumValue< std::string >( "ENUM" ) << endl;
+    cout << "\tENUM index: "
+         << ps.GetPropertyAttributeValue< int >( "ENUM", "enumCurrentIndex" ) << endl;
 
     // Set up a datamanager to test persistence
     DataManager manager;
@@ -87,17 +104,57 @@ int main(int argc, char *argv[])
     manager.SetBuffer( buffer );
 
     // Add an SQLite store
-    DataAbstractionLayerPtr sqstore( new SQLiteStore );
-    static_cast<SQLiteStore*>(sqstore.get())->SetStorePath( "/tmp/DALTest.db" );
-    manager.AttachStore( sqstore, Store::WORKINGSTORE_ROLE );
+//    DataAbstractionLayerPtr sqstore( new SQLiteStore );
+//    static_cast<SQLiteStore*>(sqstore.get())->SetStorePath( "/tmp/DALTest.db" );
+//    manager.AttachStore( sqstore, Store::WORKINGSTORE_ROLE );
 
     // Add a mongoDB store
-    //cout << "Creating MongoStore" << endl << flush;
-    //DataAbstractionLayerPtr mongostore( new MongoStore );
-    //cout << "Setting MongoStore Path" << endl << flush;
-    //static_cast<MongoStore*>(mongostore.get())->SetStorePath("localhost");
-    //cout << "Attaching MongoStore" << endl << flush;
+    DataAbstractionLayerPtr mongostore( new MongoStore );
+    static_cast<MongoStore*>(mongostore.get())->SetStorePath("localhost");
     //manager.AttachStore( mongostore, Store::BACKINGSTORE_ROLE );
+    manager.AttachStore( mongostore, Store::WORKINGSTORE_ROLE );
+
+    // This works for any type of store connected as WORKING_ROLE
+    //manager.Drop( "TestPropertySet" );
+
+    manager.Save( ps );
+    ps.SetDatumValue( "ENUM", std::string( "Three" ) );
+    manager.Load( ps );
+    cout << "\tAfter Load: " << ps.GetDatumValue< std::string >( "ENUM" ) << endl;
+
+    cout << "\tTesting search..." << endl;
+    std::string psUUID = ps.GetUUIDAsString();
+    std::vector< std::string > results;
+    SearchCriterion kvc( "Test", "=", 99.9 );
+    std::vector< SearchCriterion > criteria;
+    criteria.push_back( kvc );
+    manager.Search( "TestPropertySet", criteria, "uuid", results );
+    if( !results.empty() )
+    {
+        bool idFound = false;
+        for( size_t index = 0; index < results.size(); ++index )
+        {
+            cout << "\t\t" << results.at(index) << endl;
+            if( results.at(index) == psUUID )
+                idFound = true;
+        }
+        if( idFound )
+            cout << "\t...Search successful" << endl;
+        else
+            cout << "\t...Search returned wrong result" << endl;
+    }
+    else
+    {
+        cout << "\tSearch failed, or problem with search" << endl;
+    }
+
+    // If there are more than 5 entries in the TestPropertySet table, get rid
+    // of the table. This both tests the Drop functionality and makes search
+    // result sizes reasonable for these tests.
+    if( results.size() > 5 )
+    {
+        manager.Drop( "TestPropertySet" );
+    }
 
     // Build up a persistable with some useful test types
     Persistable q;
@@ -124,8 +181,7 @@ int main(int argc, char *argv[])
     std::vector<char> blob( bdata.begin(), bdata.end() );
     q.AddDatum( "ABlob", blob );
 
-
-    //static_cast<MongoStore*>(mongostore.get())->Drop( "TestType" );
+    manager.Drop( "TestType" );
 
     // Ensure that persistable is saved to backing as well as working dbs.
     // Normally, persistables will just be saved to the working db, but there
@@ -134,8 +190,6 @@ int main(int argc, char *argv[])
     //cout << "Saving Persistable" << endl << flush;
     manager.Save( q );
     //manager.Save( q, Store::BACKING_ROLE );
-
-    //cout << "Loading..." << endl << flush;
 
     // Set the value of "Num" field to some other value. When we load below, this
     // value will be reset to 1234.98735 if the load was successful. We then
@@ -167,7 +221,12 @@ int main(int argc, char *argv[])
     string bstr( pb, bout.size() );
     cout << "\t" << bstr << endl;
 
-#if 0
+    // Try out MapReduce functionality
+#if 1
+    // Drop all records with typename MRIN and MROUT
+    manager.Drop( "MRIN" );
+    manager.Drop( "MROUT" );
+
     Persistable one;
     one.SetTypeName( "MRIN" );
     one.AddDatum( "Num", 1 );
@@ -178,11 +237,7 @@ int main(int argc, char *argv[])
 
     Persistable three;
     three.SetTypeName( "MRIN" );
-    three.AddDatum( "Num", 2.5 );
-
-    // Drop all records with typename MRIN and MROUT
-    manager.Drop( "MRIN" );
-    manager.Drop( "MROUT" );
+    three.AddDatum( "Num", 5 );
 
     manager.Save( one );
     manager.Save( two );
@@ -192,17 +247,18 @@ int main(int argc, char *argv[])
     // gives us a UUID that can be passed into the Map function.
     Persistable mrout;
     mrout.SetTypeName( "MROUT" );
-    mrout.AddDatum( "count", 0 );
-    mrout.AddDatum( "sum", 0 );
+    mrout.AddDatum( "count", 0.0 );
+    mrout.AddDatum( "sum", 0.0 );
 
     std::string mapF = "function() {emit( \"";
     mapF += mrout.GetUUIDAsString();
     mapF += "\", {count: 1, num: this.Num} );}";
     std::string reduceF = "function(key, values) {var result = {count: 0, sum: 0};values.forEach(function(value) {result.count += value.count;result.sum += value.num;});return result;}";
-    static_cast<MongoStore*>(mongostore.get())->MapReduce( "MRIN", mapF, reduceF, mongo::BSONObj(), "MROUT" );
+    static_cast<MongoStore*>(mongostore.get())->MapReduce( "MRIN", mapF,
+        reduceF, mongo::BSONObj(), mrout.GetUUIDAsString(), "MROUT" );
 
     manager.Load( mrout );
-    cout << "MapReduce output: count = " << mrout.GetDatumValue<int>("count")
+    cout << "MapReduce output: count = " << mrout.GetDatumValue<double>("count")
          << ", sum = " << mrout.GetDatumValue<double>("sum") << endl;
 #endif
 
