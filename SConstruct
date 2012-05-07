@@ -368,6 +368,12 @@ else:
       'PocoNet','PocoDataSQLite','PocoUtil','PocoXML','PocoZip'], symbol="main", required=True)
 AppendOptions( opts, options, poco_options )
 
+# Setup mongoClient library
+#mongo_options = SConsAddons.Options.StandardPackageOption("mongo",
+#  "mongo library options, default : mongo_incdir=<mongo> mongo_libdir=<mongo>/lib(64)",
+#  pj('mongo','client','dbclient.h'), library=['mongoclient'], symbol="main", required=True)
+#AppendOptions( opts, options, mongo_options )
+
 # Setup osgWorks library
 if GetPlatform() == 'win32':
     osgworks_options = fp_option.FlagPollBasedOption( "osgWorks", "osgWorks", "1.0.0", True, True, None,
@@ -420,7 +426,9 @@ Export( 'opts', 'vtk_options', 'osg_options',
 	    'minerva_options',
         'osgbullet_options', 
         #'osgbulletplus_options',
-        'bdfx_options', 'lemon_options' )
+        'bdfx_options', 'lemon_options'
+        #, 'mongo_options'
+	)
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
@@ -724,9 +732,12 @@ if not SConsAddons.Util.hasHelpFlag():
     qtTestBuilder = pj(buildDir,'test','qt','BasicQtOffscreenRender')
     qtpropertybrowserSubdirs = pj( buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource' )
     qwtSubdirs = pj( buildDir, 'external', 'qwt-6.0.0-rc5' )
+    persistenceSubdirs = pj( buildDir, 'external', 'Persistence' )
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, lokiSubdirs, minervaDataSubdirs]
+               shareSubdirs, lokiSubdirs, minervaDataSubdirs
+               #, persistenceSubdirs
+	       ]
 
     if baseEnv[ 'MakeQtSupport' ] == 'yes':
         ves_dirs.append( qtpropertybrowserSubdirs )
