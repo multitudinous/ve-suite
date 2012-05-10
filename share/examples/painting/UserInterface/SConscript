@@ -66,7 +66,7 @@ lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'xplorer'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'command'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
                            pj('#', buildDir, 'src', 'ves', 'conductor', 'qt'),
-                           pj('#', buildDir, 'src', 'ves', 'open', 'xml'),
+                           pj('#', buildDir, 'src', 'ves', 'open', 'xml')
                          ])
 
 if GetPlatform() != 'darwin':

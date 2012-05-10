@@ -56,14 +56,12 @@ lib_env.Append(LIBS = ['ves_xplorer',
                        'ves_xplorer_eventmanager',
                        'ves_conductor_qtui',
                        'ves_open_xml'
-                       #'QtSolutions_PropertyBrowser-2.5'
                       ])
 lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'xplorer'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
                            pj('#', buildDir, 'src', 'ves', 'conductor', 'qt'),
-                           pj('#', buildDir, 'src', 'ves', 'open', 'xml'),
-                           #pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src')
+                           pj('#', buildDir, 'src', 'ves', 'open', 'xml')
                          ])
 
 if GetPlatform() != 'darwin':

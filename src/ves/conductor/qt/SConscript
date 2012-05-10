@@ -9,8 +9,6 @@ Import('minerva_options boost_options osgal_options' )
 Import('tao_options xerces_options osg_options')
 Import('bullet_options osgbullet_options')
 
-SConscript( 'DefaultPlugin/SConscript' )
-
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
 
@@ -257,3 +255,6 @@ else:
 lib.addSources(sources)
 lib.addHeaders(headers,  pj( 'ves', 'conductor','qt'))
 lib.build()
+
+SConscript( 'DefaultPlugin/SConscript' )
+
