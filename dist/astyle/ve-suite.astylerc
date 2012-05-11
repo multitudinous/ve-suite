@@ -1,0 +1,27 @@
+# astyle options file for the VE-Suite project
+
+# Allman-style formatting with broken brackets
+--style=allman
+
+# indent with 4 spaces
+--indent=spaces=4
+
+# place padding around operators
+--pad-oper
+
+# remove padding outside of parentheses
+--unpad-paren
+
+
+# place padding around the inside of parentheses
+--pad-paren-in
+
+# Add brackets around one-line conditional statements
+--add-brackets
+
+# Align pointer or reference operator to the object type
+--align-pointer=type
+--align-reference=type
+
+--min-conditional-indent=2
+--indent-col1-comments
