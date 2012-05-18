@@ -88,7 +88,7 @@ class OSGEPHEMERIS_EXPORT StarField: public osg::MatrixTransform
 
         std::vector<StarData> _stars;
         double _radius;
-        static const double _defaultRadius;
+        OSGEPHEMERIS_LOCAL static const double _defaultRadius;
         osg::ref_ptr<osg::Geode> _starGeode;
         osg::ref_ptr<osg::Geode> _starLabelsGeode;
 
@@ -97,8 +97,8 @@ class OSGEPHEMERIS_EXPORT StarField: public osg::MatrixTransform
         void _buildGeometry(void);
         void _buildLabels(void);
 
-        static std::string _vertexShaderProgram;
-        static std::string _fragmentShaderProgram;
+        OSGEPHEMERIS_LOCAL static std::string _vertexShaderProgram;
+        OSGEPHEMERIS_LOCAL static std::string _fragmentShaderProgram;
         osg::ref_ptr<osg::Uniform> _starAlpha;
         osg::ref_ptr<osg::Uniform> _pointSize;
         osg::ref_ptr<osg::Uniform> _MVi;;

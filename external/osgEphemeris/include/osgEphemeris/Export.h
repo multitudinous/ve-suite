@@ -38,14 +38,26 @@
 #if defined(_MSC_VER) || defined(__CYGWIN__) || defined(__MINGW32__) || defined( __BCPLUSPLUS__)  || defined( __MWERKS__)
     #  if defined( OSGEPHEMERIS_LIBRARY_STATIC )
     #    define OSGEPHEMERIS_EXPORT
+    #    define OSGEPHEMERIS_LOCAL
     #  elif defined( OSGEPHEMERIS_LIBRARY )
     #    define OSGEPHEMERIS_EXPORT   __declspec(dllexport)
     #  else
     #    define OSGEPHEMERIS_EXPORT   __declspec(dllimport)
     #  endif 
 #else
+  #if __GNUC__ >= 4
+    # if defined( OSGEPHEMERIS_LIBRARY_STATIC )
+    #    define OSGEPHEMERIS_EXPORT
+    #    define OSGEPHEMERIS_LOCAL
+    #  else
+    #    define OSGEPHEMERIS_EXPORT   __attribute__ ((visibility ("default")))
+    #    define OSGEPHEMERIS_LOCAL   __attribute__ ((visibility ("hidden")))
+    #  endif 
+  #else
     #  define OSGEPHEMERIS_EXPORT
-#endif  
+    #  define OSGEPHEMERIS_LOCAL
+  #endif
+#endif
 
 // set up define for whether member templates are supported by VisualStudio compilers, i.e for compilers after VS6.0
 // also set a define to know when VS6.0 is being used.

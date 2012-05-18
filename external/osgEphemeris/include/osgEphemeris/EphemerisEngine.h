@@ -108,10 +108,10 @@ class OSGEPHEMERIS_EXPORT EphemerisEngine: public osg::Referenced
 
         void _updateData( const EphemerisData &, const CelestialBody &, double, CelestialBodyData &);
 
-        static void _getLsnRsn( double mjd, double &lsn, double &rsn);
-        static void _getAnomaly( double ma, double s, double &nu, double &ea);
-        static double getLocalSiderealTimePrecise( double mjd, double longitude );
-        static void _RADecElevToAzimAlt( 
+        OSGEPHEMERIS_LOCAL static void _getLsnRsn( double mjd, double &lsn, double &rsn);
+        OSGEPHEMERIS_LOCAL static void _getAnomaly( double ma, double s, double &nu, double &ea);
+        OSGEPHEMERIS_LOCAL static double getLocalSiderealTimePrecise( double mjd, double longitude );
+        OSGEPHEMERIS_LOCAL static void _RADecElevToAzimAlt( 
                 double rightAscension,
                 double declination,
                 double latitude,
@@ -120,12 +120,12 @@ class OSGEPHEMERIS_EXPORT EphemerisEngine: public osg::Referenced
                 double rsn,
                 double &azim,
                 double &alt );
-        static void _calcParallax ( 
+        OSGEPHEMERIS_LOCAL static void _calcParallax ( 
                     double tha, double tdec,    // True right ascension and declination
                     double phi, double ht,      // geographical latitude, height abouve sealevel
                     double ehp,                 // Equatorial horizontal parallax
                     double &aha, double &adec); // output: aparent right ascencion and declination
-        static void _aaha_aux (double lat, double x, double y, double *p, double *q);
+        OSGEPHEMERIS_LOCAL static void _aaha_aux (double lat, double x, double y, double *p, double *q);
 };
 
 

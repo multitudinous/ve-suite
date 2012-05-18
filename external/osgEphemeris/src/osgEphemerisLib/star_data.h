@@ -4,7 +4,7 @@
  * Angles are given in radians; all positions are epoch 2000.
  */
 
-static const char *star_data[] =  {
+OSGEPHEMERIS_LOCAL static const char *star_data[] =  {
      "Sirius,1.767793,-0.291751,-1.46\n",
      "Canopus,1.675305,-0.919716,-0.72\n",
     "Arcturus,3.733528,0.334798,-0.04\n",

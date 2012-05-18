@@ -76,7 +76,7 @@ class OSGEPHEMERIS_EXPORT Sphere : public osg::Group
         osg::ref_ptr<osg::Geode> _northernHemisphere;
         osg::ref_ptr<osg::Geode> _southernHemisphere;
 
-        static const double _defaultRadius;
+        OSGEPHEMERIS_LOCAL static const double _defaultRadius;
         
     private:
         

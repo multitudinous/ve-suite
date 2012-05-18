@@ -53,32 +53,32 @@ class OSGEPHEMERIS_EXPORT MoonModel : public Sphere
 
     private:
 
-        static const double _moonRadius;
-        static std::string _vertexShaderProgram;
-        static std::string _fragmentShaderProgram;
+        OSGEPHEMERIS_LOCAL static const double _moonRadius;
+        OSGEPHEMERIS_LOCAL static std::string _vertexShaderProgram;
+        OSGEPHEMERIS_LOCAL static std::string _fragmentShaderProgram;
 
         int _baseTextureUnit;
         int _bumpTextureUnit;
 
         osg::ref_ptr<osg::Uniform> _light;
 
-        static unsigned int  _moonImageLoLodWidth;
-        static unsigned int _moonImageLoLodHeight;
-        static unsigned int  _moonImageInternalTextureFormat;
-        static unsigned int _moonImagePixelFormat;
-        static unsigned char _moonImageLoLodData[];
-        static unsigned int  _moonImageHiLodWidth;
-        static unsigned int _moonImageHiLodHeight;
-        static unsigned char _moonImageHiLodData[];
+        OSGEPHEMERIS_LOCAL static unsigned int  _moonImageLoLodWidth;
+        OSGEPHEMERIS_LOCAL static unsigned int _moonImageLoLodHeight;
+        OSGEPHEMERIS_LOCAL static unsigned int  _moonImageInternalTextureFormat;
+        OSGEPHEMERIS_LOCAL static unsigned int _moonImagePixelFormat;
+        OSGEPHEMERIS_LOCAL static unsigned char _moonImageLoLodData[];
+        OSGEPHEMERIS_LOCAL static unsigned int  _moonImageHiLodWidth;
+        OSGEPHEMERIS_LOCAL static unsigned int _moonImageHiLodHeight;
+        OSGEPHEMERIS_LOCAL static unsigned char _moonImageHiLodData[];
 
-        static unsigned int  _moonNormalImageLoLodWidth;
-        static unsigned int _moonNormalImageLoLodHeight;
-        static unsigned int  _moonNormalImageInternalTextureFormat;
-        static unsigned int _moonNormalImagePixelFormat;
-        static unsigned char _moonNormalImageLoLodData[];
-        static unsigned int  _moonNormalImageHiLodWidth;
-        static unsigned int _moonNormalImageHiLodHeight;
-        static unsigned char _moonNormalImageHiLodData[];
+        OSGEPHEMERIS_LOCAL static unsigned int  _moonNormalImageLoLodWidth;
+        OSGEPHEMERIS_LOCAL static unsigned int _moonNormalImageLoLodHeight;
+        OSGEPHEMERIS_LOCAL static unsigned int  _moonNormalImageInternalTextureFormat;
+        OSGEPHEMERIS_LOCAL static unsigned int _moonNormalImagePixelFormat;
+        OSGEPHEMERIS_LOCAL static unsigned char _moonNormalImageLoLodData[];
+        OSGEPHEMERIS_LOCAL static unsigned int  _moonNormalImageHiLodWidth;
+        OSGEPHEMERIS_LOCAL static unsigned int _moonNormalImageHiLodHeight;
+        OSGEPHEMERIS_LOCAL static unsigned char _moonNormalImageHiLodData[];
 
         void _buildStateSet();
 };

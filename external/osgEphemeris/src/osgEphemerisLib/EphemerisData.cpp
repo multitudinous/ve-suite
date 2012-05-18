@@ -22,4 +22,4 @@
 #include <string>
 #include <osgEphemeris/EphemerisData.h>
 
-const std::string osgEphemeris::EphemerisData::_defaultShmemFileName =  "/tmp/EphemerisData.shm";
+OSGEPHEMERIS_LOCAL const std::string osgEphemeris::EphemerisData::_defaultShmemFileName =  "/tmp/EphemerisData.shm";

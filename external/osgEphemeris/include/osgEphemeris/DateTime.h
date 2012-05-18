@@ -177,8 +177,8 @@ class OSGEPHEMERIS_EXPORT DateTime
 
     private:
         struct tm _tm;
-        static char *weekDayNames[7];
-        static char *monthNames[12];
+        OSGEPHEMERIS_LOCAL static char *weekDayNames[7];
+        OSGEPHEMERIS_LOCAL static char *monthNames[12];
 };
 
 

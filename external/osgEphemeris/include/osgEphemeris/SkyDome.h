@@ -93,7 +93,7 @@ class OSGEPHEMERIS_EXPORT SkyDome:  public Sphere
 
     private:
 
-        static const double _meanDistanceToMoon;
+        OSGEPHEMERIS_LOCAL static const double _meanDistanceToMoon;
 
         double _sunAzimuth;
         double _sunAltitude;
@@ -133,11 +133,11 @@ class OSGEPHEMERIS_EXPORT SkyDome:  public Sphere
 
         double _findIncidenceLength(double);
 
-        static unsigned int  _sunImageWidth;
-    static unsigned int  _sunImageHeight;
-        static unsigned int  _sunImageInternalTextureFormat;
-        static unsigned int  _sunImagePixelFormat;
-        static unsigned char _sunImageData[];
+        OSGEPHEMERIS_LOCAL static unsigned int  _sunImageWidth;
+        OSGEPHEMERIS_LOCAL static unsigned int  _sunImageHeight;
+        OSGEPHEMERIS_LOCAL static unsigned int  _sunImageInternalTextureFormat;
+        OSGEPHEMERIS_LOCAL static unsigned int  _sunImagePixelFormat;
+        OSGEPHEMERIS_LOCAL static unsigned char _sunImageData[];
 
 /* Sky luminance model adapted from:
  * A. J. Preetham, Peter, Shirley, Brian, Smits, "A Practical Analytic

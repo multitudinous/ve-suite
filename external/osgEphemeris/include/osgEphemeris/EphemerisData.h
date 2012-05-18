@@ -151,7 +151,7 @@ struct OSGEPHEMERIS_EXPORT EphemerisData : public Shmem
     static std::string getDefaultShmemFileName() { return _defaultShmemFileName; }
 
     private:
-        static const std::string _defaultShmemFileName; 
+        OSGEPHEMERIS_LOCAL static const std::string _defaultShmemFileName; 
 };
 
 }
