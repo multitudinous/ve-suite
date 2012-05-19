@@ -1,9 +1,7 @@
 PACKAGE_NAME=SDL
-BASE_DIR="${DEV_BASE_DIR}/SDL-1.3"
+BASE_DIR="${DEV_BASE_DIR}/SDL-2.0"
 
 SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_FORMAT=tgz
-SOURCE_URL=http://www.libsdl.org/tmp/SDL-1.3.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
@@ -22,9 +20,12 @@ case $PLATFORM in
     # POST_RETRIEVAL_METHOD="if [ -e ${BASE_DIR}/zconf.h ]; then rm ${BASE_DIR}/zconf.h; fi"
     ;;
   Darwin|Linux)
+    SOURCE_FORMAT=tgz
+    SOURCE_URL=http://www.libsdl.org/tmp/SDL-2.0.tar.gz
     PREBUILD_METHOD=configure
     CONFIGURE=../configure
 
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    POST_BUILD_METHOD="cd ${INSTALL_DIR}/include && ln -s SDL2 SDL && cd ${INSTALL_DIR}/lib && ln -s libSDL2.dylib libSDL.dylib && cd ${BUILD_DIR}"
     ;;
 esac
