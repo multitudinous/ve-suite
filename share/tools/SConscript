@@ -7,8 +7,8 @@ toolsSubdirs = Split("""
     daycent
     dds_texture_correction
     tbet
-    images
 """)
+#images
 
 toolsSubdirs.append( "gis/scenario_builder" )
 
