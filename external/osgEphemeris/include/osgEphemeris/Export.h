@@ -41,8 +41,10 @@
     #    define OSGEPHEMERIS_LOCAL
     #  elif defined( OSGEPHEMERIS_LIBRARY )
     #    define OSGEPHEMERIS_EXPORT   __declspec(dllexport)
+    #    define OSGEPHEMERIS_LOCAL
     #  else
     #    define OSGEPHEMERIS_EXPORT   __declspec(dllimport)
+    #    define OSGEPHEMERIS_LOCAL
     #  endif 
 #else
   #if __GNUC__ >= 4
