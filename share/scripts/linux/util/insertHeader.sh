@@ -4,12 +4,12 @@
 # contained in current directory
 
 # get the list of files that contain the old header
-set containingHeader = `find . \( -name "*.py" -or -name "*.cxx" -or -name "*.h" \) -exec grep -L "VE-Suite is (C) Copyright 199" {} \;`
+set containingHeader = `find . \( -name "*.py" -or -name "*.cpp" -or -name "*.h" \) -exec grep -L "latticeFX is (C) Copyright 20" {} \;`
 
 foreach file ( $containingHeader )
    echo "$file - Add header and activate props"
    mv $file $file.old
-   sed -f $VE_SUITE_HOME/VE_Installer/scripts/cmdheader "$file.old" > "$file"
+   sed -f $VE_SUITE_HOME/share/scripts/linux/util/cmdheader "$file.old" > "$file"
    rm -f $file.old
    svn propset svn:keywords "Date Author Revision Id" $file
 end

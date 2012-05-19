@@ -111,7 +111,7 @@ lib_env.AppendUnique( CPPDEFINES = ['QT_PLUGIN'] )
 
 lib = ves_pkg.createLoadableModule('ves_defaultplugin_qtui', lib_env,
            installPrefix = pj( LIBDIR, 'conductor', 'plugins' ) )
-   
+
 lib.addSources(sources)
 lib.addHeaders(headers,  pj( 'ves', 'conductor','qt', 'DefaultPlugin'))
 lib.build()
