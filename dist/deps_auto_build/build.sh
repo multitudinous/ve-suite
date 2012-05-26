@@ -226,6 +226,7 @@ function unsetvars()
   unset POST_BUILD_METHOD
   unset SOURCE_REVISION
   unset GIT_BRANCH_VERSION
+  unset PREBUILD_METHOD
 }
 
 #

@@ -3,11 +3,11 @@
 
 #include <vesenv.iss>
 #define MyAppName "VE-Suite"
-#define MyAppVer "2.3.0"
-#define MyAppVerName "VE-Suite 2.3.0"
+#define MyAppVer "3.0.0"
+#define MyAppVerName "VE-Suite 3.0.0"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
-#define VELauncher "velauncher.exe"
+;#define VELauncher "velauncher.exe"
 #define VesIcon "ves_icon.ico"
 #define VesDocumentIcon "ves_document.ico"
 
@@ -85,15 +85,15 @@ Source: {#VEINSTALLHOME}\include\*; DestDir: {app}\include\; Attribs: readonly; 
 Source: {#VEINSTALLHOME}\{#LIBDIR}\*.lib; DestDir: {app}\{#LIBDIR}; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 Source: {#SKEWMATRIXHOME}\*.dll; DestDir: {app}\{#LIBDIR}; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
-Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
+; Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
 Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}
 Source: {#OPCVESINSTALLER}; DestDir: {tmp}; Flags: skipifsourcedoesntexist
 Source: {#INSTALLERINSTALLLOCATION}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}.exe; DestDir: {tmp}; Flags: ignoreversion
 
 [Icons]
 Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}
-Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
+; Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}
+; Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
 
 [Run]
 Filename: {tmp}\{#MSREDISTRIBUTABLEFILENAME}; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Tasks: 
@@ -104,7 +104,7 @@ Filename: {tmp}\{#OPCVESINSTALLERFILENAME}; Description: Install OPC for use wit
 ;Name: D:\devEnv\VES\share\scripts\win\buildVELauncher.exe.bat; Parameters: ; Flags: abortonerror
 
 [_ISTool]
-UseAbsolutePaths=false
+UseAbsolutePaths=true
 LogFile={#VEDEVHOME}\compile.log
 LogFileAppend=false
 

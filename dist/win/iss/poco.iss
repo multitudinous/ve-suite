@@ -4,7 +4,7 @@
   #include <vesenv.iss>
 #endif
 
-#define MyAppVer "trunk"
+#define MyAppVer "1.4.1"
 #define MyAppName "POCO Pre-Compile"
 #define MyAppVerName "POCO"
 #define MyAppPublisher "VERG"

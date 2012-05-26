@@ -3,8 +3,8 @@
 
 #include <vesenv.iss>
 #define MyAppName "VE-Suite_Dependencies"
-#define MyAppVer "2.1.0"
-#define MyAppVerName "VE-Suite-2.1.0_Dependencies"
+#define MyAppVer "3.0.0"
+#define MyAppVerName "VE-Suite-3.0.0_Dependencies"
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
@@ -58,6 +58,7 @@ Name: osgal; Description: osgAL; Types: full
 Name: minerva; Description: Minerva; Types: full
 Name: poco; Description: POCO; Types: full
 Name: osgworks; Description: osgWorks; Types: full
+Name: qt; Description: Qt; Types: full
 Name: depsbuildenv; Description: Headers and Libs
 
 [Files]
@@ -74,10 +75,10 @@ Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\*.lib; DestDir: {app}\lib; Attribs:
 Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 
 ; WX Files
-Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv; Attribs: readonly
-Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
-Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\wx; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+; Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+; Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv; Attribs: readonly
+; Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
+; Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\wx; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 
 ; Juggler Files
 Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs; Components: juggler
@@ -139,6 +140,12 @@ Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.lib; DestDir: {app}\lib; Fla
 Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: osgworks
 Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion; Components: osgworks; Languages: 
+
+; Qt Files
+Source: {#QTHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#QTHOME}\bin\*.pdb; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv; Languages: 
+Source: {#QTHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#QTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: qt
 
 ; README setup for depends info
 ; Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
