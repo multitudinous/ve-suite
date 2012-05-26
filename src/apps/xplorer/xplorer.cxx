@@ -142,6 +142,11 @@ int main( int argc, char* argv[] )
     
     xplorer_desc.add_options()("VESRTT", po::bool_switch(), 
         "Enable render-to-texture mode");
+    //This tells ves to automatically determine what the desktop size is and then
+    //run with that screen size rather than require it be passed in on the 
+    //command line. Currently this only works on windows.
+    xplorer_desc.add_options()("VESDesktopMode", po::bool_switch(), 
+        "Enable automatic desktop mode");
 
     xplorer_desc.add_options()("VESDesktop", po::value< std::vector< int > >(), 
         "Enable desktop mode with the resolution of the desktop");

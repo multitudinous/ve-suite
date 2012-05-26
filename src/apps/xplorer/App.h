@@ -216,6 +216,9 @@ public:
     bool Test();
 #endif
 
+    ///Set the desktop info for various modes
+    void SetDesktopInfo( bool mode, int screenWidth, int screenHeight );
+
 protected:
 
 private:
@@ -384,6 +387,12 @@ private:
     vpr::Interval m_startFrameInt;
     ///The gadget object used to aquire timestamps during runtime
     gadget::PositionInterface m_vrjHeadInterface;
+    ///Desktop mode
+    bool m_desktopMode;
+    ///Screen width
+    int m_screenWidth;
+    ///Screen height
+    int m_screenHeight;
 };
 } //end xplorer
 } //end ves

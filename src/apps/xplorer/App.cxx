@@ -570,7 +570,7 @@ void App::initScene()
     std::cout << "| ***************************************************************** |" << std::endl;
     m_vjobsWrapper->InitCluster();
     //Need this loop here so manipulators know whether we are in desktop mode
-    if( m_vm.count("VESDesktop") )
+    if( m_desktopMode )
     {
         ves::xplorer::scenegraph::SceneManager::instance()->SetDesktopMode( true );
     }
@@ -593,12 +593,10 @@ void App::initScene()
 
     // navigation and cursor
     EnvironmentHandler::instance()->Initialize();
-    if( m_vm.count("VESDesktop") )
+    if( m_desktopMode )
     {
-        std::vector< int > desktopSize =
-            m_vm["VESDesktop"].as< std::vector< int > >();
         EnvironmentHandler::instance()->
-            SetDesktopSize( desktopSize.at( 0 ), desktopSize.at( 1 ) );
+            SetDesktopSize( m_screenWidth, m_screenHeight );
     }
 
     EnvironmentHandler::instance()->InitScene();
@@ -1492,6 +1490,13 @@ void App::SetNearFarRatio( bool const& enable, double const& nearFar )
     {
         m_nearFarRatio = 0.0005;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void App::SetDesktopInfo( bool mode, int screenWidth, int screenHeight )
+{
+    m_desktopMode = mode;
+    m_screenWidth = screenWidth;
+    m_screenHeight = screenHeight;
 }
 #if defined( _DARWIN )
 ////////////////////////////////////////////////////////////////////////////////

@@ -85,7 +85,23 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
         std::cout << "|\tEnabling RTT"<< std::endl;
     }
     
-    if( vm.count("VESDesktop") )
+    bool desktopModeOp = vm["VESDesktopMode"].as<bool>();
+    if( desktopModeOp )
+    {
+#ifdef WIN32
+        {
+            std::cout << "|\tEnabling Desktop Mode" << std::endl;
+            desktopMode = true;
+            //int dwWidth = GetSystemMetrics(SM_CXBORDER);
+            desktopWidth = GetSystemMetrics(SM_CXSCREEN);
+            //int dwHeight = GetSystemMetrics(SM_CYBORDER);
+            desktopHeight = GetSystemMetrics(SM_CYSCREEN);
+        }
+#else
+        std::cout << "Automatic desktop mode not yet supported on this platform" << std::endl;
+#endif
+    }
+    else if( vm.count("VESDesktop") )
     {
         std::cout << "|\tEnabling Desktop Mode" << std::endl;
         std::vector< int > desktopSize =
@@ -99,6 +115,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
     // block it on another thread
     // Delcare an instance of my application
     m_cfdApp = new App( m_argc, m_argv, enableRTT, vm, splitter );
+    m_cfdApp->SetDesktopInfo( desktopMode, desktopWidth, desktopHeight );
     m_cfdApp->SetWrapper( m_vjObsWrapper );
     
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
