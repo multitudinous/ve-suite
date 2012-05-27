@@ -1,0 +1,12 @@
+#Install windows bat files
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg')
+env = ves_pkg.getEnv().Clone()
+
+launcherBundle = ves_pkg.createFileBundle( 'bin' )
+
+runScripts = ['velauncher.bat']
+launcherBundle.addFiles( runScripts )

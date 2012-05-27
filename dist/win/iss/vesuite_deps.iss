@@ -59,6 +59,10 @@ Name: minerva; Description: Minerva; Types: full
 Name: poco; Description: POCO; Types: full
 Name: osgworks; Description: osgWorks; Types: full
 Name: qt; Description: Qt; Types: full
+Name: bdfx; Description: backdropFX; Types: full
+Name: bullet; Description: Bullet; Types: full
+Name: osgbullet; Description: osgBullet; Types: full
+Name: osgephemeris; Description: osgEphemeris; Types: full
 Name: depsbuildenv; Description: Headers and Libs
 
 [Files]
@@ -92,15 +96,6 @@ Source: {#DEPENDSINSTALLHOME}\{#XERCESHOME}\include\*.h*; DestDir: {app}\include
 Source: {#DEPENDSINSTALLHOME}\{#XERCESHOME}\include\*.c*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#XERCESHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#XERCESHOME}\lib\*.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
-
-; APR Files
-;Source: {#DEPENDSINSTALLHOME}\{#APRHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
-;Source: {#DEPENDSINSTALLHOME}\{#APRHOME}\lib\libapr*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
-;Source: {#DEPENDSINSTALLHOME}\{#APRUTILHOME}\lib\libaprutil*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
-;Source: {#DEPENDSINSTALLHOME}\{#APRICONVHOME}\lib\libapriconv*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
-;Source: {#DEPENDSINSTALLHOME}\{#APRHOME}\lib\*.dll; DestDir: {app}\lib; Components: apr; Flags: ignoreversion skipifsourcedoesntexist
-;Source: {#DEPENDSINSTALLHOME}\{#APRUTILHOME}\lib\*.dll; DestDir: {app}\lib; Components: apr; Flags: ignoreversion skipifsourcedoesntexist
-;Source: {#DEPENDSINSTALLHOME}\{#APRICONVHOME}\lib\*.dll; DestDir: {app}\lib; Components: apr; Flags: ignoreversion skipifsourcedoesntexist
 
 ; ACE/TAO Files
 Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: acetao
@@ -140,11 +135,39 @@ Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.lib; DestDir: {app}\lib; Fla
 Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: osgworks
 Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion; Components: osgworks; Languages: 
+Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: osgworks; Languages: 
+
+; osgBullet Files
+Source: {#DEPENDSINSTALLHOME}\{#OSGBULLETHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#OSGBULLETHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#OSGBULLETHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#OSGBULLETHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: osgbullet
+Source: {#DEPENDSINSTALLHOME}\{#OSGBULLETHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: osgbullet; Languages: 
+
+; Bullet Files
+Source: {#DEPENDSINSTALLHOME}\{#BULLETHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#BULLETHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#BULLETHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#BULLETHOME}\lib\*.pdb; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+
+; bdfx Files
+Source: {#DEPENDSINSTALLHOME}\{#BDFXHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#BDFXHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#BDFXHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#BDFXHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: bdfx
+Source: {#DEPENDSINSTALLHOME}\{#BDFXHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: bdfx; Languages: 
+
+; osgEphemeris Files
+Source: {#DEPENDSINSTALLHOME}\{#OSGEPHEMERISHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#OSGEPHEMERISHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#OSGEPHEMERISHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#OSGEPHEMERISHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: osgephemeris
+Source: {#DEPENDSINSTALLHOME}\{#OSGEPHEMERISHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: osgephemeris; Languages: 
 
 ; Qt Files
-Source: {#QTHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
-Source: {#QTHOME}\bin\*.pdb; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv; Languages: 
-Source: {#QTHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+;Source: {#QTHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+;Source: {#QTHOME}\bin\*.pdb; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv; Languages: 
+;Source: {#QTHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#QTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: qt
 
 ; README setup for depends info
@@ -186,4 +209,4 @@ Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\share\oalinst.exe; DestDir: {tmp}; Fl
 Filename: {tmp}\oalinst.exe; Flags: runascurrentuser
 
 [Icons]
-Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+;Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}

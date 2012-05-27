@@ -2,10 +2,14 @@
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
+Import('GetPlatform')
 
 scriptsSubdirs = Split("""
     linux
 """)
+
+if GetPlatform() == 'win32':
+    scriptsSubdirs.append( "win" )
 
 ##Run SConscript files in all of those folders.
 for d in scriptsSubdirs:

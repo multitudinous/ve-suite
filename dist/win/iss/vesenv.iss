@@ -49,6 +49,10 @@
 #define OSGALHOME "osgAudio_2.0.0_msvc-9.0-sp1-x64"
 #define POCOHOME "POCO_1.4.1_msvc-9.0-sp1-x64"
 #define OSGWORKSHOME "osgWorks_2.0.2_msvc-9.0-sp1-x64"
+#define OSGBULLETHOME "osgBullet_2.0.2_msvc-9.0-sp1-x64"
+#define BDFXHOME "backdropFX_0.3.2_msvc-9.0-sp1-x64"
+#define BULLETHOME "Bullet_2.80_msvc-9.0-sp1-x64"
+#define OSGEPHEMERISHOME "osgEphemeris_24_msvc-9.0-sp1-x64"
 #define QTHOME "C:\dev\deps\Qt\4.8.0_x64"
 #else
 ; Install prefix of ves
@@ -69,6 +73,10 @@
 #define OSGALHOME "osgAudio_2.0.0_msvc-9.0-sp1-x86"
 #define POCOHOME "POCO_1.3.5_msvc-9.0-sp1-x86"
 #define OSGWORKSHOME "osgWorks_1.1.1_msvc-9.0-sp1-x86"
+#define OSGBULLETHOME "osgWorks_2.0.2_msvc-9.0-sp1-x64"
+#define BDFXHOME "osgWorks_2.0.2_msvc-9.0-sp1-x64"
+#define BULLETHOME "osgWorks_2.0.2_msvc-9.0-sp1-x64"
+#define OSGEPHEMERISHOME "osgWorks_2.0.2_msvc-9.0-sp1-x64"
 #define QTHOME "C:\dev\deps\Qt\4.8.0"
 #endif
 

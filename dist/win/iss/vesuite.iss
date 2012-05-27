@@ -7,13 +7,13 @@
 #define MyAppVerName "VE-Suite 3.0.0"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
-;#define VELauncher "velauncher.exe"
+#define VELauncher "velauncher.bat"
 #define VesIcon "ves_icon.ico"
 #define VesDocumentIcon "ves_document.ico"
 
-[InnoIDE_Settings]
-LogFile={#VEDEVHOME}\compile.log
-LogFileOverwrite=true
+;[InnoIDE_Settings]
+;LogFile=compile.log
+;LogFileOverwrite=true
 
 [Setup]
 AppName={#MyAppName}
@@ -27,7 +27,7 @@ DefaultGroupName={#VESGROUPNAME}
 AllowNoIcons=true
 OutputDir={#INSTALLERINSTALLLOCATION}
 OutputBaseFilename={#MyAppName}_{#VEVERSION}.{#SVNVERSION}_{#MSVCVERSION}
-Compression=lzma
+Compression=lzma/Max
 SolidCompression=true
 ChangesEnvironment=true
 ShowLanguageDialog=yes
@@ -40,39 +40,44 @@ WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WindowVisible=true
 WizardImageBackColor=clWhite
 ChangesAssociations=true
-BackColor=$a16502
-BackColor2=$1b84f7
+BackColor=$00A16502
+BackColor2=$001B84F7
 SetupIconFile={#VEDEVHOME}\dist\installerImages\{#VesIcon}
 PrivilegesRequired=none
 UsePreviousGroup=false
-VersionInfoVersion=1.0.0
+VersionInfoVersion=3.0.0
 VersionInfoCompany=SMDS
-VersionInfoProductVersion=1.0.0
-AppVersion=1.0.0
-UninstallDisplayIcon={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
+VersionInfoProductVersion=3.0.0
+AppVersion=3.0.0
 UninstallDisplayName={#MyAppName}_{#MyAppVer}_{#MSVCVERSION}
+VersionInfoDescription=VE-Suite Installer
+VersionInfoProductName=VE-Suite
+VersionInfoCopyright=Ames Lab
+AppID={{1A4D30B2-CA0C-4B60-B368-0DDF1A5692DC}
+OutputManifestFile={#INSTALLERINSTALLLOCATION}
 
 [Types]
 Name: full; Description: Full installation
 Name: custom; Description: Custom installation; Flags: iscustom
 
 [Components]
-Name: nameserver; Description: Name Server; Types: full
-Name: vexplorer; Description: VE-Xplorer; Types: full
-Name: veconductor; Description: VE-Conductor (GUI); Types: full
+Name: core; Description: VE-Suite Core; Types: full
+;Name: nameserver; Description: Name Server; Types: full
+;Name: vexplorer; Description: VE-Xplorer; Types: full
+;Name: veconductor; Description: VE-Conductor (GUI); Types: full
 Name: vebuildenv; Description: Headers and Libs
 Name: examples; Description: Example datasets; Types: full
 ;Name: buildertools; Description: VE-Suite BuilderTools; Types: full
 
 [Registry]
 Root: HKCU; Subkey: Software\VE-Suite-Launcher; ValueType: none; Flags: uninsdeletekeyifempty
-Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Components: " examples vebuildenv veconductor vexplorer nameserver"; Tasks: " desktopVELauncherIcon"; Flags: uninsdeletekeyifempty
+Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Components: " examples vebuildenv core"; Tasks: " desktopVELauncherIcon"; Flags: uninsdeletekeyifempty
 Root: HKCR; SubKey: .ves; ValueType: string; ValueData: VESNetworkfile; Flags: uninsdeletekey createvalueifdoesntexist
 Root: HKCR; SubKey: VESNetworkfile; ValueType: string; ValueData: VE-Suite Network file; Flags: uninsdeletekey
-Root: HKCR; SubKey: VESNetworkfile\shell\open\command; ValueType: string; ValueData: """{app}\bin\velauncher.exe"" ""%1"""; Flags: uninsdeletevalue
+;Root: HKCR; SubKey: VESNetworkfile\shell\open\command; ValueType: string; ValueData: """{app}\bin\velauncher.exe"" ""%1"""; Flags: uninsdeletevalue
 Root: HKCR; Subkey: VESNetworkfile\DefaultIcon; ValueType: string; ValueData: {app}\bin\installerImages\{#VesDocumentIcon}; Flags: uninsdeletevalue; Components: ; Tasks: 
-Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher; ValueType: string; ValueData: Open with &VE-Launcher
-Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher\command; ValueType: string; ValueData: """{app}\bin\velauncher.exe"" ""%1"""; Flags: createvalueifdoesntexist uninsdeletekey
+;Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher; ValueType: string; ValueData: Open with &VE-Launcher
+;Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher\command; ValueType: string; ValueData: """{app}\bin\velauncher.exe"" ""%1"""; Flags: createvalueifdoesntexist uninsdeletekey
 [Tasks]
 Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create Desktop Icon
 
@@ -80,11 +85,12 @@ Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create 
 Source: {#VEINSTALLHOME}\{#LIBDIR}\*.dll; DestDir: {app}\{#LIBDIR}; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEINSTALLHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
 
-Source: {#VEINSTALLHOME}\share\*; DestDir: {app}\share\; Components: examples; Flags: recursesubdirs createallsubdirs
+Source: {#VEINSTALLHOME}\share\*; DestDir: {app}\share\; Components: core; Flags: recursesubdirs createallsubdirs; Excludes: examples
+Source: {#VEINSTALLHOME}\share\vesuite\examples\*; DestDir: {app}\share\vesuite\examples; Components: examples; Flags: recursesubdirs createallsubdirs
 Source: {#VEINSTALLHOME}\include\*; DestDir: {app}\include\; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEINSTALLHOME}\{#LIBDIR}\*.lib; DestDir: {app}\{#LIBDIR}; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
-Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-Source: {#SKEWMATRIXHOME}\*.dll; DestDir: {app}\{#LIBDIR}; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Components: core; Flags: replacesameversion
+Source: {#SKEWMATRIXHOME}\*.dll; DestDir: {app}\{#LIBDIR}; Components: core; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 ; Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
 Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}
 Source: {#OPCVESINSTALLER}; DestDir: {tmp}; Flags: skipifsourcedoesntexist
@@ -92,21 +98,16 @@ Source: {#INSTALLERINSTALLLOCATION}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVER
 
 [Icons]
 Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-; Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}
-; Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
+Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}
+Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
 
 [Run]
 Filename: {tmp}\{#MSREDISTRIBUTABLEFILENAME}; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Tasks: 
-Filename: {tmp}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}; Flags: postinstall runascurrentuser; Description: VE-Suite Dependency Installer; StatusMsg: Installing VE-Suite dependencies
+Filename: {tmp}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}; Flags: postinstall runascurrentuser; Description: VE-Suite Dependency Installer; StatusMsg: Installing VE-Suite dependencies; Parameters: /SILENT /SP- /DIR={app}; 
 Filename: {tmp}\{#OPCVESINSTALLERFILENAME}; Description: Install OPC for use with VE-PSI; StatusMsg: Installing OPC for use with VE-PSI...; Flags: postinstall unchecked skipifdoesntexist; Tasks: 
-
-[_ISToolPreCompile]
-;Name: D:\devEnv\VES\share\scripts\win\buildVELauncher.exe.bat; Parameters: ; Flags: abortonerror
-
-[_ISTool]
-UseAbsolutePaths=true
-LogFile={#VEDEVHOME}\compile.log
-LogFileAppend=false
 
 [UninstallDelete]
 Name: {app}; Type: filesandordirs
+
+[UninstallRun]
+Filename: {app}\unins000.exe; Parameters: /SILENT;
