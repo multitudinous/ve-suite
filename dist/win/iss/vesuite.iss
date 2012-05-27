@@ -54,7 +54,7 @@ VersionInfoDescription=VE-Suite Installer
 VersionInfoProductName=VE-Suite
 VersionInfoCopyright=Ames Lab
 AppID={{1A4D30B2-CA0C-4B60-B368-0DDF1A5692DC}
-OutputManifestFile={#INSTALLERINSTALLLOCATION}
+;OutputManifestFile={#INSTALLERINSTALLLOCATION}
 
 [Types]
 Name: full; Description: Full installation
